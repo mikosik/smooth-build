@@ -1,0 +1,127 @@
+<project name="smooth-build" basedir=".">
+
+  <property name="dir.lib" location="lib" />
+  <property name="dir.src" location="src" />
+  <property name="dir.src.java" location="${dir.src}/java" />
+  <property name="dir.src.test" location="${dir.src}/test" />
+  <property name="dir.build" location="build" />
+  <property name="dir.build.java" location="${dir.build}/java" />
+  <property name="dir.build.java.parser" location="${dir.build.java}/org/smoothbuild/antlr" />
+  <property name="dir.build.class" location="${dir.build}/class" />
+  <property name="dir.build.class.java" location="${dir.build.class}/java" />
+  <property name="dir.build.class.test" location="${dir.build.class}/test" />
+
+  <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar" />
+  <property name="lib.cglib" value="${dir.lib}/equals/cglib-nodep-2.2.3.jar" />
+  <property name="lib.equalsverifier" value="${dir.lib}/equals/equalsverifier-1.3.1.jar" />
+  <property name="lib.fest-assert" value="${dir.lib}/fest-assert-core-2.0M5.jar" />
+  <property name="lib.fest-util" value="${dir.lib}/fest-util-1.2.0.jar" />
+  <property name="lib.guava" value="${dir.lib}/guava-14.0.1.jar" />
+  <property name="lib.junit" value="${dir.lib}/junit-4.11.jar" />
+  <property name="lib.mockito" value="${dir.lib}/mockito-all-1.9.5.jar" />
+  <property name="lib.objenesis" value="${dir.lib}/equals/objenesis-1.3.jar" />
+
+  <target name="init">
+    <mkdir dir="${dir.build.java.parser}" />
+    <mkdir dir="${dir.build.class.java}" />
+    <mkdir dir="${dir.build.class.test}" />
+  </target>
+
+  <target name="generate-java-grammar" depends="init">
+    <java classname="org.antlr.v4.Tool" fork="true" failonerror="true">
+      <arg line="-o ${dir.build.java.parser}" />
+      <arg line="-package org.smoothbuild.antlr" />
+      <arg line="-Werror" />
+      <arg line="Smooth.g4" />
+      <classpath>
+        <pathelement location="${dir.lib}/antlr-4.1-complete.jar" />
+      </classpath>
+    </java>
+  </target>
+
+  <!-- compile-java -->
+        
+  <path id="classpath.for.java">
+    <pathelement location="${lib.guava}" />
+    <pathelement location="${lib.antlr}" />
+  </path>
+
+  <target name="compile-java" depends="generate-java-grammar">
+    <javac destdir="${dir.build.class.java}"
+           debug="true"
+           includeantruntime="false"
+           debuglevel="lines,vars,source">
+      <compilerarg value="-Xlint:all" />
+      <compilerarg value="-Werror" />
+      <src path="${dir.src.java}" />
+      <src path="${dir.build.java.parser}" />
+      <classpath>
+        <path refid="classpath.for.java" />
+      </classpath>
+    </javac>
+  </target>
+
+  <path id="classpath.with.java">
+    <path refid="classpath.for.java" />
+    <pathelement location="${dir.build.class.java}" />
+  </path>
+
+  <!-- compile-test -->
+
+  <path id="classpath.for.test">
+    <path refid="classpath.with.java" />
+    <pathelement location="${lib.cglib}" />
+    <pathelement location="${lib.equalsverifier}" />
+    <pathelement location="${lib.fest-assert}" />
+    <pathelement location="${lib.fest-util}" />
+    <pathelement location="${lib.junit}" />
+    <pathelement location="${lib.objenesis}" />
+    <pathelement location="${lib.mockito}" />
+  </path>
+
+  <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar" />
+  <property name="lib.cglib" value="${dir.lib}/cglib-nodep-2.2.3.jar" />
+  <property name="lib.equalsverifier" value="${dir.lib}/equals/equalsverifier-1.3.1.jar" />
+  <property name="lib.fest-assert" value="${dir.lib}/fest-assert-core-2.0M5.jar" />
+  <property name="lib.fest-util" value="${dir.lib}/fest-util-1.2.0.jar" />
+  <property name="lib.guava" value="${dir.lib}/guava-14.0.1.jar" />
+  <property name="lib.junit" value="${dir.lib}/junit-4.11.jar" />
+  <property name="lib.mockito" value="${dir.lib}/mockito-all-1.9.5.jar" />
+  <property name="lib.objenesis" value="${dir.lib}/objenesis-1.3.jar" />
+
+
+
+  <target name="compile-test" depends="compile-java">
+    <javac destdir="${dir.build.class.test}"
+           debug="true"
+           includeantruntime="false"
+           debuglevel="lines,vars,source">
+      <compilerarg value="-Xlint:all" />
+      <compilerarg value="-Werror" />
+      <src path="${dir.src.test}" />
+      <classpath>
+        <path refid="classpath.for.test" />
+      </classpath>
+    </javac>
+  </target>
+
+  <path id="classpath.with.test">
+    <path refid="classpath.for.test" />
+    <pathelement location="${dir.build.class.test}" />
+  </path>
+
+  <!-- test -->
+  <target name="test" depends="compile-test" description="runs all tests">
+    <junit haltonfailure="yes" reloading="false">
+      <classpath>
+        <path refid="classpath.with.test" />
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <batchtest fork="no" todir="${dir.build}" >
+        <fileset dir="${dir.build.class.test}" includes="**/*Test.class"/>
+      </batchtest>
+    </junit>
+  </target>
+
+</project>
+
