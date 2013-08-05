@@ -10,11 +10,25 @@ import java.io.OutputStreamWriter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.FileSystemException;
+import org.smoothbuild.fs.base.PathUtilsTest;
 
 import com.google.common.io.LineReader;
 
 public class InMemoryFileSystemTest {
   InMemoryFileSystem fileSystem = new InMemoryFileSystem();
+
+  @Test
+  public void pathExistsThrowsExceptionForInvalidPath() throws Exception {
+    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+
+      try {
+        fileSystem.pathExists(path);
+        Assert.fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
+    }
+  }
 
   @Test
   public void rootPathExists() {
@@ -46,6 +60,19 @@ public class InMemoryFileSystemTest {
   }
 
   @Test
+  public void isDirectoryThrowsExceptionForInvalidPath() throws Exception {
+    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+
+      try {
+        fileSystem.isDirectory(path);
+        Assert.fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
+    }
+  }
+
+  @Test
   public void rootPathIsADirectory() throws Exception {
     assertThat(fileSystem.isDirectory(WORKING_DIR)).isTrue();
   }
@@ -66,6 +93,19 @@ public class InMemoryFileSystemTest {
       Assert.fail("exception expected");
     } catch (FileSystemException e) {
       // expected
+    }
+  }
+
+  @Test
+  public void childNamesThrowsExceptionForInvalidPath() throws Exception {
+    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+
+      try {
+        fileSystem.childNames(path);
+        Assert.fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
     }
   }
 
@@ -93,6 +133,19 @@ public class InMemoryFileSystemTest {
       Assert.fail("exception expected");
     } catch (FileSystemException e) {
       // expected
+    }
+  }
+
+  @Test
+  public void filesFromThrowsExceptionForInvalidPath() throws Exception {
+    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+
+      try {
+        fileSystem.filesFrom(path);
+        Assert.fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
     }
   }
 
@@ -127,6 +180,19 @@ public class InMemoryFileSystemTest {
   }
 
   @Test
+  public void createOutputStreamThrowsExceptionForInvalidPath() throws Exception {
+    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+
+      try {
+        fileSystem.createOutputStream(path);
+        Assert.fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
+    }
+  }
+
+  @Test
   public void cannotCreateOutputStreamWhenFileIsADirectory() throws Exception {
     createFile("abc/def/file.txt");
     try {
@@ -137,12 +203,51 @@ public class InMemoryFileSystemTest {
   }
 
   @Test
+  public void createInputStreamThrowsExceptionForInvalidPath() throws Exception {
+    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+
+      try {
+        fileSystem.createInputStream(path);
+        Assert.fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
+    }
+  }
+
+  @Test
   public void cannotCreateInputStreamWhenFileIsADirectory() throws Exception {
     createFile("abc/def/file.txt");
     try {
       fileSystem.createInputStream("abc/def");
     } catch (FileSystemException e) {
       // expected
+    }
+  }
+
+  @Test
+  public void copyThrowsExceptionForInvalidSourcePath() throws Exception {
+    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+
+      try {
+        fileSystem.copy(path, "abc");
+        Assert.fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
+    }
+  }
+
+  @Test
+  public void copyThrowsExceptionForInvalidDestinationPath() throws Exception {
+    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+
+      try {
+        fileSystem.copy("abc", path);
+        Assert.fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
     }
   }
 
