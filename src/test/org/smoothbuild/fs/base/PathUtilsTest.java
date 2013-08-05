@@ -77,7 +77,7 @@ public class PathUtilsTest {
   }
 
   @Test
-  public void assertInvalidPathDetected() {
+  public void invalidPathsAreDetected() {
     for (String path : listOfInvalidPaths()) {
       assertThat(validationError(path)).isNotNull();
       assertThat(isValid(path)).isFalse();
