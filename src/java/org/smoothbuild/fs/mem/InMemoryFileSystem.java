@@ -1,6 +1,9 @@
 package org.smoothbuild.fs.mem;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.fs.base.PathUtils.WORKING_DIR;
+import static org.smoothbuild.fs.base.PathUtils.isValid;
+import static org.smoothbuild.fs.base.PathUtils.toCanonical;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,31 +18,35 @@ import org.smoothbuild.fs.base.RecursiveFilesIterable;
 
 import com.google.common.io.ByteStreams;
 
+/**
+ * In memory implementation of FileSystem. All path arguments are checked for
+ * validity and converted to canonical form at the beginning of each method.
+ */
 public class InMemoryFileSystem implements FileSystem {
   private final InMemoryDirectory root = new InMemoryDirectory("");
 
   @Override
   public boolean pathExists(String path) {
-    return findElement(path) != null;
+    return findElement(checked(path)) != null;
   }
 
   @Override
   public boolean isDirectory(String path) {
-    return getElement(path).isDirectory();
+    return getElement(checked(path)).isDirectory();
   }
 
   @Override
   public List<String> childNames(String directory) {
-    return getElement(directory).childNames();
+    return getElement(checked(directory)).childNames();
   }
 
   @Override
   public Iterable<String> filesFrom(String directory) {
-    return new RecursiveFilesIterable(this, directory);
+    return new RecursiveFilesIterable(this, checked(directory));
   }
 
   private InMemoryDirectory createDirectory(String directory) {
-    Iterator<String> it = PathUtils.toElements(directory).iterator();
+    Iterator<String> it = PathUtils.toElements(checked(directory)).iterator();
     InMemoryDirectory currentDir = root;
     while (it.hasNext()) {
       String name = it.next();
@@ -62,6 +69,9 @@ public class InMemoryFileSystem implements FileSystem {
 
   @Override
   public void copy(String source, String destination) {
+    source = checked(source);
+    destination = checked(destination);
+
     try (InputStream input = createInputStream(source);
         OutputStream output = createOutputStream(destination);) {
       ByteStreams.copy(input, output);
@@ -74,6 +84,7 @@ public class InMemoryFileSystem implements FileSystem {
 
   @Override
   public InputStream createInputStream(String path) {
+    path = checked(path);
     InMemoryElement element = getElement(path);
     if (element.isFile()) {
       return element.createInputStream();
@@ -84,6 +95,7 @@ public class InMemoryFileSystem implements FileSystem {
 
   @Override
   public OutputStream createOutputStream(String path) {
+    path = checked(path);
     if (path.equals(WORKING_DIR)) {
       throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
     }
@@ -125,5 +137,10 @@ public class InMemoryFileSystem implements FileSystem {
       }
     }
     return current;
+  }
+
+  private static String checked(String path) {
+    checkArgument(isValid(path));
+    return toCanonical(path);
   }
 }
