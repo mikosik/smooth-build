@@ -2,15 +2,16 @@ package org.smoothbuild.fs.mem;
 
 import static org.smoothbuild.fs.base.PathUtils.WORKING_DIR;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.FileSystemException;
 import org.smoothbuild.fs.base.PathUtils;
 import org.smoothbuild.fs.base.RecursiveFilesIterable;
-import org.smoothbuild.fs.base.FileSystemException;
 
 import com.google.common.io.ByteStreams;
 
@@ -64,9 +65,9 @@ public class InMemoryFileSystem implements FileSystem {
     try (InputStream input = createInputStream(source);
         OutputStream output = createOutputStream(destination);) {
       ByteStreams.copy(input, output);
-    } catch (Exception e) {
-      throw new FileSystemException("Error copying from '" + source + "' to '" + destination + "'.",
-          e);
+    } catch (IOException e) {
+      throw new FileSystemException(
+          "Error copying from '" + source + "' to '" + destination + "'.", e);
     }
 
   }
