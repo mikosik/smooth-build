@@ -5,7 +5,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.fs.mem.TestingFileSystem;
+import org.smoothbuild.testing.TestingFileSystem;
 
 public class RecursiveFilesIterableTest {
 

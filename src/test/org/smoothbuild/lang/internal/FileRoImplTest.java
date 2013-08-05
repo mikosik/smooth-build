@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.junit.Test;
-import org.smoothbuild.fs.mem.TestingFileSystem;
 import org.smoothbuild.lang.type.FileRo;
 import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.io.LineReader;
 
