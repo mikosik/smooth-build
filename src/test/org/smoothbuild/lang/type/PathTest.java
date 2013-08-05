@@ -37,6 +37,29 @@ public class PathTest {
   }
 
   @Test
+  public void parentOfWorkingDirThrowsException() throws Exception {
+    try {
+      path(WORKING_DIR).parent();
+      Assert.fail("exception should be thrown");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void testParent() throws Exception {
+    assertParentOf("abc", WORKING_DIR);
+    assertParentOf("abc/def", "abc");
+    assertParentOf("abc/def/ghi", "abc/def");
+
+    assertParentOf(" ", WORKING_DIR);
+  }
+
+  private static void assertParentOf(String input, String expected) {
+    assertThat(path(input).parent().value()).isEqualTo(expected);
+  }
+
+  @Test
   public void append() {
     assertAppend(WORKING_DIR, WORKING_DIR, WORKING_DIR);
 

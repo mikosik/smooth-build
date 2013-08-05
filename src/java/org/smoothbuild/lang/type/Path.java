@@ -23,6 +23,10 @@ public class Path {
     return value;
   }
 
+  public Path parent() {
+    return new Path(PathUtils.parentOf(value));
+  }
+
   public Path append(Path path) {
     return new Path(PathUtils.append(value, path.value()));
   }
