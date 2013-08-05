@@ -7,7 +7,6 @@ import static org.smoothbuild.lang.type.Path.path;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.PathUtilsTest;
-import org.smoothbuild.fs.mem.TestingFileSystem;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
@@ -16,6 +15,7 @@ import org.smoothbuild.lang.function.exc.NoSuchPathException;
 import org.smoothbuild.lang.function.exc.ParamException;
 import org.smoothbuild.lang.function.exc.PathIsNotADirException;
 import org.smoothbuild.lang.type.FilesRo;
+import org.smoothbuild.testing.TestingFileSystem;
 
 public class FilesFunctionTest {
   TestingFileSystem fileSystem = new TestingFileSystem();

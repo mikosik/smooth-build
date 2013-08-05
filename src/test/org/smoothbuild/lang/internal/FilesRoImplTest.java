@@ -5,9 +5,9 @@ import static org.smoothbuild.lang.type.Path.path;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.fs.mem.TestingFileSystem;
 import org.smoothbuild.lang.type.FileRo;
 import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.collect.ImmutableList;
 

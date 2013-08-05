@@ -10,8 +10,8 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.mem.TestingFileSystem;
 import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.testing.TestingFileSystem;
 
 public class FileRwImplTest {
   private static final String ROOT_DIR = "abc/efg";

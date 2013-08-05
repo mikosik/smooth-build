@@ -1,9 +1,10 @@
-package org.smoothbuild.fs.mem;
+package org.smoothbuild.testing;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import org.smoothbuild.fs.base.PathUtils;
+import org.smoothbuild.fs.mem.InMemoryFileSystem;
 
 public class TestingFileSystem extends InMemoryFileSystem {
 
