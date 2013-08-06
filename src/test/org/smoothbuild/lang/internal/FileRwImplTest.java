@@ -3,10 +3,7 @@ package org.smoothbuild.lang.internal;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.fs.base.PathUtils.SEPARATOR;
 import static org.smoothbuild.lang.type.Path.path;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.FileSystem;
@@ -41,14 +38,7 @@ public class FileRwImplTest {
 
   @Test
   public void createOutputStream() throws Exception {
-    createFile(FILE_PATH, fileRwImpl);
+    writeAndClose(fileRwImpl.createOutputStream(), FILE_PATH);
     FileRoImplTest.assertContentHasFilePath(fileRwImpl);
-  }
-
-  public static void createFile(String path, FileRwImpl fileRw) throws FileNotFoundException,
-      IOException {
-    OutputStreamWriter writer = new OutputStreamWriter(fileRw.createOutputStream());
-    writer.write(path);
-    writer.close();
   }
 }

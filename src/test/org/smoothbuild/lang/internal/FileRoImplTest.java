@@ -2,17 +2,15 @@ package org.smoothbuild.lang.internal;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.FileRo;
 import org.smoothbuild.lang.type.Path;
 import org.smoothbuild.testing.TestingFileSystem;
-
-import com.google.common.io.LineReader;
 
 public class FileRoImplTest {
   private static final String ROOT_DIR = "abc/efg";
@@ -47,9 +45,6 @@ public class FileRoImplTest {
 
   public static void assertContentHasFilePath(FileRo file) throws IOException,
       FileNotFoundException {
-    try (InputStreamReader readable = new InputStreamReader(file.createInputStream());) {
-      LineReader reader = new LineReader(readable);
-      assertThat(reader.readLine()).isEqualTo(file.path().value());
-    }
+    assertFileContent(file.createInputStream(), file.path().value());
   }
 }

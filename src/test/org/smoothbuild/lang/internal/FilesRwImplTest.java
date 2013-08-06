@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.internal;
 
 import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
 
 import java.io.IOException;
 
@@ -44,6 +45,6 @@ public class FilesRwImplTest {
   }
 
   private void createFile(String path) throws IOException {
-    FileRwImplTest.createFile(path, filesRwImpl.createFileRw(path(path)));
+    writeAndClose(filesRwImpl.createFileRw(path(path)).createOutputStream(), path);
   }
 }
