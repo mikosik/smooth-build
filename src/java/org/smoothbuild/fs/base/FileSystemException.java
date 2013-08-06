@@ -1,5 +1,7 @@
 package org.smoothbuild.fs.base;
 
+import java.io.IOException;
+
 /**
  * Thrown to indicate problem accessing a file. It is caused either by a bug in
  * smooth-build tool (or one of its plugins), IO problem of accessed file
@@ -18,5 +20,9 @@ public class FileSystemException extends RuntimeException {
 
   public FileSystemException(String message, Throwable e) {
     super(message, e);
+  }
+
+  public FileSystemException(IOException e) {
+    super(e);
   }
 }
