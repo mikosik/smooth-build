@@ -29,14 +29,10 @@ public class SaveToFunction implements Function {
   }
 
   @Override
-  public Void result() {
-    return null;
-  }
-
-  @Override
-  public void execute() throws FunctionException {
+  public Void execute() throws FunctionException {
     Path dirPath = PathArgValidator.validatedPath(dir);
     saveTo(dirPath);
+    return null;
   }
 
   private void saveTo(Path dirPath) throws PathIsNotADirException {
