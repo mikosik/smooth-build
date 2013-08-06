@@ -1,11 +1,16 @@
 package org.smoothbuild.fs.base;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.smoothbuild.lang.type.Path.path;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.Path;
 import org.smoothbuild.testing.TestingFileSystem;
+
+import com.google.common.collect.Lists;
 
 public class RecursiveFilesIterableTest {
 
@@ -42,10 +47,13 @@ public class RecursiveFilesIterableTest {
   private void doTestIterable(String rootDir, String[] names, String expectedRootDir,
       String[] expectedNames) throws IOException {
     TestingFileSystem fileSystem = new TestingFileSystem();
+    List<Path> created = Lists.newArrayList();
     for (String name : names) {
       fileSystem.createFile(rootDir, name);
+      created.add(path(name));
     }
 
-    assertThat(new RecursiveFilesIterable(fileSystem, rootDir)).containsOnly(names);
+    assertThat(new RecursiveFilesIterable(fileSystem, path(rootDir))).containsOnly(
+        created.toArray(new Path[] {}));
   }
 }

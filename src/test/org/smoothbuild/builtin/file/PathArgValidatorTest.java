@@ -4,11 +4,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.fs.base.PathUtilsTest;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
+import org.smoothbuild.lang.type.PathTest;
 
 public class PathArgValidatorTest {
 
@@ -27,7 +27,7 @@ public class PathArgValidatorTest {
 
   @Test
   public void illegalPathsAreReported() throws FunctionException {
-    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+    for (String path : PathTest.listOfInvalidPaths()) {
       Param<String> param = Param.stringParam("name");
       param.set(path);
       try {
@@ -43,7 +43,7 @@ public class PathArgValidatorTest {
 
   @Test
   public void validPathsAreAccepted() throws FunctionException {
-    for (String path : PathUtilsTest.listOfCorrectPaths()) {
+    for (String path : PathTest.listOfCorrectPaths()) {
       Param<String> param = Param.stringParam("name");
       param.set(path);
       PathArgValidator.validatedPath(param);

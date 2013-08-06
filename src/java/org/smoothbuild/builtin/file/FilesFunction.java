@@ -40,11 +40,11 @@ public class FilesFunction implements Function {
   }
 
   private FilesRo createFilesRo(Path dirPath) throws FunctionException {
-    if (!fileSystem.pathExists(dirPath.value())) {
+    if (!fileSystem.pathExists(dirPath)) {
       throw new NoSuchPathException(dir, dirPath);
     }
 
-    if (fileSystem.isDirectory(dirPath.value())) {
+    if (fileSystem.isDirectory(dirPath)) {
       return new FilesRoImpl(fileSystem, dirPath);
     } else {
       throw new PathIsNotADirException(dir, dirPath);

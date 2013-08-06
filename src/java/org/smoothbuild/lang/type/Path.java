@@ -1,53 +1,123 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.fs.base.PathUtils.CURRENT_DIR;
-import static org.smoothbuild.fs.base.PathUtils.WORKING_DIR;
-import static org.smoothbuild.fs.base.PathUtils.toCanonical;
-
-import org.smoothbuild.fs.base.PathUtils;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * Path within a project.
  */
 public class Path {
-  private static final Path PROJECT_ROOT_PATH = path(WORKING_DIR);
-  private static final Path CURRENT_DIR_PATH = path(CURRENT_DIR);
+  private static final char SEPARATOR_CHARACTER = '/';
+  private static final String SEPARATOR = new String(new char[] { SEPARATOR_CHARACTER });
+  private static final String ROOT_STRING = ".";
+  private static final Path ROOT_PATH = new Path(ROOT_STRING);
 
   private final String value;
 
   public static Path path(String value) {
-    return new Path(value);
+    checkIsValid(value);
+    String canonicalValue = toCanonical(value);
+    if (canonicalValue.equals(ROOT_STRING)) {
+      return ROOT_PATH;
+    } else {
+      return new Path(canonicalValue);
+    }
   }
 
-  public static Path projectRootPath() {
-    return PROJECT_ROOT_PATH;
-  }
-
-  public static Path currentDirPath() {
-    return CURRENT_DIR_PATH;
+  public static Path rootPath() {
+    return ROOT_PATH;
   }
 
   private Path(String value) {
-    checkIsValid(value);
-    this.value = toCanonical(value);
+    this.value = value;
+  }
+
+  private static void checkIsValid(String value) {
+    String message = validationError(value);
+    if (message != null) {
+      throw new IllegalArgumentException(message);
+    }
+  }
+
+  public static String validationError(String path) {
+    if (path.isEmpty()) {
+      return "Empty paths are not allowed";
+    }
+    if (path.startsWith("/")) {
+      return "Path cannot start with slash character '/'. Only paths relative to project root dir are allowed";
+    }
+    if (path.contains("//")) {
+      return "Path cannot contain two slashes (//) in a row";
+    }
+    if (path.contains("/./") || path.endsWith("/.")) {
+      return "Path can contain '.' element only at the beginning (for example './mypath').";
+    }
+    if (path.equals("..") || path.startsWith("../") || path.contains("/../")
+        || path.endsWith("/..")) {
+      return "Path cannot contain '..' element. Referencing files outside your project is a bad idea.";
+    }
+    return null;
+  }
+
+  private static String toCanonical(String path) {
+    // remove '/' suffix
+    path = path.endsWith(SEPARATOR) ? path.substring(0, path.length() - 1) : path;
+    // remove './' prefix
+    return path.startsWith("./") ? path.substring(2, path.length()) : path;
   }
 
   public String value() {
     return value;
   }
 
+  public boolean isRoot() {
+    return this == ROOT_PATH;
+  }
+
   public Path parent() {
-    return new Path(PathUtils.parentOf(value));
+    if (this == ROOT_PATH) {
+      throw new IllegalArgumentException("Cannot return parent of root path '.'");
+    }
+    int index = value.lastIndexOf(SEPARATOR_CHARACTER);
+    if (index == -1) {
+      return ROOT_PATH;
+    } else {
+      return new Path(value.substring(0, index));
+    }
   }
 
   public Path append(Path path) {
-    return new Path(PathUtils.append(value, path.value()));
+    if (this == ROOT_PATH) {
+      return path;
+    } else if (path == ROOT_PATH) {
+      return this;
+    } else {
+      return new Path(this.value + SEPARATOR + path.value);
+    }
   }
 
-  private static void checkIsValid(String value) {
-    String message = PathUtils.validationError(value);
-    if (message != null) {
-      throw new IllegalArgumentException(message);
+  public ImmutableList<Path> toElements() {
+    if (this == ROOT_PATH) {
+      return ImmutableList.<Path> of();
+    } else {
+      Builder<Path> builder = ImmutableList.builder();
+      for (String string : Splitter.on(SEPARATOR_CHARACTER).split(value)) {
+        builder.add(new Path(string));
+      }
+      return builder.build();
+    }
+  }
+
+  public Path lastElement() {
+    if (this == ROOT_PATH) {
+      throw new IllegalArgumentException("Cannot return last element of root path '.'");
+    }
+    int index = value.lastIndexOf(SEPARATOR_CHARACTER);
+    if (index == -1) {
+      return this;
+    } else {
+      return new Path(value.substring(index + 1, value.length()));
     }
   }
 

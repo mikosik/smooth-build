@@ -32,6 +32,6 @@ public class FileRoImpl implements FileRo {
 
   @Override
   public InputStream createInputStream() {
-    return fileSystem.createInputStream(fullPath.value());
+    return fileSystem.createInputStream(fullPath);
   }
 }
