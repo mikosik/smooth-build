@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.fs.base.PathUtils.CURRENT_DIR;
+import static org.smoothbuild.fs.base.PathUtils.WORKING_DIR;
 import static org.smoothbuild.fs.base.PathUtils.toCanonical;
 
 import org.smoothbuild.fs.base.PathUtils;
@@ -8,10 +10,21 @@ import org.smoothbuild.fs.base.PathUtils;
  * Path within a project.
  */
 public class Path {
+  private static final Path PROJECT_ROOT_PATH = path(WORKING_DIR);
+  private static final Path CURRENT_DIR_PATH = path(CURRENT_DIR);
+
   private final String value;
 
   public static Path path(String value) {
     return new Path(value);
+  }
+
+  public static Path projectRootPath() {
+    return PROJECT_ROOT_PATH;
+  }
+
+  public static Path currentDirPath() {
+    return CURRENT_DIR_PATH;
   }
 
   private Path(String value) {

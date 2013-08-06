@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
+import static org.smoothbuild.lang.type.Path.projectRootPath;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.lang.function.Function;
@@ -51,7 +52,7 @@ public class FileFunction implements Function {
     if (fileSystem.isDirectory(filePath.value())) {
       throw new PathIsNotAFileException(path, filePath);
     } else {
-      return new FileRoImpl(fileSystem, Path.path("."), filePath);
+      return new FileRoImpl(fileSystem, projectRootPath(), filePath);
     }
   }
 }
