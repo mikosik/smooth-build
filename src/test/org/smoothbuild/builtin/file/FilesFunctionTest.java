@@ -86,9 +86,8 @@ public class FilesFunctionTest {
     fileSystem.createFile(rootPath, filePath);
     dirParam.set(rootPath);
 
-    filesFunction.execute();
+    FilesRo filesRo = filesFunction.execute();
 
-    FilesRo filesRo = filesFunction.result();
     assertContentHasFilePath(filesRo.fileRo(path(filePath)));
   }
 

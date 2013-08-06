@@ -22,8 +22,6 @@ public class FileFunction implements Function {
 
   private final FileSystem fileSystem;
 
-  private FileRo result;
-
   public FileFunction(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
   }
@@ -34,14 +32,9 @@ public class FileFunction implements Function {
   }
 
   @Override
-  public FileRo result() {
-    return result;
-  }
-
-  @Override
-  public void execute() throws FunctionException {
+  public FileRo execute() throws FunctionException {
     Path filePath = validatedPath(path);
-    result = createFileRo(filePath);
+    return createFileRo(filePath);
   }
 
   private FileRo createFileRo(Path filePath) throws FunctionException {

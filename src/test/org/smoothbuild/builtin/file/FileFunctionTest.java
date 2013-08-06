@@ -87,9 +87,8 @@ public class FileFunctionTest {
     fileSystem.createFile(".", filePath);
     pathParam.set(filePath);
 
-    fileFunction.execute();
+    FileRo fileRo = fileFunction.execute();
 
-    FileRo fileRo = fileFunction.result();
     assertThat(fileRo.path()).isEqualTo(path(filePath));
     assertContentHasFilePath(fileRo);
   }
