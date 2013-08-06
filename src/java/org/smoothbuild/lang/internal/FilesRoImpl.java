@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.internal;
 
-import static org.smoothbuild.lang.type.Path.path;
-
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.lang.type.FileRo;
 import org.smoothbuild.lang.type.FilesRo;
@@ -35,13 +33,13 @@ public class FilesRoImpl implements FilesRo {
 
   @Override
   public Iterable<FileRo> asIterable() {
-    Iterable<String> filesIterable = fileSystem.filesFrom(root.value());
+    Iterable<Path> filesIterable = fileSystem.filesFrom(root);
     return FluentIterable.from(filesIterable).transform(pathToFileRo);
   }
 
-  private class PathToFileRoFunction implements Function<String, FileRo> {
-    public FileRo apply(String path) {
-      return new FileRoImpl(fileSystem, root, path(path));
+  private class PathToFileRoFunction implements Function<Path, FileRo> {
+    public FileRo apply(Path path) {
+      return new FileRoImpl(fileSystem, root, path);
     }
   }
 }

@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.type.Path.path;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.fs.base.PathUtilsTest;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
@@ -15,6 +14,7 @@ import org.smoothbuild.lang.function.exc.NoSuchPathException;
 import org.smoothbuild.lang.function.exc.ParamException;
 import org.smoothbuild.lang.function.exc.PathIsNotAFileException;
 import org.smoothbuild.lang.type.FileRo;
+import org.smoothbuild.lang.type.PathTest;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class FileFunctionTest {
@@ -38,7 +38,7 @@ public class FileFunctionTest {
 
   @Test
   public void illegalPathIsReported() throws FunctionException {
-    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+    for (String path : PathTest.listOfInvalidPaths()) {
       pathParam.set(path);
       try {
         fileFunction.execute();

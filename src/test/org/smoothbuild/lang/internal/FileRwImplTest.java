@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.internal;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.fs.base.PathUtils.SEPARATOR;
 import static org.smoothbuild.lang.type.Path.path;
 import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
 
@@ -11,13 +10,11 @@ import org.smoothbuild.lang.type.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class FileRwImplTest {
-  private static final String ROOT_DIR = "abc/efg";
-  private static final String FILE_PATH = "123/456";
-  private static final String FULL_PATH = ROOT_DIR + SEPARATOR + FILE_PATH;
+  Path rootDir = path("abc/efg");
+  Path filePath = path("123/456");
+  Path fullPath = rootDir.append(filePath);
 
   FileSystem fileSystem = new TestingFileSystem();
-  Path rootDir = path(ROOT_DIR);
-  Path filePath = path(FILE_PATH);
 
   FileRwImpl fileRwImpl = new FileRwImpl(fileSystem, rootDir, filePath);
 
@@ -33,12 +30,12 @@ public class FileRwImplTest {
 
   @Test
   public void fullPath() {
-    assertThat(fileRwImpl.fullPath()).isEqualTo(path(FULL_PATH));
+    assertThat(fileRwImpl.fullPath()).isEqualTo(fullPath);
   }
 
   @Test
   public void createOutputStream() throws Exception {
-    writeAndClose(fileRwImpl.createOutputStream(), FILE_PATH);
+    writeAndClose(fileRwImpl.createOutputStream(), "123/456");
     FileRoImplTest.assertContentHasFilePath(fileRwImpl);
   }
 }

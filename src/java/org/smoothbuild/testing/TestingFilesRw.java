@@ -1,14 +1,12 @@
 package org.smoothbuild.testing;
 
-import static org.smoothbuild.lang.type.Path.projectRootPath;
-
 import org.smoothbuild.fs.mem.InMemoryFileSystem;
 import org.smoothbuild.lang.internal.FilesRwImpl;
 import org.smoothbuild.lang.type.Path;
 
 public class TestingFilesRw extends FilesRwImpl {
   public TestingFilesRw() {
-    super(new InMemoryFileSystem(), projectRootPath());
+    super(new InMemoryFileSystem(), Path.rootPath());
   }
 
   @Override

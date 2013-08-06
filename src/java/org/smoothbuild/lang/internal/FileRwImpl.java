@@ -13,6 +13,6 @@ public class FileRwImpl extends FileRoImpl implements FileRw {
 
   @Override
   public OutputStream createOutputStream() {
-    return fileSystem().createOutputStream(fullPath().value());
+    return fileSystem().createOutputStream(fullPath());
   }
 }

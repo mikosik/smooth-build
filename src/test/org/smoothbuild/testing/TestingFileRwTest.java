@@ -23,7 +23,7 @@ public class TestingFileRwTest {
 
   @Test
   public void assertTestContent() throws Exception {
-    writeAndClose(fileSystem.createOutputStream(root.append(path).value()), path.value());
+    writeAndClose(fileSystem.createOutputStream(root.append(path)), path.value());
     testingFileRw.assertTestContent();
   }
 }

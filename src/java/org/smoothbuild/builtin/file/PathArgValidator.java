@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.file;
 
-import org.smoothbuild.fs.base.PathUtils;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
@@ -12,7 +11,7 @@ public class PathArgValidator {
     if (!path.isSet()) {
       throw new MissingArgException(path);
     }
-    String message = PathUtils.validationError(path.get());
+    String message = Path.validationError(path.get());
     if (message != null) {
       throw new IllegalPathException(path, message);
     }

@@ -2,28 +2,28 @@ package org.smoothbuild.fs.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.fs.base.PathUtils.WORKING_DIR;
-import static org.smoothbuild.fs.base.PathUtils.append;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
-public class RecursiveFilesIterator implements Iterator<String> {
+import org.smoothbuild.lang.type.Path;
+
+public class RecursiveFilesIterator implements Iterator<Path> {
   private final FileSystem fileSystem;
-  private final String rootPath;
+  private final Path rootPath;
 
-  private final ArrayDeque<String> directoryStack;
-  private final ArrayDeque<String> fileStack;
-  private String nextFile;
+  private final ArrayDeque<Path> directoryStack;
+  private final ArrayDeque<Path> fileStack;
+  private Path nextFile;
 
-  public RecursiveFilesIterator(FileSystem fileSystem, String rootPath) {
+  public RecursiveFilesIterator(FileSystem fileSystem, Path rootPath) {
     checkArgument(fileSystem.isDirectory(rootPath));
 
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
-    this.directoryStack = new ArrayDeque<String>();
-    this.fileStack = new ArrayDeque<String>();
-    this.directoryStack.push(WORKING_DIR);
+    this.directoryStack = new ArrayDeque<Path>();
+    this.fileStack = new ArrayDeque<Path>();
+    this.directoryStack.push(Path.rootPath());
 
     nextFile = fetchNextFile();
   }
@@ -34,25 +34,25 @@ public class RecursiveFilesIterator implements Iterator<String> {
   }
 
   @Override
-  public String next() {
+  public Path next() {
     checkState(hasNext());
 
-    String result = nextFile;
+    Path result = nextFile;
     nextFile = fetchNextFile();
     return result;
   }
 
-  private String fetchNextFile() {
+  private Path fetchNextFile() {
     while (!fileStack.isEmpty() || !directoryStack.isEmpty()) {
       if (fileStack.isEmpty()) {
-        String dir = directoryStack.remove();
-        String dirFullPath = append(rootPath, dir);
+        Path dir = directoryStack.remove();
+        Path dirFullPath = rootPath.append(dir);
         for (String name : fileSystem.childNames(dirFullPath)) {
-          fileStack.add(append(dir, name));
+          fileStack.add(dir.append(Path.path(name)));
         }
       } else {
-        String file = fileStack.remove();
-        String fullPath = append(rootPath, file);
+        Path file = fileStack.remove();
+        Path fullPath = rootPath.append(file);
         if (fileSystem.isDirectory(fullPath)) {
           directoryStack.add(file);
         } else {

@@ -1,7 +1,5 @@
 package org.smoothbuild.fs.base;
 
-import static org.smoothbuild.fs.base.PathUtils.WORKING_DIR;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,40 +10,40 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
-import java.util.List;
 
+import org.smoothbuild.lang.type.Path;
 
 // TODO test this class
 public class DiskFileSystem implements FileSystem {
   @Override
-  public boolean pathExists(String path) {
-    return new File(path).exists();
+  public boolean pathExists(Path path) {
+    return new File(path.value()).exists();
   }
 
   @Override
-  public boolean isDirectory(String path) {
-    return new File(path).isDirectory();
+  public boolean isDirectory(Path path) {
+    return new File(path.value()).isDirectory();
   }
 
   @Override
-  public List<String> childNames(String directory) {
-    String[] list = new File(directory).list();
+  public Iterable<String> childNames(Path directory) {
+    String[] list = new File(directory.value()).list();
     if (list == null) {
-      throw new FileSystemException("Path '" + directory + "' is not a directory");
+      throw new FileSystemException("Path " + directory + " is not a directory");
     } else {
       return Arrays.asList(list);
     }
   }
 
   @Override
-  public Iterable<String> filesFrom(String directory) {
+  public Iterable<Path> filesFrom(Path directory) {
     return new RecursiveFilesIterable(this, directory);
   }
 
-  private void createDirectory(String path) {
-    File directory = new File(path);
+  private void createDirectory(Path path) {
+    File directory = new File(path.value());
     if (!directory.exists()) {
-      createDirectory(PathUtils.parentOf(path));
+      createDirectory(path.parent());
       if (!directory.mkdir()) {
         throw new FileSystemException("Could not create directory '" + path + "'.");
       }
@@ -53,37 +51,37 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public InputStream createInputStream(String path) {
+  public InputStream createInputStream(Path path) {
     try {
-      return new FileInputStream(path);
+      return new FileInputStream(path.value());
     } catch (FileNotFoundException e) {
       throw new FileSystemException("Could not create InputStream for '" + path + "'", e);
     }
   }
 
   @Override
-  public OutputStream createOutputStream(String path) {
-    if (path.equals(WORKING_DIR)) {
+  public OutputStream createOutputStream(Path path) {
+    if (path.isRoot()) {
       throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
     }
-    createDirectory(PathUtils.parentOf(path));
+    createDirectory(path.parent());
 
     try {
-      return new FileOutputStream(path);
+      return new FileOutputStream(path.value());
     } catch (FileNotFoundException e) {
       throw new FileSystemException("Could not create OutputStream for '" + path + "'", e);
     }
   }
 
   @Override
-  public void copy(String from, String to) {
-    createDirectory(PathUtils.parentOf(to));
+  public void copy(Path from, Path to) {
+    createDirectory(to.parent());
     copyImpl(from, to);
   }
 
-  private void copyImpl(String from, String to) {
+  private void copyImpl(Path from, Path to) {
     try {
-      copy(new File(from), new File(to));
+      copy(new File(from.value()), new File(to.value()));
     } catch (IOException e) {
       throw new FileSystemException("Could not copy from '" + from + "' to '" + to + "'", e);
     }

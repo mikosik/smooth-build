@@ -2,8 +2,9 @@ package org.smoothbuild.lang.type;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.fs.base.PathUtils.WORKING_DIR;
+import static org.fest.assertions.api.Assertions.fail;
 import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.lang.type.Path.rootPath;
 
 import java.util.List;
 
@@ -11,18 +12,160 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.fs.base.PathUtilsTest;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Lists;
 
 public class PathTest {
 
   @Test
+  public void validationErrorReturnsNullForCorrectPath() throws Exception {
+    for (String path : listOfCorrectPaths()) {
+      assertThat(Path.validationError(path)).isNull();
+    }
+  }
+
+  @Test
+  public void pathCanBeCreatedForValidValue() throws Exception {
+    for (String path : listOfCorrectPaths()) {
+      path(path);
+    }
+  }
+
+  public static List<String> listOfCorrectPaths() {
+    Builder<String> builder = ImmutableList.builder();
+
+    builder.add(".");
+    builder.add("./");
+
+    builder.add("abc");
+    builder.add("abc/def");
+    builder.add("abc/def/ghi");
+    builder.add("abc/def/ghi/ijk");
+
+    builder.add("abc/");
+    builder.add("abc/def/");
+    builder.add("abc/def/ghi/");
+    builder.add("abc/def/ghi/ijk/");
+
+    builder.add("./abc");
+    builder.add("./abc/def");
+    builder.add("./abc/def/ghi");
+    builder.add("./abc/def/ghi/ijk");
+
+    builder.add("./abc/");
+    builder.add("./abc/def/");
+    builder.add("./abc/def/ghi/");
+    builder.add("./abc/def/ghi/ijk/");
+
+    // These paths look really strange but Linux allows creating them.
+    // I cannot see any good reason for forbidding them.
+    builder.add("...");
+    builder.add(".../abc");
+    builder.add("abc/...");
+    builder.add("abc/.../def");
+
+    builder.add(".../");
+    builder.add(".../abc/");
+    builder.add("abc/.../");
+    builder.add("abc/.../def/");
+
+    builder.add("./...");
+    builder.add("./.../abc");
+    builder.add("./abc/...");
+    builder.add("./abc/.../def");
+
+    builder.add("./.../");
+    builder.add("./.../abc/");
+    builder.add("./abc/.../");
+    builder.add("./abc/.../def/");
+
+    return builder.build();
+  }
+
+  @Test
+  public void validationErrorReturnsMessageForInvalidPath() {
+    for (String path : listOfInvalidPaths()) {
+      assertThat(Path.validationError(path)).isNotNull();
+    }
+  }
+
+  @Test
+  public void cannotCreatePathWithInvalidValue() {
+    for (String path : listOfInvalidPaths()) {
+      try {
+        path(path);
+        fail("exception should be thrown");
+      } catch (IllegalArgumentException e) {
+        // expected
+      }
+    }
+  }
+
+  public static ImmutableList<String> listOfInvalidPaths() {
+    Builder<String> builder = ImmutableList.builder();
+
+    builder.add("");
+
+    builder.add("./.");
+    builder.add("././");
+
+    builder.add("..");
+    builder.add("../");
+    builder.add("./../");
+    builder.add("../abc");
+    builder.add("abc/..");
+    builder.add("abc/../def");
+    builder.add("../..");
+
+    builder.add("/");
+    builder.add("//");
+    builder.add("///");
+
+    builder.add("/abc");
+    builder.add("//abc");
+    builder.add("///abc");
+
+    builder.add("abc//");
+    builder.add("abc///");
+
+    builder.add("abc//def");
+    builder.add("abc///def");
+
+    return builder.build();
+  }
+
+  @Test
+  public void rootPathReturnsTheSameInstanceEachTime() throws Exception {
+    assertThat(Path.rootPath()).isSameAs(Path.rootPath());
+  }
+
+  @Test
+  public void dotPathReturnsRootPathInstance() throws Exception {
+    assertThat(Path.path(".")).isSameAs(Path.rootPath());
+  }
+
+  @Test
   public void value() {
+    assertValue(".", ".");
+    assertValue("./", ".");
+
     assertValue("abc", "abc");
     assertValue("abc/def", "abc/def");
     assertValue("abc/def/ghi", "abc/def/ghi");
+
+    assertValue("abc/", "abc");
+    assertValue("abc/def/", "abc/def");
+    assertValue("abc/def/ghi/", "abc/def/ghi");
+
+    assertValue("./abc", "abc");
+    assertValue("./abc/def", "abc/def");
+    assertValue("./abc/def/ghi", "abc/def/ghi");
+
+    assertValue("./abc/", "abc");
+    assertValue("./abc/def/", "abc/def");
+    assertValue("./abc/def/ghi/", "abc/def/ghi");
   }
 
   private static void assertValue(String path, String expected) {
@@ -37,9 +180,9 @@ public class PathTest {
   }
 
   @Test
-  public void parentOfWorkingDirThrowsException() throws Exception {
+  public void parentOfRootDirThrowsException() throws Exception {
     try {
-      path(WORKING_DIR).parent();
+      Path.rootPath().parent();
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -48,28 +191,28 @@ public class PathTest {
 
   @Test
   public void testParent() throws Exception {
-    assertParentOf("abc", WORKING_DIR);
+    assertParentOf("abc", ".");
     assertParentOf("abc/def", "abc");
     assertParentOf("abc/def/ghi", "abc/def");
 
-    assertParentOf(" ", WORKING_DIR);
+    assertParentOf(" ", ".");
   }
 
   private static void assertParentOf(String input, String expected) {
-    assertThat(path(input).parent().value()).isEqualTo(expected);
+    assertThat(path(input).parent()).isEqualTo(path(expected));
   }
 
   @Test
   public void append() {
-    assertAppend(WORKING_DIR, WORKING_DIR, WORKING_DIR);
+    assertAppend(".", ".", ".");
 
-    assertAppend("abc", WORKING_DIR, "abc");
-    assertAppend("abc/def", WORKING_DIR, "abc/def");
-    assertAppend("abc/def/ghi", WORKING_DIR, "abc/def/ghi");
+    assertAppend("abc", ".", "abc");
+    assertAppend("abc/def", ".", "abc/def");
+    assertAppend("abc/def/ghi", ".", "abc/def/ghi");
 
-    assertAppend(WORKING_DIR, "abc", "abc");
-    assertAppend(WORKING_DIR, "abc/def", "abc/def");
-    assertAppend(WORKING_DIR, "abc/def/ghi", "abc/def/ghi");
+    assertAppend(".", "abc", "abc");
+    assertAppend(".", "abc/def", "abc/def");
+    assertAppend(".", "abc/def/ghi", "abc/def/ghi");
 
     assertAppend("abc", "xyz", "abc/xyz");
     assertAppend("abc", "xyz/uvw", "abc/xyz/uvw");
@@ -94,23 +237,48 @@ public class PathTest {
   }
 
   @Test
-  public void correctPath() {
-    for (String path : PathUtilsTest.listOfCorrectPaths()) {
-      // make sure path can be created without throwing exception
-      path(path);
+  public void testToElements() throws Exception {
+    assertToElements(".", ImmutableList.<String> of());
+
+    assertToElements("abc", ImmutableList.of("abc"));
+    assertToElements("abc/def", ImmutableList.of("abc", "def"));
+    assertToElements("abc/def/ghi", ImmutableList.of("abc", "def", "ghi"));
+
+    assertToElements(" ", ImmutableList.of(" "));
+    assertToElements(" / ", ImmutableList.of(" ", " "));
+    assertToElements(" / / ", ImmutableList.of(" ", " ", " "));
+  }
+
+  private static void assertToElements(String input, List<String> expected) {
+    List<String> list = Lists.newArrayList();
+    for (Path path : path(input).toElements()) {
+      list.add(path.value());
+    }
+    assertThat(list).isEqualTo(expected);
+  }
+
+  @Test
+  public void lastElementOfRootDirThrowsException() throws Exception {
+    try {
+      rootPath().lastElement();
+      Assert.fail("exception should be thrown");
+    } catch (IllegalArgumentException e) {
+      // expected
     }
   }
 
   @Test
-  public void invalidPathDetection() {
-    for (String path : PathUtilsTest.listOfInvalidPaths()) {
-      try {
-        path(path);
-        Assert.fail("exception expected");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
-    }
+  public void testLastElement() throws Exception {
+    assertLastElement(" ", " ");
+    assertLastElement(" / ", " ");
+
+    assertLastElement("abc", "abc");
+    assertLastElement("abc/def", "def");
+    assertLastElement("abc/def/ghi", "ghi");
+  }
+
+  private static void assertLastElement(String input, String expected) {
+    assertThat(path(input).lastElement()).isEqualTo(path(expected));
   }
 
   @Test

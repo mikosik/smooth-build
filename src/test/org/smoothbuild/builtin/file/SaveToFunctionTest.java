@@ -1,13 +1,12 @@
 package org.smoothbuild.builtin.file;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.fs.base.PathUtils.WORKING_DIR;
 import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.lang.type.Path.rootPath;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.fs.base.PathUtilsTest;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
@@ -17,6 +16,7 @@ import org.smoothbuild.lang.function.exc.PathIsNotADirException;
 import org.smoothbuild.lang.internal.FileRoImpl;
 import org.smoothbuild.lang.internal.FileRwImpl;
 import org.smoothbuild.lang.type.FileRo;
+import org.smoothbuild.lang.type.PathTest;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class SaveToFunctionTest {
@@ -46,7 +46,7 @@ public class SaveToFunctionTest {
   public void illegalPathsAreReported() throws FunctionException {
     fileParam.set(Mockito.mock(FileRo.class));
 
-    for (String path : PathUtilsTest.listOfInvalidPaths()) {
+    for (String path : PathTest.listOfInvalidPaths()) {
       dirParam.set(path);
       try {
         function.execute();
@@ -84,7 +84,7 @@ public class SaveToFunctionTest {
     fileSystem.createEmptyFile(destinationDirPath + fileRootPath);
 
     dirParam.set(destinationDirPath);
-    fileParam.set(new FileRoImpl(fileSystem, path(WORKING_DIR), path(filePath)));
+    fileParam.set(new FileRoImpl(fileSystem, rootPath(), path(filePath)));
 
     try {
       function.execute();

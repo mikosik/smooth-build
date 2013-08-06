@@ -47,11 +47,11 @@ public class SaveToFunction implements Function {
      */
     Path source = ((FileRoImpl) file.get()).fullPath();
 
-    fileSystem.copy(source.value(), destination.value());
+    fileSystem.copy(source, destination);
   }
 
   private void assertPathCanBeUsedAsDir(Path dirPath) throws PathIsNotADirException {
-    if (fileSystem.pathExists(dirPath.value()) && !fileSystem.isDirectory(dirPath.value())) {
+    if (fileSystem.pathExists(dirPath) && !fileSystem.isDirectory(dirPath)) {
       throw new PathIsNotADirException(dir, dirPath);
     }
   }
