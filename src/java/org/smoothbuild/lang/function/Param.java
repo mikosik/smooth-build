@@ -6,32 +6,32 @@ import org.smoothbuild.lang.type.FilesRo;
 public class Param<T> {
   public static final ParamToNameFunction PARAM_TO_NAME = new ParamToNameFunction();
 
-  private final String typeName;
+  private final Type<T> type;
   private final String name;
   private T value;
   private boolean isSet;
 
   public static Param<String> stringParam(String name) {
-    return new Param<String>("String", name);
+    return new Param<String>(Type.STRING, name);
   }
 
   public static Param<FileRo> fileParam(String name) {
-    return new Param<FileRo>("File", name);
+    return new Param<FileRo>(Type.FILE, name);
   }
 
   public static Param<FilesRo> filesParam(String name) {
-    return new Param<FilesRo>("Files", name);
+    return new Param<FilesRo>(Type.FILES, name);
   }
 
-  protected Param(String typeName, String name) {
-    this.typeName = typeName;
+  protected Param(Type<T> type, String name) {
+    this.type = type;
     this.name = name;
     this.value = null;
     this.isSet = false;
   }
 
-  public String typeName() {
-    return typeName;
+  public Type<T> type() {
+    return type;
   }
 
   public String name() {
@@ -53,7 +53,7 @@ public class Param<T> {
 
   @Override
   public String toString() {
-    return "Param(" + typeName + ": " + name + ")";
+    return "Param(" + type.name() + ": " + name + ")";
   }
 
   private static class ParamToNameFunction implements
