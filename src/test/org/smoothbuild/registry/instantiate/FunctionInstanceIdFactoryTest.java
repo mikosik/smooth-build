@@ -2,7 +2,7 @@ package org.smoothbuild.registry.instantiate;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.lang.type.Path.path;
-import static org.smoothbuild.registry.instantiate.FunctionInstanceIdFactory.BUILD_ROOT;
+import static org.smoothbuild.registry.instantiate.FunctionInstanceId.BUILD_ROOT;
 
 import org.junit.Test;
 
