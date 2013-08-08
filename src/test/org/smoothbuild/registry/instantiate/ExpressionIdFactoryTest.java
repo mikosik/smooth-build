@@ -2,13 +2,13 @@ package org.smoothbuild.registry.instantiate;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.lang.type.Path.path;
-import static org.smoothbuild.registry.instantiate.FunctionInstanceId.BUILD_ROOT;
+import static org.smoothbuild.registry.instantiate.ExpressionId.BUILD_ROOT;
 
 import org.junit.Test;
 
-public class FunctionInstanceIdFactoryTest {
+public class ExpressionIdFactoryTest {
 
-  FunctionInstanceIdFactory idFactory = new FunctionInstanceIdFactory();
+  ExpressionIdFactory idFactory = new ExpressionIdFactory();
 
   @Test
   public void test() {

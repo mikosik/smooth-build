@@ -6,14 +6,14 @@ import org.smoothbuild.lang.type.Path;
 
 import com.google.common.annotations.VisibleForTesting;
 
-public class FunctionInstanceId {
+public class ExpressionId {
   @VisibleForTesting
   static final Path BUILD_ROOT = path(".smooth");
 
   private final String hash;
   private final Path resultDir;
 
-  public FunctionInstanceId(String hash) {
+  public ExpressionId(String hash) {
     this.hash = hash;
     this.resultDir = BUILD_ROOT.append(path(hash));
   }
@@ -24,10 +24,10 @@ public class FunctionInstanceId {
 
   @Override
   public final boolean equals(Object object) {
-    if (!(object instanceof FunctionInstanceId)) {
+    if (!(object instanceof ExpressionId)) {
       return false;
     }
-    FunctionInstanceId that = (FunctionInstanceId) object;
+    ExpressionId that = (ExpressionId) object;
     return this.hash.equals(that.hash);
   }
 
