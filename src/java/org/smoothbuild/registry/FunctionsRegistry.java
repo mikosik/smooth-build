@@ -5,29 +5,29 @@ import java.util.Map;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.registry.exc.FunctionAlreadyRegisteredException;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
-import org.smoothbuild.registry.instantiate.FunctionType;
-import org.smoothbuild.registry.instantiate.FunctionTypeFactory;
+import org.smoothbuild.registry.instantiate.Function;
+import org.smoothbuild.registry.instantiate.FunctionFactory;
 
 import com.google.common.collect.Maps;
 
-public class FunctionTypesRegistry {
-  private final FunctionTypeFactory functionTypeFactory;
-  private final Map<String, FunctionType> map = Maps.newHashMap();
+public class FunctionsRegistry {
+  private final FunctionFactory functionFactory;
+  private final Map<String, Function> map = Maps.newHashMap();
 
-  public FunctionTypesRegistry(FunctionTypeFactory functionTypeFactory) {
-    this.functionTypeFactory = functionTypeFactory;
+  public FunctionsRegistry(FunctionFactory functionFactory) {
+    this.functionFactory = functionFactory;
   }
 
   public void register(Class<? extends FunctionDefinition> klass) throws FunctionImplementationException,
       FunctionAlreadyRegisteredException {
-    FunctionType functionType = functionTypeFactory.create(klass);
-    String name = functionType.name();
+    Function function = functionFactory.create(klass);
+    String name = function.name();
     if (containsType(name)) {
       // TODO add more details to the exception: function definition class,
       // builtin/plugin, plugin jar file
       throw new FunctionAlreadyRegisteredException(name);
     } else {
-      map.put(name, functionType);
+      map.put(name, function);
     }
   }
 
@@ -35,11 +35,11 @@ public class FunctionTypesRegistry {
     return map.containsKey(name);
   }
 
-  public FunctionType getType(String name) {
-    FunctionType functionType = map.get(name);
-    if (functionType == null) {
+  public Function getType(String name) {
+    Function function = map.get(name);
+    if (function == null) {
       throw new IllegalArgumentException("Function '" + name + "' doesn't exist.");
     }
-    return functionType;
+    return function;
   }
 }

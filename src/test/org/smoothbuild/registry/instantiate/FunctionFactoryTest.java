@@ -16,13 +16,13 @@ import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.exc.MissingNameException;
 
-public class FunctionTypeFactoryTest {
+public class FunctionFactoryTest {
   Instantiator instantiator = mock(Instantiator.class);
   Path path = path("abc");
   FunctionDefinition definition = mock(FunctionDefinition.class);
 
   InstantiatorFactory instantiatorFactory = mock(InstantiatorFactory.class);
-  FunctionTypeFactory functionTypeFactory = new FunctionTypeFactory(instantiatorFactory);
+  FunctionFactory functionFactory = new FunctionFactory(instantiatorFactory);
 
   @Test
   public void creatingFunctionType() throws FunctionImplementationException,
@@ -30,8 +30,8 @@ public class FunctionTypeFactoryTest {
     when(instantiatorFactory.create(MyNamedFunction.class)).thenReturn(instantiator);
     when(instantiator.newInstance(path)).thenReturn(definition);
 
-    FunctionType functionType = functionTypeFactory.create(MyNamedFunction.class);
-    FunctionDefinition newDefinition = functionType.newInstance(path);
+    Function function = functionFactory.create(MyNamedFunction.class);
+    FunctionDefinition newDefinition = function.newInstance(path);
 
     assertThat(newDefinition).isEqualTo(definition);
   }
@@ -53,7 +53,7 @@ public class FunctionTypeFactoryTest {
   @Test
   public void missingNameCausesExceptionToBeThrown() throws FunctionImplementationException {
     try {
-      functionTypeFactory.create(MyMissingNameFunction.class);
+      functionFactory.create(MyMissingNameFunction.class);
       Assert.fail("exception should be thrown");
     } catch (MissingNameException e) {
       // expected

@@ -4,11 +4,11 @@ import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.type.Path;
 import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
 
-public class FunctionType {
+public class Function {
   private final String name;
   private final Instantiator instantiator;
 
-  public FunctionType(String name, Instantiator instantiator) {
+  public Function(String name, Instantiator instantiator) {
     this.name = name;
     this.instantiator = instantiator;
   }
