@@ -2,7 +2,7 @@ package org.smoothbuild.registry;
 
 import java.util.Map;
 
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.registry.exc.FunctionAlreadyRegisteredException;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.instantiate.FunctionType;
@@ -18,7 +18,7 @@ public class FunctionTypesRegistry {
     this.functionTypeFactory = functionTypeFactory;
   }
 
-  public void register(Class<? extends Function> klass) throws FunctionImplementationException,
+  public void register(Class<? extends FunctionDefinition> klass) throws FunctionImplementationException,
       FunctionAlreadyRegisteredException {
     FunctionType functionType = functionTypeFactory.create(klass);
     String name = functionType.name();

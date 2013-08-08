@@ -1,10 +1,10 @@
 package org.smoothbuild.registry.exc;
 
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 
 @SuppressWarnings("serial")
 public class TooManyConstructorParamsException extends FunctionImplementationException {
-  public TooManyConstructorParamsException(Class<? extends Function> klass) {
+  public TooManyConstructorParamsException(Class<? extends FunctionDefinition> klass) {
     super(klass, "The only public constructor should have zero or one parameter.");
   }
 }

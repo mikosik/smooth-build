@@ -9,7 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.Params;
@@ -21,7 +21,7 @@ import org.smoothbuild.lang.type.FilesRo;
 import org.smoothbuild.lang.type.FilesRw;
 
 @FunctionName("zip")
-public class ZipFunction implements Function {
+public class ZipFunction implements FunctionDefinition {
   // TODO add missing parameters: level, comment, method
 
   // TODO investigate zip64 format.

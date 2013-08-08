@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.Params;
@@ -12,7 +12,7 @@ import org.smoothbuild.lang.type.FileRo;
 import org.smoothbuild.lang.type.Path;
 
 @FunctionName("saveTo")
-public class SaveToFunction implements Function {
+public class SaveToFunction implements FunctionDefinition {
   private final FileSystem fileSystem;
 
   private final Param<FileRo> file = Param.fileParam("file");

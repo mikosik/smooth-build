@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.type.Path.path;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
@@ -19,7 +19,7 @@ import org.smoothbuild.registry.exc.MissingNameException;
 public class FunctionTypeFactoryTest {
   Instantiator instantiator = mock(Instantiator.class);
   Path path = path("abc");
-  Function function = mock(Function.class);
+  FunctionDefinition definition = mock(FunctionDefinition.class);
 
   InstantiatorFactory instantiatorFactory = mock(InstantiatorFactory.class);
   FunctionTypeFactory functionTypeFactory = new FunctionTypeFactory(instantiatorFactory);
@@ -28,16 +28,16 @@ public class FunctionTypeFactoryTest {
   public void creatingFunctionType() throws FunctionImplementationException,
       CreatingInstanceFailedException {
     when(instantiatorFactory.create(MyNamedFunction.class)).thenReturn(instantiator);
-    when(instantiator.newInstance(path)).thenReturn(function);
+    when(instantiator.newInstance(path)).thenReturn(definition);
 
     FunctionType functionType = functionTypeFactory.create(MyNamedFunction.class);
-    Function instance = functionType.newInstance(path);
+    FunctionDefinition newDefinition = functionType.newInstance(path);
 
-    assertThat(instance).isEqualTo(function);
+    assertThat(newDefinition).isEqualTo(definition);
   }
 
   @FunctionName("myFunction")
-  public static class MyNamedFunction implements Function {
+  public static class MyNamedFunction implements FunctionDefinition {
 
     @Override
     public Params params() {
@@ -60,7 +60,7 @@ public class FunctionTypeFactoryTest {
     }
   }
 
-  public static class MyMissingNameFunction implements Function {
+  public static class MyMissingNameFunction implements FunctionDefinition {
 
     @Override
     public Params params() {

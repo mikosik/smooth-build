@@ -1,6 +1,6 @@
 package org.smoothbuild.registry.instantiate;
 
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.type.Path;
 import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
 
@@ -17,7 +17,7 @@ public class FunctionType {
     return name;
   }
 
-  public Function newInstance(Path resultDir) throws CreatingInstanceFailedException {
+  public FunctionDefinition newInstance(Path resultDir) throws CreatingInstanceFailedException {
     return instantiator.newInstance(resultDir);
   }
 }

@@ -1,17 +1,17 @@
 package org.smoothbuild.registry.exc;
 
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 
 @SuppressWarnings("serial")
 public class CreatingInstanceFailedException extends Exception {
-  private final Class<? extends Function> klass;
+  private final Class<? extends FunctionDefinition> klass;
 
-  public CreatingInstanceFailedException(Class<? extends Function> klass, Throwable e) {
+  public CreatingInstanceFailedException(Class<? extends FunctionDefinition> klass, Throwable e) {
     super(e);
     this.klass = klass;
   }
 
-  public Class<? extends Function> classThatFailed() {
+  public Class<? extends FunctionDefinition> classThatFailed() {
     return klass;
   }
 }
