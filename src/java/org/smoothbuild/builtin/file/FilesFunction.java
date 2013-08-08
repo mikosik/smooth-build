@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.Params;
@@ -18,7 +18,7 @@ import org.smoothbuild.lang.type.Path;
 // tool
 
 @FunctionName("files")
-public class FilesFunction implements Function {
+public class FilesFunction implements FunctionDefinition {
   private final Param<String> dir = Param.stringParam("dir");
   private final Params params = new Params(dir);
 

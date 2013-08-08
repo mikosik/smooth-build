@@ -9,7 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.Params;
@@ -21,7 +21,7 @@ import org.smoothbuild.lang.type.FilesRo;
 import org.smoothbuild.lang.type.FilesRw;
 
 @FunctionName("unzip")
-public class UnzipFunction implements Function {
+public class UnzipFunction implements FunctionDefinition {
   private final Param<FileRo> file = fileParam("file");
   private final Params params = new Params(file);
 

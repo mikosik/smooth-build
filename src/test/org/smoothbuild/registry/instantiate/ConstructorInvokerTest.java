@@ -6,7 +6,7 @@ import java.lang.reflect.Constructor;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
@@ -18,7 +18,7 @@ public class ConstructorInvokerTest {
   public void invoke() throws NoSuchMethodException, SecurityException,
       CreatingInstanceFailedException {
     String string = "abc";
-    Function result = constructorInvoker.invoke(getConstructor(), string);
+    FunctionDefinition result = constructorInvoker.invoke(getConstructor(), string);
     assertThat(((MyFunction) result).value).isEqualTo(string);
   }
 
@@ -37,7 +37,7 @@ public class ConstructorInvokerTest {
     return MyFunction.class.getConstructor(String.class);
   }
 
-  public static class MyFunction implements Function {
+  public static class MyFunction implements FunctionDefinition {
     public final String value;
 
     public MyFunction(String value) {

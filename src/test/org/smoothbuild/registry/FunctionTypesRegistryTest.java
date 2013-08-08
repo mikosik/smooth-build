@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.registry.exc.FunctionAlreadyRegisteredException;
@@ -66,7 +66,7 @@ public class FunctionTypesRegistryTest {
     }
   }
 
-  public static class MyFunction implements Function {
+  public static class MyFunction implements FunctionDefinition {
     @Override
     public Params params() {
       return null;
@@ -78,7 +78,7 @@ public class FunctionTypesRegistryTest {
     }
   }
 
-  public static class MyFunction2 implements Function {
+  public static class MyFunction2 implements FunctionDefinition {
     @Override
     public Params params() {
       return null;

@@ -3,11 +3,11 @@ package org.smoothbuild.registry.instantiate;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
 
 public class ConstructorInvoker {
-  public Function invoke(Constructor<? extends Function> constructor,
+  public FunctionDefinition invoke(Constructor<? extends FunctionDefinition> constructor,
       Object... parameters) throws CreatingInstanceFailedException {
     try {
       return constructor.newInstance(parameters);

@@ -3,7 +3,7 @@ package org.smoothbuild.registry.instantiate;
 import java.lang.reflect.Constructor;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.type.FilesRw;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.exc.IllegalConstructorParamException;
@@ -18,9 +18,9 @@ public class InstantiatorFactory {
     this.factoryRaw = factoryRaw;
   }
 
-  public Instantiator create(Class<? extends Function> klass)
+  public Instantiator create(Class<? extends FunctionDefinition> klass)
       throws FunctionImplementationException {
-    final Constructor<? extends Function> constructor = getConstructor(klass);
+    final Constructor<? extends FunctionDefinition> constructor = getConstructor(klass);
     Class<?>[] paramTypes = constructor.getParameterTypes();
     if (1 < paramTypes.length) {
       throw new TooManyConstructorParamsException(klass);
@@ -40,7 +40,7 @@ public class InstantiatorFactory {
     throw new IllegalConstructorParamException(klass, paramType);
   }
 
-  public static Constructor<? extends Function> getConstructor(Class<? extends Function> klass)
+  public static Constructor<? extends FunctionDefinition> getConstructor(Class<? extends FunctionDefinition> klass)
       throws MissingConstructorException, TooManyConstructorsException {
     Constructor<?>[] constructors = klass.getConstructors();
     if (constructors.length == 0) {
@@ -51,7 +51,7 @@ public class InstantiatorFactory {
     }
 
     @SuppressWarnings("unchecked")
-    Constructor<? extends Function> result = (Constructor<? extends Function>) constructors[0];
+    Constructor<? extends FunctionDefinition> result = (Constructor<? extends FunctionDefinition>) constructors[0];
     return result;
   }
 }
