@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.type.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.FunctionDefinition;
+import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.lang.type.Path;
 
 public class FunctionTest {
@@ -14,11 +15,18 @@ public class FunctionTest {
 
   String name = "functionName";
   Instantiator instantiator = mock(Instantiator.class);
-  Function function = new Function(name, instantiator);
+  Function function = new Function(name, Type.STRING, instantiator);
 
   @Test
   public void name() {
     assertThat(function.name()).isEqualTo(name);
+  }
+
+  @Test
+  public void type() {
+    @SuppressWarnings("unchecked")
+    Type<String> actual = (Type<String>) function.type();
+    assertThat(actual).isEqualTo(Type.STRING);
   }
 
   @Test

@@ -2,8 +2,11 @@ package org.smoothbuild.registry.instantiate;
 
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.FunctionName;
+import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
+import org.smoothbuild.registry.exc.IllegalReturnTypeException;
 import org.smoothbuild.registry.exc.MissingNameException;
+import org.smoothbuild.registry.exc.StrangeExecuteMethodException;
 
 public class FunctionFactory {
   private final InstantiatorFactory instantiatorFactory;
@@ -15,9 +18,10 @@ public class FunctionFactory {
   public Function create(Class<? extends FunctionDefinition> klass)
       throws FunctionImplementationException {
     String name = getFunctionName(klass);
+    Type<?> type = getReturnType(klass);
     Instantiator instantiator = instantiatorFactory.create(klass);
 
-    return new Function(name, instantiator);
+    return new Function(name, type, instantiator);
   }
 
   private static String getFunctionName(Class<? extends FunctionDefinition> klass)
@@ -27,5 +31,20 @@ public class FunctionFactory {
       throw new MissingNameException(klass);
     }
     return annotation.value();
+  }
+
+  private static Type<?> getReturnType(Class<? extends FunctionDefinition> klass)
+      throws IllegalReturnTypeException, StrangeExecuteMethodException {
+    Class<?> javaType;
+    try {
+      javaType = klass.getMethod("execute").getReturnType();
+    } catch (NoSuchMethodException | SecurityException e) {
+      throw new StrangeExecuteMethodException(klass, e);
+    }
+    Type<?> type = Type.toType(javaType);
+    if (type == null) {
+      throw new IllegalReturnTypeException(klass, javaType);
+    }
+    return type;
   }
 }

@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Params;
+import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.registry.exc.FunctionAlreadyRegisteredException;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
@@ -36,26 +37,29 @@ public class FunctionsRegistryTest {
   @Test
   public void containsAddedType() throws FunctionImplementationException,
       FunctionAlreadyRegisteredException {
-    when(functionFactory.create(MyFunction.class)).thenReturn(new Function("nameA", null));
+    String name = "nameA";
+    when(functionFactory.create(MyFunction.class)).thenReturn(function(name));
     functionsRegistry.register(MyFunction.class);
-    assertThat(functionsRegistry.containsType("nameA")).isTrue();
+    assertThat(functionsRegistry.containsType(name)).isTrue();
   }
 
   @Test
   public void returnsAddedType() throws FunctionImplementationException,
       FunctionAlreadyRegisteredException {
-    Function function = new Function("nameA", null);
+    String name = "nameA";
+    Function function = function(name);
     when(functionFactory.create(MyFunction.class)).thenReturn(function);
 
     functionsRegistry.register(MyFunction.class);
 
-    assertThat(functionsRegistry.getType("nameA")).isEqualTo(function);
+    assertThat(functionsRegistry.getType(name)).isEqualTo(function);
   }
 
   @Test
   public void cannotRegisterTwiceUnderTheSameName() throws Exception {
-    when(functionFactory.create(MyFunction.class)).thenReturn(new Function("nameA", null));
-    when(functionFactory.create(MyFunction2.class)).thenReturn(new Function("nameA", null));
+    String name = "nameA";
+    when(functionFactory.create(MyFunction.class)).thenReturn(function(name));
+    when(functionFactory.create(MyFunction2.class)).thenReturn(function(name));
 
     functionsRegistry.register(MyFunction.class);
     try {
@@ -88,5 +92,9 @@ public class FunctionsRegistryTest {
     public Object execute() throws FunctionException {
       return null;
     }
+  }
+
+  private static Function function(String name) {
+    return new Function(name, Type.STRING, null);
   }
 }
