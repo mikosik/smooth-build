@@ -11,7 +11,7 @@ import org.smoothbuild.lang.internal.FileRoImpl;
 import org.smoothbuild.lang.type.FileRo;
 import org.smoothbuild.lang.type.Path;
 
-@FunctionName(name = "saveTo")
+@FunctionName("saveTo")
 public class SaveToFunction implements Function {
   private final FileSystem fileSystem;
 

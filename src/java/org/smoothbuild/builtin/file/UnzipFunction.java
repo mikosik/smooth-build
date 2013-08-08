@@ -20,7 +20,7 @@ import org.smoothbuild.lang.type.FileRw;
 import org.smoothbuild.lang.type.FilesRo;
 import org.smoothbuild.lang.type.FilesRw;
 
-@FunctionName(name = "unzip")
+@FunctionName("unzip")
 public class UnzipFunction implements Function {
   private final Param<FileRo> file = fileParam("file");
   private final Params params = new Params(file);

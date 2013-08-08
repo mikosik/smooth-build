@@ -20,7 +20,7 @@ import org.smoothbuild.lang.type.FileRw;
 import org.smoothbuild.lang.type.FilesRo;
 import org.smoothbuild.lang.type.FilesRw;
 
-@FunctionName(name = "zip")
+@FunctionName("zip")
 public class ZipFunction implements Function {
   // TODO add missing parameters: level, comment, method
 

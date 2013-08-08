@@ -36,7 +36,7 @@ public class FunctionTypeFactoryTest {
     assertThat(instance).isEqualTo(function);
   }
 
-  @FunctionName(name = "myFunction")
+  @FunctionName("myFunction")
   public static class MyNamedFunction implements Function {
 
     @Override

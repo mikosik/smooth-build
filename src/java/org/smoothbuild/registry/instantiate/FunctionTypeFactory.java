@@ -26,6 +26,6 @@ public class FunctionTypeFactory {
     if (annotation == null) {
       throw new MissingNameException(klass);
     }
-    return annotation.name();
+    return annotation.value();
   }
 }

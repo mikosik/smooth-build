@@ -17,7 +17,7 @@ import org.smoothbuild.lang.type.Path;
 // TODO forbid dir that points to temporary files created by smooth-build
 // tool
 
-@FunctionName(name = "files")
+@FunctionName("files")
 public class FilesFunction implements Function {
   private final Param<String> dir = Param.stringParam("dir");
   private final Params params = new Params(dir);
