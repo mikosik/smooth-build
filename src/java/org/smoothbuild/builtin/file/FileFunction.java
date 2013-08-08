@@ -14,7 +14,7 @@ import org.smoothbuild.lang.internal.FileRoImpl;
 import org.smoothbuild.lang.type.FileRo;
 import org.smoothbuild.lang.type.Path;
 
-@FunctionName(name = "file")
+@FunctionName("file")
 public class FileFunction implements Function {
   private final Param<String> path = Param.stringParam("path");
   private final Params params = new Params(path);
