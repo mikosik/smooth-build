@@ -7,8 +7,8 @@ import org.junit.Test;
 public class ParamTest {
 
   @Test
-  public void typeName() throws Exception {
-    assertThat(param("type", "name").typeName()).isEqualTo("type");
+  public void type() throws Exception {
+    assertThat(param("name").type()).isEqualTo(Type.STRING);
   }
 
   @Test
@@ -18,14 +18,14 @@ public class ParamTest {
 
   @Test
   public void isNotSetInitially() {
-    Param<Integer> param = param("name");
+    Param<String> param = param("name");
     assertThat(param.isSet()).isFalse();
   }
 
   @Test
   public void isSetAfterSetting() {
-    Param<Integer> param = param("name");
-    param.set(33);
+    Param<String> param = param("name");
+    param.set("abc");
     assertThat(param.isSet()).isTrue();
   }
 
@@ -36,14 +36,10 @@ public class ParamTest {
 
   @Test
   public void testToString() throws Exception {
-    assertThat(param("type", "name").toString()).isEqualTo("Param(type: name)");
+    assertThat(param("name").toString()).isEqualTo("Param(String: name)");
   }
 
-  public static Param<Integer> param(String name) {
-    return param("typeName", name);
-  }
-
-  public static Param<Integer> param(String typeName, String name) {
-    return new Param<Integer>(typeName, name);
+  public static Param<String> param(String name) {
+    return new Param<String>(Type.STRING, name);
   }
 }
