@@ -9,16 +9,16 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.type.Path;
 
-public class FunctionTypeTest {
+public class FunctionTest {
   FunctionDefinition definition = mock(FunctionDefinition.class);
 
   String name = "functionName";
   Instantiator instantiator = mock(Instantiator.class);
-  FunctionType functionType = new FunctionType(name, instantiator);
+  Function function = new Function(name, instantiator);
 
   @Test
   public void name() {
-    assertThat(functionType.name()).isEqualTo(name);
+    assertThat(function.name()).isEqualTo(name);
   }
 
   @Test
@@ -26,6 +26,6 @@ public class FunctionTypeTest {
     Path resultDir = path("abc");
     when(instantiator.newInstance(resultDir)).thenReturn(definition);
 
-    assertThat(functionType.newInstance(resultDir)).isEqualTo(definition);
+    assertThat(function.newInstance(resultDir)).isEqualTo(definition);
   }
 }

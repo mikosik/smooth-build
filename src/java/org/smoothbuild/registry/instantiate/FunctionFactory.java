@@ -5,19 +5,19 @@ import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.exc.MissingNameException;
 
-public class FunctionTypeFactory {
+public class FunctionFactory {
   private final InstantiatorFactory instantiatorFactory;
 
-  public FunctionTypeFactory(InstantiatorFactory instantiatorFactory) {
+  public FunctionFactory(InstantiatorFactory instantiatorFactory) {
     this.instantiatorFactory = instantiatorFactory;
   }
 
-  public FunctionType create(Class<? extends FunctionDefinition> klass)
+  public Function create(Class<? extends FunctionDefinition> klass)
       throws FunctionImplementationException {
     String name = getFunctionName(klass);
     Instantiator instantiator = instantiatorFactory.create(klass);
 
-    return new FunctionType(name, instantiator);
+    return new Function(name, instantiator);
   }
 
   private static String getFunctionName(Class<? extends FunctionDefinition> klass)
