@@ -15,21 +15,19 @@ import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
-import org.smoothbuild.lang.type.FileRo;
-import org.smoothbuild.lang.type.FileRw;
-import org.smoothbuild.lang.type.FilesRo;
-import org.smoothbuild.lang.type.FilesRw;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Files;
 
 @FunctionName("unzip")
 public class UnzipFunction implements FunctionDefinition {
-  private final Param<FileRo> file = fileParam("file");
+  private final Param<File> file = fileParam("file");
   private final Params params = new Params(file);
 
-  private final FilesRw filesRw;
+  private final Files files;
   private final byte[] buffer = new byte[1024];
 
-  public UnzipFunction(FilesRw result) {
-    this.filesRw = result;
+  public UnzipFunction(Files result) {
+    this.files = result;
   }
 
   @Override
@@ -38,7 +36,7 @@ public class UnzipFunction implements FunctionDefinition {
   }
 
   @Override
-  public FilesRo execute() throws FunctionException {
+  public Files execute() throws FunctionException {
     if (!file.isSet()) {
       throw new MissingArgException(file);
     }
@@ -52,11 +50,11 @@ public class UnzipFunction implements FunctionDefinition {
       throw new FileSystemException(e);
     }
 
-    return filesRw;
+    return files;
   }
 
   private void unzipEntry(ZipInputStream zipInputStream, ZipEntry entry) throws IOException {
-    FileRw file = filesRw.createFileRw(path(entry.getName()));
+    File file = files.createFile(path(entry.getName()));
     try (OutputStream outputStream = file.createOutputStream()) {
       int len = 0;
       while ((len = zipInputStream.read(buffer)) > 0) {

@@ -1,24 +1,21 @@
 package org.smoothbuild.lang.internal;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.type.FileRo;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Path;
 
-public class FileRoImpl implements FileRo {
+public class FileImpl implements File {
   private final FileSystem fileSystem;
   private final Path path;
   private final Path fullPath;
 
-  public FileRoImpl(FileSystem fileSystem, Path rootDir, Path path) {
+  public FileImpl(FileSystem fileSystem, Path rootDir, Path path) {
     this.fileSystem = fileSystem;
     this.path = path;
     this.fullPath = rootDir.append(path);
-  }
-
-  public FileSystem fileSystem() {
-    return fileSystem;
   }
 
   @Override
@@ -33,5 +30,10 @@ public class FileRoImpl implements FileRo {
   @Override
   public InputStream createInputStream() {
     return fileSystem.createInputStream(fullPath);
+  }
+
+  @Override
+  public OutputStream createOutputStream() {
+    return fileSystem.createOutputStream(fullPath);
   }
 }

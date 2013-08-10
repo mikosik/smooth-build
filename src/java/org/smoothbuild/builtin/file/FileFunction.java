@@ -10,8 +10,8 @@ import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.NoSuchPathException;
 import org.smoothbuild.lang.function.exc.PathIsNotAFileException;
-import org.smoothbuild.lang.internal.FileRoImpl;
-import org.smoothbuild.lang.type.FileRo;
+import org.smoothbuild.lang.internal.FileImpl;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Path;
 
 @FunctionName("file")
@@ -31,12 +31,12 @@ public class FileFunction implements FunctionDefinition {
   }
 
   @Override
-  public FileRo execute() throws FunctionException {
+  public File execute() throws FunctionException {
     Path filePath = validatedPath(path);
-    return createFileRo(filePath);
+    return createFile(filePath);
   }
 
-  private FileRo createFileRo(Path filePath) throws FunctionException {
+  private File createFile(Path filePath) throws FunctionException {
     if (!fileSystem.pathExists(filePath)) {
       throw new NoSuchPathException(path, filePath);
     }
@@ -44,7 +44,7 @@ public class FileFunction implements FunctionDefinition {
     if (fileSystem.isDirectory(filePath)) {
       throw new PathIsNotAFileException(path, filePath);
     } else {
-      return new FileRoImpl(fileSystem, Path.rootPath(), filePath);
+      return new FileImpl(fileSystem, Path.rootPath(), filePath);
     }
   }
 }

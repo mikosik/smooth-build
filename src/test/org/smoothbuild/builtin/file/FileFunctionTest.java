@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.internal.FileRoImplTest.assertContentHasFilePath;
+import static org.smoothbuild.lang.internal.FileImplTest.assertContentHasFilePath;
 import static org.smoothbuild.lang.type.Path.path;
 
 import org.junit.Assert;
@@ -13,7 +13,7 @@ import org.smoothbuild.lang.function.exc.MissingArgException;
 import org.smoothbuild.lang.function.exc.NoSuchPathException;
 import org.smoothbuild.lang.function.exc.ParamException;
 import org.smoothbuild.lang.function.exc.PathIsNotAFileException;
-import org.smoothbuild.lang.type.FileRo;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.PathTest;
 import org.smoothbuild.testing.TestingFileSystem;
 
@@ -87,10 +87,10 @@ public class FileFunctionTest {
     fileSystem.createFile(".", filePath);
     pathParam.set(filePath);
 
-    FileRo fileRo = fileFunction.execute();
+    File file = fileFunction.execute();
 
-    assertThat(fileRo.path()).isEqualTo(path(filePath));
-    assertContentHasFilePath(fileRo);
+    assertThat(file.path()).isEqualTo(path(filePath));
+    assertContentHasFilePath(file);
   }
 
   private void assertExceptionContainsDirParam(ParamException e) {

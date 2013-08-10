@@ -11,31 +11,31 @@ import java.util.zip.ZipInputStream;
 import org.junit.Test;
 import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.lang.type.FileRo;
-import org.smoothbuild.lang.type.FilesRo;
-import org.smoothbuild.testing.TestingFileRw;
-import org.smoothbuild.testing.TestingFilesRw;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Files;
+import org.smoothbuild.testing.TestingFile;
+import org.smoothbuild.testing.TestingFiles;
 
 public class ZipFunctionTest {
   // TODO pass as argument object that throws exception when second file is
   // created. Or maybe even method that instantiate function given
   // ZipFunction.class
 
-  ZipFunction zipFunction = new ZipFunction(new TestingFilesRw());
+  ZipFunction zipFunction = new ZipFunction(new TestingFiles());
   @SuppressWarnings("unchecked")
-  Param<FilesRo> filesParam = (Param<FilesRo>) zipFunction.params().param("files");
+  Param<Files> filesParam = (Param<Files>) zipFunction.params().param("files");
 
   @Test
   public void testZipping() throws IOException, FunctionException {
-    TestingFilesRw inputFiles = new TestingFilesRw();
-    inputFiles.createFileRw(path("fileA.txt")).createTestContent();
-    inputFiles.createFileRw(path("fileB.txt")).createTestContent();
+    TestingFiles inputFiles = new TestingFiles();
+    inputFiles.createFile(path("fileA.txt")).createTestContent();
+    inputFiles.createFile(path("fileB.txt")).createTestContent();
 
     filesParam.set(inputFiles);
 
-    FileRo result = zipFunction.execute();
+    File result = zipFunction.execute();
 
-    TestingFilesRw unpackedFiles = new TestingFilesRw();
+    TestingFiles unpackedFiles = new TestingFiles();
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;
@@ -43,7 +43,7 @@ public class ZipFunctionTest {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         fileCount++;
-        TestingFileRw file = unpackedFiles.createFileRw(path(entry.getName()));
+        TestingFile file = unpackedFiles.createFile(path(entry.getName()));
         try (OutputStream outputStream = file.createOutputStream()) {
           int len = 0;
           while ((len = zipInputStream.read(buffer)) > 0) {

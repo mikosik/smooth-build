@@ -12,7 +12,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.lang.type.FilesRw;
+import org.smoothbuild.lang.type.Files;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.exc.IllegalConstructorParamException;
 import org.smoothbuild.registry.exc.TooManyConstructorParamsException;
@@ -28,7 +28,7 @@ public class InstantiatorFactoryTest {
     Class<? extends FunctionDefinition> klass = MyFileSystemFunction.class;
     Constructor<? extends FunctionDefinition> constructor = getConstructorOf(klass);
 
-    when(factoryRaw.fileSystemInstantiator(constructor)).thenReturn(instantiator);
+    when(factoryRaw.fileSystemPassingInstantiator(constructor)).thenReturn(instantiator);
     assertThat(instantiatorFactory.create(klass)).isSameAs(instantiator);
   }
 
@@ -47,16 +47,16 @@ public class InstantiatorFactoryTest {
   }
 
   @Test
-  public void filesRwParam() throws FunctionImplementationException {
-    Class<? extends FunctionDefinition> klass = MyFilesRwFunction.class;
+  public void filesParam() throws FunctionImplementationException {
+    Class<? extends FunctionDefinition> klass = MyFilesFunction.class;
     Constructor<? extends FunctionDefinition> constructor = getConstructorOf(klass);
 
-    when(factoryRaw.filesRwInstantiator(constructor)).thenReturn(instantiator);
+    when(factoryRaw.filesPassingInstantiator(constructor)).thenReturn(instantiator);
     assertThat(instantiatorFactory.create(klass)).isSameAs(instantiator);
   }
 
-  public static class MyFilesRwFunction implements FunctionDefinition {
-    public MyFilesRwFunction(FilesRw filesRw) {}
+  public static class MyFilesFunction implements FunctionDefinition {
+    public MyFilesFunction(Files files) {}
 
     @Override
     public Params params() {
@@ -74,7 +74,7 @@ public class InstantiatorFactoryTest {
     Class<? extends FunctionDefinition> klass = MyNoArgFunction.class;
     Constructor<? extends FunctionDefinition> constructor = getConstructorOf(klass);
 
-    when(factoryRaw.noArg(constructor)).thenReturn(instantiator);
+    when(factoryRaw.noArgInstantiator(constructor)).thenReturn(instantiator);
     assertThat(instantiatorFactory.create(klass)).isSameAs(instantiator);
   }
 
@@ -97,7 +97,7 @@ public class InstantiatorFactoryTest {
     Class<? extends FunctionDefinition> klass = MyDefaultConstructorFunction.class;
     Constructor<? extends FunctionDefinition> constructor = getConstructorOf(klass);
 
-    when(factoryRaw.noArg(constructor)).thenReturn(instantiator);
+    when(factoryRaw.noArgInstantiator(constructor)).thenReturn(instantiator);
     assertThat(instantiatorFactory.create(klass)).isSameAs(instantiator);
   }
 
@@ -148,7 +148,7 @@ public class InstantiatorFactoryTest {
   }
 
   public static class MyTooManyConstructorsFunction implements FunctionDefinition {
-    public MyTooManyConstructorsFunction(FilesRw filesRw) {}
+    public MyTooManyConstructorsFunction(Files files) {}
 
     public MyTooManyConstructorsFunction(FileSystem fileSystem) {}
 
@@ -174,7 +174,7 @@ public class InstantiatorFactoryTest {
   }
 
   public static class MyTooManyParamsInConstructorFunction implements FunctionDefinition {
-    public MyTooManyParamsInConstructorFunction(FilesRw a, FilesRw b) {}
+    public MyTooManyParamsInConstructorFunction(Files a, Files b) {}
 
     @Override
     public Params params() {
@@ -188,7 +188,8 @@ public class InstantiatorFactoryTest {
   }
 
   @SuppressWarnings("unchecked")
-  private static Constructor<? extends FunctionDefinition> getConstructorOf(Class<? extends FunctionDefinition> klass) {
+  private static Constructor<? extends FunctionDefinition> getConstructorOf(
+      Class<? extends FunctionDefinition> klass) {
     return (Constructor<? extends FunctionDefinition>) klass.getConstructors()[0];
   }
 }

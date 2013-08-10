@@ -4,23 +4,23 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.type.FileRo;
-import org.smoothbuild.lang.type.FilesRo;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Files;
 
 public class TypeTest {
 
   @Test
   public void javaType() {
     assertThat(Type.STRING.javaType()).isEqualTo(String.class);
-    assertThat(Type.FILE.javaType()).isEqualTo(FileRo.class);
-    assertThat(Type.FILES.javaType()).isEqualTo(FilesRo.class);
+    assertThat(Type.FILE.javaType()).isEqualTo(File.class);
+    assertThat(Type.FILES.javaType()).isEqualTo(Files.class);
   }
 
   @Test
   public void toType() {
     assertThat(Type.toType(String.class)).isEqualTo(Type.STRING);
-    assertThat(Type.toType(FileRo.class)).isEqualTo(Type.FILE);
-    assertThat(Type.toType(FilesRo.class)).isEqualTo(Type.FILES);
+    assertThat(Type.toType(File.class)).isEqualTo(Type.FILE);
+    assertThat(Type.toType(Files.class)).isEqualTo(Type.FILES);
   }
 
   @Test

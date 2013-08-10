@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function;
 
-import org.smoothbuild.lang.type.FileRo;
-import org.smoothbuild.lang.type.FilesRo;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Files;
 
 public class Param<T> {
   public static final ParamToNameFunction PARAM_TO_NAME = new ParamToNameFunction();
@@ -15,12 +15,12 @@ public class Param<T> {
     return new Param<String>(Type.STRING, name);
   }
 
-  public static Param<FileRo> fileParam(String name) {
-    return new Param<FileRo>(Type.FILE, name);
+  public static Param<File> fileParam(String name) {
+    return new Param<File>(Type.FILE, name);
   }
 
-  public static Param<FilesRo> filesParam(String name) {
-    return new Param<FilesRo>(Type.FILES, name);
+  public static Param<Files> filesParam(String name) {
+    return new Param<Files>(Type.FILES, name);
   }
 
   protected Param(Type<T> type, String name) {
