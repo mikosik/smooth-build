@@ -23,6 +23,7 @@ public class FileImpl implements File {
     return path;
   }
 
+  @Override
   public Path fullPath() {
     return fullPath;
   }

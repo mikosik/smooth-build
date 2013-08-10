@@ -7,7 +7,6 @@ import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.PathIsNotADirException;
-import org.smoothbuild.lang.internal.FileImpl;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Path;
 
@@ -40,12 +39,7 @@ public class SaveToFunction implements FunctionDefinition {
     Path destination = dirPath.append(file.get().path());
     assertPathCanBeUsedAsDir(destination.parent());
 
-    /*
-     * This cast wouldn't be needed if File had fullPath() method. We do not
-     * want to expose it as it would mislead developers who use File interface
-     * for implementing plugin functions.
-     */
-    Path source = ((FileImpl) file.get()).fullPath();
+    Path source = file.get().fullPath();
 
     fileSystem.copy(source, destination);
   }
