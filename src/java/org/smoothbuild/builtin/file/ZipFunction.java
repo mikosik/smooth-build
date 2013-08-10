@@ -15,10 +15,8 @@ import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
-import org.smoothbuild.lang.type.FileRo;
-import org.smoothbuild.lang.type.FileRw;
-import org.smoothbuild.lang.type.FilesRo;
-import org.smoothbuild.lang.type.FilesRw;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Files;
 
 @FunctionName("zip")
 public class ZipFunction implements FunctionDefinition {
@@ -35,14 +33,14 @@ public class ZipFunction implements FunctionDefinition {
   // http://commons.apache.org/proper/commons-compress/zip.html
   // which provides setUseZip64 method that allows specifying zip64 behaviour.
 
-  private final Param<FilesRo> files = filesParam("files");
+  private final Param<Files> files = filesParam("files");
   private final Params params = new Params(files);
 
-  private final FilesRw filesRw;
+  private final Files result;
   private final byte[] buffer = new byte[1024];
 
-  public ZipFunction(FilesRw result) {
-    this.filesRw = result;
+  public ZipFunction(Files result) {
+    this.result = result;
   }
 
   @Override
@@ -51,27 +49,27 @@ public class ZipFunction implements FunctionDefinition {
   }
 
   @Override
-  public FileRo execute() throws FunctionException {
+  public File execute() throws FunctionException {
     if (!files.isSet()) {
       throw new MissingArgException(files);
     }
-    FileRw result = filesRw.createFileRw(path("output.zip"));
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(result.createOutputStream());) {
-      for (FileRo fileRo : files.get().asIterable()) {
-        addEntry(zipOutputStream, fileRo);
+    File output = result.createFile(path("output.zip"));
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
+      for (File file : files.get().asIterable()) {
+        addEntry(zipOutputStream, file);
       }
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
 
-    return result;
+    return output;
   }
 
-  private void addEntry(ZipOutputStream zipOutputStream, FileRo fileRo) throws IOException {
-    ZipEntry entry = new ZipEntry(fileRo.path().value());
+  private void addEntry(ZipOutputStream zipOutputStream, File file) throws IOException {
+    ZipEntry entry = new ZipEntry(file.path().value());
     zipOutputStream.putNextEntry(entry);
 
-    try (InputStream inputStream = fileRo.createInputStream();) {
+    try (InputStream inputStream = file.createInputStream();) {
       int readCount = inputStream.read(buffer);
       while (readCount > 0) {
         zipOutputStream.write(buffer, 0, readCount);

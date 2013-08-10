@@ -1,29 +1,30 @@
 package org.smoothbuild.lang.internal;
 
 import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
 
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.FileRo;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.collect.ImmutableList;
 
-public class FilesRoImplTest {
+public class FilesImplTest {
   private static final String ROOT_DIR = "root/dir";
 
   TestingFileSystem fileSystem = new TestingFileSystem();
   Path root = Path.path(ROOT_DIR);;
 
-  FilesRoImpl filesRoImpl = new FilesRoImpl(fileSystem, root);
+  FilesImpl filesImpl = new FilesImpl(fileSystem, root);
 
   @Test
-  public void fileRo() throws Exception {
+  public void file() throws Exception {
     fileSystem.createFile(ROOT_DIR, "abc.txt");
-    FileRo fileRo = filesRoImpl.fileRo(path("abc.txt"));
-    FileRoImplTest.assertContentHasFilePath(fileRo);
+    File file = filesImpl.file(path("abc.txt"));
+    FileImplTest.assertContentHasFilePath(file);
   }
 
   @Test
@@ -41,8 +42,20 @@ public class FilesRoImplTest {
       fileSystem.createFile(ROOT_DIR, name);
     }
 
-    for (FileRo file : filesRoImpl.asIterable()) {
-      FileRoImplTest.assertContentHasFilePath(file);
+    for (File file : filesImpl.asIterable()) {
+      FileImplTest.assertContentHasFilePath(file);
     }
+  }
+
+  @Test
+  public void createFile() throws Exception {
+    String path = "abc/test.txt";
+    createFile(path);
+
+    FileImplTest.assertContentHasFilePath(filesImpl.file(path(path)));
+  }
+
+  private void createFile(String path) throws IOException {
+    writeAndClose(filesImpl.createFile(path(path)).createOutputStream(), path);
   }
 }

@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.lang.function.FunctionDefinition;
-import org.smoothbuild.lang.type.FilesRw;
+import org.smoothbuild.lang.type.Files;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.exc.IllegalConstructorParamException;
 import org.smoothbuild.registry.exc.MissingConstructorException;
@@ -26,22 +26,23 @@ public class InstantiatorFactory {
       throw new TooManyConstructorParamsException(klass);
     }
     if (paramTypes.length == 0) {
-      return factoryRaw.noArg(constructor);
+      return factoryRaw.noArgInstantiator(constructor);
     }
     Class<?> paramType = paramTypes[0];
-    if (paramType.equals(FilesRw.class)) {
-      return factoryRaw.filesRwInstantiator(constructor);
+    if (paramType.equals(Files.class)) {
+      return factoryRaw.filesPassingInstantiator(constructor);
     }
     // TODO disallow FileSystem param in plugin implementations
     if (paramType.equals(FileSystem.class)) {
-      return factoryRaw.fileSystemInstantiator(constructor);
+      return factoryRaw.fileSystemPassingInstantiator(constructor);
     }
     // TODO add list with allowed types to exception message
     throw new IllegalConstructorParamException(klass, paramType);
   }
 
-  public static Constructor<? extends FunctionDefinition> getConstructor(Class<? extends FunctionDefinition> klass)
-      throws MissingConstructorException, TooManyConstructorsException {
+  public static Constructor<? extends FunctionDefinition> getConstructor(
+      Class<? extends FunctionDefinition> klass) throws MissingConstructorException,
+      TooManyConstructorsException {
     Constructor<?>[] constructors = klass.getConstructors();
     if (constructors.length == 0) {
       throw new MissingConstructorException(klass);

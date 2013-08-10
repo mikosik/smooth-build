@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function;
 
-import org.smoothbuild.lang.type.FileRo;
-import org.smoothbuild.lang.type.FilesRo;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Files;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -9,8 +9,8 @@ import com.google.common.collect.ImmutableMap;
 
 public class Type<T> {
   public static final Type<String> STRING = create("String", String.class);
-  public static final Type<FileRo> FILE = create("File", FileRo.class);
-  public static final Type<FilesRo> FILES = create("Files", FilesRo.class);
+  public static final Type<File> FILE = create("File", File.class);
+  public static final Type<Files> FILES = create("Files", Files.class);
 
   static final ImmutableList<Type<?>> ALL_TYPES = createAllTypes();
   static final ImmutableList<Class<?>> ALL_JAVA_TYPES = createAllJavaTypes();

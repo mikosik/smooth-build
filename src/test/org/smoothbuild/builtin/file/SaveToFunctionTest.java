@@ -13,9 +13,8 @@ import org.smoothbuild.lang.function.exc.IllegalPathException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
 import org.smoothbuild.lang.function.exc.ParamException;
 import org.smoothbuild.lang.function.exc.PathIsNotADirException;
-import org.smoothbuild.lang.internal.FileRoImpl;
-import org.smoothbuild.lang.internal.FileRwImpl;
-import org.smoothbuild.lang.type.FileRo;
+import org.smoothbuild.lang.internal.FileImpl;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.PathTest;
 import org.smoothbuild.testing.TestingFileSystem;
 
@@ -24,13 +23,13 @@ public class SaveToFunctionTest {
   SaveToFunction function = new SaveToFunction(fileSystem);
 
   @SuppressWarnings("unchecked")
-  Param<FileRo> fileParam = (Param<FileRo>) function.params().param("file");
+  Param<File> fileParam = (Param<File>) function.params().param("file");
   @SuppressWarnings("unchecked")
   Param<String> dirParam = (Param<String>) function.params().param("dir");
 
   @Test
   public void missingDirArgIsReported() throws Exception {
-    fileParam.set(Mockito.mock(FileRo.class));
+    fileParam.set(Mockito.mock(File.class));
 
     try {
       function.execute();
@@ -44,7 +43,7 @@ public class SaveToFunctionTest {
 
   @Test
   public void illegalPathsAreReported() throws FunctionException {
-    fileParam.set(Mockito.mock(FileRo.class));
+    fileParam.set(Mockito.mock(File.class));
 
     for (String path : PathTest.listOfInvalidPaths()) {
       dirParam.set(path);
@@ -61,7 +60,7 @@ public class SaveToFunctionTest {
 
   @Test
   public void nonDirPathIsReported() throws Exception {
-    fileParam.set(Mockito.mock(FileRo.class));
+    fileParam.set(Mockito.mock(File.class));
 
     String filePath = "some/path/file.txt";
     fileSystem.createEmptyFile(filePath);
@@ -84,7 +83,7 @@ public class SaveToFunctionTest {
     fileSystem.createEmptyFile(destinationDirPath + fileRootPath);
 
     dirParam.set(destinationDirPath);
-    fileParam.set(new FileRoImpl(fileSystem, rootPath(), path(filePath)));
+    fileParam.set(new FileImpl(fileSystem, rootPath(), path(filePath)));
 
     try {
       function.execute();
@@ -104,7 +103,7 @@ public class SaveToFunctionTest {
 
     dirParam.set(destinationDirPath);
     fileSystem.createFile(fileRoot, filePath);
-    fileParam.set(new FileRwImpl(fileSystem, path(fileRoot), path(filePath)));
+    fileParam.set(new FileImpl(fileSystem, path(fileRoot), path(filePath)));
 
     function.execute();
 

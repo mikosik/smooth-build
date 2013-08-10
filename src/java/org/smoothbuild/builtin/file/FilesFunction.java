@@ -10,8 +10,8 @@ import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.NoSuchPathException;
 import org.smoothbuild.lang.function.exc.PathIsNotADirException;
-import org.smoothbuild.lang.internal.FilesRoImpl;
-import org.smoothbuild.lang.type.FilesRo;
+import org.smoothbuild.lang.internal.FilesImpl;
+import org.smoothbuild.lang.type.Files;
 import org.smoothbuild.lang.type.Path;
 
 // TODO forbid dir that points to temporary files created by smooth-build
@@ -34,18 +34,18 @@ public class FilesFunction implements FunctionDefinition {
   }
 
   @Override
-  public FilesRo execute() throws FunctionException {
+  public Files execute() throws FunctionException {
     Path dirPath = validatedPath(dir);
-    return createFilesRo(dirPath);
+    return createFiles(dirPath);
   }
 
-  private FilesRo createFilesRo(Path dirPath) throws FunctionException {
+  private Files createFiles(Path dirPath) throws FunctionException {
     if (!fileSystem.pathExists(dirPath)) {
       throw new NoSuchPathException(dir, dirPath);
     }
 
     if (fileSystem.isDirectory(dirPath)) {
-      return new FilesRoImpl(fileSystem, dirPath);
+      return new FilesImpl(fileSystem, dirPath);
     } else {
       throw new PathIsNotADirException(dir, dirPath);
     }
