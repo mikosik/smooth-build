@@ -88,24 +88,17 @@ public class DiskFileSystem implements FileSystem {
   }
 
   private static void copy(File from, File to) throws IOException {
-    final RandomAccessFile fromFile = new RandomAccessFile(from, "r");
-    try {
-      final RandomAccessFile toFile = new RandomAccessFile(to, "rw");
-      try {
-        final FileChannel fromChannel = fromFile.getChannel();
-        final FileChannel toChannel = toFile.getChannel();
-        long toCopy = fromFile.length();
-        long position = 0;
-        while (toCopy > 0) {
-          long copiedCount = fromChannel.transferTo(position, toCopy, toChannel);
-          position += copiedCount;
-          toCopy -= copiedCount;
-        }
-      } finally {
-        toFile.close();
+    try (RandomAccessFile fromFile = new RandomAccessFile(from, "r");
+        RandomAccessFile toFile = new RandomAccessFile(to, "rw");) {
+      final FileChannel fromChannel = fromFile.getChannel();
+      final FileChannel toChannel = toFile.getChannel();
+      long toCopy = fromFile.length();
+      long position = 0;
+      while (toCopy > 0) {
+        long copiedCount = fromChannel.transferTo(position, toCopy, toChannel);
+        position += copiedCount;
+        toCopy -= copiedCount;
       }
-    } finally {
-      fromFile.close();
     }
   }
 }
