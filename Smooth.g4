@@ -1,17 +1,22 @@
 grammar Smooth;
 
-
-functionDeclaration: functionSignature ':' functionBody ';' ;
-functionSignature : functionName ;
-functionBody: functionCall ( '|' functionCall )* ;
-functionCall: functionName ( '(' functionArgumentList? ')' )? ;
-functionArgumentList: functionArgument ( ',' functionArgument )* ;
-functionArgument: functionParameterName '=' functionCall ; 
+module: function* ;
+function: functionName ':' pipeExpression ';' ;
+pipeExpression: expression ( '|' functionCall )* ;
+expression : functionCall | STRING ;
+functionCall: functionName ( '(' argList? ')' )? ;
+argList: arg ( ',' arg )* ;
+arg: paramName '=' expression ; 
 
 
 functionName: IDENTIFIER ;
-functionParameterName: IDENTIFIER ;
+paramName: IDENTIFIER ;
 
 
-IDENTIFIER: ('a'..'z') ('a'..'z' | 'A'..'Z' | '_') ;
+IDENTIFIER: LETTER ( LETTER | DIGIT )* ;
+STRING: '"' (ESC|.)*? '"' ;
+
+fragment ESC : '\\"' | '\\\\' ;
+fragment LETTER: 'a'..'z' | 'A'..'Z' | '_' ;
+fragment DIGIT: '0'..'9' ;
 
