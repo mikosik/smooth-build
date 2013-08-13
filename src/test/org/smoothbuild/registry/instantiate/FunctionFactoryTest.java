@@ -14,6 +14,7 @@ import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.type.Path;
 import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
+import org.smoothbuild.registry.exc.IllegalFunctionNameException;
 import org.smoothbuild.registry.exc.IllegalReturnTypeException;
 import org.smoothbuild.registry.exc.MissingNameException;
 import org.smoothbuild.registry.exc.StrangeExecuteMethodException;
@@ -106,6 +107,30 @@ public class FunctionFactoryTest {
 
   @FunctionName("name")
   public static class MyIllegalReturnTypeFunction implements FunctionDefinition {
+
+    @Override
+    public Params params() {
+      return null;
+    }
+
+    @Override
+    public Runnable execute() throws FunctionException {
+      return null;
+    }
+  }
+
+  @Test
+  public void illegalFunctionNameCausesExceptionToBeThrown() throws FunctionImplementationException {
+    try {
+      functionFactory.create(MyIllegalFunctionNameFunction.class);
+      Assert.fail("exception should be thrown");
+    } catch (IllegalFunctionNameException e) {
+      // expected
+    }
+  }
+
+  @FunctionName("name.")
+  public static class MyIllegalFunctionNameFunction implements FunctionDefinition {
 
     @Override
     public Params params() {

@@ -3,6 +3,7 @@ package org.smoothbuild.registry;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.lang.function.CanonicalName.canonicalName;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -95,6 +96,6 @@ public class FunctionsRegistryTest {
   }
 
   private static Function function(String name) {
-    return new Function(name, Type.STRING, null);
+    return new Function(canonicalName(name), Type.STRING, null);
   }
 }

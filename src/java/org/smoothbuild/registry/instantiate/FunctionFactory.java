@@ -1,9 +1,13 @@
 package org.smoothbuild.registry.instantiate;
 
+import static org.smoothbuild.lang.function.CanonicalName.canonicalName;
+
+import org.smoothbuild.lang.function.CanonicalName;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
+import org.smoothbuild.registry.exc.IllegalFunctionNameException;
 import org.smoothbuild.registry.exc.IllegalReturnTypeException;
 import org.smoothbuild.registry.exc.MissingNameException;
 import org.smoothbuild.registry.exc.StrangeExecuteMethodException;
@@ -17,20 +21,24 @@ public class FunctionFactory {
 
   public Function create(Class<? extends FunctionDefinition> klass)
       throws FunctionImplementationException {
-    String name = getFunctionName(klass);
+    CanonicalName name = getFunctionName(klass);
     Type<?> type = getReturnType(klass);
     Instantiator instantiator = instantiatorFactory.create(klass);
 
     return new Function(name, type, instantiator);
   }
 
-  private static String getFunctionName(Class<? extends FunctionDefinition> klass)
-      throws MissingNameException {
+  private static CanonicalName getFunctionName(Class<? extends FunctionDefinition> klass)
+      throws MissingNameException, IllegalFunctionNameException {
     FunctionName annotation = klass.getAnnotation(FunctionName.class);
     if (annotation == null) {
       throw new MissingNameException(klass);
     }
-    return annotation.value();
+    try {
+      return canonicalName(annotation.value());
+    } catch (IllegalArgumentException e) {
+      throw new IllegalFunctionNameException(klass, e.getMessage());
+    }
   }
 
   private static Type<?> getReturnType(Class<? extends FunctionDefinition> klass)

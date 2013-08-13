@@ -18,10 +18,10 @@ public class FunctionsRegistry {
     this.functionFactory = functionFactory;
   }
 
-  public void register(Class<? extends FunctionDefinition> klass) throws FunctionImplementationException,
-      FunctionAlreadyRegisteredException {
+  public void register(Class<? extends FunctionDefinition> klass)
+      throws FunctionImplementationException, FunctionAlreadyRegisteredException {
     Function function = functionFactory.create(klass);
-    String name = function.name();
+    String name = function.name().full();
     if (containsType(name)) {
       // TODO add more details to the exception: function definition class,
       // builtin/plugin, plugin jar file
