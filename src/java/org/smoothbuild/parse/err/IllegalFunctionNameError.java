@@ -1,12 +1,10 @@
 package org.smoothbuild.parse.err;
 
-import static org.smoothbuild.problem.ProblemType.ERROR;
-
-import org.smoothbuild.problem.Problem;
+import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.SourceLocation;
 
-public class IllegalFunctionNameError extends Problem {
+public class IllegalFunctionNameError extends Error {
   public IllegalFunctionNameError(SourceLocation sourceLocation, String name) {
-    super(ERROR, sourceLocation, "Illegal function name '" + name + "'");
+    super(sourceLocation, "Illegal function name '" + name + "'");
   }
 }
