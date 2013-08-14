@@ -2,7 +2,6 @@ package org.smoothbuild.registry;
 
 import java.util.Map;
 
-import org.smoothbuild.registry.exc.FunctionAlreadyRegisteredException;
 import org.smoothbuild.registry.instantiate.Function;
 
 import com.google.common.collect.Maps;
@@ -10,12 +9,11 @@ import com.google.common.collect.Maps;
 public class ImportedFunctions {
   private final Map<String, Function> map = Maps.newHashMap();
 
-  public void add(Function function) throws FunctionAlreadyRegisteredException {
+  public void add(Function function) {
     String name = function.name().name();
     if (contains(name)) {
-      // TODO add more details to the exception: function definition class,
-      // builtin/plugin, plugin jar file
-      throw new FunctionAlreadyRegisteredException(name);
+      throw new IllegalArgumentException("Function with short name '" + name
+          + "' has already been imported from '" + function.name().full() + "'");
     } else {
       map.put(name, function);
     }

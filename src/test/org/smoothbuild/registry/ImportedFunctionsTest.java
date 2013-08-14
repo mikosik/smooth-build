@@ -9,7 +9,6 @@ import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.registry.exc.FunctionAlreadyRegisteredException;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.instantiate.Function;
 
@@ -32,16 +31,14 @@ public class ImportedFunctionsTest {
   }
 
   @Test
-  public void containsImportedFunction() throws FunctionImplementationException,
-      FunctionAlreadyRegisteredException {
+  public void containsImportedFunction() throws FunctionImplementationException {
     String name = "nameA";
     importedFunctions.add(function(name));
     assertThat(importedFunctions.contains(name)).isTrue();
   }
 
   @Test
-  public void returnsAddedType() throws FunctionImplementationException,
-      FunctionAlreadyRegisteredException {
+  public void returnsAddedType() throws FunctionImplementationException {
     String name = "nameA";
     Function function = function(name);
 
@@ -58,7 +55,7 @@ public class ImportedFunctionsTest {
     try {
       importedFunctions.add(function(name));
       Assert.fail("exception should be thrown");
-    } catch (FunctionAlreadyRegisteredException e) {
+    } catch (IllegalArgumentException e) {
       // expected
     }
   }
