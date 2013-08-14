@@ -10,7 +10,7 @@ public class ImportedFunctions {
   private final Map<String, Function> map = Maps.newHashMap();
 
   public void add(Function function) {
-    String name = function.name().name();
+    String name = function.name().simple();
     if (contains(name)) {
       throw new IllegalArgumentException("Function with short name '" + name
           + "' has already been imported from '" + function.name().full() + "'");

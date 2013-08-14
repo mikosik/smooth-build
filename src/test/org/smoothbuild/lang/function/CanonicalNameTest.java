@@ -36,7 +36,7 @@ public class CanonicalNameTest {
     CanonicalName canonicalName = canonicalName(full);
     assertThat(canonicalName.full()).isEqualTo(full);
     assertThat(canonicalName.aPackage()).isEqualTo(aPackage);
-    assertThat(canonicalName.name()).isEqualTo(name);
+    assertThat(canonicalName.simple()).isEqualTo(name);
   }
 
   @Test
@@ -90,7 +90,7 @@ public class CanonicalNameTest {
     CanonicalName canonicalName = CanonicalName.simpleName(name);
     assertThat(canonicalName.full()).isEqualTo(name);
     assertThat(canonicalName.aPackage()).isEqualTo("");
-    assertThat(canonicalName.name()).isEqualTo(name);
+    assertThat(canonicalName.simple()).isEqualTo(name);
   }
 
   @Test

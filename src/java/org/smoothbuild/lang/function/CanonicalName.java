@@ -9,18 +9,18 @@ public class CanonicalName {
   private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
 
   private final String aPackage;
-  private final String name;
+  private final String simple;
   private final String full;
 
-  public static CanonicalName simpleName(String name) {
-    if (!isValidSimpleName(name)) {
-      throw new IllegalArgumentException("Illegal function name: '" + name + "'");
+  public static CanonicalName simpleName(String simple) {
+    if (!isValidSimpleName(simple)) {
+      throw new IllegalArgumentException("Illegal function name: '" + simple + "'");
     }
-    return new CanonicalName("", name, name);
+    return new CanonicalName("", simple, simple);
   }
 
-  public static boolean isValidSimpleName(String name) {
-    return isValidName(name);
+  public static boolean isValidSimpleName(String simple) {
+    return isValidName(simple);
   }
 
   public static CanonicalName canonicalName(String canonicalName) {
@@ -44,9 +44,9 @@ public class CanonicalName {
     return NAME_PATTERN.matcher(name).matches();
   }
 
-  private CanonicalName(String aPackage, String name, String full) {
+  private CanonicalName(String aPackage, String simple, String full) {
     this.aPackage = aPackage;
-    this.name = name;
+    this.simple = simple;
     this.full = full;
   }
 
@@ -54,8 +54,8 @@ public class CanonicalName {
     return aPackage;
   }
 
-  public String name() {
-    return name;
+  public String simple() {
+    return simple;
   }
 
   public String full() {
