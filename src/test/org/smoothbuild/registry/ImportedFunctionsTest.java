@@ -1,8 +1,6 @@
 package org.smoothbuild.registry;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.CanonicalName.canonicalName;
 
 import org.junit.Assert;
@@ -14,21 +12,19 @@ import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.registry.exc.FunctionAlreadyRegisteredException;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.instantiate.Function;
-import org.smoothbuild.registry.instantiate.FunctionFactory;
 
-public class FunctionsRegistryTest {
-  FunctionFactory functionFactory = mock(FunctionFactory.class);
-  FunctionsRegistry functionsRegistry = new FunctionsRegistry(functionFactory);
+public class ImportedFunctionsTest {
+  ImportedFunctions importedFunctions = new ImportedFunctions();
 
   @Test
   public void doesNotContainNotAddedType() throws Exception {
-    assertThat(functionsRegistry.containsType("nameA")).isFalse();
+    assertThat(importedFunctions.contains("nameA")).isFalse();
   }
 
   @Test
   public void throwsExceptionWhenQueriedForNotRegisteredType() throws Exception {
     try {
-      functionsRegistry.getType("abc");
+      importedFunctions.get("abc");
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -36,12 +32,11 @@ public class FunctionsRegistryTest {
   }
 
   @Test
-  public void containsAddedType() throws FunctionImplementationException,
+  public void containsImportedFunction() throws FunctionImplementationException,
       FunctionAlreadyRegisteredException {
     String name = "nameA";
-    when(functionFactory.create(MyFunction.class)).thenReturn(function(name));
-    functionsRegistry.register(MyFunction.class);
-    assertThat(functionsRegistry.containsType(name)).isTrue();
+    importedFunctions.add(function(name));
+    assertThat(importedFunctions.contains(name)).isTrue();
   }
 
   @Test
@@ -49,22 +44,19 @@ public class FunctionsRegistryTest {
       FunctionAlreadyRegisteredException {
     String name = "nameA";
     Function function = function(name);
-    when(functionFactory.create(MyFunction.class)).thenReturn(function);
 
-    functionsRegistry.register(MyFunction.class);
+    importedFunctions.add(function);
 
-    assertThat(functionsRegistry.getType(name)).isEqualTo(function);
+    assertThat(importedFunctions.get(name)).isEqualTo(function);
   }
 
   @Test
   public void cannotRegisterTwiceUnderTheSameName() throws Exception {
     String name = "nameA";
-    when(functionFactory.create(MyFunction.class)).thenReturn(function(name));
-    when(functionFactory.create(MyFunction2.class)).thenReturn(function(name));
 
-    functionsRegistry.register(MyFunction.class);
+    importedFunctions.add(function(name));
     try {
-      functionsRegistry.register(MyFunction2.class);
+      importedFunctions.add(function(name));
       Assert.fail("exception should be thrown");
     } catch (FunctionAlreadyRegisteredException e) {
       // expected
