@@ -1,7 +1,5 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.problem.ProblemType.ERROR;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.BitSet;
@@ -21,7 +19,7 @@ import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.problem.Problem;
+import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
@@ -92,7 +90,7 @@ public class SyntaxParser {
       Token token = recognizer.getTokenStream().get(startIndex);
       int start = token.getStartIndex();
       SourceLocation location = new SourceLocation(token.getLine(), start, start);
-      problemsListener.report(new Problem(ERROR, location, message));
+      problemsListener.report(new Error(location, message));
     }
   }
 }
