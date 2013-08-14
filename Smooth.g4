@@ -20,3 +20,4 @@ fragment ESC : '\\"' | '\\\\' ;
 fragment LETTER: 'a'..'z' | 'A'..'Z' | '_' ;
 fragment DIGIT: '0'..'9' ;
 
+WS : [ \t\n\r]+ -> skip ;

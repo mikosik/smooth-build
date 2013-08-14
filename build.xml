@@ -33,6 +33,7 @@
     <java classname="org.antlr.v4.Tool" fork="true" failonerror="true">
       <arg line="-o ${dir.build.java.parser}" />
       <arg line="-package org.smoothbuild.antlr" />
+      <arg line="-visitor" />
       <arg line="-Werror" />
       <arg line="Smooth.g4" />
       <classpath>
