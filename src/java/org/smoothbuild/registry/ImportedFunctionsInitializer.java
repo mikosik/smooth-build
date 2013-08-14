@@ -8,9 +8,18 @@ import org.smoothbuild.builtin.file.ZipFunction;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.registry.exc.FunctionAlreadyRegisteredException;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
+import org.smoothbuild.registry.instantiate.Function;
+import org.smoothbuild.registry.instantiate.FunctionFactory;
 
-public class FunctionsRegistryInitializer {
-  private FunctionsRegistry registry;
+public class ImportedFunctionsInitializer {
+  private final ImportedFunctions importedFunctions;
+  private final FunctionFactory functionFactory;
+
+  public ImportedFunctionsInitializer(ImportedFunctions importedFunctions,
+      FunctionFactory functionFactory) {
+    this.importedFunctions = importedFunctions;
+    this.functionFactory = functionFactory;
+  }
 
   public void initialize() {
     register(FileFunction.class);
@@ -23,9 +32,16 @@ public class FunctionsRegistryInitializer {
 
   private void register(Class<? extends FunctionDefinition> klass) {
     try {
-      registry.register(klass);
+      add(klass);
     } catch (FunctionImplementationException | FunctionAlreadyRegisteredException e) {
       throw new SmoothFatalException(e);
     }
   }
+
+  public void add(Class<? extends FunctionDefinition> klass)
+      throws FunctionImplementationException, FunctionAlreadyRegisteredException {
+    Function function = functionFactory.create(klass);
+    importedFunctions.add(function);
+  }
+
 }
