@@ -4,8 +4,6 @@ import static org.smoothbuild.lang.function.CanonicalName.isValidSimpleName;
 
 import java.util.Map;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
@@ -19,6 +17,11 @@ import org.smoothbuild.registry.ImportedFunctions;
 
 import com.google.common.collect.Maps;
 
+/**
+ * Transforms script ParseTree into map that maps function name to its
+ * FunctionContext. Detects illegal function names, duplicate function names,
+ * overridden imports.
+ */
 public class FunctionsCollector extends SmoothBaseVisitor<Void> {
   private final ProblemsListener problemsListener;
   private final ImportedFunctions importedFunctions;
@@ -36,17 +39,17 @@ public class FunctionsCollector extends SmoothBaseVisitor<Void> {
     String name = nameContext.getText();
 
     if (!isValidSimpleName(name)) {
-      problemsListener.report(new IllegalFunctionNameError(location(nameContext), name));
+      problemsListener.report(new IllegalFunctionNameError(Helpers.locationOf(nameContext), name));
       return null;
     }
 
     if (functions.keySet().contains(name)) {
-      problemsListener.report(new DuplicateFunctionError(location(nameContext), name));
+      problemsListener.report(new DuplicateFunctionError(Helpers.locationOf(nameContext), name));
       return null;
     }
     if (importedFunctions.contains(name)) {
       CanonicalName importedName = importedFunctions.get(name).name();
-      SourceLocation location = location(nameContext);
+      SourceLocation location = Helpers.locationOf(nameContext);
       problemsListener.report(new OverridenImportWarning(location, name, importedName));
       return null;
     }
@@ -57,16 +60,5 @@ public class FunctionsCollector extends SmoothBaseVisitor<Void> {
 
   public Map<String, FunctionContext> foundFunctions() {
     return functions;
-  }
-
-  private static SourceLocation location(ParserRuleContext parserRuleContext) {
-    Token startToken = parserRuleContext.getStart();
-    Token endToken = parserRuleContext.getStop();
-
-    int line = startToken.getLine();
-    int start = startToken.getStartIndex();
-    int end = endToken.getStopIndex();
-
-    return new SourceLocation(line, start, end);
   }
 }
