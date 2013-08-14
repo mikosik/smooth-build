@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.base.Charsets.UTF_8;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,9 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.problem.Problem;
-import org.smoothbuild.problem.ProblemsListener;
-
-import com.google.common.collect.Lists;
 
 public class SyntaxParserTest {
 
@@ -34,12 +30,12 @@ public class SyntaxParserTest {
 
   @Test
   public void functionDefinitionWithoutSemicolonFails() throws Exception {
-    assertOnlyProblem("functionA : functionB ", SyntaxError.class);
+    parse("functionA : functionB ").assertOnlyProblem(SyntaxError.class);
   }
 
   @Test
   public void functionDefinitionWithoutBodyFails() throws Exception {
-    assertOnlyProblem("functionA : ;", SyntaxError.class);
+    parse("functionA : ;").assertOnlyProblem(SyntaxError.class);
   }
 
   @Test
@@ -59,7 +55,7 @@ public class SyntaxParserTest {
 
   @Test
   public void incorrectScriptFails() throws Exception {
-    assertOnlyProblem("abc", SyntaxError.class);
+    parse("abc").assertOnlyProblem(SyntaxError.class);
   }
 
   private static void assertParsingSucceeds(String scriptText) throws IOException {
@@ -71,30 +67,11 @@ public class SyntaxParserTest {
     }
   }
 
-  private static void assertOnlyProblem(String string, Class<SyntaxError> klass) throws IOException {
-    List<Problem> problems = parse(string).collected();
-    assertThat(problems.size()).isEqualTo(1);
-    assertThat(problems.get(0)).isInstanceOf(klass);
-  }
-
-  private static CollecedProblems parse(String string) throws IOException {
+  private static TestingProblemsListener parse(String string) throws IOException {
     SyntaxParser parser = new SyntaxParser();
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
-    CollecedProblems problems = new CollecedProblems();
+    TestingProblemsListener problems = new TestingProblemsListener();
     parser.parse(inputStream, problems);
     return problems;
-  }
-
-  private static class CollecedProblems implements ProblemsListener {
-    private final List<Problem> list = Lists.newArrayList();
-
-    @Override
-    public void report(Problem problem) {
-      list.add(problem);
-    }
-
-    public List<Problem> collected() {
-      return list;
-    }
   }
 }
