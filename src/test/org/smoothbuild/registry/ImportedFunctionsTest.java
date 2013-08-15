@@ -1,7 +1,7 @@
 package org.smoothbuild.registry;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.function.CanonicalName.canonicalName;
+import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedName;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -85,6 +85,6 @@ public class ImportedFunctionsTest {
   }
 
   private static Function function(String name) {
-    return new Function(canonicalName(name), Type.STRING, null);
+    return new Function(fullyQualifiedName(name), Type.STRING, null);
   }
 }

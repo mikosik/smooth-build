@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.type.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.CanonicalName;
+import org.smoothbuild.lang.function.FullyQualifiedName;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.lang.type.Path;
@@ -14,7 +14,7 @@ import org.smoothbuild.lang.type.Path;
 public class FunctionTest {
   FunctionDefinition definition = mock(FunctionDefinition.class);
 
-  CanonicalName name = CanonicalName.canonicalName("my.package.myFunction");
+  FullyQualifiedName name = FullyQualifiedName.fullyQualifiedName("my.package.myFunction");
   Instantiator instantiator = mock(Instantiator.class);
   Function function = new Function(name, Type.STRING, instantiator);
 

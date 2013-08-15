@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Splitter;
 
-public class CanonicalName {
+public class FullyQualifiedName {
   private static final char SEPARATOR = '.';
   private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
 
@@ -12,31 +12,31 @@ public class CanonicalName {
   private final String simple;
   private final String full;
 
-  public static CanonicalName simpleName(String simple) {
+  public static FullyQualifiedName simpleName(String simple) {
     if (!isValidSimpleName(simple)) {
       throw new IllegalArgumentException("Illegal function name: '" + simple + "'");
     }
-    return new CanonicalName("", simple, simple);
+    return new FullyQualifiedName("", simple, simple);
   }
 
   public static boolean isValidSimpleName(String simple) {
     return isValidName(simple);
   }
 
-  public static CanonicalName canonicalName(String canonicalName) {
-    for (String part : Splitter.on(SEPARATOR).split(canonicalName)) {
+  public static FullyQualifiedName fullyQualifiedName(String fullyQualifiedName) {
+    for (String part : Splitter.on(SEPARATOR).split(fullyQualifiedName)) {
       if (!isValidName(part)) {
-        throw new IllegalArgumentException("Illegal canonical function name: '" + canonicalName
+        throw new IllegalArgumentException("Illegal canonical function name: '" + fullyQualifiedName
             + "'");
       }
     }
-    int index = canonicalName.lastIndexOf(SEPARATOR);
+    int index = fullyQualifiedName.lastIndexOf(SEPARATOR);
     if (index == -1) {
-      return new CanonicalName("", canonicalName, canonicalName);
+      return new FullyQualifiedName("", fullyQualifiedName, fullyQualifiedName);
     } else {
-      String aPackage = canonicalName.substring(0, index);
-      String name = canonicalName.substring(index + 1);
-      return new CanonicalName(aPackage, name, canonicalName);
+      String aPackage = fullyQualifiedName.substring(0, index);
+      String name = fullyQualifiedName.substring(index + 1);
+      return new FullyQualifiedName(aPackage, name, fullyQualifiedName);
     }
   }
 
@@ -44,7 +44,7 @@ public class CanonicalName {
     return NAME_PATTERN.matcher(name).matches();
   }
 
-  private CanonicalName(String aPackage, String simple, String full) {
+  private FullyQualifiedName(String aPackage, String simple, String full) {
     this.aPackage = aPackage;
     this.simple = simple;
     this.full = full;
@@ -64,10 +64,10 @@ public class CanonicalName {
 
   @Override
   public final boolean equals(Object object) {
-    if (!(object instanceof CanonicalName)) {
+    if (!(object instanceof FullyQualifiedName)) {
       return false;
     }
-    CanonicalName that = (CanonicalName) object;
+    FullyQualifiedName that = (FullyQualifiedName) object;
     return this.full.equals(that.full);
   }
 
