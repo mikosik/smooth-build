@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.Token;
 import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
-import org.smoothbuild.lang.function.CanonicalName;
+import org.smoothbuild.lang.function.FullyQualifiedName;
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
@@ -91,7 +91,7 @@ public class FunctionsCollectorTest {
 
   private static ImportedFunctions createImportedFunctions() {
     ImportedFunctions imported = new ImportedFunctions();
-    imported.add(new Function(CanonicalName.simpleName(IMPORTED_FUNCTION_NAME), Type.FILE, null));
+    imported.add(new Function(FullyQualifiedName.simpleName(IMPORTED_FUNCTION_NAME), Type.FILE, null));
     return imported;
   }
 }

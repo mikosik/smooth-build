@@ -1,13 +1,13 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.function.CanonicalName.isValidSimpleName;
+import static org.smoothbuild.lang.function.FullyQualifiedName.isValidSimpleName;
 
 import java.util.Map;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
-import org.smoothbuild.lang.function.CanonicalName;
+import org.smoothbuild.lang.function.FullyQualifiedName;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportWarning;
@@ -48,7 +48,7 @@ public class FunctionsCollector extends SmoothBaseVisitor<Void> {
       return null;
     }
     if (importedFunctions.contains(name)) {
-      CanonicalName importedName = importedFunctions.get(name).name();
+      FullyQualifiedName importedName = importedFunctions.get(name).name();
       SourceLocation location = Helpers.locationOf(nameContext);
       problemsListener.report(new OverridenImportWarning(location, name, importedName));
       return null;
