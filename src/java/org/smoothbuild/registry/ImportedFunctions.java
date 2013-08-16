@@ -1,9 +1,11 @@
 package org.smoothbuild.registry;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.smoothbuild.registry.instantiate.Function;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
 public class ImportedFunctions {
@@ -29,5 +31,9 @@ public class ImportedFunctions {
       throw new IllegalArgumentException("Function '" + name + "' doesn't exist.");
     }
     return function;
+  }
+
+  public Set<String> names() {
+    return ImmutableSet.copyOf(map.keySet());
   }
 }

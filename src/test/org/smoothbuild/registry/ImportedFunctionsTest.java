@@ -48,6 +48,16 @@ public class ImportedFunctionsTest {
   }
 
   @Test
+  public void namesReturnsNamesOfAllAddedFunctions() throws FunctionImplementationException {
+    String name1 = "name1";
+    String name2 = "name2";
+    importedFunctions.add(function(name1));
+    importedFunctions.add(function(name2));
+
+    assertThat(importedFunctions.names()).containsOnly(name1, name2);
+  }
+
+  @Test
   public void cannotRegisterTwiceUnderTheSameName() throws Exception {
     String name = "nameA";
 
