@@ -26,8 +26,8 @@ public class FullyQualifiedName {
   public static FullyQualifiedName fullyQualifiedName(String fullyQualifiedName) {
     for (String part : Splitter.on(SEPARATOR).split(fullyQualifiedName)) {
       if (!isValidName(part)) {
-        throw new IllegalArgumentException("Illegal canonical function name: '" + fullyQualifiedName
-            + "'");
+        throw new IllegalArgumentException("Illegal fully qualified function name: '"
+            + fullyQualifiedName + "'");
       }
     }
     int index = fullyQualifiedName.lastIndexOf(SEPARATOR);
@@ -74,5 +74,10 @@ public class FullyQualifiedName {
   @Override
   public final int hashCode() {
     return full.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return "'" + full + "'";
   }
 }

@@ -139,7 +139,18 @@ public class FullyQualifiedNameTest {
   }
 
   @Test
+  public void testToString() throws Exception {
+    assertThat(fullyQualifiedName("abc").toString()).isEqualTo("'abc'");
+  }
+
+  @Test
   public void testEquals() throws Exception {
-    EqualsVerifier.forClass(FullyQualifiedName.class).suppress(NULL_FIELDS).verify();
+    EqualsVerifier
+        .forExamples(n("a"), n("b"), n("c"), n("a.a"), n("a.b"), n("b.a"), n("b.b"), n("a.b.c"))
+        .suppress(NULL_FIELDS).verify();
+  }
+
+  private static FullyQualifiedName n(String name) {
+    return fullyQualifiedName(name);
   }
 }
