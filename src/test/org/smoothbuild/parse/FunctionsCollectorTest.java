@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.testing.parse.TestingFunctionContext.testingFunctionContext;
+import static org.smoothbuild.testing.parse.TestingFunction.function;
 
 import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
@@ -28,8 +28,8 @@ public class FunctionsCollectorTest {
     String name1 = "functionA";
     String name2 = "functionB";
 
-    FunctionContext function1 = testingFunctionContext(name1);
-    FunctionContext function2 = testingFunctionContext(name2);
+    FunctionContext function1 = function(name1);
+    FunctionContext function2 = function(name2);
 
     functionsCollector.visitFunction(function1);
     functionsCollector.visitFunction(function2);
@@ -41,21 +41,21 @@ public class FunctionsCollectorTest {
 
   @Test
   public void illegalFunctionNameIsReported() {
-    functionsCollector.visitFunction((FunctionContext) testingFunctionContext("function-name"));
+    functionsCollector.visitFunction(function("function-name"));
     problemsListener.assertOnlyProblem(IllegalFunctionNameError.class);
   }
 
   @Test
   public void duplicateFunction() throws Exception {
-    functionsCollector.visitFunction((FunctionContext) testingFunctionContext("functionA"));
-    functionsCollector.visitFunction((FunctionContext) testingFunctionContext("functionA"));
+    functionsCollector.visitFunction(function("functionA"));
+    functionsCollector.visitFunction(function("functionA"));
 
     problemsListener.assertOnlyProblem(DuplicateFunctionError.class);
   }
 
   @Test
   public void overridenImport() throws Exception {
-    functionsCollector.visitFunction((FunctionContext) testingFunctionContext(IMPORTED_FUNCTION_NAME));
+    functionsCollector.visitFunction(function(IMPORTED_FUNCTION_NAME));
     problemsListener.assertOnlyProblem(OverridenImportWarning.class);
   }
 
