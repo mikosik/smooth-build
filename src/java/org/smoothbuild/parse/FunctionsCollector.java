@@ -23,10 +23,10 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector extends SmoothBaseVisitor<Void> {
   private final ProblemsListener problemsListener;
-  private final ImportedFunctions importedFunctions;
+  private final SymbolTable importedFunctions;
   private final Map<String, FunctionContext> functions;
 
-  public FunctionsCollector(ProblemsListener problemsListener, ImportedFunctions importedFunctions) {
+  public FunctionsCollector(ProblemsListener problemsListener, SymbolTable importedFunctions) {
     this.problemsListener = problemsListener;
     this.importedFunctions = importedFunctions;
     this.functions = Maps.newHashMap();
@@ -46,8 +46,8 @@ public class FunctionsCollector extends SmoothBaseVisitor<Void> {
       problemsListener.report(new DuplicateFunctionError(Helpers.locationOf(nameContext), name));
       return null;
     }
-    if (importedFunctions.contains(name)) {
-      FullyQualifiedName importedName = importedFunctions.get(name).name();
+    if (importedFunctions.containsFunction(name)) {
+      FullyQualifiedName importedName = importedFunctions.getFunction(name).name();
       SourceLocation location = Helpers.locationOf(nameContext);
       problemsListener.report(new OverridenImportWarning(location, name, importedName));
       return null;
