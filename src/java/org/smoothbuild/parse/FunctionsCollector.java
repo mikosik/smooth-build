@@ -13,7 +13,6 @@ import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportWarning;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
-import org.smoothbuild.registry.ImportedFunctions;
 
 import com.google.common.collect.Maps;
 

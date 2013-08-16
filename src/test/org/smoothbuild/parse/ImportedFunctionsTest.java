@@ -1,4 +1,4 @@
-package org.smoothbuild.registry;
+package org.smoothbuild.parse;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedName;
@@ -9,6 +9,7 @@ import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.lang.function.exc.FunctionException;
+import org.smoothbuild.parse.ImportedFunctions;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.instantiate.Function;
 

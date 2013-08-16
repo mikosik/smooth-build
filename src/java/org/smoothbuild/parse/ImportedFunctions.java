@@ -1,4 +1,4 @@
-package org.smoothbuild.registry;
+package org.smoothbuild.parse;
 
 import java.util.Map;
 import java.util.Set;
