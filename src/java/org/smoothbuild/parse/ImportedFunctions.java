@@ -8,12 +8,12 @@ import org.smoothbuild.registry.instantiate.Function;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
-public class ImportedFunctions {
+public class ImportedFunctions implements SymbolTable {
   private final Map<String, Function> map = Maps.newHashMap();
 
   public void add(Function function) {
     String name = function.name().simple();
-    if (contains(name)) {
+    if (containsFunction(name)) {
       throw new IllegalArgumentException("Function with short name '" + name
           + "' has already been imported from '" + function.name().full() + "'");
     } else {
@@ -21,11 +21,13 @@ public class ImportedFunctions {
     }
   }
 
-  public boolean contains(String name) {
+  @Override
+  public boolean containsFunction(String name) {
     return map.containsKey(name);
   }
 
-  public Function get(String name) {
+  @Override
+  public Function getFunction(String name) {
     Function function = map.get(name);
     if (function == null) {
       throw new IllegalArgumentException("Function '" + name + "' doesn't exist.");

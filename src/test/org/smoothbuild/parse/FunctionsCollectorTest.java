@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableMap;
 public class FunctionsCollectorTest {
   private static final String IMPORTED_FUNCTION_NAME = "importedFunction";
   TestingProblemsListener problemsListener = new TestingProblemsListener();
-  ImportedFunctions importedFunctions = createImportedFunctions();
+  SymbolTable importedFunctions = createImportedFunctions();
 
   FunctionsCollector functionsCollector = new FunctionsCollector(problemsListener,
       importedFunctions);

@@ -18,13 +18,13 @@ public class ImportedFunctionsTest {
 
   @Test
   public void doesNotContainNotAddedType() throws Exception {
-    assertThat(importedFunctions.contains("nameA")).isFalse();
+    assertThat(importedFunctions.containsFunction("nameA")).isFalse();
   }
 
   @Test
   public void throwsExceptionWhenQueriedForNotRegisteredType() throws Exception {
     try {
-      importedFunctions.get("abc");
+      importedFunctions.getFunction("abc");
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -35,7 +35,7 @@ public class ImportedFunctionsTest {
   public void containsImportedFunction() throws FunctionImplementationException {
     String name = "nameA";
     importedFunctions.add(function(name));
-    assertThat(importedFunctions.contains(name)).isTrue();
+    assertThat(importedFunctions.containsFunction(name)).isTrue();
   }
 
   @Test
@@ -45,7 +45,7 @@ public class ImportedFunctionsTest {
 
     importedFunctions.add(function);
 
-    assertThat(importedFunctions.get(name)).isEqualTo(function);
+    assertThat(importedFunctions.getFunction(name)).isEqualTo(function);
   }
 
   @Test
