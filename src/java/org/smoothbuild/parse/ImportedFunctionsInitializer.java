@@ -1,4 +1,4 @@
-package org.smoothbuild.registry;
+package org.smoothbuild.parse;
 
 import org.smoothbuild.builtin.file.FileFunction;
 import org.smoothbuild.builtin.file.FilesFunction;
