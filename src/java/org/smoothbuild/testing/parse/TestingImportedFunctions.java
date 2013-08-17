@@ -3,6 +3,7 @@ package org.smoothbuild.testing.parse;
 import static org.smoothbuild.lang.function.FullyQualifiedName.simpleName;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.parse.SymbolTable;
@@ -28,5 +29,10 @@ public class TestingImportedFunctions implements SymbolTable {
   @Override
   public Function getFunction(String name) {
     return map.get(name);
+  }
+
+  @Override
+  public Set<String> names() {
+    return map.keySet();
   }
 }

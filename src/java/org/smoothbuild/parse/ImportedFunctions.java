@@ -35,6 +35,7 @@ public class ImportedFunctions implements SymbolTable {
     return function;
   }
 
+  @Override
   public Set<String> names() {
     return ImmutableSet.copyOf(map.keySet());
   }
