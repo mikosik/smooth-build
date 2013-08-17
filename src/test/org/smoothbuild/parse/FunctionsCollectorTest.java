@@ -2,22 +2,21 @@ package org.smoothbuild.parse;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.testing.parse.TestingFunction.function;
+import static org.smoothbuild.testing.parse.TestingImportedFunctions.IMPORTED_NAME;
 
 import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
-import org.smoothbuild.lang.function.FullyQualifiedName;
-import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportWarning;
-import org.smoothbuild.registry.instantiate.Function;
+import org.smoothbuild.testing.parse.TestingImportedFunctions;
 
 import com.google.common.collect.ImmutableMap;
 
 public class FunctionsCollectorTest {
-  private static final String IMPORTED_FUNCTION_NAME = "importedFunction";
+
   TestingProblemsListener problemsListener = new TestingProblemsListener();
-  SymbolTable importedFunctions = createImportedFunctions();
+  SymbolTable importedFunctions = new TestingImportedFunctions();
 
   FunctionsCollector functionsCollector = new FunctionsCollector(problemsListener,
       importedFunctions);
@@ -54,14 +53,8 @@ public class FunctionsCollectorTest {
 
   @Test
   public void overridenImport() throws Exception {
-    functionsCollector.visitFunction(function(IMPORTED_FUNCTION_NAME));
+    functionsCollector.visitFunction(function(IMPORTED_NAME));
     problemsListener.assertOnlyProblem(OverridenImportWarning.class);
   }
 
-  private static ImportedFunctions createImportedFunctions() {
-    ImportedFunctions imported = new ImportedFunctions();
-    imported.add(new Function(FullyQualifiedName.simpleName(IMPORTED_FUNCTION_NAME), Type.FILE,
-        null));
-    return imported;
-  }
 }
