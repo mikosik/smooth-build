@@ -4,6 +4,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,12 +16,10 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.problem.ProblemsListener;
-import org.smoothbuild.problem.SourceLocation;
 import org.smoothbuild.testing.parse.TestingImportedFunctions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class DependencySorterTest {
   private static final String NAME1 = "funcation1";
@@ -103,17 +102,5 @@ public class DependencySorterTest {
       Assert.fail("List " + list.toString() + " should contain subsequence "
           + Arrays.toString(names));
     }
-  }
-
-  private static Set<Dependency> dependencies(String... names) {
-    Set<Dependency> result = Sets.newHashSet();
-    for (String name : names) {
-      result.add(dependency(name));
-    }
-    return result;
-  }
-
-  private static Dependency dependency(String name) {
-    return new Dependency(new SourceLocation(1, 2, 3), name);
   }
 }
