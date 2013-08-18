@@ -2,19 +2,18 @@ package org.smoothbuild.parse;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
 
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.problem.ProblemsListener;
-import org.smoothbuild.problem.SourceLocation;
 import org.smoothbuild.testing.parse.TestingFunction;
 import org.smoothbuild.testing.parse.TestingModule;
 import org.smoothbuild.testing.parse.TestingPipeExpression;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
 public class DependencyCollectorTest {
@@ -48,7 +47,7 @@ public class DependencyCollectorTest {
     dependencyCollector.visitModule(module);
 
     Map<String, Set<Dependency>> expected = Maps.newHashMap();
-    expected.put(name, ImmutableSet.of(dependency(dep1), dependency(dep2)));
+    expected.put(name, dependencies(dep1, dep2));
 
     assertThat(dependencyCollector.dependencies()).isEqualTo(expected);
   }
@@ -73,13 +72,9 @@ public class DependencyCollectorTest {
     dependencyCollector.visitModule(module);
 
     Map<String, Set<Dependency>> expected = Maps.newHashMap();
-    expected.put(name1, ImmutableSet.of(dependency(name2)));
-    expected.put(name2, ImmutableSet.of(dependency(name1)));
+    expected.put(name1, dependencies(name2));
+    expected.put(name2, dependencies(name1));
 
     assertThat(dependencyCollector.dependencies()).isEqualTo(expected);
-  }
-
-  private Dependency dependency(String dep1) {
-    return new Dependency(new SourceLocation(1, 2, 3), dep1);
   }
 }
