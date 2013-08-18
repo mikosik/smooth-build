@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
-import org.smoothbuild.antlr.SmoothParser.FunctionCallContext;
+import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.problem.ProblemsListener;
@@ -40,13 +40,13 @@ public class DependencyCollector extends SmoothBaseVisitor<Void> {
   }
 
   @Override
-  public Void visitFunctionCall(FunctionCallContext functionCall) {
-    FunctionNameContext functionName = functionCall.functionName();
+  public Void visitCall(CallContext call) {
+    FunctionNameContext functionName = call.functionName();
     String name = functionName.getText();
     SourceLocation location = locationOf(functionName);
     currentFunctionDependencies.add(new Dependency(location, name));
 
-    return visitChildren(functionCall);
+    return visitChildren(call);
   }
 
   public Map<String, Set<Dependency>> dependencies() {

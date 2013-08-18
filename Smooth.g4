@@ -2,9 +2,9 @@ grammar Smooth;
 
 module: function* ;
 function: functionName ':' pipeExpression ';' ;
-pipeExpression: expression ( '|' functionCall )* ;
-expression : functionCall | STRING ;
-functionCall: functionName ( '(' argList? ')' )? ;
+pipeExpression: expression ( '|' call )* ;
+expression : call | STRING ;
+call: functionName ( '(' argList? ')' )? ;
 argList: arg ( ',' arg )* ;
 arg: paramName '=' expression ; 
 
