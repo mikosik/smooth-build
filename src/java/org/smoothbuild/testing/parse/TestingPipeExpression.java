@@ -9,8 +9,8 @@ public class TestingPipeExpression extends PipeExpressionContext {
     super(parent, 0);
   }
 
-  public TestingFunctionCall addFunctionCall(String name) {
-    TestingFunctionCall function = TestingFunctionCall.functionCall(this, name);
+  public TestingCall addFunctionCall(String name) {
+    TestingCall function = TestingCall.call(this, name);
     addChild(function);
     return function;
   }
