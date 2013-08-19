@@ -23,7 +23,7 @@ public class StringExpression implements Expression {
   }
 
   @Override
-  public void execute() throws FunctionException {}
+  public void calculate() throws FunctionException {}
 
   @Override
   public Object result() {

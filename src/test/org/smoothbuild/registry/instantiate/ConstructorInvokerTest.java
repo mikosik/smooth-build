@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Params;
+import org.smoothbuild.lang.function.exc.CreatingInstanceFailedException;
 import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
 
 public class ConstructorInvokerTest {
   ConstructorInvoker constructorInvoker = new ConstructorInvoker();

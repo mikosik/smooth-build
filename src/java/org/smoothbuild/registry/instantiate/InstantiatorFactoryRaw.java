@@ -4,9 +4,9 @@ import java.lang.reflect.Constructor;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.lang.function.FunctionDefinition;
+import org.smoothbuild.lang.function.exc.CreatingInstanceFailedException;
 import org.smoothbuild.lang.internal.FilesImpl;
 import org.smoothbuild.lang.type.Path;
-import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
 
 public class InstantiatorFactoryRaw {
   private final FileSystem fileSystem;
