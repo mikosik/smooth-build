@@ -8,10 +8,10 @@ import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
 
 public class Function {
   private final FullyQualifiedName name;
-  private final Type<?> type;
+  private final Type type;
   private final Instantiator instantiator;
 
-  public Function(FullyQualifiedName name, Type<?> type, Instantiator instantiator) {
+  public Function(FullyQualifiedName name, Type type, Instantiator instantiator) {
     this.name = name;
     this.type = type;
     this.instantiator = instantiator;
@@ -21,7 +21,7 @@ public class Function {
     return name;
   }
 
-  public Type<?> type() {
+  public Type type() {
     return type;
   }
 

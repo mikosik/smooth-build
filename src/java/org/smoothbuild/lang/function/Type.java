@@ -7,24 +7,24 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
-public class Type<T> {
-  public static final Type<String> STRING = create("String", String.class);
-  public static final Type<File> FILE = create("File", File.class);
-  public static final Type<Files> FILES = create("Files", Files.class);
+public class Type {
+  public static final Type STRING = create("String", String.class);
+  public static final Type FILE = create("File", File.class);
+  public static final Type FILES = create("Files", Files.class);
 
-  static final ImmutableList<Type<?>> ALL_TYPES = createAllTypes();
+  static final ImmutableList<Type> ALL_TYPES = createAllTypes();
   static final ImmutableList<Class<?>> ALL_JAVA_TYPES = createAllJavaTypes();
 
-  static final ImmutableMap<Class<?>, Type<?>> JAVA_TO_SMOOTH = createMap();
+  static final ImmutableMap<Class<?>, Type> JAVA_TO_SMOOTH = createMap();
 
   private final String name;
-  private final Class<T> javaType;
+  private final Class<?> javaType;
 
-  private static <T> Type<T> create(String name, Class<T> klass) {
-    return new Type<T>(name, klass);
+  private static Type create(String name, Class<?> klass) {
+    return new Type(name, klass);
   }
 
-  private Type(String name, Class<T> javaType) {
+  private Type(String name, Class<?> javaType) {
     this.name = name;
     this.javaType = javaType;
   }
@@ -33,11 +33,11 @@ public class Type<T> {
     return name;
   }
 
-  public Class<T> javaType() {
+  public Class<?> javaType() {
     return javaType;
   }
 
-  public static ImmutableList<Type<?>> allTypes() {
+  public static ImmutableList<Type> allTypes() {
     return ALL_TYPES;
   }
 
@@ -45,14 +45,13 @@ public class Type<T> {
     return ALL_JAVA_TYPES;
   }
 
-  public static <T> Type<T> toType(Class<T> klass) {
-    @SuppressWarnings("unchecked")
-    Type<T> result = (Type<T>) JAVA_TO_SMOOTH.get(klass);
+  public static Type toType(Class<?> klass) {
+    Type result = JAVA_TO_SMOOTH.get(klass);
     return result;
   }
 
-  private static ImmutableList<Type<?>> createAllTypes() {
-    Builder<Type<?>> builder = ImmutableList.builder();
+  private static ImmutableList<Type> createAllTypes() {
+    Builder<Type> builder = ImmutableList.builder();
 
     builder.add(STRING);
     builder.add(FILE);
@@ -64,17 +63,17 @@ public class Type<T> {
   private static ImmutableList<Class<?>> createAllJavaTypes() {
     Builder<Class<?>> builder = ImmutableList.builder();
 
-    for (Type<?> type : ALL_TYPES) {
+    for (Type type : ALL_TYPES) {
       builder.add(type.javaType);
     }
 
     return builder.build();
   }
 
-  private static ImmutableMap<Class<?>, Type<?>> createMap() {
-    ImmutableMap.Builder<Class<?>, Type<?>> builder = ImmutableMap.builder();
+  private static ImmutableMap<Class<?>, Type> createMap() {
+    ImmutableMap.Builder<Class<?>, Type> builder = ImmutableMap.builder();
 
-    for (Type<?> type : ALL_TYPES) {
+    for (Type type : ALL_TYPES) {
       builder.put(type.javaType, type);
     }
 

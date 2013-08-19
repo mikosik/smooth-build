@@ -20,8 +20,7 @@ public class ExpressionTest {
 
   @Test
   public void type() throws Exception {
-    @SuppressWarnings("unchecked")
-    Type<String> actual = (Type<String>) expression.type();
+    Type actual = expression.type();
     assertThat(actual).isEqualTo(Type.STRING);
   }
 }

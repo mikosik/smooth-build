@@ -22,7 +22,7 @@ public class FunctionFactory {
   public Function create(Class<? extends FunctionDefinition> klass)
       throws FunctionImplementationException {
     FullyQualifiedName name = getFunctionName(klass);
-    Type<?> type = getReturnType(klass);
+    Type type = getReturnType(klass);
     Instantiator instantiator = instantiatorFactory.create(klass);
 
     return new Function(name, type, instantiator);
@@ -41,7 +41,7 @@ public class FunctionFactory {
     }
   }
 
-  private static Type<?> getReturnType(Class<? extends FunctionDefinition> klass)
+  private static Type getReturnType(Class<? extends FunctionDefinition> klass)
       throws IllegalReturnTypeException, StrangeExecuteMethodException {
     Class<?> javaType;
     try {
@@ -49,7 +49,7 @@ public class FunctionFactory {
     } catch (NoSuchMethodException | SecurityException e) {
       throw new StrangeExecuteMethodException(klass, e);
     }
-    Type<?> type = Type.toType(javaType);
+    Type type = Type.toType(javaType);
     if (type == null) {
       throw new IllegalReturnTypeException(klass, javaType);
     }
