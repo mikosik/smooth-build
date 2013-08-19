@@ -7,20 +7,20 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.FunctionDefinition;
 import org.smoothbuild.lang.function.Type;
 
-public class ExpressionTest {
+public class FunctionExpressionTest {
   ExpressionId id = new ExpressionId("abc");
   FunctionDefinition definition = mock(FunctionDefinition.class);
 
-  Expression expression = new Expression(id, Type.STRING, definition);
+  Expression functionExpression = new FunctionExpression(id, Type.STRING, definition);
 
   @Test
   public void id() {
-    assertThat(expression.id()).isEqualTo(id);
+    assertThat(functionExpression.id()).isEqualTo(id);
   }
 
   @Test
   public void type() throws Exception {
-    Type actual = expression.type();
+    Type actual = functionExpression.type();
     assertThat(actual).isEqualTo(Type.STRING);
   }
 }
