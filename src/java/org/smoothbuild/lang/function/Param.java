@@ -6,7 +6,7 @@ import org.smoothbuild.lang.type.Files;
 public class Param<T> {
   public static final ParamToNameFunction PARAM_TO_NAME = new ParamToNameFunction();
 
-  private final Type<T> type;
+  private final Type type;
   private final String name;
   private T value;
   private boolean isSet;
@@ -23,14 +23,14 @@ public class Param<T> {
     return new Param<Files>(Type.FILES, name);
   }
 
-  protected Param(Type<T> type, String name) {
+  protected Param(Type type, String name) {
     this.type = type;
     this.name = name;
     this.value = null;
     this.isSet = false;
   }
 
-  public Type<T> type() {
+  public Type type() {
     return type;
   }
 

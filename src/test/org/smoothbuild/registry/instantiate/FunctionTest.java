@@ -25,8 +25,7 @@ public class FunctionTest {
 
   @Test
   public void type() {
-    @SuppressWarnings("unchecked")
-    Type<String> actual = (Type<String>) function.type();
+    Type actual = function.type();
     assertThat(actual).isEqualTo(Type.STRING);
   }
 

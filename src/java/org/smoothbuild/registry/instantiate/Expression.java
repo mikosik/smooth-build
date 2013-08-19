@@ -6,10 +6,10 @@ import org.smoothbuild.lang.function.exc.FunctionException;
 
 public class Expression {
   private final ExpressionId id;
-  private final Type<?> type;
+  private final Type type;
   private final FunctionDefinition functionDefinition;
 
-  public Expression(ExpressionId id, Type<?> type, FunctionDefinition functionDefinition) {
+  public Expression(ExpressionId id, Type type, FunctionDefinition functionDefinition) {
     this.id = id;
     this.type = type;
     this.functionDefinition = functionDefinition;
@@ -19,7 +19,7 @@ public class Expression {
     return id;
   }
 
-  public Type<?> type() {
+  public Type type() {
     return type;
   }
 
