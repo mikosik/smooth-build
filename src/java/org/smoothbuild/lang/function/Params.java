@@ -28,10 +28,6 @@ public class Params {
     return result;
   }
 
-  public ImmutableList<Param<?>> params() {
-    return list;
-  }
-
   private static ImmutableMap<String, Param<?>> createMap(ImmutableList<Param<?>> list) {
     Builder<String, Param<?>> builder = ImmutableMap.builder();
     for (Param<?> param : list) {
