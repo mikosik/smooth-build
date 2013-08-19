@@ -9,7 +9,7 @@ public interface Expression {
 
   public Type type();
 
-  public void execute() throws FunctionException;
+  public void calculate() throws FunctionException;
 
   public Object result();
 }

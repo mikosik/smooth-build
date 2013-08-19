@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.smoothbuild.lang.function.FunctionDefinition;
-import org.smoothbuild.registry.exc.CreatingInstanceFailedException;
+import org.smoothbuild.lang.function.exc.CreatingInstanceFailedException;
 
 public class ConstructorInvoker {
   public FunctionDefinition invoke(Constructor<? extends FunctionDefinition> constructor,

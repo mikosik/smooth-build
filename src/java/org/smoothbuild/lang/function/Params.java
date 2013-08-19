@@ -13,6 +13,10 @@ public class Params {
   private final ImmutableList<Param<?>> list;
   private final ImmutableMap<String, Param<?>> map;
 
+  public static Params params(Param<?>... params) {
+    return new Params(params);
+  }
+
   public Params(Param<?>... params) {
     this.list = ImmutableList.copyOf(params);
     this.map = createMap(list);
