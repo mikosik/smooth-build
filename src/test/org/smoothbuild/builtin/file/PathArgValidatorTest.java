@@ -4,9 +4,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.builtin.file.exc.IllegalPathException;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.IllegalPathException;
 import org.smoothbuild.plugin.exc.MissingArgException;
 
 public class PathArgValidatorTest {

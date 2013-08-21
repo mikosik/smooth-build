@@ -1,6 +1,7 @@
-package org.smoothbuild.plugin.exc;
+package org.smoothbuild.builtin.file.exc;
 
 import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.exc.IllegalArgException;
 
 @SuppressWarnings("serial")
 public class PathIsNotADirException extends IllegalArgException {
