@@ -5,9 +5,9 @@ import org.smoothbuild.builtin.file.FilesFunction;
 import org.smoothbuild.builtin.file.SaveToFunction;
 import org.smoothbuild.builtin.file.UnzipFunction;
 import org.smoothbuild.builtin.file.ZipFunction;
-import org.smoothbuild.registry.exc.PluginImplementationException;
-import org.smoothbuild.registry.instantiate.Function;
-import org.smoothbuild.registry.instantiate.FunctionFactory;
+import org.smoothbuild.function.Function;
+import org.smoothbuild.function.FunctionFactory;
+import org.smoothbuild.function.exc.PluginImplementationException;
 
 public class ImportedFunctionsInitializer {
   private final ImportedFunctions importedFunctions;

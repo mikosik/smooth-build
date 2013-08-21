@@ -1,7 +1,6 @@
 package org.smoothbuild.fs.mem;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.mem.InMemoryFileSystem;
 
 import com.google.inject.AbstractModule;
 

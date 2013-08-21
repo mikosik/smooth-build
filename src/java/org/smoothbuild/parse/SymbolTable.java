@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import java.util.Set;
 
-import org.smoothbuild.registry.instantiate.Function;
+import org.smoothbuild.function.Function;
 
 public interface SymbolTable {
 

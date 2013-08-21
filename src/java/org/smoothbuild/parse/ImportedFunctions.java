@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.registry.instantiate.Function;
+import org.smoothbuild.function.Function;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
