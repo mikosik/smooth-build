@@ -2,7 +2,7 @@ package org.smoothbuild.function.exc;
 
 import java.lang.reflect.Method;
 
-import org.smoothbuild.lang.function.ExecuteMethod;
+import org.smoothbuild.lang.type.ExecuteMethod;
 
 @SuppressWarnings("serial")
 public class StaticExecuteMethodException extends FunctionImplementationException {

@@ -1,6 +1,6 @@
 package org.smoothbuild.function.exc;
 
-import org.smoothbuild.lang.function.FunctionName;
+import org.smoothbuild.lang.type.FunctionName;
 
 @SuppressWarnings("serial")
 public class MissingNameException extends FunctionImplementationException {

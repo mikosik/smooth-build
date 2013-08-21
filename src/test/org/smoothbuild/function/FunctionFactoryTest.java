@@ -8,8 +8,8 @@ import static org.smoothbuild.lang.type.Path.path;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.fs.mem.InMemoryFileSystemModule;
-import org.smoothbuild.lang.function.ExecuteMethod;
-import org.smoothbuild.lang.function.FunctionName;
+import org.smoothbuild.lang.type.ExecuteMethod;
+import org.smoothbuild.lang.type.FunctionName;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;

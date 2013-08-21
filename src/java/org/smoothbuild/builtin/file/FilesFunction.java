@@ -3,13 +3,13 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.function.ExecuteMethod;
-import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.NoSuchPathException;
 import org.smoothbuild.lang.function.exc.PathIsNotADirException;
 import org.smoothbuild.lang.internal.FilesImpl;
+import org.smoothbuild.lang.type.ExecuteMethod;
 import org.smoothbuild.lang.type.Files;
+import org.smoothbuild.lang.type.FunctionName;
 import org.smoothbuild.lang.type.Path;
 
 // TODO forbid dir that points to temporary files created by smooth-build

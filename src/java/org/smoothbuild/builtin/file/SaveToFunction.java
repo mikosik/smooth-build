@@ -1,11 +1,11 @@
 package org.smoothbuild.builtin.file;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.function.ExecuteMethod;
-import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.PathIsNotADirException;
+import org.smoothbuild.lang.type.ExecuteMethod;
 import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.FunctionName;
 import org.smoothbuild.lang.type.Path;
 
 @FunctionName("saveTo")
