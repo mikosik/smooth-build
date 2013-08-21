@@ -6,12 +6,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
@@ -60,8 +58,8 @@ public class DependencySorterTest {
 
     List<String> actual = sorter.sortByDependency(importedFunctions, map);
 
-    assertContainsSubsequence(actual, NAME4, NAME2, NAME1);
-    assertContainsSubsequence(actual, NAME6, NAME5, NAME3, NAME1);
+    assertThat(actual).containsSubsequence(NAME4, NAME2, NAME1);
+    assertThat(actual).containsSubsequence(NAME6, NAME5, NAME3, NAME1);
 
     verifyZeroInteractions(problemsListener);
   }
@@ -86,21 +84,5 @@ public class DependencySorterTest {
     sorter.sortByDependency(importedFunctions, map);
 
     verify(problemsListener).report(Matchers.isA(CycleInCallGraphError.class));
-  }
-
-  private void assertContainsSubsequence(List<String> list, String... names) {
-    int listIndex = 0;
-    int namesIndex = 0;
-
-    while (listIndex < list.size() && namesIndex < names.length) {
-      if (list.get(listIndex).equals(names[namesIndex])) {
-        namesIndex++;
-      }
-      listIndex++;
-    }
-    if (namesIndex < names.length) {
-      Assert.fail("List " + list.toString() + " should contain subsequence "
-          + Arrays.toString(names));
-    }
   }
 }
