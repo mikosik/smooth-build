@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 // TODO test this class
 @Singleton

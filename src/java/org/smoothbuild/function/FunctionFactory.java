@@ -15,7 +15,7 @@ import org.smoothbuild.function.exc.PluginImplementationException;
 import org.smoothbuild.function.exc.StaticExecuteMethodException;
 import org.smoothbuild.function.exc.TooManyParamsInExecuteMethodException;
 import org.smoothbuild.function.exc.ZeroParamsInExecuteMethodException;
-import org.smoothbuild.lang.type.ExecuteMethod;
+import org.smoothbuild.plugin.ExecuteMethod;
 
 public class FunctionFactory {
   private final FunctionSignatureFactory signatureFactory;

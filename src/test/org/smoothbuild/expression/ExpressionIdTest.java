@@ -3,7 +3,7 @@ package org.smoothbuild.expression;
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.expression.ExpressionId.BUILD_ROOT;
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;

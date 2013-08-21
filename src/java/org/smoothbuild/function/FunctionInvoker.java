@@ -3,7 +3,7 @@ package org.smoothbuild.function;
 import java.lang.reflect.Method;
 
 import org.smoothbuild.function.exc.FunctionReflectionException;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 import com.google.common.collect.ImmutableMap;
 

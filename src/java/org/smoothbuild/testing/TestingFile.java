@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.lang.internal.FileImpl;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 public class TestingFile extends FileImpl {
   public TestingFile(FileSystem fileSystem, Path root, Path path) {

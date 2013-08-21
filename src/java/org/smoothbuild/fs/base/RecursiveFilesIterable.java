@@ -2,7 +2,7 @@ package org.smoothbuild.fs.base;
 
 import java.util.Iterator;
 
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 public class RecursiveFilesIterable implements Iterable<Path> {
   private final FileSystem fileSystem;

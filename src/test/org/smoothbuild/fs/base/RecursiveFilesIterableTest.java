@@ -1,13 +1,13 @@
 package org.smoothbuild.fs.base;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.collect.Lists;

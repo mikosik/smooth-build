@@ -1,10 +1,10 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.plugin;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.fest.assertions.api.Assertions.fail;
-import static org.smoothbuild.lang.type.Path.path;
-import static org.smoothbuild.lang.type.Path.rootPath;
+import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.Path.rootPath;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.plugin.Path;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

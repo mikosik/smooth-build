@@ -1,6 +1,6 @@
 package org.smoothbuild.function.exc;
 
-import org.smoothbuild.lang.type.Files;
+import org.smoothbuild.plugin.Files;
 
 @SuppressWarnings("serial")
 public class IllegalConstructorParamException extends FunctionImplementationException {

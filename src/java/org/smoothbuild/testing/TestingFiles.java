@@ -2,7 +2,7 @@ package org.smoothbuild.testing;
 
 import org.smoothbuild.fs.mem.InMemoryFileSystem;
 import org.smoothbuild.lang.internal.FilesImpl;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 public class TestingFiles extends FilesImpl {
   public TestingFiles() {

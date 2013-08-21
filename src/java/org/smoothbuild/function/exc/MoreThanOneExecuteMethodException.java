@@ -1,6 +1,6 @@
 package org.smoothbuild.function.exc;
 
-import org.smoothbuild.lang.type.ExecuteMethod;
+import org.smoothbuild.plugin.ExecuteMethod;
 
 @SuppressWarnings("serial")
 public class MoreThanOneExecuteMethodException extends FunctionImplementationException {

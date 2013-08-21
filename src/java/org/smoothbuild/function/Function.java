@@ -1,7 +1,7 @@
 package org.smoothbuild.function;
 
-import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;
 

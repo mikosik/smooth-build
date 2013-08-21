@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.exc;
+package org.smoothbuild.plugin.exc;
 
 @SuppressWarnings("serial")
 public class ParamException extends FunctionException {

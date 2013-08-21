@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.plugin;
 
 import java.io.InputStream;
 import java.io.OutputStream;

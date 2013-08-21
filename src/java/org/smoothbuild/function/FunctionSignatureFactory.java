@@ -11,7 +11,7 @@ import org.smoothbuild.function.exc.MissingNameException;
 import org.smoothbuild.function.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.exc.PluginImplementationException;
-import org.smoothbuild.lang.type.FunctionName;
+import org.smoothbuild.plugin.FunctionName;
 
 public class FunctionSignatureFactory {
 

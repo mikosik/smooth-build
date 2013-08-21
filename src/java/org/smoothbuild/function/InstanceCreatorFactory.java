@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.function.exc.CreatingInstanceFailedException;
 import org.smoothbuild.lang.internal.FilesImpl;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 public class InstanceCreatorFactory {
   private final FileSystem fileSystem;

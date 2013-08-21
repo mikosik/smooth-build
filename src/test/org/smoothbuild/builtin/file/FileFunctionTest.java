@@ -2,18 +2,18 @@ package org.smoothbuild.builtin.file;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.lang.internal.FileImplTest.assertContentHasFilePath;
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.lang.function.exc.IllegalPathException;
-import org.smoothbuild.lang.function.exc.MissingArgException;
-import org.smoothbuild.lang.function.exc.NoSuchPathException;
-import org.smoothbuild.lang.function.exc.ParamException;
-import org.smoothbuild.lang.function.exc.PathIsNotAFileException;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.PathTest;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.PathTest;
+import org.smoothbuild.plugin.exc.FunctionException;
+import org.smoothbuild.plugin.exc.IllegalPathException;
+import org.smoothbuild.plugin.exc.MissingArgException;
+import org.smoothbuild.plugin.exc.NoSuchPathException;
+import org.smoothbuild.plugin.exc.ParamException;
+import org.smoothbuild.plugin.exc.PathIsNotAFileException;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class FileFunctionTest {
