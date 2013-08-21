@@ -7,14 +7,14 @@ import static org.smoothbuild.plugin.Path.rootPath;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.builtin.file.exc.IllegalPathException;
+import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.fs.plugin.FileImpl;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.IllegalPathException;
 import org.smoothbuild.plugin.exc.MissingArgException;
 import org.smoothbuild.plugin.exc.ParamException;
-import org.smoothbuild.plugin.exc.PathIsNotADirException;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class SaveToFunctionTest {

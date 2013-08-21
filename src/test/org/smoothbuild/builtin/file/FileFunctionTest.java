@@ -6,14 +6,14 @@ import static org.smoothbuild.plugin.Path.path;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.builtin.file.exc.IllegalPathException;
+import org.smoothbuild.builtin.file.exc.NoSuchPathException;
+import org.smoothbuild.builtin.file.exc.PathIsNotAFileException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.IllegalPathException;
 import org.smoothbuild.plugin.exc.MissingArgException;
-import org.smoothbuild.plugin.exc.NoSuchPathException;
 import org.smoothbuild.plugin.exc.ParamException;
-import org.smoothbuild.plugin.exc.PathIsNotAFileException;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class FileFunctionTest {

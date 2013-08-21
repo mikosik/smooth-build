@@ -1,12 +1,12 @@
 package org.smoothbuild.builtin.file;
 
+import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.PathIsNotADirException;
 
 @FunctionName("saveTo")
 public class SaveToFunction {

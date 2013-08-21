@@ -2,6 +2,8 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
+import org.smoothbuild.builtin.file.exc.NoSuchPathException;
+import org.smoothbuild.builtin.file.exc.PathIsNotAFileException;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.FileImpl;
 import org.smoothbuild.plugin.ExecuteMethod;
@@ -9,8 +11,6 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.NoSuchPathException;
-import org.smoothbuild.plugin.exc.PathIsNotAFileException;
 
 @FunctionName("file")
 public class FileFunction {
