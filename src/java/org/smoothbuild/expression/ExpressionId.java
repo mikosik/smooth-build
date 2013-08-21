@@ -1,4 +1,4 @@
-package org.smoothbuild.registry.instantiate;
+package org.smoothbuild.expression;
 
 import static org.smoothbuild.lang.type.Path.path;
 

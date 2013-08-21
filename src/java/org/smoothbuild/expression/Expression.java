@@ -1,4 +1,4 @@
-package org.smoothbuild.registry.instantiate;
+package org.smoothbuild.expression;
 
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.lang.function.exc.FunctionException;
