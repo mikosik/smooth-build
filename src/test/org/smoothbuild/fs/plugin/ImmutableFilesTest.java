@@ -1,6 +1,6 @@
 package org.smoothbuild.fs.plugin;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.plugin.ImmutableFiles.immutableFiles;
 import static org.smoothbuild.plugin.Path.path;
 

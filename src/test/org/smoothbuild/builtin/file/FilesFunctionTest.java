@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.plugin.FileImplTest.assertContentHasFilePath;
 import static org.smoothbuild.plugin.Path.path;
 

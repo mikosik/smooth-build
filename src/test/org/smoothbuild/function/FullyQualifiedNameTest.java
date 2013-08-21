@@ -1,7 +1,7 @@
 package org.smoothbuild.function;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.FullyQualifiedName.fullyQualifiedName;
 import static org.smoothbuild.function.FullyQualifiedName.isValidSimpleName;
 import static org.smoothbuild.function.FullyQualifiedName.simpleName;

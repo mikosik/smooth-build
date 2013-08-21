@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.FullyQualifiedName.fullyQualifiedName;
 
 import org.junit.Assert;

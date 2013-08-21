@@ -1,6 +1,6 @@
 package org.smoothbuild.function;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.ReflexiveUtils.isPublic;
 import static org.smoothbuild.function.ReflexiveUtils.isStatic;
 
