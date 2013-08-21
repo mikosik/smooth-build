@@ -1,7 +1,6 @@
 package org.smoothbuild.registry.instantiate;
 
 import org.smoothbuild.lang.function.Type;
-import org.smoothbuild.lang.function.exc.FunctionException;
 
 public class StringExpression implements Expression {
   private final ExpressionId id;
@@ -23,7 +22,7 @@ public class StringExpression implements Expression {
   }
 
   @Override
-  public void calculate() throws FunctionException {}
+  public void calculate() {}
 
   @Override
   public Object result() {

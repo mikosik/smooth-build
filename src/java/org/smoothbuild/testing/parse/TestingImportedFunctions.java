@@ -8,6 +8,7 @@ import java.util.Set;
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.parse.SymbolTable;
 import org.smoothbuild.registry.instantiate.Function;
+import org.smoothbuild.registry.instantiate.FunctionSignature;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -17,7 +18,8 @@ public class TestingImportedFunctions implements SymbolTable {
   private final Map<String, Function> map;
 
   public TestingImportedFunctions() {
-    Function function = new Function(simpleName(IMPORTED_NAME), Type.FILE, null);
+    FunctionSignature signature = new FunctionSignature(Type.FILE, simpleName(IMPORTED_NAME), null);
+    Function function = new Function(signature, null);
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
 

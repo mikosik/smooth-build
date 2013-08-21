@@ -5,8 +5,7 @@ import org.smoothbuild.builtin.file.FilesFunction;
 import org.smoothbuild.builtin.file.SaveToFunction;
 import org.smoothbuild.builtin.file.UnzipFunction;
 import org.smoothbuild.builtin.file.ZipFunction;
-import org.smoothbuild.lang.function.FunctionDefinition;
-import org.smoothbuild.registry.exc.FunctionImplementationException;
+import org.smoothbuild.registry.exc.PluginImplementationException;
 import org.smoothbuild.registry.instantiate.Function;
 import org.smoothbuild.registry.instantiate.FunctionFactory;
 
@@ -29,15 +28,15 @@ public class ImportedFunctionsInitializer {
     register(UnzipFunction.class);
   }
 
-  private void register(Class<? extends FunctionDefinition> klass) {
+  private void register(Class<?> klass) {
     try {
       add(klass);
-    } catch (FunctionImplementationException e) {
+    } catch (PluginImplementationException e) {
       throw new SmoothFatalException(e);
     }
   }
 
-  public void add(Class<? extends FunctionDefinition> klass) throws FunctionImplementationException {
+  public void add(Class<?> klass) throws PluginImplementationException {
     Function function = functionFactory.create(klass);
     importedFunctions.add(function);
   }

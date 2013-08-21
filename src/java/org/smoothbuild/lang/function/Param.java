@@ -1,33 +1,20 @@
 package org.smoothbuild.lang.function;
 
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Files;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public class Param<T> {
+public class Param {
   public static final ParamToNameFunction PARAM_TO_NAME = new ParamToNameFunction();
 
   private final Type type;
   private final String name;
-  private T value;
-  private boolean isSet;
 
-  public static Param<String> stringParam(String name) {
-    return new Param<String>(Type.STRING, name);
-  }
-
-  public static Param<File> fileParam(String name) {
-    return new Param<File>(Type.FILE, name);
-  }
-
-  public static Param<Files> filesParam(String name) {
-    return new Param<Files>(Type.FILES, name);
+  public static Param param(Type type, String name) {
+    return new Param(type, name);
   }
 
   protected Param(Type type, String name) {
-    this.type = type;
-    this.name = name;
-    this.value = null;
-    this.isSet = false;
+    this.type = checkNotNull(type);
+    this.name = checkNotNull(name);
   }
 
   public Type type() {
@@ -38,17 +25,18 @@ public class Param<T> {
     return name;
   }
 
-  public void set(T value) {
-    this.value = value;
-    this.isSet = true;
+  @Override
+  public final boolean equals(Object object) {
+    if (!(object instanceof Param)) {
+      return false;
+    }
+    Param that = (Param) object;
+    return this.type.equals(that.type) && this.name.equals(that.name);
   }
 
-  public boolean isSet() {
-    return isSet;
-  }
-
-  public T get() {
-    return value;
+  @Override
+  public final int hashCode() {
+    return 17 * type.hashCode() + name.hashCode();
   }
 
   @Override
@@ -57,8 +45,8 @@ public class Param<T> {
   }
 
   private static class ParamToNameFunction implements
-      com.google.common.base.Function<Param<?>, String> {
-    public String apply(Param<?> param) {
+      com.google.common.base.Function<Param, String> {
+    public String apply(Param param) {
       return param.name();
     }
   }

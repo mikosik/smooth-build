@@ -17,6 +17,33 @@ public class TypeTest {
   }
 
   @Test
+  public void equalsAndHashCode() throws Exception {
+    // TODO uncomment once bug
+    // https://code.google.com/p/equalsverifier/issues/detail?id=83 is fixed
+    // and remove test below
+    // EqualsVerifier.forClass(Type.class).suppress(NULL_FIELDS).verify();
+  }
+
+  @Test
+  public void equalsAndHashCodeWorkaround() throws Exception {
+    assertThat(Type.STRING).isEqualTo(Type.STRING);
+    assertThat(Type.STRING).isNotEqualTo(Type.FILE);
+    assertThat(Type.STRING).isNotEqualTo(Type.FILES);
+
+    assertThat(Type.FILE).isNotEqualTo(Type.STRING);
+    assertThat(Type.FILE).isEqualTo(Type.FILE);
+    assertThat(Type.FILE).isNotEqualTo(Type.FILES);
+
+    assertThat(Type.FILES).isNotEqualTo(Type.STRING);
+    assertThat(Type.FILES).isNotEqualTo(Type.FILE);
+    assertThat(Type.FILES).isEqualTo(Type.FILES);
+
+    assertThat(Type.STRING.hashCode()).isNotEqualTo(Type.FILE.hashCode());
+    assertThat(Type.FILE.hashCode()).isNotEqualTo(Type.FILES.hashCode());
+    assertThat(Type.FILES.hashCode()).isNotEqualTo(Type.STRING.hashCode());
+  }
+
+  @Test
   public void toType() {
     assertThat(Type.toType(String.class)).isEqualTo(Type.STRING);
     assertThat(Type.toType(File.class)).isEqualTo(Type.FILE);

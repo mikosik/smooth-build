@@ -1,21 +1,20 @@
 package org.smoothbuild.builtin.file;
 
-import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
 import org.smoothbuild.lang.type.Path;
 
 public class PathArgValidator {
-  public static Path validatedPath(Param<String> path) throws MissingArgException,
+  public static Path validatedPath(String name, String value) throws MissingArgException,
       IllegalPathException {
-    if (!path.isSet()) {
-      throw new MissingArgException(path);
+    if (value == null) {
+      throw new MissingArgException(name);
     }
-    String message = Path.validationError(path.get());
+    String message = Path.validationError(value);
     if (message != null) {
-      throw new IllegalPathException(path, message);
+      throw new IllegalPathException(name, message);
     }
 
-    return Path.path(path.get());
+    return Path.path(value);
   }
 }

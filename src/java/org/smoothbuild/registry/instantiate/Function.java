@@ -1,54 +1,30 @@
 package org.smoothbuild.registry.instantiate;
 
-import java.util.Map;
-
 import org.smoothbuild.lang.function.FullyQualifiedName;
-import org.smoothbuild.lang.function.FunctionDefinition;
-import org.smoothbuild.lang.function.Param;
-import org.smoothbuild.lang.function.Params;
-import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.type.Path;
 
 import com.google.common.collect.ImmutableMap;
 
 public class Function {
-  private final FullyQualifiedName name;
-  private final Type type;
-  private final Instantiator instantiator;
+  private final FunctionSignature signature;
+  private final FunctionInvoker functionInvoker;
 
-  public Function(FullyQualifiedName name, Type type, Instantiator instantiator) {
-    this.name = name;
-    this.type = type;
-    this.instantiator = instantiator;
+  public Function(FunctionSignature signature, FunctionInvoker functionInvoker) {
+    this.signature = signature;
+    this.functionInvoker = functionInvoker;
+  }
+
+  public FunctionSignature signature() {
+    return signature;
   }
 
   public FullyQualifiedName name() {
-    return name;
+    return signature.name();
   }
 
-  public Type type() {
-    return type;
-  }
-
-  // TODO add tests for execute once it is fixed/simplified
-  public Object execute(Path resultDir, ImmutableMap<String, Expression> arguments)
+  public Object execute(Path resultDir, ImmutableMap<String, Object> arguments)
       throws FunctionException {
-    FunctionDefinition functionDefinition = instantiator.newInstance(resultDir);
-    Params params = functionDefinition.params();
-    for (Map.Entry<String, Expression> entry : arguments.entrySet()) {
-      String argName = entry.getKey();
-      Object argValue = entry.getValue().result();
-      Param<?> param = params.param(argName);
-      setParamValue(param, argValue);
-    }
-
-    return functionDefinition.execute();
-  }
-
-  private static <T> void setParamValue(Param<T> param, Object argValue) {
-    @SuppressWarnings("unchecked")
-    T castValue = (T) argValue;
-    param.set(castValue);
+    return functionInvoker.invoke(resultDir, arguments);
   }
 }

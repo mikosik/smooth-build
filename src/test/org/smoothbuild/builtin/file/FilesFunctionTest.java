@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.type.Path.path;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
@@ -21,13 +20,10 @@ public class FilesFunctionTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
   FilesFunction filesFunction = new FilesFunction(fileSystem);
 
-  @SuppressWarnings("unchecked")
-  Param<String> dirParam = (Param<String>) filesFunction.params().param("dir");
-
   @Test
   public void missingDirArgIsReported() throws Exception {
     try {
-      filesFunction.execute();
+      filesFunction.execute(params(null));
       Assert.fail("exception should be thrown");
     } catch (MissingArgException e) {
       // expected
@@ -39,9 +35,8 @@ public class FilesFunctionTest {
   @Test
   public void illegalPathsAreReported() throws FunctionException {
     for (String path : PathTest.listOfInvalidPaths()) {
-      dirParam.set(path);
       try {
-        filesFunction.execute();
+        filesFunction.execute(params(path));
         Assert.fail("exception should be thrown");
       } catch (IllegalPathException e) {
         // expected
@@ -53,9 +48,8 @@ public class FilesFunctionTest {
 
   @Test
   public void nonexistentPathIsReported() throws Exception {
-    dirParam.set("some/path");
     try {
-      filesFunction.execute();
+      filesFunction.execute(params("some/path"));
       Assert.fail("exception should be thrown");
     } catch (NoSuchPathException e) {
       // expected
@@ -68,9 +62,8 @@ public class FilesFunctionTest {
   public void nonDirPathIsReported() throws Exception {
     String filePath = "some/path/file.txt";
     fileSystem.createEmptyFile(filePath);
-    dirParam.set(filePath);
     try {
-      filesFunction.execute();
+      filesFunction.execute(params(filePath));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
@@ -84,16 +77,22 @@ public class FilesFunctionTest {
     String rootPath = "root/path";
     String filePath = "file/path/file.txt";
     fileSystem.createFile(rootPath, filePath);
-    dirParam.set(rootPath);
 
-    Files files = filesFunction.execute();
+    Files files = filesFunction.execute(params(rootPath));
 
     assertContentHasFilePath(files.file(path(filePath)));
   }
 
   private void assertExceptionContainsDirParam(ParamException e) {
-    @SuppressWarnings("unchecked")
-    Param<String> param = (Param<String>) e.param();
-    assertThat(param).isSameAs(dirParam);
+    assertThat(e.paramName()).isSameAs("dir");
+  }
+
+  private static FilesFunction.Parameters params(final String dir) {
+    return new FilesFunction.Parameters() {
+      @Override
+      public String dir() {
+        return dir;
+      }
+    };
   }
 }

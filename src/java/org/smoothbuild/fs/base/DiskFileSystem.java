@@ -11,9 +11,12 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
+import javax.inject.Singleton;
+
 import org.smoothbuild.lang.type.Path;
 
 // TODO test this class
+@Singleton
 public class DiskFileSystem implements FileSystem {
   @Override
   public boolean pathExists(Path path) {

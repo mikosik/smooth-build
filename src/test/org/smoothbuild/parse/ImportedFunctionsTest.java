@@ -5,13 +5,10 @@ import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedNam
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.function.FunctionDefinition;
-import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.Type;
-import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.parse.ImportedFunctions;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
 import org.smoothbuild.registry.instantiate.Function;
+import org.smoothbuild.registry.instantiate.FunctionSignature;
 
 public class ImportedFunctionsTest {
   ImportedFunctions importedFunctions = new ImportedFunctions();
@@ -71,31 +68,8 @@ public class ImportedFunctionsTest {
     }
   }
 
-  public static class MyFunction implements FunctionDefinition {
-    @Override
-    public Params params() {
-      return null;
-    }
-
-    @Override
-    public Object execute() throws FunctionException {
-      return null;
-    }
-  }
-
-  public static class MyFunction2 implements FunctionDefinition {
-    @Override
-    public Params params() {
-      return null;
-    }
-
-    @Override
-    public Object execute() throws FunctionException {
-      return null;
-    }
-  }
-
   private static Function function(String name) {
-    return new Function(fullyQualifiedName(name), Type.STRING, null);
+    FunctionSignature signature = new FunctionSignature(Type.STRING, fullyQualifiedName(name), null);
+    return new Function(signature, null);
   }
 }

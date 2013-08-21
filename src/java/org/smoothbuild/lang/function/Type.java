@@ -37,6 +37,16 @@ public class Type {
     return javaType;
   }
 
+  @Override
+  public final boolean equals(Object object) {
+    return this == object;
+  }
+
+  @Override
+  public final int hashCode() {
+    return name.hashCode();
+  }
+
   public static ImmutableList<Type> allTypes() {
     return ALL_TYPES;
   }
@@ -46,8 +56,7 @@ public class Type {
   }
 
   public static Type toType(Class<?> klass) {
-    Type result = JAVA_TO_SMOOTH.get(klass);
-    return result;
+    return JAVA_TO_SMOOTH.get(klass);
   }
 
   private static ImmutableList<Type> createAllTypes() {

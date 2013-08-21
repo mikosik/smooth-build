@@ -1,45 +1,30 @@
 package org.smoothbuild.lang.function;
 
+import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.smoothbuild.lang.function.Param.param;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
 
 public class ParamTest {
-
   @Test
   public void type() throws Exception {
-    assertThat(param("name").type()).isEqualTo(Type.STRING);
+    assertThat(param(Type.STRING, "name").type()).isEqualTo(Type.STRING);
   }
 
   @Test
   public void name() throws Exception {
-    assertThat(param("name").name()).isEqualTo("name");
+    assertThat(param(Type.STRING, "name").name()).isEqualTo("name");
   }
 
   @Test
-  public void isNotSetInitially() {
-    Param<String> param = param("name");
-    assertThat(param.isSet()).isFalse();
-  }
-
-  @Test
-  public void isSetAfterSetting() {
-    Param<String> param = param("name");
-    param.set("abc");
-    assertThat(param.isSet()).isTrue();
-  }
-
-  @Test
-  public void initiallySetToNull() throws Exception {
-    assertThat(param("name").get()).isNull();
+  public void equalsAndHashCode() throws Exception {
+    EqualsVerifier.forClass(Param.class).suppress(NULL_FIELDS).verify();
   }
 
   @Test
   public void testToString() throws Exception {
-    assertThat(param("name").toString()).isEqualTo("Param(String: name)");
-  }
-
-  public static Param<String> param(String name) {
-    return new Param<String>(Type.STRING, name);
+    assertThat(param(Type.STRING, "name").toString()).isEqualTo("Param(String: name)");
   }
 }

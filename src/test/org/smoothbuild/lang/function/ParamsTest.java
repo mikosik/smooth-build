@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.function.ParamTest.param;
+import static org.smoothbuild.lang.function.Param.param;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,21 +10,19 @@ public class ParamsTest {
 
   @Test
   public void readingParam() {
-    Param<String> param1 = param("first");
-    Param<String> param2 = param("second");
+    Param param1 = param(Type.STRING, "first");
+    Param param2 = param(Type.STRING, "second");
     Params params = new Params(param1, param2);
 
-    @SuppressWarnings("unchecked")
-    Param<String> param1Read = (Param<String>) params.param("first");
+    Param param1Read = params.param("first");
     assertThat(param1Read).isSameAs(param1);
-    @SuppressWarnings("unchecked")
-    Param<String> param2Read = (Param<String>) params.param("second");
+    Param param2Read = params.param("second");
     assertThat(param2Read).isSameAs(param2);
   }
 
   @Test
   public void readingNonexistentParamFailes() throws Exception {
-    Param<String> param1 = param("first");
+    Param param1 = param(Type.STRING, "first");
     Params params = new Params(param1);
 
     try {
@@ -37,7 +35,7 @@ public class ParamsTest {
 
   @Test
   public void testToString() throws Exception {
-    Params params = new Params(param("first"), param("second"));
+    Params params = new Params(param(Type.STRING, "first"), param(Type.STRING, "second"));
     assertThat(params.toString()).isEqualTo("Params(Param(String: first), Param(String: second))");
   }
 }

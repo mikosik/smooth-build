@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.lang.function.Param.fileParam;
 import static org.smoothbuild.lang.type.Path.path;
 
 import java.io.IOException;
@@ -9,19 +8,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.function.FunctionDefinition;
+import org.smoothbuild.lang.function.ExecuteMethod;
 import org.smoothbuild.lang.function.FunctionName;
-import org.smoothbuild.lang.function.Param;
-import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Files;
 
 @FunctionName("unzip")
-public class UnzipFunction implements FunctionDefinition {
-  private final Param<File> file = fileParam("file");
-  private final Params params = new Params(file);
+public class UnzipFunction {
+  public interface Parameters {
+    public File file();
+  }
 
   private final Files files;
   private final byte[] buffer = new byte[1024];
@@ -30,18 +28,13 @@ public class UnzipFunction implements FunctionDefinition {
     this.files = result;
   }
 
-  @Override
-  public Params params() {
-    return params;
-  }
-
-  @Override
-  public Files execute() throws FunctionException {
-    if (!file.isSet()) {
-      throw new MissingArgException(file);
+  @ExecuteMethod
+  public Files execute(Parameters params) throws FunctionException {
+    if (params.file() == null) {
+      throw new MissingArgException("file");
     }
 
-    try (ZipInputStream zipInputStream = new ZipInputStream(file.get().createInputStream());) {
+    try (ZipInputStream zipInputStream = new ZipInputStream(params.file().createInputStream());) {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         unzipEntry(zipInputStream, entry);
