@@ -1,8 +1,8 @@
 package org.smoothbuild.plugin;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.plugin.Path.rootPath;
 

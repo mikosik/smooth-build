@@ -15,8 +15,7 @@
   <property name="lib.aopalliance" value="${dir.lib}/aopalliance.jar" />
   <property name="lib.cglib" value="${dir.lib}/equals/cglib-nodep-2.2.3.jar" />
   <property name="lib.equalsverifier" value="${dir.lib}/equals/equalsverifier-1.3.1.jar" />
-  <property name="lib.fest-assert" value="${dir.lib}/fest-assert-core-2.0M5.jar" />
-  <property name="lib.fest-util" value="${dir.lib}/fest-util-1.2.0.jar" />
+  <property name="lib.assertj-core" value="${dir.lib}/assertj-core-1.4.0-SNAPSHOT.jar" />
   <property name="lib.guava" value="${dir.lib}/guava-14.0.1.jar" />
   <property name="lib.guice" value="${dir.lib}/guice-3.0.jar" />
   <property name="lib.javax.inject" value="${dir.lib}/javax.inject.jar" />
@@ -79,24 +78,11 @@
     <path refid="classpath.with.java" />
     <pathelement location="${lib.cglib}" />
     <pathelement location="${lib.equalsverifier}" />
-    <pathelement location="${lib.fest-assert}" />
-    <pathelement location="${lib.fest-util}" />
+    <pathelement location="${lib.assertj-core}" />
     <pathelement location="${lib.junit}" />
     <pathelement location="${lib.objenesis}" />
     <pathelement location="${lib.mockito}" />
   </path>
-
-  <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar" />
-  <property name="lib.cglib" value="${dir.lib}/cglib-nodep-2.2.3.jar" />
-  <property name="lib.equalsverifier" value="${dir.lib}/equals/equalsverifier-1.3.1.jar" />
-  <property name="lib.fest-assert" value="${dir.lib}/fest-assert-core-2.0M5.jar" />
-  <property name="lib.fest-util" value="${dir.lib}/fest-util-1.2.0.jar" />
-  <property name="lib.guava" value="${dir.lib}/guava-14.0.1.jar" />
-  <property name="lib.junit" value="${dir.lib}/junit-4.11.jar" />
-  <property name="lib.mockito" value="${dir.lib}/mockito-all-1.9.5.jar" />
-  <property name="lib.objenesis" value="${dir.lib}/objenesis-1.3.jar" />
-
-
 
   <target name="compile-test" depends="compile-java">
     <javac destdir="${dir.build.class.test}"

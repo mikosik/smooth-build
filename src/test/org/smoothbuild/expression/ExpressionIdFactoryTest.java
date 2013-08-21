@@ -1,6 +1,6 @@
 package org.smoothbuild.expression;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.expression.ExpressionId.BUILD_ROOT;
 import static org.smoothbuild.plugin.Path.path;
 
