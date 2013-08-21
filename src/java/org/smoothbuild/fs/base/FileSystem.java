@@ -3,7 +3,7 @@ package org.smoothbuild.fs.base;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 import com.google.inject.ImplementedBy;
 

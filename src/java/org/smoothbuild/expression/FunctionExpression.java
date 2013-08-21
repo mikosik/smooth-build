@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.smoothbuild.function.Function;
 import org.smoothbuild.function.Type;
-import org.smoothbuild.lang.function.exc.FunctionException;
+import org.smoothbuild.plugin.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;

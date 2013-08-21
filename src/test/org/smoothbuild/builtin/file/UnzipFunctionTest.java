@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
 
 import java.io.IOException;
@@ -12,9 +12,9 @@ import java.util.zip.ZipOutputStream;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.UnzipFunction.Parameters;
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Files;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFiles;
 

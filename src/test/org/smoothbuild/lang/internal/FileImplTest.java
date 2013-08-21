@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.internal;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
 import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
 
@@ -9,8 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class FileImplTest {

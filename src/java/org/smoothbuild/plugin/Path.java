@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.plugin;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;

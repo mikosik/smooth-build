@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,12 +8,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.lang.function.exc.MissingArgException;
-import org.smoothbuild.lang.type.ExecuteMethod;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Files;
-import org.smoothbuild.lang.type.FunctionName;
+import org.smoothbuild.plugin.ExecuteMethod;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FunctionName;
+import org.smoothbuild.plugin.exc.FunctionException;
+import org.smoothbuild.plugin.exc.MissingArgException;
 
 @FunctionName("unzip")
 public class UnzipFunction {

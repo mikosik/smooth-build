@@ -2,9 +2,9 @@ package org.smoothbuild.lang.internal;
 
 import static org.smoothbuild.lang.internal.ImmutableFile.immutableFile;
 
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Files;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.Path;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;

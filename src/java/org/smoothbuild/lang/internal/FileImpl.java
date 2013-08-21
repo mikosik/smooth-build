@@ -4,8 +4,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Path;
 
 public class FileImpl implements File {
   private final FileSystem fileSystem;

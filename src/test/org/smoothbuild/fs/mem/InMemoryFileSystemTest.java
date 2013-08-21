@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.mem;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,8 +10,8 @@ import java.io.OutputStreamWriter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.type.Path;
-import org.smoothbuild.lang.type.PathTest;
+import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.PathTest;
 
 import com.google.common.io.LineReader;
 

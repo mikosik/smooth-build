@@ -3,8 +3,8 @@ package org.smoothbuild.lang.internal;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Path;
 
 public class ImmutableFile implements File {
   private final File file;

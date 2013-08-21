@@ -2,15 +2,15 @@ package org.smoothbuild.lang.internal;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.lang.internal.ImmutableFiles.immutableFiles;
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Files;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.collect.ImmutableList;

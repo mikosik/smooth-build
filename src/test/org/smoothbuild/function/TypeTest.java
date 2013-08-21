@@ -4,8 +4,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Files;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Files;
 
 public class TypeTest {
 

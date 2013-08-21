@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.function.exc;
+package org.smoothbuild.plugin.exc;
 
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 @SuppressWarnings("serial")
 public class NoSuchPathException extends IllegalArgException {

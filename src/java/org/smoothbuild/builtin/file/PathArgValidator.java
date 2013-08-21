@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.file;
 
-import org.smoothbuild.lang.function.exc.IllegalPathException;
-import org.smoothbuild.lang.function.exc.MissingArgException;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.exc.IllegalPathException;
+import org.smoothbuild.plugin.exc.MissingArgException;
 
 public class PathArgValidator {
   public static Path validatedPath(String name, String value) throws MissingArgException,

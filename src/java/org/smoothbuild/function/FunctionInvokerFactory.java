@@ -14,7 +14,7 @@ import org.smoothbuild.function.exc.MissingConstructorException;
 import org.smoothbuild.function.exc.NonPublicConstructorException;
 import org.smoothbuild.function.exc.TooManyConstructorParamsException;
 import org.smoothbuild.function.exc.TooManyConstructorsException;
-import org.smoothbuild.lang.type.Files;
+import org.smoothbuild.plugin.Files;
 
 public class FunctionInvokerFactory {
   private final InstanceCreatorFactory instanceCreatorFactory;

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.plugin;
 
 public interface Files {
   public File file(Path path);

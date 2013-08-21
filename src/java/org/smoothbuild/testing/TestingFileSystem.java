@@ -1,6 +1,6 @@
 package org.smoothbuild.testing;
 
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
 
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
 import org.smoothbuild.fs.mem.InMemoryFileSystem;
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 public class TestingFileSystem extends InMemoryFileSystem {
 

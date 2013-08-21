@@ -1,7 +1,7 @@
 package org.smoothbuild.function;
 
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.Files;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Files;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

@@ -1,8 +1,8 @@
 package org.smoothbuild.expression;
 
-import static org.smoothbuild.lang.type.Path.path;
+import static org.smoothbuild.plugin.Path.path;
 
-import org.smoothbuild.lang.type.Path;
+import org.smoothbuild.plugin.Path;
 
 import com.google.common.annotations.VisibleForTesting;
 

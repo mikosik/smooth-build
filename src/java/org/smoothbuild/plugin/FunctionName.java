@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.plugin;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,5 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface ExecuteMethod {}
+@Target(ElementType.TYPE)
+public @interface FunctionName {
+  String value();
+}
