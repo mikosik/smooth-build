@@ -2,22 +2,25 @@ package org.smoothbuild.registry.instantiate;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Map;
+
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.lang.function.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
 public class FunctionExpression implements Expression {
   private final ExpressionId id;
   private final Function function;
   private Object result;
-  private final ImmutableMap<String, Expression> arguments;
+  private final ImmutableMap<String, Expression> argumentProviders;
 
   public FunctionExpression(ExpressionId id, Function function,
-      ImmutableMap<String, Expression> arguments) {
+      ImmutableMap<String, Expression> argumentProviders) {
     this.id = id;
     this.function = function;
-    this.arguments = arguments;
+    this.argumentProviders = argumentProviders;
   }
 
   @Override
@@ -27,11 +30,19 @@ public class FunctionExpression implements Expression {
 
   @Override
   public Type type() {
-    return function.type();
+    return function.signature().type();
   }
 
   public void calculate() throws FunctionException {
-    result = function.execute(id.resultDir(), arguments);
+    result = function.execute(id.resultDir(), calculateArguments());
+  }
+
+  private ImmutableMap<String, Object> calculateArguments() {
+    Builder<String, Object> builder = ImmutableMap.builder();
+    for (Map.Entry<String, Expression> entry : argumentProviders.entrySet()) {
+      builder.put(entry.getKey(), entry.getValue().result());
+    }
+    return builder.build();
   }
 
   public Object result() {

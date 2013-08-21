@@ -4,7 +4,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
@@ -14,29 +13,28 @@ public class PathArgValidatorTest {
 
   @Test
   public void missingDirArgIsReported() throws Exception {
-    Param<String> param = Param.stringParam("name");
+    String name = "name";
     try {
-      PathArgValidator.validatedPath(param);
+      PathArgValidator.validatedPath(name, null);
       Assert.fail("exception should be thrown");
     } catch (MissingArgException e) {
       // expected
 
-      assertThat(param).isSameAs(param);
+      assertThat(e.paramName()).isSameAs(name);
     }
   }
 
   @Test
   public void illegalPathsAreReported() throws FunctionException {
+    String name = "name";
     for (String path : PathTest.listOfInvalidPaths()) {
-      Param<String> param = Param.stringParam("name");
-      param.set(path);
       try {
-        PathArgValidator.validatedPath(param);
+        PathArgValidator.validatedPath(name, path);
         Assert.fail("exception should be thrown");
       } catch (IllegalPathException e) {
         // expected
 
-        assertThat(param).isSameAs(param);
+        assertThat(e.paramName()).isSameAs(name);
       }
     }
   }
@@ -44,9 +42,7 @@ public class PathArgValidatorTest {
   @Test
   public void validPathsAreAccepted() throws FunctionException {
     for (String path : PathTest.listOfCorrectPaths()) {
-      Param<String> param = Param.stringParam("name");
-      param.set(path);
-      PathArgValidator.validatedPath(param);
+      PathArgValidator.validatedPath("name", path);
     }
   }
 }

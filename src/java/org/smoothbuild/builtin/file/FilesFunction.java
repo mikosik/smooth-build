@@ -3,10 +3,8 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.function.FunctionDefinition;
+import org.smoothbuild.lang.function.ExecuteMethod;
 import org.smoothbuild.lang.function.FunctionName;
-import org.smoothbuild.lang.function.Param;
-import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.NoSuchPathException;
 import org.smoothbuild.lang.function.exc.PathIsNotADirException;
@@ -18,9 +16,10 @@ import org.smoothbuild.lang.type.Path;
 // tool
 
 @FunctionName("files")
-public class FilesFunction implements FunctionDefinition {
-  private final Param<String> dir = Param.stringParam("dir");
-  private final Params params = new Params(dir);
+public class FilesFunction {
+  public interface Parameters {
+    public String dir();
+  }
 
   private final FileSystem fileSystem;
 
@@ -28,26 +27,21 @@ public class FilesFunction implements FunctionDefinition {
     this.fileSystem = fileSystem;
   }
 
-  @Override
-  public Params params() {
-    return params;
-  }
-
-  @Override
-  public Files execute() throws FunctionException {
-    Path dirPath = validatedPath(dir);
+  @ExecuteMethod
+  public Files execute(Parameters params) throws FunctionException {
+    Path dirPath = validatedPath("dir", params.dir());
     return createFiles(dirPath);
   }
 
   private Files createFiles(Path dirPath) throws FunctionException {
     if (!fileSystem.pathExists(dirPath)) {
-      throw new NoSuchPathException(dir, dirPath);
+      throw new NoSuchPathException("dir", dirPath);
     }
 
     if (fileSystem.isDirectory(dirPath)) {
       return new FilesImpl(fileSystem, dirPath);
     } else {
-      throw new PathIsNotADirException(dir, dirPath);
+      throw new PathIsNotADirException("dir", dirPath);
     }
   }
 }

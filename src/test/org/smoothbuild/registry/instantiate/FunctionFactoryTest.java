@@ -1,132 +1,62 @@
 package org.smoothbuild.registry.instantiate;
 
-import static org.mockito.Mockito.mock;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.lang.function.Param.param;
 import static org.smoothbuild.lang.type.Path.path;
 
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.function.FunctionDefinition;
+import org.smoothbuild.fs.mem.InMemoryFileSystemModule;
+import org.smoothbuild.lang.function.ExecuteMethod;
 import org.smoothbuild.lang.function.FunctionName;
-import org.smoothbuild.lang.function.Params;
-import org.smoothbuild.lang.function.exc.FunctionException;
-import org.smoothbuild.lang.type.Path;
-import org.smoothbuild.registry.exc.FunctionImplementationException;
-import org.smoothbuild.registry.exc.IllegalFunctionNameException;
-import org.smoothbuild.registry.exc.IllegalReturnTypeException;
-import org.smoothbuild.registry.exc.MissingNameException;
-import org.smoothbuild.registry.exc.StrangeExecuteMethodException;
+import org.smoothbuild.lang.function.Type;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Guice;
 
 public class FunctionFactoryTest {
-  Instantiator instantiator = mock(Instantiator.class);
-  Path path = path("abc");
-  FunctionDefinition definition = mock(FunctionDefinition.class);
+  FunctionFactory functionFactory;
 
-  InstantiatorFactory instantiatorFactory = mock(InstantiatorFactory.class);
-  FunctionFactory functionFactory = new FunctionFactory(instantiatorFactory);
-
-  // TODO add tests for creating Function once Function is simplified
-
-  @FunctionName("myFunction")
-  public static class MyNamedFunction implements FunctionDefinition {
-
-    @Override
-    public Params params() {
-      return null;
-    }
-
-    @Override
-    public String execute() throws FunctionException {
-      return null;
-    }
+  @Before
+  public void before() {
+    functionFactory = Guice.createInjector(new InMemoryFileSystemModule()).getInstance(
+        FunctionFactory.class);
   }
 
   @Test
-  public void missingNameCausesExceptionToBeThrown() throws FunctionImplementationException {
-    try {
-      functionFactory.create(MyMissingNameFunction.class);
-      Assert.fail("exception should be thrown");
-    } catch (MissingNameException e) {
-      // expected
-    }
-  }
+  public void testSignature() throws Exception {
+    Function function = functionFactory.create(MyFunctionImplementation.class);
 
-  public static class MyMissingNameFunction implements FunctionDefinition {
+    assertThat(function.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
+    FunctionSignature signature = function.signature();
+    assertThat(signature.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
+    assertThat(signature.type()).isEqualTo(Type.STRING);
 
-    @Override
-    public Params params() {
-      return null;
-    }
-
-    @Override
-    public Object execute() throws FunctionException {
-      return null;
-    }
+    assertThat(signature.params().param("stringA")).isEqualTo(param(Type.STRING, "stringA"));
+    assertThat(signature.params().param("stringB")).isEqualTo(param(Type.STRING, "stringB"));
   }
 
   @Test
-  public void missingExecuteMethodCausesExceptionToBeThrown()
-      throws FunctionImplementationException {
-    try {
-      Class<?> x = FakeFunction.class;
-      @SuppressWarnings("unchecked")
-      Class<FunctionDefinition> klass = (Class<FunctionDefinition>) x;
-      functionFactory.create(klass);
-      Assert.fail("exception should be thrown");
-    } catch (StrangeExecuteMethodException e) {
-      // expected
-    }
+  public void testInvokation() throws Exception {
+    Function function = functionFactory.create(MyFunctionImplementation.class);
+    ImmutableMap<String, Object> args = ImmutableMap.<String, Object> of("stringA", "abc",
+        "stringB", "def");
+    assertThat(function.execute(path("any/path"), args)).isEqualTo("abcdef");
   }
 
-  @FunctionName("name")
-  public static class FakeFunction {
+  public interface Parameters {
+    public String stringA();
 
+    public String stringB();
   }
 
-  @Test
-  public void illegalReturnTypeCausesExceptionToBeThrown() throws FunctionImplementationException {
-    try {
-      functionFactory.create(MyIllegalReturnTypeFunction.class);
-      Assert.fail("exception should be thrown");
-    } catch (IllegalReturnTypeException e) {
-      // expected
-    }
-  }
+  @FunctionName("my.package.myFunction")
+  public static class MyFunctionImplementation {
 
-  @FunctionName("name")
-  public static class MyIllegalReturnTypeFunction implements FunctionDefinition {
-
-    @Override
-    public Params params() {
-      return null;
-    }
-
-    @Override
-    public Runnable execute() throws FunctionException {
-      return null;
-    }
-  }
-
-  @Test
-  public void illegalFunctionNameCausesExceptionToBeThrown() throws FunctionImplementationException {
-    try {
-      functionFactory.create(MyIllegalFunctionNameFunction.class);
-      Assert.fail("exception should be thrown");
-    } catch (IllegalFunctionNameException e) {
-      // expected
-    }
-  }
-
-  @FunctionName("name.")
-  public static class MyIllegalFunctionNameFunction implements FunctionDefinition {
-
-    @Override
-    public Params params() {
-      return null;
-    }
-
-    @Override
-    public Runnable execute() throws FunctionException {
-      return null;
+    @ExecuteMethod
+    public String execute(Parameters params) {
+      return params.stringA() + params.stringB();
     }
   }
 }

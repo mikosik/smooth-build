@@ -9,7 +9,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Files;
@@ -22,8 +21,6 @@ public class ZipFunctionTest {
   // ZipFunction.class
 
   ZipFunction zipFunction = new ZipFunction(new TestingFiles());
-  @SuppressWarnings("unchecked")
-  Param<Files> filesParam = (Param<Files>) zipFunction.params().param("files");
 
   @Test
   public void testZipping() throws IOException, FunctionException {
@@ -31,9 +28,7 @@ public class ZipFunctionTest {
     inputFiles.createFile(path("fileA.txt")).createTestContent();
     inputFiles.createFile(path("fileB.txt")).createTestContent();
 
-    filesParam.set(inputFiles);
-
-    File result = zipFunction.execute();
+    File result = zipFunction.execute(params(inputFiles));
 
     TestingFiles unpackedFiles = new TestingFiles();
 
@@ -54,5 +49,14 @@ public class ZipFunctionTest {
       }
     }
     assertThat(fileCount).isEqualTo(2);
+  }
+
+  private static ZipFunction.Parameters params(final Files files) {
+    return new ZipFunction.Parameters() {
+      @Override
+      public Files files() {
+        return files;
+      }
+    };
   }
 }

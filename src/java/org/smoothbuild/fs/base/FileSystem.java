@@ -5,9 +5,12 @@ import java.io.OutputStream;
 
 import org.smoothbuild.lang.type.Path;
 
+import com.google.inject.ImplementedBy;
+
 /**
  * All errors are reported by throwing {@link FileSystemException}.
  */
+@ImplementedBy(DiskFileSystem.class)
 public interface FileSystem {
   public boolean pathExists(Path path);
 

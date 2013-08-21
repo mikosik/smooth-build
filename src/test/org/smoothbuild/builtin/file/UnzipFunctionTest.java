@@ -10,8 +10,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.file.UnzipFunction.Parameters;
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Files;
@@ -20,13 +20,11 @@ import org.smoothbuild.testing.TestingFiles;
 
 public class UnzipFunctionTest {
   UnzipFunction unzipFunction = new UnzipFunction(new TestingFiles());
-  @SuppressWarnings("unchecked")
-  Param<File> filesParam = (Param<File>) unzipFunction.params().param("file");
 
   @Test
   public void testUnzipping() throws IOException, FunctionException {
-    filesParam.set(packedFiles("file/path/file1.txt", "file/path/file2.txt"));
-    Files result = unzipFunction.execute();
+    Parameters params = params(packedFiles("file/path/file1.txt", "file/path/file2.txt"));
+    Files result = unzipFunction.execute(params);
     int fileCount = 0;
     for (File file : result.asIterable()) {
       fileCount++;
@@ -67,5 +65,14 @@ public class UnzipFunctionTest {
     }
 
     zipOutputStream.closeEntry();
+  }
+
+  private static UnzipFunction.Parameters params(final File file) {
+    return new UnzipFunction.Parameters() {
+      @Override
+      public File file() {
+        return file;
+      }
+    };
   }
 }

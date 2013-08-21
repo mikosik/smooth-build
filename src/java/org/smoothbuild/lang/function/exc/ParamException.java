@@ -1,17 +1,15 @@
 package org.smoothbuild.lang.function.exc;
 
-import org.smoothbuild.lang.function.Param;
-
 @SuppressWarnings("serial")
 public class ParamException extends FunctionException {
-  private final Param<?> param;
+  private final String paramName;
 
-  public ParamException(Param<?> param, String message) {
+  public ParamException(String paramName, String message) {
     super(message);
-    this.param = param;
+    this.paramName = paramName;
   }
 
-  public Param<?> param() {
-    return param;
+  public String paramName() {
+    return paramName;
   }
 }

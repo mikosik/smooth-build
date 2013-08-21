@@ -1,58 +1,76 @@
 package org.smoothbuild.registry.instantiate;
 
-import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.registry.instantiate.ReflexiveUtils.isPublic;
+import static org.smoothbuild.registry.instantiate.ReflexiveUtils.isStatic;
 
-import org.smoothbuild.lang.function.FullyQualifiedName;
-import org.smoothbuild.lang.function.FunctionDefinition;
-import org.smoothbuild.lang.function.FunctionName;
-import org.smoothbuild.lang.function.Type;
+import java.lang.reflect.Method;
+
+import javax.inject.Inject;
+
+import org.smoothbuild.lang.function.ExecuteMethod;
 import org.smoothbuild.registry.exc.FunctionImplementationException;
-import org.smoothbuild.registry.exc.IllegalFunctionNameException;
-import org.smoothbuild.registry.exc.IllegalReturnTypeException;
-import org.smoothbuild.registry.exc.MissingNameException;
-import org.smoothbuild.registry.exc.StrangeExecuteMethodException;
+import org.smoothbuild.registry.exc.MoreThanOneExecuteMethodException;
+import org.smoothbuild.registry.exc.NoExecuteMethodException;
+import org.smoothbuild.registry.exc.NonPublicExecuteMethodException;
+import org.smoothbuild.registry.exc.PluginImplementationException;
+import org.smoothbuild.registry.exc.StaticExecuteMethodException;
+import org.smoothbuild.registry.exc.TooManyParamsInExecuteMethodException;
+import org.smoothbuild.registry.exc.ZeroParamsInExecuteMethodException;
 
 public class FunctionFactory {
-  private final InstantiatorFactory instantiatorFactory;
+  private final FunctionSignatureFactory signatureFactory;
+  private final FunctionInvokerFactory invokerFactory;
 
-  public FunctionFactory(InstantiatorFactory instantiatorFactory) {
-    this.instantiatorFactory = instantiatorFactory;
+  @Inject
+  public FunctionFactory(FunctionSignatureFactory signatureFactory,
+      FunctionInvokerFactory invokerFactory) {
+    this.signatureFactory = signatureFactory;
+    this.invokerFactory = invokerFactory;
   }
 
-  public Function create(Class<? extends FunctionDefinition> klass)
+  public Function create(Class<?> klass) throws PluginImplementationException {
+    Method method = getExecuteMethod(klass);
+    Class<?> paramsInterface = getParamsInterface(method);
+
+    FunctionSignature signature = signatureFactory.create(klass, method, paramsInterface);
+    FunctionInvoker invoker = invokerFactory.create(klass, method, paramsInterface);
+
+    return new Function(signature, invoker);
+  }
+
+  private static Method getExecuteMethod(Class<?> klass) throws FunctionImplementationException {
+    Class<ExecuteMethod> executeAnnotation = ExecuteMethod.class;
+    Method result = null;
+    for (Method method : klass.getDeclaredMethods()) {
+      if (method.isAnnotationPresent(executeAnnotation)) {
+        if (!isPublic(method)) {
+          throw new NonPublicExecuteMethodException(klass, method);
+        }
+        if (isStatic(method)) {
+          throw new StaticExecuteMethodException(klass, method);
+        }
+        if (result == null) {
+          result = method;
+        } else {
+          throw new MoreThanOneExecuteMethodException(klass);
+        }
+      }
+    }
+    if (result == null) {
+      throw new NoExecuteMethodException(klass);
+    }
+    return result;
+  }
+
+  private static Class<?> getParamsInterface(Method executeMethod)
       throws FunctionImplementationException {
-    FullyQualifiedName name = getFunctionName(klass);
-    Type type = getReturnType(klass);
-    Instantiator instantiator = instantiatorFactory.create(klass);
-
-    return new Function(name, type, instantiator);
-  }
-
-  private static FullyQualifiedName getFunctionName(Class<? extends FunctionDefinition> klass)
-      throws MissingNameException, IllegalFunctionNameException {
-    FunctionName annotation = klass.getAnnotation(FunctionName.class);
-    if (annotation == null) {
-      throw new MissingNameException(klass);
+    Class<?>[] types = executeMethod.getParameterTypes();
+    if (types.length == 0) {
+      throw new TooManyParamsInExecuteMethodException(executeMethod.getDeclaringClass());
     }
-    try {
-      return fullyQualifiedName(annotation.value());
-    } catch (IllegalArgumentException e) {
-      throw new IllegalFunctionNameException(klass, e.getMessage());
+    if (1 < types.length) {
+      throw new ZeroParamsInExecuteMethodException(executeMethod.getDeclaringClass());
     }
-  }
-
-  private static Type getReturnType(Class<? extends FunctionDefinition> klass)
-      throws IllegalReturnTypeException, StrangeExecuteMethodException {
-    Class<?> javaType;
-    try {
-      javaType = klass.getMethod("execute").getReturnType();
-    } catch (NoSuchMethodException | SecurityException e) {
-      throw new StrangeExecuteMethodException(klass, e);
-    }
-    Type type = Type.toType(javaType);
-    if (type == null) {
-      throw new IllegalReturnTypeException(klass, javaType);
-    }
-    return type;
+    return types[0];
   }
 }

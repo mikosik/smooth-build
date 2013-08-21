@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.lang.function.Param.filesParam;
 import static org.smoothbuild.lang.type.Path.path;
 
 import java.io.IOException;
@@ -9,17 +8,23 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.function.FunctionDefinition;
+import org.smoothbuild.lang.function.ExecuteMethod;
 import org.smoothbuild.lang.function.FunctionName;
-import org.smoothbuild.lang.function.Param;
-import org.smoothbuild.lang.function.Params;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Files;
 
 @FunctionName("zip")
-public class ZipFunction implements FunctionDefinition {
+public class ZipFunction {
+
+  public interface Parameters {
+    /**
+     * Files to be zipped.
+     */
+    public Files files();
+  }
+
   // TODO add missing parameters: level, comment, method
 
   // TODO investigate zip64 format.
@@ -33,9 +38,6 @@ public class ZipFunction implements FunctionDefinition {
   // http://commons.apache.org/proper/commons-compress/zip.html
   // which provides setUseZip64 method that allows specifying zip64 behaviour.
 
-  private final Param<Files> files = filesParam("files");
-  private final Params params = new Params(files);
-
   private final Files result;
   private final byte[] buffer = new byte[1024];
 
@@ -43,19 +45,14 @@ public class ZipFunction implements FunctionDefinition {
     this.result = result;
   }
 
-  @Override
-  public Params params() {
-    return params;
-  }
-
-  @Override
-  public File execute() throws FunctionException {
-    if (!files.isSet()) {
-      throw new MissingArgException(files);
+  @ExecuteMethod
+  public File execute(Parameters params) throws FunctionException {
+    if (params.files() == null) {
+      throw new MissingArgException("files");
     }
     File output = result.createFile(path("output.zip"));
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
-      for (File file : files.get().asIterable()) {
+      for (File file : params.files().asIterable()) {
         addEntry(zipOutputStream, file);
       }
     } catch (IOException e) {

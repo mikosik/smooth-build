@@ -1,13 +1,12 @@
 package org.smoothbuild.builtin.file;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.type.Path.path;
 import static org.smoothbuild.lang.type.Path.rootPath;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.smoothbuild.lang.function.Param;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.IllegalPathException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
@@ -22,56 +21,44 @@ public class SaveToFunctionTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
   SaveToFunction function = new SaveToFunction(fileSystem);
 
-  @SuppressWarnings("unchecked")
-  Param<File> fileParam = (Param<File>) function.params().param("file");
-  @SuppressWarnings("unchecked")
-  Param<String> dirParam = (Param<String>) function.params().param("dir");
-
   @Test
   public void missingDirArgIsReported() throws Exception {
-    fileParam.set(Mockito.mock(File.class));
-
     try {
-      function.execute();
+      function.execute(params(mock(File.class), null));
       Assert.fail("exception should be thrown");
     } catch (MissingArgException e) {
       // expected
 
-      assertExceptionContainsDirParam(e);
+      assertExceptionContainsDirParamName(e);
     }
   }
 
   @Test
   public void illegalPathsAreReported() throws FunctionException {
-    fileParam.set(Mockito.mock(File.class));
-
     for (String path : PathTest.listOfInvalidPaths()) {
-      dirParam.set(path);
       try {
-        function.execute();
+        function.execute(params(mock(File.class), path));
         Assert.fail("exception should be thrown");
       } catch (IllegalPathException e) {
         // expected
 
-        assertExceptionContainsDirParam(e);
+        assertExceptionContainsDirParamName(e);
       }
     }
   }
 
   @Test
   public void nonDirPathIsReported() throws Exception {
-    fileParam.set(Mockito.mock(File.class));
-
     String filePath = "some/path/file.txt";
     fileSystem.createEmptyFile(filePath);
-    dirParam.set(filePath);
+
     try {
-      function.execute();
+      function.execute(params(mock(File.class), filePath));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
 
-      assertExceptionContainsDirParam(e);
+      assertExceptionContainsDirParamName(e);
     }
   }
 
@@ -82,16 +69,15 @@ public class SaveToFunctionTest {
     String filePath = fileRootPath + "/file.txt";
     fileSystem.createEmptyFile(destinationDirPath + fileRootPath);
 
-    dirParam.set(destinationDirPath);
-    fileParam.set(new FileImpl(fileSystem, rootPath(), path(filePath)));
+    FileImpl file = new FileImpl(fileSystem, rootPath(), path(filePath));
 
     try {
-      function.execute();
+      function.execute(params(file, destinationDirPath));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
 
-      assertExceptionContainsDirParam(e);
+      assertExceptionContainsDirParamName(e);
     }
   }
 
@@ -101,18 +87,29 @@ public class SaveToFunctionTest {
     String fileRoot = "file/root";
     String filePath = "file/path/file.txt";
 
-    dirParam.set(destinationDirPath);
     fileSystem.createFile(fileRoot, filePath);
-    fileParam.set(new FileImpl(fileSystem, path(fileRoot), path(filePath)));
+    FileImpl file = new FileImpl(fileSystem, path(fileRoot), path(filePath));
 
-    function.execute();
+    function.execute(params(file, destinationDirPath));
 
     fileSystem.assertContentHasFilePath(destinationDirPath, filePath);
   }
 
-  private void assertExceptionContainsDirParam(ParamException e) {
-    @SuppressWarnings("unchecked")
-    Param<String> param = (Param<String>) e.param();
-    assertThat(param).isSameAs(dirParam);
+  private void assertExceptionContainsDirParamName(ParamException e) {
+    assertThat(e.paramName()).isSameAs("dir");
+  }
+
+  private static SaveToFunction.Parameters params(final File file, final String dir) {
+    return new SaveToFunction.Parameters() {
+      @Override
+      public File file() {
+        return file;
+      }
+
+      @Override
+      public String dir() {
+        return dir;
+      }
+    };
   }
 }
