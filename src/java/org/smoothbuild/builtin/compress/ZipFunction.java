@@ -1,4 +1,4 @@
-package org.smoothbuild.builtin.file;
+package org.smoothbuild.builtin.compress;
 
 import static org.smoothbuild.plugin.Path.path;
 

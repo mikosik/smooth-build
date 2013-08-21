@@ -1,10 +1,10 @@
 package org.smoothbuild.parse;
 
+import org.smoothbuild.builtin.compress.UnzipFunction;
+import org.smoothbuild.builtin.compress.ZipFunction;
 import org.smoothbuild.builtin.file.FileFunction;
 import org.smoothbuild.builtin.file.FilesFunction;
 import org.smoothbuild.builtin.file.SaveToFunction;
-import org.smoothbuild.builtin.file.UnzipFunction;
-import org.smoothbuild.builtin.file.ZipFunction;
 import org.smoothbuild.function.Function;
 import org.smoothbuild.function.FunctionFactory;
 import org.smoothbuild.function.exc.PluginImplementationException;
