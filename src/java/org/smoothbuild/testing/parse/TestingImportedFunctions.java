@@ -5,10 +5,10 @@ import static org.smoothbuild.lang.function.FullyQualifiedName.simpleName;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.function.Function;
+import org.smoothbuild.function.FunctionSignature;
 import org.smoothbuild.lang.function.Type;
 import org.smoothbuild.parse.SymbolTable;
-import org.smoothbuild.registry.instantiate.Function;
-import org.smoothbuild.registry.instantiate.FunctionSignature;
 
 import com.google.common.collect.ImmutableMap;
 

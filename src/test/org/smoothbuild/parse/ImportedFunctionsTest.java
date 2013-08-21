@@ -5,10 +5,10 @@ import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedNam
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.function.Function;
+import org.smoothbuild.function.FunctionSignature;
+import org.smoothbuild.function.exc.FunctionImplementationException;
 import org.smoothbuild.lang.function.Type;
-import org.smoothbuild.registry.exc.FunctionImplementationException;
-import org.smoothbuild.registry.instantiate.Function;
-import org.smoothbuild.registry.instantiate.FunctionSignature;
 
 public class ImportedFunctionsTest {
   ImportedFunctions importedFunctions = new ImportedFunctions();
