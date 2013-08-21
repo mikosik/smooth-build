@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.internal;
+package org.smoothbuild.fs.plugin;
 
 import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
