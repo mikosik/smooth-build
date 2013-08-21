@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.internal;
+package org.smoothbuild.fs.plugin;
 
-import static org.smoothbuild.lang.internal.ImmutableFile.immutableFile;
+import static org.smoothbuild.fs.plugin.ImmutableFile.immutableFile;
 
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Files;

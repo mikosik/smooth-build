@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.internal.FilesImpl;
+import org.smoothbuild.fs.plugin.FilesImpl;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.Files;
 import org.smoothbuild.plugin.FunctionName;

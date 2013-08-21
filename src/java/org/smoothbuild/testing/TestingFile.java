@@ -3,7 +3,7 @@ package org.smoothbuild.testing;
 import java.io.IOException;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.lang.internal.FileImpl;
+import org.smoothbuild.fs.plugin.FileImpl;
 import org.smoothbuild.plugin.Path;
 
 public class TestingFile extends FileImpl {

@@ -5,8 +5,8 @@ import java.lang.reflect.Constructor;
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.plugin.FilesImpl;
 import org.smoothbuild.function.exc.CreatingInstanceFailedException;
-import org.smoothbuild.lang.internal.FilesImpl;
 import org.smoothbuild.plugin.Path;
 
 public class InstanceCreatorFactory {
