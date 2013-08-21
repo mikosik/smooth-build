@@ -1,4 +1,4 @@
-package org.smoothbuild.registry.instantiate;
+package org.smoothbuild.expression;
 
 public class ExpressionIdFactory {
   private int count = 0;

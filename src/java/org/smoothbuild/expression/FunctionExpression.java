@@ -1,4 +1,4 @@
-package org.smoothbuild.registry.instantiate;
+package org.smoothbuild.expression;
 
 import static com.google.common.base.Preconditions.checkState;
 

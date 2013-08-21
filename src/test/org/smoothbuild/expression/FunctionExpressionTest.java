@@ -1,4 +1,4 @@
-package org.smoothbuild.registry.instantiate;
+package org.smoothbuild.expression;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
