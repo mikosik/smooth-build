@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.smoothbuild.function.Function;
 import org.smoothbuild.function.FunctionSignature;
-import org.smoothbuild.lang.function.Type;
+import org.smoothbuild.function.Type;
 
 import com.google.common.collect.ImmutableMap;
 

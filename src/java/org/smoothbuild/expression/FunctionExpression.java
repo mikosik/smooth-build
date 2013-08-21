@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Map;
 
 import org.smoothbuild.function.Function;
-import org.smoothbuild.lang.function.Type;
+import org.smoothbuild.function.Type;
 import org.smoothbuild.lang.function.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;

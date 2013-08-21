@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.function;
 
-import static org.smoothbuild.lang.function.Param.PARAM_TO_NAME;
+import static org.smoothbuild.function.Param.PARAM_TO_NAME;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;

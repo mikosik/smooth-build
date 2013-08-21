@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

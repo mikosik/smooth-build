@@ -1,8 +1,8 @@
 package org.smoothbuild.function;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedName;
-import static org.smoothbuild.lang.function.Param.param;
+import static org.smoothbuild.function.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.function.Param.param;
 import static org.smoothbuild.lang.type.Path.path;
 
 import org.junit.Before;
@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.smoothbuild.fs.mem.InMemoryFileSystemModule;
 import org.smoothbuild.lang.function.ExecuteMethod;
 import org.smoothbuild.lang.function.FunctionName;
-import org.smoothbuild.lang.function.Type;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;

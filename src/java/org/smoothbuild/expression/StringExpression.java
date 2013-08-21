@@ -1,6 +1,6 @@
 package org.smoothbuild.expression;
 
-import org.smoothbuild.lang.function.Type;
+import org.smoothbuild.function.Type;
 
 public class StringExpression implements Expression {
   private final ExpressionId id;
