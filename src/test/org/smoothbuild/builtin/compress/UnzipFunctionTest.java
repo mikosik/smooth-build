@@ -1,4 +1,4 @@
-package org.smoothbuild.builtin.file;
+package org.smoothbuild.builtin.compress;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.Path.path;
@@ -10,7 +10,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.UnzipFunction.Parameters;
+import org.smoothbuild.builtin.compress.UnzipFunction.Parameters;
 import org.smoothbuild.fs.base.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Files;
