@@ -1,6 +1,6 @@
 package org.smoothbuild.function.exc;
 
-import org.smoothbuild.lang.function.ExecuteMethod;
+import org.smoothbuild.lang.type.ExecuteMethod;
 
 @SuppressWarnings("serial")
 public class TooManyParamsInExecuteMethodException extends FunctionImplementationException {

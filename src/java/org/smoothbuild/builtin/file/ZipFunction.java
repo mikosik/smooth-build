@@ -8,12 +8,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.fs.base.FileSystemException;
-import org.smoothbuild.lang.function.ExecuteMethod;
-import org.smoothbuild.lang.function.FunctionName;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.function.exc.MissingArgException;
+import org.smoothbuild.lang.type.ExecuteMethod;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Files;
+import org.smoothbuild.lang.type.FunctionName;
 
 @FunctionName("zip")
 public class ZipFunction {

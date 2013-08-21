@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.lang.type;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
