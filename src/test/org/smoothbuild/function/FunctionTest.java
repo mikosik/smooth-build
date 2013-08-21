@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.FullyQualifiedName;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.type.Path;
 

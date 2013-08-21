@@ -1,13 +1,13 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.function.FullyQualifiedName.isValidSimpleName;
+import static org.smoothbuild.function.FullyQualifiedName.isValidSimpleName;
 
 import java.util.Map;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
-import org.smoothbuild.lang.function.FullyQualifiedName;
+import org.smoothbuild.function.FullyQualifiedName;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportWarning;

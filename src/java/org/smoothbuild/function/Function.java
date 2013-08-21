@@ -1,6 +1,5 @@
 package org.smoothbuild.function;
 
-import org.smoothbuild.lang.function.FullyQualifiedName;
 import org.smoothbuild.lang.function.exc.FunctionException;
 import org.smoothbuild.lang.type.Path;
 

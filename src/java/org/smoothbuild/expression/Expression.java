@@ -1,6 +1,6 @@
 package org.smoothbuild.expression;
 
-import org.smoothbuild.lang.function.Type;
+import org.smoothbuild.function.Type;
 import org.smoothbuild.lang.function.exc.FunctionException;
 
 public interface Expression {

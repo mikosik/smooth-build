@@ -1,8 +1,5 @@
 package org.smoothbuild.function;
 
-import org.smoothbuild.lang.function.FullyQualifiedName;
-import org.smoothbuild.lang.function.Params;
-import org.smoothbuild.lang.function.Type;
 
 public class FunctionSignature {
   private final Type type;

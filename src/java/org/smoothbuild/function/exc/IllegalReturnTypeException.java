@@ -1,6 +1,6 @@
 package org.smoothbuild.function.exc;
 
-import org.smoothbuild.lang.function.Type;
+import org.smoothbuild.function.Type;
 
 import com.google.common.base.Joiner;
 

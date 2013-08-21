@@ -2,7 +2,7 @@ package org.smoothbuild.function.exc;
 
 import java.lang.reflect.Method;
 
-import org.smoothbuild.lang.function.Type;
+import org.smoothbuild.function.Type;
 
 @SuppressWarnings("serial")
 public class ForbiddenParamTypeException extends ParamsImplementationException {

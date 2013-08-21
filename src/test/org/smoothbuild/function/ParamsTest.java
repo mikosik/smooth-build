@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.function;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.function.Param.param;
+import static org.smoothbuild.function.Param.param;
 
 import org.junit.Assert;
 import org.junit.Test;

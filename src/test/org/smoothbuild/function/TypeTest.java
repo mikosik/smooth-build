@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.function;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 

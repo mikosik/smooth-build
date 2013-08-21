@@ -3,7 +3,7 @@ package org.smoothbuild.expression;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.Type;
+import org.smoothbuild.function.Type;
 
 public class StringExpressionTest {
   ExpressionId id = new ExpressionId("abc");

@@ -1,14 +1,14 @@
 package org.smoothbuild.parse;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.function.FullyQualifiedName.fullyQualifiedName;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.function.Function;
 import org.smoothbuild.function.FunctionSignature;
+import org.smoothbuild.function.Type;
 import org.smoothbuild.function.exc.FunctionImplementationException;
-import org.smoothbuild.lang.function.Type;
 
 public class ImportedFunctionsTest {
   ImportedFunctions importedFunctions = new ImportedFunctions();

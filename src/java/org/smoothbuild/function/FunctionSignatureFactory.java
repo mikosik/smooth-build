@@ -1,6 +1,6 @@
 package org.smoothbuild.function;
 
-import static org.smoothbuild.lang.function.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.function.FullyQualifiedName.fullyQualifiedName;
 
 import java.lang.reflect.Method;
 
@@ -11,11 +11,7 @@ import org.smoothbuild.function.exc.MissingNameException;
 import org.smoothbuild.function.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.exc.PluginImplementationException;
-import org.smoothbuild.lang.function.FullyQualifiedName;
 import org.smoothbuild.lang.function.FunctionName;
-import org.smoothbuild.lang.function.Param;
-import org.smoothbuild.lang.function.Params;
-import org.smoothbuild.lang.function.Type;
 
 public class FunctionSignatureFactory {
 

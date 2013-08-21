@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.function;
 
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Files;
