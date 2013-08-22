@@ -23,10 +23,9 @@ public class SaveToFunction {
   }
 
   @ExecuteMethod
-  public Void execute(Parameters params) throws FunctionException {
+  public void execute(Parameters params) throws FunctionException {
     Path dirPath = PathArgValidator.validatedPath("dir", params.dir());
     saveTo(dirPath, params);
-    return null;
   }
 
   private void saveTo(Path dirPath, Parameters params) throws PathIsNotADirException {
