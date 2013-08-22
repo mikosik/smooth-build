@@ -18,10 +18,10 @@ public class FunctionExpression implements Expression {
   private final ImmutableMap<String, Expression> argumentProviders;
 
   public FunctionExpression(ExpressionId id, Function function,
-      ImmutableMap<String, Expression> argumentProviders) {
+      Map<String, Expression> argumentProviders) {
     this.id = id;
     this.function = function;
-    this.argumentProviders = argumentProviders;
+    this.argumentProviders = ImmutableMap.copyOf(argumentProviders);
   }
 
   @Override
