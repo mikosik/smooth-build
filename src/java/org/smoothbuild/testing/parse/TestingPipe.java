@@ -1,11 +1,11 @@
 package org.smoothbuild.testing.parse;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.smoothbuild.antlr.SmoothParser.PipeExpressionContext;
+import org.smoothbuild.antlr.SmoothParser.PipeContext;
 
-public class TestingPipeExpression extends PipeExpressionContext {
+public class TestingPipe extends PipeContext {
 
-  public TestingPipeExpression(ParserRuleContext parent) {
+  public TestingPipe(ParserRuleContext parent) {
     super(parent, 0);
   }
 
