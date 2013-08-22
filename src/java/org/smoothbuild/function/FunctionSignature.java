@@ -1,12 +1,13 @@
 package org.smoothbuild.function;
 
+import com.google.common.collect.ImmutableMap;
 
 public class FunctionSignature {
   private final Type type;
   private final FullyQualifiedName name;
-  private final Params params;
+  private final ImmutableMap<String, Param> params;
 
-  public FunctionSignature(Type type, FullyQualifiedName name, Params params) {
+  public FunctionSignature(Type type, FullyQualifiedName name, ImmutableMap<String, Param> params) {
     this.type = type;
     this.name = name;
     this.params = params;
@@ -20,7 +21,7 @@ public class FunctionSignature {
     return name;
   }
 
-  public Params params() {
+  public ImmutableMap<String, Param> params() {
     return params;
   }
 }
