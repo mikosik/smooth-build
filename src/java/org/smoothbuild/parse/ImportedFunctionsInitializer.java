@@ -32,7 +32,8 @@ public class ImportedFunctionsInitializer {
     try {
       add(klass);
     } catch (PluginImplementationException e) {
-      throw new SmoothFatalException(e);
+      throw new RuntimeException("Builtin plugin " + klass.getCanonicalName()
+          + " has implementation problem.", e);
     }
   }
 
