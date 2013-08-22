@@ -3,8 +3,6 @@ package org.smoothbuild.function;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Param {
-  public static final ParamToNameFunction PARAM_TO_NAME = new ParamToNameFunction();
-
   private final Type type;
   private final String name;
 
@@ -42,12 +40,5 @@ public class Param {
   @Override
   public String toString() {
     return "Param(" + type.name() + ": " + name + ")";
-  }
-
-  private static class ParamToNameFunction implements
-      com.google.common.base.Function<Param, String> {
-    public String apply(Param param) {
-      return param.name();
-    }
   }
 }
