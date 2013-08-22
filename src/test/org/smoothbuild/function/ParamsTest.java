@@ -3,7 +3,6 @@ package org.smoothbuild.function;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.Param.param;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ParamsTest {
@@ -21,16 +20,11 @@ public class ParamsTest {
   }
 
   @Test
-  public void readingNonexistentParamFailes() throws Exception {
+  public void readingNonexistentParamReturnsNull() throws Exception {
     Param param1 = param(Type.STRING, "first");
     Params params = new Params(param1);
 
-    try {
-      params.param("abc");
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+    assertThat(params.param("abc")).isNull();
   }
 
   @Test
