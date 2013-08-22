@@ -1,6 +1,6 @@
 grammar Smooth;
 
-module: function* ;
+module: function* EOF;
 function: functionName ':' pipeExpression ';' ;
 pipeExpression: expression ( '|' call )* ;
 expression : call | STRING ;
