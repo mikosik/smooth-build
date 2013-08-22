@@ -32,8 +32,12 @@ public class FunctionFactoryTest {
     assertThat(signature.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
     assertThat(signature.type()).isEqualTo(Type.STRING);
 
-    assertThat(signature.params().param("stringA")).isEqualTo(param(Type.STRING, "stringA"));
-    assertThat(signature.params().param("stringB")).isEqualTo(param(Type.STRING, "stringB"));
+    Param paramA = param(Type.STRING, "stringA");
+    Param paramB = param(Type.STRING, "stringB");
+    ImmutableMap<String, Param> expectedParams = ImmutableMap.of(paramA.name(), paramA,
+        paramB.name(), paramB);
+
+    assertThat(signature.params()).isEqualTo(expectedParams);
   }
 
   @Test

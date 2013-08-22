@@ -13,13 +13,16 @@ import org.smoothbuild.function.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.exc.PluginImplementationException;
 import org.smoothbuild.plugin.FunctionName;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+
 public class FunctionSignatureFactory {
 
   public FunctionSignature create(Class<?> klass, Method method, Class<?> paramsInterface)
       throws PluginImplementationException {
     Type type = getReturnType(method);
     FullyQualifiedName name = getFunctionName(klass);
-    Params params = getParams(klass, method, paramsInterface);
+    ImmutableMap<String, Param> params = getParams(klass, method, paramsInterface);
 
     return new FunctionSignature(type, name, params);
   }
@@ -46,17 +49,18 @@ public class FunctionSignatureFactory {
     return type;
   }
 
-  private static Params getParams(Class<?> klass, Method method, Class<?> paramsInterface)
-      throws PluginImplementationException {
+  private static ImmutableMap<String, Param> getParams(Class<?> klass, Method method,
+      Class<?> paramsInterface) throws PluginImplementationException {
     if (!paramsInterface.isInterface()) {
       throw new ParamsIsNotInterfaceException(klass, method);
     }
     Method[] methods = paramsInterface.getMethods();
-    Param[] params = new Param[methods.length];
-    for (int i = 0; i < methods.length; i++) {
-      params[i] = methodToParam(klass, methods[i]);
+    Builder<String, Param> builder = ImmutableMap.builder();
+    for (Method method2 : methods) {
+      Param param = methodToParam(klass, method2);
+      builder.put(param.name(), param);
     }
-    return Params.params(params);
+    return builder.build();
   }
 
   private static Param methodToParam(Class<?> klass, Method method)
