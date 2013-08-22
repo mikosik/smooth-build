@@ -18,8 +18,8 @@ public class TestingFunction extends FunctionContext {
     super(parent, 0);
   }
 
-  public TestingPipeExpression addPipeExpression() {
-    TestingPipeExpression pipe = new TestingPipeExpression(this);
+  public TestingPipe addPipeExpression() {
+    TestingPipe pipe = new TestingPipe(this);
     addChild(pipe);
     return pipe;
   }

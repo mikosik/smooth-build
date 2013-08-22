@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.testing.parse.TestingFunction;
 import org.smoothbuild.testing.parse.TestingModule;
-import org.smoothbuild.testing.parse.TestingPipeExpression;
+import org.smoothbuild.testing.parse.TestingPipe;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -40,7 +40,7 @@ public class DependencyCollectorTest {
 
     TestingModule module = TestingModule.testingModule();
     TestingFunction function = module.addFunction(name);
-    TestingPipeExpression pipe = function.addPipeExpression();
+    TestingPipe pipe = function.addPipeExpression();
     pipe.addFunctionCall(dep1);
     pipe.addFunctionCall(dep2);
 
@@ -60,12 +60,12 @@ public class DependencyCollectorTest {
     TestingModule module = TestingModule.testingModule();
     {
       TestingFunction function = module.addFunction(name1);
-      TestingPipeExpression pipe = function.addPipeExpression();
+      TestingPipe pipe = function.addPipeExpression();
       pipe.addFunctionCall(name2);
     }
     {
       TestingFunction function = module.addFunction(name2);
-      TestingPipeExpression pipe = function.addPipeExpression();
+      TestingPipe pipe = function.addPipeExpression();
       pipe.addFunctionCall(name1);
     }
 
