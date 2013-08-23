@@ -9,6 +9,14 @@ public class Helpers {
     Token startToken = parserRuleContext.getStart();
     Token endToken = parserRuleContext.getStop();
 
+    return locationOf(startToken, endToken);
+  }
+
+  public static SourceLocation locationOf(Token token) {
+    return locationOf(token, token);
+  }
+
+  private static SourceLocation locationOf(Token startToken, Token endToken) {
     int line = startToken.getLine();
     int start = startToken.getStartIndex();
     int end = endToken.getStopIndex();
