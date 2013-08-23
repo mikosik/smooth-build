@@ -15,7 +15,7 @@ import org.smoothbuild.function.Type;
 
 import com.google.common.collect.ImmutableMap;
 
-public class FunctionExpressionTest {
+public class CallExpressionTest {
   ExpressionId id = new ExpressionId("hash");
   @Mock
   Function function;
@@ -29,18 +29,18 @@ public class FunctionExpressionTest {
 
   ImmutableMap<String, Expression> arguments;
 
-  FunctionExpression functionExpression;
+  CallExpression callExpression;
 
   @Before
   public void before() {
     MockitoAnnotations.initMocks(this);
     arguments = ImmutableMap.of(paramAName, expressionA, paramBName, expressionB);
-    functionExpression = new FunctionExpression(id, function, arguments);
+    callExpression = new CallExpression(id, function, arguments);
   }
 
   @Test
   public void id() {
-    assertThat(functionExpression.id()).isEqualTo(id);
+    assertThat(callExpression.id()).isEqualTo(id);
   }
 
   @Test
@@ -49,7 +49,7 @@ public class FunctionExpressionTest {
     when(signature.type()).thenReturn(Type.STRING);
     when(function.signature()).thenReturn(signature);
 
-    assertThat(functionExpression.type()).isEqualTo(Type.STRING);
+    assertThat(callExpression.type()).isEqualTo(Type.STRING);
   }
 
   @Test
@@ -66,16 +66,16 @@ public class FunctionExpressionTest {
     when(function.execute(id.resultDir(), args)).thenReturn(result);
 
     // when
-    functionExpression.calculate();
+    callExpression.calculate();
 
     // then
-    assertThat(functionExpression.result()).isEqualTo(result);
+    assertThat(callExpression.result()).isEqualTo(result);
   }
 
   @Test
   public void fetchingResultFailsWhenNoExecuteHasBeenCalled() throws Exception {
     try {
-      functionExpression.result();
+      callExpression.result();
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
       // expected

@@ -11,13 +11,13 @@ import org.smoothbuild.plugin.exc.FunctionException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class FunctionExpression implements Expression {
+public class CallExpression implements Expression {
   private final ExpressionId id;
   private final Function function;
   private Object result;
   private final ImmutableMap<String, Expression> argumentProviders;
 
-  public FunctionExpression(ExpressionId id, Function function,
+  public CallExpression(ExpressionId id, Function function,
       Map<String, Expression> argumentProviders) {
     this.id = id;
     this.function = function;
