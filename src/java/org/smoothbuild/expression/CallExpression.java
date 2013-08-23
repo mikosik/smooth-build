@@ -31,7 +31,7 @@ public class CallExpression implements Expression {
 
   @Override
   public Type type() {
-    return function.signature().type();
+    return function.type();
   }
 
   public void calculate() throws FunctionException {

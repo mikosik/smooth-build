@@ -2,7 +2,6 @@ package org.smoothbuild.expression;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -10,7 +9,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.smoothbuild.function.Function;
-import org.smoothbuild.function.FunctionSignature;
 import org.smoothbuild.function.Type;
 
 import com.google.common.collect.ImmutableMap;
@@ -45,10 +43,7 @@ public class CallExpressionTest {
 
   @Test
   public void type() throws Exception {
-    FunctionSignature signature = mock(FunctionSignature.class);
-    when(signature.type()).thenReturn(Type.STRING);
-    when(function.signature()).thenReturn(signature);
-
+    when(function.type()).thenReturn(Type.STRING);
     assertThat(callExpression.type()).isEqualTo(Type.STRING);
   }
 
