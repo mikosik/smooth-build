@@ -18,8 +18,16 @@ public class Function {
     return signature;
   }
 
+  public Type type() {
+    return signature.type();
+  }
+
   public FullyQualifiedName name() {
     return signature.name();
+  }
+
+  public ImmutableMap<String, Param> params() {
+    return signature.params();
   }
 
   public Object execute(Path resultDir, ImmutableMap<String, Object> arguments)
