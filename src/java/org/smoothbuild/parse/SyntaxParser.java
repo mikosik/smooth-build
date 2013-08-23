@@ -1,5 +1,7 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.parse.Helpers.locationOf;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.BitSet;
@@ -60,10 +62,7 @@ public class SyntaxParser {
         int stop = charPositionInLine;
         return new SourceLocation(line, start, stop);
       } else {
-        Token offendingToken = (Token) offendingSymbol;
-        int start = offendingToken.getStartIndex();
-        int stop = offendingToken.getStopIndex();
-        return new SourceLocation(line, start, stop);
+        return locationOf((Token) offendingSymbol);
       }
     }
 
@@ -88,9 +87,7 @@ public class SyntaxParser {
 
     private void reportProblem(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      int start = token.getStartIndex();
-      SourceLocation location = new SourceLocation(token.getLine(), start, start);
-      problemsListener.report(new Error(location, message));
+      problemsListener.report(new Error(locationOf(token), message));
     }
   }
 }
