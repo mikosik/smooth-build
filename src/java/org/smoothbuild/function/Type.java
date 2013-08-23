@@ -37,6 +37,10 @@ public class Type {
     return javaType;
   }
 
+  public boolean isAssignableFrom(Type type) {
+    return this.equals(type);
+  }
+
   @Override
   public final boolean equals(Object object) {
     return this == object;

@@ -17,6 +17,21 @@ public class TypeTest {
   }
 
   @Test
+  public void isAssignableFrom() throws Exception {
+    assertThat(Type.STRING.isAssignableFrom(Type.STRING)).isTrue();
+    assertThat(Type.STRING.isAssignableFrom(Type.FILE)).isFalse();
+    assertThat(Type.STRING.isAssignableFrom(Type.FILES)).isFalse();
+
+    assertThat(Type.FILE.isAssignableFrom(Type.STRING)).isFalse();
+    assertThat(Type.FILE.isAssignableFrom(Type.FILE)).isTrue();
+    assertThat(Type.FILE.isAssignableFrom(Type.FILES)).isFalse();
+
+    assertThat(Type.FILES.isAssignableFrom(Type.STRING)).isFalse();
+    assertThat(Type.FILES.isAssignableFrom(Type.FILE)).isFalse();
+    assertThat(Type.FILES.isAssignableFrom(Type.FILES)).isTrue();
+  }
+
+  @Test
   public void equalsAndHashCode() throws Exception {
     // TODO uncomment once bug
     // https://code.google.com/p/equalsverifier/issues/detail?id=83 is fixed
