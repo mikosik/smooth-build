@@ -3,12 +3,14 @@
   <property name="dir.lib" location="lib" />
   <property name="dir.src" location="src" />
   <property name="dir.src.java" location="${dir.src}/java" />
+  <property name="dir.src.testing" location="${dir.src}/testing" />
   <property name="dir.src.test" location="${dir.src}/test" />
   <property name="dir.build" location="build" />
   <property name="dir.build.java" location="${dir.build}/java" />
   <property name="dir.build.java.parser" location="${dir.build.java}/org/smoothbuild/antlr" />
   <property name="dir.build.class" location="${dir.build}/class" />
   <property name="dir.build.class.java" location="${dir.build.class}/java" />
+  <property name="dir.build.class.testing" location="${dir.build.class}/testing" />
   <property name="dir.build.class.test" location="${dir.build.class}/test" />
 
   <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar" />
@@ -26,6 +28,7 @@
   <target name="init">
     <mkdir dir="${dir.build.java.parser}" />
     <mkdir dir="${dir.build.class.java}" />
+    <mkdir dir="${dir.build.class.testing}" />
     <mkdir dir="${dir.build.class.test}" />
   </target>
 
@@ -72,10 +75,37 @@
     <pathelement location="${dir.build.class.java}" />
   </path>
 
+  <!-- compile-testing -->
+        
+  <path id="classpath.for.testing">
+    <path refid="classpath.with.java" />
+    <pathelement location="${lib.assertj-core}" />
+    <pathelement location="${lib.junit}" />
+  </path>
+
+  <target name="compile-testing" depends="compile-java">
+    <javac destdir="${dir.build.class.testing}"
+           debug="true"
+           includeantruntime="false"
+           debuglevel="lines,vars,source">
+      <compilerarg value="-Xlint:all" />
+      <compilerarg value="-Werror" />
+      <src path="${dir.src.testing}" />
+      <classpath>
+        <path refid="classpath.for.testing" />
+      </classpath>
+    </javac>
+  </target>
+
+  <path id="classpath.with.testing">
+    <path refid="classpath.for.testing" />
+    <pathelement location="${dir.build.class.testing}" />
+  </path>
+
   <!-- compile-test -->
 
   <path id="classpath.for.test">
-    <path refid="classpath.with.java" />
+    <path refid="classpath.with.testing" />
     <pathelement location="${lib.cglib}" />
     <pathelement location="${lib.equalsverifier}" />
     <pathelement location="${lib.assertj-core}" />
@@ -84,7 +114,7 @@
     <pathelement location="${lib.mockito}" />
   </path>
 
-  <target name="compile-test" depends="compile-java">
+  <target name="compile-test" depends="compile-testing">
     <javac destdir="${dir.build.class.test}"
            debug="true"
            includeantruntime="false"
