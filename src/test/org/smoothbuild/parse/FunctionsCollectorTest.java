@@ -10,6 +10,7 @@ import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportWarning;
 import org.smoothbuild.testing.parse.TestingImportedFunctions;
+import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
 

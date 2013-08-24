@@ -4,12 +4,10 @@ import static com.google.common.base.Charsets.UTF_8;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.problem.Problem;
+import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 public class SyntaxParserTest {
 
@@ -59,12 +57,8 @@ public class SyntaxParserTest {
   }
 
   private static void assertParsingSucceeds(String scriptText) throws IOException {
-    List<Problem> collected = parse(scriptText).collected();
-    if (!collected.isEmpty()) {
-      Problem problem = collected.get(0);
-      Assert.fail("Expected zero problems,\nbut got message:\n" + problem.message()
-          + "\nlocation: " + problem.sourceLocation());
-    }
+    TestingProblemsListener problems = parse(scriptText);
+    problems.assertNoProblems();
   }
 
   private static TestingProblemsListener parse(String string) throws IOException {
