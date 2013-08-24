@@ -22,4 +22,9 @@ public class Problem {
   public String message() {
     return message;
   }
+
+  @Override
+  public String toString() {
+    return type.toString() + sourceLocation.toString() + ": " + message;
+  }
 }
