@@ -32,4 +32,10 @@ public class ProblemTest {
     assertThat(problem.sourceLocation()).isSameAs(location);
     assertThat(problem.message()).isEqualTo(message);
   }
+
+  @Test
+  public void testToString() throws Exception {
+    Problem problem = new Problem(WARNING, new SourceLocation(1, 2, 3), "problem description");
+    assertThat(problem.toString()).isEqualTo("WARNING[1:2-3]: problem description");
+  }
 }
