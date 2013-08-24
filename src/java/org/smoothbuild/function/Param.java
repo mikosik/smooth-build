@@ -2,12 +2,33 @@ package org.smoothbuild.function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Set;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.Sets;
+
 public class Param {
   private final Type type;
   private final String name;
 
   public static Param param(Type type, String name) {
     return new Param(type, name);
+  }
+
+  public static ImmutableMap<String, Param> params(Param... params) {
+    Set<String> names = Sets.newHashSet();
+
+    Builder<String, Param> builder = ImmutableMap.builder();
+    for (Param param : params) {
+      String name = param.name();
+      if (names.contains(name)) {
+        throw new IllegalArgumentException("Duplicate param name = '" + name + "'");
+      }
+      builder.put(name, param);
+      names.add(name);
+    }
+    return builder.build();
   }
 
   protected Param(Type type, String name) {

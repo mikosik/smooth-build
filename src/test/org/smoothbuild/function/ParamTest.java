@@ -2,12 +2,42 @@ package org.smoothbuild.function;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.smoothbuild.function.Param.param;
+import static org.smoothbuild.function.Type.STRING;
+
+import java.util.Map;
+
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
 
 public class ParamTest {
+
+  @Test
+  public void creatingParamsMap() throws Exception {
+    String name1 = "name1";
+    String name2 = "name2";
+    Param param1 = param(STRING, name1);
+    Param param2 = param(STRING, name2);
+
+    Map<String, Param> params = Param.params(param1, param2);
+    assertThat(params.get(name1)).isSameAs(param1);
+    assertThat(params.get(name2)).isSameAs(param2);
+  }
+
+  @Test
+  public void creatingParamsMapWithDuplicateParamNamesThrowsExcpetion() throws Exception {
+    Param param1 = param(STRING, "name");
+
+    try {
+      Param.params(param1, param1);
+      fail("exception should be thrown");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
   @Test
   public void type() throws Exception {
     assertThat(param(Type.STRING, "name").type()).isEqualTo(Type.STRING);
