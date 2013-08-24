@@ -3,6 +3,7 @@ package org.smoothbuild.function;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.FullyQualifiedName.fullyQualifiedName;
 import static org.smoothbuild.function.Param.param;
+import static org.smoothbuild.function.Type.STRING;
 import static org.smoothbuild.plugin.Path.path;
 
 import org.junit.Before;
@@ -32,12 +33,10 @@ public class FunctionFactoryTest {
     assertThat(signature.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
     assertThat(signature.type()).isEqualTo(Type.STRING);
 
-    Param paramA = param(Type.STRING, "stringA");
-    Param paramB = param(Type.STRING, "stringB");
-    ImmutableMap<String, Param> expectedParams = ImmutableMap.of(paramA.name(), paramA,
-        paramB.name(), paramB);
+    Param paramA = param(STRING, "stringA");
+    Param paramB = param(STRING, "stringB");
 
-    assertThat(signature.params()).isEqualTo(expectedParams);
+    assertThat(signature.params()).isEqualTo(Param.params(paramA, paramB));
   }
 
   @Test

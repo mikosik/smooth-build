@@ -34,7 +34,7 @@ public class FunctionTest {
 
   @Test
   public void params() {
-    ImmutableMap<String, Param> params = ImmutableMap.of("name", param(Type.STRING, "name"));
+    ImmutableMap<String, Param> params = Param.params(param(Type.STRING, "name"));
     when(signature.params()).thenReturn(params);
 
     assertThat(function.params()).isEqualTo(params);
