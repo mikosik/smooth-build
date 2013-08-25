@@ -2,7 +2,7 @@ grammar Smooth;
 
 module: function* EOF;
 function: functionName ':' pipe ';' ;
-pipe: expression ( '|' call )* ;
+pipe: expression ( p+='|' call )* ;
 expression : call | STRING ;
 call: functionName ( '(' argList? ')' )? ;
 argList: arg ( ',' arg )* ;
