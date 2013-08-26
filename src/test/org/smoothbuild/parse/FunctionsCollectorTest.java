@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.testing.parse.TestingFunction.function;
 import static org.smoothbuild.testing.parse.TestingImportedFunctions.IMPORTED_NAME;
-import static org.smoothbuild.testing.parse.TestingModule.testingModule;
+import static org.smoothbuild.testing.parse.TestingModule.module;
 
 import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
@@ -32,7 +32,7 @@ public class FunctionsCollectorTest {
 
     FunctionContext function1 = function(name1);
     FunctionContext function2 = function(name2);
-    TestingModule module = testingModule(function1, function2);
+    TestingModule module = module(function1, function2);
 
     ImmutableMap<String, FunctionContext> expected = ImmutableMap.of(name1, function1, name2,
         function2);
@@ -41,19 +41,19 @@ public class FunctionsCollectorTest {
 
   @Test
   public void illegalFunctionNameIsReported() {
-    functionsCollector.parse(testingModule(function("function-name")));
+    functionsCollector.parse(module(function("function-name")));
     problemsListener.assertOnlyProblem(IllegalFunctionNameError.class);
   }
 
   @Test
   public void duplicateFunction() throws Exception {
-    functionsCollector.parse(testingModule(function("functionA"), function("functionA")));
+    functionsCollector.parse(module(function("functionA"), function("functionA")));
     problemsListener.assertOnlyProblem(DuplicateFunctionError.class);
   }
 
   @Test
   public void overridenImport() throws Exception {
-    functionsCollector.parse(testingModule(function(IMPORTED_NAME)));
+    functionsCollector.parse(module(function(IMPORTED_NAME)));
     problemsListener.assertOnlyProblem(OverridenImportWarning.class);
   }
 
