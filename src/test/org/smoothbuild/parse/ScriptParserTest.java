@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
-public class ModuleParserTest {
+public class ScriptParserTest {
 
   @Test
   public void emptyScriptSucceeds() throws Exception {
@@ -64,7 +64,7 @@ public class ModuleParserTest {
   private static TestingProblemsListener parse(String string) throws IOException {
     TestingProblemsListener problems = new TestingProblemsListener();
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
-    ModuleParser.parseModule(problems, inputStream);
+    ScriptParser.parseScript(problems, inputStream);
     return problems;
   }
 }
