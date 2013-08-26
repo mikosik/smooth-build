@@ -15,13 +15,12 @@ public class CallExpression implements Expression {
   private final ExpressionId id;
   private final Function function;
   private Object result;
-  private final ImmutableMap<String, Expression> argumentProviders;
+  private final ImmutableMap<String, Expression> arguments;
 
-  public CallExpression(ExpressionId id, Function function,
-      Map<String, Expression> argumentProviders) {
+  public CallExpression(ExpressionId id, Function function, Map<String, Expression> arguments) {
     this.id = id;
     this.function = function;
-    this.argumentProviders = ImmutableMap.copyOf(argumentProviders);
+    this.arguments = ImmutableMap.copyOf(arguments);
   }
 
   @Override
@@ -40,7 +39,7 @@ public class CallExpression implements Expression {
 
   private ImmutableMap<String, Object> calculateArguments() {
     Builder<String, Object> builder = ImmutableMap.builder();
-    for (Map.Entry<String, Expression> entry : argumentProviders.entrySet()) {
+    for (Map.Entry<String, Expression> entry : arguments.entrySet()) {
       builder.put(entry.getKey(), entry.getValue().result());
     }
     return builder.build();
