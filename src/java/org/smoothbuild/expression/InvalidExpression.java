@@ -24,11 +24,11 @@ public class InvalidExpression implements Expression {
 
   @Override
   public void calculate() throws FunctionException {
-    throw new RuntimeException("BrokenExpression cannot be calculated.");
+    throw new RuntimeException("InvalidExpression cannot be calculated.");
   }
 
   @Override
   public Object result() {
-    throw new RuntimeException("BrokenExpression cannot return result.");
+    throw new RuntimeException("InvalidExpression cannot return result.");
   }
 }
