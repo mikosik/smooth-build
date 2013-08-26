@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.BitSet;
 
-import javax.inject.Inject;
-
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -28,14 +26,8 @@ import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
 public class ModuleParser {
-  private final ProblemsListener problemsListener;
-
-  @Inject
-  public ModuleParser(ProblemsListener problemsListener) {
-    this.problemsListener = problemsListener;
-  }
-
-  public ModuleContext parse(InputStream inputStream) throws IOException {
+  public static ModuleContext parseModule(ProblemsListener problemsListener, InputStream inputStream)
+      throws IOException {
     ErrorListener errorListener = new ErrorListener(problemsListener);
 
     SmoothLexer lexer = new SmoothLexer(new ANTLRInputStream(inputStream));

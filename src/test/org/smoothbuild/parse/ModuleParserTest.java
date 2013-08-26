@@ -63,9 +63,8 @@ public class ModuleParserTest {
 
   private static TestingProblemsListener parse(String string) throws IOException {
     TestingProblemsListener problems = new TestingProblemsListener();
-    ModuleParser parser = new ModuleParser(problems);
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
-    parser.parse(inputStream);
+    ModuleParser.parseModule(problems, inputStream);
     return problems;
   }
 }
