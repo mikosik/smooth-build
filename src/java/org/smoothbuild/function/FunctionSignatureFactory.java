@@ -42,7 +42,7 @@ public class FunctionSignatureFactory {
 
   private static Type getReturnType(Method method) throws PluginImplementationException {
     Class<?> javaType = method.getReturnType();
-    Type type = Type.toType(javaType);
+    Type type = Type.javaResultTypetoType(javaType);
     if (type == null) {
       throw new IllegalReturnTypeException(method.getDeclaringClass(), javaType);
     }
@@ -69,7 +69,7 @@ public class FunctionSignatureFactory {
       throw new ParamMethodHasArgumentsException(klass, method);
     }
     Class<?> javaType = method.getReturnType();
-    Type type = Type.toType(javaType);
+    Type type = Type.javaParamTypetoType(javaType);
     if (type == null) {
       throw new ForbiddenParamTypeException(klass, method, javaType);
     }

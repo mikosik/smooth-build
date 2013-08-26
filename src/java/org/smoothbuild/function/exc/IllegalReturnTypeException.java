@@ -9,10 +9,10 @@ public class IllegalReturnTypeException extends FunctionImplementationException 
 
   public IllegalReturnTypeException(Class<?> klass, Class<?> returnType) {
     super(klass, "Return type of execute() method is illegal '" + returnType.getCanonicalName()
-        + "'.\n Only following types are allowed: " + allowedTypes() + ".");
+        + "'.\n Only following types are allowed: " + allowedResultTypes() + ".");
   }
 
-  private static String allowedTypes() {
-    return "{" + Joiner.on(", ").join(Type.allJavaTypes()) + "}";
+  private static String allowedResultTypes() {
+    return "{" + Joiner.on(", ").join(Type.javaTypesAllowedForResult()) + "}";
   }
 }

@@ -11,11 +11,16 @@ public class Type {
   public static final Type STRING = create("String", String.class);
   public static final Type FILE = create("File", File.class);
   public static final Type FILES = create("Files", Files.class);
+  public static final Type VOID = create("Void", Void.TYPE);
 
-  static final ImmutableList<Type> ALL_TYPES = createAllTypes();
-  static final ImmutableList<Class<?>> ALL_JAVA_TYPES = createAllJavaTypes();
+  static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, FILE, FILES, VOID);
+  static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, FILE, FILES);
 
-  static final ImmutableMap<Class<?>, Type> JAVA_TO_SMOOTH = createMap();
+  static final ImmutableList<Class<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
+  static final ImmutableList<Class<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
+
+  static final ImmutableMap<Class<?>, Type> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
+  static final ImmutableMap<Class<?>, Type> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
 
   private final String name;
   private final Class<?> javaType;
@@ -51,42 +56,36 @@ public class Type {
     return name.hashCode();
   }
 
-  public static ImmutableList<Type> allTypes() {
-    return ALL_TYPES;
+  public static ImmutableList<Class<?>> javaTypesAllowedForResult() {
+    return RESULT_JAVA_TYPES;
   }
 
-  public static ImmutableList<Class<?>> allJavaTypes() {
-    return ALL_JAVA_TYPES;
+  public static ImmutableList<Class<?>> javaTypesAllowedForParam() {
+    return PARAM_JAVA_TYPES;
   }
 
-  public static Type toType(Class<?> klass) {
-    return JAVA_TO_SMOOTH.get(klass);
+  public static Type javaParamTypetoType(Class<?> klass) {
+    return JAVA_PARAM_TO_SMOOTH.get(klass);
   }
 
-  private static ImmutableList<Type> createAllTypes() {
-    Builder<Type> builder = ImmutableList.builder();
-
-    builder.add(STRING);
-    builder.add(FILE);
-    builder.add(FILES);
-
-    return builder.build();
+  public static Type javaResultTypetoType(Class<?> klass) {
+    return JAVA_RESULT_TO_SMOOTH.get(klass);
   }
 
-  private static ImmutableList<Class<?>> createAllJavaTypes() {
+  private static ImmutableList<Class<?>> toJavaTypes(Iterable<Type> types) {
     Builder<Class<?>> builder = ImmutableList.builder();
 
-    for (Type type : ALL_TYPES) {
+    for (Type type : types) {
       builder.add(type.javaType);
     }
 
     return builder.build();
   }
 
-  private static ImmutableMap<Class<?>, Type> createMap() {
+  private static ImmutableMap<Class<?>, Type> javaToTypeMap(Iterable<Type> types) {
     ImmutableMap.Builder<Class<?>, Type> builder = ImmutableMap.builder();
 
-    for (Type type : ALL_TYPES) {
+    for (Type type : types) {
       builder.put(type.javaType, type);
     }
 
