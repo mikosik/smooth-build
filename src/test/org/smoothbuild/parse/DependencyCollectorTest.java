@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
 import static org.smoothbuild.testing.parse.TestingModule.module;
 
@@ -9,28 +9,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.testing.parse.TestingFunction;
 import org.smoothbuild.testing.parse.TestingModule;
 import org.smoothbuild.testing.parse.TestingPipe;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 public class DependencyCollectorTest {
-  ProblemsListener problemsListener = mock(ProblemsListener.class);
-
-  DependencyCollector dependencyCollector = new DependencyCollector(problemsListener);
 
   @Test
   public void emptyMapIsReturnedForEmptyModule() throws Exception {
-
-    TestingModule module = module();
-
-    dependencyCollector.visitModule(module);
-
-    ImmutableMap<String, Set<Dependency>> expected = ImmutableMap.of();
-    assertThat(dependencyCollector.dependencies()).isEqualTo(expected);
+    assertThat(collectDependencies(module())).isEmpty();
   }
 
   @Test
@@ -45,12 +34,10 @@ public class DependencyCollectorTest {
     pipe.addFunctionCall(dep1);
     pipe.addFunctionCall(dep2);
 
-    dependencyCollector.visitModule(module);
-
     Map<String, Set<Dependency>> expected = Maps.newHashMap();
     expected.put(name, dependencies(dep1, dep2));
 
-    assertThat(dependencyCollector.dependencies()).isEqualTo(expected);
+    assertThat(collectDependencies(module)).isEqualTo(expected);
   }
 
   @Test
@@ -70,12 +57,10 @@ public class DependencyCollectorTest {
       pipe.addFunctionCall(name1);
     }
 
-    dependencyCollector.visitModule(module);
-
     Map<String, Set<Dependency>> expected = Maps.newHashMap();
     expected.put(name1, dependencies(name2));
     expected.put(name2, dependencies(name1));
 
-    assertThat(dependencyCollector.dependencies()).isEqualTo(expected);
+    assertThat(collectDependencies(module)).isEqualTo(expected);
   }
 }
