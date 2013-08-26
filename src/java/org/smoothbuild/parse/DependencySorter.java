@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.problem.ProblemsListener;
 
 import com.google.common.collect.ImmutableList;
@@ -22,27 +20,24 @@ import com.google.common.collect.Sets;
  * function in returned list. Detects cycles in dependency graph.
  */
 public class DependencySorter {
-  private final ProblemsListener problemsListener;
+  public static List<String> sortDependencies(ProblemsListener problemsListener,
+      SymbolTable importedFunctions, Map<String, Set<Dependency>> dependenciesOrig) {
 
-  @Inject
-  public DependencySorter(ProblemsListener problemsListener) {
-    this.problemsListener = problemsListener;
-  }
-
-  public List<String> sortByDependency(SymbolTable importedFunctions,
-      Map<String, Set<Dependency>> dependenciesOrig) {
-    Worker worker = new Worker(importedFunctions, dependenciesOrig);
+    Worker worker = new Worker(problemsListener, importedFunctions, dependenciesOrig);
     worker.work();
-    return worker.sorted();
+    return worker.result();
   }
 
-  private class Worker {
+  private static class Worker {
+    private final ProblemsListener problemsListener;
     private final HashMap<String, Set<Dependency>> notSorted;
     private final HashSet<String> reachableNames;
     private final List<String> sorted;
     private final DependencyStack stack;
 
-    public Worker(SymbolTable importedFunctions, Map<String, Set<Dependency>> dependenciesOrig) {
+    public Worker(ProblemsListener problemsListener, SymbolTable importedFunctions,
+        Map<String, Set<Dependency>> dependenciesOrig) {
+      this.problemsListener = problemsListener;
       this.notSorted = Maps.newHashMap(dependenciesOrig);
       this.reachableNames = Sets.newHashSet(importedFunctions.names());
       this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
@@ -88,7 +83,7 @@ public class DependencySorter {
       reachableNames.add(name);
     }
 
-    public List<String> sorted() {
+    public List<String> result() {
       return ImmutableList.copyOf(sorted);
     }
 

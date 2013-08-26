@@ -30,8 +30,6 @@ public class DependencySorterTest {
   ProblemsListener problemsListener = mock(ProblemsListener.class);
   SymbolTable importedFunctions = new TestingImportedFunctions();
 
-  DependencySorter sorter = new DependencySorter(problemsListener);
-
   @Test
   public void linearDependency() {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
@@ -40,9 +38,7 @@ public class DependencySorterTest {
     map.put(NAME4, dependencies());
     map.put(NAME2, dependencies(NAME3));
 
-    List<String> actual = sorter.sortByDependency(importedFunctions, map);
-
-    assertThat(actual).isEqualTo(ImmutableList.of(NAME4, NAME3, NAME2, NAME1));
+    assertThat(sort(map)).isEqualTo(ImmutableList.of(NAME4, NAME3, NAME2, NAME1));
     verifyZeroInteractions(problemsListener);
   }
 
@@ -56,7 +52,7 @@ public class DependencySorterTest {
     map.put(NAME5, dependencies(NAME6));
     map.put(NAME6, dependencies());
 
-    List<String> actual = sorter.sortByDependency(importedFunctions, map);
+    List<String> actual = sort(map);
 
     assertThat(actual).containsSubsequence(NAME4, NAME2, NAME1);
     assertThat(actual).containsSubsequence(NAME6, NAME5, NAME3, NAME1);
@@ -69,7 +65,7 @@ public class DependencySorterTest {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
     map.put(NAME1, dependencies(NAME1));
 
-    sorter.sortByDependency(importedFunctions, map);
+    sort(map);
 
     verify(problemsListener).report(Matchers.isA(CycleInCallGraphError.class));
   }
@@ -81,8 +77,12 @@ public class DependencySorterTest {
     map.put(NAME2, dependencies(NAME3));
     map.put(NAME3, dependencies(NAME1));
 
-    sorter.sortByDependency(importedFunctions, map);
+    sort(map);
 
     verify(problemsListener).report(Matchers.isA(CycleInCallGraphError.class));
+  }
+
+  private List<String> sort(Map<String, Set<Dependency>> map) {
+    return DependencySorter.sortDependencies(problemsListener, importedFunctions, map);
   }
 }
