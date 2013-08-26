@@ -5,6 +5,8 @@ import static org.smoothbuild.parse.Helpers.locationOf;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
@@ -23,6 +25,7 @@ public class DependencyCollector extends SmoothBaseVisitor<Void> {
   private final ImmutableMap.Builder<String, Set<Dependency>> dependencies;
   private ImmutableSet.Builder<Dependency> currentFunctionDependencies;
 
+  @Inject
   public DependencyCollector(ProblemsListener problemsListener) {
     this.dependencies = ImmutableMap.builder();
   }

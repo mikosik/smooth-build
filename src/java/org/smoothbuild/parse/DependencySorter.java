@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.problem.ProblemsListener;
 
 import com.google.common.collect.ImmutableList;
@@ -22,6 +24,7 @@ import com.google.common.collect.Sets;
 public class DependencySorter {
   private final ProblemsListener problemsListener;
 
+  @Inject
   public DependencySorter(ProblemsListener problemsListener) {
     this.problemsListener = problemsListener;
   }
