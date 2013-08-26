@@ -47,6 +47,13 @@ public class CallExpression implements Expression {
   }
 
   public Object result() {
+    try {
+      calculate();
+    } catch (FunctionException e) {
+      // TODO fix once calculate is called by some worker
+      throw new RuntimeException(e);
+    }
+
     checkState(result != null, "Cannot return result from not executed function");
     return result;
   }
