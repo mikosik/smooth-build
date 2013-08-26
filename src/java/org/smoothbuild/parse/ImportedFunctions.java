@@ -3,11 +3,16 @@ package org.smoothbuild.parse;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Singleton;
+
 import org.smoothbuild.function.Function;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import com.google.inject.ProvidedBy;
 
+@Singleton
+@ProvidedBy(ImportedFunctionsProvider.class)
 public class ImportedFunctions implements SymbolTable {
   private final Map<String, Function> map = Maps.newHashMap();
 
