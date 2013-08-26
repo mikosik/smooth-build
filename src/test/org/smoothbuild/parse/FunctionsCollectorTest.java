@@ -5,6 +5,8 @@ import static org.smoothbuild.testing.parse.TestingFunction.function;
 import static org.smoothbuild.testing.parse.TestingImportedFunctions.IMPORTED_NAME;
 import static org.smoothbuild.testing.parse.TestingModule.module;
 
+import java.util.Map;
+
 import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
@@ -15,15 +17,11 @@ import org.smoothbuild.testing.parse.TestingModule;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.util.Providers;
 
 public class FunctionsCollectorTest {
 
   TestingProblemsListener problemsListener = new TestingProblemsListener();
   SymbolTable importedFunctions = new TestingImportedFunctions();
-
-  FunctionsCollector functionsCollector = new FunctionsCollector(
-      Providers.of(new FunctionsCollector.FunctionVisitor(importedFunctions, problemsListener)));
 
   @Test
   public void visitedFunctionNamesAreReturned() throws Exception {
@@ -36,25 +34,28 @@ public class FunctionsCollectorTest {
 
     ImmutableMap<String, FunctionContext> expected = ImmutableMap.of(name1, function1, name2,
         function2);
-    assertThat(functionsCollector.parse(module)).isEqualTo(expected);
+    assertThat(collectFunctions(module)).isEqualTo(expected);
   }
 
   @Test
   public void illegalFunctionNameIsReported() {
-    functionsCollector.parse(module(function("function-name")));
+    collectFunctions(module(function("function-name")));
     problemsListener.assertOnlyProblem(IllegalFunctionNameError.class);
   }
 
   @Test
   public void duplicateFunction() throws Exception {
-    functionsCollector.parse(module(function("functionA"), function("functionA")));
+    collectFunctions(module(function("functionA"), function("functionA")));
     problemsListener.assertOnlyProblem(DuplicateFunctionError.class);
   }
 
   @Test
   public void overridenImport() throws Exception {
-    functionsCollector.parse(module(function(IMPORTED_NAME)));
+    collectFunctions(module(function(IMPORTED_NAME)));
     problemsListener.assertOnlyProblem(OverridenImportWarning.class);
   }
 
+  private Map<String, FunctionContext> collectFunctions(TestingModule module) {
+    return FunctionsCollector.collectFunctions(problemsListener, importedFunctions, module);
+  }
 }
