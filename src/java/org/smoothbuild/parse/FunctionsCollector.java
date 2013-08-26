@@ -5,7 +5,6 @@ import static org.smoothbuild.function.FullyQualifiedName.isValidSimpleName;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
@@ -26,26 +25,21 @@ import com.google.common.collect.Maps;
  * overridden imports.
  */
 public class FunctionsCollector {
-  private final Provider<FunctionVisitor> visitorProvider;
 
-  @Inject
-  public FunctionsCollector(Provider<FunctionVisitor> visitor) {
-    this.visitorProvider = visitor;
+  public static Map<String, FunctionContext> collectFunctions(ProblemsListener problemsListener,
+      SymbolTable importedFunctions, ModuleContext module) {
+    Worker worker = new Worker(problemsListener, importedFunctions);
+    worker.visit(module);
+    return worker.foundFunctions();
   }
 
-  public Map<String, FunctionContext> parse(ModuleContext module) {
-    FunctionVisitor functionVisitor = visitorProvider.get();
-    functionVisitor.visit(module);
-    return functionVisitor.foundFunctions();
-  }
-
-  public static class FunctionVisitor extends SmoothBaseVisitor<Void> {
+  private static class Worker extends SmoothBaseVisitor<Void> {
     private final SymbolTable importedFunctions;
     private final ProblemsListener problemsListener;
     private final Map<String, FunctionContext> functions;
 
     @Inject
-    public FunctionVisitor(SymbolTable importedFunctions, ProblemsListener problemsListener) {
+    public Worker(ProblemsListener problemsListener, SymbolTable importedFunctions) {
       this.importedFunctions = importedFunctions;
       this.problemsListener = problemsListener;
       this.functions = Maps.newHashMap();
