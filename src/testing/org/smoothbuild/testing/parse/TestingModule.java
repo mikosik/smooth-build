@@ -5,7 +5,7 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 
 public class TestingModule extends ModuleContext {
 
-  public static TestingModule testingModule(FunctionContext... functions) {
+  public static TestingModule module(FunctionContext... functions) {
     TestingModule module = new TestingModule();
     for (FunctionContext function : functions) {
       module.addChild(function);

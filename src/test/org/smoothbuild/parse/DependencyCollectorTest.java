@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
+import static org.smoothbuild.testing.parse.TestingModule.module;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class DependencyCollectorTest {
   @Test
   public void emptyMapIsReturnedForEmptyModule() throws Exception {
 
-    TestingModule module = TestingModule.testingModule();
+    TestingModule module = module();
 
     dependencyCollector.visitModule(module);
 
@@ -38,7 +39,7 @@ public class DependencyCollectorTest {
     String dep1 = "dep1";
     String dep2 = "dep2";
 
-    TestingModule module = TestingModule.testingModule();
+    TestingModule module = module();
     TestingFunction function = module.addFunction(name);
     TestingPipe pipe = function.addPipeExpression();
     pipe.addFunctionCall(dep1);
@@ -57,7 +58,7 @@ public class DependencyCollectorTest {
     String name1 = "funcation1";
     String name2 = "funcation2";
 
-    TestingModule module = TestingModule.testingModule();
+    TestingModule module = module();
     {
       TestingFunction function = module.addFunction(name1);
       TestingPipe pipe = function.addPipeExpression();
