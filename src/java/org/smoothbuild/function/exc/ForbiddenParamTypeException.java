@@ -9,6 +9,6 @@ public class ForbiddenParamTypeException extends ParamsImplementationException {
 
   public ForbiddenParamTypeException(Class<?> klass, Method method, Class<?> paramType) {
     super(klass, "Method " + method.getName() + " has forbidden return type = "
-        + paramType.getCanonicalName() + "\n Allowed types = " + Type.allJavaTypes());
+        + paramType.getCanonicalName() + "\n Allowed types = " + Type.javaTypesAllowedForParam());
   }
 }
