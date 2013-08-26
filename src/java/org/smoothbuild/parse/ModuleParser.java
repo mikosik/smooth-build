@@ -25,7 +25,7 @@ import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
-public class SyntaxParser {
+public class ModuleParser {
 
   public ModuleContext parse(InputStream inputStream, ProblemsListener problemsListener)
       throws IOException {
