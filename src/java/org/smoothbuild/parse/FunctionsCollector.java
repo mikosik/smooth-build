@@ -30,7 +30,7 @@ public class FunctionsCollector {
       SymbolTable importedFunctions, ModuleContext module) {
     Worker worker = new Worker(problemsListener, importedFunctions);
     worker.visit(module);
-    return worker.foundFunctions();
+    return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
@@ -71,7 +71,7 @@ public class FunctionsCollector {
       return null;
     }
 
-    public Map<String, FunctionContext> foundFunctions() {
+    public Map<String, FunctionContext> result() {
       return functions;
     }
   }
