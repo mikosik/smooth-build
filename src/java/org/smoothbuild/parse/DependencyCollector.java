@@ -23,7 +23,7 @@ public class DependencyCollector {
   public static Map<String, Set<Dependency>> collectDependencies(ModuleContext moduleContext) {
     Worker worker = new Worker();
     worker.visit(moduleContext);
-    return worker.dependencies();
+    return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
@@ -56,7 +56,7 @@ public class DependencyCollector {
       return visitChildren(call);
     }
 
-    public Map<String, Set<Dependency>> dependencies() {
+    public Map<String, Set<Dependency>> result() {
       return dependencies.build();
     }
   }
