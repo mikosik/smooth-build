@@ -62,10 +62,10 @@ public class ModuleParserTest {
   }
 
   private static TestingProblemsListener parse(String string) throws IOException {
-    ModuleParser parser = new ModuleParser();
-    ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
     TestingProblemsListener problems = new TestingProblemsListener();
-    parser.parse(inputStream, problems);
+    ModuleParser parser = new ModuleParser(problems);
+    ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
+    parser.parse(inputStream);
     return problems;
   }
 }

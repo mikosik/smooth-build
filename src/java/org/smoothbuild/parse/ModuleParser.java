@@ -26,9 +26,13 @@ import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
 public class ModuleParser {
+  private final ProblemsListener problemsListener;
 
-  public ModuleContext parse(InputStream inputStream, ProblemsListener problemsListener)
-      throws IOException {
+  public ModuleParser(ProblemsListener problemsListener) {
+    this.problemsListener = problemsListener;
+  }
+
+  public ModuleContext parse(InputStream inputStream) throws IOException {
     ErrorListener errorListener = new ErrorListener(problemsListener);
 
     SmoothLexer lexer = new SmoothLexer(new ANTLRInputStream(inputStream));
