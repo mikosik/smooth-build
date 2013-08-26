@@ -1,7 +1,5 @@
 package org.smoothbuild.function;
 
-import static org.smoothbuild.function.ReflexiveUtils.isPublic;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
@@ -11,7 +9,6 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.function.exc.FunctionImplementationException;
 import org.smoothbuild.function.exc.IllegalConstructorParamException;
 import org.smoothbuild.function.exc.MissingConstructorException;
-import org.smoothbuild.function.exc.NonPublicConstructorException;
 import org.smoothbuild.function.exc.TooManyConstructorParamsException;
 import org.smoothbuild.function.exc.TooManyConstructorsException;
 import org.smoothbuild.plugin.Files;
@@ -68,10 +65,6 @@ public class FunctionInvokerFactory {
       throw new TooManyConstructorsException(klass);
     }
 
-    Constructor<?> result = constructors[0];
-    if (!isPublic(result)) {
-      throw new NonPublicConstructorException(klass);
-    }
-    return result;
+    return constructors[0];
   }
 }

@@ -66,10 +66,10 @@ public class FunctionFactory {
       throws FunctionImplementationException {
     Class<?>[] types = executeMethod.getParameterTypes();
     if (types.length == 0) {
-      throw new TooManyParamsInExecuteMethodException(executeMethod.getDeclaringClass());
+      throw new ZeroParamsInExecuteMethodException(executeMethod.getDeclaringClass());
     }
     if (1 < types.length) {
-      throw new ZeroParamsInExecuteMethodException(executeMethod.getDeclaringClass());
+      throw new TooManyParamsInExecuteMethodException(executeMethod.getDeclaringClass());
     }
     return types[0];
   }
