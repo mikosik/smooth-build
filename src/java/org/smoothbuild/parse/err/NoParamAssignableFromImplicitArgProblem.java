@@ -7,6 +7,6 @@ public class NoParamAssignableFromImplicitArgProblem extends Error {
   public NoParamAssignableFromImplicitArgProblem(Argument argument) {
     super(argument.sourceLocation(),
         "No parameter is assignable from implicit argument with type = "
-            + argument.expression().type().name());
+            + argument.definitionNode().type().name());
   }
 }

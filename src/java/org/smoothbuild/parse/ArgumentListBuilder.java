@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
 import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
@@ -31,9 +31,9 @@ public class ArgumentListBuilder {
     this.problemsListener = problemsListener;
   }
 
-  public Map<String, Expression> convert(Collection<Argument> arguments,
+  public Map<String, DefinitionNode> convert(Collection<Argument> arguments,
       ImmutableMap<String, Param> params) {
-    Map<String, Expression> explicitArgs = processExplicitArguments(arguments, params);
+    Map<String, DefinitionNode> explicitArgs = processExplicitArguments(arguments, params);
     if (problemsListener.hasAnyProblem()) {
       return null;
     }
@@ -46,15 +46,15 @@ public class ArgumentListBuilder {
     return explicitArgs;
   }
 
-  private Map<String, Expression> processExplicitArguments(Collection<Argument> arguments,
+  private Map<String, DefinitionNode> processExplicitArguments(Collection<Argument> arguments,
       ImmutableMap<String, Param> params) {
-    Map<String, Expression> explicitArgs = Maps.newHashMap();
+    Map<String, DefinitionNode> explicitArgs = Maps.newHashMap();
     boolean success = true;
 
     for (Argument argument : arguments) {
       if (argument.isExplicit()) {
         String argName = argument.name();
-        Expression argExpression = argument.expression();
+        DefinitionNode argNode = argument.definitionNode();
         Param param = params.get(argName);
         if (param == null) {
           problemsListener.report(new UnknownParamNameProblem(argument));
@@ -62,11 +62,11 @@ public class ArgumentListBuilder {
         } else if (explicitArgs.containsKey(argName)) {
           problemsListener.report(new DuplicateArgNameProblem(argument));
           success = false;
-        } else if (!param.type().isAssignableFrom(argExpression.type())) {
+        } else if (!param.type().isAssignableFrom(argNode.type())) {
           problemsListener.report(new TypeMismatchProblem(argument, param.type()));
           success = false;
         } else {
-          explicitArgs.put(argName, argExpression);
+          explicitArgs.put(argName, argNode);
         }
       }
     }
@@ -88,7 +88,7 @@ public class ArgumentListBuilder {
   }
 
   private void convertImplicitToExplicit(Map<String, Param> params, Collection<Argument> arguments,
-      Map<String, Expression> explicitArgs) {
+      Map<String, DefinitionNode> explicitArgs) {
 
     // TODO Implicit arguments are allowed only in pipes so there can be at most
     // one implicit argument
@@ -100,7 +100,7 @@ public class ArgumentListBuilder {
       // assignments of implicit arguments to param names and the failed one.
 
       Argument onlyImplicit = arguments.iterator().next();
-      Type type = onlyImplicit.expression().type();
+      Type type = onlyImplicit.definitionNode().type();
       boolean found = false;
       for (Param param : params.values()) {
         if (param.type() == type && !explicitArgs.containsKey(param.name())) {
@@ -109,7 +109,7 @@ public class ArgumentListBuilder {
             problemsListener.report(problem);
             return;
           } else {
-            explicitArgs.put(param.name(), onlyImplicit.expression());
+            explicitArgs.put(param.name(), onlyImplicit.definitionNode());
             found = true;
           }
         }

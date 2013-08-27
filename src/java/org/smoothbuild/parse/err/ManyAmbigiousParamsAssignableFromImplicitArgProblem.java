@@ -7,6 +7,6 @@ public class ManyAmbigiousParamsAssignableFromImplicitArgProblem extends Error {
   public ManyAmbigiousParamsAssignableFromImplicitArgProblem(Argument argument) {
     super(argument.sourceLocation(),
         "Cannot find unambigiuous param for implicit argument. More than one param has type = "
-            + argument.expression().type().name());
+            + argument.definitionNode().type().name());
   }
 }

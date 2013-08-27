@@ -4,31 +4,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.problem.SourceLocation;
 
 public class ArgumentTest {
   String name = "name";
-  Expression expression = mock(Expression.class);
+  DefinitionNode node = mock(DefinitionNode.class);
   SourceLocation sourceLocation = mock(SourceLocation.class);
 
   @Test(expected = NullPointerException.class)
-  public void nullExpressionIsForbidden() {
+  public void nullDefinitionNodeIsForbidden() {
     new Argument(name, null, sourceLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullSourceLocationIsForbidden() {
-    new Argument(name, expression, null);
+    new Argument(name, node, null);
   }
 
   @Test
   public void argumentWithNonNullNameIsExplicit() throws Exception {
-    assertThat(new Argument(name, expression, sourceLocation).isExplicit()).isTrue();
+    assertThat(new Argument(name, node, sourceLocation).isExplicit()).isTrue();
   }
 
   @Test
   public void argumentWithNullNameIsNotExplicit() throws Exception {
-    assertThat(new Argument(null, expression, sourceLocation).isExplicit()).isFalse();
+    assertThat(new Argument(null, node, sourceLocation).isExplicit()).isFalse();
   }
 }

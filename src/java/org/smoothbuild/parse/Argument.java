@@ -2,17 +2,17 @@ package org.smoothbuild.parse;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.problem.SourceLocation;
 
 public class Argument {
   private final String name;
-  private final Expression expression;
+  private final DefinitionNode node;
   private final SourceLocation sourceLocation;
 
-  public Argument(String name, Expression expression, SourceLocation sourceLocation) {
+  public Argument(String name, DefinitionNode node, SourceLocation sourceLocation) {
     this.name = name;
-    this.expression = checkNotNull(expression);
+    this.node = checkNotNull(node);
     this.sourceLocation = checkNotNull(sourceLocation);
   }
 
@@ -20,8 +20,8 @@ public class Argument {
     return name;
   }
 
-  public Expression expression() {
-    return expression;
+  public DefinitionNode definitionNode() {
+    return node;
   }
 
   public SourceLocation sourceLocation() {
