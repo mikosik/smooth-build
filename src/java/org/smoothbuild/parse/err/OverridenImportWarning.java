@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.function.FullyQualifiedName;
+import org.smoothbuild.function.base.FullyQualifiedName;
 import org.smoothbuild.problem.SourceLocation;
 import org.smoothbuild.problem.Warning;
 

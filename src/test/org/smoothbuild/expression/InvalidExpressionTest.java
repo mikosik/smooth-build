@@ -3,7 +3,7 @@ package org.smoothbuild.expression;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.smoothbuild.function.Type;
+import org.smoothbuild.function.base.Type;
 
 public class InvalidExpressionTest {
   InvalidExpression invalidExpression = new InvalidExpression(Type.STRING);

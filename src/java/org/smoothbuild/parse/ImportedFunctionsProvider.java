@@ -7,9 +7,9 @@ import org.smoothbuild.builtin.compress.ZipFunction;
 import org.smoothbuild.builtin.file.FileFunction;
 import org.smoothbuild.builtin.file.FilesFunction;
 import org.smoothbuild.builtin.file.SaveToFunction;
-import org.smoothbuild.function.Function;
-import org.smoothbuild.function.FunctionFactory;
-import org.smoothbuild.function.exc.PluginImplementationException;
+import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.plugin.FunctionFactory;
+import org.smoothbuild.function.plugin.exc.PluginImplementationException;
 
 import com.google.inject.Provider;
 

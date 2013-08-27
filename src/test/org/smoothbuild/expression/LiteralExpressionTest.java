@@ -5,7 +5,7 @@ import static org.smoothbuild.expression.LiteralExpression.literalExpression;
 import static org.smoothbuild.expression.LiteralExpression.stringExpression;
 
 import org.junit.Test;
-import org.smoothbuild.function.Type;
+import org.smoothbuild.function.base.Type;
 
 public class LiteralExpressionTest {
   ExpressionId id = new ExpressionId("abc");

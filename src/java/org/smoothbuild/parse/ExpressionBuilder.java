@@ -20,7 +20,7 @@ import org.smoothbuild.expression.Expression;
 import org.smoothbuild.expression.ExpressionId;
 import org.smoothbuild.expression.ExpressionIdFactory;
 import org.smoothbuild.expression.InvalidExpression;
-import org.smoothbuild.function.Function;
+import org.smoothbuild.function.base.Function;
 import org.smoothbuild.problem.SourceLocation;
 
 import com.google.common.collect.Lists;

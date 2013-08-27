@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.function.Type;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.parse.Argument;
 import org.smoothbuild.problem.Error;
 

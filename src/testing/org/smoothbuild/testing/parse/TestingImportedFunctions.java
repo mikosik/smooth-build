@@ -1,14 +1,14 @@
 package org.smoothbuild.testing.parse;
 
-import static org.smoothbuild.function.FullyQualifiedName.simpleName;
+import static org.smoothbuild.function.base.FullyQualifiedName.simpleName;
 
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.function.Function;
-import org.smoothbuild.function.FunctionSignature;
-import org.smoothbuild.function.PluginFunction;
-import org.smoothbuild.function.Type;
+import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.FunctionSignature;
+import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.parse.SymbolTable;
 
 import com.google.common.collect.ImmutableMap;
