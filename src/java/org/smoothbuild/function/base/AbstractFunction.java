@@ -1,5 +1,7 @@
 package org.smoothbuild.function.base;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Map;
 
 import org.smoothbuild.function.expr.Expression;
@@ -11,7 +13,7 @@ public abstract class AbstractFunction implements Function {
   private final FunctionSignature signature;
 
   public AbstractFunction(FunctionSignature signature) {
-    this.signature = signature;
+    this.signature = checkNotNull(signature);
   }
 
   public FunctionSignature signature() {
