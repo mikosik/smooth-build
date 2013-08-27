@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.function.Function;
 import org.smoothbuild.function.FunctionSignature;
+import org.smoothbuild.function.PluginFunction;
 import org.smoothbuild.function.Type;
 import org.smoothbuild.function.exc.FunctionImplementationException;
 
@@ -70,6 +71,6 @@ public class ImportedFunctionsTest {
 
   private static Function function(String name) {
     FunctionSignature signature = new FunctionSignature(Type.STRING, fullyQualifiedName(name), null);
-    return new Function(signature, null);
+    return new PluginFunction(signature, null);
   }
 }

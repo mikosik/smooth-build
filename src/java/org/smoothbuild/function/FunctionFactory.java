@@ -35,7 +35,7 @@ public class FunctionFactory {
     FunctionSignature signature = signatureFactory.create(klass, method, paramsInterface);
     FunctionInvoker invoker = invokerFactory.create(klass, method, paramsInterface);
 
-    return new Function(signature, invoker);
+    return new PluginFunction(signature, invoker);
   }
 
   private static Method getExecuteMethod(Class<?> klass) throws FunctionImplementationException {

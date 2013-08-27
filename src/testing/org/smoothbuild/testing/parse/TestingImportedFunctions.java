@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.smoothbuild.function.Function;
 import org.smoothbuild.function.FunctionSignature;
+import org.smoothbuild.function.PluginFunction;
 import org.smoothbuild.function.Type;
 import org.smoothbuild.parse.SymbolTable;
 
@@ -19,7 +20,7 @@ public class TestingImportedFunctions implements SymbolTable {
 
   public TestingImportedFunctions() {
     FunctionSignature signature = new FunctionSignature(Type.FILE, simpleName(IMPORTED_NAME), null);
-    Function function = new Function(signature, null);
+    Function function = new PluginFunction(signature, null);
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
 
