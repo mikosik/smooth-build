@@ -2,7 +2,7 @@ package org.smoothbuild.expression;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.function.Type;
+import org.smoothbuild.function.base.Type;
 
 public class LiteralExpression implements Expression {
   private final ExpressionId id;

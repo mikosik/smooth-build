@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Map;
 
-import org.smoothbuild.function.Function;
-import org.smoothbuild.function.Type;
+import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;

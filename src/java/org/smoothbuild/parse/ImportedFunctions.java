@@ -5,7 +5,7 @@ import java.util.Set;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.function.Function;
+import org.smoothbuild.function.base.Function;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;

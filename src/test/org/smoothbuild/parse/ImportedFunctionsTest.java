@@ -1,15 +1,15 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.function.base.FullyQualifiedName.fullyQualifiedName;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.function.Function;
-import org.smoothbuild.function.FunctionSignature;
-import org.smoothbuild.function.PluginFunction;
-import org.smoothbuild.function.Type;
-import org.smoothbuild.function.exc.FunctionImplementationException;
+import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.FunctionSignature;
+import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.plugin.PluginFunction;
+import org.smoothbuild.function.plugin.exc.FunctionImplementationException;
 
 public class ImportedFunctionsTest {
   ImportedFunctions importedFunctions = new ImportedFunctions();
