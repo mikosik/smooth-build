@@ -1,6 +1,7 @@
 package org.smoothbuild.function.def;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class DefinedFunction extends AbstractFunction {
 
   public DefinedFunction(FunctionSignature signature, DefinitionNode root) {
     super(signature);
-    this.root = root;
+    this.root = checkNotNull(root);
   }
 
   @Override
