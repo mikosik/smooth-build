@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
@@ -31,9 +32,9 @@ public class ArgumentListBuilder {
     this.problemsListener = problemsListener;
   }
 
-  public Map<String, DefinitionNode> convert(Collection<Argument> arguments,
-      ImmutableMap<String, Param> params) {
-    Map<String, DefinitionNode> explicitArgs = processExplicitArguments(arguments, params);
+  public Map<String, DefinitionNode> convert(Function function, Collection<Argument> arguments) {
+    ImmutableMap<String, Param> params = function.params();
+    Map<String, DefinitionNode> explicitArgs = processExplicitArguments(function, arguments, params);
     if (problemsListener.hasAnyProblem()) {
       return null;
     }
@@ -46,8 +47,8 @@ public class ArgumentListBuilder {
     return explicitArgs;
   }
 
-  private Map<String, DefinitionNode> processExplicitArguments(Collection<Argument> arguments,
-      ImmutableMap<String, Param> params) {
+  private Map<String, DefinitionNode> processExplicitArguments(Function function,
+      Collection<Argument> arguments, ImmutableMap<String, Param> params) {
     Map<String, DefinitionNode> explicitArgs = Maps.newHashMap();
     boolean success = true;
 
@@ -57,7 +58,7 @@ public class ArgumentListBuilder {
         DefinitionNode argNode = argument.definitionNode();
         Param param = params.get(argName);
         if (param == null) {
-          problemsListener.report(new UnknownParamNameProblem(argument));
+          problemsListener.report(new UnknownParamNameProblem(function.name(), argument));
           success = false;
         } else if (explicitArgs.containsKey(argName)) {
           problemsListener.report(new DuplicateArgNameProblem(argument));

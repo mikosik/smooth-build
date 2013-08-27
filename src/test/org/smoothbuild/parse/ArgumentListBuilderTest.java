@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Param.params;
+import static org.smoothbuild.function.base.QualifiedName.simpleName;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.expr.LiteralExpression.literalExpression;
@@ -14,11 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.ExpressionNode;
 import org.smoothbuild.function.expr.ExpressionId;
+import org.smoothbuild.function.plugin.PluginFunction;
+import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
 import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
@@ -62,7 +67,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param, file1Param);
     List<Argument> args = newArrayList(string1Arg, file1Arg);
 
-    Map<String, DefinitionNode> result = argumentListBuilder.convert(args, params);
+    Map<String, DefinitionNode> result = argumentListBuilder.convert(function(params), args);
 
     assertThat(result.get(string1Name)).isSameAs(string1Expr);
     assertThat(result.get(file1Name)).isSameAs(file1Expr);
@@ -75,7 +80,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param, string2Param);
     List<Argument> args = newArrayList(string1Arg, string1Arg);
 
-    argumentListBuilder.convert(args, params);
+    argumentListBuilder.convert(function(params), args);
 
     problemsListener.assertOnlyProblem(DuplicateArgNameProblem.class);
   }
@@ -85,7 +90,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param);
     List<Argument> args = newArrayList(file1Arg);
 
-    argumentListBuilder.convert(args, params);
+    argumentListBuilder.convert(function(params), args);
 
     problemsListener.assertOnlyProblem(UnknownParamNameProblem.class);
   }
@@ -95,7 +100,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param, file1Param);
     List<Argument> args = newArrayList();
 
-    Map<String, DefinitionNode> result = argumentListBuilder.convert(args, params);
+    Map<String, DefinitionNode> result = argumentListBuilder.convert(function(params), args);
 
     assertThat(result.size()).isEqualTo(0);
     problemsListener.assertNoProblems();
@@ -106,7 +111,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param, string2Param);
     List<Argument> args = newArrayList(stringImplicit1Arg);
 
-    argumentListBuilder.convert(args, params);
+    argumentListBuilder.convert(function(params), args);
 
     problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgProblem.class);
   }
@@ -116,7 +121,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(file1Param);
     List<Argument> args = newArrayList(stringImplicit1Arg);
 
-    argumentListBuilder.convert(args, params);
+    argumentListBuilder.convert(function(params), args);
 
     problemsListener.assertOnlyProblem(NoParamAssignableFromImplicitArgProblem.class);
   }
@@ -135,5 +140,10 @@ public class ArgumentListBuilderTest {
 
   private DefinitionNode node(ExpressionId expressionId, Type type, File file) {
     return new ExpressionNode(literalExpression(expressionId, type, file));
+  }
+
+  private static Function function(ImmutableMap<String, Param> params) {
+    Signature signature = new Signature(STRING, simpleName("name"), params);
+    return new PluginFunction(signature, mock(PluginInvoker.class));
   }
 }

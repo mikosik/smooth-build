@@ -18,8 +18,8 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
@@ -103,7 +103,7 @@ public class DefinedFunctionBuilder {
 
     Function function = getFunction(functionName);
 
-    Map<String, DefinitionNode> explicitArgs = builder.convert(args, function.params());
+    Map<String, DefinitionNode> explicitArgs = builder.convert(function, args);
 
     if (explicitArgs == null) {
       return new InvalidNode(function.type());
