@@ -2,8 +2,8 @@ package org.smoothbuild.function.base;
 
 import java.util.Map;
 
-import org.smoothbuild.expression.Expression;
-import org.smoothbuild.expression.ExpressionIdFactory;
+import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
 

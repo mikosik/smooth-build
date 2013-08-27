@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.expression.LiteralExpression.stringExpression;
+import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
 import static org.smoothbuild.parse.Helpers.locationOf;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
-import org.smoothbuild.expression.Expression;
-import org.smoothbuild.expression.ExpressionId;
-import org.smoothbuild.expression.ExpressionIdFactory;
-import org.smoothbuild.expression.InvalidExpression;
 import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.expr.ExpressionId;
+import org.smoothbuild.function.expr.ExpressionIdFactory;
+import org.smoothbuild.function.expr.InvalidExpression;
 import org.smoothbuild.problem.SourceLocation;
 
 import com.google.common.collect.Lists;

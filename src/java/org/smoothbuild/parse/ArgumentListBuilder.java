@@ -7,9 +7,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.expression.Expression;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
 import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;

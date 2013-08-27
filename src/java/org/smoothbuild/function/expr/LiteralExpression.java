@@ -1,4 +1,4 @@
-package org.smoothbuild.expression;
+package org.smoothbuild.function.expr;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
