@@ -13,6 +13,10 @@ import org.smoothbuild.plugin.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * Function that is implemented completely in java (as opposed to one defined in
+ * smooth script using smooth language).
+ */
 public class PluginFunction extends AbstractFunction {
   private final PluginInvoker pluginInvoker;
 
