@@ -1,18 +1,13 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.base.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.testing.TestingFunctionSignature.testingSignature;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.FunctionSignature;
-import org.smoothbuild.function.base.Param;
-import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.function.plugin.exc.FunctionImplementationException;
-
-import com.google.common.collect.ImmutableMap;
 
 public class ImportedFunctionsTest {
   ImportedFunctions importedFunctions = new ImportedFunctions();
@@ -68,9 +63,6 @@ public class ImportedFunctionsTest {
   }
 
   private static Function function(String name) {
-    ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
-    FunctionSignature signature = new FunctionSignature(Type.STRING, fullyQualifiedName(name),
-        params);
-    return new PluginFunction(signature, null);
+    return new PluginFunction(testingSignature(name), null);
   }
 }

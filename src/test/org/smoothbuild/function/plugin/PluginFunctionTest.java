@@ -3,13 +3,11 @@ package org.smoothbuild.function.plugin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.function.base.FullyQualifiedName.simpleName;
-import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
+import static org.smoothbuild.testing.TestingFunctionSignature.testingSignature;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.FunctionSignature;
-import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionId;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
@@ -20,8 +18,7 @@ import com.google.common.collect.ImmutableMap;
 public class PluginFunctionTest {
   String name = "functionName";
 
-  FunctionSignature signature = new FunctionSignature(STRING, simpleName("functionName"),
-      ImmutableMap.<String, Param> of());
+  FunctionSignature signature = testingSignature("functionName");
   PluginInvoker invoker = mock(PluginInvoker.class);
   ExpressionIdFactory idFactory = mock(ExpressionIdFactory.class);
 
