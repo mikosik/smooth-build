@@ -33,11 +33,7 @@ public class ImportedFunctions implements SymbolTable {
 
   @Override
   public Function getFunction(String name) {
-    Function function = map.get(name);
-    if (function == null) {
-      throw new IllegalArgumentException("Function '" + name + "' doesn't exist.");
-    }
-    return function;
+    return map.get(name);
   }
 
   @Override

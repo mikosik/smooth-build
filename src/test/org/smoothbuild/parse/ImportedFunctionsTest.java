@@ -20,13 +20,8 @@ public class ImportedFunctionsTest {
   }
 
   @Test
-  public void throwsExceptionWhenQueriedForNotRegisteredType() throws Exception {
-    try {
-      importedFunctions.getFunction("abc");
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+  public void returnsNullWhenQueriedForNotRegisteredType() throws Exception {
+    assertThat(importedFunctions.getFunction("abc")).isNull();
   }
 
   @Test
