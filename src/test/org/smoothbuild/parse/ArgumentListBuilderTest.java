@@ -15,7 +15,9 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
-import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.ExpressionNode;
 import org.smoothbuild.function.expr.ExpressionId;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
 import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
@@ -38,12 +40,12 @@ public class ArgumentListBuilderTest {
   Param file1Param = param(FILE, file1Name);
   Param file2Param = param(FILE, file2Name);
 
-  Expression string1Expr = stringExpression(new ExpressionId("1"), "value1");
-  Expression string2Expr = stringExpression(new ExpressionId("2"), "value2");
-  Expression stringImplicit1Expr = stringExpression(new ExpressionId("3"), "value2");
-  Expression stringImplicit2Expr = stringExpression(new ExpressionId("4"), "value2");
-  Expression file1Expr = literalExpression(new ExpressionId("5"), FILE, mock(File.class));
-  Expression file2Expr = literalExpression(new ExpressionId("6"), FILE, mock(File.class));
+  DefinitionNode string1Expr = node(new ExpressionId("1"), "value1");
+  DefinitionNode string2Expr = node(new ExpressionId("2"), "value2");
+  DefinitionNode stringImplicit1Expr = node(new ExpressionId("3"), "value2");
+  DefinitionNode stringImplicit2Expr = node(new ExpressionId("4"), "value2");
+  DefinitionNode file1Expr = node(new ExpressionId("5"), FILE, mock(File.class));
+  DefinitionNode file2Expr = node(new ExpressionId("6"), FILE, mock(File.class));
 
   Argument string1Arg = argument(string1Name, string1Expr);
   Argument string2Arg = argument(string2Name, string2Expr);
@@ -60,7 +62,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param, file1Param);
     List<Argument> args = newArrayList(string1Arg, file1Arg);
 
-    Map<String, Expression> result = argumentListBuilder.convert(args, params);
+    Map<String, DefinitionNode> result = argumentListBuilder.convert(args, params);
 
     assertThat(result.get(string1Name)).isSameAs(string1Expr);
     assertThat(result.get(file1Name)).isSameAs(file1Expr);
@@ -93,7 +95,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param, file1Param);
     List<Argument> args = newArrayList();
 
-    Map<String, Expression> result = argumentListBuilder.convert(args, params);
+    Map<String, DefinitionNode> result = argumentListBuilder.convert(args, params);
 
     assertThat(result.size()).isEqualTo(0);
     problemsListener.assertNoProblems();
@@ -119,11 +121,19 @@ public class ArgumentListBuilderTest {
     problemsListener.assertOnlyProblem(NoParamAssignableFromImplicitArgProblem.class);
   }
 
-  private static Argument argument(Expression expression) {
-    return new Argument(null, expression, new SourceLocation(1, 2, 3));
+  private static Argument argument(DefinitionNode node) {
+    return new Argument(null, node, new SourceLocation(1, 2, 3));
   }
 
-  private static Argument argument(String name, Expression expression) {
-    return new Argument(name, expression, new SourceLocation(1, 2, 3));
+  private static Argument argument(String name, DefinitionNode node) {
+    return new Argument(name, node, new SourceLocation(1, 2, 3));
+  }
+
+  private static DefinitionNode node(ExpressionId id, String value) {
+    return new ExpressionNode(stringExpression(id, value));
+  }
+
+  private DefinitionNode node(ExpressionId expressionId, Type type, File file) {
+    return new ExpressionNode(literalExpression(expressionId, type, file));
   }
 }
