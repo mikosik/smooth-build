@@ -5,22 +5,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.Param.param;
 
+import java.util.Map;
+
 import org.junit.Test;
+import org.smoothbuild.expression.Expression;
+import org.smoothbuild.expression.ExpressionIdFactory;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;
 
-public class FunctionTest {
+public class AbstractFunctionTest {
   FunctionSignature signature = mock(FunctionSignature.class);
-  FunctionInvoker invoker = mock(FunctionInvoker.class);
-
-  Function function = new Function(signature, invoker);
+  AbstractFunction function = new MyAbstractFunction(signature);
 
   @Test
   public void type() {
     when(signature.type()).thenReturn(Type.STRING);
-
     assertThat(function.type()).isEqualTo(Type.STRING);
   }
 
@@ -40,15 +41,20 @@ public class FunctionTest {
     assertThat(function.params()).isEqualTo(params);
   }
 
-  @Test
-  public void execute() throws FunctionException {
-    Path resultDir = Path.path("my/path");
-    @SuppressWarnings("unchecked")
-    ImmutableMap<String, Object> map = mock(ImmutableMap.class);
+  public static class MyAbstractFunction extends AbstractFunction {
+    public MyAbstractFunction(FunctionSignature signature) {
+      super(signature);
+    }
 
-    Object result = "result string";
-    when(invoker.invoke(resultDir, map)).thenReturn(result);
+    @Override
+    public Expression apply(ExpressionIdFactory idFactory, Map<String, Expression> arguments) {
+      return null;
+    }
 
-    assertThat(function.execute(resultDir, map)).isEqualTo(result);
+    @Override
+    public Object execute(Path resultDir, ImmutableMap<String, Object> arguments)
+        throws FunctionException {
+      return null;
+    }
   }
 }
