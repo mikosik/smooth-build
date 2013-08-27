@@ -1,6 +1,6 @@
 package org.smoothbuild.function.base;
 
-import static org.smoothbuild.function.base.FullyQualifiedName.simpleName;
+import static org.smoothbuild.function.base.QualifiedName.simpleName;
 
 import org.junit.Test;
 
@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class SignatureTest {
   Type type = Type.STRING;
-  FullyQualifiedName name = simpleName("name");
+  QualifiedName name = simpleName("name");
   ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
 
   @Test(expected = NullPointerException.class)

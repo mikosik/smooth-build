@@ -1,10 +1,10 @@
 package org.smoothbuild.function.plugin;
 
-import static org.smoothbuild.function.base.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.function.base.QualifiedName.qualifiedName;
 
 import java.lang.reflect.Method;
 
-import org.smoothbuild.function.base.FullyQualifiedName;
+import org.smoothbuild.function.base.QualifiedName;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
@@ -25,20 +25,20 @@ public class PluginSignatureFactory {
   public Signature create(Class<?> klass, Method method, Class<?> paramsInterface)
       throws PluginImplementationException {
     Type type = getReturnType(method);
-    FullyQualifiedName name = getFunctionName(klass);
+    QualifiedName name = getFunctionName(klass);
     ImmutableMap<String, Param> params = getParams(klass, method, paramsInterface);
 
     return new Signature(type, name, params);
   }
 
-  private static FullyQualifiedName getFunctionName(Class<?> klass)
+  private static QualifiedName getFunctionName(Class<?> klass)
       throws PluginImplementationException {
     FunctionName annotation = klass.getAnnotation(FunctionName.class);
     if (annotation == null) {
       throw new MissingNameException(klass);
     }
     try {
-      return fullyQualifiedName(annotation.value());
+      return qualifiedName(annotation.value());
     } catch (IllegalArgumentException e) {
       throw new IllegalFunctionNameException(klass, e.getMessage());
     }

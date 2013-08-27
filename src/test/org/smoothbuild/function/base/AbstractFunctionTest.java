@@ -30,7 +30,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void name() {
-    FullyQualifiedName name = FullyQualifiedName.fullyQualifiedName("name");
+    QualifiedName name = QualifiedName.qualifiedName("name");
     when(signature.name()).thenReturn(name);
 
     assertThat(function.name()).isEqualTo(name);

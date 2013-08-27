@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Splitter;
 
-public class FullyQualifiedName {
+public class QualifiedName {
   private static final char SEPARATOR = '.';
   private static final Pattern NAME_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
 
@@ -12,31 +12,31 @@ public class FullyQualifiedName {
   private final String simple;
   private final String full;
 
-  public static FullyQualifiedName simpleName(String simple) {
+  public static QualifiedName simpleName(String simple) {
     if (!isValidSimpleName(simple)) {
       throw new IllegalArgumentException("Illegal function name: '" + simple + "'");
     }
-    return new FullyQualifiedName("", simple, simple);
+    return new QualifiedName("", simple, simple);
   }
 
   public static boolean isValidSimpleName(String simple) {
     return isValidName(simple);
   }
 
-  public static FullyQualifiedName fullyQualifiedName(String fullyQualifiedName) {
-    for (String part : Splitter.on(SEPARATOR).split(fullyQualifiedName)) {
+  public static QualifiedName qualifiedName(String qualifiedName) {
+    for (String part : Splitter.on(SEPARATOR).split(qualifiedName)) {
       if (!isValidName(part)) {
-        throw new IllegalArgumentException("Illegal fully qualified function name: '"
-            + fullyQualifiedName + "'");
+        throw new IllegalArgumentException("Illegal qualified function name: '" + qualifiedName
+            + "'");
       }
     }
-    int index = fullyQualifiedName.lastIndexOf(SEPARATOR);
+    int index = qualifiedName.lastIndexOf(SEPARATOR);
     if (index == -1) {
-      return new FullyQualifiedName("", fullyQualifiedName, fullyQualifiedName);
+      return new QualifiedName("", qualifiedName, qualifiedName);
     } else {
-      String aPackage = fullyQualifiedName.substring(0, index);
-      String name = fullyQualifiedName.substring(index + 1);
-      return new FullyQualifiedName(aPackage, name, fullyQualifiedName);
+      String aPackage = qualifiedName.substring(0, index);
+      String name = qualifiedName.substring(index + 1);
+      return new QualifiedName(aPackage, name, qualifiedName);
     }
   }
 
@@ -44,7 +44,7 @@ public class FullyQualifiedName {
     return NAME_PATTERN.matcher(name).matches();
   }
 
-  private FullyQualifiedName(String aPackage, String simple, String full) {
+  private QualifiedName(String aPackage, String simple, String full) {
     this.aPackage = aPackage;
     this.simple = simple;
     this.full = full;
@@ -64,10 +64,10 @@ public class FullyQualifiedName {
 
   @Override
   public final boolean equals(Object object) {
-    if (!(object instanceof FullyQualifiedName)) {
+    if (!(object instanceof QualifiedName)) {
       return false;
     }
-    FullyQualifiedName that = (FullyQualifiedName) object;
+    QualifiedName that = (QualifiedName) object;
     return this.full.equals(that.full);
   }
 
