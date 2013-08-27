@@ -9,8 +9,9 @@ import org.smoothbuild.function.expr.ExpressionId;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
 
 /**
- * Function that is implemented completely in java (as opposed to one defined in
- * smooth script using smooth language).
+ * Function that is implemented completely in java (as opposed to
+ * {@link org.smoothbuild.function.plugin.PluginFunction} which is defined in
+ * Smooth script using Smooth language).
  */
 public class PluginFunction extends AbstractFunction {
   private final PluginInvoker pluginInvoker;
