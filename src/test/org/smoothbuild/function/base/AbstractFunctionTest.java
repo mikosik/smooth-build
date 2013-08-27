@@ -17,6 +17,11 @@ public class AbstractFunctionTest {
   FunctionSignature signature = mock(FunctionSignature.class);
   AbstractFunction function = new MyAbstractFunction(signature);
 
+  @Test(expected = NullPointerException.class)
+  public void nullSignatureIsForbidden() throws Exception {
+    new MyAbstractFunction(null);
+  }
+
   @Test
   public void type() {
     when(signature.type()).thenReturn(Type.STRING);
