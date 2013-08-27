@@ -1,25 +1,29 @@
-package org.smoothbuild.function.expr;
+package org.smoothbuild.function.plugin;
 
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Map;
 
-import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.expr.ExpressionId;
 import org.smoothbuild.plugin.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class CallExpression implements Expression {
+public class PluginFunctionExpression implements Expression {
   private final ExpressionId id;
-  private final Function function;
-  private Object result;
+  private final Type type;
+  private final PluginInvoker pluginInvoker;
   private final ImmutableMap<String, Expression> arguments;
+  private Object result;
 
-  public CallExpression(ExpressionId id, Function function, Map<String, Expression> arguments) {
+  public PluginFunctionExpression(ExpressionId id, Type type, PluginInvoker pluginInvoker,
+      Map<String, Expression> arguments) {
     this.id = id;
-    this.function = function;
+    this.type = type;
+    this.pluginInvoker = pluginInvoker;
     this.arguments = ImmutableMap.copyOf(arguments);
   }
 
@@ -30,11 +34,11 @@ public class CallExpression implements Expression {
 
   @Override
   public Type type() {
-    return function.type();
+    return type;
   }
 
   public void calculate() throws FunctionException {
-    result = function.execute(id.resultDir(), calculateArguments());
+    result = pluginInvoker.invoke(id.resultDir(), calculateArguments());
   }
 
   private ImmutableMap<String, Object> calculateArguments() {

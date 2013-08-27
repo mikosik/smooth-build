@@ -1,4 +1,4 @@
-package org.smoothbuild.function.expr;
+package org.smoothbuild.function.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -8,43 +8,44 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.expr.ExpressionId;
 
 import com.google.common.collect.ImmutableMap;
 
-public class CallExpressionTest {
+public class PluginFunctionExpressionTest {
   ExpressionId id = new ExpressionId("hash");
   @Mock
-  Function function;
+  PluginInvoker pluginInvoker;
   @Mock
   Expression expressionA;
   @Mock
   Expression expressionB;
 
+  Type type = Type.STRING;
   private final String paramAName = "paramA";
   private final String paramBName = "paramB";
 
   ImmutableMap<String, Expression> arguments;
 
-  CallExpression callExpression;
+  PluginFunctionExpression pluginFunctionExpression;
 
   @Before
   public void before() {
     MockitoAnnotations.initMocks(this);
     arguments = ImmutableMap.of(paramAName, expressionA, paramBName, expressionB);
-    callExpression = new CallExpression(id, function, arguments);
+    pluginFunctionExpression = new PluginFunctionExpression(id, type, pluginInvoker, arguments);
   }
 
   @Test
   public void id() {
-    assertThat(callExpression.id()).isEqualTo(id);
+    assertThat(pluginFunctionExpression.id()).isEqualTo(id);
   }
 
   @Test
   public void type() throws Exception {
-    when(function.type()).thenReturn(Type.STRING);
-    assertThat(callExpression.type()).isEqualTo(Type.STRING);
+    assertThat(pluginFunctionExpression.type()).isEqualTo(type);
   }
 
   @Test
@@ -58,19 +59,19 @@ public class CallExpressionTest {
     when(expressionB.result()).thenReturn(valueB);
 
     ImmutableMap<String, Object> args = ImmutableMap.of(paramAName, valueA, paramBName, valueB);
-    when(function.execute(id.resultDir(), args)).thenReturn(result);
+    when(pluginInvoker.invoke(id.resultDir(), args)).thenReturn(result);
 
     // when
-    callExpression.calculate();
+    pluginFunctionExpression.calculate();
 
     // then
-    assertThat(callExpression.result()).isEqualTo(result);
+    assertThat(pluginFunctionExpression.result()).isEqualTo(result);
   }
 
   // / TODO suppressed @Test
   public void fetchingResultFailsWhenNoExecuteHasBeenCalled() throws Exception {
     try {
-      callExpression.result();
+      pluginFunctionExpression.result();
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
       // expected
