@@ -13,6 +13,8 @@ import org.smoothbuild.function.plugin.exc.TooManyConstructorParamsException;
 import org.smoothbuild.function.plugin.exc.TooManyConstructorsException;
 import org.smoothbuild.plugin.Files;
 
+import com.google.common.collect.ImmutableList;
+
 public class PluginInvokerFactory {
   private final InstanceCreatorFactory instanceCreatorFactory;
   private final ReflexiveInvoker reflexiveInvoker;
@@ -52,8 +54,17 @@ public class PluginInvokerFactory {
         return instanceCreatorFactory.fileSystemPassingCreator(constructor);
       }
     }
-    // TODO add list with allowed types to exception message
-    throw new IllegalConstructorParamException(klass, paramType);
+    throw new IllegalConstructorParamException(klass, paramType, allowedTypes(builtin));
+  }
+
+  private static ImmutableList<String> allowedTypes(boolean builtin) {
+    String filesName = Files.class.getCanonicalName();
+    if (builtin) {
+      String fileSystemName = FileSystem.class.getCanonicalName();
+      return ImmutableList.of(fileSystemName, filesName);
+    } else {
+      return ImmutableList.of(filesName);
+    }
   }
 
   public static Constructor<?> getConstructor(Class<?> klass)
