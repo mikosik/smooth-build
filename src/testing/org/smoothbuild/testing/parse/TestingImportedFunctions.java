@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.parse;
 
-import static org.smoothbuild.testing.TestingFunctionSignature.testingSignature;
+import static org.smoothbuild.testing.TestingSignature.testingSignature;
 
 import java.util.Map;
 import java.util.Set;

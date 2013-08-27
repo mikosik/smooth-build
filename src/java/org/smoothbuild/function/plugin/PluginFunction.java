@@ -3,7 +3,7 @@ package org.smoothbuild.function.plugin;
 import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
-import org.smoothbuild.function.base.FunctionSignature;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionId;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
@@ -16,7 +16,7 @@ import org.smoothbuild.function.expr.ExpressionIdFactory;
 public class PluginFunction extends AbstractFunction {
   private final PluginInvoker pluginInvoker;
 
-  public PluginFunction(FunctionSignature signature, PluginInvoker pluginInvoker) {
+  public PluginFunction(Signature signature, PluginInvoker pluginInvoker) {
     super(signature);
     this.pluginInvoker = pluginInvoker;
   }

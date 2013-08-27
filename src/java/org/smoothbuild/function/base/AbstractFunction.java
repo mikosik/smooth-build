@@ -10,13 +10,13 @@ import org.smoothbuild.function.expr.ExpressionIdFactory;
 import com.google.common.collect.ImmutableMap;
 
 public abstract class AbstractFunction implements Function {
-  private final FunctionSignature signature;
+  private final Signature signature;
 
-  public AbstractFunction(FunctionSignature signature) {
+  public AbstractFunction(Signature signature) {
     this.signature = checkNotNull(signature);
   }
 
-  public FunctionSignature signature() {
+  public Signature signature() {
     return signature;
   }
 

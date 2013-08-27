@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import javax.inject.Inject;
 
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.FunctionSignature;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.plugin.exc.FunctionImplementationException;
 import org.smoothbuild.function.plugin.exc.MoreThanOneExecuteMethodException;
 import org.smoothbuild.function.plugin.exc.NoExecuteMethodException;
@@ -34,7 +34,7 @@ public class PluginFactory {
     Method method = getExecuteMethod(klass);
     Class<?> paramsInterface = getParamsInterface(method);
 
-    FunctionSignature signature = signatureFactory.create(klass, method, paramsInterface);
+    Signature signature = signatureFactory.create(klass, method, paramsInterface);
     PluginInvoker invoker = invokerFactory.create(klass, method, paramsInterface);
 
     return new PluginFunction(signature, invoker);

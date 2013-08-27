@@ -14,7 +14,7 @@ import org.smoothbuild.function.expr.ExpressionIdFactory;
 import com.google.common.collect.ImmutableMap;
 
 public class AbstractFunctionTest {
-  FunctionSignature signature = mock(FunctionSignature.class);
+  Signature signature = mock(Signature.class);
   AbstractFunction function = new MyAbstractFunction(signature);
 
   @Test(expected = NullPointerException.class)
@@ -45,7 +45,7 @@ public class AbstractFunctionTest {
   }
 
   public static class MyAbstractFunction extends AbstractFunction {
-    public MyAbstractFunction(FunctionSignature signature) {
+    public MyAbstractFunction(Signature signature) {
       super(signature);
     }
 

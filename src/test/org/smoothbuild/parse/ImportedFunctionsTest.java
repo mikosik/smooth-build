@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.TestingFunctionSignature.testingSignature;
+import static org.smoothbuild.testing.TestingSignature.testingSignature;
 
 import org.junit.Assert;
 import org.junit.Test;

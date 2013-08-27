@@ -6,23 +6,23 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-public class FunctionSignatureTest {
+public class SignatureTest {
   Type type = Type.STRING;
   FullyQualifiedName name = simpleName("name");
   ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() {
-    new FunctionSignature(null, name, params);
+    new Signature(null, name, params);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbidden() {
-    new FunctionSignature(type, null, params);
+    new Signature(type, null, params);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullParamsIsForbidden() {
-    new FunctionSignature(type, name, null);
+    new Signature(type, name, null);
   }
 }

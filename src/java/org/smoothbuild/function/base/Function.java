@@ -8,7 +8,7 @@ import org.smoothbuild.function.expr.ExpressionIdFactory;
 import com.google.common.collect.ImmutableMap;
 
 public interface Function {
-  public FunctionSignature signature();
+  public Signature signature();
 
   public Type type();
 

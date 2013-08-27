@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
-import org.smoothbuild.function.base.FunctionSignature;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
 
@@ -18,7 +18,7 @@ import org.smoothbuild.function.expr.ExpressionIdFactory;
 public class DefinedFunction extends AbstractFunction {
   private final DefinitionNode root;
 
-  public DefinedFunction(FunctionSignature signature, DefinitionNode root) {
+  public DefinedFunction(Signature signature, DefinitionNode root) {
     super(signature);
     this.root = checkNotNull(root);
   }

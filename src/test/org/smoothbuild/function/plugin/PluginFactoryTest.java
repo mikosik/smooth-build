@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.mem.InMemoryFileSystemModule;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.FunctionSignature;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.expr.Expression;
@@ -59,7 +59,7 @@ public class PluginFactoryTest {
     Function function = pluginFactory.create(MyPlugin.class);
 
     assertThat(function.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
-    FunctionSignature signature = function.signature();
+    Signature signature = function.signature();
     assertThat(signature.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
     assertThat(signature.type()).isEqualTo(Type.STRING);
 
