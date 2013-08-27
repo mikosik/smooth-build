@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
-import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -19,7 +17,4 @@ public interface Function {
   public ImmutableMap<String, Param> params();
 
   public Expression apply(ExpressionIdFactory idFactory, Map<String, Expression> arguments);
-
-  public Object execute(Path resultDir, ImmutableMap<String, Object> arguments)
-      throws FunctionException;
 }

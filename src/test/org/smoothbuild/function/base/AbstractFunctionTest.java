@@ -10,8 +10,6 @@ import java.util.Map;
 import org.junit.Test;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
-import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.exc.FunctionException;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -48,12 +46,6 @@ public class AbstractFunctionTest {
 
     @Override
     public Expression apply(ExpressionIdFactory idFactory, Map<String, Expression> arguments) {
-      return null;
-    }
-
-    @Override
-    public Object execute(Path resultDir, ImmutableMap<String, Object> arguments)
-        throws FunctionException {
       return null;
     }
   }
