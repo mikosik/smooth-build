@@ -5,7 +5,7 @@ import static org.smoothbuild.function.base.FullyQualifiedName.fullyQualifiedNam
 import java.lang.reflect.Method;
 
 import org.smoothbuild.function.base.FullyQualifiedName;
-import org.smoothbuild.function.base.FunctionSignature;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.plugin.exc.ForbiddenParamTypeException;
@@ -22,13 +22,13 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 public class PluginSignatureFactory {
 
-  public FunctionSignature create(Class<?> klass, Method method, Class<?> paramsInterface)
+  public Signature create(Class<?> klass, Method method, Class<?> paramsInterface)
       throws PluginImplementationException {
     Type type = getReturnType(method);
     FullyQualifiedName name = getFunctionName(klass);
     ImmutableMap<String, Param> params = getParams(klass, method, paramsInterface);
 
-    return new FunctionSignature(type, name, params);
+    return new Signature(type, name, params);
   }
 
   private static FullyQualifiedName getFunctionName(Class<?> klass)

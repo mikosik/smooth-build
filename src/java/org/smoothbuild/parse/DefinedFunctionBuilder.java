@@ -18,7 +18,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.FunctionSignature;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
@@ -67,7 +67,7 @@ public class DefinedFunctionBuilder {
     Type type = node.type();
     String name = function.functionName().getText();
     ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
-    FunctionSignature signature = new FunctionSignature(type, simpleName(name), params);
+    Signature signature = new Signature(type, simpleName(name), params);
 
     return new DefinedFunction(signature, node);
   }
