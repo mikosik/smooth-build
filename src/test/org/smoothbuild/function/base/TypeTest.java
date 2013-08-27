@@ -31,14 +31,6 @@ public class TypeTest {
   }
 
   @Test
-  public void equalsAndHashCode() throws Exception {
-    // TODO uncomment once bug
-    // https://code.google.com/p/equalsverifier/issues/detail?id=83 is fixed
-    // and remove test below
-    // EqualsVerifier.forClass(Type.class).suppress(NULL_FIELDS).verify();
-  }
-
-  @Test
   public void equalsAndHashCodeWorkaround() throws Exception {
     assertThat(Type.STRING).isEqualTo(Type.STRING);
     assertThat(Type.STRING).isNotEqualTo(Type.FILE);
