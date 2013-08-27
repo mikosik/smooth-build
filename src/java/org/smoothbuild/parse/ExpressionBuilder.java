@@ -16,7 +16,6 @@ import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
-import org.smoothbuild.expression.CallExpression;
 import org.smoothbuild.expression.Expression;
 import org.smoothbuild.expression.ExpressionId;
 import org.smoothbuild.expression.ExpressionIdFactory;
@@ -81,8 +80,7 @@ public class ExpressionBuilder {
     if (explicitArgs == null) {
       return new InvalidExpression(function.type());
     } else {
-      ExpressionId id = expressionIdFactory.createId(function.name().full());
-      return new CallExpression(id, function, explicitArgs);
+      return function.apply(expressionIdFactory, explicitArgs);
     }
   }
 
