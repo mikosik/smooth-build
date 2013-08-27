@@ -24,18 +24,21 @@ public class PluginFactory {
   private final PluginInvokerFactory invokerFactory;
 
   @Inject
-  public PluginFactory(PluginSignatureFactory signatureFactory,
-      PluginInvokerFactory invokerFactory) {
+  public PluginFactory(PluginSignatureFactory signatureFactory, PluginInvokerFactory invokerFactory) {
     this.signatureFactory = signatureFactory;
     this.invokerFactory = invokerFactory;
   }
 
   public Function create(Class<?> klass) throws PluginImplementationException {
+    return create(klass, false);
+  }
+
+  public Function create(Class<?> klass, boolean builtin) throws PluginImplementationException {
     Method method = getExecuteMethod(klass);
     Class<?> paramsInterface = getParamsInterface(method);
 
     Signature signature = signatureFactory.create(klass, method, paramsInterface);
-    PluginInvoker invoker = invokerFactory.create(klass, method, paramsInterface);
+    PluginInvoker invoker = invokerFactory.create(klass, method, paramsInterface, builtin);
 
     return new PluginFunction(signature, invoker);
   }

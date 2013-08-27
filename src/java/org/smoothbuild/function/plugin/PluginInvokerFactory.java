@@ -24,15 +24,15 @@ public class PluginInvokerFactory {
     this.reflexiveInvoker = reflexiveInvoker;
   }
 
-  public PluginInvoker create(Class<?> klass, Method method, Class<?> paramsInterface)
-      throws FunctionImplementationException {
-    InstanceCreator instanceCreator = createInstanceCreator(klass);
+  public PluginInvoker create(Class<?> klass, Method method, Class<?> paramsInterface,
+      boolean builtin) throws FunctionImplementationException {
+    InstanceCreator instanceCreator = createInstanceCreator(klass, builtin);
     ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
 
     return new PluginInvoker(reflexiveInvoker, instanceCreator, method, argumentsCreator);
   }
 
-  public InstanceCreator createInstanceCreator(Class<?> klass)
+  public InstanceCreator createInstanceCreator(Class<?> klass, boolean builtin)
       throws FunctionImplementationException {
     final Constructor<?> constructor = getConstructor(klass);
     Class<?>[] paramTypes = constructor.getParameterTypes();
@@ -47,9 +47,10 @@ public class PluginInvokerFactory {
     if (paramType.equals(Files.class)) {
       return instanceCreatorFactory.filesPassingCreator(constructor);
     }
-    // TODO disallow FileSystem param in plugin implementations
-    if (paramType.equals(FileSystem.class)) {
-      return instanceCreatorFactory.fileSystemPassingCreator(constructor);
+    if (builtin) {
+      if (paramType.equals(FileSystem.class)) {
+        return instanceCreatorFactory.fileSystemPassingCreator(constructor);
+      }
     }
     // TODO add list with allowed types to exception message
     throw new IllegalConstructorParamException(klass, paramType);
