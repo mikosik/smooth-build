@@ -13,23 +13,23 @@ import org.smoothbuild.function.plugin.exc.TooManyConstructorParamsException;
 import org.smoothbuild.function.plugin.exc.TooManyConstructorsException;
 import org.smoothbuild.plugin.Files;
 
-public class FunctionInvokerFactory {
+public class PluginInvokerFactory {
   private final InstanceCreatorFactory instanceCreatorFactory;
   private final ReflexiveInvoker reflexiveInvoker;
 
   @Inject
-  public FunctionInvokerFactory(InstanceCreatorFactory instanceCreatorFactory,
+  public PluginInvokerFactory(InstanceCreatorFactory instanceCreatorFactory,
       ReflexiveInvoker reflexiveInvoker) {
     this.instanceCreatorFactory = instanceCreatorFactory;
     this.reflexiveInvoker = reflexiveInvoker;
   }
 
-  public FunctionInvoker create(Class<?> klass, Method method, Class<?> paramsInterface)
+  public PluginInvoker create(Class<?> klass, Method method, Class<?> paramsInterface)
       throws FunctionImplementationException {
     InstanceCreator instanceCreator = createInstanceCreator(klass);
     ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
 
-    return new FunctionInvoker(reflexiveInvoker, instanceCreator, method, argumentsCreator);
+    return new PluginInvoker(reflexiveInvoker, instanceCreator, method, argumentsCreator);
   }
 
   public InstanceCreator createInstanceCreator(Class<?> klass)

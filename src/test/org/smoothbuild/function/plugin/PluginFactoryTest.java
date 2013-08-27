@@ -42,18 +42,18 @@ import org.smoothbuild.plugin.Path;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 
-public class FunctionFactoryTest {
-  FunctionFactory functionFactory;
+public class PluginFactoryTest {
+  PluginFactory pluginFactory;
 
   @Before
   public void before() {
-    functionFactory = Guice.createInjector(new InMemoryFileSystemModule()).getInstance(
-        FunctionFactory.class);
+    pluginFactory = Guice.createInjector(new InMemoryFileSystemModule()).getInstance(
+        PluginFactory.class);
   }
 
   @Test
   public void testSignature() throws Exception {
-    Function function = functionFactory.create(MyPlugin.class);
+    Function function = pluginFactory.create(MyPlugin.class);
 
     assertThat(function.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
     FunctionSignature signature = function.signature();
@@ -68,7 +68,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void testInvokation() throws Exception {
-    Function function = functionFactory.create(MyPlugin.class);
+    Function function = pluginFactory.create(MyPlugin.class);
     ImmutableMap<String, Object> args = ImmutableMap.<String, Object> of("stringA", "abc",
         "stringB", "def");
     assertThat(function.execute(path("any/path"), args)).isEqualTo("abcdef");
@@ -91,7 +91,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void pluginWithFaultyConstructor() throws Exception {
-    Function function = functionFactory.create(MyPluginWithFaultyConstructor.class);
+    Function function = pluginFactory.create(MyPluginWithFaultyConstructor.class);
     try {
       function.execute(Path.path("abc"), ImmutableMap.<String, Object> of());
       fail("exception shoulde be thrown");
@@ -115,7 +115,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void allowedParamTypesAreAccepted() throws Exception {
-    functionFactory.create(MyPluginWithAllowedParamTypes.class);
+    pluginFactory.create(MyPluginWithAllowedParamTypes.class);
   }
 
   public interface AllowedParameters {
@@ -138,7 +138,7 @@ public class FunctionFactoryTest {
   @Test
   public void pluginWithForbiddenParamType() throws Exception {
     try {
-      functionFactory.create(MyPluginWithForbiddenParamType.class);
+      pluginFactory.create(MyPluginWithForbiddenParamType.class);
       fail("exception shoulde be thrown");
     } catch (ForbiddenParamTypeException e) {
       // expected
@@ -160,7 +160,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void emptyParamtersAreAccepted() throws Exception {
-    functionFactory.create(MyPluginWithEmptyParameters.class);
+    pluginFactory.create(MyPluginWithEmptyParameters.class);
   }
 
   public interface EmptyParameters {}
@@ -175,7 +175,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void stringResultTypeIsAccepted() throws Exception {
-    functionFactory.create(MyPluginWithStringResult.class);
+    pluginFactory.create(MyPluginWithStringResult.class);
   }
 
   @FunctionName("my.package.myFunction")
@@ -189,7 +189,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void fileResultTypeIsAccepted() throws Exception {
-    functionFactory.create(MyPluginWithFileResult.class);
+    pluginFactory.create(MyPluginWithFileResult.class);
   }
 
   @FunctionName("my.package.myFunction")
@@ -203,7 +203,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void filesResultTypeIsAccepted() throws Exception {
-    functionFactory.create(MyPluginWithFilesResult.class);
+    pluginFactory.create(MyPluginWithFilesResult.class);
   }
 
   @FunctionName("my.package.myFunction")
@@ -217,7 +217,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void voidResultTypeIsAccepted() throws Exception {
-    functionFactory.create(MyPluginWithVoidResult.class);
+    pluginFactory.create(MyPluginWithVoidResult.class);
   }
 
   @FunctionName("my.package.myFunction")
@@ -230,7 +230,7 @@ public class FunctionFactoryTest {
   @Test
   public void illegalReturnTypeException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithIllegalReturnType.class);
+      pluginFactory.create(MyPluginWithIllegalReturnType.class);
       fail("exception should be thrown");
     } catch (IllegalReturnTypeException e) {
       // expected
@@ -249,7 +249,7 @@ public class FunctionFactoryTest {
   @Test
   public void paramsIsNotInterfaceException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithParamThatIsNotInterface.class);
+      pluginFactory.create(MyPluginWithParamThatIsNotInterface.class);
       fail("exception should be thrown");
     } catch (ParamsIsNotInterfaceException e) {
       // expected
@@ -266,7 +266,7 @@ public class FunctionFactoryTest {
   @Test
   public void illegalConstructorParamException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithIllegalConstructorParam.class);
+      pluginFactory.create(MyPluginWithIllegalConstructorParam.class);
       fail("exception should be thrown");
     } catch (IllegalConstructorParamException e) {
       // expected
@@ -287,7 +287,7 @@ public class FunctionFactoryTest {
   @Test
   public void illegalFunctionNameException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithIllegalFunctionName.class);
+      pluginFactory.create(MyPluginWithIllegalFunctionName.class);
       fail("exception should be thrown");
     } catch (IllegalFunctionNameException e) {
       // expected
@@ -303,7 +303,7 @@ public class FunctionFactoryTest {
 
   @Test
   public void invokingMethodFailedException() throws Exception {
-    Function function = functionFactory.create(MyPluginWithThrowingExecuteMethod.class);
+    Function function = pluginFactory.create(MyPluginWithThrowingExecuteMethod.class);
     try {
       function.execute(path("abc"), ImmutableMap.<String, Object> of());
       fail("exception should be thrown");
@@ -324,7 +324,7 @@ public class FunctionFactoryTest {
   @Test
   public void missingConstructorException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithPrivateConstructor.class);
+      pluginFactory.create(MyPluginWithPrivateConstructor.class);
       fail("exception should be thrown");
     } catch (MissingConstructorException e) {
       // expected
@@ -342,7 +342,7 @@ public class FunctionFactoryTest {
   @Test
   public void missingNameException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithMissingNameAnnotation.class);
+      pluginFactory.create(MyPluginWithMissingNameAnnotation.class);
       fail("exception should be thrown");
     } catch (MissingNameException e) {
       // expected
@@ -358,7 +358,7 @@ public class FunctionFactoryTest {
   @Test
   public void moreThanOneExecuteMethodException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithTwoExecuteMethods.class);
+      pluginFactory.create(MyPluginWithTwoExecuteMethods.class);
       fail("exception should be thrown");
     } catch (MoreThanOneExecuteMethodException e) {
       // expected
@@ -377,7 +377,7 @@ public class FunctionFactoryTest {
   @Test
   public void noExecuteMethodException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithZeroExecuteMethods.class);
+      pluginFactory.create(MyPluginWithZeroExecuteMethods.class);
       fail("exception should be thrown");
     } catch (NoExecuteMethodException e) {
       // expected
@@ -390,7 +390,7 @@ public class FunctionFactoryTest {
   @Test
   public void nonPublicExecuteMethodException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithPrivateExecuteMethod.class);
+      pluginFactory.create(MyPluginWithPrivateExecuteMethod.class);
       fail("exception should be thrown");
     } catch (NonPublicExecuteMethodException e) {
       // expected
@@ -407,7 +407,7 @@ public class FunctionFactoryTest {
   @Test
   public void paramMethodHasArgumentsException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithParamMethodThatHasParameters.class);
+      pluginFactory.create(MyPluginWithParamMethodThatHasParameters.class);
       fail("exception should be thrown");
     } catch (ParamMethodHasArgumentsException e) {
       // expected
@@ -428,7 +428,7 @@ public class FunctionFactoryTest {
   @Test
   public void staticExecuteMethodException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithStaticExecuteMethod.class);
+      pluginFactory.create(MyPluginWithStaticExecuteMethod.class);
       fail("exception should be thrown");
     } catch (StaticExecuteMethodException e) {
       // expected
@@ -445,7 +445,7 @@ public class FunctionFactoryTest {
   @Test
   public void tooManyConstructorParamsException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithConstructorWithTooManyParams.class);
+      pluginFactory.create(MyPluginWithConstructorWithTooManyParams.class);
       fail("exception should be thrown");
     } catch (TooManyConstructorParamsException e) {
       // expected
@@ -464,7 +464,7 @@ public class FunctionFactoryTest {
   @Test
   public void tooManyConstructorsException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithTwoConstructors.class);
+      pluginFactory.create(MyPluginWithTwoConstructors.class);
       fail("exception should be thrown");
     } catch (TooManyConstructorsException e) {
       // expected
@@ -484,7 +484,7 @@ public class FunctionFactoryTest {
   @Test
   public void tooManyParamsInExecuteMethodException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithExecuteMethodWithTwoParams.class);
+      pluginFactory.create(MyPluginWithExecuteMethodWithTwoParams.class);
       fail("exception should be thrown");
     } catch (TooManyParamsInExecuteMethodException e) {
       // expected
@@ -501,7 +501,7 @@ public class FunctionFactoryTest {
   @Test
   public void zeroParamsInExecuteMethodException() throws Exception {
     try {
-      functionFactory.create(MyPluginWithExecuteMethodWithZeroParams.class);
+      pluginFactory.create(MyPluginWithExecuteMethodWithZeroParams.class);
       fail("exception should be thrown");
     } catch (ZeroParamsInExecuteMethodException e) {
       // expected

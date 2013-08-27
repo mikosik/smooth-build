@@ -7,13 +7,13 @@ import org.smoothbuild.plugin.Path;
 
 import com.google.common.collect.ImmutableMap;
 
-public class FunctionInvoker {
+public class PluginInvoker {
   private final ReflexiveInvoker reflexiveInvoker;
   private final InstanceCreator instanceCreator;
   private final Method executeMethod;
   private final ArgumentsCreator argumentsCreator;
 
-  public FunctionInvoker(ReflexiveInvoker reflexiveInvoker, InstanceCreator instanceCreator,
+  public PluginInvoker(ReflexiveInvoker reflexiveInvoker, InstanceCreator instanceCreator,
       Method executeMethod, ArgumentsCreator argumentsCreator) {
     this.reflexiveInvoker = reflexiveInvoker;
     this.instanceCreator = instanceCreator;
