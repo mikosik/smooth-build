@@ -8,17 +8,17 @@ import org.smoothbuild.builtin.file.FileFunction;
 import org.smoothbuild.builtin.file.FilesFunction;
 import org.smoothbuild.builtin.file.SaveToFunction;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.plugin.FunctionFactory;
+import org.smoothbuild.function.plugin.PluginFactory;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
 
 import com.google.inject.Provider;
 
 public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
-  private final FunctionFactory functionFactory;
+  private final PluginFactory pluginFactory;
 
   @Inject
-  public ImportedFunctionsProvider(FunctionFactory functionFactory) {
-    this.functionFactory = functionFactory;
+  public ImportedFunctionsProvider(PluginFactory pluginFactory) {
+    this.pluginFactory = pluginFactory;
   }
 
   @Override
@@ -37,7 +37,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
 
   private Function createFunction(Class<?> klass) {
     try {
-      return functionFactory.create(klass);
+      return pluginFactory.create(klass);
     } catch (PluginImplementationException e) {
       throw new RuntimeException("Builtin plugin " + klass.getCanonicalName()
           + " has implementation problem.", e);

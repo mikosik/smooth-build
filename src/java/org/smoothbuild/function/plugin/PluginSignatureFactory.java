@@ -20,7 +20,7 @@ import org.smoothbuild.plugin.FunctionName;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class FunctionSignatureFactory {
+public class PluginSignatureFactory {
 
   public FunctionSignature create(Class<?> klass, Method method, Class<?> paramsInterface)
       throws PluginImplementationException {

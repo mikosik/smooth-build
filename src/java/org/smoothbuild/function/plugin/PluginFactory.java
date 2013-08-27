@@ -19,13 +19,13 @@ import org.smoothbuild.function.plugin.exc.TooManyParamsInExecuteMethodException
 import org.smoothbuild.function.plugin.exc.ZeroParamsInExecuteMethodException;
 import org.smoothbuild.plugin.ExecuteMethod;
 
-public class FunctionFactory {
-  private final FunctionSignatureFactory signatureFactory;
-  private final FunctionInvokerFactory invokerFactory;
+public class PluginFactory {
+  private final PluginSignatureFactory signatureFactory;
+  private final PluginInvokerFactory invokerFactory;
 
   @Inject
-  public FunctionFactory(FunctionSignatureFactory signatureFactory,
-      FunctionInvokerFactory invokerFactory) {
+  public PluginFactory(PluginSignatureFactory signatureFactory,
+      PluginInvokerFactory invokerFactory) {
     this.signatureFactory = signatureFactory;
     this.invokerFactory = invokerFactory;
   }
@@ -35,7 +35,7 @@ public class FunctionFactory {
     Class<?> paramsInterface = getParamsInterface(method);
 
     FunctionSignature signature = signatureFactory.create(klass, method, paramsInterface);
-    FunctionInvoker invoker = invokerFactory.create(klass, method, paramsInterface);
+    PluginInvoker invoker = invokerFactory.create(klass, method, paramsInterface);
 
     return new PluginFunction(signature, invoker);
   }

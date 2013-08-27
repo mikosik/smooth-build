@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class PluginFunctionTest {
   FunctionSignature signature = mock(FunctionSignature.class);
-  FunctionInvoker invoker = mock(FunctionInvoker.class);
+  PluginInvoker invoker = mock(PluginInvoker.class);
 
   PluginFunction function = new PluginFunction(signature, invoker);
 

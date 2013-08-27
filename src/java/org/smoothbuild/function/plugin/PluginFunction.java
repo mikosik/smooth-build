@@ -14,11 +14,11 @@ import org.smoothbuild.plugin.exc.FunctionException;
 import com.google.common.collect.ImmutableMap;
 
 public class PluginFunction extends AbstractFunction {
-  private final FunctionInvoker functionInvoker;
+  private final PluginInvoker pluginInvoker;
 
-  public PluginFunction(FunctionSignature signature, FunctionInvoker functionInvoker) {
+  public PluginFunction(FunctionSignature signature, PluginInvoker pluginInvoker) {
     super(signature);
-    this.functionInvoker = functionInvoker;
+    this.pluginInvoker = pluginInvoker;
   }
 
   @Override
@@ -30,6 +30,6 @@ public class PluginFunction extends AbstractFunction {
   @Override
   public Object execute(Path resultDir, ImmutableMap<String, Object> arguments)
       throws FunctionException {
-    return functionInvoker.invoke(resultDir, arguments);
+    return pluginInvoker.invoke(resultDir, arguments);
   }
 }
