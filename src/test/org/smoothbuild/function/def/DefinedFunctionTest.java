@@ -3,23 +3,19 @@ package org.smoothbuild.function.def;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.function.base.FullyQualifiedName.simpleName;
-import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.testing.TestingFunctionSignature.testingSignature;
 
 import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.FunctionSignature;
-import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 public class DefinedFunctionTest {
-  FunctionSignature signature = new FunctionSignature(STRING, simpleName("name"),
-      ImmutableMap.<String, Param> of());
+  FunctionSignature signature = testingSignature("name");
   DefinitionNode root = mock(DefinitionNode.class);
 
   DefinedFunction function = new DefinedFunction(signature, root);
