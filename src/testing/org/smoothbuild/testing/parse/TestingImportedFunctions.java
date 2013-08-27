@@ -1,13 +1,14 @@
 package org.smoothbuild.testing.parse;
 
 import static org.smoothbuild.function.base.FullyQualifiedName.simpleName;
+import static org.smoothbuild.function.base.Type.FILE;
 
 import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.FunctionSignature;
-import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.parse.SymbolTable;
 
@@ -19,7 +20,8 @@ public class TestingImportedFunctions implements SymbolTable {
   private final Map<String, Function> map;
 
   public TestingImportedFunctions() {
-    FunctionSignature signature = new FunctionSignature(Type.FILE, simpleName(IMPORTED_NAME), null);
+    ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
+    FunctionSignature signature = new FunctionSignature(FILE, simpleName(IMPORTED_NAME), params);
     Function function = new PluginFunction(signature, null);
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
