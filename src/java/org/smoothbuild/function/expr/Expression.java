@@ -1,4 +1,4 @@
-package org.smoothbuild.expression;
+package org.smoothbuild.function.expr;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.exc.FunctionException;

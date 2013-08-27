@@ -1,4 +1,4 @@
-package org.smoothbuild.expression;
+package org.smoothbuild.function.expr;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;

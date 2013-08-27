@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.expression.Expression;
+import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.problem.SourceLocation;
 
 public class Argument {

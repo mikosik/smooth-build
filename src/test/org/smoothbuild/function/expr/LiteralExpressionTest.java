@@ -1,8 +1,8 @@
-package org.smoothbuild.expression;
+package org.smoothbuild.function.expr;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.expression.LiteralExpression.literalExpression;
-import static org.smoothbuild.expression.LiteralExpression.stringExpression;
+import static org.smoothbuild.function.expr.LiteralExpression.literalExpression;
+import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;

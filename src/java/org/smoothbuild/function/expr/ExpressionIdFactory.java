@@ -1,4 +1,4 @@
-package org.smoothbuild.expression;
+package org.smoothbuild.function.expr;
 
 public class ExpressionIdFactory {
   private int count = 0;

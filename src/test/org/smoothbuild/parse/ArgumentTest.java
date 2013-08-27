@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-import org.smoothbuild.expression.Expression;
+import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.problem.SourceLocation;
 
 public class ArgumentTest {

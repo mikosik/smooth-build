@@ -1,8 +1,8 @@
-package org.smoothbuild.expression;
+package org.smoothbuild.function.expr;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.expression.ExpressionId.BUILD_ROOT;
+import static org.smoothbuild.function.expr.ExpressionId.BUILD_ROOT;
 import static org.smoothbuild.plugin.Path.path;
 import nl.jqno.equalsverifier.EqualsVerifier;
 

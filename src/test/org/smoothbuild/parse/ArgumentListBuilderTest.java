@@ -3,20 +3,20 @@ package org.smoothbuild.parse;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.expression.LiteralExpression.literalExpression;
-import static org.smoothbuild.expression.LiteralExpression.stringExpression;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Param.params;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.function.expr.LiteralExpression.literalExpression;
+import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
 
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.expression.Expression;
-import org.smoothbuild.expression.ExpressionId;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.expr.Expression;
+import org.smoothbuild.function.expr.ExpressionId;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
 import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
