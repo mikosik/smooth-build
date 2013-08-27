@@ -2,7 +2,7 @@ package org.smoothbuild.function.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.function.base.FullyQualifiedName.fullyQualifiedName;
+import static org.smoothbuild.function.base.QualifiedName.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
@@ -58,9 +58,9 @@ public class PluginFactoryTest {
   public void testSignature() throws Exception {
     Function function = pluginFactory.create(MyPlugin.class);
 
-    assertThat(function.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
+    assertThat(function.name()).isEqualTo(qualifiedName("my.package.myFunction"));
     Signature signature = function.signature();
-    assertThat(signature.name()).isEqualTo(fullyQualifiedName("my.package.myFunction"));
+    assertThat(signature.name()).isEqualTo(qualifiedName("my.package.myFunction"));
     assertThat(signature.type()).isEqualTo(Type.STRING);
 
     Param paramA = param(STRING, "stringA");

@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.function.base.FullyQualifiedName.simpleName;
+import static org.smoothbuild.function.base.QualifiedName.simpleName;
 import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
 import static org.smoothbuild.parse.Helpers.locationOf;
 

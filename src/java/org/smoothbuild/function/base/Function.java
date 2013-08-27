@@ -12,7 +12,7 @@ public interface Function {
 
   public Type type();
 
-  public FullyQualifiedName name();
+  public QualifiedName name();
 
   public ImmutableMap<String, Param> params();
 
