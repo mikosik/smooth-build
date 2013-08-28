@@ -9,7 +9,7 @@ import org.smoothbuild.command.err.NothingToDoError;
 import org.smoothbuild.problem.ProblemsListener;
 
 public class CommandLineParser {
-  public CommandLineArguments parse(ProblemsListener problems, String[] args) {
+  public CommandLineArguments parse(ProblemsListener problems, String... args) {
     if (args.length == 0) {
       problems.report(new NothingToDoError());
       return null;
