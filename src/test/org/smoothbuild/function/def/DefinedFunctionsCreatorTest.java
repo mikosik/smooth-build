@@ -14,7 +14,7 @@ import org.smoothbuild.function.expr.ExpressionIdFactory;
 
 import com.google.common.collect.Maps;
 
-public class DefinedFunctionTest {
+public class DefinedFunctionsCreatorTest {
   Signature signature = testingSignature("name");
   DefinitionNode root = mock(DefinitionNode.class);
 

@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 // TODO test it
-public class DefinedFunctionBuilder {
+public class DefinedFunctionsCreator {
 
   public static Map<QualifiedName, DefinedFunction> createDefinedFunctions(
       ProblemsListener problems, SymbolTable symbolTable,
