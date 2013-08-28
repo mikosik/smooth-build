@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.function.base.QualifiedName.simpleName;
-import static org.smoothbuild.parse.ArgumentListBuilder.convert;
+import static org.smoothbuild.parse.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.parse.Helpers.locationOf;
 
 import java.util.List;
@@ -107,7 +107,7 @@ public class DefinedFunctionBuilder {
 
       Function function = getFunction(functionName);
 
-      Map<String, DefinitionNode> explicitArgs = convert(problemsListener, function, args);
+      Map<String, DefinitionNode> explicitArgs = createArgumentNodes(problemsListener, function, args);
 
       if (explicitArgs == null) {
         return new InvalidNode(function.type());

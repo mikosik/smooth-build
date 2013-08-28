@@ -23,9 +23,9 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-public class ArgumentListBuilder {
+public class ArgumentNodesCreator {
 
-  public static Map<String, DefinitionNode> convert(ProblemsListener problemsListener,
+  public static Map<String, DefinitionNode> createArgumentNodes(ProblemsListener problemsListener,
       Function function, Collection<Argument> arguments) {
     return new Worker(problemsListener, function, arguments).convert();
   }
