@@ -38,4 +38,10 @@ public class ProblemTest {
     Problem problem = new Problem(WARNING, new SourceLocation(1, 2, 3), "problem description");
     assertThat(problem.toString()).isEqualTo("WARNING[1:2-3]: problem description");
   }
+
+  @Test
+  public void testToStringWithNullSourceLocation() throws Exception {
+    Problem problem = new Problem(WARNING, null, "problem description");
+    assertThat(problem.toString()).isEqualTo("WARNING: problem description");
+  }
 }
