@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.function.base.QualifiedName.simpleName;
-import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
 import static org.smoothbuild.parse.Helpers.locationOf;
 
 import java.util.List;
@@ -24,11 +23,9 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.ExpressionNode;
 import org.smoothbuild.function.def.FunctionNode;
 import org.smoothbuild.function.def.InvalidNode;
-import org.smoothbuild.function.expr.ExpressionId;
-import org.smoothbuild.function.expr.ExpressionIdFactory;
+import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.problem.SourceLocation;
 
 import com.google.common.collect.ImmutableMap;
@@ -38,16 +35,13 @@ import com.google.common.collect.Maps;
 // TODO test it
 public class DefinedFunctionBuilder {
   private final SymbolTable symbolTable;
-  private final ExpressionIdFactory expressionIdFactory;
   private final ArgumentListBuilder builder;
 
   private final Map<QualifiedName, DefinedFunction> functions;
 
   @Inject
-  public DefinedFunctionBuilder(SymbolTable symbolTable, ExpressionIdFactory expressionIdFactory,
-      ArgumentListBuilder builder) {
+  public DefinedFunctionBuilder(SymbolTable symbolTable, ArgumentListBuilder builder) {
     this.symbolTable = symbolTable;
-    this.expressionIdFactory = expressionIdFactory;
     this.builder = builder;
 
     this.functions = Maps.newHashMap();
@@ -158,7 +152,6 @@ public class DefinedFunctionBuilder {
   private DefinitionNode buildStringNode(TerminalNode stringToken) {
     String quotedString = stringToken.getText();
     String string = quotedString.substring(1, quotedString.length() - 1);
-    ExpressionId id = expressionIdFactory.createId(string);
-    return new ExpressionNode(stringExpression(id, string));
+    return new StringNode(string);
   }
 }

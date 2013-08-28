@@ -1,25 +1,26 @@
 package org.smoothbuild.function.def;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
 
-public class ExpressionNode implements DefinitionNode {
-  private final Expression expression;
+public class StringNode implements DefinitionNode {
+  private final String string;
 
-  public ExpressionNode(Expression expression) {
-    this.expression = checkNotNull(expression);
+  public StringNode(String string) {
+    this.string = checkNotNull(string);
   }
 
   @Override
   public Type type() {
-    return expression.type();
+    return Type.STRING;
   }
 
   @Override
   public Expression expression(ExpressionIdFactory idFactory) {
-    return expression;
+    return stringExpression(idFactory.createId(string), string);
   }
 }
