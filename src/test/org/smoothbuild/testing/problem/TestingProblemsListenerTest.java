@@ -10,6 +10,17 @@ import org.smoothbuild.problem.SourceLocation;
 public class TestingProblemsListenerTest {
   TestingProblemsListener testingProblemListener = new TestingProblemsListener();
 
+  @Test(expected = AssertionError.class)
+  public void problemsFoundFailesWhenNothingFound() throws Exception {
+    testingProblemListener.assertProblemsFound();
+  }
+
+  @Test
+  public void problemsFoundSucceedsWhenProblemsWereReported() throws Exception {
+    testingProblemListener.report(new MyProblem());
+    testingProblemListener.assertProblemsFound();
+  }
+
   @Test
   public void assertingThatOnlyOneProblemExistsSucceedsWhenOneExists() {
     testingProblemListener.report(new MyProblem());
