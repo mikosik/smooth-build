@@ -6,7 +6,6 @@ import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +29,11 @@ public class ModuleParser {
     this.importedFunctions = importedFunctions;
   }
 
-  public Module createModule(ProblemsListener problemsListener, InputStream inputStream)
-      throws IOException {
+  public Module createModule(ProblemsListener problemsListener, InputStream inputStream,
+      String scriptFile) {
     DetectingErrorsProblemsListener problemsDetector = new DetectingErrorsProblemsListener(
         problemsListener);
-    ModuleContext module = parseScript(problemsListener, inputStream);
+    ModuleContext module = parseScript(problemsListener, inputStream, scriptFile);
     if (problemsDetector.errorDetected()) {
       return null;
     }
