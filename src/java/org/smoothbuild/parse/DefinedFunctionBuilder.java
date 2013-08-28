@@ -19,6 +19,7 @@ import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.base.QualifiedName;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
@@ -40,7 +41,7 @@ public class DefinedFunctionBuilder {
   private final ExpressionIdFactory expressionIdFactory;
   private final ArgumentListBuilder builder;
 
-  private final Map<String, DefinedFunction> functions;
+  private final Map<QualifiedName, DefinedFunction> functions;
 
   @Inject
   public DefinedFunctionBuilder(SymbolTable symbolTable, ExpressionIdFactory expressionIdFactory,
@@ -52,11 +53,11 @@ public class DefinedFunctionBuilder {
     this.functions = Maps.newHashMap();
   }
 
-  public Map<String, DefinedFunction> build(Map<String, FunctionContext> functionContexts,
+  public Map<QualifiedName, DefinedFunction> build(Map<String, FunctionContext> functionContexts,
       List<String> sorted) {
     for (String name : sorted) {
       DefinedFunction definedFunction = build(functionContexts.get(name));
-      functions.put(name, definedFunction);
+      functions.put(QualifiedName.simpleName(name), definedFunction);
     }
     return functions;
   }
