@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.parse.DefinedFunctionBuilder.createDefinedFunctions;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
@@ -23,13 +24,10 @@ import org.smoothbuild.problem.ProblemsListener;
 
 public class ModuleParser {
   private final ImportedFunctions importedFunctions;
-  private final DefinedFunctionBuilder definedFunctionBuilder;
 
   @Inject
-  public ModuleParser(ImportedFunctions importedFunctions,
-      DefinedFunctionBuilder definedFunctionBuilder) {
+  public ModuleParser(ImportedFunctions importedFunctions) {
     this.importedFunctions = importedFunctions;
-    this.definedFunctionBuilder = definedFunctionBuilder;
   }
 
   public Module createModule(ProblemsListener problemsListener, InputStream inputStream)
@@ -54,8 +52,8 @@ public class ModuleParser {
       return null;
     }
 
-    Map<QualifiedName, DefinedFunction> definedFunctions = definedFunctionBuilder.build(functions,
-        sorted);
+    Map<QualifiedName, DefinedFunction> definedFunctions = createDefinedFunctions(problemsDetector,
+        importedFunctions, functions, sorted);
     if (problemsDetector.errorDetected()) {
       return null;
     }

@@ -1,12 +1,11 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.function.base.QualifiedName.simpleName;
+import static org.smoothbuild.parse.ArgumentListBuilder.convert;
 import static org.smoothbuild.parse.Helpers.locationOf;
 
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
@@ -26,6 +25,7 @@ import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.FunctionNode;
 import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
+import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
 import com.google.common.collect.ImmutableMap;
@@ -34,124 +34,135 @@ import com.google.common.collect.Maps;
 
 // TODO test it
 public class DefinedFunctionBuilder {
-  private final SymbolTable symbolTable;
-  private final ArgumentListBuilder builder;
 
-  private final Map<QualifiedName, DefinedFunction> functions;
-
-  @Inject
-  public DefinedFunctionBuilder(SymbolTable symbolTable, ArgumentListBuilder builder) {
-    this.symbolTable = symbolTable;
-    this.builder = builder;
-
-    this.functions = Maps.newHashMap();
+  public static Map<QualifiedName, DefinedFunction> createDefinedFunctions(
+      ProblemsListener problemsListener, SymbolTable symbolTable,
+      Map<String, FunctionContext> functionContexts, List<String> sorted) {
+    return new Worker(problemsListener, symbolTable, functionContexts, sorted).run();
   }
 
-  public Map<QualifiedName, DefinedFunction> build(Map<String, FunctionContext> functionContexts,
-      List<String> sorted) {
-    for (String name : sorted) {
-      DefinedFunction definedFunction = build(functionContexts.get(name));
-      functions.put(QualifiedName.simpleName(name), definedFunction);
+  private static class Worker {
+    private final ProblemsListener problemsListener;
+    private final SymbolTable symbolTable;
+    private final Map<String, FunctionContext> functionContexts;
+    private final List<String> sorted;
+
+    private final Map<QualifiedName, DefinedFunction> functions = Maps.newHashMap();
+
+    public Worker(ProblemsListener problemsListener, SymbolTable symbolTable,
+        Map<String, FunctionContext> functionContexts, List<String> sorted) {
+      this.problemsListener = problemsListener;
+      this.symbolTable = symbolTable;
+      this.functionContexts = functionContexts;
+      this.sorted = sorted;
     }
-    return functions;
-  }
 
-  public DefinedFunction build(FunctionContext function) {
-    DefinitionNode node = build(function.pipe());
+    public Map<QualifiedName, DefinedFunction> run() {
+      for (String name : sorted) {
+        DefinedFunction definedFunction = build(functionContexts.get(name));
+        functions.put(simpleName(name), definedFunction);
+      }
+      return functions;
+    }
 
-    Type type = node.type();
-    String name = function.functionName().getText();
-    ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
-    Signature signature = new Signature(type, simpleName(name), params);
+    public DefinedFunction build(FunctionContext function) {
+      DefinitionNode node = build(function.pipe());
 
-    return new DefinedFunction(signature, node);
-  }
+      Type type = node.type();
+      String name = function.functionName().getText();
+      ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
+      Signature signature = new Signature(type, simpleName(name), params);
 
-  private DefinitionNode build(PipeContext pipe) {
-    DefinitionNode result = build(pipe.expression());
-    List<CallContext> elements = pipe.call();
-    for (int i = 0; i < elements.size(); i++) {
-      CallContext call = elements.get(i);
+      return new DefinedFunction(signature, node);
+    }
+
+    private DefinitionNode build(PipeContext pipe) {
+      DefinitionNode result = build(pipe.expression());
+      List<CallContext> elements = pipe.call();
+      for (int i = 0; i < elements.size(); i++) {
+        CallContext call = elements.get(i);
+        List<Argument> arguments = build(call.argList());
+        // implicit piped argument's location is set to the pipe character '|'
+        SourceLocation sourceLocation = locationOf(pipe.p.get(i));
+        arguments.add(new Argument(null, result, sourceLocation));
+        result = build(call, arguments);
+      }
+      return result;
+    }
+
+    private DefinitionNode build(ExpressionContext expression) {
+      if (expression.call() != null) {
+        return build(expression.call());
+      }
+      return buildStringNode(expression.STRING());
+    }
+
+    private DefinitionNode build(CallContext call) {
       List<Argument> arguments = build(call.argList());
-      // implicit piped argument's location is set to the pipe character '|'
-      SourceLocation sourceLocation = locationOf(pipe.p.get(i));
-      arguments.add(new Argument(null, result, sourceLocation));
-      result = build(call, arguments);
+      return build(call, arguments);
     }
-    return result;
-  }
 
-  private DefinitionNode build(ExpressionContext expression) {
-    if (expression.call() != null) {
-      return build(expression.call());
-    }
-    return buildStringNode(expression.STRING());
-  }
+    private DefinitionNode build(CallContext call, List<Argument> args) {
+      String functionName = call.functionName().getText();
 
-  private DefinitionNode build(CallContext call) {
-    List<Argument> arguments = build(call.argList());
-    return build(call, arguments);
-  }
+      Function function = getFunction(functionName);
 
-  private DefinitionNode build(CallContext call, List<Argument> args) {
-    String functionName = call.functionName().getText();
+      Map<String, DefinitionNode> explicitArgs = convert(problemsListener, function, args);
 
-    Function function = getFunction(functionName);
-
-    Map<String, DefinitionNode> explicitArgs = builder.convert(function, args);
-
-    if (explicitArgs == null) {
-      return new InvalidNode(function.type());
-    } else {
-      return new FunctionNode(function, explicitArgs);
-    }
-  }
-
-  private Function getFunction(String functionName) {
-    // UndefinedFunctionDetector has been run already so we can be sure at this
-    // point that function with given name exists either among imported
-    // functions or among already handled defined functions.
-
-    Function function = symbolTable.getFunction(functionName);
-    if (function == null) {
-      return functions.get(functionName);
-    } else {
-      return function;
-    }
-  }
-
-  private List<Argument> build(ArgListContext argList) {
-    List<Argument> result = Lists.newArrayList();
-    if (argList != null) {
-      for (ArgContext arg : argList.arg()) {
-        DefinitionNode node = build(arg.expression());
-        result.add(new Argument(argName(arg), node, argLocation(arg)));
+      if (explicitArgs == null) {
+        return new InvalidNode(function.type());
+      } else {
+        return new FunctionNode(function, explicitArgs);
       }
     }
-    return result;
-  }
 
-  private static String argName(ArgContext arg) {
-    ParamNameContext paramName = arg.paramName();
-    if (paramName == null) {
-      return null;
-    } else {
-      return paramName.getText();
+    private Function getFunction(String functionName) {
+      // UndefinedFunctionDetector has been run already so we can be sure at
+      // this
+      // point that function with given name exists either among imported
+      // functions or among already handled defined functions.
+
+      Function function = symbolTable.getFunction(functionName);
+      if (function == null) {
+        return functions.get(functionName);
+      } else {
+        return function;
+      }
     }
-  }
 
-  private static SourceLocation argLocation(ArgContext arg) {
-    ParamNameContext paramName = arg.paramName();
-    if (paramName == null) {
-      return locationOf(arg.expression());
-    } else {
-      return locationOf(paramName);
+    private List<Argument> build(ArgListContext argList) {
+      List<Argument> result = Lists.newArrayList();
+      if (argList != null) {
+        for (ArgContext arg : argList.arg()) {
+          DefinitionNode node = build(arg.expression());
+          result.add(new Argument(argName(arg), node, argLocation(arg)));
+        }
+      }
+      return result;
     }
-  }
 
-  private DefinitionNode buildStringNode(TerminalNode stringToken) {
-    String quotedString = stringToken.getText();
-    String string = quotedString.substring(1, quotedString.length() - 1);
-    return new StringNode(string);
+    private static String argName(ArgContext arg) {
+      ParamNameContext paramName = arg.paramName();
+      if (paramName == null) {
+        return null;
+      } else {
+        return paramName.getText();
+      }
+    }
+
+    private static SourceLocation argLocation(ArgContext arg) {
+      ParamNameContext paramName = arg.paramName();
+      if (paramName == null) {
+        return locationOf(arg.expression());
+      } else {
+        return locationOf(paramName);
+      }
+    }
+
+    private DefinitionNode buildStringNode(TerminalNode stringToken) {
+      String quotedString = stringToken.getText();
+      String string = quotedString.substring(1, quotedString.length() - 1);
+      return new StringNode(string);
+    }
   }
 }

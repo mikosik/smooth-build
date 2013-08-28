@@ -61,14 +61,13 @@ public class ArgumentListBuilderTest {
   Argument file2Arg = argument(file2Name, file2Expr);
 
   TestingProblemsListener problemsListener = new TestingProblemsListener();
-  ArgumentListBuilder argumentListBuilder = new ArgumentListBuilder(problemsListener);
 
   @Test
   public void convertingExplicitArguments() {
     ImmutableMap<String, Param> params = params(string1Param, file1Param);
     List<Argument> args = newArrayList(string1Arg, file1Arg);
 
-    Map<String, DefinitionNode> result = argumentListBuilder.convert(function(params), args);
+    Map<String, DefinitionNode> result = convert(params, args);
 
     assertThat(result.get(string1Name)).isSameAs(string1Expr);
     assertThat(result.get(file1Name)).isSameAs(file1Expr);
@@ -76,12 +75,17 @@ public class ArgumentListBuilderTest {
     problemsListener.assertNoProblems();
   }
 
+  private Map<String, DefinitionNode> convert(ImmutableMap<String, Param> params,
+      List<Argument> args) {
+    return ArgumentListBuilder.convert(problemsListener, function(params), args);
+  }
+
   @Test
   public void duplicatedExplicitNames() {
     ImmutableMap<String, Param> params = params(string1Param, string2Param);
     List<Argument> args = newArrayList(string1Arg, string1Arg);
 
-    argumentListBuilder.convert(function(params), args);
+    convert(params, args);
 
     problemsListener.assertOnlyProblem(DuplicateArgNameProblem.class);
   }
@@ -91,7 +95,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param);
     List<Argument> args = newArrayList(file1Arg);
 
-    argumentListBuilder.convert(function(params), args);
+    convert(params, args);
 
     problemsListener.assertOnlyProblem(UnknownParamNameProblem.class);
   }
@@ -101,7 +105,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param, file1Param);
     List<Argument> args = newArrayList();
 
-    Map<String, DefinitionNode> result = argumentListBuilder.convert(function(params), args);
+    Map<String, DefinitionNode> result = convert(params, args);
 
     assertThat(result.size()).isEqualTo(0);
     problemsListener.assertNoProblems();
@@ -112,7 +116,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(string1Param, string2Param);
     List<Argument> args = newArrayList(stringImplicit1Arg);
 
-    argumentListBuilder.convert(function(params), args);
+    convert(params, args);
 
     problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgProblem.class);
   }
@@ -122,7 +126,7 @@ public class ArgumentListBuilderTest {
     ImmutableMap<String, Param> params = params(file1Param);
     List<Argument> args = newArrayList(stringImplicit1Arg);
 
-    argumentListBuilder.convert(function(params), args);
+    convert(params, args);
 
     problemsListener.assertOnlyProblem(NoParamAssignableFromImplicitArgProblem.class);
   }
