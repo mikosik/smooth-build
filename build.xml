@@ -12,6 +12,7 @@
   <property name="dir.build.class.java" location="${dir.build.class}/java" />
   <property name="dir.build.class.testing" location="${dir.build.class}/testing" />
   <property name="dir.build.class.test" location="${dir.build.class}/test" />
+  <property name="dir.build.release" location="${dir.build}/release" />
 
   <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar" />
   <property name="lib.aopalliance" value="${dir.lib}/aopalliance.jar" />
@@ -30,6 +31,7 @@
     <mkdir dir="${dir.build.class.java}" />
     <mkdir dir="${dir.build.class.testing}" />
     <mkdir dir="${dir.build.class.test}" />
+    <mkdir dir="${dir.build.release}" />
   </target>
 
   <target name="generate-java-grammar" depends="init">
@@ -144,6 +146,13 @@
         <fileset dir="${dir.build.class.test}" includes="**/*Test.class"/>
       </batchtest>
     </junit>
+  </target>
+
+  <!-- release -->
+  <target name="release" depends="test">
+    <jar destfile="${dir.build.release}/smooth.jar">
+      <fileset dir="${dir.build.class.java}"/>
+    </jar>
   </target>
 
 </project>
