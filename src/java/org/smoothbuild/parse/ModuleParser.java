@@ -18,6 +18,7 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.QualifiedName;
 import org.smoothbuild.function.def.DefinedFunction;
+import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
 
 public class ModuleParser {
@@ -33,27 +34,29 @@ public class ModuleParser {
 
   public Module createModule(ProblemsListener problemsListener, InputStream inputStream)
       throws IOException {
+    DetectingErrorsProblemsListener problemsDetector = new DetectingErrorsProblemsListener(
+        problemsListener);
     ModuleContext module = parseScript(problemsListener, inputStream);
-    if (problemsListener.hasAnyProblem()) {
+    if (problemsDetector.errorDetected()) {
       return null;
     }
 
     Map<String, FunctionContext> functions = collectFunctions(problemsListener, importedFunctions,
         module);
-    if (problemsListener.hasAnyProblem()) {
+    if (problemsDetector.errorDetected()) {
       return null;
     }
 
     Map<String, Set<Dependency>> dependencies = collectDependencies(module);
 
     List<String> sorted = sortDependencies(problemsListener, importedFunctions, dependencies);
-    if (problemsListener.hasAnyProblem()) {
+    if (problemsDetector.errorDetected()) {
       return null;
     }
 
     Map<QualifiedName, DefinedFunction> definedFunctions = definedFunctionBuilder.build(functions,
         sorted);
-    if (problemsListener.hasAnyProblem()) {
+    if (problemsDetector.errorDetected()) {
       return null;
     }
 

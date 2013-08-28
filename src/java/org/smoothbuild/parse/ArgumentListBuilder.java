@@ -16,6 +16,7 @@ import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgPro
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.TypeMismatchProblem;
 import org.smoothbuild.parse.err.UnknownParamNameProblem;
+import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.Problem;
 import org.smoothbuild.problem.ProblemsListener;
 
@@ -25,22 +26,22 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 public class ArgumentListBuilder {
-  private final ProblemsListener problemsListener;
+  private final DetectingErrorsProblemsListener problemsDetector;
 
   @Inject
   public ArgumentListBuilder(ProblemsListener problemsListener) {
-    this.problemsListener = problemsListener;
+    this.problemsDetector = new DetectingErrorsProblemsListener(problemsListener);
   }
 
   public Map<String, DefinitionNode> convert(Function function, Collection<Argument> arguments) {
     ImmutableMap<String, Param> params = function.params();
     Map<String, DefinitionNode> explicitArgs = processExplicitArguments(function, arguments, params);
-    if (problemsListener.hasAnyProblem()) {
+    if (problemsDetector.errorDetected()) {
       return null;
     }
 
     convertImplicitToExplicit(params, implicitArgs(arguments), explicitArgs);
-    if (problemsListener.hasAnyProblem()) {
+    if (problemsDetector.errorDetected()) {
       return null;
     }
 
@@ -58,13 +59,13 @@ public class ArgumentListBuilder {
         DefinitionNode argNode = argument.definitionNode();
         Param param = params.get(argName);
         if (param == null) {
-          problemsListener.report(new UnknownParamNameProblem(function.name(), argument));
+          problemsDetector.report(new UnknownParamNameProblem(function.name(), argument));
           success = false;
         } else if (explicitArgs.containsKey(argName)) {
-          problemsListener.report(new DuplicateArgNameProblem(argument));
+          problemsDetector.report(new DuplicateArgNameProblem(argument));
           success = false;
         } else if (!param.type().isAssignableFrom(argNode.type())) {
-          problemsListener.report(new TypeMismatchProblem(argument, param.type()));
+          problemsDetector.report(new TypeMismatchProblem(argument, param.type()));
           success = false;
         } else {
           explicitArgs.put(argName, argNode);
@@ -107,7 +108,7 @@ public class ArgumentListBuilder {
         if (param.type() == type && !explicitArgs.containsKey(param.name())) {
           if (found) {
             Problem problem = new ManyAmbigiousParamsAssignableFromImplicitArgProblem(onlyImplicit);
-            problemsListener.report(problem);
+            problemsDetector.report(problem);
             return;
           } else {
             explicitArgs.put(param.name(), onlyImplicit.definitionNode());
@@ -117,7 +118,7 @@ public class ArgumentListBuilder {
       }
       if (!found) {
         Problem problem = new NoParamAssignableFromImplicitArgProblem(onlyImplicit);
-        problemsListener.report(problem);
+        problemsDetector.report(problem);
       }
     }
   }
