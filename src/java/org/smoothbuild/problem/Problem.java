@@ -25,6 +25,14 @@ public class Problem {
 
   @Override
   public String toString() {
-    return type.toString() + sourceLocation.toString() + ": " + message;
+    return type.toString() + locationToString() + ": " + message;
+  }
+
+  private String locationToString() {
+    if (sourceLocation == null) {
+      return "";
+    } else {
+      return sourceLocation.toString();
+    }
   }
 }
