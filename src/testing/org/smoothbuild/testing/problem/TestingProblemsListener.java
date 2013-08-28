@@ -17,8 +17,14 @@ public class TestingProblemsListener implements ProblemsListener {
     list.add(problem);
   }
 
+  public void assertProblemsFound() {
+    assertThat(list.isEmpty()).isFalse();
+  }
+
   public void assertOnlyProblem(Class<? extends Problem> klass) {
-    assertThat(list.size()).isEqualTo(1);
+    if (list.size() != 1) {
+      throw new AssertionError("Expected one problems,\nbut got:\n" + list.toString());
+    }
     assertThat(list.get(0)).isInstanceOf(klass);
   }
 
