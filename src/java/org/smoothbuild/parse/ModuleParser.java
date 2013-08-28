@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.parse.DefinedFunctionBuilder.createDefinedFunctions;
+import static org.smoothbuild.parse.DefinedFunctionsCreator.createDefinedFunctions;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
