@@ -20,17 +20,26 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(ProblemsListener problemsListener, InputStream inputStream)
-      throws IOException {
+  public static ModuleContext parseScript(ProblemsListener problemsListener,
+      InputStream inputStream, String scriptFile) {
     ErrorListener errorListener = new ErrorListener(problemsListener);
 
-    SmoothLexer lexer = new SmoothLexer(new ANTLRInputStream(inputStream));
+    ANTLRInputStream antlrInputStream;
+    try {
+      antlrInputStream = new ANTLRInputStream(inputStream);
+    } catch (IOException e) {
+      problemsListener.report(new CannotReadScriptError(scriptFile, e));
+      return null;
+    }
+
+    SmoothLexer lexer = new SmoothLexer(antlrInputStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
 

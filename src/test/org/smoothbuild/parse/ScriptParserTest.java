@@ -64,7 +64,7 @@ public class ScriptParserTest {
   private static TestingProblemsListener parse(String string) throws IOException {
     TestingProblemsListener problems = new TestingProblemsListener();
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
-    ScriptParser.parseScript(problems, inputStream);
+    ScriptParser.parseScript(problems, inputStream, "filename.smooth");
     return problems;
   }
 }
