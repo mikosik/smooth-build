@@ -29,17 +29,27 @@ public class ScriptParserTest {
 
   @Test
   public void functionDefinitionWithoutSemicolonFails() throws Exception {
-    parse("functionA : functionB ").assertOnlyProblem(SyntaxError.class);
+    assertParsingFails("functionA : functionB ");
   }
 
   @Test
   public void functionDefinitionWithoutBodyFails() throws Exception {
-    parse("functionA : ;").assertOnlyProblem(SyntaxError.class);
+    assertParsingFails("functionA : ;");
   }
 
   @Test
-  public void functionAssignedToStringLiteral() throws Exception {
+  public void functionDefinedAsStringLiteral() throws Exception {
     assertParsingSucceeds(oneLineScript("functionA : 'abc' ;"));
+  }
+
+  @Test
+  public void emptyStringsAreAllowed() throws Exception {
+    assertParsingSucceeds(oneLineScript("functionA : '' ;"));
+  }
+
+  @Test
+  public void notClosedStringLiteralFails() throws Exception {
+    parse(oneLineScript("functionA : 'abc ;")).assertProblemsFound();
   }
 
   @Test
@@ -54,12 +64,17 @@ public class ScriptParserTest {
 
   @Test
   public void incorrectScriptFails() throws Exception {
-    parse("abc").assertOnlyProblem(SyntaxError.class);
+    assertParsingFails("abc");
   }
 
   private static void assertParsingSucceeds(String scriptText) throws IOException {
     TestingProblemsListener problems = parse(scriptText);
     problems.assertNoProblems();
+  }
+
+  private static void assertParsingFails(String script) throws IOException {
+    TestingProblemsListener problems = parse(script);
+    problems.assertOnlyProblem(SyntaxError.class);
   }
 
   private static TestingProblemsListener parse(String string) throws IOException {
