@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.function.base.QualifiedName.isValidSimpleName;
+import static org.smoothbuild.function.base.Name.isValidSimpleName;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.function.base.QualifiedName;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportWarning;
@@ -60,7 +60,7 @@ public class FunctionsCollector {
         return null;
       }
       if (importedFunctions.containsFunction(name)) {
-        QualifiedName importedName = importedFunctions.getFunction(name).name();
+        Name importedName = importedFunctions.getFunction(name).name();
         SourceLocation location = Helpers.locationOf(nameContext);
         problems.report(new OverridenImportWarning(location, name, importedName));
         return null;

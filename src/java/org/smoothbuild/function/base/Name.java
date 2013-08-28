@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Splitter;
 
-public class QualifiedName {
+public class Name {
   private static final char SEPARATOR = '.';
   private static final Pattern PART_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
 
@@ -12,31 +12,31 @@ public class QualifiedName {
   private final String simple;
   private final String full;
 
-  public static QualifiedName simpleName(String simple) {
+  public static Name simpleName(String simple) {
     if (!isValidSimpleName(simple)) {
       throw new IllegalArgumentException("Illegal function name: '" + simple + "'");
     }
-    return new QualifiedName("", simple, simple);
+    return new Name("", simple, simple);
   }
 
   public static boolean isValidSimpleName(String simple) {
     return isValidPart(simple);
   }
 
-  public static QualifiedName qualifiedName(String qualifiedName) {
-    for (String part : Splitter.on(SEPARATOR).split(qualifiedName)) {
+  public static Name qualifiedName(String qualified) {
+    for (String part : Splitter.on(SEPARATOR).split(qualified)) {
       if (!isValidPart(part)) {
-        throw new IllegalArgumentException("Illegal qualified function name: '" + qualifiedName
+        throw new IllegalArgumentException("Illegal qualified function name: '" + qualified
             + "'");
       }
     }
-    int index = qualifiedName.lastIndexOf(SEPARATOR);
+    int index = qualified.lastIndexOf(SEPARATOR);
     if (index == -1) {
-      return new QualifiedName("", qualifiedName, qualifiedName);
+      return new Name("", qualified, qualified);
     } else {
-      String aPackage = qualifiedName.substring(0, index);
-      String name = qualifiedName.substring(index + 1);
-      return new QualifiedName(aPackage, name, qualifiedName);
+      String aPackage = qualified.substring(0, index);
+      String name = qualified.substring(index + 1);
+      return new Name(aPackage, name, qualified);
     }
   }
 
@@ -44,7 +44,7 @@ public class QualifiedName {
     return PART_PATTERN.matcher(part).matches();
   }
 
-  private QualifiedName(String aPackage, String simple, String full) {
+  private Name(String aPackage, String simple, String full) {
     this.aPackage = aPackage;
     this.simple = simple;
     this.full = full;
@@ -64,10 +64,10 @@ public class QualifiedName {
 
   @Override
   public final boolean equals(Object object) {
-    if (!(object instanceof QualifiedName)) {
+    if (!(object instanceof Name)) {
       return false;
     }
-    QualifiedName that = (QualifiedName) object;
+    Name that = (Name) object;
     return this.full.equals(that.full);
   }
 

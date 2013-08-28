@@ -2,15 +2,15 @@ package org.smoothbuild.function.base;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.base.QualifiedName.qualifiedName;
-import static org.smoothbuild.function.base.QualifiedName.isValidSimpleName;
-import static org.smoothbuild.function.base.QualifiedName.simpleName;
+import static org.smoothbuild.function.base.Name.isValidSimpleName;
+import static org.smoothbuild.function.base.Name.qualifiedName;
+import static org.smoothbuild.function.base.Name.simpleName;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public class QualifiedNameTest {
+public class NameTest {
 
   @Test
   public void correctQualifiedNames() {
@@ -33,7 +33,7 @@ public class QualifiedNameTest {
   }
 
   private static void doTestQualifiedName(String full, String aPackage, String name) {
-    QualifiedName qualifiedName = qualifiedName(full);
+    Name qualifiedName = qualifiedName(full);
     assertThat(qualifiedName.full()).isEqualTo(full);
     assertThat(qualifiedName.aPackage()).isEqualTo(aPackage);
     assertThat(qualifiedName.simple()).isEqualTo(name);
@@ -87,10 +87,10 @@ public class QualifiedNameTest {
   private static void doTestSimple(String name) {
     assertThat(isValidSimpleName(name)).isTrue();
 
-    QualifiedName qualifiedName = QualifiedName.simpleName(name);
-    assertThat(qualifiedName.full()).isEqualTo(name);
-    assertThat(qualifiedName.aPackage()).isEqualTo("");
-    assertThat(qualifiedName.simple()).isEqualTo(name);
+    Name simpleName = simpleName(name);
+    assertThat(simpleName.full()).isEqualTo(name);
+    assertThat(simpleName.aPackage()).isEqualTo("");
+    assertThat(simpleName.simple()).isEqualTo(name);
   }
 
   @Test
@@ -150,7 +150,7 @@ public class QualifiedNameTest {
         .suppress(NULL_FIELDS).verify();
   }
 
-  private static QualifiedName n(String name) {
+  private static Name n(String name) {
     return qualifiedName(name);
   }
 }

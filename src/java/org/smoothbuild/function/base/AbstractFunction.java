@@ -24,7 +24,7 @@ public abstract class AbstractFunction implements Function {
     return signature.type();
   }
 
-  public QualifiedName name() {
+  public Name name() {
     return signature.name();
   }
 

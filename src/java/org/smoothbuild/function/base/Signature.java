@@ -9,10 +9,10 @@ import com.google.common.collect.ImmutableMap;
  */
 public class Signature {
   private final Type type;
-  private final QualifiedName name;
+  private final Name name;
   private final ImmutableMap<String, Param> params;
 
-  public Signature(Type type, QualifiedName name, ImmutableMap<String, Param> params) {
+  public Signature(Type type, Name name, ImmutableMap<String, Param> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.params = checkNotNull(params);
@@ -22,7 +22,7 @@ public class Signature {
     return type;
   }
 
-  public QualifiedName name() {
+  public Name name() {
     return name;
   }
 

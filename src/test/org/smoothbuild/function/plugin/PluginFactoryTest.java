@@ -2,7 +2,7 @@ package org.smoothbuild.function.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.function.base.QualifiedName.qualifiedName;
+import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;

@@ -1,10 +1,10 @@
 package org.smoothbuild.function.plugin;
 
-import static org.smoothbuild.function.base.QualifiedName.qualifiedName;
+import static org.smoothbuild.function.base.Name.qualifiedName;
 
 import java.lang.reflect.Method;
 
-import org.smoothbuild.function.base.QualifiedName;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
@@ -25,13 +25,13 @@ public class PluginSignatureFactory {
   public Signature create(Class<?> klass, Method method, Class<?> paramsInterface)
       throws PluginImplementationException {
     Type type = getReturnType(method);
-    QualifiedName name = getFunctionName(klass);
+    Name name = getFunctionName(klass);
     ImmutableMap<String, Param> params = getParams(klass, method, paramsInterface);
 
     return new Signature(type, name, params);
   }
 
-  private static QualifiedName getFunctionName(Class<?> klass)
+  private static Name getFunctionName(Class<?> klass)
       throws PluginImplementationException {
     FunctionName annotation = klass.getAnnotation(FunctionName.class);
     if (annotation == null) {

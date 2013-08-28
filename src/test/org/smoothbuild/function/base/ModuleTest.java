@@ -2,7 +2,7 @@ package org.smoothbuild.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.function.base.QualifiedName.qualifiedName;
+import static org.smoothbuild.function.base.Name.qualifiedName;
 
 import java.util.Map;
 
@@ -12,12 +12,12 @@ import org.smoothbuild.function.def.DefinedFunction;
 import com.google.common.collect.ImmutableMap;
 
 public class ModuleTest {
-  QualifiedName name1 = qualifiedName("name1");
-  QualifiedName name2 = qualifiedName("name2");
+  Name name1 = qualifiedName("name1");
+  Name name2 = qualifiedName("name2");
   DefinedFunction function1 = mock(DefinedFunction.class);
   DefinedFunction function2 = mock(DefinedFunction.class);
 
-  Map<QualifiedName, DefinedFunction> map = ImmutableMap.of(name1, function1, name2, function2);
+  Map<Name, DefinedFunction> map = ImmutableMap.of(name1, function1, name2, function2);
 
   @Test
   public void getFunction() {
@@ -29,7 +29,7 @@ public class ModuleTest {
 
   @Test
   public void nullReturnedWhenFunctionDoesNotExist() throws Exception {
-    Module module = new Module(ImmutableMap.<QualifiedName, DefinedFunction> of());
+    Module module = new Module(ImmutableMap.<Name, DefinedFunction> of());
     assertThat(module.getFunction(name1)).isNull();
   }
 
