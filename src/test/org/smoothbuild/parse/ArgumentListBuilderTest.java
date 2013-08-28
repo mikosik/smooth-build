@@ -8,8 +8,6 @@ import static org.smoothbuild.function.base.Param.params;
 import static org.smoothbuild.function.base.QualifiedName.simpleName;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
-import static org.smoothbuild.function.expr.LiteralExpression.literalExpression;
-import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
 
 import java.util.List;
 import java.util.Map;
@@ -20,8 +18,10 @@ import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.ExpressionNode;
+import org.smoothbuild.function.def.StringNode;
+import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionId;
+import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
@@ -29,6 +29,7 @@ import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgPro
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.UnknownParamNameProblem;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.problem.SourceLocation;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
@@ -45,12 +46,12 @@ public class ArgumentListBuilderTest {
   Param file1Param = param(FILE, file1Name);
   Param file2Param = param(FILE, file2Name);
 
-  DefinitionNode string1Expr = node(new ExpressionId("1"), "value1");
-  DefinitionNode string2Expr = node(new ExpressionId("2"), "value2");
-  DefinitionNode stringImplicit1Expr = node(new ExpressionId("3"), "value2");
-  DefinitionNode stringImplicit2Expr = node(new ExpressionId("4"), "value2");
-  DefinitionNode file1Expr = node(new ExpressionId("5"), FILE, mock(File.class));
-  DefinitionNode file2Expr = node(new ExpressionId("6"), FILE, mock(File.class));
+  DefinitionNode string1Expr = node("value1");
+  DefinitionNode string2Expr = node("value2");
+  DefinitionNode stringImplicit1Expr = node("value2");
+  DefinitionNode stringImplicit2Expr = node("value2");
+  DefinitionNode file1Expr = node(mock(File.class));
+  DefinitionNode file2Expr = node(mock(File.class));
 
   Argument string1Arg = argument(string1Name, string1Expr);
   Argument string2Arg = argument(string2Name, string2Expr);
@@ -134,12 +135,42 @@ public class ArgumentListBuilderTest {
     return new Argument(name, node, new SourceLocation(1, 2, 3));
   }
 
-  private static DefinitionNode node(ExpressionId id, String value) {
-    return new ExpressionNode(stringExpression(id, value));
+  private static DefinitionNode node(String value) {
+    return new StringNode(value);
   }
 
-  private DefinitionNode node(ExpressionId expressionId, Type type, File file) {
-    return new ExpressionNode(literalExpression(expressionId, type, file));
+  private DefinitionNode node(final File file) {
+    return new DefinitionNode() {
+
+      @Override
+      public Type type() {
+        return Type.FILE;
+      }
+
+      @Override
+      public Expression expression(ExpressionIdFactory idFactory) {
+        final ExpressionId id = idFactory.createId(file.path().toString());
+        return new Expression() {
+          @Override
+          public Type type() {
+            return Type.FILE;
+          }
+
+          @Override
+          public Object result() {
+            return file;
+          }
+
+          @Override
+          public ExpressionId id() {
+            return id;
+          }
+
+          @Override
+          public void calculate() throws FunctionException {}
+        };
+      }
+    };
   }
 
   private static Function function(ImmutableMap<String, Param> params) {
