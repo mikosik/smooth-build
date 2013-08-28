@@ -26,22 +26,22 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<String, FunctionContext> collectFunctions(ProblemsListener problemsListener,
+  public static Map<String, FunctionContext> collectFunctions(ProblemsListener problems,
       SymbolTable importedFunctions, ModuleContext module) {
-    Worker worker = new Worker(problemsListener, importedFunctions);
+    Worker worker = new Worker(problems, importedFunctions);
     worker.visit(module);
     return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final SymbolTable importedFunctions;
-    private final ProblemsListener problemsListener;
+    private final ProblemsListener problems;
     private final Map<String, FunctionContext> functions;
 
     @Inject
-    public Worker(ProblemsListener problemsListener, SymbolTable importedFunctions) {
+    public Worker(ProblemsListener problems, SymbolTable importedFunctions) {
       this.importedFunctions = importedFunctions;
-      this.problemsListener = problemsListener;
+      this.problems = problems;
       this.functions = Maps.newHashMap();
     }
 
@@ -51,19 +51,18 @@ public class FunctionsCollector {
       String name = nameContext.getText();
 
       if (!isValidSimpleName(name)) {
-        problemsListener
-            .report(new IllegalFunctionNameError(Helpers.locationOf(nameContext), name));
+        problems.report(new IllegalFunctionNameError(Helpers.locationOf(nameContext), name));
         return null;
       }
 
       if (functions.keySet().contains(name)) {
-        problemsListener.report(new DuplicateFunctionError(Helpers.locationOf(nameContext), name));
+        problems.report(new DuplicateFunctionError(Helpers.locationOf(nameContext), name));
         return null;
       }
       if (importedFunctions.containsFunction(name)) {
         QualifiedName importedName = importedFunctions.getFunction(name).name();
         SourceLocation location = Helpers.locationOf(nameContext);
-        problemsListener.report(new OverridenImportWarning(location, name, importedName));
+        problems.report(new OverridenImportWarning(location, name, importedName));
         return null;
       }
 

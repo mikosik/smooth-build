@@ -20,24 +20,24 @@ import com.google.common.collect.Sets;
  * function in returned list. Detects cycles in dependency graph.
  */
 public class DependencySorter {
-  public static List<String> sortDependencies(ProblemsListener problemsListener,
+  public static List<String> sortDependencies(ProblemsListener problems,
       SymbolTable importedFunctions, Map<String, Set<Dependency>> dependenciesOrig) {
 
-    Worker worker = new Worker(problemsListener, importedFunctions, dependenciesOrig);
+    Worker worker = new Worker(problems, importedFunctions, dependenciesOrig);
     worker.work();
     return worker.result();
   }
 
   private static class Worker {
-    private final ProblemsListener problemsListener;
+    private final ProblemsListener problems;
     private final HashMap<String, Set<Dependency>> notSorted;
     private final HashSet<String> reachableNames;
     private final List<String> sorted;
     private final DependencyStack stack;
 
-    public Worker(ProblemsListener problemsListener, SymbolTable importedFunctions,
+    public Worker(ProblemsListener problems, SymbolTable importedFunctions,
         Map<String, Set<Dependency>> dependenciesOrig) {
-      this.problemsListener = problemsListener;
+      this.problems = problems;
       this.notSorted = Maps.newHashMap(dependenciesOrig);
       this.reachableNames = Sets.newHashSet(importedFunctions.names());
       this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
@@ -73,7 +73,7 @@ public class DependencySorter {
       // DependencyCollector made sure that all dependency exists so the
       // only possibility at this point is that missing dependency is on
       // stack and we have cycle in call graph.
-      problemsListener.report(stack.createCycleProblem());
+      problems.report(stack.createCycleProblem());
       addStackTopToSorted();
     }
 

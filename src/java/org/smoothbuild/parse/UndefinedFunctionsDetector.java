@@ -11,7 +11,7 @@ import org.smoothbuild.problem.ProblemsListener;
  */
 public class UndefinedFunctionsDetector {
   public void detect(SymbolTable importedFunctions, Map<String, Set<Dependency>> dependencies,
-      ProblemsListener problemsListener) {
+      ProblemsListener problems) {
 
     Set<String> declaredFunctions = dependencies.keySet();
 
@@ -19,7 +19,7 @@ public class UndefinedFunctionsDetector {
       for (Dependency dependency : functionDependecies) {
         String name = dependency.functionName();
         if (!importedFunctions.containsFunction(name) && !declaredFunctions.contains(name)) {
-          problemsListener.report(new UndefinedFunctionError(dependency.location(), name));
+          problems.report(new UndefinedFunctionError(dependency.location(), name));
         }
       }
     }

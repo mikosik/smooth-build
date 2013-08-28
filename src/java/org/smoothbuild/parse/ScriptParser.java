@@ -27,15 +27,15 @@ import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(ProblemsListener problemsListener,
-      InputStream inputStream, String scriptFile) {
-    ErrorListener errorListener = new ErrorListener(problemsListener);
+  public static ModuleContext parseScript(ProblemsListener problems, InputStream inputStream,
+      String scriptFile) {
+    ErrorListener errorListener = new ErrorListener(problems);
 
     ANTLRInputStream antlrInputStream;
     try {
       antlrInputStream = new ANTLRInputStream(inputStream);
     } catch (IOException e) {
-      problemsListener.report(new CannotReadScriptError(scriptFile, e));
+      problems.report(new CannotReadScriptError(scriptFile, e));
       return null;
     }
 
@@ -51,17 +51,17 @@ public class ScriptParser {
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final ProblemsListener problemsListener;
+    private final ProblemsListener problems;
 
-    public ErrorListener(ProblemsListener problemsListener) {
-      this.problemsListener = problemsListener;
+    public ErrorListener(ProblemsListener problems) {
+      this.problems = problems;
     }
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol,
         int line, int charPositionInLine, String msg, @Nullable RecognitionException e) {
       SourceLocation location = createLocation(offendingSymbol, line, charPositionInLine);
-      problemsListener.report(new SyntaxError(location, msg));
+      problems.report(new SyntaxError(location, msg));
     }
 
     private SourceLocation createLocation(Object offendingSymbol, int line, int charPositionInLine) {
@@ -95,7 +95,7 @@ public class ScriptParser {
 
     private void reportProblem(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      problemsListener.report(new Error(locationOf(token), message));
+      problems.report(new Error(locationOf(token), message));
     }
   }
 }

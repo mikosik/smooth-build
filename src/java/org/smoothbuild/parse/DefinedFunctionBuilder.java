@@ -36,22 +36,22 @@ import com.google.common.collect.Maps;
 public class DefinedFunctionBuilder {
 
   public static Map<QualifiedName, DefinedFunction> createDefinedFunctions(
-      ProblemsListener problemsListener, SymbolTable symbolTable,
+      ProblemsListener problems, SymbolTable symbolTable,
       Map<String, FunctionContext> functionContexts, List<String> sorted) {
-    return new Worker(problemsListener, symbolTable, functionContexts, sorted).run();
+    return new Worker(problems, symbolTable, functionContexts, sorted).run();
   }
 
   private static class Worker {
-    private final ProblemsListener problemsListener;
+    private final ProblemsListener problems;
     private final SymbolTable symbolTable;
     private final Map<String, FunctionContext> functionContexts;
     private final List<String> sorted;
 
     private final Map<QualifiedName, DefinedFunction> functions = Maps.newHashMap();
 
-    public Worker(ProblemsListener problemsListener, SymbolTable symbolTable,
+    public Worker(ProblemsListener problems, SymbolTable symbolTable,
         Map<String, FunctionContext> functionContexts, List<String> sorted) {
-      this.problemsListener = problemsListener;
+      this.problems = problems;
       this.symbolTable = symbolTable;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
@@ -107,8 +107,7 @@ public class DefinedFunctionBuilder {
 
       Function function = getFunction(functionName);
 
-      Map<String, DefinitionNode> explicitArgs = createArgumentNodes(problemsListener, function,
-          args);
+      Map<String, DefinitionNode> explicitArgs = createArgumentNodes(problems, function, args);
 
       if (explicitArgs == null) {
         return new InvalidNode(function.type());

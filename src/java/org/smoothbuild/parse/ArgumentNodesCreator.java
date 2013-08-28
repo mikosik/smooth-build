@@ -25,19 +25,18 @@ import com.google.common.collect.Maps;
 
 public class ArgumentNodesCreator {
 
-  public static Map<String, DefinitionNode> createArgumentNodes(ProblemsListener problemsListener,
+  public static Map<String, DefinitionNode> createArgumentNodes(ProblemsListener problems,
       Function function, Collection<Argument> arguments) {
-    return new Worker(problemsListener, function, arguments).convert();
+    return new Worker(problems, function, arguments).convert();
   }
 
   private static class Worker {
-    private final DetectingErrorsProblemsListener problemsDetector;
+    private final DetectingErrorsProblemsListener problems;
     private final Function function;
     private final Collection<Argument> arguments;
 
-    public Worker(ProblemsListener problemsListener, Function function,
-        Collection<Argument> arguments) {
-      this.problemsDetector = new DetectingErrorsProblemsListener(problemsListener);
+    public Worker(ProblemsListener problems, Function function, Collection<Argument> arguments) {
+      this.problems = new DetectingErrorsProblemsListener(problems);
       this.function = function;
       this.arguments = arguments;
     }
@@ -45,12 +44,12 @@ public class ArgumentNodesCreator {
     public Map<String, DefinitionNode> convert() {
       ImmutableMap<String, Param> params = function.params();
       Map<String, DefinitionNode> explicitArgs = processExplicitArguments(params);
-      if (problemsDetector.errorDetected()) {
+      if (problems.errorDetected()) {
         return null;
       }
 
       convertImplicitToExplicit(params, implicitArgs(arguments), explicitArgs);
-      if (problemsDetector.errorDetected()) {
+      if (problems.errorDetected()) {
         return null;
       }
 
@@ -67,13 +66,13 @@ public class ArgumentNodesCreator {
           DefinitionNode argNode = argument.definitionNode();
           Param param = params.get(argName);
           if (param == null) {
-            problemsDetector.report(new UnknownParamNameProblem(function.name(), argument));
+            problems.report(new UnknownParamNameProblem(function.name(), argument));
             success = false;
           } else if (explicitArgs.containsKey(argName)) {
-            problemsDetector.report(new DuplicateArgNameProblem(argument));
+            problems.report(new DuplicateArgNameProblem(argument));
             success = false;
           } else if (!param.type().isAssignableFrom(argNode.type())) {
-            problemsDetector.report(new TypeMismatchProblem(argument, param.type()));
+            problems.report(new TypeMismatchProblem(argument, param.type()));
             success = false;
           } else {
             explicitArgs.put(argName, argNode);
@@ -118,7 +117,7 @@ public class ArgumentNodesCreator {
             if (found) {
               Problem problem = new ManyAmbigiousParamsAssignableFromImplicitArgProblem(
                   onlyImplicit);
-              problemsDetector.report(problem);
+              problems.report(problem);
               return;
             } else {
               explicitArgs.put(param.name(), onlyImplicit.definitionNode());
@@ -128,7 +127,7 @@ public class ArgumentNodesCreator {
         }
         if (!found) {
           Problem problem = new NoParamAssignableFromImplicitArgProblem(onlyImplicit);
-          problemsDetector.report(problem);
+          problems.report(problem);
         }
       }
     }

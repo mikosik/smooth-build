@@ -31,29 +31,28 @@ public class ModuleParser {
 
   public Module createModule(ProblemsListener problemsListener, InputStream inputStream,
       String scriptFile) {
-    DetectingErrorsProblemsListener problemsDetector = new DetectingErrorsProblemsListener(
-        problemsListener);
+    DetectingErrorsProblemsListener problems = new DetectingErrorsProblemsListener(problemsListener);
     ModuleContext module = parseScript(problemsListener, inputStream, scriptFile);
-    if (problemsDetector.errorDetected()) {
+    if (problems.errorDetected()) {
       return null;
     }
 
     Map<String, FunctionContext> functions = collectFunctions(problemsListener, importedFunctions,
         module);
-    if (problemsDetector.errorDetected()) {
+    if (problems.errorDetected()) {
       return null;
     }
 
     Map<String, Set<Dependency>> dependencies = collectDependencies(module);
 
     List<String> sorted = sortDependencies(problemsListener, importedFunctions, dependencies);
-    if (problemsDetector.errorDetected()) {
+    if (problems.errorDetected()) {
       return null;
     }
 
-    Map<QualifiedName, DefinedFunction> definedFunctions = createDefinedFunctions(problemsDetector,
+    Map<QualifiedName, DefinedFunction> definedFunctions = createDefinedFunctions(problems,
         importedFunctions, functions, sorted);
-    if (problemsDetector.errorDetected()) {
+    if (problems.errorDetected()) {
       return null;
     }
 
