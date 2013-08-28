@@ -37,7 +37,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
 
   private Function createFunction(Class<?> klass) {
     try {
-      return pluginFactory.create(klass);
+      return pluginFactory.create(klass, true);
     } catch (PluginImplementationException e) {
       throw new RuntimeException("Builtin plugin " + klass.getCanonicalName()
           + " has implementation problem.", e);
