@@ -107,7 +107,8 @@ public class DefinedFunctionBuilder {
 
       Function function = getFunction(functionName);
 
-      Map<String, DefinitionNode> explicitArgs = createArgumentNodes(problemsListener, function, args);
+      Map<String, DefinitionNode> explicitArgs = createArgumentNodes(problemsListener, function,
+          args);
 
       if (explicitArgs == null) {
         return new InvalidNode(function.type());
@@ -124,7 +125,7 @@ public class DefinedFunctionBuilder {
 
       Function function = symbolTable.getFunction(functionName);
       if (function == null) {
-        return functions.get(functionName);
+        return functions.get(simpleName(functionName));
       } else {
         return function;
       }
