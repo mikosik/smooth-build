@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.function.base.QualifiedName.simpleName;
+import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.parse.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.parse.Helpers.locationOf;
 
@@ -17,7 +17,7 @@ import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
-import org.smoothbuild.function.base.QualifiedName;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
@@ -35,7 +35,7 @@ import com.google.common.collect.Maps;
 // TODO test it
 public class DefinedFunctionsCreator {
 
-  public static Map<QualifiedName, DefinedFunction> createDefinedFunctions(
+  public static Map<Name, DefinedFunction> createDefinedFunctions(
       ProblemsListener problems, SymbolTable symbolTable,
       Map<String, FunctionContext> functionContexts, List<String> sorted) {
     return new Worker(problems, symbolTable, functionContexts, sorted).run();
@@ -47,7 +47,7 @@ public class DefinedFunctionsCreator {
     private final Map<String, FunctionContext> functionContexts;
     private final List<String> sorted;
 
-    private final Map<QualifiedName, DefinedFunction> functions = Maps.newHashMap();
+    private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
 
     public Worker(ProblemsListener problems, SymbolTable symbolTable,
         Map<String, FunctionContext> functionContexts, List<String> sorted) {
@@ -57,7 +57,7 @@ public class DefinedFunctionsCreator {
       this.sorted = sorted;
     }
 
-    public Map<QualifiedName, DefinedFunction> run() {
+    public Map<Name, DefinedFunction> run() {
       for (String name : sorted) {
         DefinedFunction definedFunction = build(functionContexts.get(name));
         functions.put(simpleName(name), definedFunction);

@@ -8,17 +8,17 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class Module {
-  private final ImmutableMap<QualifiedName, DefinedFunction> functions;
+  private final ImmutableMap<Name, DefinedFunction> functions;
 
-  public Module(Map<QualifiedName, DefinedFunction> definedFunctions) {
+  public Module(Map<Name, DefinedFunction> definedFunctions) {
     this.functions = ImmutableMap.copyOf(definedFunctions);
   }
 
-  public Function getFunction(QualifiedName name) {
+  public Function getFunction(Name name) {
     return functions.get(name);
   }
 
-  public ImmutableSet<QualifiedName> availableNames() {
+  public ImmutableSet<Name> availableNames() {
     return functions.keySet();
   }
 }

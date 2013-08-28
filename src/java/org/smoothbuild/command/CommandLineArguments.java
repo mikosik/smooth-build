@@ -1,12 +1,12 @@
 package org.smoothbuild.command;
 
-import org.smoothbuild.function.base.QualifiedName;
+import org.smoothbuild.function.base.Name;
 
 public class CommandLineArguments {
   private final String scriptFile;
-  private final QualifiedName function;
+  private final Name function;
 
-  public CommandLineArguments(String scriptFile, QualifiedName function) {
+  public CommandLineArguments(String scriptFile, Name function) {
     this.scriptFile = scriptFile;
     this.function = function;
   }
@@ -15,7 +15,7 @@ public class CommandLineArguments {
     return scriptFile;
   }
 
-  public QualifiedName function() {
+  public Name function() {
     return function;
   }
 }

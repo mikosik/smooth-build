@@ -1,7 +1,7 @@
 package org.smoothbuild.command;
 
-import static org.smoothbuild.function.base.QualifiedName.isValidSimpleName;
-import static org.smoothbuild.function.base.QualifiedName.qualifiedName;
+import static org.smoothbuild.function.base.Name.isValidSimpleName;
+import static org.smoothbuild.function.base.Name.qualifiedName;
 
 import org.smoothbuild.command.err.CommandLineError;
 import org.smoothbuild.command.err.IllegalFunctionNameError;

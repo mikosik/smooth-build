@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.function.base.Module;
-import org.smoothbuild.function.base.QualifiedName;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
@@ -50,7 +50,7 @@ public class ModuleParser {
       return null;
     }
 
-    Map<QualifiedName, DefinedFunction> definedFunctions = createDefinedFunctions(problems,
+    Map<Name, DefinedFunction> definedFunctions = createDefinedFunctions(problems,
         importedFunctions, functions, sorted);
     if (problems.errorDetected()) {
       return null;

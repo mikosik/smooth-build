@@ -11,7 +11,7 @@ import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.command.CommandLineParser;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Module;
-import org.smoothbuild.function.base.QualifiedName;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.parse.ModuleParser;
@@ -56,7 +56,7 @@ public class SmoothRunner {
       return;
     }
 
-    QualifiedName name = args.function();
+    Name name = args.function();
     Function function = module.getFunction(name);
     if (function == null) {
       problems.report(new UnknownFunctionError(name, module.availableNames()));
