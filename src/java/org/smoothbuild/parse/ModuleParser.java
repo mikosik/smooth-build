@@ -34,13 +34,17 @@ public class ModuleParser {
   public Module createModule(ProblemsListener problemsListener, InputStream inputStream,
       Path scriptFile) {
     DetectingErrorsProblemsListener problems = new DetectingErrorsProblemsListener(problemsListener);
-    ModuleContext module = parseScript(problemsListener, inputStream, scriptFile);
+    return createModule(problems, inputStream, scriptFile);
+  }
+
+  private Module createModule(DetectingErrorsProblemsListener problems, InputStream inputStream,
+      Path scriptFile) {
+    ModuleContext module = parseScript(problems, inputStream, scriptFile);
     if (problems.errorDetected()) {
       return null;
     }
 
-    Map<String, FunctionContext> functions = collectFunctions(problemsListener, importedFunctions,
-        module);
+    Map<String, FunctionContext> functions = collectFunctions(problems, importedFunctions, module);
     if (problems.errorDetected()) {
       return null;
     }
@@ -52,7 +56,7 @@ public class ModuleParser {
       return null;
     }
 
-    List<String> sorted = sortDependencies(problemsListener, importedFunctions, dependencies);
+    List<String> sorted = sortDependencies(problems, importedFunctions, dependencies);
     if (problems.errorDetected()) {
       return null;
     }
