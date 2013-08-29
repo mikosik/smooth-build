@@ -11,25 +11,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.PathTest;
 
 import com.google.common.io.LineReader;
 
 public class InMemoryFileSystemTest {
   InMemoryFileSystem fileSystem = new InMemoryFileSystem();
-
-  @Test
-  public void pathExistsThrowsExceptionForInvalidPath() throws Exception {
-    for (String path : PathTest.listOfInvalidPaths()) {
-
-      try {
-        fileSystem.pathExists(path(path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
-    }
-  }
 
   @Test
   public void rootPathExists() {
@@ -61,19 +47,6 @@ public class InMemoryFileSystemTest {
   }
 
   @Test
-  public void isDirectoryThrowsExceptionForInvalidPath() throws Exception {
-    for (String path : PathTest.listOfInvalidPaths()) {
-
-      try {
-        fileSystem.isDirectory(path(path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
   public void rootPathIsADirectory() throws Exception {
     assertThat(fileSystem.isDirectory(Path.rootPath())).isTrue();
   }
@@ -98,19 +71,6 @@ public class InMemoryFileSystemTest {
   }
 
   @Test
-  public void childNamesThrowsExceptionForInvalidPath() throws Exception {
-    for (String path : PathTest.listOfInvalidPaths()) {
-
-      try {
-        fileSystem.childNames(path(path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
   public void childNamesThatAreDirectories() throws Exception {
     createFile("abc/dir1/text.txt");
     createFile("abc/dir2/text.txt");
@@ -124,7 +84,8 @@ public class InMemoryFileSystemTest {
     createFile("abc/text2.txt");
     createFile("abc/text3.txt");
 
-    assertThat(fileSystem.childNames(path("abc"))).containsOnly("text1.txt", "text2.txt", "text3.txt");
+    assertThat(fileSystem.childNames(path("abc"))).containsOnly("text1.txt", "text2.txt",
+        "text3.txt");
   }
 
   @Test
@@ -134,19 +95,6 @@ public class InMemoryFileSystemTest {
       Assert.fail("exception expected");
     } catch (FileSystemException e) {
       // expected
-    }
-  }
-
-  @Test
-  public void filesFromThrowsExceptionForInvalidPath() throws Exception {
-    for (String path : PathTest.listOfInvalidPaths()) {
-
-      try {
-        fileSystem.filesFrom(path(path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
     }
   }
 
@@ -183,19 +131,6 @@ public class InMemoryFileSystemTest {
   }
 
   @Test
-  public void createOutputStreamThrowsExceptionForInvalidPath() throws Exception {
-    for (String path : PathTest.listOfInvalidPaths()) {
-
-      try {
-        fileSystem.createOutputStream(path(path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
   public void cannotCreateOutputStreamWhenFileIsADirectory() throws Exception {
     createFile("abc/def/file.txt");
     try {
@@ -206,51 +141,12 @@ public class InMemoryFileSystemTest {
   }
 
   @Test
-  public void createInputStreamThrowsExceptionForInvalidPath() throws Exception {
-    for (String path : PathTest.listOfInvalidPaths()) {
-
-      try {
-        fileSystem.createInputStream(path(path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
   public void cannotCreateInputStreamWhenFileIsADirectory() throws Exception {
     createFile("abc/def/file.txt");
     try {
       fileSystem.createInputStream(path("abc/def"));
     } catch (FileSystemException e) {
       // expected
-    }
-  }
-
-  @Test
-  public void copyThrowsExceptionForInvalidSourcePath() throws Exception {
-    for (String path : PathTest.listOfInvalidPaths()) {
-
-      try {
-        fileSystem.copy(path(path), path("abc"));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
-  public void copyThrowsExceptionForInvalidDestinationPath() throws Exception {
-    for (String path : PathTest.listOfInvalidPaths()) {
-
-      try {
-        fileSystem.copy(path("abc"), path(path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
-        // expected
-      }
     }
   }
 
