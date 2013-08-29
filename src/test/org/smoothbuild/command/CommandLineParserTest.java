@@ -17,7 +17,7 @@ public class CommandLineParserTest {
   public void functionToRun() {
     CommandLineArguments args = parser.parse(problems, functionName);
 
-    assertThat(args.function()).isEqualTo(simpleName(functionName));
+    assertThat(args.functionToRun()).isEqualTo(simpleName(functionName));
     problems.assertNoProblems();
   }
 

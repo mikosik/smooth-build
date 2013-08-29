@@ -56,7 +56,7 @@ public class SmoothRunner {
       return;
     }
 
-    Name name = args.function();
+    Name name = args.functionToRun();
     Function function = module.getFunction(name);
     if (function == null) {
       problems.report(new UnknownFunctionError(name, module.availableNames()));

@@ -15,7 +15,7 @@ public class CommandLineArguments {
     return scriptFile;
   }
 
-  public Name function() {
+  public Name functionToRun() {
     return function;
   }
 }
