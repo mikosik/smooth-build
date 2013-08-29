@@ -29,7 +29,7 @@ public class TestingProblemsListener implements ProblemsListener {
   }
 
   public void assertNoProblems() {
-    if (list.size() != 0) {
+    if (!list.isEmpty()) {
       throw new AssertionError("Expected zero problems,\nbut got:\n" + list.toString());
     }
   }
