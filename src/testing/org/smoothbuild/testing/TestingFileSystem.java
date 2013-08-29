@@ -16,7 +16,7 @@ public class TestingFileSystem extends InMemoryFileSystem {
   /**
    * Creates textual file that contains its path.
    */
-  public void createFileContainingPath(String root, String path) throws IOException {
+  public void createFileContainingItsPath(String root, String path) throws IOException {
     createFileWithContent(fullPath(root, path), path);
   }
 

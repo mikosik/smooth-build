@@ -21,9 +21,9 @@ public class TestingFileSystemTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
 
   @Test
-  public void createFileContiningPath() throws Exception {
+  public void createFileContiningItsPath() throws Exception {
     String root = "my/root";
-    fileSystem.createFileContainingPath(root, pathString);
+    fileSystem.createFileContainingItsPath(root, pathString);
     InputStream is = fileSystem.createInputStream(path(root + "/" + pathString));
 
     assertContent(is, pathString);

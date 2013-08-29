@@ -76,7 +76,7 @@ public class FilesFunctionTest {
   public void execute() throws Exception {
     String rootPath = "root/path";
     String filePath = "file/path/file.txt";
-    fileSystem.createFileContainingPath(rootPath, filePath);
+    fileSystem.createFileContainingItsPath(rootPath, filePath);
 
     Files files = filesFunction.execute(params(rootPath));
 

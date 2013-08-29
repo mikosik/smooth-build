@@ -37,7 +37,7 @@ public class SmoothRunnerTest {
   public void singleFileReadAndWritten_pipe() throws IOException {
     String script = script("run : file(path='" + file + "') | saveTo(dir='destinationDir');");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT_PATH, script);
-    fileSystem.createFileContainingPath(".", file);
+    fileSystem.createFileContainingItsPath(".", file);
 
     smoothRunner.run("run");
 
@@ -49,7 +49,7 @@ public class SmoothRunnerTest {
   public void singleFileReadAndWritten_nestedCalls() throws IOException {
     String script = script("run : saveTo(dir='destinationDir', file=file(path='" + file + "') );");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT_PATH, script);
-    fileSystem.createFileContainingPath(".", file);
+    fileSystem.createFileContainingItsPath(".", file);
 
     smoothRunner.run("run");
 
@@ -64,7 +64,7 @@ public class SmoothRunnerTest {
     builder.addLine("myfile : file(path=filename);");
     builder.addLine("run : saveTo(file=myfile, dir='destinationDir');");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT_PATH, builder.build());
-    fileSystem.createFileContainingPath(".", file);
+    fileSystem.createFileContainingItsPath(".", file);
 
     smoothRunner.run("run");
 
