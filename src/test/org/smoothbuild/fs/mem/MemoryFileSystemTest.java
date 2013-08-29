@@ -15,8 +15,8 @@ import org.smoothbuild.plugin.Path;
 
 import com.google.common.io.LineReader;
 
-public class InMemoryFileSystemTest {
-  InMemoryFileSystem fileSystem = new InMemoryFileSystem();
+public class MemoryFileSystemTest {
+  MemoryFileSystem fileSystem = new MemoryFileSystem();
 
   @Test
   public void rootPathExists() {

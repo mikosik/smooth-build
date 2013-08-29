@@ -10,7 +10,7 @@ import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.mem.InMemoryFileSystemModule;
+import org.smoothbuild.fs.mem.MemoryFileSystemModule;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
@@ -50,7 +50,7 @@ public class PluginFactoryTest {
 
   @Before
   public void before() {
-    pluginFactory = Guice.createInjector(new InMemoryFileSystemModule()).getInstance(
+    pluginFactory = Guice.createInjector(new MemoryFileSystemModule()).getInstance(
         PluginFactory.class);
   }
 

@@ -8,11 +8,11 @@ import java.util.List;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
 
-public class InMemoryFile implements InMemoryElement {
+public class MemoryFile implements MemoryElement {
   private final String name;
   private byte data[];
 
-  public InMemoryFile(String name) {
+  public MemoryFile(String name) {
     this.name = name;
   }
 
@@ -37,7 +37,7 @@ public class InMemoryFile implements InMemoryElement {
   }
 
   @Override
-  public InMemoryElement child(String name) {
+  public MemoryElement child(String name) {
     throw new UnsupportedOperationException();
   }
 
@@ -47,7 +47,7 @@ public class InMemoryFile implements InMemoryElement {
   }
 
   @Override
-  public void addChild(InMemoryElement newDir) {
+  public void addChild(MemoryElement newDir) {
     throw new UnsupportedOperationException();
   }
 
@@ -61,13 +61,13 @@ public class InMemoryFile implements InMemoryElement {
 
   @Override
   public OutputStream createOutputStream() {
-    return new InMemoryOutputStream();
+    return new MemoryOutputStream();
   }
 
-  private class InMemoryOutputStream extends ByteArrayOutputStream {
+  private class MemoryOutputStream extends ByteArrayOutputStream {
     @Override
     public void close() {
-      InMemoryFile.this.data = toByteArray();
+      MemoryFile.this.data = toByteArray();
     }
   }
 }

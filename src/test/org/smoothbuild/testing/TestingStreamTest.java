@@ -7,14 +7,14 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.fs.mem.InMemoryFile;
+import org.smoothbuild.fs.mem.MemoryFile;
 
 public class TestingStreamTest {
 
   @Test
   public void testWriteAndClose() throws IOException {
     String content = "content to test.";
-    InMemoryFile file = new InMemoryFile("file");
+    MemoryFile file = new MemoryFile("file");
 
     writeAndClose(file.createOutputStream(), content);
 

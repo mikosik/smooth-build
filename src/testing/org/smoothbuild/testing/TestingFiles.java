@@ -1,12 +1,12 @@
 package org.smoothbuild.testing;
 
-import org.smoothbuild.fs.mem.InMemoryFileSystem;
+import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.fs.plugin.FilesImpl;
 import org.smoothbuild.plugin.Path;
 
 public class TestingFiles extends FilesImpl {
   public TestingFiles() {
-    super(new InMemoryFileSystem(), Path.rootPath());
+    super(new MemoryFileSystem(), Path.rootPath());
   }
 
   @Override
