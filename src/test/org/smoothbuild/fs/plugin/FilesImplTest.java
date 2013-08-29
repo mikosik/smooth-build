@@ -22,7 +22,7 @@ public class FilesImplTest {
 
   @Test
   public void file() throws Exception {
-    fileSystem.createFileContainingPath(ROOT_DIR, "abc.txt");
+    fileSystem.createFileContainingItsPath(ROOT_DIR, "abc.txt");
     File file = filesImpl.file(path("abc.txt"));
     FileImplTest.assertContentHasFilePath(file);
   }
@@ -39,7 +39,7 @@ public class FilesImplTest {
    */
   private void testAsIterableFor(ImmutableList<String> fileNames) throws IOException {
     for (String name : fileNames) {
-      fileSystem.createFileContainingPath(ROOT_DIR, name);
+      fileSystem.createFileContainingItsPath(ROOT_DIR, name);
     }
 
     for (File file : filesImpl.asIterable()) {

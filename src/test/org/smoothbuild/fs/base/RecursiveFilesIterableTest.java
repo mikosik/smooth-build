@@ -49,7 +49,7 @@ public class RecursiveFilesIterableTest {
     TestingFileSystem fileSystem = new TestingFileSystem();
     List<Path> created = Lists.newArrayList();
     for (String name : names) {
-      fileSystem.createFileContainingPath(rootDir, name);
+      fileSystem.createFileContainingItsPath(rootDir, name);
       created.add(path(name));
     }
 

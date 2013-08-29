@@ -87,7 +87,7 @@ public class SaveToFunctionTest {
     String fileRoot = "file/root";
     String filePath = "file/path/file.txt";
 
-    fileSystem.createFileContainingPath(fileRoot, filePath);
+    fileSystem.createFileContainingItsPath(fileRoot, filePath);
     FileImpl file = new FileImpl(fileSystem, path(fileRoot), path(filePath));
 
     function.execute(params(file, destinationDirPath));

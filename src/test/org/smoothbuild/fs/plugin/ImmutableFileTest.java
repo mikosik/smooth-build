@@ -42,7 +42,7 @@ public class ImmutableFileTest {
 
   @Test
   public void createInputStream() throws Exception {
-    fileSystem.createFileContainingPath(ROOT_DIR, FILE_PATH);
+    fileSystem.createFileContainingItsPath(ROOT_DIR, FILE_PATH);
     assertContentHasFilePath(file);
   }
 
