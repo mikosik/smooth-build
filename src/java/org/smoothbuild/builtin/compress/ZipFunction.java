@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.fs.base.FileSystemException;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Files;

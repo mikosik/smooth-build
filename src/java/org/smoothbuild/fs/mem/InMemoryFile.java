@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import org.smoothbuild.fs.base.FileSystemException;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 
 public class InMemoryFile implements InMemoryElement {
   private final String name;

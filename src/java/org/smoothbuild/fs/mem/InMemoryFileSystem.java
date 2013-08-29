@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.FileSystemException;
 import org.smoothbuild.fs.base.RecursiveFilesIterable;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.Path;
 
 import com.google.common.io.ByteStreams;

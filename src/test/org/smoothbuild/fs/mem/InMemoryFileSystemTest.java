@@ -9,7 +9,7 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.fs.base.FileSystemException;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
 
