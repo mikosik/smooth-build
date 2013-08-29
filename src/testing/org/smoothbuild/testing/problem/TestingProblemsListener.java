@@ -30,7 +30,12 @@ public class TestingProblemsListener implements ProblemsListener {
 
   public void assertNoProblems() {
     if (!list.isEmpty()) {
-      throw new AssertionError("Expected zero problems,\nbut got:\n" + list.toString());
+      StringBuilder builder = new StringBuilder("Expected zero problems, but got:\n");
+      for (Problem problem : list) {
+        builder.append(problem.toString());
+        builder.append("\n");
+      }
+      throw new AssertionError(builder.toString());
     }
   }
 }
