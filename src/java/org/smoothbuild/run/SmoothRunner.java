@@ -35,7 +35,7 @@ public class SmoothRunner {
     this.moduleParser = moduleParser;
   }
 
-  public void run(String[] commandLine) {
+  public void run(String... commandLine) {
     DetectingErrorsProblemsListener problems = new DetectingErrorsProblemsListener(
         new PrintingProblemsListener());
 
