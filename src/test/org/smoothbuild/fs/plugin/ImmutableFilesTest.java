@@ -30,14 +30,14 @@ public class ImmutableFilesTest {
 
   @Test
   public void file() throws Exception {
-    fileSystem.createFile(ROOT_DIR, "abc.txt");
+    fileSystem.createFileContainingPath(ROOT_DIR, "abc.txt");
     File file = files.file(path("abc.txt"));
     FileImplTest.assertContentHasFilePath(file);
   }
 
   @Test
   public void eachFileIsImmutable() throws Exception {
-    fileSystem.createFile(ROOT_DIR, "abc.txt");
+    fileSystem.createFileContainingPath(ROOT_DIR, "abc.txt");
     File file = files.file(path("abc.txt"));
     try {
       file.createOutputStream();
@@ -59,7 +59,7 @@ public class ImmutableFilesTest {
    */
   private void testAsIterableFor(ImmutableList<String> fileNames) throws IOException {
     for (String name : fileNames) {
-      fileSystem.createFile(ROOT_DIR, name);
+      fileSystem.createFileContainingPath(ROOT_DIR, name);
     }
 
     for (File file : files.asIterable()) {

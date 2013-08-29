@@ -16,10 +16,17 @@ public class TestingFileSystem extends InMemoryFileSystem {
   /**
    * Creates textual file that contains its path.
    */
-  public void createFile(String root, String path) throws IOException {
-    Path fullPath = fullPath(root, path);
-    OutputStreamWriter writer = new OutputStreamWriter(createOutputStream(fullPath));
-    writer.write(path);
+  public void createFileContainingPath(String root, String path) throws IOException {
+    createFileWithContent(fullPath(root, path), path);
+  }
+
+  public void createFileWithContent(String path, String content) throws IOException {
+    createFileWithContent(path(path), content);
+  }
+
+  private void createFileWithContent(Path path, String content) throws IOException {
+    OutputStreamWriter writer = new OutputStreamWriter(createOutputStream(path));
+    writer.write(content);
     writer.close();
   }
 
@@ -28,7 +35,7 @@ public class TestingFileSystem extends InMemoryFileSystem {
     writer.close();
   }
 
-  public void assertContentHasFilePath(String root, String path) throws IOException,
+  public void assertFileContainsItsPath(String root, String path) throws IOException,
       FileNotFoundException {
     Path fullPath = fullPath(root, path);
     InputStream inputStream = this.createInputStream(fullPath);
