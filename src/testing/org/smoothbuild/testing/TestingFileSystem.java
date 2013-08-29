@@ -20,11 +20,7 @@ public class TestingFileSystem extends InMemoryFileSystem {
     createFileWithContent(fullPath(root, path), path);
   }
 
-  public void createFileWithContent(String path, String content) throws IOException {
-    createFileWithContent(path(path), content);
-  }
-
-  private void createFileWithContent(Path path, String content) throws IOException {
+  public void createFileWithContent(Path path, String content) throws IOException {
     OutputStreamWriter writer = new OutputStreamWriter(createOutputStream(path));
     writer.write(content);
     writer.close();
@@ -37,9 +33,12 @@ public class TestingFileSystem extends InMemoryFileSystem {
 
   public void assertFileContainsItsPath(String root, String path) throws IOException,
       FileNotFoundException {
-    Path fullPath = fullPath(root, path);
-    InputStream inputStream = this.createInputStream(fullPath);
-    assertFileContent(inputStream, path);
+    assertFileContains(fullPath(root, path), path);
+  }
+
+  public void assertFileContains(Path path, String content) throws IOException {
+    InputStream inputStream = createInputStream(path);
+    assertFileContent(inputStream, content);
   }
 
   private static Path fullPath(String root, String path) {
