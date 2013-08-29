@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base;
+package org.smoothbuild.fs.base.exc;
 
 import java.io.IOException;
 

@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import javax.inject.Singleton;
 
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.Path;
 
 // TODO test this class

@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.FileSystemException;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 
 import com.google.common.io.LineReader;
 

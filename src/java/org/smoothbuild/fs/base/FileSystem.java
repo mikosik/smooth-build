@@ -3,6 +3,7 @@ package org.smoothbuild.fs.base;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.Path;
 
 import com.google.inject.ImplementedBy;

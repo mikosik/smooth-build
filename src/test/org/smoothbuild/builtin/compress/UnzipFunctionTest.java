@@ -11,7 +11,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.UnzipFunction.Parameters;
-import org.smoothbuild.fs.base.FileSystemException;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Files;
 import org.smoothbuild.plugin.exc.FunctionException;
