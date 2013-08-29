@@ -5,6 +5,7 @@ import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
+import static org.smoothbuild.parse.UndefinedFunctionsDetector.detectUndefinedFunctions;
 
 import java.io.InputStream;
 import java.util.List;
@@ -44,6 +45,11 @@ public class ModuleParser {
     }
 
     Map<String, Set<Dependency>> dependencies = collectDependencies(module);
+
+    detectUndefinedFunctions(problems, importedFunctions, dependencies);
+    if (problems.errorDetected()) {
+      return null;
+    }
 
     List<String> sorted = sortDependencies(problemsListener, importedFunctions, dependencies);
     if (problems.errorDetected()) {
