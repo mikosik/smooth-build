@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 
 import com.google.common.io.LineReader;
 
-public class TestingFileContent {
+public class TestingStream {
 
   public static void writeAndClose(OutputStream outputStream, String content) throws IOException {
     try (OutputStreamWriter writer = new OutputStreamWriter(outputStream);) {
@@ -16,7 +16,7 @@ public class TestingFileContent {
     }
   }
 
-  public static void assertFileContent(InputStream inputStream, String content) throws IOException,
+  public static void assertContent(InputStream inputStream, String content) throws IOException,
       AssertionError {
     try (InputStreamReader readable = new InputStreamReader(inputStream);) {
       LineReader reader = new LineReader(readable);
