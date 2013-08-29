@@ -1,6 +1,7 @@
 package org.smoothbuild.command;
 
 import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.plugin.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Name;
@@ -15,6 +16,6 @@ public class CommandLineArgumentsTest {
 
   @Test(expected = NullPointerException.class)
   public void nullFunctionNameIsForbidden() {
-    new CommandLineArguments("script.smooth", null);
+    new CommandLineArguments(path("sctipt.smooth"), null);
   }
 }

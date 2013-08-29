@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.base.Charsets.UTF_8;
+import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.ScriptBuilder.oneLineScript;
 
 import java.io.ByteArrayInputStream;
@@ -80,7 +81,7 @@ public class ScriptParserTest {
   private static TestingProblemsListener parse(String string) throws IOException {
     TestingProblemsListener problems = new TestingProblemsListener();
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
-    ScriptParser.parseScript(problems, inputStream, "filename.smooth");
+    ScriptParser.parseScript(problems, inputStream, path("filename.smooth"));
     return problems;
   }
 }
