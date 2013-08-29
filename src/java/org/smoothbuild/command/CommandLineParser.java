@@ -1,6 +1,6 @@
 package org.smoothbuild.command;
 
-import static org.smoothbuild.function.base.Name.isValidSimpleName;
+import static org.smoothbuild.function.base.Name.isLegalSimpleName;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 
 import org.smoothbuild.command.err.CommandLineError;
@@ -22,7 +22,7 @@ public class CommandLineParser {
     }
 
     String functionString = args[0];
-    if (!isValidSimpleName(functionString)) {
+    if (!isLegalSimpleName(functionString)) {
       problems.report(new IllegalFunctionNameError(functionString));
       return null;
     }
