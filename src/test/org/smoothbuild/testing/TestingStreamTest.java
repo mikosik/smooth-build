@@ -1,7 +1,7 @@
 package org.smoothbuild.testing;
 
-import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
-import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
+import static org.smoothbuild.testing.TestingStream.assertContent;
+import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.mem.InMemoryFile;
 
-public class TestingFileContentTest {
+public class TestingStreamTest {
 
   @Test
   public void testWriteAndClose() throws IOException {
@@ -18,9 +18,9 @@ public class TestingFileContentTest {
 
     writeAndClose(file.createOutputStream(), content);
 
-    assertFileContent(file.createInputStream(), content);
+    assertContent(file.createInputStream(), content);
     try {
-      assertFileContent(file.createInputStream(), "different content");
+      assertContent(file.createInputStream(), "different content");
       Assert.fail("exception should be thrown");
     } catch (AssertionError e) {
       // expected

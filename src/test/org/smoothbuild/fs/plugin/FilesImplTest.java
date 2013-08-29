@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.plugin;
 
 import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
+import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import java.io.IOException;
 

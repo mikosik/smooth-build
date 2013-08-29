@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
+import static org.smoothbuild.testing.TestingStream.assertContent;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +28,7 @@ public class UnzipFunctionTest {
     int fileCount = 0;
     for (File file : result.asIterable()) {
       fileCount++;
-      assertFileContent(file.createInputStream(), file.path().value());
+      assertContent(file.createInputStream(), file.path().value());
     }
     assertThat(fileCount).isEqualTo(2);
   }

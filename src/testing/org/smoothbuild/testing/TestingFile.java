@@ -12,10 +12,10 @@ public class TestingFile extends FileImpl {
   }
 
   public void createTestContent() throws IOException {
-    TestingFileContent.writeAndClose(createOutputStream(), path().value());
+    TestingStream.writeAndClose(createOutputStream(), path().value());
   }
 
   public void assertTestContent() throws IOException {
-    TestingFileContent.assertFileContent(createInputStream(), path().value());
+    TestingStream.assertContent(createInputStream(), path().value());
   }
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.fs.plugin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.plugin.ImmutableFile.immutableFile;
 import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
+import static org.smoothbuild.testing.TestingStream.assertContent;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -57,6 +57,6 @@ public class ImmutableFileTest {
   }
 
   public static void assertContentHasFilePath(File file) throws IOException, FileNotFoundException {
-    assertFileContent(file.createInputStream(), file.path().value());
+    assertContent(file.createInputStream(), file.path().value());
   }
 }

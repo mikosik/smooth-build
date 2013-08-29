@@ -3,8 +3,8 @@ package org.smoothbuild.testing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
-import static org.smoothbuild.testing.TestingFileContent.writeAndClose;
+import static org.smoothbuild.testing.TestingStream.assertContent;
+import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ public class TestingFileSystemTest {
     fileSystem.createFileContainingPath(root, pathString);
     InputStream is = fileSystem.createInputStream(path(root + "/" + pathString));
 
-    assertFileContent(is, pathString);
+    assertContent(is, pathString);
   }
 
   @Test
@@ -34,7 +34,7 @@ public class TestingFileSystemTest {
     fileSystem.createFileWithContent(path, content);
     InputStream is = fileSystem.createInputStream(path);
 
-    assertFileContent(is, content);
+    assertContent(is, content);
   }
 
   @Test

@@ -1,7 +1,7 @@
 package org.smoothbuild.testing;
 
 import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.testing.TestingFileContent.assertFileContent;
+import static org.smoothbuild.testing.TestingStream.assertContent;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class TestingFileSystem extends InMemoryFileSystem {
 
   public void assertFileContains(Path path, String content) throws IOException {
     InputStream inputStream = createInputStream(path);
-    assertFileContent(inputStream, content);
+    assertContent(inputStream, content);
   }
 
   private static Path fullPath(String root, String path) {
