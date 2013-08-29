@@ -10,8 +10,8 @@ import org.smoothbuild.problem.ProblemsListener;
  * Detects calls to functions that are neither declared nor imported.
  */
 public class UndefinedFunctionsDetector {
-  public void detect(SymbolTable importedFunctions, Map<String, Set<Dependency>> dependencies,
-      ProblemsListener problems) {
+  public static void detectUndefinedFunctions(ProblemsListener problems,
+      SymbolTable importedFunctions, Map<String, Set<Dependency>> dependencies) {
 
     Set<String> declaredFunctions = dependencies.keySet();
 

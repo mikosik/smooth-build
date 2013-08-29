@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.parse.UndefinedFunctionsDetector.detectUndefinedFunctions;
 import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
 
 import java.util.Map;
@@ -19,12 +20,11 @@ import com.google.common.collect.Maps;
 public class UndefinedFunctionsDetectorTest {
   ProblemsListener problemsListener = mock(ProblemsListener.class);
   SymbolTable importedFunctions = mock(SymbolTable.class);
-  UndefinedFunctionsDetector detector = new UndefinedFunctionsDetector();
 
   @Test
   public void emptyFunctionSetHasNoProblems() {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
-    detector.detect(importedFunctions, map, problemsListener);
+    detectUndefinedFunctions(problemsListener, importedFunctions, map);
     verifyZeroInteractions(problemsListener);
   }
 
@@ -35,7 +35,7 @@ public class UndefinedFunctionsDetectorTest {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
     map.put("function1", dependencies(imported));
 
-    detector.detect(importedFunctions, map, problemsListener);
+    detectUndefinedFunctions(problemsListener, importedFunctions, map);
     verifyZeroInteractions(problemsListener);
   }
 
@@ -47,7 +47,7 @@ public class UndefinedFunctionsDetectorTest {
     map.put(fun1, dependencies(fun2));
     map.put(fun2, dependencies(fun1));
 
-    detector.detect(importedFunctions, map, problemsListener);
+    detectUndefinedFunctions(problemsListener, importedFunctions, map);
     verifyZeroInteractions(problemsListener);
   }
 
@@ -56,7 +56,7 @@ public class UndefinedFunctionsDetectorTest {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
     map.put("function1", dependencies("function2"));
 
-    detector.detect(importedFunctions, map, problemsListener);
+    detectUndefinedFunctions(problemsListener, importedFunctions, map);
     verify(problemsListener).report(Matchers.isA(UndefinedFunctionError.class));
   }
 }
