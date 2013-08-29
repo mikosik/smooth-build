@@ -9,6 +9,7 @@ import java.util.List;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.RecursiveFilesIterable;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.Path;
 
 import com.google.common.io.ByteStreams;
@@ -108,7 +109,7 @@ public class InMemoryFileSystem implements FileSystem {
   private InMemoryElement getElement(Path path) {
     InMemoryElement found = findElement(path);
     if (found == null) {
-      throw new FileSystemException("Path '" + path + "' doesn't exist");
+      throw new NoSuchFileException(path);
     } else {
       return found;
     }

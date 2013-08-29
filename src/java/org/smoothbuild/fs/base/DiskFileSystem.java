@@ -14,6 +14,7 @@ import java.util.Arrays;
 import javax.inject.Singleton;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.Path;
 
 // TODO test this class
@@ -59,7 +60,7 @@ public class DiskFileSystem implements FileSystem {
     try {
       return new FileInputStream(path.value());
     } catch (FileNotFoundException e) {
-      throw new FileSystemException("Could not create InputStream for '" + path + "'", e);
+      throw new NoSuchFileException(path, e);
     }
   }
 

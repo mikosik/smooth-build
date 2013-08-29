@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.Path;
 
 import com.google.common.io.LineReader;
@@ -60,14 +61,14 @@ public class InMemoryFileSystemTest {
     assertThat(fileSystem.isDirectory(path("abc/def/ghi/text.txt"))).isFalse();
   }
 
-  @Test
+  @Test(expected = NoSuchFileException.class)
   public void isDirectoryThrowsExceptionWhenPathDoesNotExist() throws Exception {
-    try {
-      fileSystem.isDirectory(path("abc"));
-      Assert.fail("exception expected");
-    } catch (FileSystemException e) {
-      // expected
-    }
+    fileSystem.isDirectory(path("abc"));
+  }
+
+  @Test(expected = NoSuchFileException.class)
+  public void childNamesThrowsExceptionWhenDirDoesNotExist() throws Exception {
+    fileSystem.childNames(path("abc"));
   }
 
   @Test
@@ -96,6 +97,10 @@ public class InMemoryFileSystemTest {
     } catch (FileSystemException e) {
       // expected
     }
+  }
+
+  public void filesFromDoesNotThrowExceptionWhenDirDoesNotExist() throws Exception {
+    fileSystem.filesFrom(path("abc"));
   }
 
   @Test
@@ -140,6 +145,11 @@ public class InMemoryFileSystemTest {
     }
   }
 
+  @Test(expected = NoSuchFileException.class)
+  public void createInputStreamThrowsExceptionWhenDirDoesNotExist() throws Exception {
+    fileSystem.createInputStream(path("abc"));
+  }
+
   @Test
   public void cannotCreateInputStreamWhenFileIsADirectory() throws Exception {
     createFile("abc/def/file.txt");
@@ -148,6 +158,11 @@ public class InMemoryFileSystemTest {
     } catch (FileSystemException e) {
       // expected
     }
+  }
+
+  @Test(expected = NoSuchFileException.class)
+  public void copyThrowsExceptionWhenSourceDoesNotExist() throws Exception {
+    fileSystem.copy(path("abc"), path("def"));
   }
 
   @Test
