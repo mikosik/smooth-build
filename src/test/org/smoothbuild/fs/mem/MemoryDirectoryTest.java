@@ -9,11 +9,11 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-public class InMemoryDirectoryTest {
+public class MemoryDirectoryTest {
   private static final String CHILD_NAME = "childName";
 
-  InMemoryElement child = createChild();
-  InMemoryDirectory dir = new InMemoryDirectory("name");
+  MemoryElement child = createChild();
+  MemoryDirectory dir = new MemoryDirectory("name");
 
   @Test
   public void name() {
@@ -89,8 +89,8 @@ public class InMemoryDirectoryTest {
     }
   }
 
-  private static InMemoryElement createChild() {
-    InMemoryElement childMock = mock(InMemoryElement.class);
+  private static MemoryElement createChild() {
+    MemoryElement childMock = mock(MemoryElement.class);
     when(childMock.name()).thenReturn(CHILD_NAME);
     return childMock;
   }

@@ -12,8 +12,8 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 
 import com.google.common.io.LineReader;
 
-public class InMemoryFileTest {
-  InMemoryFile file = new InMemoryFile("name");
+public class MemoryFileTest {
+  MemoryFile file = new MemoryFile("name");
 
   @Test
   public void name() {
@@ -63,7 +63,7 @@ public class InMemoryFileTest {
   @Test
   public void addChildThrowsException() {
     try {
-      file.addChild(mock(InMemoryElement.class));
+      file.addChild(mock(MemoryElement.class));
       fail("exception should be thrown");
     } catch (UnsupportedOperationException e) {
       // expected

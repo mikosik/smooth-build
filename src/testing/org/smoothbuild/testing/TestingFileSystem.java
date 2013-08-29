@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
-import org.smoothbuild.fs.mem.InMemoryFileSystem;
+import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.plugin.Path;
 
-public class TestingFileSystem extends InMemoryFileSystem {
+public class TestingFileSystem extends MemoryFileSystem {
 
   /**
    * Creates textual file that contains its path.

@@ -8,11 +8,11 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
-public class InMemoryDirectory implements InMemoryElement {
+public class MemoryDirectory implements MemoryElement {
   private final String name;
-  private final Map<String, InMemoryElement> map = Maps.newHashMap();
+  private final Map<String, MemoryElement> map = Maps.newHashMap();
 
-  public InMemoryDirectory(String name) {
+  public MemoryDirectory(String name) {
     this.name = name;
   }
 
@@ -37,8 +37,8 @@ public class InMemoryDirectory implements InMemoryElement {
   }
 
   @Override
-  public InMemoryElement child(String name) {
-    InMemoryElement result = map.get(name);
+  public MemoryElement child(String name) {
+    MemoryElement result = map.get(name);
     if (result == null) {
       throw new IllegalArgumentException("Element '" + name + "' does not exist.");
     }
@@ -51,7 +51,7 @@ public class InMemoryDirectory implements InMemoryElement {
   }
 
   @Override
-  public void addChild(InMemoryElement element) {
+  public void addChild(MemoryElement element) {
     String elementName = element.name();
     if (map.containsKey(elementName)) {
       throw new IllegalStateException("Directory already contains child with name '" + elementName

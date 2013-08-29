@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-public interface InMemoryElement {
+public interface MemoryElement {
   public String name();
 
   public boolean isFile();
@@ -13,11 +13,11 @@ public interface InMemoryElement {
 
   public boolean hasChild(String name);
 
-  public InMemoryElement child(String name);
+  public MemoryElement child(String name);
 
   public List<String> childNames();
 
-  public void addChild(InMemoryElement newDir);
+  public void addChild(MemoryElement newDir);
 
   public InputStream createInputStream();
 

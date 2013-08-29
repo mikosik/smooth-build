@@ -17,8 +17,8 @@ import com.google.common.io.ByteStreams;
 /**
  * In memory implementation of FileSystem.
  */
-public class InMemoryFileSystem implements FileSystem {
-  private final InMemoryDirectory root = new InMemoryDirectory("");
+public class MemoryFileSystem implements FileSystem {
+  private final MemoryDirectory root = new MemoryDirectory("");
 
   @Override
   public boolean pathExists(Path path) {
@@ -40,21 +40,21 @@ public class InMemoryFileSystem implements FileSystem {
     return new RecursiveFilesIterable(this, directory);
   }
 
-  private InMemoryDirectory createDirectory(Path directory) {
+  private MemoryDirectory createDirectory(Path directory) {
     Iterator<Path> it = directory.toElements().iterator();
-    InMemoryDirectory currentDir = root;
+    MemoryDirectory currentDir = root;
     while (it.hasNext()) {
       String name = it.next().value();
       if (currentDir.hasChild(name)) {
-        InMemoryElement child = currentDir.child(name);
+        MemoryElement child = currentDir.child(name);
         if (child.isDirectory()) {
-          currentDir = (InMemoryDirectory) child;
+          currentDir = (MemoryDirectory) child;
         } else {
           throw new FileSystemException(
               "Path (or subpath) of to be created directory is taken by some file.");
         }
       } else {
-        InMemoryDirectory newDir = new InMemoryDirectory(name);
+        MemoryDirectory newDir = new MemoryDirectory(name);
         currentDir.addChild(newDir);
         currentDir = newDir;
       }
@@ -76,7 +76,7 @@ public class InMemoryFileSystem implements FileSystem {
 
   @Override
   public InputStream createInputStream(Path path) {
-    InMemoryElement element = getElement(path);
+    MemoryElement element = getElement(path);
     if (element.isFile()) {
       return element.createInputStream();
     } else {
@@ -89,11 +89,11 @@ public class InMemoryFileSystem implements FileSystem {
     if (path.isRoot()) {
       throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
     }
-    InMemoryDirectory dir = createDirectory(path.parent());
+    MemoryDirectory dir = createDirectory(path.parent());
 
     String name = path.lastElement().value();
     if (dir.hasChild(name)) {
-      InMemoryElement child = dir.child(name);
+      MemoryElement child = dir.child(name);
       if (child.isFile()) {
         return child.createOutputStream();
       } else {
@@ -101,13 +101,13 @@ public class InMemoryFileSystem implements FileSystem {
       }
     }
 
-    InMemoryFile child = new InMemoryFile(name);
+    MemoryFile child = new MemoryFile(name);
     dir.addChild(child);
     return child.createOutputStream();
   }
 
-  private InMemoryElement getElement(Path path) {
-    InMemoryElement found = findElement(path);
+  private MemoryElement getElement(Path path) {
+    MemoryElement found = findElement(path);
     if (found == null) {
       throw new NoSuchFileException(path);
     } else {
@@ -115,9 +115,9 @@ public class InMemoryFileSystem implements FileSystem {
     }
   }
 
-  private InMemoryElement findElement(Path path) {
+  private MemoryElement findElement(Path path) {
     Iterator<Path> it = path.toElements().iterator();
-    InMemoryElement current = root;
+    MemoryElement current = root;
     while (it.hasNext()) {
       String name = it.next().value();
       if (current.hasChild(name)) {
