@@ -9,7 +9,7 @@ package org.smoothbuild.testing;
 public class ScriptBuilder {
   private final StringBuilder builder = new StringBuilder();
 
-  public static String oneLineScript(String string) {
+  public static String script(String string) {
     return fromSingleToDoubleQuotes(string);
   }
 

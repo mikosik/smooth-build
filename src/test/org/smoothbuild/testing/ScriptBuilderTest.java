@@ -1,7 +1,7 @@
 package org.smoothbuild.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.ScriptBuilder.oneLineScript;
+import static org.smoothbuild.testing.ScriptBuilder.script;
 
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class ScriptBuilderTest {
 
   @Test
   public void singleQuotesAreChangedIntoDoubleQuotesByOneLineScript() throws Exception {
-    assertThat(oneLineScript("a 'message' quoted")).isEqualTo("a \"message\" quoted");
+    assertThat(script("a 'message' quoted")).isEqualTo("a \"message\" quoted");
   }
 
   @Test
@@ -36,6 +36,6 @@ public class ScriptBuilderTest {
 
   @Test
   public void doubleQuotesAreUnchangedByOneLineScript() throws Exception {
-    assertThat(oneLineScript("a \"message\" quoted")).isEqualTo("a \"message\" quoted");
+    assertThat(script("a \"message\" quoted")).isEqualTo("a \"message\" quoted");
   }
 }

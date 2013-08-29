@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.testing.ScriptBuilder.oneLineScript;
+import static org.smoothbuild.testing.ScriptBuilder.script;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -40,17 +40,17 @@ public class ScriptParserTest {
 
   @Test
   public void functionDefinedAsStringLiteral() throws Exception {
-    assertParsingSucceeds(oneLineScript("functionA : 'abc' ;"));
+    assertParsingSucceeds(script("functionA : 'abc' ;"));
   }
 
   @Test
   public void emptyStringsAreAllowed() throws Exception {
-    assertParsingSucceeds(oneLineScript("functionA : '' ;"));
+    assertParsingSucceeds(script("functionA : '' ;"));
   }
 
   @Test
   public void notClosedStringLiteralFails() throws Exception {
-    parse(oneLineScript("functionA : 'abc ;")).assertProblemsFound();
+    parse(script("functionA : 'abc ;")).assertProblemsFound();
   }
 
   @Test
@@ -60,7 +60,7 @@ public class ScriptParserTest {
 
   @Test
   public void functionCallWithStringLiteralArgument() throws Exception {
-    assertParsingSucceeds(oneLineScript("functionA: functionB(param1='abc');"));
+    assertParsingSucceeds(script("functionA: functionB(param1='abc');"));
   }
 
   @Test
