@@ -2,7 +2,7 @@ package org.smoothbuild.function.base;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.base.Name.isValidSimpleName;
+import static org.smoothbuild.function.base.Name.isLegalSimpleName;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Name.simpleName;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -13,7 +13,7 @@ import org.junit.Test;
 public class NameTest {
 
   @Test
-  public void correctQualifiedNames() {
+  public void legalQualifiedNames() {
     doTestQualifiedName("a", "", "a");
     doTestQualifiedName("ab", "", "ab");
     doTestQualifiedName("abc", "", "abc");
@@ -40,30 +40,30 @@ public class NameTest {
   }
 
   @Test
-  public void incorrectQualifiedNames() {
-    assertIncorrectQualifiedName("");
-    assertIncorrectQualifiedName(".");
-    assertIncorrectQualifiedName("..");
-    assertIncorrectQualifiedName("...");
+  public void illegalQualifiedNames() {
+    assertIllegalQualifiedName("");
+    assertIllegalQualifiedName(".");
+    assertIllegalQualifiedName("..");
+    assertIllegalQualifiedName("...");
 
-    assertIncorrectQualifiedName("@");
-    assertIncorrectQualifiedName("#");
+    assertIllegalQualifiedName("@");
+    assertIllegalQualifiedName("#");
 
-    assertIncorrectQualifiedName(".a");
-    assertIncorrectQualifiedName(".a.b");
-    assertIncorrectQualifiedName(".a.b.c");
+    assertIllegalQualifiedName(".a");
+    assertIllegalQualifiedName(".a.b");
+    assertIllegalQualifiedName(".a.b.c");
 
-    assertIncorrectQualifiedName("a.");
-    assertIncorrectQualifiedName("a.b.");
-    assertIncorrectQualifiedName("a.b.c.");
+    assertIllegalQualifiedName("a.");
+    assertIllegalQualifiedName("a.b.");
+    assertIllegalQualifiedName("a.b.c.");
 
-    assertIncorrectQualifiedName("a..b");
+    assertIllegalQualifiedName("a..b");
 
-    assertIncorrectQualifiedName("my-function");
-    assertIncorrectQualifiedName("a-package.myFunction");
+    assertIllegalQualifiedName("my-function");
+    assertIllegalQualifiedName("a-package.myFunction");
   }
 
-  private static void assertIncorrectQualifiedName(String fullName) {
+  private static void assertIllegalQualifiedName(String fullName) {
     try {
       qualifiedName(fullName);
       Assert.fail("exception should be thrown");
@@ -73,7 +73,7 @@ public class NameTest {
   }
 
   @Test
-  public void correctSimpleNames() {
+  public void legalSimpleNames() {
     doTestSimple("a");
     doTestSimple("ab");
     doTestSimple("abc");
@@ -85,7 +85,7 @@ public class NameTest {
   }
 
   private static void doTestSimple(String name) {
-    assertThat(isValidSimpleName(name)).isTrue();
+    assertThat(isLegalSimpleName(name)).isTrue();
 
     Name simpleName = simpleName(name);
     assertThat(simpleName.full()).isEqualTo(name);
@@ -94,42 +94,42 @@ public class NameTest {
   }
 
   @Test
-  public void incorrectSimpleNames() {
-    assertIncorrectSimpleName("a.b");
-    assertIncorrectSimpleName("a.b.c");
-    assertIncorrectSimpleName("a.b.c.d");
+  public void illegalSimpleNames() {
+    assertIllegalSimpleName("a.b");
+    assertIllegalSimpleName("a.b.c");
+    assertIllegalSimpleName("a.b.c.d");
 
-    assertIncorrectSimpleName("my.package.FuncA");
-    assertIncorrectSimpleName("MY.PACKAGE.FUNC_A");
+    assertIllegalSimpleName("my.package.FuncA");
+    assertIllegalSimpleName("MY.PACKAGE.FUNC_A");
 
-    assertIncorrectSimpleName("a_package.my_function");
-    assertIncorrectSimpleName("_._._");
-    assertIncorrectSimpleName("a_._b._c_");
+    assertIllegalSimpleName("a_package.my_function");
+    assertIllegalSimpleName("_._._");
+    assertIllegalSimpleName("a_._b._c_");
 
-    assertIncorrectSimpleName("");
-    assertIncorrectSimpleName(".");
-    assertIncorrectSimpleName("..");
-    assertIncorrectSimpleName("...");
+    assertIllegalSimpleName("");
+    assertIllegalSimpleName(".");
+    assertIllegalSimpleName("..");
+    assertIllegalSimpleName("...");
 
-    assertIncorrectSimpleName("@");
-    assertIncorrectSimpleName("#");
+    assertIllegalSimpleName("@");
+    assertIllegalSimpleName("#");
 
-    assertIncorrectSimpleName(".a");
-    assertIncorrectSimpleName(".a.b");
-    assertIncorrectSimpleName(".a.b.c");
+    assertIllegalSimpleName(".a");
+    assertIllegalSimpleName(".a.b");
+    assertIllegalSimpleName(".a.b.c");
 
-    assertIncorrectSimpleName("a.");
-    assertIncorrectSimpleName("a.b.");
-    assertIncorrectSimpleName("a.b.c.");
+    assertIllegalSimpleName("a.");
+    assertIllegalSimpleName("a.b.");
+    assertIllegalSimpleName("a.b.c.");
 
-    assertIncorrectSimpleName("a..b");
+    assertIllegalSimpleName("a..b");
 
-    assertIncorrectSimpleName("my-function");
-    assertIncorrectSimpleName("a-package.myFunction");
+    assertIllegalSimpleName("my-function");
+    assertIllegalSimpleName("a-package.myFunction");
   }
 
-  private static void assertIncorrectSimpleName(String name) {
-    assertThat(isValidSimpleName(name)).isFalse();
+  private static void assertIllegalSimpleName(String name) {
+    assertThat(isLegalSimpleName(name)).isFalse();
     try {
       simpleName(name);
       Assert.fail("exception should be thrown");

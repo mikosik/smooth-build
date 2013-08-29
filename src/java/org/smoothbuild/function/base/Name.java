@@ -13,19 +13,19 @@ public class Name {
   private final String full;
 
   public static Name simpleName(String simple) {
-    if (!isValidSimpleName(simple)) {
+    if (!isLegalSimpleName(simple)) {
       throw new IllegalArgumentException("Illegal function name: '" + simple + "'");
     }
     return new Name("", simple, simple);
   }
 
-  public static boolean isValidSimpleName(String simple) {
-    return isValidPart(simple);
+  public static boolean isLegalSimpleName(String simple) {
+    return isLegalPart(simple);
   }
 
   public static Name qualifiedName(String qualified) {
     for (String part : Splitter.on(SEPARATOR).split(qualified)) {
-      if (!isValidPart(part)) {
+      if (!isLegalPart(part)) {
         throw new IllegalArgumentException("Illegal qualified function name: '" + qualified
             + "'");
       }
@@ -40,7 +40,7 @@ public class Name {
     }
   }
 
-  private static boolean isValidPart(String part) {
+  private static boolean isLegalPart(String part) {
     return PART_PATTERN.matcher(part).matches();
   }
 

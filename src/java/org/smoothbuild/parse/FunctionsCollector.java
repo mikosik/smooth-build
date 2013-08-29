@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.function.base.Name.isValidSimpleName;
+import static org.smoothbuild.function.base.Name.isLegalSimpleName;
 
 import java.util.Map;
 
@@ -50,7 +50,7 @@ public class FunctionsCollector {
       FunctionNameContext nameContext = functionContext.functionName();
       String name = nameContext.getText();
 
-      if (!isValidSimpleName(name)) {
+      if (!isLegalSimpleName(name)) {
         problems.report(new IllegalFunctionNameError(Helpers.locationOf(nameContext), name));
         return null;
       }
