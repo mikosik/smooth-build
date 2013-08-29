@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
-import org.smoothbuild.parse.err.OverridenImportWarning;
+import org.smoothbuild.parse.err.OverridenImportError;
 import org.smoothbuild.testing.parse.TestingImportedFunctions;
 import org.smoothbuild.testing.parse.TestingModule;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
@@ -52,7 +52,7 @@ public class FunctionsCollectorTest {
   @Test
   public void overridenImport() throws Exception {
     collectFunctions(module(function(IMPORTED_NAME)));
-    problemsListener.assertOnlyProblem(OverridenImportWarning.class);
+    problemsListener.assertOnlyProblem(OverridenImportError.class);
   }
 
   private Map<String, FunctionContext> collectFunctions(TestingModule module) {

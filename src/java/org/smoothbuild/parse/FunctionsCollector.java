@@ -13,7 +13,7 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
-import org.smoothbuild.parse.err.OverridenImportWarning;
+import org.smoothbuild.parse.err.OverridenImportError;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
@@ -62,7 +62,7 @@ public class FunctionsCollector {
       if (importedFunctions.containsFunction(name)) {
         Name importedName = importedFunctions.getFunction(name).name();
         SourceLocation location = Helpers.locationOf(nameContext);
-        problems.report(new OverridenImportWarning(location, name, importedName));
+        problems.report(new OverridenImportError(location, name, importedName));
         return null;
       }
 
