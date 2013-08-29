@@ -35,7 +35,7 @@ public class FileImplTest {
 
   @Test
   public void createInputStream() throws Exception {
-    fileSystem.createFile(ROOT_DIR, FILE_PATH);
+    fileSystem.createFileContainingPath(ROOT_DIR, FILE_PATH);
     assertContentHasFilePath(fileImpl);
   }
 

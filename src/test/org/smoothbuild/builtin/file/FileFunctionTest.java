@@ -77,7 +77,7 @@ public class FileFunctionTest {
   @Test
   public void execute() throws Exception {
     String filePath = "file/path/file.txt";
-    fileSystem.createFile(".", filePath);
+    fileSystem.createFileContainingPath(".", filePath);
 
     File file = fileFunction.execute(params(filePath));
 

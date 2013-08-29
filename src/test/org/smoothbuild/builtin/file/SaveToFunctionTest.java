@@ -87,12 +87,12 @@ public class SaveToFunctionTest {
     String fileRoot = "file/root";
     String filePath = "file/path/file.txt";
 
-    fileSystem.createFile(fileRoot, filePath);
+    fileSystem.createFileContainingPath(fileRoot, filePath);
     FileImpl file = new FileImpl(fileSystem, path(fileRoot), path(filePath));
 
     function.execute(params(file, destinationDirPath));
 
-    fileSystem.assertContentHasFilePath(destinationDirPath, filePath);
+    fileSystem.assertFileContainsItsPath(destinationDirPath, filePath);
   }
 
   private void assertExceptionContainsDirParamName(ParamException e) {
