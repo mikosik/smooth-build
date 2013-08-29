@@ -19,6 +19,7 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
 
@@ -31,7 +32,7 @@ public class ModuleParser {
   }
 
   public Module createModule(ProblemsListener problemsListener, InputStream inputStream,
-      String scriptFile) {
+      Path scriptFile) {
     DetectingErrorsProblemsListener problems = new DetectingErrorsProblemsListener(problemsListener);
     ModuleContext module = parseScript(problemsListener, inputStream, scriptFile);
     if (problems.errorDetected()) {

@@ -22,13 +22,14 @@ import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
 public class ScriptParser {
   public static ModuleContext parseScript(ProblemsListener problems, InputStream inputStream,
-      String scriptFile) {
+      Path scriptFile) {
     ErrorListener errorListener = new ErrorListener(problems);
 
     ANTLRInputStream antlrInputStream;

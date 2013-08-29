@@ -15,6 +15,7 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.parse.ModuleParser;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.PrintingProblemsListener;
@@ -44,7 +45,7 @@ public class SmoothRunner {
       return;
     }
 
-    String scriptFile = args.scriptFile();
+    Path scriptFile = args.scriptFile();
 
     InputStream inputStream = scriptInputStream(problems, scriptFile);
     if (problems.errorDetected()) {
@@ -71,9 +72,9 @@ public class SmoothRunner {
     }
   }
 
-  private InputStream scriptInputStream(ProblemsListener problems, String scriptFile) {
+  private InputStream scriptInputStream(ProblemsListener problems, Path scriptFile) {
     try {
-      return new BufferedInputStream(new FileInputStream(scriptFile));
+      return new BufferedInputStream(new FileInputStream(scriptFile.value()));
     } catch (FileNotFoundException e) {
       problems.report(new ScriptFileNotFoundError(scriptFile));
       return null;
