@@ -17,7 +17,6 @@ import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
-import org.smoothbuild.problem.PrintingProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.run.err.FunctionError;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
@@ -26,22 +25,21 @@ import org.smoothbuild.run.err.UnknownFunctionError;
 import com.google.common.collect.ImmutableMap;
 
 public class SmoothRunner {
+  private final DetectingErrorsProblemsListener problems;
   private final CommandLineParser commandLineParser;
   private final FileSystem fileSystem;
   private final ModuleParser moduleParser;
 
   @Inject
-  public SmoothRunner(CommandLineParser commandLineParser, FileSystem fileSystem,
-      ModuleParser moduleParser) {
+  public SmoothRunner(ProblemsListener problemsListener, CommandLineParser commandLineParser,
+      FileSystem fileSystem, ModuleParser moduleParser) {
+    this.problems = new DetectingErrorsProblemsListener(problemsListener);
     this.commandLineParser = commandLineParser;
     this.fileSystem = fileSystem;
     this.moduleParser = moduleParser;
   }
 
   public void run(String... commandLine) {
-    DetectingErrorsProblemsListener problems = new DetectingErrorsProblemsListener(
-        new PrintingProblemsListener());
-
     CommandLineArguments args = commandLineParser.parse(problems, commandLine);
     if (problems.errorDetected()) {
       return;
