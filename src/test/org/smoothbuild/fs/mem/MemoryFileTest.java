@@ -13,11 +13,17 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import com.google.common.io.LineReader;
 
 public class MemoryFileTest {
-  MemoryFile file = new MemoryFile("name");
+  MemoryDirectory parent = mock(MemoryDirectory.class);
+  MemoryFile file = new MemoryFile(parent, "name");
 
   @Test
   public void name() {
     assertThat(file.name()).isEqualTo("name");
+  }
+
+  @Test
+  public void parent() throws Exception {
+    assertThat(file.parent()).isSameAs(parent);
   }
 
   @Test

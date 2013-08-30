@@ -7,6 +7,8 @@ import java.util.List;
 public interface MemoryElement {
   public String name();
 
+  public MemoryDirectory parent();
+
   public boolean isFile();
 
   public boolean isDirectory();

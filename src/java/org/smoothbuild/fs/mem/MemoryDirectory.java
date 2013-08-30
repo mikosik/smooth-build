@@ -9,16 +9,23 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 public class MemoryDirectory implements MemoryElement {
+  private final MemoryDirectory parent;
   private final String name;
   private final Map<String, MemoryElement> map = Maps.newHashMap();
 
-  public MemoryDirectory(String name) {
+  public MemoryDirectory(MemoryDirectory parent, String name) {
+    this.parent = parent;
     this.name = name;
   }
 
   @Override
   public String name() {
     return name;
+  }
+
+  @Override
+  public MemoryDirectory parent() {
+    return parent;
   }
 
   @Override

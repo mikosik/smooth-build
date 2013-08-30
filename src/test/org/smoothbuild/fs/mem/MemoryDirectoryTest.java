@@ -13,11 +13,17 @@ public class MemoryDirectoryTest {
   private static final String CHILD_NAME = "childName";
 
   MemoryElement child = createChild();
-  MemoryDirectory dir = new MemoryDirectory("name");
+  MemoryDirectory parent = mock(MemoryDirectory.class);
+  MemoryDirectory dir = new MemoryDirectory(parent, "name");
 
   @Test
   public void name() {
     assertThat(dir.name()).isEqualTo("name");
+  }
+
+  @Test
+  public void parent() throws Exception {
+    assertThat(dir.parent()).isSameAs(parent);
   }
 
   @Test

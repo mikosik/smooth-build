@@ -9,16 +9,23 @@ import java.util.List;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 
 public class MemoryFile implements MemoryElement {
+  private final MemoryDirectory parent;
   private final String name;
   private byte data[];
 
-  public MemoryFile(String name) {
+  public MemoryFile(MemoryDirectory parent, String name) {
+    this.parent = parent;
     this.name = name;
   }
 
   @Override
   public String name() {
     return name;
+  }
+
+  @Override
+  public MemoryDirectory parent() {
+    return parent;
   }
 
   @Override
