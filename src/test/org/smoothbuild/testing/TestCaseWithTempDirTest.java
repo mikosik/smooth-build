@@ -11,9 +11,17 @@ public class TestCaseWithTempDirTest {
 
   @Test
   public void temporaryDirectoryExists() {
+    // given
     TestCaseWithTempDir testCase = new TestCaseWithTempDir();
+
+    // when
     File tempDir = testCase.getTempDirectory();
+
+    // then
     assertThat(tempDir.exists()).isTrue();
+
+    // cleanup temporary dir
+    tempDir.delete();
   }
 
   @Test
