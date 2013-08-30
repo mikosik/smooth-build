@@ -11,6 +11,7 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
@@ -20,6 +21,17 @@ import org.smoothbuild.plugin.Path;
 // TODO test this class
 @Singleton
 public class DiskFileSystem implements FileSystem {
+  private final String projectRoot;
+
+  @Inject
+  public DiskFileSystem() {
+    this(null);
+  }
+
+  public DiskFileSystem(String projectRoot) {
+    this.projectRoot = projectRoot;
+  }
+
   @Override
   public boolean pathExists(Path path) {
     return jdkFile(path).exists();
@@ -108,6 +120,6 @@ public class DiskFileSystem implements FileSystem {
   }
 
   private File jdkFile(Path path) {
-    return new File(path.value());
+    return new File(projectRoot, path.value());
   }
 }
