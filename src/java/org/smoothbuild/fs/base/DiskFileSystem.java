@@ -14,11 +14,12 @@ import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.Path;
 
-// TODO test this class
 @Singleton
 public class DiskFileSystem implements FileSystem {
   private final String projectRoot;
@@ -46,7 +47,7 @@ public class DiskFileSystem implements FileSystem {
   public Iterable<String> childNames(Path directory) {
     String[] list = jdkFile(directory).list();
     if (list == null) {
-      throw new FileSystemException("Path " + directory + " is not a directory");
+      throw new NoSuchDirException(directory);
     } else {
       return Arrays.asList(list);
     }
@@ -70,7 +71,7 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public InputStream createInputStream(Path path) {
     try {
-      return new FileInputStream(path.value());
+      return new FileInputStream(jdkFile(path));
     } catch (FileNotFoundException e) {
       throw new NoSuchFileException(path, e);
     }
@@ -84,9 +85,9 @@ public class DiskFileSystem implements FileSystem {
     createDirectory(path.parent());
 
     try {
-      return new FileOutputStream(path.value());
+      return new FileOutputStream(jdkFile(path));
     } catch (FileNotFoundException e) {
-      throw new FileSystemException("Could not create OutputStream for '" + path + "'", e);
+      throw new CannotCreateFileException(path, e);
     }
   }
 
