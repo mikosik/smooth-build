@@ -1,0 +1,6 @@
+#!/bin/sh
+
+SMOOTH_DIR=`dirname ${0}`
+
+java -cp "${SMOOTH_DIR}"/smooth-all.jar org.smoothbuild.Main ${*}
+
