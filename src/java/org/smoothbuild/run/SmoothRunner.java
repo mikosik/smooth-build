@@ -26,20 +26,24 @@ import com.google.common.collect.ImmutableMap;
 
 public class SmoothRunner {
   private final DetectingErrorsProblemsListener problems;
+  private final Cleaner cleaner;
   private final CommandLineParser commandLineParser;
   private final FileSystem fileSystem;
   private final ModuleParser moduleParser;
 
   @Inject
-  public SmoothRunner(ProblemsListener problemsListener, CommandLineParser commandLineParser,
-      FileSystem fileSystem, ModuleParser moduleParser) {
+  public SmoothRunner(ProblemsListener problemsListener, Cleaner cleaner,
+      CommandLineParser commandLineParser, FileSystem fileSystem, ModuleParser moduleParser) {
     this.problems = new DetectingErrorsProblemsListener(problemsListener);
+    this.cleaner = cleaner;
     this.commandLineParser = commandLineParser;
     this.fileSystem = fileSystem;
     this.moduleParser = moduleParser;
   }
 
   public void run(String... commandLine) {
+    cleaner.clearBuildDir();
+
     CommandLineArguments args = commandLineParser.parse(problems, commandLine);
     if (problems.errorDetected()) {
       return;
