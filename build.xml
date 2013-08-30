@@ -5,7 +5,7 @@
   <property name="dir.src.java" location="${dir.src}/java" />
   <property name="dir.src.testing" location="${dir.src}/testing" />
   <property name="dir.src.test" location="${dir.src}/test" />
-  <property name="dir.src.sh" location="${dir.src}/sh" />
+  <property name="dir.src.script" location="${dir.src}/script" />
   <property name="dir.build" location="build" />
   <property name="dir.build.java" location="${dir.build}/java" />
   <property name="dir.build.java.parser" location="${dir.build.java}/org/smoothbuild/antlr" />
@@ -184,8 +184,8 @@
   <target name="release" depends="jar-file">
     <zip destfile="${dir.build.release.file}">
       <zipfileset prefix="smooth" file="${dir.build.jar.file}"/>
-      <zipfileset prefix="smooth" dir="${dir.src.sh}" filemode="755"/>
-      <zipfileset prefix="smooth.bat" dir="${dir.src.sh}"/>
+      <zipfileset prefix="smooth" file="${dir.src.script}/smooth" filemode="755"/>
+      <zipfileset prefix="smooth" file="${dir.src.script}/smooth.bat"/>
     </zip>
   </target>
 
