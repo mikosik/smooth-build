@@ -23,6 +23,8 @@ public interface FileSystem {
 
   public void copy(Path sourceFile, Path destinationFile);
 
+  public void deleteDirectoryRecursively(Path directory);
+
   public InputStream createInputStream(Path path);
 
   public OutputStream createOutputStream(Path path);

@@ -9,6 +9,7 @@ import java.util.List;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.RecursiveFilesIterable;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.Path;
 
@@ -73,6 +74,21 @@ public class MemoryFileSystem implements FileSystem {
           "Error copying from '" + source + "' to '" + destination + "'.", e);
     }
 
+  }
+
+  @Override
+  public void deleteDirectoryRecursively(Path directory) {
+    MemoryElement element = getElement(directory);
+    if (element.isDirectory()) {
+      MemoryDirectory parent = element.parent();
+      if (parent == null) {
+        throw new IllegalArgumentException("Cannot delete root directory.");
+      } else {
+        parent.removeChild(element);
+      }
+    } else {
+      throw new NoSuchDirException(directory);
+    }
   }
 
   @Override

@@ -1,6 +1,7 @@
 package org.smoothbuild.fs.mem;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
@@ -11,6 +12,7 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.Path;
 
@@ -208,8 +210,65 @@ public class MemoryFileSystemTest {
     }
   }
 
+  @Test
+  public void deleteDirectoryRecursively() throws Exception {
+    // given
+    Path fileOutsideMain = path("fileOutsideMain");
+    Path mainDir = path("mainDir");
+
+    Path directFile = mainDir.append(path("directFile"));
+    Path directDir = mainDir.append(path("directDir"));
+
+    Path notDirectFile = directDir.append(path("notDirectFile"));
+    Path notDirectDir = directDir.append(path("notDirectDir"));
+
+    createEmptyFile(fileOutsideMain);
+    createEmptyFile(directFile);
+    createEmptyFile(notDirectFile);
+
+    // when
+    fileSystem.deleteDirectoryRecursively(mainDir);
+
+    // then
+    assertThat(fileSystem.pathExists(fileOutsideMain)).isTrue();
+
+    assertThat(fileSystem.pathExists(directFile)).isFalse();
+    assertThat(fileSystem.pathExists(directDir)).isFalse();
+
+    assertThat(fileSystem.pathExists(notDirectFile)).isFalse();
+    assertThat(fileSystem.pathExists(notDirectDir)).isFalse();
+  }
+
+  @Test
+  public void deleteDirectoryRecursivelyThrowsExceptionForNonDir() throws Exception {
+    Path file = path("myFile");
+    createEmptyFile(file);
+
+    try {
+      fileSystem.deleteDirectoryRecursively(file);
+      fail("exception should be thrown");
+    } catch (NoSuchDirException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void deleteDirectoryRecursivelyThrowsExceptionForNonexistentDir() throws Exception {
+    Path nonexistentPath = path("nonexistent");
+    try {
+      fileSystem.deleteDirectoryRecursively(nonexistentPath);
+      fail("exception should be thrown");
+    } catch (NoSuchFileException e) {
+      // expected
+    }
+  }
+
   private void createEmptyFile(String path) throws IOException {
-    createFile(path(path), "");
+    createEmptyFile(path(path));
+  }
+
+  private void createEmptyFile(Path path) throws IOException {
+    createFile(path, "");
   }
 
   private void createFile(Path path, String line) throws IOException {

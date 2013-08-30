@@ -67,6 +67,10 @@ public class MemoryDirectory implements MemoryElement {
     map.put(elementName, element);
   }
 
+  public void removeChild(MemoryElement element) {
+    map.remove(element.name());
+  }
+
   @Override
   public InputStream createInputStream() {
     throw new UnsupportedOperationException();
