@@ -2,10 +2,11 @@ package org.smoothbuild.fs.mem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class MemoryFileSystemTest {
 
   @Test
   public void pathExistsAfterCreating() throws Exception {
-    createFile("abc/def/ghi/text.txt");
+    createEmptyFile("abc/def/ghi/text.txt");
 
     assertThat(fileSystem.pathExists(path("abc"))).isTrue();
     assertThat(fileSystem.pathExists(path("abc/def"))).isTrue();
@@ -43,8 +44,8 @@ public class MemoryFileSystemTest {
 
   @Test
   public void creatingFileTwiceIsPossible() throws Exception {
-    createFile("abc/def/ghi/text.txt");
-    createFile("abc/def/ghi/text.txt");
+    createEmptyFile("abc/def/ghi/text.txt");
+    createEmptyFile("abc/def/ghi/text.txt");
   }
 
   @Test
@@ -54,7 +55,7 @@ public class MemoryFileSystemTest {
 
   @Test
   public void isDirectory() throws Exception {
-    createFile("abc/def/ghi/text.txt");
+    createEmptyFile("abc/def/ghi/text.txt");
     assertThat(fileSystem.pathExistsAndisDirectory(path("abc"))).isTrue();
     assertThat(fileSystem.pathExistsAndisDirectory(path("abc/def"))).isTrue();
     assertThat(fileSystem.pathExistsAndisDirectory(path("abc/def/ghi"))).isTrue();
@@ -73,17 +74,17 @@ public class MemoryFileSystemTest {
 
   @Test
   public void childNamesThatAreDirectories() throws Exception {
-    createFile("abc/dir1/text.txt");
-    createFile("abc/dir2/text.txt");
-    createFile("abc/dir3/text.txt");
+    createEmptyFile("abc/dir1/text.txt");
+    createEmptyFile("abc/dir2/text.txt");
+    createEmptyFile("abc/dir3/text.txt");
     assertThat(fileSystem.childNames(path("abc"))).containsOnly("dir1", "dir2", "dir3");
   }
 
   @Test
   public void childNamesThatAreFiles() throws Exception {
-    createFile("abc/text1.txt");
-    createFile("abc/text2.txt");
-    createFile("abc/text3.txt");
+    createEmptyFile("abc/text1.txt");
+    createEmptyFile("abc/text2.txt");
+    createEmptyFile("abc/text3.txt");
 
     assertThat(fileSystem.childNames(path("abc"))).containsOnly("text1.txt", "text2.txt",
         "text3.txt");
@@ -105,9 +106,9 @@ public class MemoryFileSystemTest {
 
   @Test
   public void filesFrom() throws Exception {
-    createFile("abc/text1.txt");
-    createFile("abc/text2.txt");
-    createFile("abc/def/text3.txt");
+    createEmptyFile("abc/text1.txt");
+    createEmptyFile("abc/text2.txt");
+    createEmptyFile("abc/def/text3.txt");
     assertThat(fileSystem.filesFrom(path("abc"))).containsOnly(path("text1.txt"),
         path("text2.txt"), path("def/text3.txt"));
   }
@@ -125,11 +126,11 @@ public class MemoryFileSystemTest {
   @Test
   public void writingAndReading() throws Exception {
     String line = "abcdefgh";
-    String path = "a/b/file.txt";
+    Path path = path("a/b/file.txt");
 
     createFile(path, line);
-    LineReader reader = new LineReader(new InputStreamReader(
-        fileSystem.createInputStream(path(path))));
+
+    LineReader reader = new LineReader(new InputStreamReader(fileSystem.createInputStream(path)));
 
     assertThat(reader.readLine()).isEqualTo(line);
     assertThat(reader.readLine()).isNull();
@@ -137,7 +138,7 @@ public class MemoryFileSystemTest {
 
   @Test
   public void cannotCreateOutputStreamWhenFileIsADirectory() throws Exception {
-    createFile("abc/def/file.txt");
+    createEmptyFile("abc/def/file.txt");
     try {
       fileSystem.createOutputStream(path("abc/def"));
     } catch (FileSystemException e) {
@@ -152,7 +153,7 @@ public class MemoryFileSystemTest {
 
   @Test
   public void cannotCreateInputStreamWhenFileIsADirectory() throws Exception {
-    createFile("abc/def/file.txt");
+    createEmptyFile("abc/def/file.txt");
     try {
       fileSystem.createInputStream(path("abc/def"));
     } catch (FileSystemException e) {
@@ -170,13 +171,15 @@ public class MemoryFileSystemTest {
     String line = "abcdefgh";
     String source = "a/b/file1.txt";
     String destination = "d/e/file2.txt";
+    Path sourcePath = path(source);
+    Path destinationPath = path(destination);
 
-    createFile(source, line);
+    createFile(sourcePath, line);
 
-    fileSystem.copy(path(source), path(destination));
+    fileSystem.copy(sourcePath, destinationPath);
 
     LineReader reader = new LineReader(new InputStreamReader(
-        fileSystem.createInputStream(path(destination))));
+        fileSystem.createInputStream(destinationPath)));
 
     assertThat(reader.readLine()).isEqualTo(line);
     assertThat(reader.readLine()).isNull();
@@ -184,7 +187,7 @@ public class MemoryFileSystemTest {
 
   @Test
   public void cannotCopyFromADirectory() throws Exception {
-    createFile("abc/def/file.txt");
+    createEmptyFile("abc/def/file.txt");
     try {
       fileSystem.copy(path("abc/def"), path("xyz/output.txt"));
     } catch (FileSystemException e) {
@@ -194,23 +197,23 @@ public class MemoryFileSystemTest {
 
   @Test
   public void cannotCopyToADirectory() throws Exception {
-    createFile("abc/def/file.txt");
-    createFile("xyz/prs/file.txt");
+    String sourceFileName = "abc/def/file.txt";
+    createEmptyFile(sourceFileName);
+    createEmptyFile("xyz/prs/file.txt");
 
     try {
-      fileSystem.copy(path("abc/def/file.txt"), path("xyz/"));
+      fileSystem.copy(path(sourceFileName), path("xyz/"));
     } catch (FileSystemException e) {
       // expected
     }
   }
 
-  private void createFile(String path, String line) throws IOException {
-    OutputStreamWriter writer = new OutputStreamWriter(fileSystem.createOutputStream(path(path)));
-    writer.write(line);
-    writer.close();
+  private void createEmptyFile(String path) throws IOException {
+    createFile(path(path), "");
   }
 
-  private void createFile(String path) throws IOException {
-    fileSystem.createOutputStream(path(path)).close();
+  private void createFile(Path path, String line) throws IOException {
+    OutputStream outputStream = fileSystem.createOutputStream(path);
+    writeAndClose(outputStream, line);
   }
 }
