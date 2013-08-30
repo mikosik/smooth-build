@@ -18,7 +18,7 @@ import com.google.common.io.ByteStreams;
  * In memory implementation of FileSystem.
  */
 public class MemoryFileSystem implements FileSystem {
-  private final MemoryDirectory root = new MemoryDirectory("");
+  private final MemoryDirectory root = new MemoryDirectory(null, "");
 
   @Override
   public boolean pathExists(Path path) {
@@ -55,7 +55,7 @@ public class MemoryFileSystem implements FileSystem {
               "Path (or subpath) of to be created directory is taken by some file.");
         }
       } else {
-        MemoryDirectory newDir = new MemoryDirectory(name);
+        MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
         currentDir.addChild(newDir);
         currentDir = newDir;
       }
@@ -102,7 +102,7 @@ public class MemoryFileSystem implements FileSystem {
       }
     }
 
-    MemoryFile child = new MemoryFile(name);
+    MemoryFile child = new MemoryFile(dir, name);
     dir.addChild(child);
     return child.createOutputStream();
   }

@@ -14,7 +14,7 @@ public class TestingStreamTest {
   @Test
   public void testWriteAndClose() throws IOException {
     String content = "content to test.";
-    MemoryFile file = new MemoryFile("file");
+    MemoryFile file = new MemoryFile(null, "file");
 
     writeAndClose(file.createOutputStream(), content);
 
@@ -30,7 +30,7 @@ public class TestingStreamTest {
   @Test
   public void testWriteAndCloseWithEmptyContent() throws IOException {
     String content = "";
-    MemoryFile file = new MemoryFile("file");
+    MemoryFile file = new MemoryFile(null, "file");
 
     writeAndClose(file.createOutputStream(), content);
 
