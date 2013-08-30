@@ -49,21 +49,21 @@ public class MemoryFileSystemTest {
 
   @Test
   public void rootPathIsADirectory() throws Exception {
-    assertThat(fileSystem.isDirectory(Path.rootPath())).isTrue();
+    assertThat(fileSystem.pathExistsAndisDirectory(Path.rootPath())).isTrue();
   }
 
   @Test
   public void isDirectory() throws Exception {
     createFile("abc/def/ghi/text.txt");
-    assertThat(fileSystem.isDirectory(path("abc"))).isTrue();
-    assertThat(fileSystem.isDirectory(path("abc/def"))).isTrue();
-    assertThat(fileSystem.isDirectory(path("abc/def/ghi"))).isTrue();
-    assertThat(fileSystem.isDirectory(path("abc/def/ghi/text.txt"))).isFalse();
+    assertThat(fileSystem.pathExistsAndisDirectory(path("abc"))).isTrue();
+    assertThat(fileSystem.pathExistsAndisDirectory(path("abc/def"))).isTrue();
+    assertThat(fileSystem.pathExistsAndisDirectory(path("abc/def/ghi"))).isTrue();
+    assertThat(fileSystem.pathExistsAndisDirectory(path("abc/def/ghi/text.txt"))).isFalse();
   }
 
-  @Test(expected = NoSuchFileException.class)
-  public void isDirectoryThrowsExceptionWhenPathDoesNotExist() throws Exception {
-    fileSystem.isDirectory(path("abc"));
+  @Test
+  public void isDirectoryReturnsFalseWhenPathDoesNotExist() throws Exception {
+    assertThat(fileSystem.pathExistsAndisDirectory(path("abc"))).isFalse();
   }
 
   @Test(expected = NoSuchFileException.class)
@@ -117,7 +117,7 @@ public class MemoryFileSystemTest {
     try {
       fileSystem.filesFrom(path("abc")).iterator().hasNext();
       Assert.fail("exception expected");
-    } catch (FileSystemException e) {
+    } catch (IllegalArgumentException e) {
       // expected
     }
   }
