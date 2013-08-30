@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.plugin.FilesImpl;
+import org.smoothbuild.fs.plugin.FileListImpl;
 import org.smoothbuild.function.plugin.exc.CreatingInstanceFailedException;
 import org.smoothbuild.plugin.Path;
 
@@ -30,7 +30,7 @@ public class InstanceCreatorFactory {
   public InstanceCreator filesPassingCreator(final Constructor<?> constructor) {
     return new InstanceCreator() {
       public Object createInstance(Path resultDir) throws CreatingInstanceFailedException {
-        FilesImpl constructorParam = new FilesImpl(fileSystem, resultDir);
+        FileListImpl constructorParam = new FileListImpl(fileSystem, resultDir);
         return reflexiveInvoker.invokeConstructor(constructor, constructorParam);
       }
     };

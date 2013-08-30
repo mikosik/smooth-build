@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 
 public class TypeTest {
 
@@ -12,48 +12,48 @@ public class TypeTest {
   public void javaType() {
     assertThat((Object) Type.STRING.javaType()).isEqualTo(String.class);
     assertThat((Object) Type.FILE.javaType()).isEqualTo(File.class);
-    assertThat((Object) Type.FILES.javaType()).isEqualTo(Files.class);
+    assertThat((Object) Type.FILE_LIST.javaType()).isEqualTo(FileList.class);
   }
 
   @Test
   public void isAssignableFrom() throws Exception {
     assertThat(Type.STRING.isAssignableFrom(Type.STRING)).isTrue();
     assertThat(Type.STRING.isAssignableFrom(Type.FILE)).isFalse();
-    assertThat(Type.STRING.isAssignableFrom(Type.FILES)).isFalse();
+    assertThat(Type.STRING.isAssignableFrom(Type.FILE_LIST)).isFalse();
 
     assertThat(Type.FILE.isAssignableFrom(Type.STRING)).isFalse();
     assertThat(Type.FILE.isAssignableFrom(Type.FILE)).isTrue();
-    assertThat(Type.FILE.isAssignableFrom(Type.FILES)).isFalse();
+    assertThat(Type.FILE.isAssignableFrom(Type.FILE_LIST)).isFalse();
 
-    assertThat(Type.FILES.isAssignableFrom(Type.STRING)).isFalse();
-    assertThat(Type.FILES.isAssignableFrom(Type.FILE)).isFalse();
-    assertThat(Type.FILES.isAssignableFrom(Type.FILES)).isTrue();
+    assertThat(Type.FILE_LIST.isAssignableFrom(Type.STRING)).isFalse();
+    assertThat(Type.FILE_LIST.isAssignableFrom(Type.FILE)).isFalse();
+    assertThat(Type.FILE_LIST.isAssignableFrom(Type.FILE_LIST)).isTrue();
   }
 
   @Test
   public void equalsAndHashCodeWorkaround() throws Exception {
     assertThat(Type.STRING).isEqualTo(Type.STRING);
     assertThat(Type.STRING).isNotEqualTo(Type.FILE);
-    assertThat(Type.STRING).isNotEqualTo(Type.FILES);
+    assertThat(Type.STRING).isNotEqualTo(Type.FILE_LIST);
 
     assertThat(Type.FILE).isNotEqualTo(Type.STRING);
     assertThat(Type.FILE).isEqualTo(Type.FILE);
-    assertThat(Type.FILE).isNotEqualTo(Type.FILES);
+    assertThat(Type.FILE).isNotEqualTo(Type.FILE_LIST);
 
-    assertThat(Type.FILES).isNotEqualTo(Type.STRING);
-    assertThat(Type.FILES).isNotEqualTo(Type.FILE);
-    assertThat(Type.FILES).isEqualTo(Type.FILES);
+    assertThat(Type.FILE_LIST).isNotEqualTo(Type.STRING);
+    assertThat(Type.FILE_LIST).isNotEqualTo(Type.FILE);
+    assertThat(Type.FILE_LIST).isEqualTo(Type.FILE_LIST);
 
     assertThat(Type.STRING.hashCode()).isNotEqualTo(Type.FILE.hashCode());
-    assertThat(Type.FILE.hashCode()).isNotEqualTo(Type.FILES.hashCode());
-    assertThat(Type.FILES.hashCode()).isNotEqualTo(Type.STRING.hashCode());
+    assertThat(Type.FILE.hashCode()).isNotEqualTo(Type.FILE_LIST.hashCode());
+    assertThat(Type.FILE_LIST.hashCode()).isNotEqualTo(Type.STRING.hashCode());
   }
 
   @Test
   public void javaParamTypetoType() {
     assertThat(Type.javaParamTypetoType(String.class)).isEqualTo(Type.STRING);
     assertThat(Type.javaParamTypetoType(File.class)).isEqualTo(Type.FILE);
-    assertThat(Type.javaParamTypetoType(Files.class)).isEqualTo(Type.FILES);
+    assertThat(Type.javaParamTypetoType(FileList.class)).isEqualTo(Type.FILE_LIST);
   }
 
   @Test
@@ -65,7 +65,7 @@ public class TypeTest {
   public void javaResultTypetoType() {
     assertThat(Type.javaResultTypetoType(String.class)).isEqualTo(Type.STRING);
     assertThat(Type.javaResultTypetoType(File.class)).isEqualTo(Type.FILE);
-    assertThat(Type.javaResultTypetoType(Files.class)).isEqualTo(Type.FILES);
+    assertThat(Type.javaResultTypetoType(FileList.class)).isEqualTo(Type.FILE_LIST);
     assertThat(Type.javaResultTypetoType(Void.TYPE)).isEqualTo(Type.VOID);
   }
 

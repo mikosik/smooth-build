@@ -18,12 +18,12 @@ public class FilesImplTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
   Path root = Path.path(ROOT_DIR);;
 
-  FilesImpl filesImpl = new FilesImpl(fileSystem, root);
+  FileListImpl fileListImpl = new FileListImpl(fileSystem, root);
 
   @Test
   public void file() throws Exception {
     fileSystem.createFileContainingItsPath(ROOT_DIR, "abc.txt");
-    File file = filesImpl.file(path("abc.txt"));
+    File file = fileListImpl.file(path("abc.txt"));
     FileImplTest.assertContentHasFilePath(file);
   }
 
@@ -42,7 +42,7 @@ public class FilesImplTest {
       fileSystem.createFileContainingItsPath(ROOT_DIR, name);
     }
 
-    for (File file : filesImpl.asIterable()) {
+    for (File file : fileListImpl.asIterable()) {
       FileImplTest.assertContentHasFilePath(file);
     }
   }
@@ -52,10 +52,10 @@ public class FilesImplTest {
     String path = "abc/test.txt";
     createFile(path);
 
-    FileImplTest.assertContentHasFilePath(filesImpl.file(path(path)));
+    FileImplTest.assertContentHasFilePath(fileListImpl.file(path(path)));
   }
 
   private void createFile(String path) throws IOException {
-    writeAndClose(filesImpl.createFile(path(path)).createOutputStream(), path);
+    writeAndClose(fileListImpl.createFile(path(path)).createOutputStream(), path);
   }
 }

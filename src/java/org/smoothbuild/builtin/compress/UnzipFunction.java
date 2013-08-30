@@ -10,7 +10,7 @@ import java.util.zip.ZipInputStream;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
@@ -21,15 +21,15 @@ public class UnzipFunction {
     public File file();
   }
 
-  private final Files files;
+  private final FileList fileList;
   private final byte[] buffer = new byte[1024];
 
-  public UnzipFunction(Files result) {
-    this.files = result;
+  public UnzipFunction(FileList result) {
+    this.fileList = result;
   }
 
   @ExecuteMethod
-  public Files execute(Parameters params) throws FunctionException {
+  public FileList execute(Parameters params) throws FunctionException {
     if (params.file() == null) {
       throw new MissingArgException("file");
     }
@@ -43,11 +43,11 @@ public class UnzipFunction {
       throw new FileSystemException(e);
     }
 
-    return files;
+    return fileList;
   }
 
   private void unzipEntry(ZipInputStream zipInputStream, ZipEntry entry) throws IOException {
-    File file = files.createFile(path(entry.getName()));
+    File file = fileList.createFile(path(entry.getName()));
     try (OutputStream outputStream = file.createOutputStream()) {
       int len = 0;
       while ((len = zipInputStream.read(buffer)) > 0) {
