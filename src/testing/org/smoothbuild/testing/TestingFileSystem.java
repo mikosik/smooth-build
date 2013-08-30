@@ -6,7 +6,7 @@ import static org.smoothbuild.testing.TestingStream.assertContent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.plugin.Path;
@@ -21,14 +21,12 @@ public class TestingFileSystem extends MemoryFileSystem {
   }
 
   public void createFileWithContent(Path path, String content) throws IOException {
-    OutputStreamWriter writer = new OutputStreamWriter(createOutputStream(path));
-    writer.write(content);
-    writer.close();
+    OutputStream outputStream = createOutputStream(path);
+    TestingStream.writeAndClose(outputStream, content);
   }
 
   public void createEmptyFile(String path) throws IOException {
-    OutputStreamWriter writer = new OutputStreamWriter(createOutputStream(path(path)));
-    writer.close();
+    createFileWithContent(path(path), "");
   }
 
   public void assertFileContainsItsPath(String root, String path) throws IOException,
