@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static com.google.inject.Guice.createInjector;
-import static org.smoothbuild.command.CommandLineParser.DEFAULT_SCRIPT_PATH;
+import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.testing.ScriptBuilder.script;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class SmoothRunnerTest {
   @Test
   public void singleFileReadAndWritten_pipe() throws IOException {
     String script = script("run : file(path='" + file + "') | saveTo(dir='destinationDir');");
-    fileSystem.createFileWithContent(DEFAULT_SCRIPT_PATH, script);
+    fileSystem.createFileWithContent(DEFAULT_SCRIPT, script);
     fileSystem.createFileContainingItsPath(".", file);
 
     smoothRunner.run("run");
@@ -48,7 +48,7 @@ public class SmoothRunnerTest {
   @Test
   public void singleFileReadAndWritten_nestedCalls() throws IOException {
     String script = script("run : saveTo(dir='destinationDir', file=file(path='" + file + "') );");
-    fileSystem.createFileWithContent(DEFAULT_SCRIPT_PATH, script);
+    fileSystem.createFileWithContent(DEFAULT_SCRIPT, script);
     fileSystem.createFileContainingItsPath(".", file);
 
     smoothRunner.run("run");
@@ -63,7 +63,7 @@ public class SmoothRunnerTest {
     builder.addLine("filename : '" + file + "';");
     builder.addLine("myfile : file(path=filename);");
     builder.addLine("run : saveTo(file=myfile, dir='destinationDir');");
-    fileSystem.createFileWithContent(DEFAULT_SCRIPT_PATH, builder.build());
+    fileSystem.createFileWithContent(DEFAULT_SCRIPT, builder.build());
     fileSystem.createFileContainingItsPath(".", file);
 
     smoothRunner.run("run");
