@@ -34,7 +34,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public List<String> childNames(Path directory) {
-    return getElement(directory).childNames();
+    return getDirectory(directory).childNames();
   }
 
   @Override
@@ -78,7 +78,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public void deleteDirectoryRecursively(Path directory) {
-    MemoryElement element = getElement(directory);
+    MemoryElement element = getDirectory(directory);
     if (element.isDirectory()) {
       MemoryDirectory parent = element.parent();
       if (parent == null) {
@@ -93,7 +93,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public InputStream createInputStream(Path path) {
-    MemoryElement element = getElement(path);
+    MemoryElement element = getFile(path);
     if (element.isFile()) {
       return element.createInputStream();
     } else {
@@ -123,10 +123,19 @@ public class MemoryFileSystem implements FileSystem {
     return child.createOutputStream();
   }
 
-  private MemoryElement getElement(Path path) {
+  private MemoryElement getFile(Path path) {
     MemoryElement found = findElement(path);
     if (found == null) {
       throw new NoSuchFileException(path);
+    } else {
+      return found;
+    }
+  }
+
+  private MemoryElement getDirectory(Path path) {
+    MemoryElement found = findElement(path);
+    if (found == null) {
+      throw new NoSuchDirException(path);
     } else {
       return found;
     }
