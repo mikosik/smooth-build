@@ -120,6 +120,18 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
+  public void deleteDirectoryRecursively(Path directory) {
+    if (pathExistsAndisDirectory(directory)) {
+      try {
+        RecursiveDirectoryDeleter.deleteRecursively(jdkFile(directory));
+      } catch (IOException e) {
+        throw new FileSystemException(e);
+      }
+    } else {
+      throw new NoSuchDirException(directory);
+    }
+  }
+
   private File jdkFile(Path path) {
     return new File(projectRoot, path.value());
   }

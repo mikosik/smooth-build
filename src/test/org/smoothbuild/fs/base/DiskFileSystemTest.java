@@ -273,4 +273,63 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
       // expected
     }
   }
+
+  @Test
+  public void deleteDirectoryRecursively() throws Exception {
+    // given
+    File fileOutside = createEmptyFile(root, "fileOutsideMain");
+
+    String mainDirName = "mainDir";
+    File mainDir = createDir(root, mainDirName);
+
+    String directFileName = "directFile";
+    File directFile = createEmptyFile(mainDir, directFileName);
+
+    String directDirName = "directDir";
+    File directDir = createDir(mainDir, directDirName);
+
+    String notDirectFileName = "notDirectFile";
+    File notDirectFile = createEmptyFile(directDir, notDirectFileName);
+
+    String notDirectDirName = "notDirectDir";
+    File notDirectDir = createDir(directDir, notDirectDirName);
+
+    // when
+    fileSystem.deleteDirectoryRecursively(path(mainDirName));
+
+    // then
+    assertThat(fileOutside.exists()).isTrue();
+
+    assertThat(mainDir.exists()).isFalse();
+    assertThat(directFile.exists()).isFalse();
+    assertThat(directDir.exists()).isFalse();
+    assertThat(notDirectFile.exists()).isFalse();
+    assertThat(notDirectDir.exists()).isFalse();
+  }
+
+  @Test
+  public void deleteDirectoryRecursivelyThrowsExceptionForNonDir() throws Exception {
+    String fileName = "fileName";
+    createEmptyFile(root, fileName);
+    Path path = path(fileName);
+
+    try {
+      fileSystem.deleteDirectoryRecursively(path);
+      fail("exception should be thrown");
+    } catch (NoSuchDirException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void deleteDirectoryRecursivelyThrowsExceptionForNonexistentDir() throws Exception {
+    Path path = path("nonexistent");
+
+    try {
+      fileSystem.deleteDirectoryRecursively(path);
+      fail("exception should be thrown");
+    } catch (NoSuchDirException e) {
+      // expected
+    }
+  }
 }
