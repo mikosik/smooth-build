@@ -5,9 +5,9 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.plugin.FilesImpl;
+import org.smoothbuild.fs.plugin.FileListImpl;
 import org.smoothbuild.plugin.ExecuteMethod;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
@@ -28,18 +28,18 @@ public class FilesFunction {
   }
 
   @ExecuteMethod
-  public Files execute(Parameters params) throws FunctionException {
+  public FileList execute(Parameters params) throws FunctionException {
     Path dirPath = validatedPath("dir", params.dir());
     return createFiles(dirPath);
   }
 
-  private Files createFiles(Path dirPath) throws FunctionException {
+  private FileList createFiles(Path dirPath) throws FunctionException {
     if (!fileSystem.pathExists(dirPath)) {
       throw new NoSuchPathException("dir", dirPath);
     }
 
     if (fileSystem.pathExistsAndisDirectory(dirPath)) {
-      return new FilesImpl(fileSystem, dirPath);
+      return new FileListImpl(fileSystem, dirPath);
     } else {
       throw new PathIsNotADirException("dir", dirPath);
     }

@@ -1,11 +1,11 @@
 package org.smoothbuild.testing;
 
 import org.smoothbuild.fs.mem.MemoryFileSystem;
-import org.smoothbuild.fs.plugin.FilesImpl;
+import org.smoothbuild.fs.plugin.FileListImpl;
 import org.smoothbuild.plugin.Path;
 
-public class TestingFiles extends FilesImpl {
-  public TestingFiles() {
+public class TestingFileList extends FileListImpl {
+  public TestingFileList() {
     super(new MemoryFileSystem(), Path.rootPath());
   }
 

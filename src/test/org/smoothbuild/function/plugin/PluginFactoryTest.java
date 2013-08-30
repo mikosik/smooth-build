@@ -38,7 +38,7 @@ import org.smoothbuild.function.plugin.exc.TooManyParamsInExecuteMethodException
 import org.smoothbuild.function.plugin.exc.ZeroParamsInExecuteMethodException;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.FunctionName;
 
 import com.google.common.collect.ImmutableMap;
@@ -130,7 +130,7 @@ public class PluginFactoryTest {
 
     public File file();
 
-    public Files files();
+    public FileList fileList();
   }
 
   @FunctionName("my.package.myFunction")
@@ -217,7 +217,7 @@ public class PluginFactoryTest {
   public static class MyPluginWithFilesResult {
 
     @ExecuteMethod
-    public Files execute(EmptyParameters params) {
+    public FileList execute(EmptyParameters params) {
       return null;
     }
   }

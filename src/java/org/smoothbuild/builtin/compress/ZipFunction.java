@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
@@ -22,7 +22,7 @@ public class ZipFunction {
     /**
      * Files to be zipped.
      */
-    public Files files();
+    public FileList fileList();
   }
 
   // TODO add missing parameters: level, comment, method
@@ -38,21 +38,21 @@ public class ZipFunction {
   // http://commons.apache.org/proper/commons-compress/zip.html
   // which provides setUseZip64 method that allows specifying zip64 behaviour.
 
-  private final Files result;
+  private final FileList result;
   private final byte[] buffer = new byte[1024];
 
-  public ZipFunction(Files result) {
+  public ZipFunction(FileList result) {
     this.result = result;
   }
 
   @ExecuteMethod
   public File execute(Parameters params) throws FunctionException {
-    if (params.files() == null) {
+    if (params.fileList() == null) {
       throw new MissingArgException("files");
     }
     File output = result.createFile(path("output.zip"));
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
-      for (File file : params.files().asIterable()) {
+      for (File file : params.fileList().asIterable()) {
         addEntry(zipOutputStream, file);
       }
     } catch (IOException e) {

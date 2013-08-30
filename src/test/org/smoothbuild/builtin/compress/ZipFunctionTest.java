@@ -10,27 +10,27 @@ import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
-import org.smoothbuild.testing.TestingFiles;
+import org.smoothbuild.testing.TestingFileList;
 
 public class ZipFunctionTest {
   // TODO pass as argument object that throws exception when second file is
   // created. Or maybe even method that instantiate function given
   // ZipFunction.class
 
-  ZipFunction zipFunction = new ZipFunction(new TestingFiles());
+  ZipFunction zipFunction = new ZipFunction(new TestingFileList());
 
   @Test
   public void testZipping() throws IOException, FunctionException {
-    TestingFiles inputFiles = new TestingFiles();
+    TestingFileList inputFiles = new TestingFileList();
     inputFiles.createFile(path("fileA.txt")).createTestContent();
     inputFiles.createFile(path("fileB.txt")).createTestContent();
 
     File result = zipFunction.execute(params(inputFiles));
 
-    TestingFiles unpackedFiles = new TestingFiles();
+    TestingFileList unpackedFiles = new TestingFileList();
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;
@@ -51,11 +51,11 @@ public class ZipFunctionTest {
     assertThat(fileCount).isEqualTo(2);
   }
 
-  private static ZipFunction.Parameters params(final Files files) {
+  private static ZipFunction.Parameters params(final FileList fileList) {
     return new ZipFunction.Parameters() {
       @Override
-      public Files files() {
-        return files;
+      public FileList fileList() {
+        return fileList;
       }
     };
   }

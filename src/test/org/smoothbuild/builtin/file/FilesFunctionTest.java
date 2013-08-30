@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.exc.IllegalPathException;
 import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
@@ -78,9 +78,9 @@ public class FilesFunctionTest {
     String filePath = "file/path/file.txt";
     fileSystem.createFileContainingItsPath(rootPath, filePath);
 
-    Files files = filesFunction.execute(params(rootPath));
+    FileList fileList = filesFunction.execute(params(rootPath));
 
-    assertContentHasFilePath(files.file(path(filePath)));
+    assertContentHasFilePath(fileList.file(path(filePath)));
   }
 
   private void assertExceptionContainsDirParam(ParamException e) {

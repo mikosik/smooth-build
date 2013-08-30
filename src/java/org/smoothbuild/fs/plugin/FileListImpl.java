@@ -2,18 +2,18 @@ package org.smoothbuild.fs.plugin;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 
-public class FilesImpl implements Files {
+public class FileListImpl implements FileList {
   private final PathToFileConverter pathToFileConverter = new PathToFileConverter();
   private final FileSystem fileSystem;
   private final Path root;
 
-  public FilesImpl(FileSystem fileSystem, Path root) {
+  public FileListImpl(FileSystem fileSystem, Path root) {
     this.fileSystem = fileSystem;
     this.root = root;
   }

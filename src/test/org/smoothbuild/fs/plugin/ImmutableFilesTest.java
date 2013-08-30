@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.fs.plugin.ImmutableFiles.immutableFiles;
+import static org.smoothbuild.fs.plugin.ImmutableFileList.immutableFiles;
 import static org.smoothbuild.plugin.Path.path;
 
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
@@ -21,24 +21,24 @@ public class ImmutableFilesTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
   Path root = Path.path(ROOT_DIR);;
 
-  Files files = immutableFiles(new FilesImpl(fileSystem, root));
+  FileList fileList = immutableFiles(new FileListImpl(fileSystem, root));
 
   @Test
   public void convertingImmutableToImmutableReturnsTheSameObject() throws Exception {
-    assertThat(immutableFiles(files)).isSameAs(files);
+    assertThat(immutableFiles(fileList)).isSameAs(fileList);
   }
 
   @Test
   public void file() throws Exception {
     fileSystem.createFileContainingItsPath(ROOT_DIR, "abc.txt");
-    File file = files.file(path("abc.txt"));
+    File file = fileList.file(path("abc.txt"));
     FileImplTest.assertContentHasFilePath(file);
   }
 
   @Test
   public void eachFileIsImmutable() throws Exception {
     fileSystem.createFileContainingItsPath(ROOT_DIR, "abc.txt");
-    File file = files.file(path("abc.txt"));
+    File file = fileList.file(path("abc.txt"));
     try {
       file.createOutputStream();
       Assert.fail("exception should be thrown");
@@ -62,7 +62,7 @@ public class ImmutableFilesTest {
       fileSystem.createFileContainingItsPath(ROOT_DIR, name);
     }
 
-    for (File file : files.asIterable()) {
+    for (File file : fileList.asIterable()) {
       FileImplTest.assertContentHasFilePath(file);
     }
   }
@@ -70,7 +70,7 @@ public class ImmutableFilesTest {
   @Test
   public void createFileThrowsUnsupportedOperationException() throws Exception {
     try {
-      files.createFile(path("abc/test.txt"));
+      fileList.createFile(path("abc/test.txt"));
       Assert.fail("exception should be thrown");
     } catch (UnsupportedOperationException e) {
       // expected

@@ -1,7 +1,7 @@
 package org.smoothbuild.function.base;
 
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Files;
+import org.smoothbuild.plugin.FileList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -10,11 +10,11 @@ import com.google.common.collect.ImmutableMap;
 public class Type {
   public static final Type STRING = create("String", String.class);
   public static final Type FILE = create("File", File.class);
-  public static final Type FILES = create("Files", Files.class);
+  public static final Type FILE_LIST = create("FileList", FileList.class);
   public static final Type VOID = create("Void", Void.TYPE);
 
-  static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, FILE, FILES, VOID);
-  static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, FILE, FILES);
+  static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, FILE, FILE_LIST, VOID);
+  static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, FILE, FILE_LIST);
 
   static final ImmutableList<Class<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
   static final ImmutableList<Class<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
