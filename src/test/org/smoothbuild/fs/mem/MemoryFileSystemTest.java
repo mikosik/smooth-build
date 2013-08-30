@@ -69,7 +69,7 @@ public class MemoryFileSystemTest {
     assertThat(fileSystem.pathExistsAndisDirectory(path("abc"))).isFalse();
   }
 
-  @Test(expected = NoSuchFileException.class)
+  @Test(expected = NoSuchDirException.class)
   public void childNamesThrowsExceptionWhenDirDoesNotExist() throws Exception {
     fileSystem.childNames(path("abc"));
   }
@@ -258,7 +258,7 @@ public class MemoryFileSystemTest {
     try {
       fileSystem.deleteDirectoryRecursively(nonexistentPath);
       fail("exception should be thrown");
-    } catch (NoSuchFileException e) {
+    } catch (NoSuchDirException e) {
       // expected
     }
   }
