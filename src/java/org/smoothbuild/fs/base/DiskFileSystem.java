@@ -22,17 +22,17 @@ import org.smoothbuild.plugin.Path;
 public class DiskFileSystem implements FileSystem {
   @Override
   public boolean pathExists(Path path) {
-    return new File(path.value()).exists();
+    return jdkFile(path).exists();
   }
 
   @Override
   public boolean isDirectory(Path path) {
-    return new File(path.value()).isDirectory();
+    return jdkFile(path).isDirectory();
   }
 
   @Override
   public Iterable<String> childNames(Path directory) {
-    String[] list = new File(directory.value()).list();
+    String[] list = jdkFile(directory).list();
     if (list == null) {
       throw new FileSystemException("Path " + directory + " is not a directory");
     } else {
@@ -46,7 +46,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   private void createDirectory(Path path) {
-    File directory = new File(path.value());
+    File directory = jdkFile(path);
     if (!directory.exists()) {
       createDirectory(path.parent());
       if (!directory.mkdir()) {
@@ -86,7 +86,7 @@ public class DiskFileSystem implements FileSystem {
 
   private void copyImpl(Path from, Path to) {
     try {
-      copy(new File(from.value()), new File(to.value()));
+      copy(jdkFile(from), jdkFile(to));
     } catch (IOException e) {
       throw new FileSystemException("Could not copy from '" + from + "' to '" + to + "'", e);
     }
@@ -105,5 +105,9 @@ public class DiskFileSystem implements FileSystem {
         toCopy -= copiedCount;
       }
     }
+  }
+
+  private File jdkFile(Path path) {
+    return new File(path.value());
   }
 }
