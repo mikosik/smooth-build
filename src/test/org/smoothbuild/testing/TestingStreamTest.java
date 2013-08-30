@@ -26,4 +26,20 @@ public class TestingStreamTest {
       // expected
     }
   }
+
+  @Test
+  public void testWriteAndCloseWithEmptyContent() throws IOException {
+    String content = "";
+    MemoryFile file = new MemoryFile("file");
+
+    writeAndClose(file.createOutputStream(), content);
+
+    assertContent(file.createInputStream(), content);
+    try {
+      assertContent(file.createInputStream(), "different content");
+      Assert.fail("exception should be thrown");
+    } catch (AssertionError e) {
+      // expected
+    }
+  }
 }

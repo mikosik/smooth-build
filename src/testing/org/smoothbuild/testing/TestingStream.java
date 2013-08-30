@@ -20,7 +20,8 @@ public class TestingStream {
       AssertionError {
     try (InputStreamReader readable = new InputStreamReader(inputStream);) {
       LineReader reader = new LineReader(readable);
-      String actual = reader.readLine();
+      String line = reader.readLine();
+      String actual = line == null ? "" : line;
       if (!actual.equals(content)) {
         throw new AssertionError("File content is incorrect. Expected '" + content + "' but was '"
             + actual + "'.");
