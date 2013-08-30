@@ -1,6 +1,5 @@
 package org.smoothbuild.fs.base;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayDeque;
@@ -17,8 +16,6 @@ public class RecursiveFilesIterator implements Iterator<Path> {
   private Path nextFile;
 
   public RecursiveFilesIterator(FileSystem fileSystem, Path rootPath) {
-    checkArgument(fileSystem.pathExistsAndisDirectory(rootPath));
-
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
     this.directoryStack = new ArrayDeque<Path>();
