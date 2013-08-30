@@ -185,6 +185,7 @@
     <zip destfile="${dir.build.release.file}">
       <zipfileset prefix="smooth" file="${dir.build.jar.file}"/>
       <zipfileset prefix="smooth" dir="${dir.src.sh}" filemode="755"/>
+      <zipfileset prefix="smooth.bat" dir="${dir.src.sh}"/>
     </zip>
   </target>
 
