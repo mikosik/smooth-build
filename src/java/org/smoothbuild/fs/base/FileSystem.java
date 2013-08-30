@@ -15,16 +15,8 @@ import com.google.inject.ImplementedBy;
 public interface FileSystem {
   public boolean pathExists(Path path);
 
-  /**
-   * @return true when path exists and is a directory
-   * @throws FileSystemException
-   *           when path doesn't exist
-   */
-  public boolean isDirectory(Path path);
+  public boolean pathExistsAndisDirectory(Path path);
 
-  /**
-   * @return list of childs of given directory
-   */
   public Iterable<String> childNames(Path directory);
 
   public Iterable<Path> filesFrom(Path directory);

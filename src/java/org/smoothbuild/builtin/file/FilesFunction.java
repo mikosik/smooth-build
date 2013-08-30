@@ -38,7 +38,7 @@ public class FilesFunction {
       throw new NoSuchPathException("dir", dirPath);
     }
 
-    if (fileSystem.isDirectory(dirPath)) {
+    if (fileSystem.pathExistsAndisDirectory(dirPath)) {
       return new FilesImpl(fileSystem, dirPath);
     } else {
       throw new PathIsNotADirException("dir", dirPath);

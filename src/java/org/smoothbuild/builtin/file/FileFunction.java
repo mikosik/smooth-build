@@ -36,7 +36,7 @@ public class FileFunction {
       throw new NoSuchPathException("path", filePath);
     }
 
-    if (fileSystem.isDirectory(filePath)) {
+    if (fileSystem.pathExistsAndisDirectory(filePath)) {
       throw new PathIsNotAFileException("path", filePath);
     } else {
       return new FileImpl(fileSystem, Path.rootPath(), filePath);

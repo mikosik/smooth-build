@@ -38,7 +38,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public boolean isDirectory(Path path) {
+  public boolean pathExistsAndisDirectory(Path path) {
     return jdkFile(path).isDirectory();
   }
 

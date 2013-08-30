@@ -39,7 +39,7 @@ public class SaveToFunction {
   }
 
   private void assertPathCanBeUsedAsDir(Path dirPath) throws PathIsNotADirException {
-    if (fileSystem.pathExists(dirPath) && !fileSystem.isDirectory(dirPath)) {
+    if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndisDirectory(dirPath)) {
       throw new PathIsNotADirException("dir", dirPath);
     }
   }
