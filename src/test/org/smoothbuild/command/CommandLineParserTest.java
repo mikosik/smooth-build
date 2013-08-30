@@ -1,7 +1,7 @@
 package org.smoothbuild.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.command.CommandLineParser.DEFAULT_SCRIPT_PATH;
+import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.function.base.Name.simpleName;
 
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class CommandLineParserTest {
   public void scriptFile() throws Exception {
     CommandLineArguments args = parser.parse(problems, functionName);
 
-    assertThat(args.scriptFile()).isEqualTo(DEFAULT_SCRIPT_PATH);
+    assertThat(args.scriptFile()).isEqualTo(DEFAULT_SCRIPT);
     problems.assertNoProblems();
   }
 

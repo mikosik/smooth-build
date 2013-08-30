@@ -2,7 +2,7 @@ package org.smoothbuild.function.expr;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.expr.ExpressionId.BUILD_ROOT;
+import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import static org.smoothbuild.plugin.Path.path;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -14,7 +14,7 @@ public class ExpressionIdTest {
   public void resultDir() {
     String functionName = "abc";
     ExpressionId id = new ExpressionId(functionName);
-    assertThat(id.resultDir()).isEqualTo(BUILD_ROOT.append(path(functionName)));
+    assertThat(id.resultDir()).isEqualTo(BUILD_DIR.append(path(functionName)));
   }
 
   @Test
