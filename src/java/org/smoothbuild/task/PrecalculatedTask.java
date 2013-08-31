@@ -2,13 +2,12 @@ package org.smoothbuild.task;
 
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.problem.ProblemsListener;
-
-import com.google.common.collect.ImmutableMap;
+import org.smoothbuild.util.Empty;
 
 public class PrecalculatedTask extends AbstractTask {
 
   public PrecalculatedTask(Object object) {
-    super(object, ImmutableMap.<String, Task> of());
+    super(object, Empty.stringTaskMap());
   }
 
   @Override
