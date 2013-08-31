@@ -4,6 +4,7 @@ import static java.lang.reflect.Proxy.newProxyInstance;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -14,7 +15,7 @@ public class ArgumentsCreator {
     this.paramsInterface = paramsInterface;
   }
 
-  public Object create(ImmutableMap<String, Object> arguments) {
+  public Object create(Map<String, Object> arguments) {
     ClassLoader classLoader = this.getClass().getClassLoader();
     Class<?>[] args = new Class<?>[] { paramsInterface };
     InvocationHandler invocationHandler = new MapInvocationHandler(arguments);
@@ -25,8 +26,8 @@ public class ArgumentsCreator {
   private final class MapInvocationHandler implements InvocationHandler {
     private final ImmutableMap<String, Object> arguments;
 
-    private MapInvocationHandler(ImmutableMap<String, Object> arguments) {
-      this.arguments = arguments;
+    private MapInvocationHandler(Map<String, Object> arguments) {
+      this.arguments = ImmutableMap.copyOf(arguments);
     }
 
     @Override
