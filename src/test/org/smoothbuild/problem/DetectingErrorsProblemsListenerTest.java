@@ -12,7 +12,7 @@ public class DetectingErrorsProblemsListenerTest {
 
   @Test
   public void problemsAreForwarded() {
-    Problem problem = new Problem(ProblemType.ERROR, null, "message");
+    Problem problem = new Problem(ProblemType.ERROR, "message");
 
     listener.report(problem);
 
@@ -26,13 +26,13 @@ public class DetectingErrorsProblemsListenerTest {
 
   @Test
   public void errorIsDetectedAfterAddingError() throws Exception {
-    listener.report(new Error(null, "message"));
+    listener.report(new Error("message"));
     assertThat(listener.errorDetected()).isTrue();
   }
 
   @Test
   public void errorIsNotDetectedAfterAddingWarning() throws Exception {
-    listener.report(new Warning(null, "message"));
+    listener.report(new Warning("message"));
     assertThat(listener.errorDetected()).isFalse();
   }
 }

@@ -7,6 +7,6 @@ public class FunctionError extends Error {
   public FunctionError(FunctionException exception) {
     // TODO smooth stack trace pointing to faulty call in smooth script should
     // be added here
-    super(null, exception.getClass().getSimpleName() + ": " + exception.getMessage());
+    super(exception.getClass().getSimpleName() + ": " + exception.getMessage());
   }
 }

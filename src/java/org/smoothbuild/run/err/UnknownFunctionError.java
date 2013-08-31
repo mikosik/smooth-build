@@ -8,7 +8,7 @@ import org.smoothbuild.problem.Error;
 public class UnknownFunctionError extends Error {
 
   public UnknownFunctionError(Name name, Collection<Name> availableNames) {
-    super(null, "Unknown function " + name + "\nOnly following function are available: "
+    super("Unknown function " + name + "\nOnly following function are available: "
         + availableNames.toString());
   }
 }

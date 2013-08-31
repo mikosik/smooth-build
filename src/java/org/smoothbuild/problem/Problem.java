@@ -1,22 +1,18 @@
 package org.smoothbuild.problem;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class Problem {
   private final ProblemType type;
-  private final SourceLocation sourceLocation;
   private final String message;
 
-  public Problem(ProblemType type, SourceLocation sourceLocation, String message) {
-    this.type = type;
-    this.sourceLocation = sourceLocation;
-    this.message = message;
+  public Problem(ProblemType type, String message) {
+    this.type = checkNotNull(type);
+    this.message = checkNotNull(message);
   }
 
   public ProblemType type() {
     return type;
-  }
-
-  public SourceLocation sourceLocation() {
-    return sourceLocation;
   }
 
   public String message() {
@@ -25,14 +21,6 @@ public class Problem {
 
   @Override
   public String toString() {
-    return type.toString() + locationToString() + ": " + message;
-  }
-
-  private String locationToString() {
-    if (sourceLocation == null) {
-      return "";
-    } else {
-      return sourceLocation.toString();
-    }
+    return type.toString() + ": " + message;
   }
 }
