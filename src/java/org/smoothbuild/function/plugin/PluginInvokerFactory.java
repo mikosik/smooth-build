@@ -6,9 +6,9 @@ import java.lang.reflect.Method;
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.function.plugin.exc.FunctionImplementationException;
 import org.smoothbuild.function.plugin.exc.IllegalConstructorParamException;
 import org.smoothbuild.function.plugin.exc.MissingConstructorException;
+import org.smoothbuild.function.plugin.exc.PluginImplementationException;
 import org.smoothbuild.function.plugin.exc.TooManyConstructorParamsException;
 import org.smoothbuild.function.plugin.exc.TooManyConstructorsException;
 import org.smoothbuild.plugin.FileList;
@@ -27,7 +27,7 @@ public class PluginInvokerFactory {
   }
 
   public PluginInvoker create(Class<?> klass, Method method, Class<?> paramsInterface,
-      boolean builtin) throws FunctionImplementationException {
+      boolean builtin) throws PluginImplementationException {
     InstanceCreator instanceCreator = createInstanceCreator(klass, builtin);
     ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
 
@@ -35,7 +35,7 @@ public class PluginInvokerFactory {
   }
 
   public InstanceCreator createInstanceCreator(Class<?> klass, boolean builtin)
-      throws FunctionImplementationException {
+      throws PluginImplementationException {
     final Constructor<?> constructor = getConstructor(klass);
     Class<?>[] paramTypes = constructor.getParameterTypes();
 
@@ -67,8 +67,7 @@ public class PluginInvokerFactory {
     }
   }
 
-  public static Constructor<?> getConstructor(Class<?> klass)
-      throws FunctionImplementationException {
+  public static Constructor<?> getConstructor(Class<?> klass) throws PluginImplementationException {
     Constructor<?>[] constructors = klass.getConstructors();
     if (constructors.length == 0) {
       throw new MissingConstructorException(klass);

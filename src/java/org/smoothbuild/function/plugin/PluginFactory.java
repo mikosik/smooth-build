@@ -43,16 +43,16 @@ public class PluginFactory {
     return new PluginFunction(signature, invoker);
   }
 
-  private static Method getExecuteMethod(Class<?> klass) throws FunctionImplementationException {
+  private static Method getExecuteMethod(Class<?> klass) throws PluginImplementationException {
     Class<ExecuteMethod> executeAnnotation = ExecuteMethod.class;
     Method result = null;
     for (Method method : klass.getDeclaredMethods()) {
       if (method.isAnnotationPresent(executeAnnotation)) {
         if (!isPublic(method)) {
-          throw new NonPublicExecuteMethodException(klass, method);
+          throw new NonPublicExecuteMethodException(method);
         }
         if (isStatic(method)) {
-          throw new StaticExecuteMethodException(klass, method);
+          throw new StaticExecuteMethodException(method);
         }
         if (result == null) {
           result = method;
@@ -71,10 +71,10 @@ public class PluginFactory {
       throws FunctionImplementationException {
     Class<?>[] types = executeMethod.getParameterTypes();
     if (types.length == 0) {
-      throw new ZeroParamsInExecuteMethodException(executeMethod.getDeclaringClass());
+      throw new ZeroParamsInExecuteMethodException(executeMethod);
     }
     if (1 < types.length) {
-      throw new TooManyParamsInExecuteMethodException(executeMethod.getDeclaringClass());
+      throw new TooManyParamsInExecuteMethodException(executeMethod);
     }
     return types[0];
   }

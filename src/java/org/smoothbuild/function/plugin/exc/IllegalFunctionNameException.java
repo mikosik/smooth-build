@@ -1,9 +1,10 @@
 package org.smoothbuild.function.plugin.exc;
 
+import java.lang.reflect.Method;
 
 @SuppressWarnings("serial")
 public class IllegalFunctionNameException extends FunctionImplementationException {
-  public IllegalFunctionNameException(Class<?> klass, String message) {
-    super(klass, message);
+  public IllegalFunctionNameException(Method method, String message) {
+    super(method, message);
   }
 }

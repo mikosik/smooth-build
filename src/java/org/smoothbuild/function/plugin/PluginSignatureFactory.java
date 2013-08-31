@@ -5,8 +5,8 @@ import static org.smoothbuild.function.base.Name.qualifiedName;
 import java.lang.reflect.Method;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.plugin.exc.ForbiddenParamTypeException;
 import org.smoothbuild.function.plugin.exc.IllegalFunctionNameException;
@@ -15,7 +15,7 @@ import org.smoothbuild.function.plugin.exc.MissingNameException;
 import org.smoothbuild.function.plugin.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.plugin.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
-import org.smoothbuild.plugin.FunctionName;
+import org.smoothbuild.plugin.ExecuteMethod;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -25,22 +25,21 @@ public class PluginSignatureFactory {
   public Signature create(Class<?> klass, Method method, Class<?> paramsInterface)
       throws PluginImplementationException {
     Type type = getReturnType(method);
-    Name name = getFunctionName(klass);
+    Name name = getFunctionName(method);
     ImmutableMap<String, Param> params = getParams(klass, method, paramsInterface);
 
     return new Signature(type, name, params);
   }
 
-  private static Name getFunctionName(Class<?> klass)
-      throws PluginImplementationException {
-    FunctionName annotation = klass.getAnnotation(FunctionName.class);
+  private static Name getFunctionName(Method method) throws PluginImplementationException {
+    ExecuteMethod annotation = method.getAnnotation(ExecuteMethod.class);
     if (annotation == null) {
-      throw new MissingNameException(klass);
+      throw new MissingNameException(method);
     }
     try {
       return qualifiedName(annotation.value());
     } catch (IllegalArgumentException e) {
-      throw new IllegalFunctionNameException(klass, e.getMessage());
+      throw new IllegalFunctionNameException(method, e.getMessage());
     }
   }
 
@@ -48,7 +47,7 @@ public class PluginSignatureFactory {
     Class<?> javaType = method.getReturnType();
     Type type = Type.javaResultTypetoType(javaType);
     if (type == null) {
-      throw new IllegalReturnTypeException(method.getDeclaringClass(), javaType);
+      throw new IllegalReturnTypeException(method, javaType);
     }
     return type;
   }

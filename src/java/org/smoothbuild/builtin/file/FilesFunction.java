@@ -8,14 +8,12 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.FileListImpl;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.FileList;
-import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
 
 // TODO forbid dir that points to temporary files created by smooth-build
 // tool
 
-@FunctionName("files")
 public class FilesFunction {
   public interface Parameters {
     public String dir();
@@ -27,7 +25,7 @@ public class FilesFunction {
     this.fileSystem = fileSystem;
   }
 
-  @ExecuteMethod
+  @ExecuteMethod("files")
   public FileList execute(Parameters params) throws FunctionException {
     Path dirPath = validatedPath("dir", params.dir());
     return createFiles(dirPath);

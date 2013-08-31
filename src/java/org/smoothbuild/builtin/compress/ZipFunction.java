@@ -11,11 +11,9 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
-import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
 
-@FunctionName("zip")
 public class ZipFunction {
 
   public interface Parameters {
@@ -45,7 +43,7 @@ public class ZipFunction {
     this.result = result;
   }
 
-  @ExecuteMethod
+  @ExecuteMethod("zip")
   public File execute(Parameters params) throws FunctionException {
     if (params.fileList() == null) {
       throw new MissingArgException("files");

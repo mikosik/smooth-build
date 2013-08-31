@@ -20,7 +20,6 @@ import org.smoothbuild.function.plugin.exc.IllegalConstructorParamException;
 import org.smoothbuild.function.plugin.exc.IllegalFunctionNameException;
 import org.smoothbuild.function.plugin.exc.IllegalReturnTypeException;
 import org.smoothbuild.function.plugin.exc.MissingConstructorException;
-import org.smoothbuild.function.plugin.exc.MissingNameException;
 import org.smoothbuild.function.plugin.exc.MoreThanOneExecuteMethodException;
 import org.smoothbuild.function.plugin.exc.NoExecuteMethodException;
 import org.smoothbuild.function.plugin.exc.NonPublicExecuteMethodException;
@@ -34,7 +33,6 @@ import org.smoothbuild.function.plugin.exc.ZeroParamsInExecuteMethodException;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
-import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.run.err.FunctionError;
 import org.smoothbuild.task.PrecalculatedTask;
@@ -91,10 +89,9 @@ public class PluginFactoryTest {
     public String stringB();
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPlugin {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public String execute(Parameters params) {
       return params.stringA() + params.stringB();
     }
@@ -107,14 +104,13 @@ public class PluginFactoryTest {
     problems.assertOnlyProblem(FunctionError.class);
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithFaultyConstructor {
 
     public MyPluginWithFaultyConstructor() {
       throw new RuntimeException();
     }
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public String execute(Parameters params) {
       return null;
     }
@@ -133,10 +129,9 @@ public class PluginFactoryTest {
     public FileList fileList();
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithAllowedParamTypes {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public String execute(Parameters params) {
       return params.stringA() + params.stringB();
     }
@@ -156,10 +151,9 @@ public class PluginFactoryTest {
     public Runnable runnable();
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithForbiddenParamType {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public String execute(ForbiddenParams params) {
       return null;
     }
@@ -172,9 +166,8 @@ public class PluginFactoryTest {
 
   public interface EmptyParameters {}
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithEmptyParameters {
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public String execute(EmptyParameters params) {
       return null;
     }
@@ -185,10 +178,9 @@ public class PluginFactoryTest {
     pluginFactory.create(MyPluginWithStringResult.class);
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithStringResult {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public String execute(EmptyParameters params) {
       return null;
     }
@@ -199,10 +191,9 @@ public class PluginFactoryTest {
     pluginFactory.create(MyPluginWithFileResult.class);
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithFileResult {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public File execute(EmptyParameters params) {
       return null;
     }
@@ -213,10 +204,9 @@ public class PluginFactoryTest {
     pluginFactory.create(MyPluginWithFilesResult.class);
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithFilesResult {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public FileList execute(EmptyParameters params) {
       return null;
     }
@@ -227,10 +217,9 @@ public class PluginFactoryTest {
     pluginFactory.create(MyPluginWithVoidResult.class);
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithVoidResult {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public void execute(EmptyParameters params) {}
   }
 
@@ -244,10 +233,9 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithIllegalReturnType {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public Runnable execute(EmptyParameters params) {
       return null;
     }
@@ -263,10 +251,9 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithParamThatIsNotInterface {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public void execute(String string) {}
   }
 
@@ -280,14 +267,10 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.myFunction")
   public static class MyPluginWithIllegalConstructorParam {
+    public MyPluginWithIllegalConstructorParam(String illegal) {}
 
-    public MyPluginWithIllegalConstructorParam(String illegal) {
-
-    }
-
-    @ExecuteMethod
+    @ExecuteMethod("my.package.myFunction")
     public void execute(EmptyParameters param) {}
   }
 
@@ -301,10 +284,8 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my..package")
   public static class MyPluginWithIllegalFunctionName {
-
-    @ExecuteMethod
+    @ExecuteMethod("my..package")
     public void execute(EmptyParameters params) {}
   }
 
@@ -315,10 +296,9 @@ public class PluginFactoryTest {
     problems.assertOnlyProblem(FunctionError.class);
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithThrowingExecuteMethod {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public void execute(EmptyParameters params) {
       throw new RuntimeException();
     }
@@ -334,27 +314,10 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithPrivateConstructor {
     private MyPluginWithPrivateConstructor() {}
 
-    @ExecuteMethod
-    public void execute(EmptyParameters params) {}
-  }
-
-  @Test
-  public void missingNameException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithMissingNameAnnotation.class);
-      fail("exception should be thrown");
-    } catch (MissingNameException e) {
-      // expected
-    }
-  }
-
-  public static class MyPluginWithMissingNameAnnotation {
-
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public void execute(EmptyParameters params) {}
   }
 
@@ -368,12 +331,11 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithTwoExecuteMethods {
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public void execute(EmptyParameters params) {}
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction2")
     public void execute2(EmptyParameters params) {}
   }
 
@@ -387,7 +349,6 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithZeroExecuteMethods {}
 
   @Test
@@ -400,10 +361,9 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithPrivateExecuteMethod {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     private void execute(EmptyParameters params) {}
   }
 
@@ -421,10 +381,9 @@ public class PluginFactoryTest {
     public String string(String notAllowed);
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithParamMethodThatHasParameters {
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public void execute(ParametersWithMethodWithParameters params) {}
   }
 
@@ -438,10 +397,8 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithStaticExecuteMethod {
-
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public static void execute(EmptyParameters params) {}
   }
 
@@ -455,12 +412,10 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithConstructorWithTooManyParams {
-
     public MyPluginWithConstructorWithTooManyParams(FileSystem fileSystem, FileSystem fileSystem2) {}
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public void execute(EmptyParameters params) {}
   }
 
@@ -474,13 +429,12 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithTwoConstructors {
     public MyPluginWithTwoConstructors() {}
 
     public MyPluginWithTwoConstructors(FileSystem fileSystem) {}
 
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public void execute(EmptyParameters params) {}
   }
 
@@ -494,10 +448,8 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithExecuteMethodWithTwoParams {
-
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public void execute(EmptyParameters params, EmptyParameters params2) {}
   }
 
@@ -511,10 +463,8 @@ public class PluginFactoryTest {
     }
   }
 
-  @FunctionName("my.package.MyFunction")
   public static class MyPluginWithExecuteMethodWithZeroParams {
-
-    @ExecuteMethod
+    @ExecuteMethod("my.package.MyFunction")
     public void execute() {}
   }
 }
