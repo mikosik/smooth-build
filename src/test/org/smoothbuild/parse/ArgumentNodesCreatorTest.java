@@ -19,9 +19,6 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.StringNode;
-import org.smoothbuild.function.expr.Expression;
-import org.smoothbuild.function.expr.ExpressionId;
-import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
@@ -29,7 +26,6 @@ import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgPro
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.UnknownParamNameProblem;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.problem.SourceLocation;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
@@ -145,30 +141,6 @@ public class ArgumentNodesCreatorTest {
       @Override
       public Type type() {
         return Type.FILE;
-      }
-
-      @Override
-      public Expression expression(ExpressionIdFactory idFactory) {
-        final ExpressionId id = idFactory.createId(file.path().toString());
-        return new Expression() {
-          @Override
-          public Type type() {
-            return Type.FILE;
-          }
-
-          @Override
-          public Object result() {
-            return file;
-          }
-
-          @Override
-          public ExpressionId id() {
-            return id;
-          }
-
-          @Override
-          public void calculate() throws FunctionException {}
-        };
       }
 
       @Override

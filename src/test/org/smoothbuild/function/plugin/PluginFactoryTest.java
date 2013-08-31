@@ -5,25 +5,20 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
-import static org.smoothbuild.function.expr.LiteralExpression.stringExpression;
+import static org.smoothbuild.plugin.Path.path;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.mem.MemoryFileSystemModule;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.expr.Expression;
-import org.smoothbuild.function.expr.ExpressionId;
-import org.smoothbuild.function.expr.ExpressionIdFactory;
-import org.smoothbuild.function.plugin.exc.CreatingInstanceFailedException;
 import org.smoothbuild.function.plugin.exc.ForbiddenParamTypeException;
 import org.smoothbuild.function.plugin.exc.IllegalConstructorParamException;
 import org.smoothbuild.function.plugin.exc.IllegalFunctionNameException;
 import org.smoothbuild.function.plugin.exc.IllegalReturnTypeException;
-import org.smoothbuild.function.plugin.exc.InvokingMethodFailedException;
 import org.smoothbuild.function.plugin.exc.MissingConstructorException;
 import org.smoothbuild.function.plugin.exc.MissingNameException;
 import org.smoothbuild.function.plugin.exc.MoreThanOneExecuteMethodException;
@@ -40,12 +35,19 @@ import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.FunctionName;
+import org.smoothbuild.plugin.Path;
+import org.smoothbuild.run.err.FunctionError;
+import org.smoothbuild.task.PrecalculatedTask;
+import org.smoothbuild.task.Task;
+import org.smoothbuild.testing.problem.TestingProblemsListener;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 
 public class PluginFactoryTest {
-  ExpressionIdFactory idFactory = new ExpressionIdFactory();
+  TestingProblemsListener problems = new TestingProblemsListener();
+  Path tempDir = path("tem/dir");
   PluginFactory pluginFactory;
 
   @Before
@@ -72,13 +74,15 @@ public class PluginFactoryTest {
   @Test
   public void testInvokation() throws Exception {
     Function function = pluginFactory.create(MyPlugin.class);
-    ImmutableMap<String, Expression> args = ImmutableMap.of("stringA", stringExpr("abc"),
-        "stringB", stringExpr("def"));
-    assertThat(function.apply(idFactory, args).result()).isEqualTo("abcdef");
+    ImmutableMap<String, Task> dependencies = ImmutableMap.of("stringA",
+        stringReturningTask("abc"), "stringB", stringReturningTask("def"));
+    Task task = function.generateTask(dependencies);
+    task.calculateResult(problems, tempDir);
+    assertThat(task.result()).isEqualTo("abcdef");
   }
 
-  private Expression stringExpr(String string) {
-    return stringExpression(new ExpressionId("x"), string);
+  private Task stringReturningTask(String string) {
+    return new PrecalculatedTask(string);
   }
 
   public interface Parameters {
@@ -99,12 +103,8 @@ public class PluginFactoryTest {
   @Test
   public void pluginWithFaultyConstructor() throws Exception {
     Function function = pluginFactory.create(MyPluginWithFaultyConstructor.class);
-    try {
-      function.apply(idFactory, ImmutableMap.<String, Expression> of()).calculate();
-      fail("exception shoulde be thrown");
-    } catch (CreatingInstanceFailedException e) {
-      // expected
-    }
+    function.generateTask(Empty.stringTaskMap()).calculateResult(problems, tempDir);
+    problems.assertOnlyProblem(FunctionError.class);
   }
 
   @FunctionName("my.package.myFunction")
@@ -311,12 +311,8 @@ public class PluginFactoryTest {
   @Test
   public void invokingMethodFailedException() throws Exception {
     Function function = pluginFactory.create(MyPluginWithThrowingExecuteMethod.class);
-    try {
-      function.apply(idFactory, ImmutableMap.<String, Expression> of()).calculate();
-      fail("exception should be thrown");
-    } catch (InvokingMethodFailedException e) {
-      // expected
-    }
+    function.generateTask(Empty.stringTaskMap()).calculateResult(problems, tempDir);
+    problems.assertOnlyProblem(FunctionError.class);
   }
 
   @FunctionName("my.package.MyFunction")
