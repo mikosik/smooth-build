@@ -1,6 +1,17 @@
 package org.smoothbuild.function.base;
 
+import static java.lang.Void.TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.function.base.Type.FILE;
+import static org.smoothbuild.function.base.Type.FILE_LIST;
+import static org.smoothbuild.function.base.Type.JAVA_PARAM_TO_SMOOTH;
+import static org.smoothbuild.function.base.Type.JAVA_RESULT_TO_SMOOTH;
+import static org.smoothbuild.function.base.Type.PARAM_TYPES;
+import static org.smoothbuild.function.base.Type.RESULT_TYPES;
+import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.function.base.Type.javaParamTypetoType;
+import static org.smoothbuild.function.base.Type.javaResultTypetoType;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
@@ -10,74 +21,74 @@ public class TypeTest {
 
   @Test
   public void javaType() {
-    assertThat((Object) Type.STRING.javaType()).isEqualTo(String.class);
-    assertThat((Object) Type.FILE.javaType()).isEqualTo(File.class);
-    assertThat((Object) Type.FILE_LIST.javaType()).isEqualTo(FileList.class);
+    assertThat((Object) STRING.javaType()).isEqualTo(String.class);
+    assertThat((Object) FILE.javaType()).isEqualTo(File.class);
+    assertThat((Object) FILE_LIST.javaType()).isEqualTo(FileList.class);
   }
 
   @Test
   public void isAssignableFrom() throws Exception {
-    assertThat(Type.STRING.isAssignableFrom(Type.STRING)).isTrue();
-    assertThat(Type.STRING.isAssignableFrom(Type.FILE)).isFalse();
-    assertThat(Type.STRING.isAssignableFrom(Type.FILE_LIST)).isFalse();
+    assertThat(STRING.isAssignableFrom(STRING)).isTrue();
+    assertThat(STRING.isAssignableFrom(FILE)).isFalse();
+    assertThat(STRING.isAssignableFrom(FILE_LIST)).isFalse();
 
-    assertThat(Type.FILE.isAssignableFrom(Type.STRING)).isFalse();
-    assertThat(Type.FILE.isAssignableFrom(Type.FILE)).isTrue();
-    assertThat(Type.FILE.isAssignableFrom(Type.FILE_LIST)).isFalse();
+    assertThat(FILE.isAssignableFrom(STRING)).isFalse();
+    assertThat(FILE.isAssignableFrom(FILE)).isTrue();
+    assertThat(FILE.isAssignableFrom(FILE_LIST)).isFalse();
 
-    assertThat(Type.FILE_LIST.isAssignableFrom(Type.STRING)).isFalse();
-    assertThat(Type.FILE_LIST.isAssignableFrom(Type.FILE)).isFalse();
-    assertThat(Type.FILE_LIST.isAssignableFrom(Type.FILE_LIST)).isTrue();
+    assertThat(FILE_LIST.isAssignableFrom(STRING)).isFalse();
+    assertThat(FILE_LIST.isAssignableFrom(FILE)).isFalse();
+    assertThat(FILE_LIST.isAssignableFrom(FILE_LIST)).isTrue();
   }
 
   @Test
   public void equalsAndHashCodeWorkaround() throws Exception {
-    assertThat(Type.STRING).isEqualTo(Type.STRING);
-    assertThat(Type.STRING).isNotEqualTo(Type.FILE);
-    assertThat(Type.STRING).isNotEqualTo(Type.FILE_LIST);
+    assertThat(STRING).isEqualTo(STRING);
+    assertThat(STRING).isNotEqualTo(FILE);
+    assertThat(STRING).isNotEqualTo(FILE_LIST);
 
-    assertThat(Type.FILE).isNotEqualTo(Type.STRING);
-    assertThat(Type.FILE).isEqualTo(Type.FILE);
-    assertThat(Type.FILE).isNotEqualTo(Type.FILE_LIST);
+    assertThat(FILE).isNotEqualTo(STRING);
+    assertThat(FILE).isEqualTo(FILE);
+    assertThat(FILE).isNotEqualTo(FILE_LIST);
 
-    assertThat(Type.FILE_LIST).isNotEqualTo(Type.STRING);
-    assertThat(Type.FILE_LIST).isNotEqualTo(Type.FILE);
-    assertThat(Type.FILE_LIST).isEqualTo(Type.FILE_LIST);
+    assertThat(FILE_LIST).isNotEqualTo(STRING);
+    assertThat(FILE_LIST).isNotEqualTo(FILE);
+    assertThat(FILE_LIST).isEqualTo(FILE_LIST);
 
-    assertThat(Type.STRING.hashCode()).isNotEqualTo(Type.FILE.hashCode());
-    assertThat(Type.FILE.hashCode()).isNotEqualTo(Type.FILE_LIST.hashCode());
-    assertThat(Type.FILE_LIST.hashCode()).isNotEqualTo(Type.STRING.hashCode());
+    assertThat(STRING.hashCode()).isNotEqualTo(FILE.hashCode());
+    assertThat(FILE.hashCode()).isNotEqualTo(FILE_LIST.hashCode());
+    assertThat(FILE_LIST.hashCode()).isNotEqualTo(STRING.hashCode());
   }
 
   @Test
-  public void javaParamTypetoType() {
-    assertThat(Type.javaParamTypetoType(String.class)).isEqualTo(Type.STRING);
-    assertThat(Type.javaParamTypetoType(File.class)).isEqualTo(Type.FILE);
-    assertThat(Type.javaParamTypetoType(FileList.class)).isEqualTo(Type.FILE_LIST);
+  public void testJavaParamTypetoType() {
+    assertThat(javaParamTypetoType(String.class)).isEqualTo(STRING);
+    assertThat(javaParamTypetoType(File.class)).isEqualTo(FILE);
+    assertThat(javaParamTypetoType(FileList.class)).isEqualTo(FILE_LIST);
   }
 
   @Test
   public void voidIsNotValidParamType() throws Exception {
-    assertThat(Type.javaParamTypetoType(Void.class)).isNull();
+    assertThat(javaParamTypetoType(Void.class)).isNull();
   }
 
   @Test
-  public void javaResultTypetoType() {
-    assertThat(Type.javaResultTypetoType(String.class)).isEqualTo(Type.STRING);
-    assertThat(Type.javaResultTypetoType(File.class)).isEqualTo(Type.FILE);
-    assertThat(Type.javaResultTypetoType(FileList.class)).isEqualTo(Type.FILE_LIST);
-    assertThat(Type.javaResultTypetoType(Void.TYPE)).isEqualTo(Type.VOID);
+  public void testJavaResultTypetoType() {
+    assertThat(javaResultTypetoType(String.class)).isEqualTo(STRING);
+    assertThat(javaResultTypetoType(File.class)).isEqualTo(FILE);
+    assertThat(javaResultTypetoType(FileList.class)).isEqualTo(FILE_LIST);
+    assertThat(javaResultTypetoType(TYPE)).isEqualTo(VOID);
   }
 
   @Test
   public void javaResultToSmoothContainsAllResultTypes() throws Exception {
     Type[] array = new Type[] {};
-    assertThat(Type.JAVA_RESULT_TO_SMOOTH.values()).containsOnly(Type.RESULT_TYPES.toArray(array));
+    assertThat(JAVA_RESULT_TO_SMOOTH.values()).containsOnly(RESULT_TYPES.toArray(array));
   }
 
   @Test
   public void javaParamToSmoothContainsAllResultTypes() throws Exception {
     Type[] array = new Type[] {};
-    assertThat(Type.JAVA_PARAM_TO_SMOOTH.values()).containsOnly(Type.PARAM_TYPES.toArray(array));
+    assertThat(JAVA_PARAM_TO_SMOOTH.values()).containsOnly(PARAM_TYPES.toArray(array));
   }
 }
