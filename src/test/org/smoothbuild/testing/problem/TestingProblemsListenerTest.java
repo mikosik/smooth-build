@@ -5,7 +5,6 @@ import static org.smoothbuild.problem.ProblemType.ERROR;
 
 import org.junit.Test;
 import org.smoothbuild.problem.Problem;
-import org.smoothbuild.problem.SourceLocation;
 
 public class TestingProblemsListenerTest {
   TestingProblemsListener testingProblemListener = new TestingProblemsListener();
@@ -60,7 +59,7 @@ public class TestingProblemsListenerTest {
 
   private static class MyProblem extends Problem {
     public MyProblem() {
-      super(ERROR, new SourceLocation(1, 2, 3), "message");
+      super(ERROR, "message");
     }
   }
 }

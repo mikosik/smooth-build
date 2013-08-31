@@ -11,7 +11,7 @@ public class ForwardingProblemsListenerTest {
   @Test
   public void problemsAreForwarded() {
     ProblemsListener wrapped = mock(ProblemsListener.class);
-    Problem problem = new Problem(ProblemType.ERROR, null, "message");
+    Problem problem = new Problem(ProblemType.ERROR, "message");
 
     MyForwardingProblemsListener listener = new MyForwardingProblemsListener(wrapped);
     listener.report(problem);

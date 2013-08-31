@@ -23,7 +23,7 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.plugin.Path;
-import org.smoothbuild.problem.Error;
+import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 
@@ -96,7 +96,7 @@ public class ScriptParser {
 
     private void reportProblem(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      problems.report(new Error(locationOf(token), message));
+      problems.report(new CodeError(locationOf(token), message));
     }
   }
 }

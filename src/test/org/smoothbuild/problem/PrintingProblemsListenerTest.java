@@ -23,7 +23,7 @@ public class PrintingProblemsListenerTest {
     private final String toStrigValue;
 
     public MyProblem(String toStringValue) {
-      super(ERROR, null, "");
+      super(ERROR, "");
       this.toStrigValue = toStringValue;
     }
 

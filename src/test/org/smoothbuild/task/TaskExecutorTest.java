@@ -55,7 +55,7 @@ public class TaskExecutorTest {
       @Override
       public Void answer(InvocationOnMock invocation) throws Throwable {
         ProblemsListener problems = (ProblemsListener) invocation.getArguments()[0];
-        problems.report(new Error(null, ""));
+        problems.report(new Error(""));
         return null;
       }
     }).when(subTask).calculateResult(Matchers.<ProblemsListener> any(), Matchers.<Path> any());
