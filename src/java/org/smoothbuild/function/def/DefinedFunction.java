@@ -9,6 +9,10 @@ import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
+import org.smoothbuild.task.Task;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Function that is defined completely in Smooth script using Smooth language
@@ -28,5 +32,12 @@ public class DefinedFunction extends AbstractFunction {
     checkArgument(arguments.isEmpty(),
         "Defined function cannot have any arguments. (That should change soon!)");
     return root.expression(idFactory);
+  }
+
+  @Override
+  public Task generateTask(ImmutableMap<String, Task> dependencies) {
+    Preconditions.checkArgument(dependencies.isEmpty(),
+        "DefinedFunction.generateTask() cannot accept non-empty dependencies");
+    return root.generateTask();
   }
 }

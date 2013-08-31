@@ -11,18 +11,14 @@ import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.function.expr.Expression;
-import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
-import org.smoothbuild.run.err.FunctionError;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
 import org.smoothbuild.run.err.UnknownFunctionError;
-
-import com.google.common.collect.ImmutableMap;
+import org.smoothbuild.task.TaskExecutor;
+import org.smoothbuild.util.Empty;
 
 public class SmoothRunner {
   private final DetectingErrorsProblemsListener problems;
@@ -68,12 +64,8 @@ public class SmoothRunner {
       return;
     }
 
-    try {
-      function.apply(new ExpressionIdFactory(), ImmutableMap.<String, Expression> of()).calculate();
-    } catch (FunctionException e) {
-      problems.report(new FunctionError(e));
-      return;
-    }
+    TaskExecutor.execute(problems, function.generateTask(Empty.stringTaskMap()));
+
   }
 
   private InputStream scriptInputStream(ProblemsListener problems, Path scriptFile) {
