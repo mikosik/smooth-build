@@ -3,9 +3,9 @@ package org.smoothbuild.parse;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Param.params;
-import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
 
@@ -31,6 +31,7 @@ import org.smoothbuild.parse.err.UnknownParamNameProblem;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
@@ -169,11 +170,15 @@ public class ArgumentNodesCreatorTest {
           public void calculate() throws FunctionException {}
         };
       }
+
+      @Override
+      public Task generateTask() {
+        return null;
+      }
     };
   }
 
-  private Map<String, DefinitionNode> create(ImmutableMap<String, Param> params,
-      List<Argument> args) {
+  private Map<String, DefinitionNode> create(ImmutableMap<String, Param> params, List<Argument> args) {
     return ArgumentNodesCreator.createArgumentNodes(problemsListener, function(params), args);
   }
 

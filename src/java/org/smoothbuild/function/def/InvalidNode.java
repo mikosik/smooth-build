@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
+import org.smoothbuild.task.Task;
 
 public class InvalidNode implements DefinitionNode {
   private final Type type;
@@ -21,5 +22,10 @@ public class InvalidNode implements DefinitionNode {
   @Override
   public Expression expression(ExpressionIdFactory idFactory) {
     throw new RuntimeException("InvalidNode.expression() should not be called.");
+  }
+
+  @Override
+  public Task generateTask() {
+    throw new RuntimeException("InvalidNode.generateTask() should not be called.");
   }
 }

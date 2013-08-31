@@ -24,4 +24,9 @@ public class InvalidNodeTest {
   public void calculateThrowsException() throws Exception {
     invalidNode.expression(mock(ExpressionIdFactory.class));
   }
+
+  @Test(expected = RuntimeException.class)
+  public void generateTaskThrowsException() throws Exception {
+    invalidNode.generateTask();
+  }
 }

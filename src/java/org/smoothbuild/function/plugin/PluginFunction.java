@@ -7,6 +7,10 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.expr.Expression;
 import org.smoothbuild.function.expr.ExpressionId;
 import org.smoothbuild.function.expr.ExpressionIdFactory;
+import org.smoothbuild.task.PluginTask;
+import org.smoothbuild.task.Task;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Function that is implemented completely in java (as opposed to
@@ -25,5 +29,10 @@ public class PluginFunction extends AbstractFunction {
   public Expression apply(ExpressionIdFactory idFactory, Map<String, Expression> arguments) {
     ExpressionId id = idFactory.createId(name().full());
     return new PluginFunctionExpression(id, type(), pluginInvoker, arguments);
+  }
+
+  @Override
+  public Task generateTask(ImmutableMap<String, Task> dependencies) {
+    return new PluginTask(pluginInvoker, dependencies);
   }
 }
