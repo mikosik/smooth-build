@@ -1,8 +1,7 @@
 package org.smoothbuild.function.plugin.exc;
 
-
 @SuppressWarnings("serial")
-public class TooManyConstructorsException extends FunctionImplementationException {
+public class TooManyConstructorsException extends FunctionClassImplementationException {
 
   public TooManyConstructorsException(Class<?> klass) {
     super(klass,

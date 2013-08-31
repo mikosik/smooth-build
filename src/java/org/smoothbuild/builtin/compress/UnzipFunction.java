@@ -11,11 +11,9 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
-import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
 
-@FunctionName("unzip")
 public class UnzipFunction {
   public interface Parameters {
     public File file();
@@ -28,7 +26,7 @@ public class UnzipFunction {
     this.fileList = result;
   }
 
-  @ExecuteMethod
+  @ExecuteMethod("unzip")
   public FileList execute(Parameters params) throws FunctionException {
     if (params.file() == null) {
       throw new MissingArgException("file");

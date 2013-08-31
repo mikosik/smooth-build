@@ -8,11 +8,9 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.FileImpl;
 import org.smoothbuild.plugin.ExecuteMethod;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FunctionName;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
 
-@FunctionName("file")
 public class FileFunction {
 
   public interface Parameters {
@@ -25,7 +23,7 @@ public class FileFunction {
     this.fileSystem = fileSystem;
   }
 
-  @ExecuteMethod
+  @ExecuteMethod("file")
   public File execute(Parameters params) throws FunctionException {
     Path filePath = validatedPath("path", params.path());
     return createFile(filePath);

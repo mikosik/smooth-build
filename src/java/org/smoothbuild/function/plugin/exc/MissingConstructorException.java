@@ -1,8 +1,7 @@
 package org.smoothbuild.function.plugin.exc;
 
-
 @SuppressWarnings("serial")
-public class MissingConstructorException extends FunctionImplementationException {
+public class MissingConstructorException extends FunctionClassImplementationException {
 
   public MissingConstructorException(Class<?> klass) {
     super(klass,

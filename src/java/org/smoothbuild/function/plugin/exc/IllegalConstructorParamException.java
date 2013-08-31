@@ -4,7 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 
 @SuppressWarnings("serial")
-public class IllegalConstructorParamException extends FunctionImplementationException {
+public class IllegalConstructorParamException extends FunctionClassImplementationException {
 
   public IllegalConstructorParamException(Class<?> klass, Class<?> paramType,
       ImmutableList<String> allowedTypes) {

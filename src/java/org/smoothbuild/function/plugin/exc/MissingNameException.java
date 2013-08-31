@@ -1,11 +1,12 @@
 package org.smoothbuild.function.plugin.exc;
 
-import org.smoothbuild.plugin.FunctionName;
+import java.lang.reflect.Method;
+
+import org.smoothbuild.plugin.ExecuteMethod;
 
 @SuppressWarnings("serial")
 public class MissingNameException extends FunctionImplementationException {
-
-  public MissingNameException(Class<?> klass) {
-    super(klass, "Class should be annotated with @" + FunctionName.class.getCanonicalName() + ".");
+  public MissingNameException(Method method) {
+    super(method, "It should be annotated with @" + ExecuteMethod.class.getCanonicalName() + ".");
   }
 }
