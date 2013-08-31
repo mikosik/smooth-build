@@ -1,14 +1,9 @@
 package org.smoothbuild.function.def;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.function.expr.Expression;
-import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.task.Task;
 
 import com.google.common.base.Preconditions;
@@ -25,13 +20,6 @@ public class DefinedFunction extends AbstractFunction {
   public DefinedFunction(Signature signature, DefinitionNode root) {
     super(signature);
     this.root = checkNotNull(root);
-  }
-
-  @Override
-  public Expression apply(ExpressionIdFactory idFactory, Map<String, Expression> arguments) {
-    checkArgument(arguments.isEmpty(),
-        "Defined function cannot have any arguments. (That should change soon!)");
-    return root.expression(idFactory);
   }
 
   @Override

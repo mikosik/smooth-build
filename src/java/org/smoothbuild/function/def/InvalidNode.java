@@ -3,8 +3,6 @@ package org.smoothbuild.function.def;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.expr.Expression;
-import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.task.Task;
 
 public class InvalidNode implements DefinitionNode {
@@ -17,11 +15,6 @@ public class InvalidNode implements DefinitionNode {
   @Override
   public Type type() {
     return type;
-  }
-
-  @Override
-  public Expression expression(ExpressionIdFactory idFactory) {
-    throw new RuntimeException("InvalidNode.expression() should not be called.");
   }
 
   @Override

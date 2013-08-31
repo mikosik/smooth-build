@@ -5,11 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Param.param;
 
-import java.util.Map;
-
 import org.junit.Test;
-import org.smoothbuild.function.expr.Expression;
-import org.smoothbuild.function.expr.ExpressionIdFactory;
 import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableMap;
@@ -48,11 +44,6 @@ public class AbstractFunctionTest {
   public static class MyAbstractFunction extends AbstractFunction {
     public MyAbstractFunction(Signature signature) {
       super(signature);
-    }
-
-    @Override
-    public Expression apply(ExpressionIdFactory idFactory, Map<String, Expression> arguments) {
-      return null;
     }
 
     @Override

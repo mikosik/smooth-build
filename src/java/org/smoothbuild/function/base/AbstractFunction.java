@@ -2,11 +2,6 @@ package org.smoothbuild.function.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Map;
-
-import org.smoothbuild.function.expr.Expression;
-import org.smoothbuild.function.expr.ExpressionIdFactory;
-
 import com.google.common.collect.ImmutableMap;
 
 public abstract class AbstractFunction implements Function {
@@ -31,6 +26,4 @@ public abstract class AbstractFunction implements Function {
   public ImmutableMap<String, Param> params() {
     return signature.params();
   }
-
-  public abstract Expression apply(ExpressionIdFactory idFactory, Map<String, Expression> arguments);
 }
