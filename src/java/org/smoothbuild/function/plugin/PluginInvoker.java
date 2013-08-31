@@ -1,11 +1,10 @@
 package org.smoothbuild.function.plugin;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
 import org.smoothbuild.plugin.Path;
-
-import com.google.common.collect.ImmutableMap;
 
 public class PluginInvoker {
   private final ReflexiveInvoker reflexiveInvoker;
@@ -21,7 +20,7 @@ public class PluginInvoker {
     this.argumentsCreator = argumentsCreator;
   }
 
-  public Object invoke(Path resultDir, ImmutableMap<String, Object> argumentsMap)
+  public Object invoke(Path resultDir, Map<String, Object> argumentsMap)
       throws FunctionReflectionException {
     Object object = instanceCreator.createInstance(resultDir);
     Object arguments = argumentsCreator.create(argumentsMap);
