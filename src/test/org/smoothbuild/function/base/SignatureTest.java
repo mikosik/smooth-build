@@ -3,13 +3,14 @@ package org.smoothbuild.function.base;
 import static org.smoothbuild.function.base.Name.simpleName;
 
 import org.junit.Test;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
 public class SignatureTest {
   Type type = Type.STRING;
   Name name = simpleName("name");
-  ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
+  ImmutableMap<String, Param> params = Empty.stringParamMap();
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() {

@@ -16,8 +16,8 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Name;
+import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
@@ -27,6 +27,7 @@ import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -35,9 +36,8 @@ import com.google.common.collect.Maps;
 // TODO test it
 public class DefinedFunctionsCreator {
 
-  public static Map<Name, DefinedFunction> createDefinedFunctions(
-      ProblemsListener problems, SymbolTable symbolTable,
-      Map<String, FunctionContext> functionContexts, List<String> sorted) {
+  public static Map<Name, DefinedFunction> createDefinedFunctions(ProblemsListener problems,
+      SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
     return new Worker(problems, symbolTable, functionContexts, sorted).run();
   }
 
@@ -70,7 +70,7 @@ public class DefinedFunctionsCreator {
 
       Type type = node.type();
       String name = function.functionName().getText();
-      ImmutableMap<String, Param> params = ImmutableMap.<String, Param> of();
+      ImmutableMap<String, Param> params = Empty.stringParamMap();
       Signature signature = new Signature(type, simpleName(name), params);
 
       return new DefinedFunction(signature, node);
