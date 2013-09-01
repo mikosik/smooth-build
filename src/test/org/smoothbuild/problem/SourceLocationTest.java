@@ -1,6 +1,7 @@
 package org.smoothbuild.problem;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,6 +55,11 @@ public class SourceLocationTest {
     } catch (IllegalArgumentException e) {
       // expected
     }
+  }
+
+  @Test
+  public void equalsAndHashCode() throws Exception {
+    EqualsVerifier.forClass(SourceLocation.class).verify();
   }
 
   @Test
