@@ -1,6 +1,7 @@
 package org.smoothbuild.problem;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.problem.CodeLocation.codeLocation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
@@ -10,7 +11,7 @@ public class CodeLocationTest {
 
   @Test
   public void testGetters() {
-    CodeLocation location = new CodeLocation(1, 2, 3);
+    CodeLocation location = codeLocation(1, 2, 3);
 
     assertThat(location.line()).isEqualTo(1);
     assertThat(location.startPosition()).isEqualTo(2);
@@ -20,7 +21,7 @@ public class CodeLocationTest {
   @Test
   public void negativeLineIsForbidden() throws Exception {
     try {
-      new CodeLocation(-1, 1, 1);
+      codeLocation(-1, 1, 1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -30,7 +31,7 @@ public class CodeLocationTest {
   @Test
   public void zeroLineIsForbidden() throws Exception {
     try {
-      new CodeLocation(0, 1, 1);
+      codeLocation(0, 1, 1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -40,7 +41,7 @@ public class CodeLocationTest {
   @Test
   public void negativeStartPositionIsForbidden() throws Exception {
     try {
-      new CodeLocation(1, -1, 1);
+      codeLocation(1, -1, 1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -50,7 +51,7 @@ public class CodeLocationTest {
   @Test
   public void negativeEndPositionIsForbidden() throws Exception {
     try {
-      new CodeLocation(1, 1, -1);
+      codeLocation(1, 1, -1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -64,6 +65,6 @@ public class CodeLocationTest {
 
   @Test
   public void testToString() throws Exception {
-    assertThat(new CodeLocation(1, 2, 3).toString()).isEqualTo("[1:2-3]");
+    assertThat(codeLocation(1, 2, 3).toString()).isEqualTo("[1:2-3]");
   }
 }

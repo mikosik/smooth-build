@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.parse.Helpers.locationOf;
+import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +25,8 @@ import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.problem.CodeError;
-import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.CodeLocation;
+import org.smoothbuild.problem.ProblemsListener;
 
 public class ScriptParser {
   public static ModuleContext parseScript(ProblemsListener problems, InputStream inputStream,
@@ -69,7 +70,7 @@ public class ScriptParser {
       if (offendingSymbol == null) {
         int start = charPositionInLine;
         int stop = charPositionInLine;
-        return new CodeLocation(line, start, stop);
+        return codeLocation(line, start, stop);
       } else {
         return locationOf((Token) offendingSymbol);
       }

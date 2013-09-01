@@ -8,6 +8,7 @@ import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Param.params;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,6 @@ import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgPro
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.UnknownParamNameProblem;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.problem.CodeLocation;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
@@ -124,11 +124,11 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static Argument argument(DefinitionNode node) {
-    return new Argument(null, node, new CodeLocation(1, 2, 3));
+    return new Argument(null, node, codeLocation(1, 2, 3));
   }
 
   private static Argument argument(String name, DefinitionNode node) {
-    return new Argument(name, node, new CodeLocation(1, 2, 3));
+    return new Argument(name, node, codeLocation(1, 2, 3));
   }
 
   private static DefinitionNode node(String value) {
