@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.parse.Helpers.locationIn;
+import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -54,6 +55,6 @@ public class HelpersTest {
     when(startToken.getLine()).thenReturn(7);
     when(startToken.getStartIndex()).thenReturn(11);
 
-    assertThat(locationIn(startToken, 13)).isEqualTo(new CodeLocation(7, 24, 24));
+    assertThat(locationIn(startToken, 13)).isEqualTo(codeLocation(7, 24, 24));
   }
 }

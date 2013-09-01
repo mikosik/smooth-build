@@ -1,9 +1,10 @@
 package org.smoothbuild.testing.parse;
 
+import static org.smoothbuild.problem.CodeLocation.codeLocation;
+
 import java.util.Set;
 
 import org.smoothbuild.parse.Dependency;
-import org.smoothbuild.problem.CodeLocation;
 
 import com.google.common.collect.Sets;
 
@@ -17,6 +18,6 @@ public class TestingDependency {
   }
 
   public static Dependency dependency(String name) {
-    return new Dependency(new CodeLocation(1, 2, 3), name);
+    return new Dependency(codeLocation(1, 2, 3), name);
   }
 }

@@ -7,7 +7,11 @@ public class CodeLocation {
   private final int startPosition;
   private final int endPosition;
 
-  public CodeLocation(int line, int startPosition, int endPosition) {
+  public static CodeLocation codeLocation(int line, int startPosition, int endPosition) {
+    return new CodeLocation(line, startPosition, endPosition);
+  }
+
+  private CodeLocation(int line, int startPosition, int endPosition) {
     checkArgument(0 < line);
     checkArgument(0 <= startPosition);
     checkArgument(0 <= endPosition);

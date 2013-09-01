@@ -1,5 +1,7 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.problem.CodeLocation.codeLocation;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.smoothbuild.problem.CodeLocation;
@@ -21,12 +23,12 @@ public class Helpers {
     int start = startToken.getStartIndex();
     int end = endToken.getStopIndex();
 
-    return new CodeLocation(line, start, end);
+    return codeLocation(line, start, end);
   }
 
   public static CodeLocation locationIn(Token token, int offset) {
     int line = token.getLine();
     int column = token.getStartIndex() + offset;
-    return new CodeLocation(line, column, column);
+    return codeLocation(line, column, column);
   }
 }
