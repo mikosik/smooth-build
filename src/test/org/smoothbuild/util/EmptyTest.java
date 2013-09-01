@@ -3,6 +3,7 @@ package org.smoothbuild.util;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Param;
 import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableMap;
@@ -29,5 +30,16 @@ public class EmptyTest {
   public void emptyStringObjectMapIsImmutable() {
     @SuppressWarnings("unused")
     ImmutableMap<String, Object> map = Empty.stringObjectMap();
+  }
+
+  @Test
+  public void emptyStringParamIsEmpty() {
+    assertThat(Empty.stringParamMap()).isEmpty();
+  }
+
+  @Test
+  public void emptyStringParamMapIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableMap<String, Param> map = Empty.stringParamMap();
   }
 }
