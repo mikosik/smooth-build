@@ -15,7 +15,7 @@ import org.smoothbuild.function.plugin.exc.MissingNameException;
 import org.smoothbuild.function.plugin.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.plugin.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
-import org.smoothbuild.plugin.ExecuteMethod;
+import org.smoothbuild.plugin.SmoothMethod;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -32,7 +32,7 @@ public class PluginSignatureFactory {
   }
 
   private static Name getFunctionName(Method method) throws PluginImplementationException {
-    ExecuteMethod annotation = method.getAnnotation(ExecuteMethod.class);
+    SmoothMethod annotation = method.getAnnotation(SmoothMethod.class);
     if (annotation == null) {
       throw new MissingNameException(method);
     }

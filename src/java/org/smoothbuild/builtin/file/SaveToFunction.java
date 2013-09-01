@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.plugin.ExecuteMethod;
+import org.smoothbuild.plugin.SmoothMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
@@ -20,7 +20,7 @@ public class SaveToFunction {
     this.fileSystem = fileSystem;
   }
 
-  @ExecuteMethod("saveTo")
+  @SmoothMethod("saveTo")
   public void execute(Parameters params) throws FunctionException {
     Path dirPath = PathArgValidator.validatedPath("dir", params.dir());
     saveTo(dirPath, params);

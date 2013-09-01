@@ -8,7 +8,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
-import org.smoothbuild.plugin.ExecuteMethod;
+import org.smoothbuild.plugin.SmoothMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.exc.FunctionException;
@@ -26,7 +26,7 @@ public class UnzipFunction {
     this.fileList = result;
   }
 
-  @ExecuteMethod("unzip")
+  @SmoothMethod("unzip")
   public FileList execute(Parameters params) throws FunctionException {
     if (params.file() == null) {
       throw new MissingArgException("file");
