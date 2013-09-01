@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.parse.Helpers.locationOf;
+import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.util.Map;
 import java.util.Set;
