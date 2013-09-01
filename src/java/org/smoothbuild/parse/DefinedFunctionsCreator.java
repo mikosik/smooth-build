@@ -1,8 +1,11 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.parse.ArgumentNodesCreator.createArgumentNodes;
+import static org.smoothbuild.parse.Helpers.locationIn;
 import static org.smoothbuild.parse.Helpers.locationOf;
+import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.List;
 import java.util.Map;
@@ -25,9 +28,11 @@ import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.FunctionNode;
 import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
+import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.SourceLocation;
 import org.smoothbuild.util.Empty;
+import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -162,7 +167,13 @@ public class DefinedFunctionsCreator {
     private DefinitionNode buildStringNode(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
-      return new StringNode(string);
+      try {
+        return new StringNode(unescaped(string));
+      } catch (UnescapingFailedException e) {
+        SourceLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
+        problems.report(new CodeError(location, e.getMessage()));
+        return new InvalidNode(STRING);
+      }
     }
   }
 }
