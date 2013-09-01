@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.parse.Helpers.locationIn;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -46,5 +47,13 @@ public class HelpersTest {
     assertThat(location.line()).isEqualTo(line);
     assertThat(location.startPosition()).isEqualTo(start);
     assertThat(location.endPosition()).isEqualTo(end);
+  }
+
+  @Test
+  public void locationInToken() throws Exception {
+    when(startToken.getLine()).thenReturn(7);
+    when(startToken.getStartIndex()).thenReturn(11);
+
+    assertThat(locationIn(startToken, 13)).isEqualTo(new SourceLocation(7, 24, 24));
   }
 }

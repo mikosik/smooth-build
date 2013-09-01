@@ -23,4 +23,10 @@ public class Helpers {
 
     return new SourceLocation(line, start, end);
   }
+
+  public static SourceLocation locationIn(Token token, int offset) {
+    int line = token.getLine();
+    int column = token.getStartIndex() + offset;
+    return new SourceLocation(line, column, column);
+  }
 }
