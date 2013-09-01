@@ -39,6 +39,21 @@ public class SourceLocation {
   }
 
   @Override
+  public final boolean equals(Object object) {
+    if (object instanceof SourceLocation) {
+      SourceLocation that = (SourceLocation) object;
+      return this.line == that.line && this.startPosition == that.startPosition
+          && this.endPosition == that.endPosition;
+    }
+    return false;
+  }
+
+  @Override
+  public final int hashCode() {
+    return line + 17 * (startPosition + 17 * (endPosition));
+  }
+
+  @Override
   public String toString() {
     return "[" + str(line) + ":" + str(startPosition) + "-" + str(endPosition) + "]";
   }
