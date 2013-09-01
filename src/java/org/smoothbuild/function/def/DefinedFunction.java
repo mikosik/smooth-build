@@ -2,12 +2,13 @@ package org.smoothbuild.function.def;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Map;
+
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.task.Task;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Function that is defined completely in Smooth script using Smooth language
@@ -23,7 +24,7 @@ public class DefinedFunction extends AbstractFunction {
   }
 
   @Override
-  public Task generateTask(ImmutableMap<String, Task> dependencies) {
+  public Task generateTask(Map<String, Task> dependencies) {
     Preconditions.checkArgument(dependencies.isEmpty(),
         "DefinedFunction.generateTask() cannot accept non-empty dependencies");
     return root.generateTask();

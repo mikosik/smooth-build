@@ -5,6 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Param.param;
 
+import java.util.Map;
+
 import org.junit.Test;
 import org.smoothbuild.task.Task;
 
@@ -47,7 +49,7 @@ public class AbstractFunctionTest {
     }
 
     @Override
-    public Task generateTask(ImmutableMap<String, Task> dependencies) {
+    public Task generateTask(Map<String, Task> dependencies) {
       return null;
     }
   }
