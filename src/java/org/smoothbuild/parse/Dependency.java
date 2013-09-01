@@ -1,17 +1,17 @@
 package org.smoothbuild.parse;
 
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 public class Dependency {
-  private final SourceLocation location;
+  private final CodeLocation location;
   private final String functionName;
 
-  public Dependency(SourceLocation location, String functionName) {
+  public Dependency(CodeLocation location, String functionName) {
     this.location = location;
     this.functionName = functionName;
   }
 
-  public SourceLocation location() {
+  public CodeLocation location() {
     return location;
   }
 

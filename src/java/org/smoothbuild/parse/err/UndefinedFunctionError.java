@@ -1,10 +1,10 @@
 package org.smoothbuild.parse.err;
 
 import org.smoothbuild.problem.CodeError;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 public class UndefinedFunctionError extends CodeError {
-  public UndefinedFunctionError(SourceLocation sourceLocation, String name) {
-    super(sourceLocation, "Undefined function  '" + name + "'");
+  public UndefinedFunctionError(CodeLocation codeLocation, String name) {
+    super(codeLocation, "Undefined function  '" + name + "'");
   }
 }

@@ -5,6 +5,6 @@ import org.smoothbuild.problem.CodeError;
 
 public class DuplicateArgNameProblem extends CodeError {
   public DuplicateArgNameProblem(Argument argument) {
-    super(argument.sourceLocation(), "Duplicated argument name = " + argument.name());
+    super(argument.codeLocation(), "Duplicated argument name = " + argument.name());
   }
 }

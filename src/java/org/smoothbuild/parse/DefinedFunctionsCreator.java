@@ -30,7 +30,7 @@ import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.ProblemsListener;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -88,8 +88,8 @@ public class DefinedFunctionsCreator {
         CallContext call = elements.get(i);
         List<Argument> arguments = build(call.argList());
         // implicit piped argument's location is set to the pipe character '|'
-        SourceLocation sourceLocation = locationOf(pipe.p.get(i));
-        arguments.add(new Argument(null, result, sourceLocation));
+        CodeLocation codeLocation = locationOf(pipe.p.get(i));
+        arguments.add(new Argument(null, result, codeLocation));
         result = build(call, arguments);
       }
       return result;
@@ -155,7 +155,7 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private static SourceLocation argLocation(ArgContext arg) {
+    private static CodeLocation argLocation(ArgContext arg) {
       ParamNameContext paramName = arg.paramName();
       if (paramName == null) {
         return locationOf(arg.expression());
@@ -170,7 +170,7 @@ public class DefinedFunctionsCreator {
       try {
         return new StringNode(unescaped(string));
       } catch (UnescapingFailedException e) {
-        SourceLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
+        CodeLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
         problems.report(new CodeError(location, e.getMessage()));
         return new InvalidNode(STRING);
       }

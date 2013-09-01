@@ -15,7 +15,7 @@ import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
 import org.smoothbuild.problem.ProblemsListener;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 import com.google.common.collect.Maps;
 
@@ -61,7 +61,7 @@ public class FunctionsCollector {
       }
       if (importedFunctions.containsFunction(name)) {
         Name importedName = importedFunctions.getFunction(name).name();
-        SourceLocation location = Helpers.locationOf(nameContext);
+        CodeLocation location = Helpers.locationOf(nameContext);
         problems.report(new OverridenImportError(location, name, importedName));
         return null;
       }

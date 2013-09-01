@@ -14,7 +14,7 @@ public class CodeProblemTest {
 
   @Test
   public void testToString() throws Exception {
-    Problem problem = new CodeProblem(WARNING, new SourceLocation(1, 2, 3), "problem description");
+    Problem problem = new CodeProblem(WARNING, new CodeLocation(1, 2, 3), "problem description");
     assertThat(problem.toString()).isEqualTo("WARNING[1:2-3]: problem description");
   }
 }

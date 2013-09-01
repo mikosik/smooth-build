@@ -6,7 +6,7 @@ import org.smoothbuild.problem.CodeError;
 
 public class TypeMismatchProblem extends CodeError {
   public TypeMismatchProblem(Argument argument, Type type) {
-    super(argument.sourceLocation(), "Type mismatch, cannot convert from "
+    super(argument.codeLocation(), "Type mismatch, cannot convert from "
         + argument.definitionNode().type().name() + " to " + type.name());
   }
 }

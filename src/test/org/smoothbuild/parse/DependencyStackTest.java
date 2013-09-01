@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -156,7 +156,7 @@ public class DependencyStackTest {
   private DependencyStackElem elem(String from, String to, int location) {
     ImmutableSet<Dependency> deps = ImmutableSet.of();
     DependencyStackElem elem = new DependencyStackElem(from, deps);
-    elem.setMissing(new Dependency(new SourceLocation(location, location, location), to));
+    elem.setMissing(new Dependency(new CodeLocation(location, location, location), to));
     return elem;
   }
 

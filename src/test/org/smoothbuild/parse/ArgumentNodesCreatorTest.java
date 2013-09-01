@@ -26,7 +26,7 @@ import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgPro
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.UnknownParamNameProblem;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
@@ -124,11 +124,11 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static Argument argument(DefinitionNode node) {
-    return new Argument(null, node, new SourceLocation(1, 2, 3));
+    return new Argument(null, node, new CodeLocation(1, 2, 3));
   }
 
   private static Argument argument(String name, DefinitionNode node) {
-    return new Argument(name, node, new SourceLocation(1, 2, 3));
+    return new Argument(name, node, new CodeLocation(1, 2, 3));
   }
 
   private static DefinitionNode node(String value) {

@@ -3,15 +3,15 @@ package org.smoothbuild.problem;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CodeProblem extends Problem {
-  private final SourceLocation sourceLocation;
+  private final CodeLocation codeLocation;
 
-  public CodeProblem(ProblemType type, SourceLocation sourceLocation, String message) {
+  public CodeProblem(ProblemType type, CodeLocation codeLocation, String message) {
     super(type, message);
-    this.sourceLocation = checkNotNull(sourceLocation);
+    this.codeLocation = checkNotNull(codeLocation);
   }
 
   @Override
   public String toString() {
-    return type().toString() + sourceLocation.toString() + ": " + message();
+    return type().toString() + codeLocation.toString() + ": " + message();
   }
 }

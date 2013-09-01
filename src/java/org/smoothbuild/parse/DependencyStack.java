@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 public class DependencyStack {
   private final Deque<DependencyStackElem> stack = new ArrayDeque<DependencyStackElem>();
@@ -45,7 +45,7 @@ public class DependencyStack {
       builder.append(current.name() + missing.location() + " -> " + missing.functionName() + "\n");
     }
 
-    SourceLocation location = array[first].missing().location();
+    CodeLocation location = array[first].missing().location();
     String message = builder.toString();
     CycleInCallGraphError problem = new CycleInCallGraphError(location, message);
     return problem;

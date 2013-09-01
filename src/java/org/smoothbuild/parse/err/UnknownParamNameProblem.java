@@ -6,7 +6,7 @@ import org.smoothbuild.problem.CodeError;
 
 public class UnknownParamNameProblem extends CodeError {
   public UnknownParamNameProblem(Name name, Argument argument) {
-    super(argument.sourceLocation(), "Function " + name + " has no parameter with name = "
+    super(argument.codeLocation(), "Function " + name + " has no parameter with name = "
         + argument.name());
   }
 }
