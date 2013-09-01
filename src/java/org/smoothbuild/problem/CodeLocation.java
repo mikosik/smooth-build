@@ -4,21 +4,21 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class CodeLocation {
   private final int line;
-  private final int startPosition;
-  private final int endPosition;
+  private final int start;
+  private final int end;
 
-  public static CodeLocation codeLocation(int line, int startPosition, int endPosition) {
-    return new CodeLocation(line, startPosition, endPosition);
+  public static CodeLocation codeLocation(int line, int start, int end) {
+    return new CodeLocation(line, start, end);
   }
 
-  private CodeLocation(int line, int startPosition, int endPosition) {
+  private CodeLocation(int line, int start, int end) {
     checkArgument(0 < line);
-    checkArgument(0 <= startPosition);
-    checkArgument(0 <= endPosition);
+    checkArgument(0 <= start);
+    checkArgument(0 <= end);
 
     this.line = line;
-    this.startPosition = startPosition;
-    this.endPosition = endPosition;
+    this.start = start;
+    this.end = end;
   }
 
   /**
@@ -31,35 +31,35 @@ public class CodeLocation {
   /**
    * Start position within line. (first character = 0)
    */
-  public int startPosition() {
-    return startPosition;
+  public int start() {
+    return start;
   }
 
   /**
    * End position within line. (first character = 0)
    */
-  public int endPosition() {
-    return endPosition;
+  public int end() {
+    return end;
   }
 
   @Override
   public final boolean equals(Object object) {
     if (object instanceof CodeLocation) {
       CodeLocation that = (CodeLocation) object;
-      return this.line == that.line && this.startPosition == that.startPosition
-          && this.endPosition == that.endPosition;
+      return this.line == that.line && this.start == that.start
+          && this.end == that.end;
     }
     return false;
   }
 
   @Override
   public final int hashCode() {
-    return line + 17 * (startPosition + 17 * (endPosition));
+    return line + 17 * (start + 17 * (end));
   }
 
   @Override
   public String toString() {
-    return "[" + str(line) + ":" + str(startPosition) + "-" + str(endPosition) + "]";
+    return "[" + str(line) + ":" + str(start) + "-" + str(end) + "]";
   }
 
   private static String str(int integer) {
