@@ -6,7 +6,7 @@ import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotAFileException;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.FileImpl;
-import org.smoothbuild.plugin.ExecuteMethod;
+import org.smoothbuild.plugin.SmoothMethod;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
@@ -23,7 +23,7 @@ public class FileFunction {
     this.fileSystem = fileSystem;
   }
 
-  @ExecuteMethod("file")
+  @SmoothMethod("file")
   public File execute(Parameters params) throws FunctionException {
     Path filePath = validatedPath("path", params.path());
     return createFile(filePath);

@@ -6,7 +6,7 @@ import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.FileListImpl;
-import org.smoothbuild.plugin.ExecuteMethod;
+import org.smoothbuild.plugin.SmoothMethod;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.exc.FunctionException;
@@ -25,7 +25,7 @@ public class FilesFunction {
     this.fileSystem = fileSystem;
   }
 
-  @ExecuteMethod("files")
+  @SmoothMethod("files")
   public FileList execute(Parameters params) throws FunctionException {
     Path dirPath = validatedPath("dir", params.dir());
     return createFiles(dirPath);

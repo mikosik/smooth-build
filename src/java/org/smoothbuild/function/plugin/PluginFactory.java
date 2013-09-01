@@ -17,7 +17,7 @@ import org.smoothbuild.function.plugin.exc.PluginImplementationException;
 import org.smoothbuild.function.plugin.exc.StaticExecuteMethodException;
 import org.smoothbuild.function.plugin.exc.TooManyParamsInExecuteMethodException;
 import org.smoothbuild.function.plugin.exc.ZeroParamsInExecuteMethodException;
-import org.smoothbuild.plugin.ExecuteMethod;
+import org.smoothbuild.plugin.SmoothMethod;
 
 public class PluginFactory {
   private final PluginSignatureFactory signatureFactory;
@@ -44,7 +44,7 @@ public class PluginFactory {
   }
 
   private static Method getExecuteMethod(Class<?> klass) throws PluginImplementationException {
-    Class<ExecuteMethod> executeAnnotation = ExecuteMethod.class;
+    Class<SmoothMethod> executeAnnotation = SmoothMethod.class;
     Method result = null;
     for (Method method : klass.getDeclaredMethods()) {
       if (method.isAnnotationPresent(executeAnnotation)) {
