@@ -1,11 +1,11 @@
 package org.smoothbuild.function.plugin;
 
+import java.util.Map;
+
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.task.PluginTask;
 import org.smoothbuild.task.Task;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Function that is implemented completely in java (as opposed to
@@ -21,7 +21,7 @@ public class PluginFunction extends AbstractFunction {
   }
 
   @Override
-  public Task generateTask(ImmutableMap<String, Task> dependencies) {
+  public Task generateTask(Map<String, Task> dependencies) {
     return new PluginTask(pluginInvoker, dependencies);
   }
 }
