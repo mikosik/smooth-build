@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.smoothbuild.problem.CodeLocation;
 
-public class Helpers {
+public class LocationHelpers {
   public static CodeLocation locationOf(ParserRuleContext parserRuleContext) {
     Token startToken = parserRuleContext.getStart();
     Token endToken = parserRuleContext.getStop();

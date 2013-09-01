@@ -51,17 +51,17 @@ public class FunctionsCollector {
       String name = nameContext.getText();
 
       if (!isLegalSimpleName(name)) {
-        problems.report(new IllegalFunctionNameError(Helpers.locationOf(nameContext), name));
+        problems.report(new IllegalFunctionNameError(LocationHelpers.locationOf(nameContext), name));
         return null;
       }
 
       if (functions.keySet().contains(name)) {
-        problems.report(new DuplicateFunctionError(Helpers.locationOf(nameContext), name));
+        problems.report(new DuplicateFunctionError(LocationHelpers.locationOf(nameContext), name));
         return null;
       }
       if (importedFunctions.containsFunction(name)) {
         Name importedName = importedFunctions.getFunction(name).name();
-        CodeLocation location = Helpers.locationOf(nameContext);
+        CodeLocation location = LocationHelpers.locationOf(nameContext);
         problems.report(new OverridenImportError(location, name, importedName));
         return null;
       }

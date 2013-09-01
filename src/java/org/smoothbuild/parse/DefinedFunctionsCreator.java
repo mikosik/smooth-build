@@ -3,8 +3,8 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.parse.ArgumentNodesCreator.createArgumentNodes;
-import static org.smoothbuild.parse.Helpers.locationIn;
-import static org.smoothbuild.parse.Helpers.locationOf;
+import static org.smoothbuild.parse.LocationHelpers.locationIn;
+import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.List;

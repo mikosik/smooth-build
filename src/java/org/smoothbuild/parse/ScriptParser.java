@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.parse.Helpers.locationOf;
+import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.io.IOException;
