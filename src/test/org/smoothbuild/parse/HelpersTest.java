@@ -30,8 +30,8 @@ public class HelpersTest {
     CodeLocation location = Helpers.locationOf(parserRuleContext);
 
     assertThat(location.line()).isEqualTo(line);
-    assertThat(location.startPosition()).isEqualTo(start);
-    assertThat(location.endPosition()).isEqualTo(end);
+    assertThat(location.start()).isEqualTo(start);
+    assertThat(location.end()).isEqualTo(end);
   }
 
   @Test
@@ -46,8 +46,8 @@ public class HelpersTest {
     CodeLocation location = Helpers.locationOf(startToken);
 
     assertThat(location.line()).isEqualTo(line);
-    assertThat(location.startPosition()).isEqualTo(start);
-    assertThat(location.endPosition()).isEqualTo(end);
+    assertThat(location.start()).isEqualTo(start);
+    assertThat(location.end()).isEqualTo(end);
   }
 
   @Test

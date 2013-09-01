@@ -14,8 +14,8 @@ public class CodeLocationTest {
     CodeLocation location = codeLocation(1, 2, 3);
 
     assertThat(location.line()).isEqualTo(1);
-    assertThat(location.startPosition()).isEqualTo(2);
-    assertThat(location.endPosition()).isEqualTo(3);
+    assertThat(location.start()).isEqualTo(2);
+    assertThat(location.end()).isEqualTo(3);
   }
 
   @Test
@@ -39,7 +39,7 @@ public class CodeLocationTest {
   }
 
   @Test
-  public void negativeStartPositionIsForbidden() throws Exception {
+  public void negativeStartIsForbidden() throws Exception {
     try {
       codeLocation(1, -1, 1);
       Assert.fail("exception should be thrown");
@@ -49,7 +49,7 @@ public class CodeLocationTest {
   }
 
   @Test
-  public void negativeEndPositionIsForbidden() throws Exception {
+  public void negativeEndIsForbidden() throws Exception {
     try {
       codeLocation(1, 1, -1);
       Assert.fail("exception should be thrown");
