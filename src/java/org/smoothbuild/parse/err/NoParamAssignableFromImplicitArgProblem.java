@@ -5,7 +5,7 @@ import org.smoothbuild.problem.CodeError;
 
 public class NoParamAssignableFromImplicitArgProblem extends CodeError {
   public NoParamAssignableFromImplicitArgProblem(Argument argument) {
-    super(argument.sourceLocation(),
+    super(argument.codeLocation(),
         "No parameter is assignable from implicit argument with type = "
             + argument.definitionNode().type().name());
   }

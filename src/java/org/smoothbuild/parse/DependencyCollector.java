@@ -10,7 +10,7 @@ import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -50,7 +50,7 @@ public class DependencyCollector {
     public Void visitCall(CallContext call) {
       FunctionNameContext functionName = call.functionName();
       String name = functionName.getText();
-      SourceLocation location = locationOf(functionName);
+      CodeLocation location = locationOf(functionName);
       currentFunctionDependencies.add(new Dependency(location, name));
 
       return visitChildren(call);

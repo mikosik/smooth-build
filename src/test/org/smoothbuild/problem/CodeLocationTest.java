@@ -6,11 +6,11 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SourceLocationTest {
+public class CodeLocationTest {
 
   @Test
   public void testGetters() {
-    SourceLocation location = new SourceLocation(1, 2, 3);
+    CodeLocation location = new CodeLocation(1, 2, 3);
 
     assertThat(location.line()).isEqualTo(1);
     assertThat(location.startPosition()).isEqualTo(2);
@@ -20,7 +20,7 @@ public class SourceLocationTest {
   @Test
   public void negativeLineIsForbidden() throws Exception {
     try {
-      new SourceLocation(-1, 1, 1);
+      new CodeLocation(-1, 1, 1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -30,7 +30,7 @@ public class SourceLocationTest {
   @Test
   public void zeroLineIsForbidden() throws Exception {
     try {
-      new SourceLocation(0, 1, 1);
+      new CodeLocation(0, 1, 1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -40,7 +40,7 @@ public class SourceLocationTest {
   @Test
   public void negativeStartPositionIsForbidden() throws Exception {
     try {
-      new SourceLocation(1, -1, 1);
+      new CodeLocation(1, -1, 1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -50,7 +50,7 @@ public class SourceLocationTest {
   @Test
   public void negativeEndPositionIsForbidden() throws Exception {
     try {
-      new SourceLocation(1, 1, -1);
+      new CodeLocation(1, 1, -1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -59,11 +59,11 @@ public class SourceLocationTest {
 
   @Test
   public void equalsAndHashCode() throws Exception {
-    EqualsVerifier.forClass(SourceLocation.class).verify();
+    EqualsVerifier.forClass(CodeLocation.class).verify();
   }
 
   @Test
   public void testToString() throws Exception {
-    assertThat(new SourceLocation(1, 2, 3).toString()).isEqualTo("[1:2-3]");
+    assertThat(new CodeLocation(1, 2, 3).toString()).isEqualTo("[1:2-3]");
   }
 }

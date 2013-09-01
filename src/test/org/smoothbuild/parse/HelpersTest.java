@@ -8,7 +8,7 @@ import static org.smoothbuild.parse.Helpers.locationIn;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.junit.Test;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 public class HelpersTest {
   ParserRuleContext parserRuleContext = mock(ParserRuleContext.class);
@@ -26,7 +26,7 @@ public class HelpersTest {
     when(startToken.getLine()).thenReturn(line);
     when(stopToken.getStopIndex()).thenReturn(end);
 
-    SourceLocation location = Helpers.locationOf(parserRuleContext);
+    CodeLocation location = Helpers.locationOf(parserRuleContext);
 
     assertThat(location.line()).isEqualTo(line);
     assertThat(location.startPosition()).isEqualTo(start);
@@ -42,7 +42,7 @@ public class HelpersTest {
     when(startToken.getLine()).thenReturn(line);
     when(startToken.getStopIndex()).thenReturn(end);
 
-    SourceLocation location = Helpers.locationOf(startToken);
+    CodeLocation location = Helpers.locationOf(startToken);
 
     assertThat(location.line()).isEqualTo(line);
     assertThat(location.startPosition()).isEqualTo(start);
@@ -54,6 +54,6 @@ public class HelpersTest {
     when(startToken.getLine()).thenReturn(7);
     when(startToken.getStartIndex()).thenReturn(11);
 
-    assertThat(locationIn(startToken, 13)).isEqualTo(new SourceLocation(7, 24, 24));
+    assertThat(locationIn(startToken, 13)).isEqualTo(new CodeLocation(7, 24, 24));
   }
 }

@@ -1,10 +1,10 @@
 package org.smoothbuild.parse.err;
 
 import org.smoothbuild.problem.CodeError;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 public class DuplicateFunctionError extends CodeError {
-  public DuplicateFunctionError(SourceLocation sourceLocation, String name) {
-    super(sourceLocation, "Duplicate function '" + name + "'");
+  public DuplicateFunctionError(CodeLocation codeLocation, String name) {
+    super(codeLocation, "Duplicate function '" + name + "'");
   }
 }

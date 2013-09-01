@@ -8,6 +8,6 @@ import org.junit.Test;
 public class CodeErrorTest {
   @Test
   public void type() {
-    assertThat(new CodeError(new SourceLocation(1, 2, 3), "message").type()).isEqualTo(ERROR);
+    assertThat(new CodeError(new CodeLocation(1, 2, 3), "message").type()).isEqualTo(ERROR);
   }
 }

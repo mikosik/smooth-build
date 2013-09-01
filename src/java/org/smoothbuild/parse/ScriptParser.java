@@ -25,7 +25,7 @@ import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.ProblemsListener;
-import org.smoothbuild.problem.SourceLocation;
+import org.smoothbuild.problem.CodeLocation;
 
 public class ScriptParser {
   public static ModuleContext parseScript(ProblemsListener problems, InputStream inputStream,
@@ -61,15 +61,15 @@ public class ScriptParser {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol,
         int line, int charPositionInLine, String msg, @Nullable RecognitionException e) {
-      SourceLocation location = createLocation(offendingSymbol, line, charPositionInLine);
+      CodeLocation location = createLocation(offendingSymbol, line, charPositionInLine);
       problems.report(new SyntaxError(location, msg));
     }
 
-    private SourceLocation createLocation(Object offendingSymbol, int line, int charPositionInLine) {
+    private CodeLocation createLocation(Object offendingSymbol, int line, int charPositionInLine) {
       if (offendingSymbol == null) {
         int start = charPositionInLine;
         int stop = charPositionInLine;
-        return new SourceLocation(line, start, stop);
+        return new CodeLocation(line, start, stop);
       } else {
         return locationOf((Token) offendingSymbol);
       }

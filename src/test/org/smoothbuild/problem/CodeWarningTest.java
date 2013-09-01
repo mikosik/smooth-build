@@ -8,6 +8,6 @@ import org.junit.Test;
 public class CodeWarningTest {
   @Test
   public void type() {
-    assertThat(new CodeWarning(new SourceLocation(1, 2, 3), "message").type()).isEqualTo(WARNING);
+    assertThat(new CodeWarning(new CodeLocation(1, 2, 3), "message").type()).isEqualTo(WARNING);
   }
 }

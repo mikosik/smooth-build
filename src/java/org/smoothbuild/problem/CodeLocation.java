@@ -2,12 +2,12 @@ package org.smoothbuild.problem;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class SourceLocation {
+public class CodeLocation {
   private final int line;
   private final int startPosition;
   private final int endPosition;
 
-  public SourceLocation(int line, int startPosition, int endPosition) {
+  public CodeLocation(int line, int startPosition, int endPosition) {
     checkArgument(0 < line);
     checkArgument(0 <= startPosition);
     checkArgument(0 <= endPosition);
@@ -40,8 +40,8 @@ public class SourceLocation {
 
   @Override
   public final boolean equals(Object object) {
-    if (object instanceof SourceLocation) {
-      SourceLocation that = (SourceLocation) object;
+    if (object instanceof CodeLocation) {
+      CodeLocation that = (CodeLocation) object;
       return this.line == that.line && this.startPosition == that.startPosition
           && this.endPosition == that.endPosition;
     }
