@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.function.base.Name.isLegalSimpleName;
+import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.util.Map;
 
@@ -14,8 +15,8 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
-import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.CodeLocation;
+import org.smoothbuild.problem.ProblemsListener;
 
 import com.google.common.collect.Maps;
 
@@ -51,17 +52,17 @@ public class FunctionsCollector {
       String name = nameContext.getText();
 
       if (!isLegalSimpleName(name)) {
-        problems.report(new IllegalFunctionNameError(LocationHelpers.locationOf(nameContext), name));
+        problems.report(new IllegalFunctionNameError(locationOf(nameContext), name));
         return null;
       }
 
       if (functions.keySet().contains(name)) {
-        problems.report(new DuplicateFunctionError(LocationHelpers.locationOf(nameContext), name));
+        problems.report(new DuplicateFunctionError(locationOf(nameContext), name));
         return null;
       }
       if (importedFunctions.containsFunction(name)) {
         Name importedName = importedFunctions.getFunction(name).name();
-        CodeLocation location = LocationHelpers.locationOf(nameContext);
+        CodeLocation location = locationOf(nameContext);
         problems.report(new OverridenImportError(location, name, importedName));
         return null;
       }
