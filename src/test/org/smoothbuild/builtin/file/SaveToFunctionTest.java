@@ -7,6 +7,7 @@ import static org.smoothbuild.plugin.Path.rootPath;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.builtin.file.SaveToFunction.Parameters;
 import org.smoothbuild.builtin.file.exc.IllegalPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.fs.plugin.FileImpl;
@@ -23,12 +24,10 @@ public class SaveToFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
   TestingFileSystem fileSystem = sandbox.fileSystem();
 
-  SaveToFunction function = new SaveToFunction(sandbox);
-
   @Test
   public void missingDirArgIsReported() throws Exception {
     try {
-      function.execute(params(mock(File.class), null));
+      runExecute(params(mock(File.class), null));
       Assert.fail("exception should be thrown");
     } catch (MissingArgException e) {
       // expected
@@ -41,7 +40,7 @@ public class SaveToFunctionTest {
   public void illegalPathsAreReported() throws FunctionException {
     for (String path : PathTest.listOfInvalidPaths()) {
       try {
-        function.execute(params(mock(File.class), path));
+        runExecute(params(mock(File.class), path));
         Assert.fail("exception should be thrown");
       } catch (IllegalPathException e) {
         // expected
@@ -57,7 +56,7 @@ public class SaveToFunctionTest {
     fileSystem.createEmptyFile(file);
 
     try {
-      function.execute(params(mock(File.class), file.value()));
+      runExecute(params(mock(File.class), file.value()));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
@@ -75,7 +74,7 @@ public class SaveToFunctionTest {
     FileImpl file = new FileImpl(fileSystem, rootPath(), filePath);
 
     try {
-      function.execute(params(file, destinationDir.value()));
+      runExecute(params(file, destinationDir.value()));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
@@ -93,7 +92,7 @@ public class SaveToFunctionTest {
     fileSystem.createFileContainingItsPath(root, path);
     FileImpl file = new FileImpl(fileSystem, root, path);
 
-    function.execute(params(file, destinationDir.value()));
+    runExecute(params(file, destinationDir.value()));
 
     fileSystem.assertFileContainsItsPath(destinationDir, path);
   }
@@ -102,7 +101,7 @@ public class SaveToFunctionTest {
     assertThat(e.paramName()).isSameAs("dir");
   }
 
-  private static SaveToFunction.Parameters params(final File file, final String dir) {
+  private static Parameters params(final File file, final String dir) {
     return new SaveToFunction.Parameters() {
       @Override
       public File file() {
@@ -114,5 +113,9 @@ public class SaveToFunctionTest {
         return dir;
       }
     };
+  }
+
+  private void runExecute(Parameters params) throws FunctionException {
+    SaveToFunction.execute(sandbox, params);
   }
 }

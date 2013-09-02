@@ -3,12 +3,11 @@ package org.smoothbuild.function.plugin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingSignature.testingSignature;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.util.Empty;
@@ -16,6 +15,7 @@ import org.smoothbuild.util.Empty;
 import com.google.common.collect.ImmutableMap;
 
 public class PluginFunctionTest {
+  Sandbox sandbox = mock(Sandbox.class);
   String name = "functionName";
 
   Signature signature = testingSignature("functionName");
@@ -39,15 +39,14 @@ public class PluginFunctionTest {
   @Test
   public void generatedTaskUsesPluginInvokerForCalculatingResult() throws Exception {
     ProblemsListener problemsListener = mock(ProblemsListener.class);
-    Path tempDir = path("tempPath");
     String result = "result";
 
     // given
-    when(invoker.invoke(tempDir, Empty.stringObjectMap())).thenReturn(result);
+    when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(result);
 
     // when
     Task task = function.generateTask(Empty.stringTaskMap());
-    task.calculateResult(problemsListener, tempDir);
+    task.calculateResult(problemsListener, sandbox);
 
     // then
     assertThat(task.isResultCalculated()).isTrue();

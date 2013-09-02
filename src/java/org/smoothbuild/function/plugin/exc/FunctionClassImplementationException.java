@@ -12,6 +12,6 @@ public class FunctionClassImplementationException extends PluginImplementationEx
 
   private static String buildMessage(Class<?> klass, String message) {
     return "Java class '" + klass.getCanonicalName()
-        + "' in not a correct Smooth function implementation:\n" + message;
+        + "' has no correct Smooth function implementations:\n" + message;
   }
 }

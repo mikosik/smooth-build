@@ -6,6 +6,7 @@ import static org.smoothbuild.plugin.Path.path;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.builtin.file.FilesFunction.Parameters;
 import org.smoothbuild.builtin.file.exc.IllegalPathException;
 import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
@@ -19,12 +20,11 @@ import org.smoothbuild.plugin.exc.ParamException;
 
 public class FilesFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
-  FilesFunction filesFunction = new FilesFunction(sandbox);
 
   @Test
   public void missingDirArgIsReported() throws Exception {
     try {
-      filesFunction.execute(params(null));
+      runExecute(params(null));
       Assert.fail("exception should be thrown");
     } catch (MissingArgException e) {
       // expected
@@ -37,7 +37,7 @@ public class FilesFunctionTest {
   public void illegalPathsAreReported() throws FunctionException {
     for (String path : PathTest.listOfInvalidPaths()) {
       try {
-        filesFunction.execute(params(path));
+        runExecute(params(path));
         Assert.fail("exception should be thrown");
       } catch (IllegalPathException e) {
         // expected
@@ -50,7 +50,7 @@ public class FilesFunctionTest {
   @Test
   public void nonexistentPathIsReported() throws Exception {
     try {
-      filesFunction.execute(params("some/path"));
+      runExecute(params("some/path"));
       Assert.fail("exception should be thrown");
     } catch (NoSuchPathException e) {
       // expected
@@ -64,7 +64,7 @@ public class FilesFunctionTest {
     Path filePath = path("some/path/file.txt");
     sandbox.fileSystem().createEmptyFile(filePath);
     try {
-      filesFunction.execute(params(filePath.value()));
+      runExecute(params(filePath.value()));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
@@ -79,7 +79,7 @@ public class FilesFunctionTest {
     Path filePath = path("file/path/file.txt");
     sandbox.fileSystem().createFileContainingItsPath(rootPath, filePath);
 
-    FileList fileList = filesFunction.execute(params(rootPath.value()));
+    FileList fileList = runExecute(params(rootPath.value()));
 
     assertContentHasFilePath(fileList.file(filePath));
   }
@@ -95,5 +95,9 @@ public class FilesFunctionTest {
         return dir;
       }
     };
+  }
+
+  private FileList runExecute(Parameters params) throws FunctionException {
+    return FilesFunction.execute(sandbox, params);
   }
 }

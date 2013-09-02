@@ -18,28 +18,36 @@ public class FileFunction {
     public String path();
   }
 
-  private final SandboxImpl sandbox;
-
-  public FileFunction(SandboxImpl sandbox) {
-    this.sandbox = sandbox;
-  }
-
   @SmoothFunction("file")
-  public File execute(Parameters params) throws FunctionException {
-    Path filePath = validatedPath("path", params.path());
-    return createFile(filePath);
+  public static File execute(SandboxImpl sandbox, Parameters params) throws FunctionException {
+    return new Worker(sandbox, params).execute();
   }
 
-  private File createFile(Path filePath) throws FunctionException {
-    FileSystem fileSystem = sandbox.fileSystem();
-    if (!fileSystem.pathExists(filePath)) {
-      throw new NoSuchPathException("path", filePath);
+  private static class Worker {
+    private final SandboxImpl sandbox;
+    private final Parameters params;
+
+    public Worker(SandboxImpl sandbox, Parameters params) {
+      this.sandbox = sandbox;
+      this.params = params;
     }
 
-    if (fileSystem.pathExistsAndisDirectory(filePath)) {
-      throw new PathIsNotAFileException("path", filePath);
-    } else {
-      return new FileImpl(fileSystem, Path.rootPath(), filePath);
+    public File execute() throws FunctionException {
+      Path filePath = validatedPath("path", params.path());
+      return createFile(filePath);
+    }
+
+    private File createFile(Path filePath) throws FunctionException {
+      FileSystem fileSystem = sandbox.fileSystem();
+      if (!fileSystem.pathExists(filePath)) {
+        throw new NoSuchPathException("path", filePath);
+      }
+
+      if (fileSystem.pathExistsAndisDirectory(filePath)) {
+        throw new PathIsNotAFileException("path", filePath);
+      } else {
+        return new FileImpl(fileSystem, Path.rootPath(), filePath);
+      }
     }
   }
 }

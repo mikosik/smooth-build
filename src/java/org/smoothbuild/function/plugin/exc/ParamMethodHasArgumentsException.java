@@ -4,8 +4,8 @@ import java.lang.reflect.Method;
 
 @SuppressWarnings("serial")
 public class ParamMethodHasArgumentsException extends ParamsImplementationException {
-
-  public ParamMethodHasArgumentsException(Class<?> klass, Method method) {
-    super(klass, "Method " + method.getName() + " has parameters but should be parameterless");
+  public ParamMethodHasArgumentsException(Method method, Method paramMethod) {
+    super(method, "with all method parameterless, but method " + paramMethod.getName()
+        + " has parameters.");
   }
 }

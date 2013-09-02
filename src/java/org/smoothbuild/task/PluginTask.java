@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.run.err.FunctionError;
 
@@ -20,9 +20,9 @@ public class PluginTask extends AbstractTask {
   }
 
   @Override
-  public void calculateResult(ProblemsListener problems, Path tempDir) {
+  public void calculateResult(ProblemsListener problems, Sandbox sandbox) {
     try {
-      setResult(pluginInvoker.invoke(tempDir, calculateArguments(dependencies())));
+      setResult(pluginInvoker.invoke(sandbox, calculateArguments(dependencies())));
       // TODO handle also FileSystemException and others RuntimeException and
       // even Errors/Throwable (?)
     } catch (FunctionReflectionException e) {

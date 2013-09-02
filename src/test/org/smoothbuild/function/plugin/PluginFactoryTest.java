@@ -2,6 +2,7 @@ package org.smoothbuild.function.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
@@ -9,31 +10,26 @@ import static org.smoothbuild.plugin.Path.path;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.mem.MemoryFileSystemModule;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.plugin.exc.ForbiddenParamTypeException;
-import org.smoothbuild.function.plugin.exc.IllegalConstructorParamException;
 import org.smoothbuild.function.plugin.exc.IllegalFunctionNameException;
 import org.smoothbuild.function.plugin.exc.IllegalReturnTypeException;
-import org.smoothbuild.function.plugin.exc.MissingConstructorException;
-import org.smoothbuild.function.plugin.exc.MoreThanOneExecuteMethodException;
-import org.smoothbuild.function.plugin.exc.NoExecuteMethodException;
-import org.smoothbuild.function.plugin.exc.NonPublicExecuteMethodException;
+import org.smoothbuild.function.plugin.exc.MoreThanOneSmoothFunctionException;
+import org.smoothbuild.function.plugin.exc.NoSmoothFunctionException;
+import org.smoothbuild.function.plugin.exc.NonPublicSmoothFunctionException;
+import org.smoothbuild.function.plugin.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.function.plugin.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.plugin.exc.ParamsIsNotInterfaceException;
-import org.smoothbuild.function.plugin.exc.StaticExecuteMethodException;
-import org.smoothbuild.function.plugin.exc.TooManyConstructorParamsException;
-import org.smoothbuild.function.plugin.exc.TooManyConstructorsException;
-import org.smoothbuild.function.plugin.exc.TooManyParamsInExecuteMethodException;
-import org.smoothbuild.function.plugin.exc.ZeroParamsInExecuteMethodException;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.function.plugin.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.run.err.FunctionError;
 import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
@@ -44,6 +40,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 
 public class PluginFactoryTest {
+  Sandbox sandbox = mock(Sandbox.class);
   TestingProblemsListener problems = new TestingProblemsListener();
   Path tempDir = path("tem/dir");
   PluginFactory pluginFactory;
@@ -75,7 +72,8 @@ public class PluginFactoryTest {
     ImmutableMap<String, Task> dependencies = ImmutableMap.of("stringA",
         stringReturningTask("abc"), "stringB", stringReturningTask("def"));
     Task task = function.generateTask(dependencies);
-    task.calculateResult(problems, tempDir);
+    task.calculateResult(problems, sandbox);
+    problems.assertNoProblems();
     assertThat(task.result()).isEqualTo("abcdef");
   }
 
@@ -90,29 +88,9 @@ public class PluginFactoryTest {
   }
 
   public static class MyPlugin {
-
     @SmoothFunction("my.package.myFunction")
-    public String execute(Parameters params) {
+    public static String execute(Sandbox sandbox, Parameters params) {
       return params.stringA() + params.stringB();
-    }
-  }
-
-  @Test
-  public void pluginWithFaultyConstructor() throws Exception {
-    Function function = pluginFactory.create(MyPluginWithFaultyConstructor.class);
-    function.generateTask(Empty.stringTaskMap()).calculateResult(problems, tempDir);
-    problems.assertOnlyProblem(FunctionError.class);
-  }
-
-  public static class MyPluginWithFaultyConstructor {
-
-    public MyPluginWithFaultyConstructor() {
-      throw new RuntimeException();
-    }
-
-    @SmoothFunction("my.package.myFunction")
-    public String execute(Parameters params) {
-      return null;
     }
   }
 
@@ -130,21 +108,15 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithAllowedParamTypes {
-
     @SmoothFunction("my.package.myFunction")
-    public String execute(Parameters params) {
+    public static String execute(Sandbox sandbox, Parameters params) {
       return params.stringA() + params.stringB();
     }
   }
 
   @Test
   public void pluginWithForbiddenParamType() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithForbiddenParamType.class);
-      fail("exception shoulde be thrown");
-    } catch (ForbiddenParamTypeException e) {
-      // expected
-    }
+    assertExceptionThrown(MyPluginWithForbiddenParamType.class, ForbiddenParamTypeException.class);
   }
 
   public interface ForbiddenParams {
@@ -152,9 +124,8 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithForbiddenParamType {
-
     @SmoothFunction("my.package.myFunction")
-    public String execute(ForbiddenParams params) {
+    public static String execute(Sandbox sandbox, ForbiddenParams params) {
       return null;
     }
   }
@@ -168,7 +139,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithEmptyParameters {
     @SmoothFunction("my.package.myFunction")
-    public String execute(EmptyParameters params) {
+    public static String execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -179,9 +150,8 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithStringResult {
-
     @SmoothFunction("my.package.myFunction")
-    public String execute(EmptyParameters params) {
+    public static String execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -192,9 +162,8 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithFileResult {
-
     @SmoothFunction("my.package.myFunction")
-    public File execute(EmptyParameters params) {
+    public static File execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -207,7 +176,7 @@ public class PluginFactoryTest {
   public static class MyPluginWithFilesResult {
 
     @SmoothFunction("my.package.myFunction")
-    public FileList execute(EmptyParameters params) {
+    public static FileList execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -218,163 +187,95 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithVoidResult {
-
     @SmoothFunction("my.package.myFunction")
-    public void execute(EmptyParameters params) {}
+    public static void execute(Sandbox sandbox, EmptyParameters params) {}
   }
 
   @Test
   public void illegalReturnTypeException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithIllegalReturnType.class);
-      fail("exception should be thrown");
-    } catch (IllegalReturnTypeException e) {
-      // expected
-    }
+    assertExceptionThrown(MyPluginWithIllegalReturnType.class, IllegalReturnTypeException.class);
   }
 
   public static class MyPluginWithIllegalReturnType {
 
     @SmoothFunction("my.package.MyFunction")
-    public Runnable execute(EmptyParameters params) {
+    public static Runnable execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
 
   @Test
   public void paramsIsNotInterfaceException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithParamThatIsNotInterface.class);
-      fail("exception should be thrown");
-    } catch (ParamsIsNotInterfaceException e) {
-      // expected
-    }
+    assertExceptionThrown(MyPluginWithParamThatIsNotInterface.class,
+        ParamsIsNotInterfaceException.class);
   }
 
   public static class MyPluginWithParamThatIsNotInterface {
 
     @SmoothFunction("my.package.myFunction")
-    public void execute(String string) {}
-  }
-
-  @Test
-  public void illegalConstructorParamException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithIllegalConstructorParam.class);
-      fail("exception should be thrown");
-    } catch (IllegalConstructorParamException e) {
-      // expected
-    }
-  }
-
-  public static class MyPluginWithIllegalConstructorParam {
-    public MyPluginWithIllegalConstructorParam(String illegal) {}
-
-    @SmoothFunction("my.package.myFunction")
-    public void execute(EmptyParameters param) {}
+    public static void execute(Sandbox sandbox, String string) {}
   }
 
   @Test
   public void illegalFunctionNameException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithIllegalFunctionName.class);
-      fail("exception should be thrown");
-    } catch (IllegalFunctionNameException e) {
-      // expected
-    }
+    assertExceptionThrown(MyPluginWithIllegalFunctionName.class, IllegalFunctionNameException.class);
   }
 
   public static class MyPluginWithIllegalFunctionName {
     @SmoothFunction("my..package")
-    public void execute(EmptyParameters params) {}
+    public static void execute(Sandbox sandbox, EmptyParameters params) {}
   }
 
   @Test
   public void invokingMethodFailedException() throws Exception {
-    Function function = pluginFactory.create(MyPluginWithThrowingExecuteMethod.class);
-    function.generateTask(Empty.stringTaskMap()).calculateResult(problems, tempDir);
+    Function function = pluginFactory.create(MyPluginWithThrowingSmoothMethod.class);
+    function.generateTask(Empty.stringTaskMap()).calculateResult(problems, sandbox);
     problems.assertOnlyProblem(FunctionError.class);
   }
 
-  public static class MyPluginWithThrowingExecuteMethod {
-
+  public static class MyPluginWithThrowingSmoothMethod {
     @SmoothFunction("my.package.MyFunction")
-    public void execute(EmptyParameters params) {
+    public static void execute(Sandbox sandbox, EmptyParameters params) {
       throw new RuntimeException();
     }
   }
 
   @Test
-  public void missingConstructorException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithPrivateConstructor.class);
-      fail("exception should be thrown");
-    } catch (MissingConstructorException e) {
-      // expected
-    }
+  public void moreThanOneSmoothMethodException() throws Exception {
+    assertExceptionThrown(MyPluginWithTwoSmoothMethods.class,
+        MoreThanOneSmoothFunctionException.class);
   }
 
-  public static class MyPluginWithPrivateConstructor {
-    private MyPluginWithPrivateConstructor() {}
-
+  public static class MyPluginWithTwoSmoothMethods {
     @SmoothFunction("my.package.MyFunction")
-    public void execute(EmptyParameters params) {}
-  }
-
-  @Test
-  public void moreThanOneExecuteMethodException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithTwoExecuteMethods.class);
-      fail("exception should be thrown");
-    } catch (MoreThanOneExecuteMethodException e) {
-      // expected
-    }
-  }
-
-  public static class MyPluginWithTwoExecuteMethods {
-    @SmoothFunction("my.package.MyFunction")
-    public void execute(EmptyParameters params) {}
+    public static void execute(Sandbox sandbox, EmptyParameters params) {}
 
     @SmoothFunction("my.package.MyFunction2")
-    public void execute2(EmptyParameters params) {}
+    public static void execute2(Sandbox sandbox, EmptyParameters params) {}
   }
 
   @Test
-  public void noExecuteMethodException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithZeroExecuteMethods.class);
-      fail("exception should be thrown");
-    } catch (NoExecuteMethodException e) {
-      // expected
-    }
+  public void noSmoothMethodException() throws Exception {
+    assertExceptionThrown(MyPluginWithZeroSmoothMethods.class, NoSmoothFunctionException.class);
   }
 
-  public static class MyPluginWithZeroExecuteMethods {}
+  public static class MyPluginWithZeroSmoothMethods {}
 
   @Test
-  public void nonPublicExecuteMethodException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithPrivateExecuteMethod.class);
-      fail("exception should be thrown");
-    } catch (NonPublicExecuteMethodException e) {
-      // expected
-    }
+  public void nonPublicSmoothMethodException() throws Exception {
+    assertExceptionThrown(MyPluginWithPrivateSmoothMethod.class,
+        NonPublicSmoothFunctionException.class);
   }
 
-  public static class MyPluginWithPrivateExecuteMethod {
-
+  public static class MyPluginWithPrivateSmoothMethod {
     @SmoothFunction("my.package.MyFunction")
-    private void execute(EmptyParameters params) {}
+    private static void execute(Sandbox sandbox, EmptyParameters params) {}
   }
 
   @Test
   public void paramMethodHasArgumentsException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithParamMethodThatHasParameters.class);
-      fail("exception should be thrown");
-    } catch (ParamMethodHasArgumentsException e) {
-      // expected
-    }
+    assertExceptionThrown(MyPluginWithParamMethodThatHasParameters.class,
+        ParamMethodHasArgumentsException.class);
   }
 
   public interface ParametersWithMethodWithParameters {
@@ -382,89 +283,72 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithParamMethodThatHasParameters {
-
     @SmoothFunction("my.package.MyFunction")
-    public void execute(ParametersWithMethodWithParameters params) {}
+    public static void execute(Sandbox sandbox, ParametersWithMethodWithParameters params) {}
   }
 
   @Test
-  public void staticExecuteMethodException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithStaticExecuteMethod.class);
-      fail("exception should be thrown");
-    } catch (StaticExecuteMethodException e) {
-      // expected
-    }
+  public void nonStaticSmoothMethodException() throws Exception {
+    assertExceptionThrown(MyPluginWithNonStaticSmoothMethod.class,
+        NonStaticSmoothFunctionException.class);
   }
 
-  public static class MyPluginWithStaticExecuteMethod {
+  public static class MyPluginWithNonStaticSmoothMethod {
     @SmoothFunction("my.package.MyFunction")
-    public static void execute(EmptyParameters params) {}
+    public void execute(Sandbox sandbox, EmptyParameters params) {}
   }
 
   @Test
-  public void tooManyConstructorParamsException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithConstructorWithTooManyParams.class);
-      fail("exception should be thrown");
-    } catch (TooManyConstructorParamsException e) {
-      // expected
-    }
+  public void zeroParamsInSmoothMethodException() throws Exception {
+    assertExceptionThrown(MyPluginWithSmoothMethodWithZeroParams.class,
+        WrongParamsInSmoothFunctionException.class);
   }
 
-  public static class MyPluginWithConstructorWithTooManyParams {
-    public MyPluginWithConstructorWithTooManyParams(FileSystem fileSystem, FileSystem fileSystem2) {}
-
+  public static class MyPluginWithSmoothMethodWithZeroParams {
     @SmoothFunction("my.package.MyFunction")
-    public void execute(EmptyParameters params) {}
+    public static void execute() {}
   }
 
   @Test
-  public void tooManyConstructorsException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithTwoConstructors.class);
-      fail("exception should be thrown");
-    } catch (TooManyConstructorsException e) {
-      // expected
-    }
+  public void oneParamInSmoothMethodException() throws Exception {
+    assertExceptionThrown(MyPluginWithSmoothMethodWithOneParam.class,
+        WrongParamsInSmoothFunctionException.class);
   }
 
-  public static class MyPluginWithTwoConstructors {
-    public MyPluginWithTwoConstructors() {}
-
-    public MyPluginWithTwoConstructors(FileSystem fileSystem) {}
-
+  public static class MyPluginWithSmoothMethodWithOneParam {
     @SmoothFunction("my.package.MyFunction")
-    public void execute(EmptyParameters params) {}
+    public static void execute() {}
   }
 
   @Test
-  public void tooManyParamsInExecuteMethodException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithExecuteMethodWithTwoParams.class);
-      fail("exception should be thrown");
-    } catch (TooManyParamsInExecuteMethodException e) {
-      // expected
-    }
+  public void wrongFirstParamInSmoothMethodException() throws Exception {
+    assertExceptionThrown(MyPluginWithSmoothMethodWithWrongFirstParam.class,
+        WrongParamsInSmoothFunctionException.class);
   }
 
-  public static class MyPluginWithExecuteMethodWithTwoParams {
+  public static class MyPluginWithSmoothMethodWithWrongFirstParam {
     @SmoothFunction("my.package.MyFunction")
-    public void execute(EmptyParameters params, EmptyParameters params2) {}
+    public static void execute(Parameters wrong, Parameters params) {}
   }
 
   @Test
-  public void zeroParamsInExecuteMethodException() throws Exception {
-    try {
-      pluginFactory.create(MyPluginWithExecuteMethodWithZeroParams.class);
-      fail("exception should be thrown");
-    } catch (ZeroParamsInExecuteMethodException e) {
-      // expected
-    }
+  public void wrongSecondParamInSmoothMethodException() throws Exception {
+    assertExceptionThrown(MyPluginWithSmoothMethodWithWrongSecondParam.class,
+        ParamsIsNotInterfaceException.class);
   }
 
-  public static class MyPluginWithExecuteMethodWithZeroParams {
+  public static class MyPluginWithSmoothMethodWithWrongSecondParam {
     @SmoothFunction("my.package.MyFunction")
-    public void execute() {}
+    public static void execute(Sandbox sandbox, Integer wrong) {}
+  }
+
+  private void assertExceptionThrown(Class<?> klass, Class<?> exception) {
+    try {
+      pluginFactory.create(klass);
+      fail("exception should be thrown");
+    } catch (Throwable e) {
+      // expected
+      assertThat(e).isInstanceOf(exception);
+    }
   }
 }

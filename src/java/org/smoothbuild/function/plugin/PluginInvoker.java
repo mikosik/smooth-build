@@ -4,26 +4,23 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.Sandbox;
 
 public class PluginInvoker {
   private final ReflexiveInvoker reflexiveInvoker;
-  private final InstanceCreator instanceCreator;
-  private final Method executeMethod;
+  private final Method method;
   private final ArgumentsCreator argumentsCreator;
 
-  public PluginInvoker(ReflexiveInvoker reflexiveInvoker, InstanceCreator instanceCreator,
-      Method executeMethod, ArgumentsCreator argumentsCreator) {
+  public PluginInvoker(ReflexiveInvoker reflexiveInvoker, Method method,
+      ArgumentsCreator argumentsCreator) {
     this.reflexiveInvoker = reflexiveInvoker;
-    this.instanceCreator = instanceCreator;
-    this.executeMethod = executeMethod;
+    this.method = method;
     this.argumentsCreator = argumentsCreator;
   }
 
-  public Object invoke(Path resultDir, Map<String, Object> argumentsMap)
+  public Object invoke(Sandbox sandbox, Map<String, Object> argumentsMap)
       throws FunctionReflectionException {
-    Object object = instanceCreator.createInstance(resultDir);
     Object arguments = argumentsCreator.create(argumentsMap);
-    return reflexiveInvoker.invokeMethod(object, executeMethod, arguments);
+    return reflexiveInvoker.invokeMethod(null, method, sandbox, arguments);
   }
 }

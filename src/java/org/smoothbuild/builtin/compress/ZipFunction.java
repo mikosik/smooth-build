@@ -37,42 +37,51 @@ public class ZipFunction {
   // http://commons.apache.org/proper/commons-compress/zip.html
   // which provides setUseZip64 method that allows specifying zip64 behaviour.
 
-  private final Sandbox sandbox;
-  private final byte[] buffer = new byte[1024];
-
-  public ZipFunction(Sandbox sandbox) {
-    this.sandbox = sandbox;
-  }
-
   @SmoothFunction("zip")
-  public File execute(Parameters params) throws FunctionException {
-    if (params.fileList() == null) {
-      throw new MissingArgException("files");
-    }
-    File output = sandbox.resultFile(path("output.zip"));
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
-      for (File file : params.fileList().asIterable()) {
-        addEntry(zipOutputStream, file);
-      }
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
-
-    return output;
+  public static File execute(Sandbox sandbox, Parameters params) throws FunctionException {
+    return new Worker(sandbox, params).execute();
   }
 
-  private void addEntry(ZipOutputStream zipOutputStream, File file) throws IOException {
-    ZipEntry entry = new ZipEntry(file.path().value());
-    zipOutputStream.putNextEntry(entry);
+  private static class Worker {
+    private final Sandbox sandbox;
+    private final Parameters params;
 
-    try (InputStream inputStream = file.createInputStream();) {
-      int readCount = inputStream.read(buffer);
-      while (readCount > 0) {
-        zipOutputStream.write(buffer, 0, readCount);
-        readCount = inputStream.read(buffer);
-      }
+    private final byte[] buffer = new byte[1024];
+
+    public Worker(Sandbox sandbox, Parameters params) {
+      this.sandbox = sandbox;
+      this.params = params;
     }
 
-    zipOutputStream.closeEntry();
+    public File execute() throws FunctionException {
+      if (params.fileList() == null) {
+        throw new MissingArgException("files");
+      }
+      File output = sandbox.resultFile(path("output.zip"));
+      try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
+        for (File file : params.fileList().asIterable()) {
+          addEntry(zipOutputStream, file);
+        }
+      } catch (IOException e) {
+        throw new FileSystemException(e);
+      }
+
+      return output;
+    }
+
+    private void addEntry(ZipOutputStream zipOutputStream, File file) throws IOException {
+      ZipEntry entry = new ZipEntry(file.path().value());
+      zipOutputStream.putNextEntry(entry);
+
+      try (InputStream inputStream = file.createInputStream();) {
+        int readCount = inputStream.read(buffer);
+        while (readCount > 0) {
+          zipOutputStream.write(buffer, 0, readCount);
+          readCount = inputStream.read(buffer);
+        }
+      }
+
+      zipOutputStream.closeEntry();
+    }
   }
 }

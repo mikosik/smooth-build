@@ -5,6 +5,10 @@ import static org.smoothbuild.plugin.Path.path;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
@@ -12,12 +16,18 @@ import org.smoothbuild.problem.ProblemsListener;
 import com.google.common.collect.ImmutableMap;
 
 public class TaskExecutor {
+  private final FileSystem fileSystem;
 
-  public static void execute(ProblemsListener problemsListener, Task task) {
+  @Inject
+  public TaskExecutor(FileSystem fileSystem) {
+    this.fileSystem = fileSystem;
+  }
+
+  public void execute(ProblemsListener problemsListener, Task task) {
     new Worker(problemsListener).execute(task);
   }
 
-  private static class Worker {
+  private class Worker {
     private final DetectingErrorsProblemsListener problems;
     private int temptDirCount = 0;
 
@@ -34,7 +44,7 @@ public class TaskExecutor {
       }
 
       Path tempPath = BUILD_DIR.append(path(Integer.toString(temptDirCount++)));
-      task.calculateResult(problems, tempPath);
+      task.calculateResult(problems, new SandboxImpl(fileSystem, tempPath));
     }
 
     private void calculateTasks(Collection<Task> tasks) {
