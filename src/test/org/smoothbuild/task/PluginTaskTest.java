@@ -8,21 +8,19 @@ import org.junit.Test;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
 import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.run.err.FunctionError;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
 
 public class PluginTaskTest {
   PluginInvoker pluginInvoker = mock(PluginInvoker.class);
   Task subTask = mock(Task.class);
-  Sandbox sandbox = mock(Sandbox.class);
+  TestingSandbox sandbox = new TestingSandbox();
   String name = "param";
   Object argValue = "argValue";
 
   Path tempDir = Path.path("temp/dir");
-  TestingProblemsListener problems = new TestingProblemsListener();
 
   PluginTask pluginTask = new PluginTask(pluginInvoker, ImmutableMap.of(name, subTask));
 
@@ -33,7 +31,7 @@ public class PluginTaskTest {
     String result = "result";
     when(pluginInvoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenReturn(result);
 
-    pluginTask.calculateResult(problems, sandbox);
+    pluginTask.calculateResult(sandbox);
     assertThat(pluginTask.result()).isSameAs(result);
   }
 
@@ -44,9 +42,9 @@ public class PluginTaskTest {
     when(pluginInvoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenThrow(
         new FunctionReflectionException(""));
 
-    pluginTask.calculateResult(problems, sandbox);
+    pluginTask.calculateResult(sandbox);
 
-    problems.assertOnlyProblem(FunctionError.class);
+    sandbox.problems().assertOnlyProblem(FunctionError.class);
     assertThat(pluginTask.isResultCalculated()).isFalse();
   }
 

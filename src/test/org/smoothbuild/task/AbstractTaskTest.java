@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.Sandbox;
-import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
@@ -71,7 +70,7 @@ public class AbstractTaskTest {
     }
 
     @Override
-    public void calculateResult(ProblemsListener problems, Sandbox sandbox) {}
+    public void calculateResult(Sandbox sandbox) {}
 
   }
 }

@@ -5,7 +5,6 @@ import java.util.Map;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
 import org.smoothbuild.plugin.Sandbox;
-import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.run.err.FunctionError;
 
 import com.google.common.collect.ImmutableMap;
@@ -20,13 +19,13 @@ public class PluginTask extends AbstractTask {
   }
 
   @Override
-  public void calculateResult(ProblemsListener problems, Sandbox sandbox) {
+  public void calculateResult(Sandbox sandbox) {
     try {
       setResult(pluginInvoker.invoke(sandbox, calculateArguments(dependencies())));
       // TODO handle also FileSystemException and others RuntimeException and
       // even Errors/Throwable (?)
     } catch (FunctionReflectionException e) {
-      problems.report(new FunctionError(e));
+      sandbox.report(new FunctionError(e));
       return;
     }
   }

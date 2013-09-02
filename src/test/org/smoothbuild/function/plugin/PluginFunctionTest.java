@@ -8,7 +8,6 @@ import static org.smoothbuild.testing.TestingSignature.testingSignature;
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.plugin.Sandbox;
-import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.util.Empty;
 
@@ -38,7 +37,6 @@ public class PluginFunctionTest {
 
   @Test
   public void generatedTaskUsesPluginInvokerForCalculatingResult() throws Exception {
-    ProblemsListener problemsListener = mock(ProblemsListener.class);
     String result = "result";
 
     // given
@@ -46,7 +44,7 @@ public class PluginFunctionTest {
 
     // when
     Task task = function.generateTask(Empty.stringTaskMap());
-    task.calculateResult(problemsListener, sandbox);
+    task.calculateResult(sandbox);
 
     // then
     assertThat(task.isResultCalculated()).isTrue();
