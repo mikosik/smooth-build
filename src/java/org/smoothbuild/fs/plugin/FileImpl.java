@@ -12,10 +12,10 @@ public class FileImpl implements File {
   private final Path path;
   private final Path fullPath;
 
-  public FileImpl(FileSystem fileSystem, Path rootDir, Path path) {
+  public FileImpl(FileSystem fileSystem, Path root, Path path) {
     this.fileSystem = fileSystem;
     this.path = path;
-    this.fullPath = rootDir.append(path);
+    this.fullPath = root.append(path);
   }
 
   @Override

@@ -39,7 +39,7 @@ public class FileListImpl implements FileList {
 
   @Override
   public FileImpl createFile(Path path) {
-    return new FileImpl(fileSystem(), root(), path);
+    return new FileImpl(fileSystem, root, path);
   }
 
   private class PathToFileConverter implements Function<Path, File> {
