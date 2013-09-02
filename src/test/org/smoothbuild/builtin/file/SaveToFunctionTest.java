@@ -1,23 +1,19 @@
 package org.smoothbuild.builtin.file;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.plugin.Path.rootPath;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.SaveToFunction.Parameters;
-import org.smoothbuild.builtin.file.exc.IllegalPathException;
-import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
+import org.smoothbuild.builtin.file.err.IllegalPathError;
+import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
+import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.plugin.FileImpl;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.TestingSandbox;
-import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.MissingArgException;
-import org.smoothbuild.plugin.exc.ParamException;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class SaveToFunctionTest {
@@ -26,27 +22,16 @@ public class SaveToFunctionTest {
 
   @Test
   public void missingDirArgIsReported() throws Exception {
-    try {
-      runExecute(params(mock(File.class), null));
-      Assert.fail("exception should be thrown");
-    } catch (MissingArgException e) {
-      // expected
-
-      assertExceptionContainsDirParamName(e);
-    }
+    runExecute(params(mock(File.class), null));
+    sandbox.problems().assertOnlyProblem(MissingRequiredArgError.class);
   }
 
   @Test
-  public void illegalPathsAreReported() throws FunctionException {
+  public void illegalPathsAreReported() {
     for (String path : PathTest.listOfInvalidPaths()) {
-      try {
-        runExecute(params(mock(File.class), path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalPathException e) {
-        // expected
-
-        assertExceptionContainsDirParamName(e);
-      }
+      sandbox = new TestingSandbox();
+      runExecute(params(mock(File.class), path));
+      sandbox.problems().assertOnlyProblem(IllegalPathError.class);
     }
   }
 
@@ -55,14 +40,8 @@ public class SaveToFunctionTest {
     Path file = path("some/path/file.txt");
     fileSystem.createEmptyFile(file);
 
-    try {
-      runExecute(params(mock(File.class), file.value()));
-      Assert.fail("exception should be thrown");
-    } catch (PathIsNotADirException e) {
-      // expected
-
-      assertExceptionContainsDirParamName(e);
-    }
+    runExecute(params(mock(File.class), file.value()));
+    sandbox.problems().assertOnlyProblem(PathIsNotADirError.class);
   }
 
   @Test
@@ -73,14 +52,8 @@ public class SaveToFunctionTest {
 
     FileImpl file = new FileImpl(fileSystem, rootPath(), filePath);
 
-    try {
-      runExecute(params(file, destinationDir.value()));
-      Assert.fail("exception should be thrown");
-    } catch (PathIsNotADirException e) {
-      // expected
-
-      assertExceptionContainsDirParamName(e);
-    }
+    runExecute(params(file, destinationDir.value()));
+    sandbox.problems().assertOnlyProblem(PathIsNotADirError.class);
   }
 
   @Test
@@ -97,10 +70,6 @@ public class SaveToFunctionTest {
     fileSystem.assertFileContainsItsPath(destinationDir, path);
   }
 
-  private void assertExceptionContainsDirParamName(ParamException e) {
-    assertThat(e.paramName()).isSameAs("dir");
-  }
-
   private static Parameters params(final File file, final String dir) {
     return new SaveToFunction.Parameters() {
       @Override
@@ -115,7 +84,7 @@ public class SaveToFunctionTest {
     };
   }
 
-  private void runExecute(Parameters params) throws FunctionException {
+  private void runExecute(Parameters params) {
     SaveToFunction.execute(sandbox, params);
   }
 }

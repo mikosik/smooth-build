@@ -7,13 +7,12 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.MissingArgException;
 
 public class ZipFunction {
 
@@ -38,7 +37,7 @@ public class ZipFunction {
   // which provides setUseZip64 method that allows specifying zip64 behaviour.
 
   @SmoothFunction("zip")
-  public static File execute(Sandbox sandbox, Parameters params) throws FunctionException {
+  public static File execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -53,9 +52,9 @@ public class ZipFunction {
       this.params = params;
     }
 
-    public File execute() throws FunctionException {
+    public File execute() {
       if (params.fileList() == null) {
-        throw new MissingArgException("files");
+        sandbox.report(new MissingRequiredArgError("files"));
       }
       File output = sandbox.resultFile(path("output.zip"));
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {

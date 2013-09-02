@@ -7,13 +7,12 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.MissingArgException;
 
 public class UnzipFunction {
   public interface Parameters {
@@ -21,7 +20,7 @@ public class UnzipFunction {
   }
 
   @SmoothFunction("unzip")
-  public static FileList execute(Sandbox sandbox, Parameters params) throws FunctionException {
+  public static FileList execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -34,11 +33,11 @@ public class UnzipFunction {
       this.params = params;
     }
 
-    public FileList execute() throws FunctionException {
+    public FileList execute() {
       byte[] buffer = new byte[1024];
 
       if (params.file() == null) {
-        throw new MissingArgException("file");
+        sandbox.report(new MissingRequiredArgError("file"));
       }
 
       FileList resultFiles = sandbox.resultFileList();

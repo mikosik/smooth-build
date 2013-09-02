@@ -2,15 +2,14 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
-import org.smoothbuild.builtin.file.exc.NoSuchPathException;
-import org.smoothbuild.builtin.file.exc.PathIsNotAFileException;
+import org.smoothbuild.builtin.file.err.NoSuchPathError;
+import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.FileImpl;
 import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.plugin.exc.FunctionException;
 
 public class FileFunction {
 
@@ -19,7 +18,7 @@ public class FileFunction {
   }
 
   @SmoothFunction("file")
-  public static File execute(SandboxImpl sandbox, Parameters params) throws FunctionException {
+  public static File execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -32,19 +31,24 @@ public class FileFunction {
       this.params = params;
     }
 
-    public File execute() throws FunctionException {
-      Path filePath = validatedPath("path", params.path());
+    public File execute() {
+      Path filePath = validatedPath("path", params.path(), sandbox);
+      if (filePath == null) {
+        return null;
+      }
       return createFile(filePath);
     }
 
-    private File createFile(Path filePath) throws FunctionException {
+    private File createFile(Path filePath) {
       FileSystem fileSystem = sandbox.fileSystem();
       if (!fileSystem.pathExists(filePath)) {
-        throw new NoSuchPathException("path", filePath);
+        sandbox.report(new NoSuchPathError("path", filePath));
+        return null;
       }
 
       if (fileSystem.pathExistsAndisDirectory(filePath)) {
-        throw new PathIsNotAFileException("path", filePath);
+        sandbox.report(new PathIsNotAFileError("path", filePath));
+        return null;
       } else {
         return new FileImpl(fileSystem, Path.rootPath(), filePath);
       }
