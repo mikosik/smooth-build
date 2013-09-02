@@ -1,12 +1,13 @@
-package org.smoothbuild.function.plugin;
+package org.smoothbuild.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.plugin.ReflexiveUtils.isPublic;
-import static org.smoothbuild.function.plugin.ReflexiveUtils.isStatic;
+import static org.smoothbuild.util.ReflexiveUtils.isPublic;
+import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
 import java.lang.reflect.Method;
 
 import org.junit.Test;
+import org.smoothbuild.util.ReflexiveUtils;
 
 public class ReflexiveUtilsTest {
 

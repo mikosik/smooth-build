@@ -3,9 +3,9 @@ package org.smoothbuild.task;
 import java.util.Map;
 
 import org.smoothbuild.function.plugin.PluginInvoker;
-import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.run.err.FunctionError;
+import org.smoothbuild.util.FunctionReflectionException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;

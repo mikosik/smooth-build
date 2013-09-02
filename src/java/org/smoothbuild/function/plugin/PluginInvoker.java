@@ -3,8 +3,9 @@ package org.smoothbuild.function.plugin;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.util.FunctionReflectionException;
+import org.smoothbuild.util.ReflexiveUtils;
 
 public class PluginInvoker {
   private final Method method;

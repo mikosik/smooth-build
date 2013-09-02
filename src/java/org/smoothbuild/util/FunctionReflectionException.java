@@ -1,4 +1,4 @@
-package org.smoothbuild.function.plugin.exc;
+package org.smoothbuild.util;
 
 import org.smoothbuild.plugin.exc.FunctionException;
 
