@@ -36,10 +36,11 @@ public class InstanceCreatorFactory {
     };
   }
 
-  public InstanceCreator fileSystemPassingCreator(final Constructor<?> constructor) {
+  public InstanceCreator sandboxImplPassingCreator(final Constructor<?> constructor) {
     return new InstanceCreator() {
       public Object createInstance(Path resultDir) throws CreatingInstanceFailedException {
-        return reflexiveInvoker.invokeConstructor(constructor, fileSystem);
+        SandboxImpl sandbox = new SandboxImpl(fileSystem, resultDir);
+        return reflexiveInvoker.invokeConstructor(constructor, sandbox);
       }
     };
   }

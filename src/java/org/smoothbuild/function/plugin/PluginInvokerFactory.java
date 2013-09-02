@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.function.plugin.exc.IllegalConstructorParamException;
 import org.smoothbuild.function.plugin.exc.MissingConstructorException;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
@@ -50,8 +50,8 @@ public class PluginInvokerFactory {
       return instanceCreatorFactory.sandboxPassingCreator(constructor);
     }
     if (builtin) {
-      if (paramType.equals(FileSystem.class)) {
-        return instanceCreatorFactory.fileSystemPassingCreator(constructor);
+      if (paramType.equals(SandboxImpl.class)) {
+        return instanceCreatorFactory.sandboxImplPassingCreator(constructor);
       }
     }
     throw new IllegalConstructorParamException(klass, paramType, allowedTypes(builtin));
@@ -60,7 +60,7 @@ public class PluginInvokerFactory {
   private static ImmutableList<String> allowedTypes(boolean builtin) {
     String sandboxName = Sandbox.class.getCanonicalName();
     if (builtin) {
-      String fileSystemName = FileSystem.class.getCanonicalName();
+      String fileSystemName = SandboxImpl.class.getCanonicalName();
       return ImmutableList.of(fileSystemName, sandboxName);
     } else {
       return ImmutableList.of(sandboxName);

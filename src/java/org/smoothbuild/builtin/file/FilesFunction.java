@@ -6,9 +6,10 @@ import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.FileListImpl;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.plugin.exc.FunctionException;
 
 // TODO forbid dir that points to temporary files created by smooth-build
@@ -19,10 +20,10 @@ public class FilesFunction {
     public String dir();
   }
 
-  private final FileSystem fileSystem;
+  private final SandboxImpl sandbox;
 
-  public FilesFunction(FileSystem fileSystem) {
-    this.fileSystem = fileSystem;
+  public FilesFunction(SandboxImpl sandbox) {
+    this.sandbox = sandbox;
   }
 
   @SmoothFunction("files")
@@ -32,6 +33,7 @@ public class FilesFunction {
   }
 
   private FileList createFiles(Path dirPath) throws FunctionException {
+    FileSystem fileSystem = sandbox.fileSystem();
     if (!fileSystem.pathExists(dirPath)) {
       throw new NoSuchPathException("dir", dirPath);
     }
