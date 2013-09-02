@@ -1,76 +1,50 @@
 package org.smoothbuild.builtin.file;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.plugin.FileImplTest.assertContentHasFilePath;
 import static org.smoothbuild.plugin.Path.path;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FilesFunction.Parameters;
-import org.smoothbuild.builtin.file.exc.IllegalPathException;
-import org.smoothbuild.builtin.file.exc.NoSuchPathException;
-import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
+import org.smoothbuild.builtin.file.err.IllegalPathError;
+import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
+import org.smoothbuild.builtin.file.err.NoSuchPathError;
+import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.TestingSandbox;
-import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.MissingArgException;
-import org.smoothbuild.plugin.exc.ParamException;
 
 public class FilesFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
 
   @Test
   public void missingDirArgIsReported() throws Exception {
-    try {
-      runExecute(params(null));
-      Assert.fail("exception should be thrown");
-    } catch (MissingArgException e) {
-      // expected
-
-      assertExceptionContainsDirParam(e);
-    }
+    runExecute(params(null));
+    sandbox.problems().assertOnlyProblem(MissingRequiredArgError.class);
   }
 
   @Test
-  public void illegalPathsAreReported() throws FunctionException {
+  public void illegalPathsAreReported() {
     for (String path : PathTest.listOfInvalidPaths()) {
-      try {
-        runExecute(params(path));
-        Assert.fail("exception should be thrown");
-      } catch (IllegalPathException e) {
-        // expected
-
-        assertExceptionContainsDirParam(e);
-      }
+      sandbox = new TestingSandbox();
+      runExecute(params(path));
+      sandbox.problems().assertOnlyProblem(IllegalPathError.class);
     }
   }
 
   @Test
   public void nonexistentPathIsReported() throws Exception {
-    try {
-      runExecute(params("some/path"));
-      Assert.fail("exception should be thrown");
-    } catch (NoSuchPathException e) {
-      // expected
-
-      assertExceptionContainsDirParam(e);
-    }
+    runExecute(params("some/path"));
+    sandbox.problems().assertOnlyProblem(NoSuchPathError.class);
   }
 
   @Test
   public void nonDirPathIsReported() throws Exception {
     Path filePath = path("some/path/file.txt");
     sandbox.fileSystem().createEmptyFile(filePath);
-    try {
-      runExecute(params(filePath.value()));
-      Assert.fail("exception should be thrown");
-    } catch (PathIsNotADirException e) {
-      // expected
 
-      assertExceptionContainsDirParam(e);
-    }
+    runExecute(params(filePath.value()));
+    sandbox.problems().assertOnlyProblem(PathIsNotADirError.class);
   }
 
   @Test
@@ -84,10 +58,6 @@ public class FilesFunctionTest {
     assertContentHasFilePath(fileList.file(filePath));
   }
 
-  private void assertExceptionContainsDirParam(ParamException e) {
-    assertThat(e.paramName()).isSameAs("dir");
-  }
-
   private static FilesFunction.Parameters params(final String dir) {
     return new FilesFunction.Parameters() {
       @Override
@@ -97,7 +67,7 @@ public class FilesFunctionTest {
     };
   }
 
-  private FileList runExecute(Parameters params) throws FunctionException {
+  private FileList runExecute(Parameters params) {
     return FilesFunction.execute(sandbox, params);
   }
 }

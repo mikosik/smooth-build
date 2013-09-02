@@ -1,48 +1,38 @@
 package org.smoothbuild.builtin.file;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.builtin.file.exc.IllegalPathException;
+import org.smoothbuild.builtin.file.err.IllegalPathError;
+import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.exc.FunctionException;
-import org.smoothbuild.plugin.exc.MissingArgException;
+import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 public class PathArgValidatorTest {
+  TestingProblemsListener problems = new TestingProblemsListener();
 
   @Test
   public void missingDirArgIsReported() throws Exception {
     String name = "name";
-    try {
-      PathArgValidator.validatedPath(name, null);
-      Assert.fail("exception should be thrown");
-    } catch (MissingArgException e) {
-      // expected
-
-      assertThat(e.paramName()).isSameAs(name);
-    }
+    PathArgValidator.validatedPath(name, null, problems);
+    problems.assertOnlyProblem(MissingRequiredArgError.class);
   }
 
   @Test
   public void illegalPathsAreReported() throws FunctionException {
     String name = "name";
     for (String path : PathTest.listOfInvalidPaths()) {
-      try {
-        PathArgValidator.validatedPath(name, path);
-        Assert.fail("exception should be thrown");
-      } catch (IllegalPathException e) {
-        // expected
-
-        assertThat(e.paramName()).isSameAs(name);
-      }
+      TestingProblemsListener problems = new TestingProblemsListener();
+      PathArgValidator.validatedPath(name, path, problems);
+      problems.assertOnlyProblem(IllegalPathError.class);
     }
   }
 
   @Test
   public void validPathsAreAccepted() throws FunctionException {
     for (String path : PathTest.listOfCorrectPaths()) {
-      PathArgValidator.validatedPath("name", path);
+      TestingProblemsListener problems = new TestingProblemsListener();
+      PathArgValidator.validatedPath("name", path, problems);
+      problems.assertNoProblems();
     }
   }
 }

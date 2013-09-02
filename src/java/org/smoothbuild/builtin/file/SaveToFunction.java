@@ -1,12 +1,13 @@
 package org.smoothbuild.builtin.file;
 
-import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
+import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
+
+import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.plugin.exc.FunctionException;
 
 public class SaveToFunction {
   public interface Parameters {
@@ -16,7 +17,7 @@ public class SaveToFunction {
   }
 
   @SmoothFunction("saveTo")
-  public static void execute(SandboxImpl sandbox, Parameters params) throws FunctionException {
+  public static void execute(SandboxImpl sandbox, Parameters params) {
     new Worker(sandbox, params).execute();
   }
 
@@ -29,27 +30,34 @@ public class SaveToFunction {
       this.params = params;
     }
 
-    public void execute() throws FunctionException {
-      Path dirPath = PathArgValidator.validatedPath("dir", params.dir());
+    public void execute() {
+      Path dirPath = validatedPath("dir", params.dir(), sandbox);
+      if (dirPath == null) {
+        return;
+      }
       saveTo(dirPath, params);
     }
 
-    private void saveTo(Path dirPath, Parameters params) throws PathIsNotADirException {
+    private void saveTo(Path dirPath, Parameters params) {
       FileSystem fileSystem = sandbox.fileSystem();
-      assertPathCanBeUsedAsDir(fileSystem, dirPath);
+      if (!canPathBeUsedAsDir(fileSystem, dirPath)) {
+        return;
+      }
       Path destination = dirPath.append(params.file().path());
-      assertPathCanBeUsedAsDir(fileSystem, destination.parent());
+      if (!canPathBeUsedAsDir(fileSystem, destination.parent())) {
+        return;
+      }
 
       Path source = params.file().fullPath();
-
       fileSystem.copy(source, destination);
     }
 
-    private void assertPathCanBeUsedAsDir(FileSystem fileSystem, Path dirPath)
-        throws PathIsNotADirException {
+    private boolean canPathBeUsedAsDir(FileSystem fileSystem, Path dirPath) {
       if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndisDirectory(dirPath)) {
-        throw new PathIsNotADirException("dir", dirPath);
+        sandbox.report(new PathIsNotADirError("dir", dirPath));
+        return false;
       }
+      return true;
     }
   }
 }
