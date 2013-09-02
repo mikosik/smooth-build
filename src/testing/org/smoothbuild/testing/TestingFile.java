@@ -11,11 +11,11 @@ public class TestingFile extends FileImpl {
     super(fileSystem, root, path);
   }
 
-  public void createTestContent() throws IOException {
+  public void createContentWithFilePath() throws IOException {
     TestingStream.writeAndClose(createOutputStream(), path().value());
   }
 
-  public void assertTestContent() throws IOException {
+  public void assertContentContainsFilePath() throws IOException {
     TestingStream.assertContent(createInputStream(), path().value());
   }
 }

@@ -25,8 +25,8 @@ public class ZipFunctionTest {
   @Test
   public void testZipping() throws IOException, FunctionException {
     TestingFileList inputFiles = new TestingFileList();
-    inputFiles.createFile(path("fileA.txt")).createTestContent();
-    inputFiles.createFile(path("fileB.txt")).createTestContent();
+    inputFiles.createFile(path("fileA.txt")).createContentWithFilePath();
+    inputFiles.createFile(path("fileB.txt")).createContentWithFilePath();
 
     File result = zipFunction.execute(params(inputFiles));
 
@@ -45,7 +45,7 @@ public class ZipFunctionTest {
             outputStream.write(buffer, 0, len);
           }
         }
-        file.assertTestContent();
+        file.assertContentContainsFilePath();
       }
     }
     assertThat(fileCount).isEqualTo(2);
