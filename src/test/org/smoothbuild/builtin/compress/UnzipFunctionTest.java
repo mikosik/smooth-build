@@ -14,17 +14,20 @@ import org.smoothbuild.builtin.compress.UnzipFunction.Parameters;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileList;
 
 public class UnzipFunctionTest {
-  UnzipFunction unzipFunction = new UnzipFunction(new TestingFileList());
+  UnzipFunction unzipFunction = new UnzipFunction(new TestingSandbox());
 
   @Test
   public void testUnzipping() throws IOException, FunctionException {
     Parameters params = params(packedFiles("file/path/file1.txt", "file/path/file2.txt"));
+
     FileList result = unzipFunction.execute(params);
+
     int fileCount = 0;
     for (File file : result.asIterable()) {
       fileCount++;

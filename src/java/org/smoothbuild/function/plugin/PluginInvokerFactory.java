@@ -11,7 +11,7 @@ import org.smoothbuild.function.plugin.exc.MissingConstructorException;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
 import org.smoothbuild.function.plugin.exc.TooManyConstructorParamsException;
 import org.smoothbuild.function.plugin.exc.TooManyConstructorsException;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.Sandbox;
 
 import com.google.common.collect.ImmutableList;
 
@@ -46,8 +46,8 @@ public class PluginInvokerFactory {
       return instanceCreatorFactory.noArgInstanceCreator(constructor);
     }
     Class<?> paramType = paramTypes[0];
-    if (paramType.equals(FileList.class)) {
-      return instanceCreatorFactory.filesPassingCreator(constructor);
+    if (paramType.equals(Sandbox.class)) {
+      return instanceCreatorFactory.sandboxPassingCreator(constructor);
     }
     if (builtin) {
       if (paramType.equals(FileSystem.class)) {
@@ -58,12 +58,12 @@ public class PluginInvokerFactory {
   }
 
   private static ImmutableList<String> allowedTypes(boolean builtin) {
-    String filesName = FileList.class.getCanonicalName();
+    String sandboxName = Sandbox.class.getCanonicalName();
     if (builtin) {
       String fileSystemName = FileSystem.class.getCanonicalName();
-      return ImmutableList.of(fileSystemName, filesName);
+      return ImmutableList.of(fileSystemName, sandboxName);
     } else {
-      return ImmutableList.of(filesName);
+      return ImmutableList.of(sandboxName);
     }
   }
 
