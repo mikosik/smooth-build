@@ -23,7 +23,7 @@ public class TestingProblemsListener implements ProblemsListener {
 
   public void assertOnlyProblem(Class<? extends Problem> klass) {
     if (list.size() != 1) {
-      throw new AssertionError("Expected one problems,\nbut got:\n" + list.toString());
+      throw new AssertionError("Expected one problem,\nbut got:\n" + list.toString());
     }
     assertThat(list.get(0)).isInstanceOf(klass);
   }
