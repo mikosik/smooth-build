@@ -10,6 +10,7 @@ import org.smoothbuild.builtin.file.exc.IllegalPathException;
 import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotAFileException;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
@@ -60,12 +61,12 @@ public class FileFunctionTest {
 
   @Test
   public void nonFilePathIsReported() throws Exception {
-    String dirPath = "some/path/";
-    String filePath = dirPath + "file.txt";
-    fileSystem.createEmptyFile(filePath);
+    Path dir = path("some/path/");
+    Path file = dir.append(path("file.txt"));
+    fileSystem.createEmptyFile(file);
 
     try {
-      fileFunction.execute(params(dirPath));
+      fileFunction.execute(params(dir.value()));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotAFileException e) {
       // expected
@@ -76,12 +77,12 @@ public class FileFunctionTest {
 
   @Test
   public void execute() throws Exception {
-    String filePath = "file/path/file.txt";
-    fileSystem.createFileContainingItsPath(".", filePath);
+    Path filePath = path("file/path/file.txt");
+    fileSystem.createFileContainingItsPath(Path.rootPath(), filePath);
 
-    File file = fileFunction.execute(params(filePath));
+    File file = fileFunction.execute(params(filePath.value()));
 
-    assertThat(file.path()).isEqualTo(path(filePath));
+    assertThat(file.path()).isEqualTo(filePath);
     assertContentHasFilePath(file);
   }
 

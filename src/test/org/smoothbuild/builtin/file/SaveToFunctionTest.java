@@ -11,6 +11,7 @@ import org.smoothbuild.builtin.file.exc.IllegalPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.fs.plugin.FileImpl;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
@@ -49,11 +50,11 @@ public class SaveToFunctionTest {
 
   @Test
   public void nonDirPathIsReported() throws Exception {
-    String filePath = "some/path/file.txt";
-    fileSystem.createEmptyFile(filePath);
+    Path file = path("some/path/file.txt");
+    fileSystem.createEmptyFile(file);
 
     try {
-      function.execute(params(mock(File.class), filePath));
+      function.execute(params(mock(File.class), file.value()));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
@@ -64,15 +65,14 @@ public class SaveToFunctionTest {
 
   @Test
   public void nonDirPathAfterMergingDirAndFileIsReported() throws Exception {
-    String destinationDirPath = "root/path/";
-    String fileRootPath = "file/path";
-    String filePath = fileRootPath + "/file.txt";
-    fileSystem.createEmptyFile(destinationDirPath + fileRootPath);
+    Path destinationDir = path("root/path/");
+    Path filePath = path("file/path/file.txt");
+    fileSystem.createEmptyFile(path("root/path/file/path"));
 
-    FileImpl file = new FileImpl(fileSystem, rootPath(), path(filePath));
+    FileImpl file = new FileImpl(fileSystem, rootPath(), filePath);
 
     try {
-      function.execute(params(file, destinationDirPath));
+      function.execute(params(file, destinationDir.value()));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
@@ -83,16 +83,16 @@ public class SaveToFunctionTest {
 
   @Test
   public void execute() throws Exception {
-    String destinationDirPath = "root/path";
-    String fileRoot = "file/root";
-    String filePath = "file/path/file.txt";
+    Path destinationDir = path("root/path");
+    Path root = path("file/root");
+    Path path = path("file/path/file.txt");
 
-    fileSystem.createFileContainingItsPath(fileRoot, filePath);
-    FileImpl file = new FileImpl(fileSystem, path(fileRoot), path(filePath));
+    fileSystem.createFileContainingItsPath(root, path);
+    FileImpl file = new FileImpl(fileSystem, root, path);
 
-    function.execute(params(file, destinationDirPath));
+    function.execute(params(file, destinationDir.value()));
 
-    fileSystem.assertFileContainsItsPath(destinationDirPath, filePath);
+    fileSystem.assertFileContainsItsPath(destinationDir, path);
   }
 
   private void assertExceptionContainsDirParamName(ParamException e) {
