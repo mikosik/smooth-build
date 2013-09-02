@@ -21,12 +21,10 @@ import org.smoothbuild.plugin.SmoothFunction;
 
 public class PluginFactory {
   private final PluginSignatureFactory signatureFactory;
-  private final PluginInvokerFactory invokerFactory;
 
   @Inject
-  public PluginFactory(PluginSignatureFactory signatureFactory, PluginInvokerFactory invokerFactory) {
+  public PluginFactory(PluginSignatureFactory signatureFactory) {
     this.signatureFactory = signatureFactory;
-    this.invokerFactory = invokerFactory;
   }
 
   public Function create(Class<?> klass) throws PluginImplementationException {
@@ -38,9 +36,15 @@ public class PluginFactory {
     Class<?> paramsInterface = method.getParameterTypes()[1];
 
     Signature signature = signatureFactory.create(method, paramsInterface);
-    PluginInvoker invoker = invokerFactory.create(method, paramsInterface);
+    PluginInvoker invoker = createInvoker(method, paramsInterface);
 
     return new PluginFunction(signature, invoker);
+  }
+
+  private static PluginInvoker createInvoker(Method method, Class<?> paramsInterface)
+      throws PluginImplementationException {
+    ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
+    return new PluginInvoker(method, argumentsCreator);
   }
 
   private static Method getExecuteMethod(Class<?> klass, boolean builtin)

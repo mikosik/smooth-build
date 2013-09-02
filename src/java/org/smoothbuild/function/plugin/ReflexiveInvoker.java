@@ -6,8 +6,7 @@ import java.lang.reflect.Method;
 import org.smoothbuild.function.plugin.exc.InvokingMethodFailedException;
 
 public class ReflexiveInvoker {
-
-  public Object invokeMethod(Object object, Method method, Object... parameters)
+  public static Object invokeMethod(Object object, Method method, Object... parameters)
       throws InvokingMethodFailedException {
     try {
       return method.invoke(object, parameters);
