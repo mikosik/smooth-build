@@ -20,13 +20,13 @@ public class TestingFileSystem extends MemoryFileSystem {
     createFileWithContent(fullPath(root, path), path);
   }
 
+  public void createEmptyFile(String path) throws IOException {
+    createFileWithContent(path(path), "");
+  }
+
   public void createFileWithContent(Path path, String content) throws IOException {
     OutputStream outputStream = createOutputStream(path);
     TestingStream.writeAndClose(outputStream, content);
-  }
-
-  public void createEmptyFile(String path) throws IOException {
-    createFileWithContent(path(path), "");
   }
 
   public void assertFileContainsItsPath(String root, String path) throws IOException,
