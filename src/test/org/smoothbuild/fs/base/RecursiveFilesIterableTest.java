@@ -21,11 +21,15 @@ public class RecursiveFilesIterableTest {
     doTestIterable("abc/xyz/prs", "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt");
   }
 
+  private void doTestIterable(String rootDir, String... names) throws IOException {
+    doTestIterable(rootDir, names, rootDir, names);
+  }
+
   @Test
   public void iterateOnlySubDirectory() throws Exception {
     String[] names = new String[] { "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt",
         "ghi/6.txt" };
-    String[] expectedNames = new String[] { "def/4.txt", "def/5.txt" };
+    String[] expectedNames = new String[] { "4.txt", "5.txt" };
 
     doTestIterable("abc", names, "abc/def", expectedNames);
   }
@@ -40,20 +44,19 @@ public class RecursiveFilesIterableTest {
     doTestIterable("abc/xyz/prs", names, "abc", expectedNames);
   }
 
-  private void doTestIterable(String rootDir, String... names) throws IOException {
-    doTestIterable(rootDir, names, rootDir, names);
-  }
-
   private void doTestIterable(String rootDir, String[] names, String expectedRootDir,
       String[] expectedNames) throws IOException {
     TestingFileSystem fileSystem = new TestingFileSystem();
-    List<Path> created = Lists.newArrayList();
     for (String name : names) {
-      fileSystem.createFileContainingItsPath(rootDir, name);
+      fileSystem.createEmptyFile(path(rootDir).append(path(name)));
+    }
+
+    List<Path> created = Lists.newArrayList();
+    for (String name : expectedNames) {
       created.add(path(name));
     }
 
-    assertThat(new RecursiveFilesIterable(fileSystem, path(rootDir))).containsOnly(
+    assertThat(new RecursiveFilesIterable(fileSystem, path(expectedRootDir))).containsOnly(
         created.toArray(new Path[] {}));
   }
 }

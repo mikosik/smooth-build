@@ -15,15 +15,11 @@ import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class ImmutableFileTest {
-
-  private static final String ROOT_DIR = "abc/efg";
-  private static final String FILE_PATH = "xyz/test.txt";
-
   TestingFileSystem fileSystem = new TestingFileSystem();
-  Path rootDir = path(ROOT_DIR);
-  Path filePath = path(FILE_PATH);
+  Path root = path("abc/efg");
+  Path filePath = path("xyz/test.txt");
 
-  File file = immutableFile(new FileImpl(fileSystem, rootDir, filePath));
+  File file = immutableFile(new FileImpl(fileSystem, root, filePath));
 
   @Test
   public void convertingImmutableToImmutableReturnsTheSameObject() throws Exception {
@@ -37,12 +33,12 @@ public class ImmutableFileTest {
 
   @Test
   public void fullPath() {
-    assertThat(file.fullPath()).isEqualTo(rootDir.append(filePath));
+    assertThat(file.fullPath()).isEqualTo(root.append(filePath));
   }
 
   @Test
   public void createInputStream() throws Exception {
-    fileSystem.createFileContainingItsPath(ROOT_DIR, FILE_PATH);
+    fileSystem.createFileContainingItsPath(root, filePath);
     assertContentHasFilePath(file);
   }
 

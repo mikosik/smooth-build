@@ -1,6 +1,5 @@
 package org.smoothbuild.testing;
 
-import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingStream.assertContent;
 
 import java.io.FileNotFoundException;
@@ -16,12 +15,12 @@ public class TestingFileSystem extends MemoryFileSystem {
   /**
    * Creates textual file that contains its path.
    */
-  public void createFileContainingItsPath(String root, String path) throws IOException {
-    createFileWithContent(fullPath(root, path), path);
+  public void createFileContainingItsPath(Path root, Path path) throws IOException {
+    createFileWithContent(fullPath(root, path), path.value());
   }
 
-  public void createEmptyFile(String path) throws IOException {
-    createFileWithContent(path(path), "");
+  public void createEmptyFile(Path path) throws IOException {
+    createFileWithContent(path, "");
   }
 
   public void createFileWithContent(Path path, String content) throws IOException {
@@ -29,9 +28,9 @@ public class TestingFileSystem extends MemoryFileSystem {
     TestingStream.writeAndClose(outputStream, content);
   }
 
-  public void assertFileContainsItsPath(String root, String path) throws IOException,
+  public void assertFileContainsItsPath(Path root, Path path) throws IOException,
       FileNotFoundException {
-    assertFileContains(fullPath(root, path), path);
+    assertFileContains(fullPath(root, path), path.value());
   }
 
   public void assertFileContains(Path path, String content) throws IOException {
@@ -39,7 +38,7 @@ public class TestingFileSystem extends MemoryFileSystem {
     assertContent(inputStream, content);
   }
 
-  private static Path fullPath(String root, String path) {
-    return path(root).append(path(path));
+  private static Path fullPath(Path root, Path path) {
+    return root.append(path);
   }
 }

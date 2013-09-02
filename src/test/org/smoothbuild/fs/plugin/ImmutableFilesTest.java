@@ -16,10 +16,9 @@ import org.smoothbuild.testing.TestingFileSystem;
 import com.google.common.collect.ImmutableList;
 
 public class ImmutableFilesTest {
-  private static final String ROOT_DIR = "root/dir";
-
   TestingFileSystem fileSystem = new TestingFileSystem();
-  Path root = Path.path(ROOT_DIR);;
+  Path root = Path.path("root/dir");
+  Path filePath = path("abc.txt");
 
   FileList fileList = immutableFiles(new FileListImpl(fileSystem, root));
 
@@ -30,14 +29,14 @@ public class ImmutableFilesTest {
 
   @Test
   public void file() throws Exception {
-    fileSystem.createFileContainingItsPath(ROOT_DIR, "abc.txt");
-    File file = fileList.file(path("abc.txt"));
+    fileSystem.createFileContainingItsPath(root, filePath);
+    File file = fileList.file(filePath);
     FileImplTest.assertContentHasFilePath(file);
   }
 
   @Test
   public void eachFileIsImmutable() throws Exception {
-    fileSystem.createFileContainingItsPath(ROOT_DIR, "abc.txt");
+    fileSystem.createFileContainingItsPath(root, filePath);
     File file = fileList.file(path("abc.txt"));
     try {
       file.createOutputStream();
@@ -59,7 +58,7 @@ public class ImmutableFilesTest {
    */
   private void testAsIterableFor(ImmutableList<String> fileNames) throws IOException {
     for (String name : fileNames) {
-      fileSystem.createFileContainingItsPath(ROOT_DIR, name);
+      fileSystem.createFileContainingItsPath(root, path(name));
     }
 
     for (File file : fileList.asIterable()) {

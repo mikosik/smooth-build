@@ -2,12 +2,14 @@ package org.smoothbuild.run;
 
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
+import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.ScriptBuilder.script;
 
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.ScriptBuilder;
 import org.smoothbuild.testing.TestingFileSystem;
 import org.smoothbuild.testing.TestingFileSystemModule;
@@ -17,8 +19,8 @@ import org.smoothbuild.testing.problem.TestingProblemsListenerModule;
 import com.google.inject.Injector;
 
 public class SmoothRunnerTest {
-  String file = "file/path/file.txt";
-  String destinationDir = "destinationDir";
+  Path file = path("file/path/file.txt");
+  Path destinationDir = path("destination/dir");
 
   TestingFileSystem fileSystem;
   SmoothRunner smoothRunner;
@@ -35,9 +37,10 @@ public class SmoothRunnerTest {
 
   @Test
   public void singleFileReadAndWritten_pipe() throws IOException {
-    String script = script("run : file(path='" + file + "') | saveTo(dir='destinationDir');");
+    String script = script("run : file(path='" + file.value() + "') | saveTo(dir='"
+        + destinationDir.value() + "');");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT, script);
-    fileSystem.createFileContainingItsPath(".", file);
+    fileSystem.createFileContainingItsPath(Path.rootPath(), file);
 
     smoothRunner.run("run");
 
@@ -47,9 +50,10 @@ public class SmoothRunnerTest {
 
   @Test
   public void singleFileReadAndWritten_nestedCalls() throws IOException {
-    String script = script("run : saveTo(dir='destinationDir', file=file(path='" + file + "') );");
+    String script = script("run : saveTo(dir='" + destinationDir.value() + "', file=file(path='"
+        + file.value() + "') );");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT, script);
-    fileSystem.createFileContainingItsPath(".", file);
+    fileSystem.createFileContainingItsPath(Path.rootPath(), file);
 
     smoothRunner.run("run");
 
@@ -60,11 +64,11 @@ public class SmoothRunnerTest {
   @Test
   public void singleFileReadAndWritten_separeteFunctions() throws IOException {
     ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("filename : '" + file + "';");
+    builder.addLine("filename : '" + file.value() + "';");
     builder.addLine("myfile : file(path=filename);");
-    builder.addLine("run : saveTo(file=myfile, dir='destinationDir');");
+    builder.addLine("run : saveTo(file=myfile, dir='" + destinationDir.value() + "');");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT, builder.build());
-    fileSystem.createFileContainingItsPath(".", file);
+    fileSystem.createFileContainingItsPath(Path.rootPath(), file);
 
     smoothRunner.run("run");
 

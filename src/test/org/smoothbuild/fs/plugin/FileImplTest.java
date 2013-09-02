@@ -14,12 +14,9 @@ import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class FileImplTest {
-  private static final String ROOT_DIR = "abc/efg";
-  private static final String FILE_PATH = "xyz/test.txt";
-
   TestingFileSystem fileSystem = new TestingFileSystem();
-  Path rootDir = path(ROOT_DIR);
-  Path filePath = path(FILE_PATH);
+  Path rootDir = path("abc/efg");
+  Path filePath = path("xyz/test.txt");
 
   FileImpl fileImpl = new FileImpl(fileSystem, rootDir, filePath);
 
@@ -35,13 +32,13 @@ public class FileImplTest {
 
   @Test
   public void createInputStream() throws Exception {
-    fileSystem.createFileContainingItsPath(ROOT_DIR, FILE_PATH);
+    fileSystem.createFileContainingItsPath(rootDir, filePath);
     assertContentHasFilePath(fileImpl);
   }
 
   @Test
   public void createOutputStream() throws Exception {
-    writeAndClose(fileImpl.createOutputStream(), FILE_PATH);
+    writeAndClose(fileImpl.createOutputStream(), filePath.value());
     FileImplTest.assertContentHasFilePath(fileImpl);
   }
 

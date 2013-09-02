@@ -10,6 +10,7 @@ import org.smoothbuild.builtin.file.exc.IllegalPathException;
 import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
@@ -60,10 +61,10 @@ public class FilesFunctionTest {
 
   @Test
   public void nonDirPathIsReported() throws Exception {
-    String filePath = "some/path/file.txt";
+    Path filePath = path("some/path/file.txt");
     fileSystem.createEmptyFile(filePath);
     try {
-      filesFunction.execute(params(filePath));
+      filesFunction.execute(params(filePath.value()));
       Assert.fail("exception should be thrown");
     } catch (PathIsNotADirException e) {
       // expected
@@ -74,13 +75,13 @@ public class FilesFunctionTest {
 
   @Test
   public void execute() throws Exception {
-    String rootPath = "root/path";
-    String filePath = "file/path/file.txt";
+    Path rootPath = path("root/path");
+    Path filePath = path("file/path/file.txt");
     fileSystem.createFileContainingItsPath(rootPath, filePath);
 
-    FileList fileList = filesFunction.execute(params(rootPath));
+    FileList fileList = filesFunction.execute(params(rootPath.value()));
 
-    assertContentHasFilePath(fileList.file(path(filePath)));
+    assertContentHasFilePath(fileList.file(filePath));
   }
 
   private void assertExceptionContainsDirParam(ParamException e) {
