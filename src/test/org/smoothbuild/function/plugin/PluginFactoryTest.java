@@ -2,7 +2,6 @@ package org.smoothbuild.function.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
@@ -30,18 +29,17 @@ import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.run.err.FunctionError;
 import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 
 public class PluginFactoryTest {
-  Sandbox sandbox = mock(Sandbox.class);
-  TestingProblemsListener problems = new TestingProblemsListener();
+  TestingSandbox sandbox = new TestingSandbox();
   Path tempDir = path("tem/dir");
   PluginFactory pluginFactory;
 
@@ -72,8 +70,8 @@ public class PluginFactoryTest {
     ImmutableMap<String, Task> dependencies = ImmutableMap.of("stringA",
         stringReturningTask("abc"), "stringB", stringReturningTask("def"));
     Task task = function.generateTask(dependencies);
-    task.calculateResult(problems, sandbox);
-    problems.assertNoProblems();
+    task.calculateResult(sandbox);
+    sandbox.problems().assertNoProblems();
     assertThat(task.result()).isEqualTo("abcdef");
   }
 
@@ -229,8 +227,8 @@ public class PluginFactoryTest {
   @Test
   public void invokingMethodFailedException() throws Exception {
     Function function = pluginFactory.create(MyPluginWithThrowingSmoothMethod.class);
-    function.generateTask(Empty.stringTaskMap()).calculateResult(problems, sandbox);
-    problems.assertOnlyProblem(FunctionError.class);
+    function.generateTask(Empty.stringTaskMap()).calculateResult(sandbox);
+    sandbox.problems().assertOnlyProblem(FunctionError.class);
   }
 
   public static class MyPluginWithThrowingSmoothMethod {

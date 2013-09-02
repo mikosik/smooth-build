@@ -1,7 +1,6 @@
 package org.smoothbuild.task;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -40,8 +39,8 @@ public class TaskExecutorTest {
     taskExecutor.execute(problems, task);
 
     InOrder inOrder = inOrder(task, subTask);
-    inOrder.verify(subTask).calculateResult(isA(ProblemsListener.class), any(Sandbox.class));
-    inOrder.verify(task).calculateResult(isA(ProblemsListener.class), any(Sandbox.class));
+    inOrder.verify(subTask).calculateResult(any(Sandbox.class));
+    inOrder.verify(task).calculateResult(any(Sandbox.class));
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -60,12 +59,11 @@ public class TaskExecutorTest {
         problems.report(new Error(""));
         return null;
       }
-    }).when(subTask).calculateResult(Matchers.<ProblemsListener> any(), Matchers.<Sandbox> any());
+    }).when(subTask).calculateResult(Matchers.<Sandbox> any());
 
     taskExecutor.execute(problems, task);
 
     problems.assertOnlyProblem(Error.class);
-    verify(task, times(0)).calculateResult(Matchers.<ProblemsListener> any(),
-        Matchers.<Sandbox> any());
+    verify(task, times(0)).calculateResult(Matchers.<Sandbox> any());
   }
 }
