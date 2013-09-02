@@ -30,7 +30,7 @@ import org.smoothbuild.function.plugin.exc.TooManyConstructorParamsException;
 import org.smoothbuild.function.plugin.exc.TooManyConstructorsException;
 import org.smoothbuild.function.plugin.exc.TooManyParamsInExecuteMethodException;
 import org.smoothbuild.function.plugin.exc.ZeroParamsInExecuteMethodException;
-import org.smoothbuild.plugin.SmoothMethod;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
@@ -91,7 +91,7 @@ public class PluginFactoryTest {
 
   public static class MyPlugin {
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public String execute(Parameters params) {
       return params.stringA() + params.stringB();
     }
@@ -110,7 +110,7 @@ public class PluginFactoryTest {
       throw new RuntimeException();
     }
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public String execute(Parameters params) {
       return null;
     }
@@ -131,7 +131,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithAllowedParamTypes {
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public String execute(Parameters params) {
       return params.stringA() + params.stringB();
     }
@@ -153,7 +153,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithForbiddenParamType {
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public String execute(ForbiddenParams params) {
       return null;
     }
@@ -167,7 +167,7 @@ public class PluginFactoryTest {
   public interface EmptyParameters {}
 
   public static class MyPluginWithEmptyParameters {
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public String execute(EmptyParameters params) {
       return null;
     }
@@ -180,7 +180,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithStringResult {
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public String execute(EmptyParameters params) {
       return null;
     }
@@ -193,7 +193,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithFileResult {
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public File execute(EmptyParameters params) {
       return null;
     }
@@ -206,7 +206,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithFilesResult {
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public FileList execute(EmptyParameters params) {
       return null;
     }
@@ -219,7 +219,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithVoidResult {
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public void execute(EmptyParameters params) {}
   }
 
@@ -235,7 +235,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithIllegalReturnType {
 
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public Runnable execute(EmptyParameters params) {
       return null;
     }
@@ -253,7 +253,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithParamThatIsNotInterface {
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public void execute(String string) {}
   }
 
@@ -270,7 +270,7 @@ public class PluginFactoryTest {
   public static class MyPluginWithIllegalConstructorParam {
     public MyPluginWithIllegalConstructorParam(String illegal) {}
 
-    @SmoothMethod("my.package.myFunction")
+    @SmoothFunction("my.package.myFunction")
     public void execute(EmptyParameters param) {}
   }
 
@@ -285,7 +285,7 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithIllegalFunctionName {
-    @SmoothMethod("my..package")
+    @SmoothFunction("my..package")
     public void execute(EmptyParameters params) {}
   }
 
@@ -298,7 +298,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithThrowingExecuteMethod {
 
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public void execute(EmptyParameters params) {
       throw new RuntimeException();
     }
@@ -317,7 +317,7 @@ public class PluginFactoryTest {
   public static class MyPluginWithPrivateConstructor {
     private MyPluginWithPrivateConstructor() {}
 
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public void execute(EmptyParameters params) {}
   }
 
@@ -332,10 +332,10 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithTwoExecuteMethods {
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public void execute(EmptyParameters params) {}
 
-    @SmoothMethod("my.package.MyFunction2")
+    @SmoothFunction("my.package.MyFunction2")
     public void execute2(EmptyParameters params) {}
   }
 
@@ -363,7 +363,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithPrivateExecuteMethod {
 
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     private void execute(EmptyParameters params) {}
   }
 
@@ -383,7 +383,7 @@ public class PluginFactoryTest {
 
   public static class MyPluginWithParamMethodThatHasParameters {
 
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public void execute(ParametersWithMethodWithParameters params) {}
   }
 
@@ -398,7 +398,7 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithStaticExecuteMethod {
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public static void execute(EmptyParameters params) {}
   }
 
@@ -415,7 +415,7 @@ public class PluginFactoryTest {
   public static class MyPluginWithConstructorWithTooManyParams {
     public MyPluginWithConstructorWithTooManyParams(FileSystem fileSystem, FileSystem fileSystem2) {}
 
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public void execute(EmptyParameters params) {}
   }
 
@@ -434,7 +434,7 @@ public class PluginFactoryTest {
 
     public MyPluginWithTwoConstructors(FileSystem fileSystem) {}
 
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public void execute(EmptyParameters params) {}
   }
 
@@ -449,7 +449,7 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithExecuteMethodWithTwoParams {
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public void execute(EmptyParameters params, EmptyParameters params2) {}
   }
 
@@ -464,7 +464,7 @@ public class PluginFactoryTest {
   }
 
   public static class MyPluginWithExecuteMethodWithZeroParams {
-    @SmoothMethod("my.package.MyFunction")
+    @SmoothFunction("my.package.MyFunction")
     public void execute() {}
   }
 }
