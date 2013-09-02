@@ -1,11 +1,10 @@
-package org.smoothbuild.function.plugin;
+package org.smoothbuild.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.smoothbuild.function.plugin.exc.InvokingMethodFailedException;
 
 public class ReflexiveUtils {
 

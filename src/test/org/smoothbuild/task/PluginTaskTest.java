@@ -6,10 +6,10 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.smoothbuild.function.plugin.PluginInvoker;
-import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.run.err.FunctionError;
+import org.smoothbuild.util.FunctionReflectionException;
 
 import com.google.common.collect.ImmutableMap;
 

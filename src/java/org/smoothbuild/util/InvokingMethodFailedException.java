@@ -1,6 +1,7 @@
-package org.smoothbuild.function.plugin.exc;
+package org.smoothbuild.util;
 
 import java.lang.reflect.Method;
+
 
 @SuppressWarnings("serial")
 public class InvokingMethodFailedException extends FunctionReflectionException {

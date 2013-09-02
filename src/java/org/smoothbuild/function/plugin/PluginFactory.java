@@ -1,7 +1,7 @@
 package org.smoothbuild.function.plugin;
 
-import static org.smoothbuild.function.plugin.ReflexiveUtils.isPublic;
-import static org.smoothbuild.function.plugin.ReflexiveUtils.isStatic;
+import static org.smoothbuild.util.ReflexiveUtils.isPublic;
+import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
 import java.lang.reflect.Method;
 
