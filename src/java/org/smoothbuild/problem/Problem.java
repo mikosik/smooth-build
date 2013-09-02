@@ -20,6 +20,20 @@ public class Problem {
   }
 
   @Override
+  public final boolean equals(Object object) {
+    if (object instanceof Problem) {
+      Problem that = (Problem) object;
+      return this.type == that.type && this.message.equals(that.message);
+    }
+    return false;
+  }
+
+  @Override
+  public final int hashCode() {
+    return this.type.hashCode() + 17 * message.hashCode();
+  }
+
+  @Override
   public String toString() {
     return type.toString() + ": " + message;
   }
