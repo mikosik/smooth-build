@@ -18,6 +18,6 @@ public class PluginInvoker {
   public Object invoke(Sandbox sandbox, Map<String, Object> argumentsMap)
       throws FunctionReflectionException {
     Object arguments = argumentsCreator.create(argumentsMap);
-    return ReflexiveInvoker.invokeMethod(null, method, sandbox, arguments);
+    return ReflexiveUtils.invokeMethod(null, method, sandbox, arguments);
   }
 }

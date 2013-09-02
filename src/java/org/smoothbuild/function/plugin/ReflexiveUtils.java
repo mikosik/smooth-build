@@ -1,8 +1,11 @@
 package org.smoothbuild.function.plugin;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
+import org.smoothbuild.function.plugin.exc.InvokingMethodFailedException;
 
 public class ReflexiveUtils {
 
@@ -24,5 +27,14 @@ public class ReflexiveUtils {
 
   private static boolean hasStaticFlag(int modifiers) {
     return Modifier.isStatic(modifiers);
+  }
+
+  public static Object invokeMethod(Object object, Method method, Object... parameters)
+      throws InvokingMethodFailedException {
+    try {
+      return method.invoke(object, parameters);
+    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      throw new InvokingMethodFailedException(method, e);
+    }
   }
 }
