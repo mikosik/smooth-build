@@ -20,13 +20,13 @@ import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileList;
 
 public class UnzipFunctionTest {
-  UnzipFunction unzipFunction = new UnzipFunction(new TestingSandbox());
+  TestingSandbox sandbox = new TestingSandbox();
 
   @Test
   public void testUnzipping() throws IOException, FunctionException {
     Parameters params = params(packedFiles("file/path/file1.txt", "file/path/file2.txt"));
 
-    FileList result = unzipFunction.execute(params);
+    FileList result = runExecute(params);
 
     int fileCount = 0;
     for (File file : result.asIterable()) {
@@ -77,5 +77,9 @@ public class UnzipFunctionTest {
         return file;
       }
     };
+  }
+
+  private FileList runExecute(Parameters params) throws FunctionException {
+    return UnzipFunction.execute(sandbox, params);
   }
 }

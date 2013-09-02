@@ -22,11 +22,11 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 public class PluginSignatureFactory {
 
-  public Signature create(Class<?> klass, Method method, Class<?> paramsInterface)
+  public Signature create(Method method, Class<?> paramsInterface)
       throws PluginImplementationException {
     Type type = getReturnType(method);
     Name name = getFunctionName(method);
-    ImmutableMap<String, Param> params = getParams(klass, method, paramsInterface);
+    ImmutableMap<String, Param> params = getParams(method, paramsInterface);
 
     return new Signature(type, name, params);
   }
@@ -52,31 +52,31 @@ public class PluginSignatureFactory {
     return type;
   }
 
-  private static ImmutableMap<String, Param> getParams(Class<?> klass, Method method,
-      Class<?> paramsInterface) throws PluginImplementationException {
+  private static ImmutableMap<String, Param> getParams(Method method, Class<?> paramsInterface)
+      throws PluginImplementationException {
     if (!paramsInterface.isInterface()) {
-      throw new ParamsIsNotInterfaceException(klass, method);
+      throw new ParamsIsNotInterfaceException(method);
     }
     Method[] methods = paramsInterface.getMethods();
     Builder<String, Param> builder = ImmutableMap.builder();
-    for (Method method2 : methods) {
-      Param param = methodToParam(klass, method2);
+    for (Method paramMethod : methods) {
+      Param param = methodToParam(method, paramMethod);
       builder.put(param.name(), param);
     }
     return builder.build();
   }
 
-  private static Param methodToParam(Class<?> klass, Method method)
+  private static Param methodToParam(Method method, Method paramMethod)
       throws PluginImplementationException {
-    if (method.getParameterTypes().length != 0) {
-      throw new ParamMethodHasArgumentsException(klass, method);
+    if (paramMethod.getParameterTypes().length != 0) {
+      throw new ParamMethodHasArgumentsException(method, paramMethod);
     }
-    Class<?> javaType = method.getReturnType();
+    Class<?> javaType = paramMethod.getReturnType();
     Type type = Type.javaParamTypetoType(javaType);
     if (type == null) {
-      throw new ForbiddenParamTypeException(klass, method, javaType);
+      throw new ForbiddenParamTypeException(method, paramMethod, javaType);
     }
 
-    return Param.param(type, method.getName());
+    return Param.param(type, paramMethod.getName());
   }
 }

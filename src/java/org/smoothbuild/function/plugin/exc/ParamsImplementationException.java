@@ -1,18 +1,10 @@
 package org.smoothbuild.function.plugin.exc;
 
+import java.lang.reflect.Method;
+
 @SuppressWarnings("serial")
-public class ParamsImplementationException extends PluginImplementationException {
-
-  public ParamsImplementationException(Class<?> klass, String message) {
-    super(buildMessage(klass, message));
-  }
-
-  public ParamsImplementationException(Class<?> klass, String message, Throwable e) {
-    super(buildMessage(klass, message), e);
-  }
-
-  private static String buildMessage(Class<?> klass, String message) {
-    return "Java class '" + klass.getCanonicalName()
-        + "' in not a correct function's parameters implementation:\n" + message;
+public class ParamsImplementationException extends FunctionImplementationException {
+  public ParamsImplementationException(Method method, String message) {
+    super(method, "Its second argument should be an interface,\n" + message);
   }
 }

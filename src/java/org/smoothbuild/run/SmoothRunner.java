@@ -26,10 +26,13 @@ public class SmoothRunner {
   private final CommandLineParser commandLineParser;
   private final FileSystem fileSystem;
   private final ModuleParser moduleParser;
+  private final TaskExecutor taskExecutor;
 
   @Inject
   public SmoothRunner(ProblemsListener problemsListener, Cleaner cleaner,
-      CommandLineParser commandLineParser, FileSystem fileSystem, ModuleParser moduleParser) {
+      CommandLineParser commandLineParser, FileSystem fileSystem, ModuleParser moduleParser,
+      TaskExecutor taskExecutor) {
+    this.taskExecutor = taskExecutor;
     this.problems = new DetectingErrorsProblemsListener(problemsListener);
     this.cleaner = cleaner;
     this.commandLineParser = commandLineParser;
@@ -64,7 +67,7 @@ public class SmoothRunner {
       return;
     }
 
-    TaskExecutor.execute(problems, function.generateTask(Empty.stringTaskMap()));
+    taskExecutor.execute(problems, function.generateTask(Empty.stringTaskMap()));
 
   }
 

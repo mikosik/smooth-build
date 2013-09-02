@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.util.Empty;
 
@@ -71,7 +71,7 @@ public class AbstractTaskTest {
     }
 
     @Override
-    public void calculateResult(ProblemsListener problems, Path tempDir) {}
+    public void calculateResult(ProblemsListener problems, Sandbox sandbox) {}
 
   }
 }

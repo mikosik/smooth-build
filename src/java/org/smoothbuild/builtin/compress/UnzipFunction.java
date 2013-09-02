@@ -20,40 +20,48 @@ public class UnzipFunction {
     public File file();
   }
 
-  private final Sandbox sandbox;
-
-  public UnzipFunction(Sandbox sandbox) {
-    this.sandbox = sandbox;
-  }
-
   @SmoothFunction("unzip")
-  public FileList execute(Parameters params) throws FunctionException {
-    byte[] buffer = new byte[1024];
-
-    if (params.file() == null) {
-      throw new MissingArgException("file");
-    }
-
-    FileList resultFiles = sandbox.resultFileList();
-    try (ZipInputStream zipInputStream = new ZipInputStream(params.file().createInputStream());) {
-      ZipEntry entry = null;
-      while ((entry = zipInputStream.getNextEntry()) != null) {
-        unzipEntry(zipInputStream, entry, resultFiles, buffer);
-      }
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
-
-    return resultFiles;
+  public static FileList execute(Sandbox sandbox, Parameters params) throws FunctionException {
+    return new Worker(sandbox, params).execute();
   }
 
-  private void unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, FileList fileList,
-      byte[] buffer) throws IOException {
-    File file = fileList.createFile(path(entry.getName()));
-    try (OutputStream outputStream = file.createOutputStream()) {
-      int len = 0;
-      while ((len = zipInputStream.read(buffer)) > 0) {
-        outputStream.write(buffer, 0, len);
+  private static class Worker {
+    private final Sandbox sandbox;
+    private final Parameters params;
+
+    public Worker(Sandbox sandbox, Parameters params) {
+      this.sandbox = sandbox;
+      this.params = params;
+    }
+
+    public FileList execute() throws FunctionException {
+      byte[] buffer = new byte[1024];
+
+      if (params.file() == null) {
+        throw new MissingArgException("file");
+      }
+
+      FileList resultFiles = sandbox.resultFileList();
+      try (ZipInputStream zipInputStream = new ZipInputStream(params.file().createInputStream());) {
+        ZipEntry entry = null;
+        while ((entry = zipInputStream.getNextEntry()) != null) {
+          unzipEntry(zipInputStream, entry, resultFiles, buffer);
+        }
+      } catch (IOException e) {
+        throw new FileSystemException(e);
+      }
+
+      return resultFiles;
+    }
+
+    private void unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, FileList fileList,
+        byte[] buffer) throws IOException {
+      File file = fileList.createFile(path(entry.getName()));
+      try (OutputStream outputStream = file.createOutputStream()) {
+        int len = 0;
+        while ((len = zipInputStream.read(buffer)) > 0) {
+          outputStream.write(buffer, 0, len);
+        }
       }
     }
   }

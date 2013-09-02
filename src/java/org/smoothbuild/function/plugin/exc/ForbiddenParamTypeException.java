@@ -7,8 +7,9 @@ import org.smoothbuild.function.base.Type;
 @SuppressWarnings("serial")
 public class ForbiddenParamTypeException extends ParamsImplementationException {
 
-  public ForbiddenParamTypeException(Class<?> klass, Method method, Class<?> paramType) {
-    super(klass, "Method " + method.getName() + " has forbidden return type = "
-        + paramType.getCanonicalName() + "\n Allowed types = " + Type.javaTypesAllowedForParam());
+  public ForbiddenParamTypeException(Method method, Method paramMethod, Class<?> paramType) {
+    super(method, "with all methods returning proper types, but method '" + method.getName()
+        + "' has forbidden return type = " + paramType.getCanonicalName() + "\n Allowed types = "
+        + Type.javaTypesAllowedForParam());
   }
 }

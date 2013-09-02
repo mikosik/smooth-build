@@ -20,28 +20,36 @@ public class FilesFunction {
     public String dir();
   }
 
-  private final SandboxImpl sandbox;
-
-  public FilesFunction(SandboxImpl sandbox) {
-    this.sandbox = sandbox;
-  }
-
   @SmoothFunction("files")
-  public FileList execute(Parameters params) throws FunctionException {
-    Path dirPath = validatedPath("dir", params.dir());
-    return createFiles(dirPath);
+  public static FileList execute(SandboxImpl sandbox, Parameters params) throws FunctionException {
+    return new Worker(sandbox, params).execute();
   }
 
-  private FileList createFiles(Path dirPath) throws FunctionException {
-    FileSystem fileSystem = sandbox.fileSystem();
-    if (!fileSystem.pathExists(dirPath)) {
-      throw new NoSuchPathException("dir", dirPath);
+  private static class Worker {
+    private final SandboxImpl sandbox;
+    private final Parameters params;
+
+    public Worker(SandboxImpl sandbox, Parameters params) {
+      this.sandbox = sandbox;
+      this.params = params;
     }
 
-    if (fileSystem.pathExistsAndisDirectory(dirPath)) {
-      return new FileListImpl(fileSystem, dirPath);
-    } else {
-      throw new PathIsNotADirException("dir", dirPath);
+    public FileList execute() throws FunctionException {
+      Path dirPath = validatedPath("dir", params.dir());
+      return createFiles(dirPath);
+    }
+
+    private FileList createFiles(Path dirPath) throws FunctionException {
+      FileSystem fileSystem = sandbox.fileSystem();
+      if (!fileSystem.pathExists(dirPath)) {
+        throw new NoSuchPathException("dir", dirPath);
+      }
+
+      if (fileSystem.pathExistsAndisDirectory(dirPath)) {
+        return new FileListImpl(fileSystem, dirPath);
+      } else {
+        throw new PathIsNotADirException("dir", dirPath);
+      }
     }
   }
 }

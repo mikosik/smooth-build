@@ -1,81 +1,22 @@
 package org.smoothbuild.function.plugin;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.fs.plugin.SandboxImpl;
-import org.smoothbuild.function.plugin.exc.IllegalConstructorParamException;
-import org.smoothbuild.function.plugin.exc.MissingConstructorException;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
-import org.smoothbuild.function.plugin.exc.TooManyConstructorParamsException;
-import org.smoothbuild.function.plugin.exc.TooManyConstructorsException;
-import org.smoothbuild.plugin.Sandbox;
-
-import com.google.common.collect.ImmutableList;
 
 public class PluginInvokerFactory {
-  private final InstanceCreatorFactory instanceCreatorFactory;
   private final ReflexiveInvoker reflexiveInvoker;
 
   @Inject
-  public PluginInvokerFactory(InstanceCreatorFactory instanceCreatorFactory,
-      ReflexiveInvoker reflexiveInvoker) {
-    this.instanceCreatorFactory = instanceCreatorFactory;
+  public PluginInvokerFactory(ReflexiveInvoker reflexiveInvoker) {
     this.reflexiveInvoker = reflexiveInvoker;
   }
 
-  public PluginInvoker create(Class<?> klass, Method method, Class<?> paramsInterface,
-      boolean builtin) throws PluginImplementationException {
-    InstanceCreator instanceCreator = createInstanceCreator(klass, builtin);
-    ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
-
-    return new PluginInvoker(reflexiveInvoker, instanceCreator, method, argumentsCreator);
-  }
-
-  public InstanceCreator createInstanceCreator(Class<?> klass, boolean builtin)
+  public PluginInvoker create(Method method, Class<?> paramsInterface)
       throws PluginImplementationException {
-    final Constructor<?> constructor = getConstructor(klass);
-    Class<?>[] paramTypes = constructor.getParameterTypes();
-
-    if (1 < paramTypes.length) {
-      throw new TooManyConstructorParamsException(klass);
-    }
-    if (paramTypes.length == 0) {
-      return instanceCreatorFactory.noArgInstanceCreator(constructor);
-    }
-    Class<?> paramType = paramTypes[0];
-    if (paramType.equals(Sandbox.class)) {
-      return instanceCreatorFactory.sandboxPassingCreator(constructor);
-    }
-    if (builtin) {
-      if (paramType.equals(SandboxImpl.class)) {
-        return instanceCreatorFactory.sandboxImplPassingCreator(constructor);
-      }
-    }
-    throw new IllegalConstructorParamException(klass, paramType, allowedTypes(builtin));
-  }
-
-  private static ImmutableList<String> allowedTypes(boolean builtin) {
-    String sandboxName = Sandbox.class.getCanonicalName();
-    if (builtin) {
-      String fileSystemName = SandboxImpl.class.getCanonicalName();
-      return ImmutableList.of(fileSystemName, sandboxName);
-    } else {
-      return ImmutableList.of(sandboxName);
-    }
-  }
-
-  public static Constructor<?> getConstructor(Class<?> klass) throws PluginImplementationException {
-    Constructor<?>[] constructors = klass.getConstructors();
-    if (constructors.length == 0) {
-      throw new MissingConstructorException(klass);
-    }
-    if (1 < constructors.length) {
-      throw new TooManyConstructorsException(klass);
-    }
-
-    return constructors[0];
+    ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
+    return new PluginInvoker(reflexiveInvoker, method, argumentsCreator);
   }
 }

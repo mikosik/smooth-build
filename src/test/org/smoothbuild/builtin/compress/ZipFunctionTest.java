@@ -9,6 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.compress.ZipFunction.Parameters;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.TestingSandbox;
@@ -16,12 +17,11 @@ import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileList;
 
+// TODO pass as argument object that throws exception when second file is
+// created. Or maybe even method that instantiate function given
+// ZipFunction.class
 public class ZipFunctionTest {
-  // TODO pass as argument object that throws exception when second file is
-  // created. Or maybe even method that instantiate function given
-  // ZipFunction.class
-
-  ZipFunction zipFunction = new ZipFunction(new TestingSandbox());
+  TestingSandbox sandbox = new TestingSandbox();
 
   @Test
   public void testZipping() throws IOException, FunctionException {
@@ -29,7 +29,7 @@ public class ZipFunctionTest {
     inputFiles.createFile(path("fileA.txt")).createContentWithFilePath();
     inputFiles.createFile(path("fileB.txt")).createContentWithFilePath();
 
-    File result = zipFunction.execute(params(inputFiles));
+    File result = runExecute(params(inputFiles));
 
     TestingFileList unpackedFiles = new TestingFileList();
 
@@ -59,5 +59,9 @@ public class ZipFunctionTest {
         return fileList;
       }
     };
+  }
+
+  private File runExecute(Parameters params) throws FunctionException {
+    return ZipFunction.execute(sandbox, params);
   }
 }
