@@ -7,13 +7,10 @@ import org.smoothbuild.function.plugin.exc.FunctionReflectionException;
 import org.smoothbuild.plugin.Sandbox;
 
 public class PluginInvoker {
-  private final ReflexiveInvoker reflexiveInvoker;
   private final Method method;
   private final ArgumentsCreator argumentsCreator;
 
-  public PluginInvoker(ReflexiveInvoker reflexiveInvoker, Method method,
-      ArgumentsCreator argumentsCreator) {
-    this.reflexiveInvoker = reflexiveInvoker;
+  public PluginInvoker(Method method, ArgumentsCreator argumentsCreator) {
     this.method = method;
     this.argumentsCreator = argumentsCreator;
   }
@@ -21,6 +18,6 @@ public class PluginInvoker {
   public Object invoke(Sandbox sandbox, Map<String, Object> argumentsMap)
       throws FunctionReflectionException {
     Object arguments = argumentsCreator.create(argumentsMap);
-    return reflexiveInvoker.invokeMethod(null, method, sandbox, arguments);
+    return ReflexiveInvoker.invokeMethod(null, method, sandbox, arguments);
   }
 }

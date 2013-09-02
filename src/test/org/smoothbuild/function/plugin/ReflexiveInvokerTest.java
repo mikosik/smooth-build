@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 import org.junit.Test;
 
 public class ReflexiveInvokerTest {
-  ReflexiveInvoker reflexiveInvoker = new ReflexiveInvoker();
 
   public static class MyClassWithNoArgConstructor {
     public MyClassWithNoArgConstructor() {}
@@ -26,7 +25,7 @@ public class ReflexiveInvokerTest {
     Class<?> klass = MyClassWithStringMethod.class;
     Method method = klass.getMethod("string");
 
-    Object result = reflexiveInvoker.invokeMethod(klass, method);
+    Object result = ReflexiveInvoker.invokeMethod(klass, method);
 
     assertThat(result).isEqualTo("string value");
   }
@@ -37,7 +36,7 @@ public class ReflexiveInvokerTest {
     Method method = klass.getMethod("chain", Object.class);
     String string = "string";
 
-    Object result = reflexiveInvoker.invokeMethod(klass, method, string);
+    Object result = ReflexiveInvoker.invokeMethod(klass, method, string);
 
     assertThat(result).isEqualTo(string);
 
