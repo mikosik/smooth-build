@@ -1,45 +1,13 @@
 package org.smoothbuild.function.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.junit.Test;
-import org.smoothbuild.function.plugin.exc.CreatingInstanceFailedException;
 
 public class ReflexiveInvokerTest {
   ReflexiveInvoker reflexiveInvoker = new ReflexiveInvoker();
-
-  @Test
-  public void invokeConstructor() throws Exception {
-    Object object = reflexiveInvoker.invokeConstructor(MyClassWithNoArgConstructor.class
-        .getConstructor());
-    assertThat(object).isInstanceOf(MyClassWithNoArgConstructor.class);
-  }
-
-  @Test
-  public void invokeConstructorWithParam() throws Exception {
-    String value = "string value";
-    Constructor<?> constructor = MyClassWithOneArgConstructor.class.getConstructor(String.class);
-
-    Object object = reflexiveInvoker.invokeConstructor(constructor, value);
-
-    assertThat(((MyClassWithOneArgConstructor) object).param).isEqualTo(value);
-  }
-
-  @Test
-  public void invokingNoArgConstructorWithArgumentThrowsException() throws Exception {
-    try {
-      reflexiveInvoker.invokeConstructor(MyClassWithNoArgConstructor.class.getConstructor(),
-          "string");
-      fail("exception should be thrown");
-    } catch (CreatingInstanceFailedException e) {
-      // expected
-      assertThat((Object) e.classThatFailed()).isEqualTo(MyClassWithNoArgConstructor.class);
-    }
-  }
 
   public static class MyClassWithNoArgConstructor {
     public MyClassWithNoArgConstructor() {}
