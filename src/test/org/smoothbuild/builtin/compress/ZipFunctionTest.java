@@ -11,6 +11,7 @@ import java.util.zip.ZipInputStream;
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileList;
@@ -20,7 +21,7 @@ public class ZipFunctionTest {
   // created. Or maybe even method that instantiate function given
   // ZipFunction.class
 
-  ZipFunction zipFunction = new ZipFunction(new TestingFileList());
+  ZipFunction zipFunction = new ZipFunction(new TestingSandbox());
 
   @Test
   public void testZipping() throws IOException, FunctionException {

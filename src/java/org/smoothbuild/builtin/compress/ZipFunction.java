@@ -8,9 +8,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
-import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
 
@@ -36,11 +37,11 @@ public class ZipFunction {
   // http://commons.apache.org/proper/commons-compress/zip.html
   // which provides setUseZip64 method that allows specifying zip64 behaviour.
 
-  private final FileList result;
+  private final Sandbox sandbox;
   private final byte[] buffer = new byte[1024];
 
-  public ZipFunction(FileList result) {
-    this.result = result;
+  public ZipFunction(Sandbox sandbox) {
+    this.sandbox = sandbox;
   }
 
   @SmoothFunction("zip")
@@ -48,7 +49,7 @@ public class ZipFunction {
     if (params.fileList() == null) {
       throw new MissingArgException("files");
     }
-    File output = result.createFile(path("output.zip"));
+    File output = sandbox.resultFile(path("output.zip"));
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
       for (File file : params.fileList().asIterable()) {
         addEntry(zipOutputStream, file);
