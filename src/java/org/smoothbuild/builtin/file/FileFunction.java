@@ -6,9 +6,10 @@ import org.smoothbuild.builtin.file.exc.NoSuchPathException;
 import org.smoothbuild.builtin.file.exc.PathIsNotAFileException;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.FileImpl;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.plugin.exc.FunctionException;
 
 public class FileFunction {
@@ -17,10 +18,10 @@ public class FileFunction {
     public String path();
   }
 
-  private final FileSystem fileSystem;
+  private final SandboxImpl sandbox;
 
-  public FileFunction(FileSystem fileSystem) {
-    this.fileSystem = fileSystem;
+  public FileFunction(SandboxImpl sandbox) {
+    this.sandbox = sandbox;
   }
 
   @SmoothFunction("file")
@@ -30,6 +31,7 @@ public class FileFunction {
   }
 
   private File createFile(Path filePath) throws FunctionException {
+    FileSystem fileSystem = sandbox.fileSystem();
     if (!fileSystem.pathExists(filePath)) {
       throw new NoSuchPathException("path", filePath);
     }

@@ -13,14 +13,17 @@ import org.smoothbuild.fs.plugin.FileImpl;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
+import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
 import org.smoothbuild.plugin.exc.ParamException;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class SaveToFunctionTest {
-  TestingFileSystem fileSystem = new TestingFileSystem();
-  SaveToFunction function = new SaveToFunction(fileSystem);
+  TestingSandbox sandbox = new TestingSandbox();
+  TestingFileSystem fileSystem = sandbox.fileSystem();
+
+  SaveToFunction function = new SaveToFunction(sandbox);
 
   @Test
   public void missingDirArgIsReported() throws Exception {

@@ -12,14 +12,14 @@ import org.smoothbuild.builtin.file.exc.PathIsNotADirException;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
+import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.plugin.exc.MissingArgException;
 import org.smoothbuild.plugin.exc.ParamException;
-import org.smoothbuild.testing.TestingFileSystem;
 
 public class FilesFunctionTest {
-  TestingFileSystem fileSystem = new TestingFileSystem();
-  FilesFunction filesFunction = new FilesFunction(fileSystem);
+  TestingSandbox sandbox = new TestingSandbox();
+  FilesFunction filesFunction = new FilesFunction(sandbox);
 
   @Test
   public void missingDirArgIsReported() throws Exception {
@@ -62,7 +62,7 @@ public class FilesFunctionTest {
   @Test
   public void nonDirPathIsReported() throws Exception {
     Path filePath = path("some/path/file.txt");
-    fileSystem.createEmptyFile(filePath);
+    sandbox.fileSystem().createEmptyFile(filePath);
     try {
       filesFunction.execute(params(filePath.value()));
       Assert.fail("exception should be thrown");
@@ -77,7 +77,7 @@ public class FilesFunctionTest {
   public void execute() throws Exception {
     Path rootPath = path("root/path");
     Path filePath = path("file/path/file.txt");
-    fileSystem.createFileContainingItsPath(rootPath, filePath);
+    sandbox.fileSystem().createFileContainingItsPath(rootPath, filePath);
 
     FileList fileList = filesFunction.execute(params(rootPath.value()));
 

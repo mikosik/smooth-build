@@ -2,14 +2,24 @@ package org.smoothbuild.plugin;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileList;
 import org.smoothbuild.testing.TestingFileSystem;
 
-public class TestingSandbox implements Sandbox {
-  private final TestingFileSystem fileSystem = new TestingFileSystem();
+public class TestingSandbox extends SandboxImpl {
+  private final TestingFileSystem fileSystem;
   private TestingFileList resultFileList;
   private TestingFile resultFile;
+
+  public TestingSandbox() {
+    this(new TestingFileSystem());
+  }
+
+  public TestingSandbox(TestingFileSystem fileSystem) {
+    super(fileSystem, Path.rootPath());
+    this.fileSystem = fileSystem;
+  }
 
   @Override
   public TestingFileList resultFileList() {
@@ -32,6 +42,7 @@ public class TestingSandbox implements Sandbox {
     return resultFile;
   }
 
+  @Override
   public TestingFileSystem fileSystem() {
     return fileSystem;
   }
