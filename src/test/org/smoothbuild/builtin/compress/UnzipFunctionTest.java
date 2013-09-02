@@ -35,8 +35,8 @@ public class UnzipFunctionTest {
 
   private static TestingFile packedFiles(String path1, String path2) throws IOException {
     TestingFileList filesToPack = new TestingFileList();
-    filesToPack.createFile(path(path1)).createTestContent();
-    filesToPack.createFile(path(path2)).createTestContent();
+    filesToPack.createFile(path(path1)).createContentWithFilePath();
+    filesToPack.createFile(path(path2)).createContentWithFilePath();
 
     TestingFile inputFile = new TestingFileList().createFile(path("input.zip"));
 
