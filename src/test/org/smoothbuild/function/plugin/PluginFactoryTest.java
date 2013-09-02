@@ -30,9 +30,9 @@ import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.plugin.TestingSandbox;
-import org.smoothbuild.run.err.FunctionError;
 import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.err.UnexpectedError;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
@@ -225,10 +225,10 @@ public class PluginFactoryTest {
   }
 
   @Test
-  public void invokingMethodFailedException() throws Exception {
+  public void runtimeExceptionThrownAreReported() throws Exception {
     Function function = pluginFactory.create(MyPluginWithThrowingSmoothMethod.class);
     function.generateTask(Empty.stringTaskMap()).calculateResult(sandbox);
-    sandbox.problems().assertOnlyProblem(FunctionError.class);
+    sandbox.problems().assertOnlyProblem(UnexpectedError.class);
   }
 
   public static class MyPluginWithThrowingSmoothMethod {

@@ -4,12 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.junit.Test;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.TestingSandbox;
-import org.smoothbuild.run.err.FunctionError;
-import org.smoothbuild.util.FunctionReflectionException;
+import org.smoothbuild.task.err.ReflexivePluginError;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -22,10 +23,10 @@ public class PluginTaskTest {
 
   Path tempDir = Path.path("temp/dir");
 
-  PluginTask pluginTask = new PluginTask(pluginInvoker, ImmutableMap.of(name, subTask));
+  PluginTask pluginTask = new PluginTask(pluginInvoker, ImmutableMap.of(name, subTask), false);
 
   @Test
-  public void calculateResult() throws FunctionReflectionException {
+  public void calculateResult() throws IllegalAccessException, InvocationTargetException {
     when(subTask.result()).thenReturn(argValue);
 
     String result = "result";
@@ -37,14 +38,14 @@ public class PluginTaskTest {
 
   @Test
   public void calculateResultReportErrorWhenExceptionIsThrownFromPluginInvoker()
-      throws FunctionReflectionException {
+      throws IllegalAccessException, InvocationTargetException {
     when(subTask.result()).thenReturn(argValue);
     when(pluginInvoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenThrow(
-        new FunctionReflectionException(""));
+        new IllegalAccessException(""));
 
     pluginTask.calculateResult(sandbox);
 
-    sandbox.problems().assertOnlyProblem(FunctionError.class);
+    sandbox.problems().assertOnlyProblem(ReflexivePluginError.class);
     assertThat(pluginTask.isResultCalculated()).isFalse();
   }
 
