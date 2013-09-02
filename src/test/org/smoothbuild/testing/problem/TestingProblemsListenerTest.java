@@ -1,10 +1,10 @@
 package org.smoothbuild.testing.problem;
 
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.problem.ProblemType.ERROR;
 
 import org.junit.Test;
 import org.smoothbuild.problem.Problem;
+import org.smoothbuild.problem.Warning;
 
 public class TestingProblemsListenerTest {
   TestingProblemsListener testingProblemListener = new TestingProblemsListener();
@@ -41,7 +41,7 @@ public class TestingProblemsListenerTest {
 
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneProblemExistsFailsWhenOneProblemOfWrongTypeExists() {
-    testingProblemListener.report(mock(Problem.class));
+    testingProblemListener.report(new Warning("message"));
 
     testingProblemListener.assertOnlyProblem(MyProblem.class);
   }

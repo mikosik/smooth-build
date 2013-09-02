@@ -1,8 +1,10 @@
 package org.smoothbuild.problem;
 
+import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.problem.ProblemType.ERROR;
 import static org.smoothbuild.problem.ProblemType.WARNING;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
 
@@ -36,5 +38,10 @@ public class ProblemTest {
 
     assertThat(problem.type()).isEqualTo(WARNING);
     assertThat(problem.message()).isEqualTo(message);
+  }
+
+  @Test
+  public void equalsAndHashCode() throws Exception {
+    EqualsVerifier.forClass(Problem.class).suppress(NULL_FIELDS).verify();
   }
 }
