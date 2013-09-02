@@ -42,4 +42,8 @@ public class SandboxImpl implements Sandbox {
 
     return resultFile;
   }
+
+  public FileSystem fileSystem() {
+    return fileSystem;
+  }
 }

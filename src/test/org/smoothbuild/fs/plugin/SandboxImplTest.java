@@ -1,5 +1,6 @@
 package org.smoothbuild.fs.plugin;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingStream.writeAndClose;
@@ -66,4 +67,8 @@ public class SandboxImplTest {
     }
   }
 
+  @Test
+  public void fileSystem() throws Exception {
+    assertThat(sandbox.fileSystem()).isSameAs(fileSystem);
+  }
 }
