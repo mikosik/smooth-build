@@ -4,10 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.util.ReflexiveUtils.isPublic;
 import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
-import java.lang.reflect.Method;
-
 import org.junit.Test;
-import org.smoothbuild.util.ReflexiveUtils;
 
 public class ReflexiveUtilsTest {
 
@@ -87,39 +84,5 @@ public class ReflexiveUtilsTest {
 
   public static class MyPrivateConstructorClass {
     private MyPrivateConstructorClass() {}
-  }
-
-  @Test
-  public void invokeMethod() throws Exception {
-    Class<?> klass = MyClassWithStringMethod.class;
-    Method method = klass.getMethod("string");
-
-    Object result = ReflexiveUtils.invokeMethod(klass, method);
-
-    assertThat(result).isEqualTo("string value");
-  }
-
-  public static class MyClassWithStringMethod {
-    public static String string() {
-      return "string value";
-    }
-  }
-
-  @Test
-  public void invokeMethodWithArg() throws Exception {
-    Class<?> klass = MyClassWithChainMethod.class;
-    Method method = klass.getMethod("chain", Object.class);
-    String string = "string";
-
-    Object result = ReflexiveUtils.invokeMethod(klass, method, string);
-
-    assertThat(result).isEqualTo(string);
-
-  }
-
-  public static class MyClassWithChainMethod {
-    public static Object chain(Object value) {
-      return value;
-    }
   }
 }

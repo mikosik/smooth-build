@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.task.PluginTask;
 import org.smoothbuild.task.Task;
 
@@ -22,6 +23,6 @@ public class PluginFunction extends AbstractFunction {
 
   @Override
   public Task generateTask(Map<String, Task> dependencies) {
-    return new PluginTask(pluginInvoker, dependencies);
+    return new PluginTask(pluginInvoker, dependencies, type() == Type.VOID);
   }
 }

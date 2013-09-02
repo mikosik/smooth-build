@@ -1,11 +1,10 @@
 package org.smoothbuild.function.plugin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.smoothbuild.plugin.Sandbox;
-import org.smoothbuild.util.FunctionReflectionException;
-import org.smoothbuild.util.ReflexiveUtils;
 
 public class PluginInvoker {
   private final Method method;
@@ -17,8 +16,8 @@ public class PluginInvoker {
   }
 
   public Object invoke(Sandbox sandbox, Map<String, Object> argumentsMap)
-      throws FunctionReflectionException {
+      throws IllegalAccessException, InvocationTargetException {
     Object arguments = argumentsCreator.create(argumentsMap);
-    return ReflexiveUtils.invokeMethod(null, method, sandbox, arguments);
+    return method.invoke(null, new Object[] { sandbox, arguments });
   }
 }
