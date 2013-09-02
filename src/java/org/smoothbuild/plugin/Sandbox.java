@@ -1,6 +1,8 @@
 package org.smoothbuild.plugin;
 
-public interface Sandbox {
+import org.smoothbuild.problem.ProblemsListener;
+
+public interface Sandbox extends ProblemsListener {
   public FileList resultFileList();
 
   public File resultFile(Path path);

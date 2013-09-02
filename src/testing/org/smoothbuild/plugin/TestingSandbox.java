@@ -6,19 +6,23 @@ import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileList;
 import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 public class TestingSandbox extends SandboxImpl {
   private final TestingFileSystem fileSystem;
+  private final TestingProblemsListener problems;
+
   private TestingFileList resultFileList;
   private TestingFile resultFile;
 
   public TestingSandbox() {
-    this(new TestingFileSystem());
+    this(new TestingFileSystem(), new TestingProblemsListener());
   }
 
-  public TestingSandbox(TestingFileSystem fileSystem) {
-    super(fileSystem, Path.rootPath());
+  public TestingSandbox(TestingFileSystem fileSystem, TestingProblemsListener problemsListener) {
+    super(fileSystem, Path.rootPath(), problemsListener);
     this.fileSystem = fileSystem;
+    this.problems = problemsListener;
   }
 
   @Override
@@ -45,5 +49,9 @@ public class TestingSandbox extends SandboxImpl {
   @Override
   public TestingFileSystem fileSystem() {
     return fileSystem;
+  }
+
+  public TestingProblemsListener problems() {
+    return problems;
   }
 }

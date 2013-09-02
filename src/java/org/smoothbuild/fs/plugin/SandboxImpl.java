@@ -7,17 +7,21 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileList;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.problem.Problem;
+import org.smoothbuild.problem.ProblemsListener;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem fileSystem;
   private final Path root;
+  private final ProblemsListener problems;
 
   private FileList resultFileList;
   private File resultFile;
 
-  public SandboxImpl(FileSystem fileSystem, Path root) {
+  public SandboxImpl(FileSystem fileSystem, Path root, ProblemsListener problems) {
     this.fileSystem = fileSystem;
     this.root = root;
+    this.problems = problems;
   }
 
   @Override
@@ -45,5 +49,10 @@ public class SandboxImpl implements Sandbox {
 
   public FileSystem fileSystem() {
     return fileSystem;
+  }
+
+  @Override
+  public void report(Problem problem) {
+    problems.report(problem);
   }
 }
