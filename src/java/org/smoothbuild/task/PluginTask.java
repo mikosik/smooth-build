@@ -10,7 +10,7 @@ import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
-import org.smoothbuild.task.err.PluginInternalError;
+import org.smoothbuild.task.err.ReflexiveInternalError;
 import org.smoothbuild.task.err.UnexpectedError;
 
 import com.google.common.collect.ImmutableMap;
@@ -37,7 +37,7 @@ public class PluginTask extends AbstractTask {
         setResult(result);
       }
     } catch (IllegalAccessException e) {
-      sandbox.report(new PluginInternalError(signature.name(), e));
+      sandbox.report(new ReflexiveInternalError(signature.name(), e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof FileSystemException) {
