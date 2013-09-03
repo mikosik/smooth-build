@@ -23,6 +23,11 @@ public class EmptyTest {
   }
 
   @Test
+  public void emptyStringMapAlwaysReturnsTheSameObject() {
+    assertThat(Empty.stringTaskMap()).isSameAs(Empty.stringTaskMap());
+  }
+
+  @Test
   public void emptyStringObjectIsEmpty() {
     assertThat(Empty.stringObjectMap()).isEmpty();
   }
@@ -31,6 +36,11 @@ public class EmptyTest {
   public void emptyStringObjectMapIsImmutable() {
     @SuppressWarnings("unused")
     ImmutableMap<String, Object> map = Empty.stringObjectMap();
+  }
+
+  @Test
+  public void emptyStringObjectAlwaysReturnsTheSameObject() {
+    assertThat(Empty.stringObjectMap()).isSameAs(Empty.stringObjectMap());
   }
 
   @Test
@@ -45,6 +55,11 @@ public class EmptyTest {
   }
 
   @Test
+  public void emptyStringParamAlwaysReturnsTheSameObject() {
+    assertThat(Empty.stringParamMap()).isSameAs(Empty.stringParamMap());
+  }
+
+  @Test
   public void emptyTaskListIsEmpty() {
     assertThat(Empty.taskList()).isEmpty();
   }
@@ -53,5 +68,10 @@ public class EmptyTest {
   public void emptyTaskListIsImmutable() {
     @SuppressWarnings("unused")
     ImmutableList<Task> list = Empty.taskList();
+  }
+
+  @Test
+  public void emptyTaskListAlwaysReturnsTheSameObject() {
+    assertThat(Empty.taskList()).isSameAs(Empty.taskList());
   }
 }
