@@ -32,7 +32,7 @@ public class PluginTask extends AbstractTask {
     try {
       Object result = pluginInvoker.invoke(sandbox, calculateArguments(dependencies()));
       if (result == null && !isNullResultAllowed()) {
-        sandbox.report(new NullResultError());
+        sandbox.report(new NullResultError(signature.name()));
       } else {
         setResult(result);
       }
