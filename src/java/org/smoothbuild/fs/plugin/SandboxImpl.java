@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.problem.Problem;
@@ -15,7 +15,7 @@ public class SandboxImpl implements Sandbox {
   private final Path root;
   private final ProblemsListener problems;
 
-  private FileList resultFileList;
+  private FileSet resultFileSet;
   private File resultFile;
 
   public SandboxImpl(FileSystem fileSystem, Path root, ProblemsListener problems) {
@@ -25,22 +25,21 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
-  public FileList resultFileList() {
-    checkState(resultFile == null,
-        "Cannot call resultFileList() when resultFile() has been called.");
+  public FileSet resultFileSet() {
+    checkState(resultFile == null, "Cannot call resultFileSet() when resultFile() has been called.");
 
-    if (resultFileList == null) {
-      resultFileList = new FileListImpl(fileSystem, root);
+    if (resultFileSet == null) {
+      resultFileSet = new FileSetImpl(fileSystem, root);
     }
 
-    return resultFileList;
+    return resultFileSet;
   }
 
   @Override
   public File resultFile(Path path) {
     checkState(resultFile == null, "Cannot call resultFile() twice.");
-    checkState(resultFileList == null,
-        "Cannot call resultFile() when resultFileList() has been called.");
+    checkState(resultFileSet == null,
+        "Cannot call resultFile() when resultFileSet() has been called.");
 
     resultFile = new FileImpl(fileSystem, root, path);
 

@@ -5,9 +5,9 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.plugin.FileListImpl;
+import org.smoothbuild.fs.plugin.FileSetImpl;
 import org.smoothbuild.fs.plugin.SandboxImpl;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.SmoothFunction;
 
@@ -20,7 +20,7 @@ public class FilesFunction {
   }
 
   @SmoothFunction("files")
-  public static FileList execute(SandboxImpl sandbox, Parameters params) {
+  public static FileSet execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -33,7 +33,7 @@ public class FilesFunction {
       this.params = params;
     }
 
-    public FileList execute() {
+    public FileSet execute() {
       Path dirPath = validatedPath("dir", params.dir(), sandbox);
       if (dirPath == null) {
         return null;
@@ -41,7 +41,7 @@ public class FilesFunction {
       return createFiles(dirPath);
     }
 
-    private FileList createFiles(Path dirPath) {
+    private FileSet createFiles(Path dirPath) {
       FileSystem fileSystem = sandbox.fileSystem();
       if (!fileSystem.pathExists(dirPath)) {
         sandbox.report(new NoSuchPathError("dir", dirPath));
@@ -49,7 +49,7 @@ public class FilesFunction {
       }
 
       if (fileSystem.pathExistsAndisDirectory(dirPath)) {
-        return new FileListImpl(fileSystem, dirPath);
+        return new FileSetImpl(fileSystem, dirPath);
       } else {
         sandbox.report(new PathIsNotADirError("dir", dirPath));
         return null;

@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.testing.TestingFile;
-import org.smoothbuild.testing.TestingFileList;
+import org.smoothbuild.testing.TestingFileSet;
 import org.smoothbuild.testing.TestingFileSystem;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
@@ -12,7 +12,7 @@ public class TestingSandbox extends SandboxImpl {
   private final TestingFileSystem fileSystem;
   private final TestingProblemsListener problems;
 
-  private TestingFileList resultFileList;
+  private TestingFileSet resultFileSet;
   private TestingFile resultFile;
 
   public TestingSandbox() {
@@ -26,22 +26,21 @@ public class TestingSandbox extends SandboxImpl {
   }
 
   @Override
-  public TestingFileList resultFileList() {
-    checkState(resultFile == null,
-        "Cannot call resultFileList() when resultFile() has been called.");
+  public TestingFileSet resultFileSet() {
+    checkState(resultFile == null, "Cannot call resultFileSet() when resultFile() has been called.");
 
-    if (resultFileList == null) {
-      resultFileList = new TestingFileList(fileSystem);
+    if (resultFileSet == null) {
+      resultFileSet = new TestingFileSet(fileSystem);
     }
 
-    return resultFileList;
+    return resultFileSet;
   }
 
   @Override
   public TestingFile resultFile(Path path) {
     checkState(resultFile == null, "Cannot call resultFile() twice.");
-    checkState(resultFileList == null,
-        "Cannot call resultFile() when resultFileList() has been called.");
+    checkState(resultFileSet == null,
+        "Cannot call resultFile() when resultFileSet() has been called.");
     resultFile = new TestingFile(fileSystem, Path.rootPath(), path);
     return resultFile;
   }

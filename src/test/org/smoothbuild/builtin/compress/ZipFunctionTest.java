@@ -11,11 +11,11 @@ import java.util.zip.ZipInputStream;
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.ZipFunction.Parameters;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
-import org.smoothbuild.testing.TestingFileList;
+import org.smoothbuild.testing.TestingFileSet;
 
 // TODO pass as argument object that throws exception when second file is
 // created. Or maybe even method that instantiate function given
@@ -25,13 +25,13 @@ public class ZipFunctionTest {
 
   @Test
   public void testZipping() throws IOException, FunctionException {
-    TestingFileList inputFiles = new TestingFileList();
+    TestingFileSet inputFiles = new TestingFileSet();
     inputFiles.createFile(path("fileA.txt")).createContentWithFilePath();
     inputFiles.createFile(path("fileB.txt")).createContentWithFilePath();
 
     File result = runExecute(params(inputFiles));
 
-    TestingFileList unpackedFiles = new TestingFileList();
+    TestingFileSet unpackedFiles = new TestingFileSet();
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;
@@ -52,11 +52,11 @@ public class ZipFunctionTest {
     assertThat(fileCount).isEqualTo(2);
   }
 
-  private static ZipFunction.Parameters params(final FileList fileList) {
+  private static ZipFunction.Parameters params(final FileSet fileSet) {
     return new ZipFunction.Parameters() {
       @Override
-      public FileList fileList() {
-        return fileList;
+      public FileSet fileSet() {
+        return fileSet;
       }
     };
   }

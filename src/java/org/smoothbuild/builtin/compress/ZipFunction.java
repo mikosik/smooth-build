@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 
@@ -20,7 +20,7 @@ public class ZipFunction {
     /**
      * Files to be zipped.
      */
-    public FileList fileList();
+    public FileSet fileSet();
   }
 
   // TODO add missing parameters: level, comment, method
@@ -53,12 +53,12 @@ public class ZipFunction {
     }
 
     public File execute() {
-      if (params.fileList() == null) {
+      if (params.fileSet() == null) {
         sandbox.report(new MissingRequiredArgError("files"));
       }
       File output = sandbox.resultFile(path("output.zip"));
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
-        for (File file : params.fileList().asIterable()) {
+        for (File file : params.fileSet().asIterable()) {
           addEntry(zipOutputStream, file);
         }
       } catch (IOException e) {

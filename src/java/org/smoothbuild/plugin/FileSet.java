@@ -1,6 +1,6 @@
 package org.smoothbuild.plugin;
 
-public interface FileList {
+public interface FileSet {
   public File file(Path path);
 
   public Iterable<File> asIterable();

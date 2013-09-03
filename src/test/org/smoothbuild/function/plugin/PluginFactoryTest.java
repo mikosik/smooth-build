@@ -25,7 +25,7 @@ import org.smoothbuild.function.plugin.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.plugin.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.plugin.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
@@ -102,7 +102,7 @@ public class PluginFactoryTest {
 
     public File file();
 
-    public FileList fileList();
+    public FileSet fileSet();
   }
 
   public static class MyPluginWithAllowedParamTypes {
@@ -174,7 +174,7 @@ public class PluginFactoryTest {
   public static class MyPluginWithFilesResult {
 
     @SmoothFunction("my.package.myFunction")
-    public static FileList execute(Sandbox sandbox, EmptyParameters params) {
+    public static FileSet execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }

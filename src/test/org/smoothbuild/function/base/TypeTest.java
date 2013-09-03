@@ -2,7 +2,7 @@ package org.smoothbuild.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.base.Type.FILE;
-import static org.smoothbuild.function.base.Type.FILE_LIST;
+import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.JAVA_PARAM_TO_SMOOTH;
 import static org.smoothbuild.function.base.Type.JAVA_RESULT_TO_SMOOTH;
 import static org.smoothbuild.function.base.Type.PARAM_TYPES;
@@ -14,7 +14,7 @@ import static org.smoothbuild.function.base.Type.javaResultTypetoType;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 
 import com.google.inject.TypeLiteral;
 
@@ -24,7 +24,7 @@ public class TypeTest {
   public void javaType() {
     assertThat((Object) STRING.javaType()).isEqualTo(type(String.class));
     assertThat((Object) FILE.javaType()).isEqualTo(type(File.class));
-    assertThat((Object) FILE_LIST.javaType()).isEqualTo(type(FileList.class));
+    assertThat((Object) FILE_SET.javaType()).isEqualTo(type(FileSet.class));
     assertThat((Object) Type.VOID.javaType()).isEqualTo(type(Void.TYPE));
   }
 
@@ -32,41 +32,41 @@ public class TypeTest {
   public void isAssignableFrom() throws Exception {
     assertThat(STRING.isAssignableFrom(STRING)).isTrue();
     assertThat(STRING.isAssignableFrom(FILE)).isFalse();
-    assertThat(STRING.isAssignableFrom(FILE_LIST)).isFalse();
+    assertThat(STRING.isAssignableFrom(FILE_SET)).isFalse();
 
     assertThat(FILE.isAssignableFrom(STRING)).isFalse();
     assertThat(FILE.isAssignableFrom(FILE)).isTrue();
-    assertThat(FILE.isAssignableFrom(FILE_LIST)).isFalse();
+    assertThat(FILE.isAssignableFrom(FILE_SET)).isFalse();
 
-    assertThat(FILE_LIST.isAssignableFrom(STRING)).isFalse();
-    assertThat(FILE_LIST.isAssignableFrom(FILE)).isFalse();
-    assertThat(FILE_LIST.isAssignableFrom(FILE_LIST)).isTrue();
+    assertThat(FILE_SET.isAssignableFrom(STRING)).isFalse();
+    assertThat(FILE_SET.isAssignableFrom(FILE)).isFalse();
+    assertThat(FILE_SET.isAssignableFrom(FILE_SET)).isTrue();
   }
 
   @Test
   public void equalsAndHashCodeWorkaround() throws Exception {
     assertThat(STRING).isEqualTo(STRING);
     assertThat(STRING).isNotEqualTo(FILE);
-    assertThat(STRING).isNotEqualTo(FILE_LIST);
+    assertThat(STRING).isNotEqualTo(FILE_SET);
 
     assertThat(FILE).isNotEqualTo(STRING);
     assertThat(FILE).isEqualTo(FILE);
-    assertThat(FILE).isNotEqualTo(FILE_LIST);
+    assertThat(FILE).isNotEqualTo(FILE_SET);
 
-    assertThat(FILE_LIST).isNotEqualTo(STRING);
-    assertThat(FILE_LIST).isNotEqualTo(FILE);
-    assertThat(FILE_LIST).isEqualTo(FILE_LIST);
+    assertThat(FILE_SET).isNotEqualTo(STRING);
+    assertThat(FILE_SET).isNotEqualTo(FILE);
+    assertThat(FILE_SET).isEqualTo(FILE_SET);
 
     assertThat(STRING.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(FILE.hashCode()).isNotEqualTo(FILE_LIST.hashCode());
-    assertThat(FILE_LIST.hashCode()).isNotEqualTo(STRING.hashCode());
+    assertThat(FILE.hashCode()).isNotEqualTo(FILE_SET.hashCode());
+    assertThat(FILE_SET.hashCode()).isNotEqualTo(STRING.hashCode());
   }
 
   @Test
   public void testJavaParamTypetoType() {
     assertThat(javaParamTypetoType(type(String.class))).isEqualTo(STRING);
     assertThat(javaParamTypetoType(type(File.class))).isEqualTo(FILE);
-    assertThat(javaParamTypetoType(type(FileList.class))).isEqualTo(FILE_LIST);
+    assertThat(javaParamTypetoType(type(FileSet.class))).isEqualTo(FILE_SET);
   }
 
   @Test
@@ -78,7 +78,7 @@ public class TypeTest {
   public void testJavaResultTypetoType() {
     assertThat(javaResultTypetoType(type(String.class))).isEqualTo(STRING);
     assertThat(javaResultTypetoType(type(File.class))).isEqualTo(FILE);
-    assertThat(javaResultTypetoType(type(FileList.class))).isEqualTo(FILE_LIST);
+    assertThat(javaResultTypetoType(type(FileSet.class))).isEqualTo(FILE_SET);
     assertThat(javaResultTypetoType(type(Void.TYPE))).isEqualTo(VOID);
   }
 
