@@ -14,15 +14,17 @@ import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
 import org.smoothbuild.task.err.UnexpectedError;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class PluginTask extends AbstractTask {
   private final Signature signature;
   private final PluginInvoker pluginInvoker;
+  private final ImmutableMap<String, Task> dependencies;
 
   public PluginTask(Signature signature, PluginInvoker pluginInvoker, Map<String, Task> dependencies) {
-    super(dependencies);
+    this.dependencies = ImmutableMap.copyOf(dependencies);
     this.signature = signature;
     this.pluginInvoker = pluginInvoker;
   }
@@ -30,7 +32,7 @@ public class PluginTask extends AbstractTask {
   @Override
   public void calculateResult(Sandbox sandbox) {
     try {
-      Object result = pluginInvoker.invoke(sandbox, calculateArguments(dependencies()));
+      Object result = pluginInvoker.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {
         sandbox.report(new NullResultError(functionName()));
       } else {
@@ -56,12 +58,16 @@ public class PluginTask extends AbstractTask {
     return signature.type() == Type.VOID;
   }
 
-  private static ImmutableMap<String, Object> calculateArguments(
-      ImmutableMap<String, Task> dependencies) {
+  private ImmutableMap<String, Object> calculateArguments() {
     Builder<String, Object> builder = ImmutableMap.builder();
     for (Map.Entry<String, Task> entry : dependencies.entrySet()) {
       builder.put(entry.getKey(), entry.getValue().result());
     }
     return builder.build();
+  }
+
+  @Override
+  public ImmutableCollection<Task> dependencies() {
+    return dependencies.values();
   }
 }

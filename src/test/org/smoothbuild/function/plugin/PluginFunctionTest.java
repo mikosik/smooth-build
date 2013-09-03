@@ -32,7 +32,7 @@ public class PluginFunctionTest {
   public void generateTaskReturnsTaskWithPassedDependencies() throws Exception {
     ImmutableMap<String, Task> dependencies = Empty.stringTaskMap();
     Task task = function.generateTask(dependencies);
-    assertThat(task.dependencies()).isSameAs(dependencies);
+    assertThat(task.dependencies()).isSameAs(dependencies.values());
   }
 
   @Test

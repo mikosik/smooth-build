@@ -19,4 +19,9 @@ public class PrecalculatedTaskTest {
     assertThat(task.result()).isSameAs(result);
   }
 
+  @Test
+  public void hasZeroDependencies() throws Exception {
+    PrecalculatedTask task = new PrecalculatedTask("result");
+    assertThat(task.dependencies()).isEmpty();
+  }
 }
