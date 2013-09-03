@@ -12,16 +12,16 @@ import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.collect.ImmutableList;
 
-public class FilesImplTest {
+public class FileSetImplTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
   Path root = Path.path("root/dir");
 
-  FileListImpl fileListImpl = new FileListImpl(fileSystem, root);
+  FileSetImpl fileSetImpl = new FileSetImpl(fileSystem, root);
 
   @Test
   public void file() throws Exception {
     fileSystem.createFileContainingItsPath(root, path("abc.txt"));
-    File file = fileListImpl.file(path("abc.txt"));
+    File file = fileSetImpl.file(path("abc.txt"));
     FileImplTest.assertContentHasFilePath(file);
   }
 
@@ -40,7 +40,7 @@ public class FilesImplTest {
       fileSystem.createFileContainingItsPath(root, path(name));
     }
 
-    for (File file : fileListImpl.asIterable()) {
+    for (File file : fileSetImpl.asIterable()) {
       FileImplTest.assertContentHasFilePath(file);
     }
   }
@@ -50,10 +50,10 @@ public class FilesImplTest {
     String path = "abc/test.txt";
     createFile(path);
 
-    FileImplTest.assertContentHasFilePath(fileListImpl.file(path(path)));
+    FileImplTest.assertContentHasFilePath(fileSetImpl.file(path(path)));
   }
 
   private void createFile(String path) throws IOException {
-    writeAndClose(fileListImpl.createFile(path(path)).createOutputStream(), path);
+    writeAndClose(fileSetImpl.createFile(path(path)).createOutputStream(), path);
   }
 }

@@ -1,16 +1,16 @@
 package org.smoothbuild.testing;
 
-import org.smoothbuild.fs.plugin.FileListImpl;
+import org.smoothbuild.fs.plugin.FileSetImpl;
 import org.smoothbuild.plugin.Path;
 
-public class TestingFileList extends FileListImpl {
+public class TestingFileSet extends FileSetImpl {
   private final TestingFileSystem fileSystem;
 
-  public TestingFileList() {
+  public TestingFileSet() {
     this(new TestingFileSystem());
   }
 
-  public TestingFileList(TestingFileSystem fileSystem) {
+  public TestingFileSet(TestingFileSystem fileSystem) {
     super(fileSystem, Path.rootPath());
     this.fileSystem = fileSystem;
   }

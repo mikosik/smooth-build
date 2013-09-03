@@ -9,7 +9,7 @@ import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.TestingSandbox;
@@ -53,9 +53,9 @@ public class FilesFunctionTest {
     Path filePath = path("file/path/file.txt");
     sandbox.fileSystem().createFileContainingItsPath(rootPath, filePath);
 
-    FileList fileList = runExecute(params(rootPath.value()));
+    FileSet fileSet = runExecute(params(rootPath.value()));
 
-    assertContentHasFilePath(fileList.file(filePath));
+    assertContentHasFilePath(fileSet.file(filePath));
   }
 
   private static FilesFunction.Parameters params(final String dir) {
@@ -67,7 +67,7 @@ public class FilesFunctionTest {
     };
   }
 
-  private FileList runExecute(Parameters params) {
+  private FileSet runExecute(Parameters params) {
     return FilesFunction.execute(sandbox, params);
   }
 }

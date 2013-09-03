@@ -10,7 +10,7 @@ import java.util.zip.ZipInputStream;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 
@@ -20,7 +20,7 @@ public class UnzipFunction {
   }
 
   @SmoothFunction("unzip")
-  public static FileList execute(Sandbox sandbox, Parameters params) {
+  public static FileSet execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -33,14 +33,14 @@ public class UnzipFunction {
       this.params = params;
     }
 
-    public FileList execute() {
+    public FileSet execute() {
       byte[] buffer = new byte[1024];
 
       if (params.file() == null) {
         sandbox.report(new MissingRequiredArgError("file"));
       }
 
-      FileList resultFiles = sandbox.resultFileList();
+      FileSet resultFiles = sandbox.resultFileSet();
       try (ZipInputStream zipInputStream = new ZipInputStream(params.file().createInputStream());) {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
@@ -53,9 +53,9 @@ public class UnzipFunction {
       return resultFiles;
     }
 
-    private void unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, FileList fileList,
+    private void unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, FileSet fileSet,
         byte[] buffer) throws IOException {
-      File file = fileList.createFile(path(entry.getName()));
+      File file = fileSet.createFile(path(entry.getName()));
       try (OutputStream outputStream = file.createOutputStream()) {
         int len = 0;
         while ((len = zipInputStream.read(buffer)) > 0) {

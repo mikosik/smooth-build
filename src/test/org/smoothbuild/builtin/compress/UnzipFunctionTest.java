@@ -13,11 +13,11 @@ import org.junit.Test;
 import org.smoothbuild.builtin.compress.UnzipFunction.Parameters;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
-import org.smoothbuild.testing.TestingFileList;
+import org.smoothbuild.testing.TestingFileSet;
 
 public class UnzipFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
@@ -26,7 +26,7 @@ public class UnzipFunctionTest {
   public void testUnzipping() throws IOException, FunctionException {
     Parameters params = params(packedFiles("file/path/file1.txt", "file/path/file2.txt"));
 
-    FileList result = runExecute(params);
+    FileSet result = runExecute(params);
 
     int fileCount = 0;
     for (File file : result.asIterable()) {
@@ -37,11 +37,11 @@ public class UnzipFunctionTest {
   }
 
   private static TestingFile packedFiles(String path1, String path2) throws IOException {
-    TestingFileList filesToPack = new TestingFileList();
+    TestingFileSet filesToPack = new TestingFileSet();
     filesToPack.createFile(path(path1)).createContentWithFilePath();
     filesToPack.createFile(path(path2)).createContentWithFilePath();
 
-    TestingFile inputFile = new TestingFileList().createFile(path("input.zip"));
+    TestingFile inputFile = new TestingFileSet().createFile(path("input.zip"));
 
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.createOutputStream());) {
       for (File file : filesToPack.asIterable()) {
@@ -79,7 +79,7 @@ public class UnzipFunctionTest {
     };
   }
 
-  private FileList runExecute(Parameters params) throws FunctionException {
+  private FileSet runExecute(Parameters params) throws FunctionException {
     return UnzipFunction.execute(sandbox, params);
   }
 }

@@ -8,7 +8,7 @@ import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.FileList;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
@@ -42,8 +42,8 @@ public class SandboxImplTest {
   }
 
   @Test
-  public void cannotCallResultFileAfterCallingResultFileList() {
-    sandbox.resultFileList();
+  public void cannotCallResultFileAfterCallingResultFileSet() {
+    sandbox.resultFileSet();
     try {
       sandbox.resultFile(file);
       fail("exception should be thrown");
@@ -54,19 +54,19 @@ public class SandboxImplTest {
 
   @Test
   public void resultFilesAreCreatedOnFileSystem() throws Exception {
-    FileList resultFileList = sandbox.resultFileList();
-    writeAndClose(resultFileList.createFile(file).createOutputStream(), file.value());
-    writeAndClose(resultFileList.createFile(file2).createOutputStream(), file2.value());
+    FileSet resultFileSet = sandbox.resultFileSet();
+    writeAndClose(resultFileSet.createFile(file).createOutputStream(), file.value());
+    writeAndClose(resultFileSet.createFile(file2).createOutputStream(), file2.value());
 
     fileSystem.assertFileContainsItsPath(root, file);
     fileSystem.assertFileContainsItsPath(root, file2);
   }
 
   @Test
-  public void cannotCallResultFileListAfterCallingResultFileTwice() {
+  public void cannotCallResultFileSetAfterCallingResultFileTwice() {
     sandbox.resultFile(file);
     try {
-      sandbox.resultFileList();
+      sandbox.resultFileSet();
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
       // expected
