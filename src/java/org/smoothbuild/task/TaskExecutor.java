@@ -13,8 +13,6 @@ import org.smoothbuild.plugin.Path;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
 
-import com.google.common.collect.ImmutableMap;
-
 public class TaskExecutor {
   private final FileSystem fileSystem;
 
@@ -36,8 +34,7 @@ public class TaskExecutor {
     }
 
     private void execute(Task task) {
-      ImmutableMap<String, Task> dependencies = task.dependencies();
-      calculateTasks(dependencies.values());
+      calculateTasks(task.dependencies());
 
       if (problems.errorDetected()) {
         return;

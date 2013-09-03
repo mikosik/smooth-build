@@ -20,7 +20,7 @@ import org.smoothbuild.testing.TestingFileSystem;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 public class TaskExecutorTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
@@ -33,8 +33,8 @@ public class TaskExecutorTest {
     Task subTask = mock(Task.class);
     Task task = mock(Task.class);
 
-    when(subTask.dependencies()).thenReturn(Empty.stringTaskMap());
-    when(task.dependencies()).thenReturn(ImmutableMap.of("name", subTask));
+    when(subTask.dependencies()).thenReturn(Empty.taskList());
+    when(task.dependencies()).thenReturn(ImmutableList.of(subTask));
 
     taskExecutor.execute(problems, task);
 
@@ -49,8 +49,8 @@ public class TaskExecutorTest {
     Task subTask = mock(Task.class);
     Task task = mock(Task.class);
 
-    when(subTask.dependencies()).thenReturn(Empty.stringTaskMap());
-    when(task.dependencies()).thenReturn(ImmutableMap.of("name", subTask));
+    when(subTask.dependencies()).thenReturn(Empty.taskList());
+    when(task.dependencies()).thenReturn(ImmutableList.of(subTask));
 
     Mockito.doAnswer(new Answer<Void>() {
       @Override

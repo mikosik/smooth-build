@@ -1,28 +1,25 @@
 package org.smoothbuild.task;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-
-import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableCollection;
 
 public class AbstractTaskTest {
 
   @Test
   public void resultNotSetInitiallyWhenConstructorWithoutResultParamUsed() {
-    MyAbstractTask task = new MyAbstractTask(Empty.stringTaskMap());
+    MyAbstractTask task = new MyAbstractTask();
     assertThat(task.isResultCalculated()).isFalse();
   }
 
   @Test
   public void resultSetInitiallyWhenConstructorWithResultParamUsed() {
     String result = "result";
-    MyAbstractTask task = new MyAbstractTask(result, Empty.stringTaskMap());
+    MyAbstractTask task = new MyAbstractTask(result);
 
     assertThat(task.isResultCalculated()).isTrue();
     assertThat(task.result()).isSameAs(result);
@@ -47,22 +44,13 @@ public class AbstractTaskTest {
     assertThat(task.result()).isSameAs(result);
   }
 
-  @Test
-  public void dependencies() throws Exception {
-    ImmutableMap<String, Task> dependencies = ImmutableMap.of("key", mock(Task.class));
-    MyAbstractTask task = new MyAbstractTask(dependencies);
-
-    assertThat(task.dependencies()).isSameAs(dependencies);
-  }
-
   public static class MyAbstractTask extends AbstractTask {
-
-    public MyAbstractTask(Map<String, Task> dependencies) {
-      super(dependencies);
+    public MyAbstractTask() {
+      super();
     }
 
-    public MyAbstractTask(Object result, Map<String, Task> dependencies) {
-      super(result, dependencies);
+    public MyAbstractTask(Object result) {
+      super(result);
     }
 
     public void setMyResult(Object result) {
@@ -72,5 +60,9 @@ public class AbstractTaskTest {
     @Override
     public void calculateResult(Sandbox sandbox) {}
 
+    @Override
+    public ImmutableCollection<Task> dependencies() {
+      return Empty.taskList();
+    }
   }
 }
