@@ -10,7 +10,15 @@ public class Argument {
   private final DefinitionNode node;
   private final CodeLocation codeLocation;
 
-  public Argument(String name, DefinitionNode node, CodeLocation codeLocation) {
+  public static Argument explicitArg(String name, DefinitionNode node, CodeLocation codeLocation) {
+    return new Argument(name, node, codeLocation);
+  }
+
+  public static Argument implicitArg(DefinitionNode node, CodeLocation codeLocation) {
+    return new Argument(null, node, codeLocation);
+  }
+
+  private Argument(String name, DefinitionNode node, CodeLocation codeLocation) {
     this.name = name;
     this.node = checkNotNull(node);
     this.codeLocation = checkNotNull(codeLocation);

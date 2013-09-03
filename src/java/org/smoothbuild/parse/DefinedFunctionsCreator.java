@@ -2,6 +2,8 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.parse.Argument.explicitArg;
+import static org.smoothbuild.parse.Argument.implicitArg;
 import static org.smoothbuild.parse.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -88,7 +90,7 @@ public class DefinedFunctionsCreator {
         List<Argument> arguments = build(call.argList());
         // implicit piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipe.p.get(i));
-        arguments.add(new Argument(null, result, codeLocation));
+        arguments.add(implicitArg(result, codeLocation));
         result = build(call, arguments);
       }
       return result;
@@ -142,7 +144,7 @@ public class DefinedFunctionsCreator {
       if (argList != null) {
         for (ArgContext arg : argList.arg()) {
           DefinitionNode node = build(arg.expression());
-          result.add(new Argument(argName(arg), node, argLocation(arg)));
+          result.add(explicitArg(argName(arg), node, argLocation(arg)));
         }
       }
       return result;
