@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.TestingSandbox;
-import org.smoothbuild.task.err.PluginInternalError;
+import org.smoothbuild.task.err.ReflexiveInternalError;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -47,7 +47,7 @@ public class PluginTaskTest {
 
     pluginTask.calculateResult(sandbox);
 
-    sandbox.problems().assertOnlyProblem(PluginInternalError.class);
+    sandbox.problems().assertOnlyProblem(ReflexiveInternalError.class);
     assertThat(pluginTask.isResultCalculated()).isFalse();
   }
 
