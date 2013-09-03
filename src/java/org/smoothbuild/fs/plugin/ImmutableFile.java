@@ -27,11 +27,6 @@ public class ImmutableFile implements File {
   }
 
   @Override
-  public Path fullPath() {
-    return file.fullPath();
-  }
-
-  @Override
   public InputStream createInputStream() {
     return file.createInputStream();
   }
