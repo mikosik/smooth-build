@@ -6,6 +6,7 @@ import org.smoothbuild.plugin.FileList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.TypeLiteral;
 
 public class Type {
   public static final Type STRING = create("String", String.class);
@@ -16,20 +17,20 @@ public class Type {
   static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, FILE, FILE_LIST, VOID);
   static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, FILE, FILE_LIST);
 
-  static final ImmutableList<Class<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
-  static final ImmutableList<Class<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
+  static final ImmutableList<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
+  static final ImmutableList<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
 
-  static final ImmutableMap<Class<?>, Type> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
-  static final ImmutableMap<Class<?>, Type> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
+  static final ImmutableMap<TypeLiteral<?>, Type> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
+  static final ImmutableMap<TypeLiteral<?>, Type> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
 
   private final String name;
-  private final Class<?> javaType;
+  private final TypeLiteral<?> javaType;
 
-  private static Type create(String name, Class<?> klass) {
-    return new Type(name, klass);
+  private static Type create(String name, Class<?> javaType) {
+    return new Type(name, TypeLiteral.get(javaType));
   }
 
-  private Type(String name, Class<?> javaType) {
+  private Type(String name, TypeLiteral<?> javaType) {
     this.name = name;
     this.javaType = javaType;
   }
@@ -38,7 +39,7 @@ public class Type {
     return name;
   }
 
-  public Class<?> javaType() {
+  public TypeLiteral<?> javaType() {
     return javaType;
   }
 
@@ -56,24 +57,24 @@ public class Type {
     return name.hashCode();
   }
 
-  public static ImmutableList<Class<?>> javaTypesAllowedForResult() {
+  public static ImmutableList<TypeLiteral<?>> javaTypesAllowedForResult() {
     return RESULT_JAVA_TYPES;
   }
 
-  public static ImmutableList<Class<?>> javaTypesAllowedForParam() {
+  public static ImmutableList<TypeLiteral<?>> javaTypesAllowedForParam() {
     return PARAM_JAVA_TYPES;
   }
 
-  public static Type javaParamTypetoType(Class<?> klass) {
-    return JAVA_PARAM_TO_SMOOTH.get(klass);
+  public static Type javaParamTypetoType(TypeLiteral<?> javaType) {
+    return JAVA_PARAM_TO_SMOOTH.get(javaType);
   }
 
-  public static Type javaResultTypetoType(Class<?> klass) {
-    return JAVA_RESULT_TO_SMOOTH.get(klass);
+  public static Type javaResultTypetoType(TypeLiteral<?> javaType) {
+    return JAVA_RESULT_TO_SMOOTH.get(javaType);
   }
 
-  private static ImmutableList<Class<?>> toJavaTypes(Iterable<Type> types) {
-    Builder<Class<?>> builder = ImmutableList.builder();
+  private static ImmutableList<TypeLiteral<?>> toJavaTypes(Iterable<Type> types) {
+    Builder<TypeLiteral<?>> builder = ImmutableList.builder();
 
     for (Type type : types) {
       builder.add(type.javaType);
@@ -82,8 +83,8 @@ public class Type {
     return builder.build();
   }
 
-  private static ImmutableMap<Class<?>, Type> javaToTypeMap(Iterable<Type> types) {
-    ImmutableMap.Builder<Class<?>, Type> builder = ImmutableMap.builder();
+  private static ImmutableMap<TypeLiteral<?>, Type> javaToTypeMap(Iterable<Type> types) {
+    ImmutableMap.Builder<TypeLiteral<?>, Type> builder = ImmutableMap.builder();
 
     for (Type type : types) {
       builder.put(type.javaType, type);

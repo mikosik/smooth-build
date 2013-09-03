@@ -19,6 +19,7 @@ import org.smoothbuild.plugin.SmoothFunction;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import com.google.inject.TypeLiteral;
 
 public class PluginSignatureFactory {
 
@@ -44,7 +45,8 @@ public class PluginSignatureFactory {
   }
 
   private static Type getReturnType(Method method) throws PluginImplementationException {
-    Class<?> javaType = method.getReturnType();
+    Class<?> klass = method.getReturnType();
+    TypeLiteral<?> javaType = TypeLiteral.get(klass);
     Type type = Type.javaResultTypetoType(javaType);
     if (type == null) {
       throw new IllegalReturnTypeException(method, javaType);
@@ -71,7 +73,8 @@ public class PluginSignatureFactory {
     if (paramMethod.getParameterTypes().length != 0) {
       throw new ParamMethodHasArgumentsException(method, paramMethod);
     }
-    Class<?> javaType = paramMethod.getReturnType();
+    Class<?> klass = paramMethod.getReturnType();
+    TypeLiteral<?> javaType = TypeLiteral.get(klass);
     Type type = Type.javaParamTypetoType(javaType);
     if (type == null) {
       throw new ForbiddenParamTypeException(method, paramMethod, javaType);
