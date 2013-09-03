@@ -29,8 +29,8 @@ import org.smoothbuild.function.def.FunctionNode;
 import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.problem.CodeError;
-import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.problem.CodeLocation;
+import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -38,7 +38,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-// TODO test it
 public class DefinedFunctionsCreator {
 
   public static Map<Name, DefinedFunction> createDefinedFunctions(ProblemsListener problems,
