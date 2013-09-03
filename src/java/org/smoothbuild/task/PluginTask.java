@@ -37,7 +37,7 @@ public class PluginTask extends AbstractTask {
         setResult(result);
       }
     } catch (IllegalAccessException e) {
-      sandbox.report(new ReflexivePluginError(e));
+      sandbox.report(new ReflexivePluginError(signature.name(), e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof FileSystemException) {
