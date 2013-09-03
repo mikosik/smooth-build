@@ -3,6 +3,7 @@ package org.smoothbuild.util;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.task.Task;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class Empty {
@@ -16,5 +17,9 @@ public class Empty {
 
   public static ImmutableMap<String, Param> stringParamMap() {
     return ImmutableMap.of();
+  }
+
+  public static ImmutableList<Task> taskList() {
+    return ImmutableList.of();
   }
 }

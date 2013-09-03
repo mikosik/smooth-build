@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.task.Task;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class EmptyTest {
@@ -41,5 +42,16 @@ public class EmptyTest {
   public void emptyStringParamMapIsImmutable() {
     @SuppressWarnings("unused")
     ImmutableMap<String, Param> map = Empty.stringParamMap();
+  }
+
+  @Test
+  public void emptyTaskListIsEmpty() {
+    assertThat(Empty.taskList()).isEmpty();
+  }
+
+  @Test
+  public void emptyTaskListIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableList<Task> list = Empty.taskList();
   }
 }
