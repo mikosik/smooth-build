@@ -98,7 +98,10 @@ public class DefinedFunctionsCreator {
       if (expression.call() != null) {
         return build(expression.call());
       }
-      return buildStringNode(expression.STRING());
+      if (expression.STRING() != null) {
+        return buildStringNode(expression.STRING());
+      }
+      throw new RuntimeException("Illegal parse tree: ExpressionContext without children.");
     }
 
     private DefinitionNode build(CallContext call) {
