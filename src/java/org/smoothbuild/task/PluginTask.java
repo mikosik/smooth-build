@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.err.FileSystemError;
@@ -15,13 +17,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class PluginTask extends AbstractTask {
+  private final Signature signature;
   private final PluginInvoker pluginInvoker;
-  private final boolean voidType;
 
-  public PluginTask(PluginInvoker pluginInvoker, Map<String, Task> dependencies, boolean voidType) {
+  public PluginTask(Signature signature, PluginInvoker pluginInvoker, Map<String, Task> dependencies) {
     super(dependencies);
+    this.signature = signature;
     this.pluginInvoker = pluginInvoker;
-    this.voidType = voidType;
   }
 
   @Override
@@ -29,7 +31,7 @@ public class PluginTask extends AbstractTask {
     // TODO improve problems messages and test all cases
     try {
       Object result = pluginInvoker.invoke(sandbox, calculateArguments(dependencies()));
-      if (result == null && !voidType) {
+      if (result == null && !isNullResultAllowed()) {
         sandbox.report(new NullResultError());
       } else {
         setResult(result);
@@ -44,6 +46,10 @@ public class PluginTask extends AbstractTask {
         sandbox.report(new UnexpectedError(cause));
       }
     }
+  }
+
+  private boolean isNullResultAllowed() {
+    return signature.type() == Type.VOID;
   }
 
   private static ImmutableMap<String, Object> calculateArguments(
