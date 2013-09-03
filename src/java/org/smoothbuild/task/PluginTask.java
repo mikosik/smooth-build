@@ -29,7 +29,6 @@ public class PluginTask extends AbstractTask {
 
   @Override
   public void calculateResult(Sandbox sandbox) {
-    // TODO improve problems messages and test all cases
     try {
       Object result = pluginInvoker.invoke(sandbox, calculateArguments(dependencies()));
       if (result == null && !isNullResultAllowed()) {
