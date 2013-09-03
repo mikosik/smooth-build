@@ -2,6 +2,7 @@ package org.smoothbuild.function.base;
 
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.StringSet;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -10,6 +11,7 @@ import com.google.inject.TypeLiteral;
 
 public class Type {
   public static final Type STRING = create("String", String.class);
+  public static final Type STRING_SET = create("String", StringSet.class);
   public static final Type FILE = create("File", File.class);
   public static final Type FILE_SET = create("FileSet", FileSet.class);
   public static final Type VOID = create("Void", Void.TYPE);
