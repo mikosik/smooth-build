@@ -53,7 +53,10 @@ public class SandboxImpl implements Sandbox {
 
   @Override
   public void report(Problem problem) {
-    // TODO CodeLocation should be added here
+    // TODO Smooth StackTrace (list of CodeLocations) should be added here. This
+    // will be possible when each Task will have parent field pointing in
+    // direction to nearest root node (build run can have more than one
+    // task-to-run [soon]).
     problems.report(problem);
   }
 }
