@@ -5,8 +5,8 @@ import org.smoothbuild.problem.Error;
 
 import com.google.common.base.Throwables;
 
-public class ReflexivePluginError extends Error {
-  public ReflexivePluginError(Name name, Throwable e) {
+public class PluginInternalError extends Error {
+  public PluginInternalError(Name name, Throwable e) {
     super("Invoking function " + name + " caused internal exception:\n"
         + Throwables.getStackTraceAsString(e));
   }
