@@ -2,6 +2,8 @@ package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.parse.Argument.explicitArg;
+import static org.smoothbuild.parse.Argument.implicitArg;
 
 import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;
@@ -13,22 +15,32 @@ public class ArgumentTest {
   CodeLocation codeLocation = mock(CodeLocation.class);
 
   @Test(expected = NullPointerException.class)
-  public void nullDefinitionNodeIsForbidden() {
-    new Argument(name, null, codeLocation);
+  public void nullDefinitionNodeIsForbiddenInExplicitArg() {
+    explicitArg(name, null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullSourceLocationIsForbidden() {
-    new Argument(name, node, null);
+  public void nullDefinitionNodeIsForbiddenInImplicitArg() {
+    implicitArg(null, codeLocation);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void nullSourceLocationIsForbiddenInExplicitArg() {
+    explicitArg(name, node, null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void nullSourceLocationIsForbiddenInImplicitArg() {
+    implicitArg(node, null);
   }
 
   @Test
-  public void argumentWithNonNullNameIsExplicit() throws Exception {
-    assertThat(new Argument(name, node, codeLocation).isExplicit()).isTrue();
+  public void explicitArgIsExplicit() throws Exception {
+    assertThat(explicitArg(name, node, codeLocation).isExplicit()).isTrue();
   }
 
   @Test
-  public void argumentWithNullNameIsNotExplicit() throws Exception {
-    assertThat(new Argument(null, node, codeLocation).isExplicit()).isFalse();
+  public void implicitArgIsNotExplicit() throws Exception {
+    assertThat(implicitArg(node, codeLocation).isExplicit()).isFalse();
   }
 }

@@ -8,6 +8,8 @@ import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Param.params;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.parse.Argument.explicitArg;
+import static org.smoothbuild.parse.Argument.implicitArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.List;
@@ -124,11 +126,11 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static Argument argument(DefinitionNode node) {
-    return new Argument(null, node, codeLocation(1, 2, 3));
+    return implicitArg(node, codeLocation(1, 2, 3));
   }
 
   private static Argument argument(String name, DefinitionNode node) {
-    return new Argument(name, node, codeLocation(1, 2, 3));
+    return explicitArg(name, node, codeLocation(1, 2, 3));
   }
 
   private static DefinitionNode node(String value) {
