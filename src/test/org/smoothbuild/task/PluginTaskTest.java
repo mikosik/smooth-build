@@ -3,6 +3,7 @@ package org.smoothbuild.task;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.testing.TestingSignature.testingSignature;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -23,7 +24,8 @@ public class PluginTaskTest {
 
   Path tempDir = Path.path("temp/dir");
 
-  PluginTask pluginTask = new PluginTask(pluginInvoker, ImmutableMap.of(name, subTask), false);
+  PluginTask pluginTask = new PluginTask(testingSignature(), pluginInvoker, ImmutableMap.of(name,
+      subTask));
 
   @Test
   public void calculateResult() throws IllegalAccessException, InvocationTargetException {
