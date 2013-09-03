@@ -41,7 +41,7 @@ public class PluginTask extends AbstractTask {
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof FileSystemException) {
-        sandbox.report(new FileSystemError(cause));
+        sandbox.report(new FileSystemError(signature.name(), cause));
       } else {
         sandbox.report(new UnexpectedError(cause));
       }
