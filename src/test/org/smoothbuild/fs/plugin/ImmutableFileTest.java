@@ -32,11 +32,6 @@ public class ImmutableFileTest {
   }
 
   @Test
-  public void fullPath() {
-    assertThat(file.fullPath()).isEqualTo(root.append(filePath));
-  }
-
-  @Test
   public void createInputStream() throws Exception {
     fileSystem.createFileContainingItsPath(root, filePath);
     assertContentHasFilePath(file);
