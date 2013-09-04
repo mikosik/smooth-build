@@ -9,11 +9,13 @@ import org.smoothbuild.builtin.file.SaveToFunction.Parameters;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
+import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.fs.plugin.StoredFile;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.TestingSandbox;
+import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class SaveToFunctionTest {
@@ -50,7 +52,7 @@ public class SaveToFunctionTest {
     Path filePath = path("file/path/file.txt");
     fileSystem.createEmptyFile(path("root/path/file/path"));
 
-    StoredFile file = new StoredFile(fileSystem, rootPath(), filePath);
+    StoredFile file = new StoredFile(new SubFileSystem(fileSystem, rootPath()), filePath);
 
     runExecute(params(file, destinationDir.value()));
     sandbox.problems().assertOnlyProblem(PathIsNotADirError.class);
@@ -62,8 +64,8 @@ public class SaveToFunctionTest {
     Path root = path("file/root");
     Path path = path("file/path/file.txt");
 
-    fileSystem.createFileContainingItsPath(root, path);
-    StoredFile file = new StoredFile(fileSystem, root, path);
+    TestingFile file = new TestingFile(new SubFileSystem(fileSystem, root), path);
+    file.createContentWithFilePath();
 
     runExecute(params(file, destinationDir.value()));
 

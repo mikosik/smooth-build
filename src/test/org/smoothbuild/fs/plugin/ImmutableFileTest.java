@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
@@ -19,7 +20,7 @@ public class ImmutableFileTest {
   Path root = path("abc/efg");
   Path filePath = path("xyz/test.txt");
 
-  File file = immutableFile(new StoredFile(fileSystem, root, filePath));
+  File file = immutableFile(new StoredFile(new SubFileSystem(fileSystem, root), filePath));
 
   @Test
   public void convertingImmutableToImmutableReturnsTheSameObject() throws Exception {
