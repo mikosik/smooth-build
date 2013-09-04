@@ -6,11 +6,6 @@ public abstract class AbstractTask implements Task {
   private Object result;
   private boolean resultCalculated;
 
-  public AbstractTask(Object object) {
-    this.result = object;
-    this.resultCalculated = true;
-  }
-
   public AbstractTask() {
     this.result = null;
     this.resultCalculated = false;

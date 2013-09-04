@@ -17,15 +17,6 @@ public class AbstractTaskTest {
   }
 
   @Test
-  public void resultSetInitiallyWhenConstructorWithResultParamUsed() {
-    String result = "result";
-    MyAbstractTask task = new MyAbstractTask(result);
-
-    assertThat(task.isResultCalculated()).isTrue();
-    assertThat(task.result()).isSameAs(result);
-  }
-
-  @Test
   public void resultIsSetAfterSetting() throws Exception {
     doTestResultSetting("result");
   }
@@ -36,7 +27,7 @@ public class AbstractTaskTest {
   }
 
   private void doTestResultSetting(Object result) {
-    MyAbstractTask task = new MyAbstractTask(Empty.stringTaskMap());
+    MyAbstractTask task = new MyAbstractTask();
 
     task.setMyResult(result);
 
@@ -47,10 +38,6 @@ public class AbstractTaskTest {
   public static class MyAbstractTask extends AbstractTask {
     public MyAbstractTask() {
       super();
-    }
-
-    public MyAbstractTask(Object result) {
-      super(result);
     }
 
     public void setMyResult(Object result) {

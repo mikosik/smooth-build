@@ -1,14 +1,27 @@
 package org.smoothbuild.task;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;
 
-public class PrecalculatedTask extends AbstractTask {
+public class PrecalculatedTask implements Task {
+  private final Object result;
 
   public PrecalculatedTask(Object object) {
-    super(object);
+    this.result = checkNotNull(object);
+  }
+
+  @Override
+  public boolean isResultCalculated() {
+    return true;
+  }
+
+  @Override
+  public Object result() {
+    return result;
   }
 
   @Override
