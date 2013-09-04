@@ -23,6 +23,13 @@ public class SubFileSystemTest {
   SubFileSystem subFileSystem = new SubFileSystem(fileSystem, root);
 
   @Test
+  public void root() throws Exception {
+    Path parentRoot = path("parent/root");
+    when(fileSystem.root()).thenReturn(parentRoot);
+    assertThat(subFileSystem.root()).isEqualTo(parentRoot.append(root));
+  }
+
+  @Test
   public void pathExists() {
     when(fileSystem.pathExists(absolutePath)).thenReturn(true);
     assertThat(subFileSystem.pathExists(path)).isTrue();

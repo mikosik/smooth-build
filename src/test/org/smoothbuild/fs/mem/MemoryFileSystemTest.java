@@ -22,6 +22,11 @@ public class MemoryFileSystemTest {
   MemoryFileSystem fileSystem = new MemoryFileSystem();
 
   @Test
+  public void root() throws Exception {
+    assertThat(fileSystem.root()).isEqualTo(Path.rootPath());
+  }
+
+  @Test
   public void rootPathExists() {
     assertThat(fileSystem.pathExists(Path.rootPath())).isTrue();
   }

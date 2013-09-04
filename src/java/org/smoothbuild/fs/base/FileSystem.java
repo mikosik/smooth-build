@@ -13,6 +13,8 @@ import com.google.inject.ImplementedBy;
  */
 @ImplementedBy(DiskFileSystem.class)
 public interface FileSystem {
+  public Path root();
+
   public boolean pathExists(Path path);
 
   public boolean pathExistsAndIsDirectory(Path path);

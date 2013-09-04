@@ -25,6 +25,11 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   File root = getTempDirectory();
   FileSystem fileSystem = new DiskFileSystem(root.getAbsolutePath());
 
+  @Test
+  public void root() throws Exception {
+    assertThat(fileSystem.root()).isEqualTo(Path.rootPath());
+  }
+
   // pathExists()
 
   @Test
