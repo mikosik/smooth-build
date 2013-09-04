@@ -20,7 +20,7 @@ public class SandboxImpl implements Sandbox {
   }
 
   public MutableFile createFile(Path path) {
-    return new StoredFile(sandboxFileSystem, path);
+    return new MutableStoredFile(sandboxFileSystem, path);
   }
 
   public FileSystem projectFileSystem() {
