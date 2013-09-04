@@ -56,7 +56,7 @@ public class ZipFunction {
       if (params.fileSet() == null) {
         sandbox.report(new MissingRequiredArgError("files"));
       }
-      File output = sandbox.resultFile(path("output.zip"));
+      File output = sandbox.createFile(path("output.zip"));
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
         for (File file : params.fileSet()) {
           addEntry(zipOutputStream, file);
