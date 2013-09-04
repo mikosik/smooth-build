@@ -6,20 +6,18 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.collect.ImmutableList;
 
 public class StoredFileSetTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
-  Path root = Path.path("root/dir");
 
-  StoredFileSet storedFileSet = new StoredFileSet(fileSystem, root);
+  StoredFileSet storedFileSet = new StoredFileSet(fileSystem);
 
   @Test
   public void file() throws Exception {
-    fileSystem.createFileContainingItsPath(root, path("abc.txt"));
+    fileSystem.createFileContainingItsPath(path("abc.txt"));
     File file = storedFileSet.file(path("abc.txt"));
     StoredFileTest.assertContentHasFilePath(file);
   }
@@ -36,7 +34,7 @@ public class StoredFileSetTest {
    */
   private void testAsIterableFor(ImmutableList<String> fileNames) throws IOException {
     for (String name : fileNames) {
-      fileSystem.createFileContainingItsPath(root, path(name));
+      fileSystem.createFileContainingItsPath(path(name));
     }
 
     for (File file : storedFileSet) {

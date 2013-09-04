@@ -3,7 +3,6 @@ package org.smoothbuild.fs.plugin;
 import java.util.Iterator;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
@@ -18,8 +17,8 @@ public class StoredFileSet implements FileSet {
   private final PathToFileConverter pathToFileConverter = new PathToFileConverter();
   private final FileSystem fileSystem;
 
-  public StoredFileSet(FileSystem fileSystem, Path root) {
-    this.fileSystem = new SubFileSystem(fileSystem, root);
+  public StoredFileSet(FileSystem fileSystem) {
+    this.fileSystem = fileSystem;
   }
 
   public boolean contains(Path path) {
