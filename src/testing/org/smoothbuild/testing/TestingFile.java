@@ -7,8 +7,8 @@ import org.smoothbuild.fs.plugin.StoredFile;
 import org.smoothbuild.plugin.Path;
 
 public class TestingFile extends StoredFile {
-  public TestingFile(FileSystem fileSystem, Path root, Path path) {
-    super(fileSystem, root, path);
+  public TestingFile(FileSystem fileSystem, Path path) {
+    super(fileSystem, path);
   }
 
   public void createContentWithFilePath() throws IOException {
