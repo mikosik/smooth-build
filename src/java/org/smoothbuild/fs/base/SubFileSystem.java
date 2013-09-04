@@ -9,6 +9,11 @@ public class SubFileSystem implements FileSystem {
   private final FileSystem fileSystem;
   private final Path root;
 
+  @Override
+  public Path root() {
+    return fileSystem.root().append(root);
+  }
+
   public SubFileSystem(FileSystem fileSystem, Path root) {
     this.fileSystem = fileSystem;
     this.root = root;
