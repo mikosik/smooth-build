@@ -33,6 +33,12 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
+  public boolean pathExistsAndIsFile(Path path) {
+    MemoryElement element = findElement(path);
+    return element != null && element.isFile();
+  }
+
+  @Override
   public List<String> childNames(Path directory) {
     return getDirectory(directory).childNames();
   }

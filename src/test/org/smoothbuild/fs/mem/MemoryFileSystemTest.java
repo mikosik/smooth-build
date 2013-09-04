@@ -44,6 +44,52 @@ public class MemoryFileSystemTest {
     assertThat(fileSystem.pathExists(path("abc/def/ghi/text.txt"))).isTrue();
   }
 
+  // pathExistsAndIsDirectory()
+
+  @Test
+  public void pathExistsAndIsDirectoryReturnsTrueForDirectoryPath() throws Exception {
+    Path dir = path("myDirectory");
+    createDir(dir);
+
+    assertThat(fileSystem.pathExistsAndIsDirectory(dir)).isTrue();
+  }
+
+  @Test
+  public void pathExistsAndIsDirectoryReturnsFalseForFilePath() throws Exception {
+    String fileName = "myFile";
+    createEmptyFile(fileName);
+
+    assertThat(fileSystem.pathExistsAndIsDirectory(path(fileName))).isFalse();
+  }
+
+  @Test
+  public void pathExistsAndIsDirectoryReturnsFalseForNonexistentPathPath() throws Exception {
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
+  }
+
+  // pathExistsAndIsFile()
+
+  @Test
+  public void pathExistsAndIsFileReturnsFalseForDirectoryPath() throws Exception {
+    Path dir = path("myDirectory");
+    createDir(dir);
+
+    assertThat(fileSystem.pathExistsAndIsFile(dir)).isFalse();
+  }
+
+  @Test
+  public void pathExistsAndIsFileReturnsTrueForFilePath() throws Exception {
+    String fileName = "myFile";
+    createEmptyFile(fileName);
+
+    assertThat(fileSystem.pathExistsAndIsFile(path(fileName))).isTrue();
+  }
+
+  @Test
+  public void pathExistsAndisFileReturnsFalseForNonexistentPathPath() throws Exception {
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
+  }
+
   @Test
   public void creatingFileTwiceIsPossible() throws Exception {
     createEmptyFile("abc/def/ghi/text.txt");
@@ -261,6 +307,10 @@ public class MemoryFileSystemTest {
     } catch (NoSuchDirException e) {
       // expected
     }
+  }
+
+  private void createDir(Path path) throws IOException {
+    createEmptyFile(path.append(path("dummy-file")));
   }
 
   private void createEmptyFile(String path) throws IOException {

@@ -17,6 +17,8 @@ public interface FileSystem {
 
   public boolean pathExistsAndIsDirectory(Path path);
 
+  public boolean pathExistsAndIsFile(Path path);
+
   public Iterable<String> childNames(Path directory);
 
   public Iterable<Path> filesFrom(Path directory);

@@ -49,10 +49,10 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     assertThat(fileSystem.pathExists(path("myFile"))).isFalse();
   }
 
-  // pathExistsAndisDirectory()
+  // pathExistsAndIsDirectory()
 
   @Test
-  public void pathExistsAndisDirectoryReturnsTrueForDirectoryPath() throws Exception {
+  public void pathExistsAndIsDirectoryReturnsTrueForDirectoryPath() throws Exception {
     String myDir = "myDirectory";
     File myDirectory = new File(root, myDir);
     myDirectory.mkdirs();
@@ -61,7 +61,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   }
 
   @Test
-  public void pathExistsAndisDirectoryReturnsFalseForFilePath() throws Exception {
+  public void pathExistsAndIsDirectoryReturnsFalseForFilePath() throws Exception {
     String fileName = "myFile";
     createEmptyFile(root, fileName);
 
@@ -69,7 +69,31 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   }
 
   @Test
-  public void pathExistsAndisDirectoryReturnsFalseForNonexistentPathPath() throws Exception {
+  public void pathExistsAndIsDirectoryReturnsFalseForNonexistentPathPath() throws Exception {
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
+  }
+
+  // pathExistsAndIsFile()
+
+  @Test
+  public void pathExistsAndIsFileReturnsFalseForDirectoryPath() throws Exception {
+    String myDir = "myDirectory";
+    File myDirectory = new File(root, myDir);
+    myDirectory.mkdirs();
+
+    assertThat(fileSystem.pathExistsAndIsFile(path(myDir))).isFalse();
+  }
+
+  @Test
+  public void pathExistsAndIsFileReturnsTrueForFilePath() throws Exception {
+    String fileName = "myFile";
+    createEmptyFile(root, fileName);
+
+    assertThat(fileSystem.pathExistsAndIsFile(path(fileName))).isTrue();
+  }
+
+  @Test
+  public void pathExistsAndIsFileReturnsFalseForNonexistentPathPath() throws Exception {
     assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
   }
 
