@@ -25,6 +25,12 @@ public class SandboxImplTest {
   SandboxImpl sandbox = new SandboxImpl(fileSystem, root, problems);
 
   @Test
+  public void createFileCreatesFileOnFileSystem() throws Exception {
+    writeAndClose(sandbox.createFile(file).createOutputStream(), file.value());
+    fileSystem.assertFileContainsItsPath(root, file);
+  }
+
+  @Test
   public void resultFileIsCreatedOnFileSystem() throws Exception {
     writeAndClose(sandbox.resultFile(file).createOutputStream(), file.value());
     fileSystem.assertFileContainsItsPath(root, file);

@@ -24,6 +24,10 @@ public class SandboxImpl implements Sandbox {
     this.problems = problems;
   }
 
+  public File createFile(Path path) {
+    return new FileImpl(fileSystem, root, path);
+  }
+
   @Override
   public FileSet resultFileSet() {
     checkState(resultFile == null, "Cannot call resultFileSet() when resultFile() has been called.");
