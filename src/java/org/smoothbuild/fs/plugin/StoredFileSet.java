@@ -37,7 +37,7 @@ public class StoredFileSet implements FileSet {
 
   @Override
   public File file(Path path) {
-    return new FileImpl(fileSystem, root, path);
+    return new StoredFile(fileSystem, root, path);
   }
 
   @Override
@@ -48,7 +48,7 @@ public class StoredFileSet implements FileSet {
 
   private class PathToFileConverter implements Function<Path, File> {
     public File apply(Path path) {
-      return new FileImpl(fileSystem, root, path);
+      return new StoredFile(fileSystem, root, path);
     }
   }
 }

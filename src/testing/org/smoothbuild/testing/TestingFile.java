@@ -3,10 +3,10 @@ package org.smoothbuild.testing;
 import java.io.IOException;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.plugin.FileImpl;
+import org.smoothbuild.fs.plugin.StoredFile;
 import org.smoothbuild.plugin.Path;
 
-public class TestingFile extends FileImpl {
+public class TestingFile extends StoredFile {
   public TestingFile(FileSystem fileSystem, Path root, Path path) {
     super(fileSystem, root, path);
   }

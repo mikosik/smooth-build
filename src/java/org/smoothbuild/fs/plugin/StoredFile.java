@@ -7,12 +7,12 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 
-public class FileImpl implements File {
+public class StoredFile implements File {
   private final FileSystem fileSystem;
   private final Path path;
   private final Path fullPath;
 
-  public FileImpl(FileSystem fileSystem, Path root, Path path) {
+  public StoredFile(FileSystem fileSystem, Path root, Path path) {
     this.fileSystem = fileSystem;
     this.path = path;
     this.fullPath = root.append(path);

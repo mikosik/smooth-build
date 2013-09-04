@@ -13,33 +13,33 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
-public class FileImplTest {
+public class StoredFileTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
   Path rootDir = path("abc/efg");
   Path filePath = path("xyz/test.txt");
 
-  FileImpl fileImpl = new FileImpl(fileSystem, rootDir, filePath);
+  StoredFile storedFile = new StoredFile(fileSystem, rootDir, filePath);
 
   @Test
   public void testPath() throws Exception {
-    assertThat(fileImpl.path()).isEqualTo(filePath);
+    assertThat(storedFile.path()).isEqualTo(filePath);
   }
 
   @Test
   public void fullPath() {
-    assertThat(fileImpl.fullPath()).isEqualTo(rootDir.append(filePath));
+    assertThat(storedFile.fullPath()).isEqualTo(rootDir.append(filePath));
   }
 
   @Test
   public void createInputStream() throws Exception {
     fileSystem.createFileContainingItsPath(rootDir, filePath);
-    assertContentHasFilePath(fileImpl);
+    assertContentHasFilePath(storedFile);
   }
 
   @Test
   public void createOutputStream() throws Exception {
-    writeAndClose(fileImpl.createOutputStream(), filePath.value());
-    FileImplTest.assertContentHasFilePath(fileImpl);
+    writeAndClose(storedFile.createOutputStream(), filePath.value());
+    StoredFileTest.assertContentHasFilePath(storedFile);
   }
 
   public static void assertContentHasFilePath(File file) throws IOException, FileNotFoundException {

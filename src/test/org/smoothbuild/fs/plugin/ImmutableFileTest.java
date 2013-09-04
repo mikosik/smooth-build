@@ -19,7 +19,7 @@ public class ImmutableFileTest {
   Path root = path("abc/efg");
   Path filePath = path("xyz/test.txt");
 
-  File file = immutableFile(new FileImpl(fileSystem, root, filePath));
+  File file = immutableFile(new StoredFile(fileSystem, root, filePath));
 
   @Test
   public void convertingImmutableToImmutableReturnsTheSameObject() throws Exception {
