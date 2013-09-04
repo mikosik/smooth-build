@@ -2,12 +2,14 @@ package org.smoothbuild.fs.plugin;
 
 import static org.smoothbuild.fs.plugin.ImmutableFile.immutableFile;
 
+import java.util.Iterator;
+
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
 
 import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterators;
 
 public class ImmutableFileSet implements FileSet {
   private final FileSet fileSet;
@@ -30,12 +32,13 @@ public class ImmutableFileSet implements FileSet {
   }
 
   @Override
-  public Iterable<File> asIterable() {
-    return FluentIterable.from(fileSet.asIterable()).transform(new Function<File, File>() {
+  public Iterator<File> iterator() {
+    Function<File, File> transformFunction = new Function<File, File>() {
       public File apply(File file) {
         return immutableFile(file);
       }
-    });
+    };
+    return Iterators.transform(fileSet.iterator(), transformFunction);
   }
 
   @Override

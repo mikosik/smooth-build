@@ -61,7 +61,7 @@ public class ImmutableFileSetTest {
       fileSystem.createFileContainingItsPath(root, path(name));
     }
 
-    for (File file : fileSet.asIterable()) {
+    for (File file : fileSet) {
       FileImplTest.assertContentHasFilePath(file);
     }
   }
