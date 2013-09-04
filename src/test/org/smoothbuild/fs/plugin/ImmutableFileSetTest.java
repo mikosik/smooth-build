@@ -20,7 +20,7 @@ public class ImmutableFileSetTest {
   Path root = Path.path("root/dir");
   Path filePath = path("abc.txt");
 
-  FileSet fileSet = immutableFiles(new FileSetImpl(fileSystem, root));
+  FileSet fileSet = immutableFiles(new StoredFileSet(fileSystem, root));
 
   @Test
   public void convertingImmutableToImmutableReturnsTheSameObject() throws Exception {

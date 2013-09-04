@@ -5,7 +5,7 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.plugin.FileSetImpl;
+import org.smoothbuild.fs.plugin.StoredFileSet;
 import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
@@ -49,7 +49,7 @@ public class FilesFunction {
       }
 
       if (fileSystem.pathExistsAndisDirectory(dirPath)) {
-        return new FileSetImpl(fileSystem, dirPath);
+        return new StoredFileSet(fileSystem, dirPath);
       } else {
         sandbox.report(new PathIsNotADirError("dir", dirPath));
         return null;

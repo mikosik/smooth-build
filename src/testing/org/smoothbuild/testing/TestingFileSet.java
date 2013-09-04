@@ -1,9 +1,9 @@
 package org.smoothbuild.testing;
 
-import org.smoothbuild.fs.plugin.FileSetImpl;
+import org.smoothbuild.fs.plugin.StoredFileSet;
 import org.smoothbuild.plugin.Path;
 
-public class TestingFileSet extends FileSetImpl {
+public class TestingFileSet extends StoredFileSet {
   private final TestingFileSystem fileSystem;
 
   public TestingFileSet() {
