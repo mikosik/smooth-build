@@ -10,12 +10,15 @@ import org.smoothbuild.plugin.Path;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 
-public class FileSetImpl implements FileSet {
+/**
+ * Set of files on given fileSystem.
+ */
+public class StoredFileSet implements FileSet {
   private final PathToFileConverter pathToFileConverter = new PathToFileConverter();
   private final FileSystem fileSystem;
   private final Path root;
 
-  public FileSetImpl(FileSystem fileSystem, Path root) {
+  public StoredFileSet(FileSystem fileSystem, Path root) {
     this.fileSystem = fileSystem;
     this.root = root;
   }

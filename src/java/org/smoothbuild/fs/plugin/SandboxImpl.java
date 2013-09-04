@@ -29,7 +29,7 @@ public class SandboxImpl implements Sandbox {
     checkState(resultFile == null, "Cannot call resultFileSet() when resultFile() has been called.");
 
     if (resultFileSet == null) {
-      resultFileSet = new FileSetImpl(fileSystem, root);
+      resultFileSet = new StoredFileSet(fileSystem, root);
     }
 
     return resultFileSet;
