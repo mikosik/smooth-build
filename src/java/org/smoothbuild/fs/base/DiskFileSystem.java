@@ -43,6 +43,10 @@ public class DiskFileSystem implements FileSystem {
     return jdkFile(path).isDirectory();
   }
 
+  public boolean pathExistsAndIsFile(Path path) {
+    return jdkFile(path).isFile();
+  }
+
   @Override
   public Iterable<String> childNames(Path directory) {
     String[] list = jdkFile(directory).list();
