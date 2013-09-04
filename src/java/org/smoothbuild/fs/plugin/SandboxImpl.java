@@ -1,6 +1,7 @@
 package org.smoothbuild.fs.plugin;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.Sandbox;
@@ -8,22 +9,22 @@ import org.smoothbuild.problem.Problem;
 import org.smoothbuild.problem.ProblemsListener;
 
 public class SandboxImpl implements Sandbox {
-  private final FileSystem fileSystem;
-  private final Path root;
+  private final FileSystem projectFileSystem;
+  private final SubFileSystem sandboxFileSystem;
   private final ProblemsListener problems;
 
   public SandboxImpl(FileSystem fileSystem, Path root, ProblemsListener problems) {
-    this.fileSystem = fileSystem;
-    this.root = root;
+    this.projectFileSystem = fileSystem;
+    this.sandboxFileSystem = new SubFileSystem(fileSystem, root);
     this.problems = problems;
   }
 
   public File createFile(Path path) {
-    return new StoredFile(fileSystem, root, path);
+    return new StoredFile(sandboxFileSystem, path);
   }
 
-  public FileSystem fileSystem() {
-    return fileSystem;
+  public FileSystem projectFileSystem() {
+    return projectFileSystem;
   }
 
   @Override

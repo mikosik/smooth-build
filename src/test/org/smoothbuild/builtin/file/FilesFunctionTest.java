@@ -41,7 +41,7 @@ public class FilesFunctionTest {
   @Test
   public void nonDirPathIsReported() throws Exception {
     Path filePath = path("some/path/file.txt");
-    sandbox.fileSystem().createEmptyFile(filePath);
+    sandbox.projectFileSystem().createEmptyFile(filePath);
 
     runExecute(params(filePath.value()));
     sandbox.problems().assertOnlyProblem(PathIsNotADirError.class);
@@ -51,7 +51,7 @@ public class FilesFunctionTest {
   public void execute() throws Exception {
     Path rootPath = path("root/path");
     Path filePath = path("file/path/file.txt");
-    sandbox.fileSystem().createFileContainingItsPath(rootPath, filePath);
+    sandbox.projectFileSystem().createFileContainingItsPath(rootPath, filePath);
 
     FileSet fileSet = runExecute(params(rootPath.value()));
 

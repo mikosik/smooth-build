@@ -18,7 +18,7 @@ import org.smoothbuild.testing.TestingFileSystem;
 
 public class SaveToFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
-  TestingFileSystem fileSystem = sandbox.fileSystem();
+  TestingFileSystem fileSystem = sandbox.projectFileSystem();
 
   @Test
   public void missingDirArgIsReported() throws Exception {

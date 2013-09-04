@@ -42,7 +42,7 @@ public class FilesFunction {
     }
 
     private FileSet createFiles(Path dirPath) {
-      FileSystem fileSystem = sandbox.fileSystem();
+      FileSystem fileSystem = sandbox.projectFileSystem();
       if (!fileSystem.pathExists(dirPath)) {
         sandbox.report(new NoSuchPathError("dir", dirPath));
         return null;

@@ -30,7 +30,7 @@ public class SandboxImplTest {
 
   @Test
   public void fileSystem() throws Exception {
-    assertThat(sandbox.fileSystem()).isSameAs(fileSystem);
+    assertThat(sandbox.projectFileSystem()).isSameAs(fileSystem);
   }
 
   @Test
