@@ -5,7 +5,7 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.plugin.FileImpl;
+import org.smoothbuild.fs.plugin.StoredFile;
 import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
@@ -50,7 +50,7 @@ public class FileFunction {
         sandbox.report(new PathIsNotAFileError("path", filePath));
         return null;
       } else {
-        return new FileImpl(fileSystem, Path.rootPath(), filePath);
+        return new StoredFile(fileSystem, Path.rootPath(), filePath);
       }
     }
   }

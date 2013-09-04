@@ -21,7 +21,7 @@ public class StoredFileSetTest {
   public void file() throws Exception {
     fileSystem.createFileContainingItsPath(root, path("abc.txt"));
     File file = storedFileSet.file(path("abc.txt"));
-    FileImplTest.assertContentHasFilePath(file);
+    StoredFileTest.assertContentHasFilePath(file);
   }
 
   @Test
@@ -40,7 +40,7 @@ public class StoredFileSetTest {
     }
 
     for (File file : storedFileSet) {
-      FileImplTest.assertContentHasFilePath(file);
+      StoredFileTest.assertContentHasFilePath(file);
     }
   }
 

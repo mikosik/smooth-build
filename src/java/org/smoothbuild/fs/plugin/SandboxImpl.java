@@ -19,7 +19,7 @@ public class SandboxImpl implements Sandbox {
   }
 
   public File createFile(Path path) {
-    return new FileImpl(fileSystem, root, path);
+    return new StoredFile(fileSystem, root, path);
   }
 
   public FileSystem fileSystem() {

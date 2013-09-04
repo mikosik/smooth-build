@@ -4,7 +4,7 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.plugin.FileImpl;
+import org.smoothbuild.fs.plugin.StoredFile;
 import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
@@ -49,7 +49,7 @@ public class SaveToFunction {
         return;
       }
 
-      Path source = ((FileImpl) params.file()).fullPath();
+      Path source = ((StoredFile) params.file()).fullPath();
       fileSystem.copy(source, destination);
     }
 
