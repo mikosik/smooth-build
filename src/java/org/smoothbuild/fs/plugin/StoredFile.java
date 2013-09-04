@@ -13,7 +13,11 @@ public class StoredFile implements File {
   private final Path path;
 
   public StoredFile(FileSystem fileSystem, Path root, Path path) {
-    this.fileSystem = new SubFileSystem(fileSystem, root);
+    this(new SubFileSystem(fileSystem, root), path);
+  }
+
+  public StoredFile(FileSystem fileSystem, Path path) {
+    this.fileSystem = fileSystem;
     this.path = path;
   }
 
