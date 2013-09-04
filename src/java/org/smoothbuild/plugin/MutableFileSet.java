@@ -13,6 +13,7 @@ public class MutableFileSet implements FileSet {
     return map.values().iterator();
   }
 
+  @Override
   public boolean contains(Path path) {
     return map.containsKey(path);
   }

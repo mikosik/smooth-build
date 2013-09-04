@@ -23,6 +23,10 @@ public class StoredFileSet implements FileSet {
     this.root = root;
   }
 
+  public boolean contains(Path path) {
+    return fileSystem.pathExistsAndIsFile(path);
+  }
+
   public FileSystem fileSystem() {
     return fileSystem;
   }
