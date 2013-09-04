@@ -1,12 +1,14 @@
 package org.smoothbuild.fs.plugin;
 
+import java.util.Iterator;
+
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Path;
 
 import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterators;
 
 public class FileSetImpl implements FileSet {
   private final PathToFileConverter pathToFileConverter = new PathToFileConverter();
@@ -32,9 +34,9 @@ public class FileSetImpl implements FileSet {
   }
 
   @Override
-  public Iterable<File> asIterable() {
+  public Iterator<File> iterator() {
     Iterable<Path> filesIterable = fileSystem.filesFrom(root);
-    return FluentIterable.from(filesIterable).transform(pathToFileConverter);
+    return Iterators.transform(filesIterable.iterator(), pathToFileConverter);
   }
 
   @Override

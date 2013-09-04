@@ -58,7 +58,7 @@ public class ZipFunction {
       }
       File output = sandbox.resultFile(path("output.zip"));
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
-        for (File file : params.fileSet().asIterable()) {
+        for (File file : params.fileSet()) {
           addEntry(zipOutputStream, file);
         }
       } catch (IOException e) {

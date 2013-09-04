@@ -40,7 +40,7 @@ public class FileSetImplTest {
       fileSystem.createFileContainingItsPath(root, path(name));
     }
 
-    for (File file : fileSetImpl.asIterable()) {
+    for (File file : fileSetImpl) {
       FileImplTest.assertContentHasFilePath(file);
     }
   }

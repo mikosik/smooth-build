@@ -29,7 +29,7 @@ public class UnzipFunctionTest {
     FileSet result = runExecute(params);
 
     int fileCount = 0;
-    for (File file : result.asIterable()) {
+    for (File file : result) {
       fileCount++;
       assertContent(file.createInputStream(), file.path().value());
     }
@@ -44,7 +44,7 @@ public class UnzipFunctionTest {
     TestingFile inputFile = new TestingFileSet().createFile(path("input.zip"));
 
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.createOutputStream());) {
-      for (File file : filesToPack.asIterable()) {
+      for (File file : filesToPack) {
         addEntry(zipOutputStream, file);
       }
     } catch (IOException e) {
