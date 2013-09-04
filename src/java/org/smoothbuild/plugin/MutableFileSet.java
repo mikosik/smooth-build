@@ -3,7 +3,6 @@ package org.smoothbuild.plugin;
 import java.util.Iterator;
 import java.util.Map;
 
-
 import com.google.common.collect.Maps;
 
 public class MutableFileSet implements FileSet {
@@ -33,11 +32,5 @@ public class MutableFileSet implements FileSet {
       throw new IllegalArgumentException("FileSet already contains " + path);
     }
     map.put(path, file);
-  }
-
-  @Override
-  public File createFile(Path path) {
-    // TODO remove once it is removed from FileSet interface
-    throw new UnsupportedOperationException();
   }
 }

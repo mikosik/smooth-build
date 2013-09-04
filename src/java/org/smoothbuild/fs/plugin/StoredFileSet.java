@@ -42,11 +42,6 @@ public class StoredFileSet implements FileSet {
     return Iterators.transform(filesIterable.iterator(), pathToFileConverter);
   }
 
-  @Override
-  public FileImpl createFile(Path path) {
-    return new FileImpl(fileSystem, root, path);
-  }
-
   private class PathToFileConverter implements Function<Path, File> {
     public File apply(Path path) {
       return new FileImpl(fileSystem, root, path);

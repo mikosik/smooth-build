@@ -20,7 +20,6 @@ public class TestingFileSet extends StoredFileSet {
     return fileSystem;
   }
 
-  @Override
   public TestingFile createFile(Path path) {
     return new TestingFile(fileSystem(), root(), path);
   }

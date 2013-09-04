@@ -1,7 +1,6 @@
 package org.smoothbuild.fs.plugin;
 
 import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import java.io.IOException;
 
@@ -45,15 +44,4 @@ public class StoredFileSetTest {
     }
   }
 
-  @Test
-  public void createFile() throws Exception {
-    String path = "abc/test.txt";
-    createFile(path);
-
-    FileImplTest.assertContentHasFilePath(storedFileSet.file(path(path)));
-  }
-
-  private void createFile(String path) throws IOException {
-    writeAndClose(storedFileSet.createFile(path(path)).createOutputStream(), path);
-  }
 }
