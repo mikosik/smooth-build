@@ -11,6 +11,7 @@ import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.MutableFile;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 
@@ -56,7 +57,7 @@ public class ZipFunction {
       if (params.fileSet() == null) {
         sandbox.report(new MissingRequiredArgError("files"));
       }
-      File output = sandbox.createFile(path("output.zip"));
+      MutableFile output = sandbox.createFile(path("output.zip"));
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
         for (File file : params.fileSet()) {
           addEntry(zipOutputStream, file);

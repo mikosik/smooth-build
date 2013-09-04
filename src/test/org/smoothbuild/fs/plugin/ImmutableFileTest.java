@@ -8,10 +8,10 @@ import static org.smoothbuild.testing.TestingStream.assertContent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.MutableFile;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
@@ -21,6 +21,11 @@ public class ImmutableFileTest {
   Path filePath = path("xyz/test.txt");
 
   File file = immutableFile(new StoredFile(new SubFileSystem(fileSystem, root), filePath));
+
+  @Test
+  public void immutableFileIsNotMutable() throws Exception {
+    assertThat(file).isNotInstanceOf(MutableFile.class);
+  }
 
   @Test
   public void convertingImmutableToImmutableReturnsTheSameObject() throws Exception {
@@ -36,16 +41,6 @@ public class ImmutableFileTest {
   public void createInputStream() throws Exception {
     fileSystem.createFileContainingItsPath(root, filePath);
     assertContentHasFilePath(file);
-  }
-
-  @Test
-  public void createOutputStream() throws Exception {
-    try {
-      file.createOutputStream();
-      Assert.fail("exception should be thrown");
-    } catch (UnsupportedOperationException e) {
-      // expected
-    }
   }
 
   public static void assertContentHasFilePath(File file) throws IOException, FileNotFoundException {
