@@ -1,11 +1,13 @@
 package org.smoothbuild.fs.plugin;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.Path.path;
 
 import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.collect.ImmutableList;
@@ -14,6 +16,19 @@ public class StoredFileSetTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
 
   StoredFileSet storedFileSet = new StoredFileSet(fileSystem);
+
+  @Test
+  public void containsReturnsTrueForExistingFile() throws Exception {
+    Path path = path("my/file");
+    fileSystem.createEmptyFile(path);
+    assertThat(storedFileSet.contains(path)).isTrue();
+  }
+
+  @Test
+  public void containsReturnsFalseForNonexistentFile() throws Exception {
+    Path path = path("my/file");
+    assertThat(storedFileSet.contains(path)).isFalse();
+  }
 
   @Test
   public void file() throws Exception {
