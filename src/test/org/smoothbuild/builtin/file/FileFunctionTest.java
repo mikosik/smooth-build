@@ -43,7 +43,7 @@ public class FileFunctionTest {
   public void nonFilePathIsReported() throws Exception {
     Path dir = path("some/path/");
     Path file = dir.append(path("file.txt"));
-    sandbox.fileSystem().createEmptyFile(file);
+    sandbox.projectFileSystem().createEmptyFile(file);
 
     runExecute(params(dir.value()));
     sandbox.problems().assertOnlyProblem(PathIsNotAFileError.class);
@@ -52,7 +52,7 @@ public class FileFunctionTest {
   @Test
   public void execute() throws Exception {
     Path filePath = path("file/path/file.txt");
-    sandbox.fileSystem().createFileContainingItsPath(Path.rootPath(), filePath);
+    sandbox.projectFileSystem().createFileContainingItsPath(Path.rootPath(), filePath);
 
     File file = runExecute(params(filePath.value()));
 

@@ -40,7 +40,7 @@ public class SaveToFunction {
     }
 
     private void saveTo(Path dirPath, Parameters params) {
-      FileSystem fileSystem = sandbox.fileSystem();
+      FileSystem fileSystem = sandbox.projectFileSystem();
       if (!canPathBeUsedAsDir(fileSystem, dirPath)) {
         return;
       }

@@ -40,7 +40,7 @@ public class FileFunction {
     }
 
     private File createFile(Path filePath) {
-      FileSystem fileSystem = sandbox.fileSystem();
+      FileSystem fileSystem = sandbox.projectFileSystem();
       if (!fileSystem.pathExists(filePath)) {
         sandbox.report(new NoSuchPathError("path", filePath));
         return null;

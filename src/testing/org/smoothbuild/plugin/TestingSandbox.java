@@ -25,7 +25,7 @@ public class TestingSandbox extends SandboxImpl {
   }
 
   @Override
-  public TestingFileSystem fileSystem() {
+  public TestingFileSystem projectFileSystem() {
     return fileSystem;
   }
 
