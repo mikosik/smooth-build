@@ -44,7 +44,7 @@ public class PluginFunctionTest {
 
     // when
     Task task = function.generateTask(Empty.stringTaskMap());
-    task.calculateResult(sandbox);
+    task.execute(sandbox);
 
     // then
     assertThat(task.isResultCalculated()).isTrue();

@@ -33,6 +33,6 @@ public class PrecalculatedTaskTest {
 
   @Test(expected = UnsupportedOperationException.class)
   public void calculateResultThrowsException() throws Exception {
-    task.calculateResult(mock(Sandbox.class));
+    task.execute(mock(Sandbox.class));
   }
 }

@@ -45,7 +45,7 @@ public class AbstractTaskTest {
     }
 
     @Override
-    public void calculateResult(Sandbox sandbox) {}
+    public void execute(Sandbox sandbox) {}
 
     @Override
     public ImmutableCollection<Task> dependencies() {

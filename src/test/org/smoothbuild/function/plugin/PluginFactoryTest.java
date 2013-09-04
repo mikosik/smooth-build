@@ -70,7 +70,7 @@ public class PluginFactoryTest {
     ImmutableMap<String, Task> dependencies = ImmutableMap.of("stringA",
         stringReturningTask("abc"), "stringB", stringReturningTask("def"));
     Task task = function.generateTask(dependencies);
-    task.calculateResult(sandbox);
+    task.execute(sandbox);
     sandbox.problems().assertNoProblems();
     assertThat(task.result()).isEqualTo("abcdef");
   }
@@ -227,7 +227,7 @@ public class PluginFactoryTest {
   @Test
   public void runtimeExceptionThrownAreReported() throws Exception {
     Function function = pluginFactory.create(MyPluginWithThrowingSmoothMethod.class);
-    function.generateTask(Empty.stringTaskMap()).calculateResult(sandbox);
+    function.generateTask(Empty.stringTaskMap()).execute(sandbox);
     sandbox.problems().assertOnlyProblem(UnexpectedError.class);
   }
 

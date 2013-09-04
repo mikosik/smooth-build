@@ -30,7 +30,7 @@ public class PluginTask extends AbstractTask {
   }
 
   @Override
-  public void calculateResult(Sandbox sandbox) {
+  public void execute(Sandbox sandbox) {
     try {
       Object result = pluginInvoker.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {
