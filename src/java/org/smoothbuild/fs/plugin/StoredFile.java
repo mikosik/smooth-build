@@ -4,17 +4,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 
 public class StoredFile implements File {
   private final FileSystem fileSystem;
   private final Path path;
-
-  public StoredFile(FileSystem fileSystem, Path root, Path path) {
-    this(new SubFileSystem(fileSystem, root), path);
-  }
 
   public StoredFile(FileSystem fileSystem, Path path) {
     this.fileSystem = fileSystem;

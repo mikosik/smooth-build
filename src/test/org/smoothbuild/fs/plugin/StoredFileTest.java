@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
@@ -18,7 +19,7 @@ public class StoredFileTest {
   Path rootDir = path("abc/efg");
   Path filePath = path("xyz/test.txt");
 
-  StoredFile storedFile = new StoredFile(fileSystem, rootDir, filePath);
+  StoredFile storedFile = new StoredFile(new SubFileSystem(fileSystem, rootDir), filePath);
 
   @Test
   public void testPath() throws Exception {
