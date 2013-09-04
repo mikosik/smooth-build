@@ -48,7 +48,7 @@ public class FilesFunction {
         return null;
       }
 
-      if (fileSystem.pathExistsAndisDirectory(dirPath)) {
+      if (fileSystem.pathExistsAndIsDirectory(dirPath)) {
         return new StoredFileSet(fileSystem, dirPath);
       } else {
         sandbox.report(new PathIsNotADirError("dir", dirPath));

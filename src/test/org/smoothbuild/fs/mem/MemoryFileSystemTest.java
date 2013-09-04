@@ -52,21 +52,21 @@ public class MemoryFileSystemTest {
 
   @Test
   public void rootPathIsADirectory() throws Exception {
-    assertThat(fileSystem.pathExistsAndisDirectory(Path.rootPath())).isTrue();
+    assertThat(fileSystem.pathExistsAndIsDirectory(Path.rootPath())).isTrue();
   }
 
   @Test
   public void isDirectory() throws Exception {
     createEmptyFile("abc/def/ghi/text.txt");
-    assertThat(fileSystem.pathExistsAndisDirectory(path("abc"))).isTrue();
-    assertThat(fileSystem.pathExistsAndisDirectory(path("abc/def"))).isTrue();
-    assertThat(fileSystem.pathExistsAndisDirectory(path("abc/def/ghi"))).isTrue();
-    assertThat(fileSystem.pathExistsAndisDirectory(path("abc/def/ghi/text.txt"))).isFalse();
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc"))).isTrue();
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc/def"))).isTrue();
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc/def/ghi"))).isTrue();
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc/def/ghi/text.txt"))).isFalse();
   }
 
   @Test
   public void isDirectoryReturnsFalseWhenPathDoesNotExist() throws Exception {
-    assertThat(fileSystem.pathExistsAndisDirectory(path("abc"))).isFalse();
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc"))).isFalse();
   }
 
   @Test(expected = NoSuchDirException.class)

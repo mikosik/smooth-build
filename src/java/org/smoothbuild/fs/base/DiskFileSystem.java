@@ -39,7 +39,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public boolean pathExistsAndisDirectory(Path path) {
+  public boolean pathExistsAndIsDirectory(Path path) {
     return jdkFile(path).isDirectory();
   }
 
@@ -121,7 +121,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   public void deleteDirectoryRecursively(Path directory) {
-    if (pathExistsAndisDirectory(directory)) {
+    if (pathExistsAndIsDirectory(directory)) {
       try {
         RecursiveDirectoryDeleter.deleteRecursively(jdkFile(directory));
       } catch (IOException e) {

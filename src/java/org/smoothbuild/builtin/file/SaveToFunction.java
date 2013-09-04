@@ -54,7 +54,7 @@ public class SaveToFunction {
     }
 
     private boolean canPathBeUsedAsDir(FileSystem fileSystem, Path dirPath) {
-      if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndisDirectory(dirPath)) {
+      if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndIsDirectory(dirPath)) {
         sandbox.report(new PathIsNotADirError("dir", dirPath));
         return false;
       }

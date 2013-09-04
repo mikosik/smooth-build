@@ -50,7 +50,7 @@ public class RecursiveFilesIterator implements Iterator<Path> {
       } else {
         Path file = fileStack.remove();
         Path fullPath = rootPath.append(file);
-        if (fileSystem.pathExistsAndisDirectory(fullPath)) {
+        if (fileSystem.pathExistsAndIsDirectory(fullPath)) {
           directoryStack.add(file);
         } else {
           return file;
