@@ -20,6 +20,8 @@ import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.Path;
 
+import com.google.common.annotations.VisibleForTesting;
+
 @Singleton
 public class DiskFileSystem implements FileSystem {
   private final String projectRoot;
@@ -29,7 +31,8 @@ public class DiskFileSystem implements FileSystem {
     this(null);
   }
 
-  public DiskFileSystem(String projectRoot) {
+  @VisibleForTesting
+  DiskFileSystem(String projectRoot) {
     this.projectRoot = projectRoot;
   }
 
