@@ -11,6 +11,9 @@ import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.plugin.Path;
 
 public class TestingFileSystem extends MemoryFileSystem {
+  public void createFileContainingItsPath(Path path) throws IOException {
+    createFileWithContent(path, path.value());
+  }
 
   /**
    * Creates textual file that contains its path.
