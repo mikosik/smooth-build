@@ -1,6 +1,5 @@
 package org.smoothbuild.plugin;
 
-import org.smoothbuild.fs.plugin.StoredFile;
 import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.testing.TestingFileSystem;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
@@ -17,11 +16,6 @@ public class TestingSandbox extends SandboxImpl {
     super(fileSystem, Path.rootPath(), problemsListener);
     this.fileSystem = fileSystem;
     this.problems = problemsListener;
-  }
-
-  @Override
-  public File createFile(Path path) {
-    return new StoredFile(fileSystem, Path.rootPath(), path);
   }
 
   @Override
