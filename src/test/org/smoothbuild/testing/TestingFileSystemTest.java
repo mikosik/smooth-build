@@ -20,6 +20,12 @@ public class TestingFileSystemTest {
 
   @Test
   public void createFileContiningItsPath() throws Exception {
+    fileSystem.createFileContainingItsPath(path);
+    assertContent(fileSystem.createInputStream(path), path.value());
+  }
+
+  @Test
+  public void createRootedFileContiningItsPath() throws Exception {
     fileSystem.createFileContainingItsPath(root, path);
     assertContent(fileSystem.createInputStream(root.append(path)), path.value());
   }
