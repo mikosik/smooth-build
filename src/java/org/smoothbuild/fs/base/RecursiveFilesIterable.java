@@ -11,7 +11,7 @@ public class RecursiveFilesIterable implements Iterable<Path> {
   private final Path directory;
 
   public RecursiveFilesIterable(FileSystem fileSystem, Path directory) {
-    checkArgument(fileSystem.pathExistsAndisDirectory(directory));
+    checkArgument(fileSystem.pathExistsAndIsDirectory(directory));
     this.fileSystem = fileSystem;
     this.directory = directory;
   }

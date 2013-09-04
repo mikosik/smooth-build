@@ -46,7 +46,7 @@ public class FileFunction {
         return null;
       }
 
-      if (fileSystem.pathExistsAndisDirectory(filePath)) {
+      if (fileSystem.pathExistsAndIsDirectory(filePath)) {
         sandbox.report(new PathIsNotAFileError("path", filePath));
         return null;
       } else {

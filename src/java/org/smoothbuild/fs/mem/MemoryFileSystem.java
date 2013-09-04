@@ -27,7 +27,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public boolean pathExistsAndisDirectory(Path path) {
+  public boolean pathExistsAndIsDirectory(Path path) {
     MemoryElement element = findElement(path);
     return element != null && element.isDirectory();
   }

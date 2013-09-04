@@ -15,7 +15,7 @@ import com.google.inject.ImplementedBy;
 public interface FileSystem {
   public boolean pathExists(Path path);
 
-  public boolean pathExistsAndisDirectory(Path path);
+  public boolean pathExistsAndIsDirectory(Path path);
 
   public Iterable<String> childNames(Path directory);
 

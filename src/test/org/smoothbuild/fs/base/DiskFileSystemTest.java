@@ -57,7 +57,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     File myDirectory = new File(root, myDir);
     myDirectory.mkdirs();
 
-    assertThat(fileSystem.pathExistsAndisDirectory(path(myDir))).isTrue();
+    assertThat(fileSystem.pathExistsAndIsDirectory(path(myDir))).isTrue();
   }
 
   @Test
@@ -65,12 +65,12 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     String fileName = "myFile";
     createEmptyFile(root, fileName);
 
-    assertThat(fileSystem.pathExistsAndisDirectory(path(fileName))).isFalse();
+    assertThat(fileSystem.pathExistsAndIsDirectory(path(fileName))).isFalse();
   }
 
   @Test
   public void pathExistsAndisDirectoryReturnsFalseForNonexistentPathPath() throws Exception {
-    assertThat(fileSystem.pathExistsAndisDirectory(path("myFile"))).isFalse();
+    assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
   }
 
   // childNames()
