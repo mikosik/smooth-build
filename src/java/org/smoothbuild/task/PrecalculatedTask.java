@@ -25,7 +25,7 @@ public class PrecalculatedTask implements Task {
   }
 
   @Override
-  public void calculateResult(Sandbox sandbox) {
+  public void execute(Sandbox sandbox) {
     throw new UnsupportedOperationException(
         "No need to call calculatedResult on PrecalculatedTask.");
   }

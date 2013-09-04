@@ -41,7 +41,7 @@ public class TaskExecutor {
       }
 
       Path tempPath = BUILD_DIR.append(path(Integer.toString(temptDirCount++)));
-      task.calculateResult(new SandboxImpl(fileSystem, tempPath, problems));
+      task.execute(new SandboxImpl(fileSystem, tempPath, problems));
     }
 
     private void calculateTasks(Collection<Task> tasks) {

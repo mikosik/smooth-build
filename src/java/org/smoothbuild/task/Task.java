@@ -11,6 +11,6 @@ public interface Task {
 
   public ImmutableCollection<Task> dependencies();
 
-  public void calculateResult(Sandbox sandbox);
+  public void execute(Sandbox sandbox);
 
 }

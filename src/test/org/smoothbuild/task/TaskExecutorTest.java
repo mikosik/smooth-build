@@ -39,8 +39,8 @@ public class TaskExecutorTest {
     taskExecutor.execute(problems, task);
 
     InOrder inOrder = inOrder(task, subTask);
-    inOrder.verify(subTask).calculateResult(any(Sandbox.class));
-    inOrder.verify(task).calculateResult(any(Sandbox.class));
+    inOrder.verify(subTask).execute(any(Sandbox.class));
+    inOrder.verify(task).execute(any(Sandbox.class));
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -59,11 +59,11 @@ public class TaskExecutorTest {
         problems.report(new Error(""));
         return null;
       }
-    }).when(subTask).calculateResult(Matchers.<Sandbox> any());
+    }).when(subTask).execute(Matchers.<Sandbox> any());
 
     taskExecutor.execute(problems, task);
 
     problems.assertOnlyProblem(Error.class);
-    verify(task, times(0)).calculateResult(Matchers.<Sandbox> any());
+    verify(task, times(0)).execute(Matchers.<Sandbox> any());
   }
 }

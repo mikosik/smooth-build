@@ -42,7 +42,7 @@ public class PluginTaskTest {
     String result = "result";
     when(pluginInvoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenReturn(result);
 
-    pluginTask.calculateResult(sandbox);
+    pluginTask.execute(sandbox);
     assertThat(pluginTask.result()).isSameAs(result);
   }
 
@@ -51,7 +51,7 @@ public class PluginTaskTest {
       throws Exception {
     when(pluginInvoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 
-    pluginTask.calculateResult(sandbox);
+    pluginTask.execute(sandbox);
 
     sandbox.problems().assertOnlyProblem(NullResultError.class);
     assertThat(pluginTask.isResultCalculated()).isFalse();
@@ -63,7 +63,7 @@ public class PluginTaskTest {
         pluginInvoker, Empty.stringTaskMap());
     when(pluginInvoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 
-    pluginTask.calculateResult(sandbox);
+    pluginTask.execute(sandbox);
 
     sandbox.problems().assertNoProblems();
     assertThat(pluginTask.isResultCalculated()).isTrue();
@@ -90,7 +90,7 @@ public class PluginTaskTest {
       Class<? extends Problem> expected) throws Exception {
     when(pluginInvoker.invoke(sandbox, Empty.stringObjectMap())).thenThrow(thrown);
 
-    pluginTask.calculateResult(sandbox);
+    pluginTask.execute(sandbox);
 
     sandbox.problems().assertOnlyProblem(expected);
     assertThat(pluginTask.isResultCalculated()).isFalse();
