@@ -11,7 +11,7 @@ public class TestingFileSet extends StoredFileSet {
   }
 
   public TestingFileSet(TestingFileSystem fileSystem) {
-    super(fileSystem, Path.rootPath());
+    super(fileSystem);
     this.fileSystem = fileSystem;
   }
 
