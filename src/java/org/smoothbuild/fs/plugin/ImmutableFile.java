@@ -1,7 +1,6 @@
 package org.smoothbuild.fs.plugin;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
@@ -31,8 +30,4 @@ public class ImmutableFile implements File {
     return file.createInputStream();
   }
 
-  @Override
-  public OutputStream createOutputStream() {
-    throw new UnsupportedOperationException();
-  }
 }

@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.MutableFile;
 import org.smoothbuild.plugin.Path;
 
-public class StoredFile implements File {
+public class StoredFile implements MutableFile {
   private final FileSystem fileSystem;
   private final Path path;
 

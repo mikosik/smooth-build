@@ -2,7 +2,7 @@ package org.smoothbuild.fs.plugin;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.MutableFile;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.problem.Problem;
@@ -19,7 +19,7 @@ public class SandboxImpl implements Sandbox {
     this.problems = problems;
   }
 
-  public File createFile(Path path) {
+  public MutableFile createFile(Path path) {
     return new StoredFile(sandboxFileSystem, path);
   }
 

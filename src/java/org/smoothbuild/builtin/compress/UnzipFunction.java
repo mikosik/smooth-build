@@ -11,6 +11,7 @@ import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.MutableFile;
 import org.smoothbuild.plugin.MutableFileSet;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
@@ -56,7 +57,7 @@ public class UnzipFunction {
 
     private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, byte[] buffer)
         throws IOException {
-      File file = sandbox.createFile(path(entry.getName()));
+      MutableFile file = sandbox.createFile(path(entry.getName()));
       try (OutputStream outputStream = file.createOutputStream()) {
         int len = 0;
         while ((len = zipInputStream.read(buffer)) > 0) {
