@@ -9,8 +9,7 @@ public interface Task {
 
   public Object result();
 
-  public ImmutableCollection<Task> dependencies();
-
   public void execute(Sandbox sandbox);
 
+  public ImmutableCollection<Task> dependencies();
 }

@@ -16,14 +16,14 @@ public abstract class AbstractTask implements Task {
     return resultCalculated;
   }
 
-  protected void setResult(Object result) {
-    this.result = result;
-    this.resultCalculated = true;
-  }
-
   @Override
   public Object result() {
     checkState(resultCalculated, "Result not calculated yet.");
     return result;
+  }
+
+  protected void setResult(Object result) {
+    this.result = result;
+    this.resultCalculated = true;
   }
 }
