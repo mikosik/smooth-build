@@ -21,6 +21,6 @@ public class TestingFileSet extends StoredFileSet {
   }
 
   public TestingFile createFile(Path path) {
-    return new TestingFile(fileSystem(), root(), path);
+    return new TestingFile(fileSystem(), path);
   }
 }

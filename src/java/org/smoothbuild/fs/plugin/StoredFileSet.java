@@ -30,10 +30,6 @@ public class StoredFileSet implements FileSet {
     return fileSystem;
   }
 
-  public Path root() {
-    return fileSystem.root();
-  }
-
   @Override
   public File file(Path path) {
     return pathToFileConverter.apply(path);
