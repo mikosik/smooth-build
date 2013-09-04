@@ -11,6 +11,7 @@ import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.MutableFileSet;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 
@@ -40,11 +41,11 @@ public class UnzipFunction {
         sandbox.report(new MissingRequiredArgError("file"));
       }
 
-      FileSet resultFiles = sandbox.resultFileSet();
+      MutableFileSet resultFiles = new MutableFileSet();
       try (ZipInputStream zipInputStream = new ZipInputStream(params.file().createInputStream());) {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
-          unzipEntry(zipInputStream, entry, resultFiles, buffer);
+          resultFiles.add(unzipEntry(zipInputStream, entry, buffer));
         }
       } catch (IOException e) {
         throw new FileSystemException(e);
@@ -53,15 +54,16 @@ public class UnzipFunction {
       return resultFiles;
     }
 
-    private void unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, FileSet fileSet,
-        byte[] buffer) throws IOException {
-      File file = fileSet.createFile(path(entry.getName()));
+    private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, byte[] buffer)
+        throws IOException {
+      File file = sandbox.createFile(path(entry.getName()));
       try (OutputStream outputStream = file.createOutputStream()) {
         int len = 0;
         while ((len = zipInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);
         }
       }
+      return file;
     }
   }
 }
