@@ -3,7 +3,6 @@ package org.smoothbuild.fs.plugin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.TestingStream.assertContent;
-import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,12 +34,6 @@ public class StoredFileTest {
   public void createInputStream() throws Exception {
     fileSystem.createFileContainingItsPath(rootDir, filePath);
     assertContentHasFilePath(storedFile);
-  }
-
-  @Test
-  public void createOutputStream() throws Exception {
-    writeAndClose(storedFile.createOutputStream(), filePath.value());
-    StoredFileTest.assertContentHasFilePath(storedFile);
   }
 
   public static void assertContentHasFilePath(File file) throws IOException, FileNotFoundException {
