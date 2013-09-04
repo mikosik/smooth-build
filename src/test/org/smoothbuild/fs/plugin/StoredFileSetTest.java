@@ -44,4 +44,8 @@ public class StoredFileSetTest {
     }
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void fetchingNonexistentFileThrowsException() throws Exception {
+    storedFileSet.file(path("nonexistent"));
+  }
 }
