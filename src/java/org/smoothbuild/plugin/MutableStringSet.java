@@ -1,16 +1,15 @@
-package org.smoothbuild.fs.plugin;
+package org.smoothbuild.plugin;
 
 import java.util.Iterator;
 import java.util.Set;
 
-import org.smoothbuild.plugin.StringSet;
 
 import com.google.common.collect.Sets;
 
-public class StringSetImpl implements StringSet {
+public class MutableStringSet implements StringSet {
   private final Set<String> set;
 
-  public StringSetImpl() {
+  public MutableStringSet() {
     this.set = Sets.newHashSet();
   }
 
