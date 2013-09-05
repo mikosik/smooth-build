@@ -86,6 +86,11 @@ public class TypeTest {
   }
 
   @Test
+  public void testToString() throws Exception {
+    assertThat(STRING.toString()).isEqualTo("'String'");
+  }
+
+  @Test
   public void testJavaParamTypetoType() {
     assertThat(javaParamTypetoType(type(String.class))).isEqualTo(STRING);
     assertThat(javaParamTypetoType(type(StringSet.class))).isEqualTo(STRING_SET);
