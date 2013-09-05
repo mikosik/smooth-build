@@ -1,39 +1,18 @@
-package org.smoothbuild.run;
+package org.smoothbuild.integration;
 
-import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.plugin.Path.path;
 import static org.smoothbuild.testing.ScriptBuilder.script;
 
 import java.io.IOException;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.ScriptBuilder;
-import org.smoothbuild.testing.TestingFileSystem;
-import org.smoothbuild.testing.TestingFileSystemModule;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
-import org.smoothbuild.testing.problem.TestingProblemsListenerModule;
 
-import com.google.inject.Injector;
-
-public class SmoothRunnerTest {
+public class BasicReadAndWriteTest extends IntegrationTestCase {
   Path file = path("file/path/file.txt");
   Path destinationDir = path("destination/dir");
-
-  TestingFileSystem fileSystem;
-  SmoothRunner smoothRunner;
-  TestingProblemsListener problems;
-
-  @Before
-  public void before() {
-    Injector injector = createInjector(new TestingFileSystemModule(),
-        new TestingProblemsListenerModule());
-    fileSystem = injector.getInstance(TestingFileSystem.class);
-    problems = injector.getInstance(TestingProblemsListener.class);
-    smoothRunner = injector.getInstance(SmoothRunner.class);
-  }
 
   @Test
   public void singleFileReadAndWritten_pipe() throws IOException {
