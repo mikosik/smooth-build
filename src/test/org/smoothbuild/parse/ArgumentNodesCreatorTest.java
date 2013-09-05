@@ -3,15 +3,19 @@ package org.smoothbuild.parse;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Param.params;
 import static org.smoothbuild.function.base.Type.FILE;
+import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.parse.Argument.explicitArg;
 import static org.smoothbuild.parse.Argument.implicitArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,107 +25,274 @@ import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
 import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.UnknownParamNameProblem;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ArgumentNodesCreatorTest {
-  String string1Name = "string1";
-  String string2Name = "string2";
-  String file1Name = "file1";
-  String file2Name = "file2";
-
-  Param string1Param = param(STRING, string1Name);
-  Param string2Param = param(STRING, string2Name);
-  Param file1Param = param(FILE, file1Name);
-  Param file2Param = param(FILE, file2Name);
-
-  DefinitionNode string1Expr = node("value1");
-  DefinitionNode string2Expr = node("value2");
-  DefinitionNode stringImplicit1Expr = node("value2");
-  DefinitionNode stringImplicit2Expr = node("value2");
-  DefinitionNode file1Expr = node(mock(File.class));
-  DefinitionNode file2Expr = node(mock(File.class));
-
-  Argument string1Arg = argument(string1Name, string1Expr);
-  Argument string2Arg = argument(string2Name, string2Expr);
-  Argument stringImplicit1Arg = argument(stringImplicit1Expr);
-  Argument stringImplicit2Arg = argument(stringImplicit2Expr);
-  Argument file1Arg = argument(file1Name, file1Expr);
-  Argument file2Arg = argument(file2Name, file2Expr);
 
   TestingProblemsListener problemsListener = new TestingProblemsListener();
 
   @Test
-  public void convertingExplicitArguments() {
-    ImmutableMap<String, Param> params = params(string1Param, file1Param);
-    List<Argument> args = newArrayList(string1Arg, file1Arg);
-
-    Map<String, DefinitionNode> result = create(params, args);
-
-    assertThat(result.get(string1Name)).isSameAs(string1Expr);
-    assertThat(result.get(file1Name)).isSameAs(file1Expr);
-    assertThat(result.size()).isEqualTo(2);
-    problemsListener.assertNoProblems();
+  public void convertingExplicitStringArgument() {
+    doTestConvertingExplicitArgument(STRING);
   }
 
   @Test
-  public void duplicatedExplicitNames() {
-    ImmutableMap<String, Param> params = params(string1Param, string2Param);
-    List<Argument> args = newArrayList(string1Arg, string1Arg);
+  public void convertingExplicitStringSetArgument() {
+    doTestConvertingExplicitArgument(STRING_SET);
+  }
 
-    create(params, args);
+  @Test
+  public void convertingExplicitFileArgument() {
+    doTestConvertingExplicitArgument(FILE);
+  }
 
+  @Test
+  public void convertingExplicitFileSetArgument() {
+    doTestConvertingExplicitArgument(FILE_SET);
+  }
+
+  private void doTestConvertingExplicitArgument(Type type) {
+    // given
+    Param p1 = param(type, "name1");
+    Param p2 = param(type, "name2");
+
+    Argument a1 = argument(p1.name(), node(type));
+
+    // when
+    Map<String, DefinitionNode> result = create(params(p1, p2), list(a1));
+
+    // then
+    problemsListener.assertNoProblems();
+    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
+    assertThat(result.size()).isEqualTo(1);
+  }
+
+  @Test
+  public void duplicatedExplicitStringNames() {
+    doTestDuplicatedExplicitNames(STRING);
+  }
+
+  @Test
+  public void duplicatedExplicitStringSetNames() {
+    doTestDuplicatedExplicitNames(STRING_SET);
+  }
+
+  @Test
+  public void duplicatedExplicitFileNames() {
+    doTestDuplicatedExplicitNames(FILE);
+  }
+
+  @Test
+  public void duplicatedExplicitFileSetNames() {
+    doTestDuplicatedExplicitNames(FILE_SET);
+  }
+
+  private void doTestDuplicatedExplicitNames(Type type) {
+    // given
+    Param p1 = param(type, "name1");
+
+    Argument a1 = argument(p1.name(), node(type));
+    Argument a2 = argument(p1.name(), node(type));
+
+    // when
+    create(params(p1), list(a1, a2));
+
+    // then
     problemsListener.assertOnlyProblem(DuplicateArgNameProblem.class);
   }
 
   @Test
   public void unknownParamName() {
-    ImmutableMap<String, Param> params = params(string1Param);
-    List<Argument> args = newArrayList(file1Arg);
+    // given
+    Param p1 = param(STRING, "name1");
+    Argument a1 = argument("otherName", node(STRING));
 
-    create(params, args);
+    // when
+    create(params(p1), list(a1));
 
+    // then
     problemsListener.assertOnlyProblem(UnknownParamNameProblem.class);
   }
 
   @Test
   public void convertingEmptyList() throws Exception {
-    ImmutableMap<String, Param> params = params(string1Param, file1Param);
-    List<Argument> args = newArrayList();
+    // given
+    Param p1 = param(STRING, "name1");
 
-    Map<String, DefinitionNode> result = create(params, args);
+    // when
+    Map<String, DefinitionNode> result = create(params(p1), list());
 
-    assertThat(result.size()).isEqualTo(0);
+    // then
     problemsListener.assertNoProblems();
+    assertThat(result.size()).isEqualTo(0);
   }
 
   @Test
-  public void ambigiuousImplicitArgument() throws Exception {
-    ImmutableMap<String, Param> params = params(string1Param, string2Param);
-    List<Argument> args = newArrayList(stringImplicit1Arg);
+  public void convertingSingleImplicitStringArgument() {
+    doTestConvertingSingleImplicitArgument(STRING, STRING_SET);
+    doTestConvertingSingleImplicitArgument(STRING, FILE);
+    doTestConvertingSingleImplicitArgument(STRING, FILE_SET);
+  }
 
-    create(params, args);
+  @Test
+  public void convertingSingleImplicitStringSetArgument() {
+    doTestConvertingSingleImplicitArgument(STRING_SET, STRING);
+    doTestConvertingSingleImplicitArgument(STRING_SET, FILE);
+    doTestConvertingSingleImplicitArgument(STRING_SET, FILE_SET);
+  }
 
+  @Test
+  public void convertingSingleImplicitFileArgument() {
+    doTestConvertingSingleImplicitArgument(FILE, STRING);
+    doTestConvertingSingleImplicitArgument(FILE, STRING_SET);
+    doTestConvertingSingleImplicitArgument(FILE, FILE_SET);
+  }
+
+  @Test
+  public void convertingSingleImplicitFileSetArgument() {
+    doTestConvertingSingleImplicitArgument(FILE_SET, STRING);
+    doTestConvertingSingleImplicitArgument(FILE_SET, STRING_SET);
+    doTestConvertingSingleImplicitArgument(FILE_SET, FILE);
+  }
+
+  private void doTestConvertingSingleImplicitArgument(Type type, Type otherType) {
+    // given
+    Param p1 = param(otherType, "name1");
+    Param p2 = param(type, "name2");
+    Param p3 = param(otherType, "name3");
+
+    Argument a1 = argument(node(type));
+
+    // when
+    Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1));
+
+    // then
+    problemsListener.assertNoProblems();
+    assertThat(result.get(p2.name())).isSameAs(a1.definitionNode());
+    assertThat(result.size()).isEqualTo(1);
+  }
+
+  @Test
+  public void convertingSingleImplicitStringArgumentWithOtherExplicit() {
+    doTestConvertingSingleImplicitArgumentWhitOtherExplicit(STRING);
+  }
+
+  @Test
+  public void convertingSingleImplicitStringSetArgumentWithOtherExplicit() {
+    doTestConvertingSingleImplicitArgumentWhitOtherExplicit(STRING_SET);
+  }
+
+  @Test
+  public void convertingSingleImplicitFileArgumentWithOtherExplicit() {
+    doTestConvertingSingleImplicitArgumentWhitOtherExplicit(FILE);
+  }
+
+  @Test
+  public void convertingSingleImplicitFileSetArgumentWithOtherExplicit() {
+    doTestConvertingSingleImplicitArgumentWhitOtherExplicit(FILE_SET);
+  }
+
+  private void doTestConvertingSingleImplicitArgumentWhitOtherExplicit(Type type) {
+    // given
+    Param p1 = param(type, "name1");
+    Param p2 = param(type, "name2");
+    Param p3 = param(type, "name3");
+
+    Argument a1 = argument(p1.name(), node(type));
+    Argument a2 = argument(node(type));
+    Argument a3 = argument(p3.name(), node(type));
+
+    // when
+    Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1, a2, a3));
+
+    // then
+    problemsListener.assertNoProblems();
+    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
+    assertThat(result.get(p2.name())).isSameAs(a2.definitionNode());
+    assertThat(result.get(p3.name())).isSameAs(a3.definitionNode());
+    assertThat(result.size()).isEqualTo(3);
+  }
+
+  @Test
+  public void ambigiuousImplicitStringArgument() throws Exception {
+    doTestAmbiguousImplicitArgument(STRING);
+  }
+
+  @Test
+  public void ambigiuousImplicitStringSetArgument() throws Exception {
+    doTestAmbiguousImplicitArgument(STRING_SET);
+  }
+
+  @Test
+  public void ambigiuousImplicitFileArgument() throws Exception {
+    doTestAmbiguousImplicitArgument(FILE);
+  }
+
+  @Test
+  public void ambigiuousImplicitFileSetArgument() throws Exception {
+    doTestAmbiguousImplicitArgument(FILE_SET);
+  }
+
+  private void doTestAmbiguousImplicitArgument(Type type) {
+    // given
+    Param p1 = param(type, "name1");
+    Param p2 = param(type, "name2");
+
+    Argument a1 = argument(node(type));
+
+    // when
+    create(params(p1, p2), list(a1));
+
+    // then
     problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgProblem.class);
   }
 
   @Test
-  public void noParamWithProperTypeForImplicitArgument() throws Exception {
-    ImmutableMap<String, Param> params = params(file1Param);
-    List<Argument> args = newArrayList(stringImplicit1Arg);
+  public void noParamWithProperTypeForImplicitStringArgument() throws Exception {
+    doTestNoParamWithProperTypeForImplicitArgument(STRING, STRING_SET);
+    doTestNoParamWithProperTypeForImplicitArgument(STRING, FILE);
+    doTestNoParamWithProperTypeForImplicitArgument(STRING, FILE_SET);
+  }
 
-    create(params, args);
+  @Test
+  public void noParamWithProperTypeForImplicitStringSetArgument() throws Exception {
+    doTestNoParamWithProperTypeForImplicitArgument(STRING_SET, STRING);
+    doTestNoParamWithProperTypeForImplicitArgument(STRING_SET, FILE);
+    doTestNoParamWithProperTypeForImplicitArgument(STRING_SET, FILE_SET);
+  }
 
+  @Test
+  public void noParamWithProperTypeForImplicitFileArgument() throws Exception {
+    doTestNoParamWithProperTypeForImplicitArgument(FILE, STRING);
+    doTestNoParamWithProperTypeForImplicitArgument(FILE, STRING_SET);
+    doTestNoParamWithProperTypeForImplicitArgument(FILE, FILE_SET);
+  }
+
+  @Test
+  public void noParamWithProperTypeForImplicitFileSetArgument() throws Exception {
+    doTestNoParamWithProperTypeForImplicitArgument(FILE_SET, STRING);
+    doTestNoParamWithProperTypeForImplicitArgument(FILE_SET, STRING_SET);
+    doTestNoParamWithProperTypeForImplicitArgument(FILE_SET, FILE);
+  }
+
+  private void doTestNoParamWithProperTypeForImplicitArgument(Type type, Type otherType) {
+    // given
+    problemsListener = new TestingProblemsListener();
+    Param p1 = param(otherType, "name1");
+    Argument a1 = argument(node(type));
+
+    // when
+    create(params(p1), list(a1));
+
+    // then
     problemsListener.assertOnlyProblem(NoParamAssignableFromImplicitArgProblem.class);
   }
 
@@ -133,23 +304,10 @@ public class ArgumentNodesCreatorTest {
     return explicitArg(name, node, codeLocation(1, 2, 3));
   }
 
-  private static DefinitionNode node(String value) {
-    return new StringNode(value);
-  }
-
-  private DefinitionNode node(final File file) {
-    return new DefinitionNode() {
-
-      @Override
-      public Type type() {
-        return Type.FILE;
-      }
-
-      @Override
-      public Task generateTask() {
-        return null;
-      }
-    };
+  private static DefinitionNode node(Type type) {
+    DefinitionNode node = mock(DefinitionNode.class);
+    when(node.type()).thenReturn(type);
+    return node;
   }
 
   private Map<String, DefinitionNode> create(ImmutableMap<String, Param> params, List<Argument> args) {
@@ -159,5 +317,9 @@ public class ArgumentNodesCreatorTest {
   private static Function function(ImmutableMap<String, Param> params) {
     Signature signature = new Signature(STRING, simpleName("name"), params);
     return new PluginFunction(signature, mock(PluginInvoker.class));
+  }
+
+  private static ArrayList<Argument> list(Argument... args) {
+    return newArrayList(args);
   }
 }
