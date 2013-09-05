@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.MutableStoredFile;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.Path;
 
 public class TestingFile extends MutableStoredFile {
   public TestingFile(Path path) {

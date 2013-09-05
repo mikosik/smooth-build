@@ -1,12 +1,12 @@
 package org.smoothbuild.fs.plugin;
 
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
 import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class MutableStoredFileTest {

@@ -3,8 +3,8 @@ package org.smoothbuild.fs.plugin;
 import java.io.InputStream;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.Path;
 
 public class StoredFile implements File {
   private final FileSystem fileSystem;

@@ -3,7 +3,7 @@ package org.smoothbuild.task;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;

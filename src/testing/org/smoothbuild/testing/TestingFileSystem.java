@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.mem.MemoryFileSystem;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 
 public class TestingFileSystem extends MemoryFileSystem {
   public void createFileContainingItsPath(Path path) throws IOException {

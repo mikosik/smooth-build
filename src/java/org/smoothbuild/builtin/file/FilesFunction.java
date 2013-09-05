@@ -8,9 +8,9 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.fs.plugin.StoredFileSet;
-import org.smoothbuild.plugin.FileSet;
-import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.SmoothFunction;
 
 // TODO forbid dir that points to temporary files created by smooth-build
 // tool

@@ -1,13 +1,13 @@
 package org.smoothbuild.integration;
 
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.ScriptBuilder.script;
 
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.ScriptBuilder;
 
 public class BasicReadAndWriteSmoothTest extends IntegrationTestCase {

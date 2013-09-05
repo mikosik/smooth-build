@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.TestingSignature.testingSignature;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.util.Empty;
 

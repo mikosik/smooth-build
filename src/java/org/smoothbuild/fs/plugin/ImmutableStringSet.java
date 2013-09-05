@@ -2,7 +2,7 @@ package org.smoothbuild.fs.plugin;
 
 import java.util.Iterator;
 
-import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.api.StringSet;
 
 import com.google.common.collect.ImmutableSet;
 

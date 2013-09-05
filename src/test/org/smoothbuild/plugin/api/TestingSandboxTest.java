@@ -1,9 +1,10 @@
-package org.smoothbuild.plugin;
+package org.smoothbuild.plugin.api;
 
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
 import org.junit.Test;
+import org.smoothbuild.plugin.TestingSandbox;
 
 public class TestingSandboxTest {
   Path file = path("my/path");

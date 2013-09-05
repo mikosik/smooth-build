@@ -13,7 +13,7 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.testing.TestingFileSystem;

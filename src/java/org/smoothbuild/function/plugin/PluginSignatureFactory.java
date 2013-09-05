@@ -15,7 +15,7 @@ import org.smoothbuild.function.plugin.exc.MissingNameException;
 import org.smoothbuild.function.plugin.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.plugin.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.api.SmoothFunction;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;

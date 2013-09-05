@@ -11,7 +11,7 @@ import org.smoothbuild.fs.base.RecursiveFilesIterable;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 
 import com.google.common.io.ByteStreams;
 

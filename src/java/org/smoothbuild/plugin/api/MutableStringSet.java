@@ -1,8 +1,7 @@
-package org.smoothbuild.plugin;
+package org.smoothbuild.plugin.api;
 
 import java.util.Iterator;
 import java.util.Set;
-
 
 import com.google.common.collect.Sets;
 

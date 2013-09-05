@@ -3,7 +3,7 @@ package org.smoothbuild.command;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 
 public class CommandLineArguments {
   private final Path scriptFile;

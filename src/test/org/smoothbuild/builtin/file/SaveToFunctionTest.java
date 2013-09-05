@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.file;
 
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.plugin.Path.rootPath;
+import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.plugin.api.Path.rootPath;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.SaveToFunction.Parameters;
@@ -11,10 +11,10 @@ import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.fs.plugin.StoredFile;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.TestingSandbox;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSystem;
 

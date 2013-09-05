@@ -2,7 +2,7 @@ package org.smoothbuild.task;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;

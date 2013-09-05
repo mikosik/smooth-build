@@ -2,7 +2,7 @@ package org.smoothbuild.function.plugin.exc;
 
 import java.lang.reflect.Method;
 
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.api.SmoothFunction;
 
 @SuppressWarnings("serial")
 public class MissingNameException extends FunctionImplementationException {

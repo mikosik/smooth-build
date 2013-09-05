@@ -6,9 +6,9 @@ import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.StoredFile;
 import org.smoothbuild.fs.plugin.SandboxImpl;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.SmoothFunction;
 
 public class SaveToFunction {
   public interface Parameters {

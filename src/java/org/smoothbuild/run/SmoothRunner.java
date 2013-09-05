@@ -12,7 +12,7 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.parse.ModuleParser;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;

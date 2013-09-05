@@ -1,4 +1,4 @@
-package org.smoothbuild.plugin.exc;
+package org.smoothbuild.plugin.api.exc;
 
 @SuppressWarnings("serial")
 public class FunctionException extends Exception {

@@ -1,4 +1,4 @@
-package org.smoothbuild.plugin;
+package org.smoothbuild.plugin.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,10 +10,10 @@ import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.ZipFunction.Parameters;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.TestingSandbox;
-import org.smoothbuild.plugin.exc.FunctionException;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSet;
 

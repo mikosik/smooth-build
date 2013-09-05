@@ -1,7 +1,7 @@
 package org.smoothbuild.task;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 
 import java.util.Collection;
 
@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.plugin.SandboxImpl;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
 
