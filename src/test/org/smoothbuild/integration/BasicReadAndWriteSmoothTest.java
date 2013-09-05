@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.ScriptBuilder;
 
-public class BasicReadAndWriteTest extends IntegrationTestCase {
+public class BasicReadAndWriteSmoothTest extends IntegrationTestCase {
   Path file = path("file/path/file.txt");
   Path destinationDir = path("destination/dir");
 
@@ -19,7 +19,7 @@ public class BasicReadAndWriteTest extends IntegrationTestCase {
     String script = script("run : file(path='" + file.value() + "') | saveTo(dir='"
         + destinationDir.value() + "');");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT, script);
-    fileSystem.createFileContainingItsPath(Path.rootPath(), file);
+    fileSystem.createFileContainingItsPath(file);
 
     smoothRunner.run("run");
 
@@ -32,7 +32,7 @@ public class BasicReadAndWriteTest extends IntegrationTestCase {
     String script = script("run : saveTo(dir='" + destinationDir.value() + "', file=file(path='"
         + file.value() + "') );");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT, script);
-    fileSystem.createFileContainingItsPath(Path.rootPath(), file);
+    fileSystem.createFileContainingItsPath(file);
 
     smoothRunner.run("run");
 
@@ -47,7 +47,7 @@ public class BasicReadAndWriteTest extends IntegrationTestCase {
     builder.addLine("myfile : file(path=filename);");
     builder.addLine("run : saveTo(file=myfile, dir='" + destinationDir.value() + "');");
     fileSystem.createFileWithContent(DEFAULT_SCRIPT, builder.build());
-    fileSystem.createFileContainingItsPath(Path.rootPath(), file);
+    fileSystem.createFileContainingItsPath(file);
 
     smoothRunner.run("run");
 
