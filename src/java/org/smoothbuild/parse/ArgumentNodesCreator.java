@@ -113,7 +113,7 @@ public class ArgumentNodesCreator {
         Type type = onlyImplicit.definitionNode().type();
         boolean found = false;
         for (Param param : params.values()) {
-          if (param.type() == type && !explicitArgs.containsKey(param.name())) {
+          if (param.type().isAssignableFrom(type) && !explicitArgs.containsKey(param.name())) {
             if (found) {
               Problem problem = new ManyAmbigiousParamsAssignableFromImplicitArgProblem(
                   onlyImplicit);
