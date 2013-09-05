@@ -11,14 +11,16 @@ import com.google.inject.TypeLiteral;
 
 public class Type {
   public static final Type STRING = create("String", String.class);
-  public static final Type STRING_SET = create("String", StringSet.class);
+  public static final Type STRING_SET = create("StringSet", StringSet.class);
   public static final Type FILE = create("File", File.class);
   public static final Type FILE_SET = create("FileSet", FileSet.class);
   public static final Type VOID = create("Void", Void.TYPE);
 
   static final ImmutableList<Type> SET_ELEM_TYPES = ImmutableList.of(STRING, FILE);
-  static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, FILE, FILE_SET, VOID);
-  static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, FILE, FILE_SET);
+  static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, STRING_SET, FILE,
+      FILE_SET, VOID);
+  static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, STRING_SET, FILE,
+      FILE_SET);
 
   static final ImmutableList<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
   static final ImmutableList<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
