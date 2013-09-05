@@ -2,8 +2,8 @@ package org.smoothbuild.task;
 
 import java.util.Set;
 
-import org.smoothbuild.fs.plugin.ImmutableStringSet;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.internal.ImmutableStringSet;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;

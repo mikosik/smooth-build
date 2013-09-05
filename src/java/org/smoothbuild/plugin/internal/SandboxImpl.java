@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.plugin;
+package org.smoothbuild.plugin.internal;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;

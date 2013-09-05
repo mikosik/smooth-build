@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.plugin.exc.MoreThanOneSmoothFunctionException;
@@ -18,6 +17,7 @@ import org.smoothbuild.function.plugin.exc.PluginImplementationException;
 import org.smoothbuild.function.plugin.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.internal.SandboxImpl;
 
 public class PluginFactory {
   private final PluginSignatureFactory signatureFactory;

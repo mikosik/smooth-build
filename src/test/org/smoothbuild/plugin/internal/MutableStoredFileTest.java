@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.plugin;
+package org.smoothbuild.plugin.internal;
 
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
