@@ -1,6 +1,7 @@
 package org.smoothbuild.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.JAVA_PARAM_TO_SMOOTH;
@@ -14,6 +15,7 @@ import static org.smoothbuild.function.base.Type.javaParamTypetoType;
 import static org.smoothbuild.function.base.Type.javaResultTypetoType;
 
 import org.junit.Test;
+import org.smoothbuild.fs.plugin.EmptySet;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.StringSet;
@@ -28,25 +30,47 @@ public class TypeTest {
     assertThat(STRING.isAssignableFrom(STRING_SET)).isFalse();
     assertThat(STRING.isAssignableFrom(FILE)).isFalse();
     assertThat(STRING.isAssignableFrom(FILE_SET)).isFalse();
+    assertThat(STRING.isAssignableFrom(VOID)).isFalse();
+    assertThat(STRING.isAssignableFrom(EMPTY_SET)).isFalse();
 
     assertThat(STRING_SET.isAssignableFrom(STRING)).isFalse();
     assertThat(STRING_SET.isAssignableFrom(STRING_SET)).isTrue();
     assertThat(STRING_SET.isAssignableFrom(FILE)).isFalse();
     assertThat(STRING_SET.isAssignableFrom(FILE_SET)).isFalse();
+    assertThat(STRING_SET.isAssignableFrom(VOID)).isFalse();
+    assertThat(STRING_SET.isAssignableFrom(EMPTY_SET)).isTrue();
 
     assertThat(FILE.isAssignableFrom(STRING)).isFalse();
     assertThat(FILE.isAssignableFrom(STRING_SET)).isFalse();
     assertThat(FILE.isAssignableFrom(FILE)).isTrue();
     assertThat(FILE.isAssignableFrom(FILE_SET)).isFalse();
+    assertThat(FILE.isAssignableFrom(VOID)).isFalse();
+    assertThat(FILE.isAssignableFrom(EMPTY_SET)).isFalse();
 
     assertThat(FILE_SET.isAssignableFrom(STRING)).isFalse();
     assertThat(FILE_SET.isAssignableFrom(STRING_SET)).isFalse();
     assertThat(FILE_SET.isAssignableFrom(FILE)).isFalse();
     assertThat(FILE_SET.isAssignableFrom(FILE_SET)).isTrue();
+    assertThat(FILE_SET.isAssignableFrom(VOID)).isFalse();
+    assertThat(FILE_SET.isAssignableFrom(EMPTY_SET)).isTrue();
+
+    assertThat(EMPTY_SET.isAssignableFrom(STRING)).isFalse();
+    assertThat(EMPTY_SET.isAssignableFrom(STRING_SET)).isFalse();
+    assertThat(EMPTY_SET.isAssignableFrom(FILE)).isFalse();
+    assertThat(EMPTY_SET.isAssignableFrom(FILE_SET)).isFalse();
+    assertThat(EMPTY_SET.isAssignableFrom(VOID)).isFalse();
+    assertThat(EMPTY_SET.isAssignableFrom(EMPTY_SET)).isTrue();
+
+    assertThat(VOID.isAssignableFrom(STRING)).isFalse();
+    assertThat(VOID.isAssignableFrom(STRING_SET)).isFalse();
+    assertThat(VOID.isAssignableFrom(FILE)).isFalse();
+    assertThat(VOID.isAssignableFrom(FILE_SET)).isFalse();
+    assertThat(VOID.isAssignableFrom(VOID)).isTrue();
+    assertThat(VOID.isAssignableFrom(EMPTY_SET)).isFalse();
   }
 
   @Test
-  public void equalsAndHashCodeWorkaround() throws Exception {
+  public void equalsAndHashCode() throws Exception {
     assertThat(STRING).isEqualTo(STRING);
     assertThat(STRING).isNotEqualTo(FILE);
     assertThat(STRING).isNotEqualTo(FILE_SET);
@@ -59,21 +83,41 @@ public class TypeTest {
     assertThat(FILE_SET).isNotEqualTo(FILE);
     assertThat(FILE_SET).isEqualTo(FILE_SET);
 
-    assertThat(STRING.hashCode()).isNotEqualTo(FILE.hashCode());
     assertThat(STRING.hashCode()).isNotEqualTo(STRING_SET.hashCode());
+    assertThat(STRING.hashCode()).isNotEqualTo(FILE.hashCode());
     assertThat(STRING.hashCode()).isNotEqualTo(FILE_SET.hashCode());
+    assertThat(STRING.hashCode()).isNotEqualTo(VOID.hashCode());
+    assertThat(STRING.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
 
     assertThat(STRING_SET.hashCode()).isNotEqualTo(STRING.hashCode());
     assertThat(STRING_SET.hashCode()).isNotEqualTo(FILE.hashCode());
     assertThat(STRING_SET.hashCode()).isNotEqualTo(FILE_SET.hashCode());
+    assertThat(STRING_SET.hashCode()).isNotEqualTo(VOID.hashCode());
+    assertThat(STRING_SET.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
 
     assertThat(FILE.hashCode()).isNotEqualTo(STRING.hashCode());
     assertThat(FILE.hashCode()).isNotEqualTo(STRING_SET.hashCode());
     assertThat(FILE.hashCode()).isNotEqualTo(FILE_SET.hashCode());
+    assertThat(FILE.hashCode()).isNotEqualTo(VOID.hashCode());
+    assertThat(FILE.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
 
     assertThat(FILE_SET.hashCode()).isNotEqualTo(STRING.hashCode());
     assertThat(FILE_SET.hashCode()).isNotEqualTo(STRING_SET.hashCode());
     assertThat(FILE_SET.hashCode()).isNotEqualTo(FILE.hashCode());
+    assertThat(FILE_SET.hashCode()).isNotEqualTo(VOID.hashCode());
+    assertThat(FILE_SET.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
+
+    assertThat(VOID.hashCode()).isNotEqualTo(STRING.hashCode());
+    assertThat(VOID.hashCode()).isNotEqualTo(STRING_SET.hashCode());
+    assertThat(VOID.hashCode()).isNotEqualTo(FILE.hashCode());
+    assertThat(VOID.hashCode()).isNotEqualTo(FILE_SET.hashCode());
+    assertThat(VOID.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
+
+    assertThat(EMPTY_SET.hashCode()).isNotEqualTo(STRING.hashCode());
+    assertThat(EMPTY_SET.hashCode()).isNotEqualTo(STRING_SET.hashCode());
+    assertThat(EMPTY_SET.hashCode()).isNotEqualTo(FILE.hashCode());
+    assertThat(EMPTY_SET.hashCode()).isNotEqualTo(FILE_SET.hashCode());
+    assertThat(EMPTY_SET.hashCode()).isNotEqualTo(VOID.hashCode());
   }
 
   @Test
@@ -92,6 +136,11 @@ public class TypeTest {
   @Test
   public void voidIsNotValidParamType() throws Exception {
     assertThat(javaParamTypetoType(type(Void.class))).isNull();
+  }
+
+  @Test
+  public void emptySetIsNotValidParamType() throws Exception {
+    assertThat(javaParamTypetoType(type(EmptySet.class))).isNull();
   }
 
   @Test
