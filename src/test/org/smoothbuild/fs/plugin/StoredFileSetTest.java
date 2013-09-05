@@ -2,12 +2,14 @@ package org.smoothbuild.fs.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
 
 import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
+import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSystem;
 
 import com.google.common.collect.ImmutableList;
@@ -34,7 +36,7 @@ public class StoredFileSetTest {
   public void file() throws Exception {
     fileSystem.createFileContainingItsPath(path("abc.txt"));
     File file = storedFileSet.file(path("abc.txt"));
-    StoredFileTest.assertContentHasFilePath(file);
+    assertContentHasFilePath(file);
   }
 
   @Test
@@ -53,7 +55,7 @@ public class StoredFileSetTest {
     }
 
     for (File file : storedFileSet) {
-      StoredFileTest.assertContentHasFilePath(file);
+      TestingFile.assertContentHasFilePath(file);
     }
   }
 
