@@ -44,10 +44,6 @@ public class Type {
     return name;
   }
 
-  public TypeLiteral<?> javaType() {
-    return javaType;
-  }
-
   public boolean isAssignableFrom(Type type) {
     return this.equals(type);
   }
