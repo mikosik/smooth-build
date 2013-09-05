@@ -2,14 +2,10 @@ package org.smoothbuild.fs.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.testing.TestingStream.assertContent;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
@@ -36,7 +32,4 @@ public class StoredFileTest {
     assertContentHasFilePath(storedFile);
   }
 
-  public static void assertContentHasFilePath(File file) throws IOException, FileNotFoundException {
-    assertContent(file.createInputStream(), file.path().value());
-  }
 }
