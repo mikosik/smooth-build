@@ -20,6 +20,8 @@ import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
+import org.smoothbuild.antlr.SmoothParser.SetContext;
+import org.smoothbuild.antlr.SmoothParser.SetElemContext;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
@@ -27,15 +29,22 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.FunctionNode;
 import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
+import org.smoothbuild.function.def.StringSetNode;
+import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
+import org.smoothbuild.parse.err.IncompatibleSetElemsError;
 import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.CodeLocation;
+import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -97,13 +106,84 @@ public class DefinedFunctionsCreator {
     }
 
     private DefinitionNode build(ExpressionContext expression) {
+      if (expression.set() != null) {
+        return build(expression.set());
+      }
       if (expression.call() != null) {
         return build(expression.call());
       }
       if (expression.STRING() != null) {
         return buildStringNode(expression.STRING());
       }
-      throw new RuntimeException("Illegal parse tree: ExpressionContext without children.");
+      throw new RuntimeException("Illegal parse tree: " + ExpressionContext.class.getSimpleName()
+          + " without children.");
+    }
+
+    private DefinitionNode build(SetContext list) {
+      List<SetElemContext> elems = list.setElem();
+      ImmutableList<DefinitionNode> elemNodes = build(elems);
+
+      if (elemNodes.isEmpty()) {
+        return emptySetNode();
+      }
+
+      if (!areAllElemTypesEqual(elems, elemNodes)) {
+        return emptySetNode();
+      }
+
+      Type elemsType = elemNodes.get(0).type();
+      if (elemsType == Type.STRING) {
+        return new StringSetNode(elemNodes);
+      }
+      if (elemsType == Type.FILE) {
+        return new FileSetNode(elemNodes);
+      }
+      throw new RuntimeException("Bug in Smooth implementation. No code to handle type = "
+          + elemsType);
+    }
+
+    private ImmutableList<DefinitionNode> build(List<SetElemContext> elems) {
+      Builder<DefinitionNode> builder = ImmutableList.builder();
+      for (SetElemContext elem : elems) {
+        DefinitionNode node = build(elem);
+        if (!Type.allowedForSetElem().contains(node.type())) {
+          problems.report(new ForbiddenSetElemTypeError(locationOf(elem), node.type()));
+        } else {
+          builder.add(node);
+        }
+      }
+      return builder.build();
+    }
+
+    private DefinitionNode build(SetElemContext elem) {
+      if (elem.STRING() != null) {
+        return buildStringNode(elem.STRING());
+      }
+      if (elem.call() != null) {
+        return build(elem.call());
+      }
+      throw new RuntimeException("Illegal parse tree: " + SetElemContext.class.getSimpleName()
+          + " without children.");
+    }
+
+    private DefinitionNode emptySetNode() {
+      // TODO implement empty set
+      problems.report(new Error("Empty sets are not allowed (yet)"));
+      return new InvalidNode(STRING);
+    }
+
+    private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<DefinitionNode> elemNodes) {
+      boolean success = true;
+      Type firstType = elemNodes.get(0).type();
+      for (int i = 0; i < elemNodes.size(); i++) {
+        DefinitionNode elemNode = elemNodes.get(i);
+        if (elemNode.type() != firstType) {
+          CodeLocation location = locationOf(elems.get(i));
+          problems.report(new IncompatibleSetElemsError(location, firstType, i, elemNode.type()));
+          success = false;
+        }
+      }
+      return success;
     }
 
     private DefinitionNode build(CallContext call) {
