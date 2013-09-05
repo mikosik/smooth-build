@@ -10,11 +10,11 @@ import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.fs.plugin.StoredFile;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
+import org.smoothbuild.plugin.internal.StoredFile;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSystem;
 

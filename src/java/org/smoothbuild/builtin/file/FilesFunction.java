@@ -6,11 +6,11 @@ import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.fs.plugin.SandboxImpl;
-import org.smoothbuild.fs.plugin.StoredFileSet;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.internal.SandboxImpl;
+import org.smoothbuild.plugin.internal.StoredFileSet;
 
 // TODO forbid dir that points to temporary files created by smooth-build
 // tool

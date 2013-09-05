@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.plugin;
+package org.smoothbuild.plugin.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;

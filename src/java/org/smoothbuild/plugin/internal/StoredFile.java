@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.plugin;
+package org.smoothbuild.plugin.internal;
 
 import java.io.InputStream;
 

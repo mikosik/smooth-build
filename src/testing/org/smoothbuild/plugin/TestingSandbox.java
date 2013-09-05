@@ -1,7 +1,7 @@
 package org.smoothbuild.plugin;
 
-import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.testing.TestingFileSystem;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 

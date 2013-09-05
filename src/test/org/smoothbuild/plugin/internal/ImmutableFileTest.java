@@ -1,8 +1,8 @@
-package org.smoothbuild.fs.plugin;
+package org.smoothbuild.plugin.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.fs.plugin.ImmutableFile.immutableFile;
 import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.plugin.internal.ImmutableFile.immutableFile;
 import static org.smoothbuild.testing.TestingStream.assertContent;
 
 import java.io.FileNotFoundException;

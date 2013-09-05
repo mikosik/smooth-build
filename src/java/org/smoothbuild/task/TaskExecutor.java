@@ -8,8 +8,8 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.plugin.SandboxImpl;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
 
