@@ -62,6 +62,11 @@ public class Type {
     return name.hashCode();
   }
 
+  @Override
+  public String toString() {
+    return "'" + name + "'";
+  }
+
   public static ImmutableList<Type> allowedForSetElem() {
     return SET_ELEM_TYPES;
   }
