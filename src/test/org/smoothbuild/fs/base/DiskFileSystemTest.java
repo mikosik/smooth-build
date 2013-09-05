@@ -2,7 +2,7 @@ package org.smoothbuild.fs.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.TestingJdkFile.assertContent;
 import static org.smoothbuild.testing.TestingJdkFile.createDir;
 import static org.smoothbuild.testing.TestingJdkFile.createEmptyFile;
@@ -18,7 +18,7 @@ import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.TestCaseWithTempDir;
 
 public class DiskFileSystemTest extends TestCaseWithTempDir {

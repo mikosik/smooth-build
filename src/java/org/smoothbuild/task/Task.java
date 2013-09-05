@@ -1,6 +1,6 @@
 package org.smoothbuild.task;
 
-import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.api.Sandbox;
 
 import com.google.common.collect.ImmutableCollection;
 

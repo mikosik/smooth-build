@@ -1,7 +1,7 @@
 package org.smoothbuild.testing;
 
 import static org.junit.Assert.fail;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.TestingStream.assertContent;
 import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 
 public class TestingFileSystemTest {
   Path root = path("my/root");

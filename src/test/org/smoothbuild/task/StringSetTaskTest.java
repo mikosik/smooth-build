@@ -3,7 +3,7 @@ package org.smoothbuild.task;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.api.StringSet;
 
 import com.google.common.collect.ImmutableSet;
 

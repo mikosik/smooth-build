@@ -1,11 +1,10 @@
-package org.smoothbuild.plugin;
+package org.smoothbuild.plugin.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Iterator;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.MutableStringSet;
 
 public class MutableStringSetTest {
   MutableStringSet mutableStringSet = new MutableStringSet();

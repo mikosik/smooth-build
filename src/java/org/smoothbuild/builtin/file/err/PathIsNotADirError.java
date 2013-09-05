@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.Error;
 
 public class PathIsNotADirError extends Error {

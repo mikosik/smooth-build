@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.api.StringSet;
 import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableList;

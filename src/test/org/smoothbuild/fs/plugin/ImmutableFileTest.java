@@ -2,7 +2,7 @@ package org.smoothbuild.fs.plugin;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.plugin.ImmutableFile.immutableFile;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.TestingStream.assertContent;
 
 import java.io.FileNotFoundException;
@@ -10,9 +10,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.MutableFile;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.MutableFile;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.TestingFileSystem;
 
 public class ImmutableFileTest {

@@ -1,6 +1,6 @@
 package org.smoothbuild.function.plugin.exc;
 
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.api.SmoothFunction;
 
 @SuppressWarnings("serial")
 public class MoreThanOneSmoothFunctionException extends FunctionClassImplementationException {

@@ -2,8 +2,8 @@ package org.smoothbuild.fs.plugin;
 
 import java.io.InputStream;
 
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.Path;
 
 public class ImmutableFile implements File {
   private final File file;

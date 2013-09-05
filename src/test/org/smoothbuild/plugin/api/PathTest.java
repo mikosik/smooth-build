@@ -1,10 +1,10 @@
-package org.smoothbuild.plugin;
+package org.smoothbuild.plugin.api;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.plugin.Path.rootPath;
+import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.plugin.api.Path.rootPath;
 
 import java.util.List;
 

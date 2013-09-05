@@ -16,8 +16,8 @@ import org.smoothbuild.function.plugin.exc.NonPublicSmoothFunctionException;
 import org.smoothbuild.function.plugin.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
 import org.smoothbuild.function.plugin.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.plugin.Sandbox;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.api.SmoothFunction;
 
 public class PluginFactory {
   private final PluginSignatureFactory signatureFactory;

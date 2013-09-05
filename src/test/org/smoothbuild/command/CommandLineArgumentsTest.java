@@ -1,7 +1,7 @@
 package org.smoothbuild.command;
 
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Name;

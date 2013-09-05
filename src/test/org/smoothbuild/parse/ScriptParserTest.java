@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.base.Charsets.UTF_8;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.ScriptBuilder.script;
 
 import java.io.ByteArrayInputStream;

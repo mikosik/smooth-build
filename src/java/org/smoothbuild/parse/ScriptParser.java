@@ -23,7 +23,7 @@ import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.CodeLocation;
 import org.smoothbuild.problem.ProblemsListener;

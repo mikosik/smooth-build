@@ -2,9 +2,9 @@ package org.smoothbuild.task;
 
 import java.util.Set;
 
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.MutableFileSet;
-import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.MutableFileSet;
+import org.smoothbuild.plugin.api.Sandbox;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;

@@ -1,11 +1,11 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.plugin.Path.path;
-import static org.smoothbuild.plugin.Path.validationError;
+import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.plugin.api.Path.validationError;
 
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.ProblemsListener;
 
 public class PathArgValidator {

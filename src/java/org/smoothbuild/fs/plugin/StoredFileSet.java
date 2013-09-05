@@ -3,9 +3,9 @@ package org.smoothbuild.fs.plugin;
 import java.util.Iterator;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileSet;
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.Path;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;

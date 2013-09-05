@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
 
 import org.junit.Test;
@@ -9,10 +9,10 @@ import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
-import org.smoothbuild.plugin.FileSet;
-import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.PathTest;
 import org.smoothbuild.plugin.TestingSandbox;
+import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.PathTest;
 
 public class FilesFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();

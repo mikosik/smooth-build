@@ -16,9 +16,9 @@ import static org.smoothbuild.function.base.Type.javaResultTypetoType;
 
 import org.junit.Test;
 import org.smoothbuild.fs.plugin.EmptySet;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileSet;
-import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.StringSet;
 
 import com.google.inject.TypeLiteral;
 

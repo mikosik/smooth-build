@@ -2,7 +2,7 @@ package org.smoothbuild.parse.err;
 
 import java.io.IOException;
 
-import org.smoothbuild.plugin.Path;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.Error;
 
 public class CannotReadScriptError extends Error {

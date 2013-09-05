@@ -1,15 +1,12 @@
-package org.smoothbuild.plugin;
+package org.smoothbuild.plugin.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.plugin.Path.path;
+import static org.smoothbuild.plugin.api.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.MutableFileSet;
-import org.smoothbuild.plugin.Path;
 
 public class MutableFileSetTest {
   File file = file(path("my/file"));

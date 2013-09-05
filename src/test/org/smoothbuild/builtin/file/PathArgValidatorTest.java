@@ -3,8 +3,8 @@ package org.smoothbuild.builtin.file;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
-import org.smoothbuild.plugin.PathTest;
-import org.smoothbuild.plugin.exc.FunctionException;
+import org.smoothbuild.plugin.api.PathTest;
+import org.smoothbuild.plugin.api.exc.FunctionException;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 public class PathArgValidatorTest {

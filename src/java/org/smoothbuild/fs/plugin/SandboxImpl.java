@@ -2,9 +2,9 @@ package org.smoothbuild.fs.plugin;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.plugin.MutableFile;
-import org.smoothbuild.plugin.Path;
-import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.api.MutableFile;
+import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.problem.Problem;
 import org.smoothbuild.problem.ProblemsListener;
 
