@@ -9,6 +9,8 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.FileSetNode;
+import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.parse.err.DuplicateArgNameProblem;
 import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
@@ -75,7 +77,7 @@ public class ArgumentNodesCreator {
             problems.report(new TypeMismatchProblem(argument, param.type()));
             success = false;
           } else {
-            explicitArgs.put(argName, argNode);
+            explicitArgs.put(argName, convert(param.type(), argNode));
           }
         }
       }
@@ -83,6 +85,20 @@ public class ArgumentNodesCreator {
         return explicitArgs;
       } else {
         return null;
+      }
+    }
+
+    private static DefinitionNode convert(Type type, DefinitionNode argNode) {
+      if (argNode.type() == Type.EMPTY_SET) {
+        if (type == Type.STRING_SET) {
+          return new StringSetNode(ImmutableList.<DefinitionNode> of());
+        } else if (type == Type.FILE_SET) {
+          return new FileSetNode(ImmutableList.<DefinitionNode> of());
+        } else {
+          throw new RuntimeException("Cannot convert from " + argNode.type() + " to " + type + ".");
+        }
+      } else {
+        return argNode;
       }
     }
 
@@ -120,7 +136,7 @@ public class ArgumentNodesCreator {
               problems.report(problem);
               return;
             } else {
-              explicitArgs.put(param.name(), onlyImplicit.definitionNode());
+              explicitArgs.put(param.name(), convert(param.type(), onlyImplicit.definitionNode()));
               found = true;
             }
           }
