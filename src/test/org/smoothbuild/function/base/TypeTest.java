@@ -23,15 +23,6 @@ import com.google.inject.TypeLiteral;
 public class TypeTest {
 
   @Test
-  public void javaType() {
-    assertThat((Object) STRING.javaType()).isEqualTo(type(String.class));
-    assertThat((Object) STRING_SET.javaType()).isEqualTo(type(StringSet.class));
-    assertThat((Object) FILE.javaType()).isEqualTo(type(File.class));
-    assertThat((Object) FILE_SET.javaType()).isEqualTo(type(FileSet.class));
-    assertThat((Object) Type.VOID.javaType()).isEqualTo(type(Void.TYPE));
-  }
-
-  @Test
   public void isAssignableFrom() throws Exception {
     assertThat(STRING.isAssignableFrom(STRING)).isTrue();
     assertThat(STRING.isAssignableFrom(STRING_SET)).isFalse();
