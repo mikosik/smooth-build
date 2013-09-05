@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.plugin.api.PathTest;
-import org.smoothbuild.plugin.api.exc.FunctionException;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 public class PathArgValidatorTest {
@@ -18,7 +17,7 @@ public class PathArgValidatorTest {
   }
 
   @Test
-  public void illegalPathsAreReported() throws FunctionException {
+  public void illegalPathsAreReported() {
     String name = "name";
     for (String path : PathTest.listOfInvalidPaths()) {
       TestingProblemsListener problems = new TestingProblemsListener();
@@ -28,7 +27,7 @@ public class PathArgValidatorTest {
   }
 
   @Test
-  public void validPathsAreAccepted() throws FunctionException {
+  public void validPathsAreAccepted() {
     for (String path : PathTest.listOfCorrectPaths()) {
       TestingProblemsListener problems = new TestingProblemsListener();
       PathArgValidator.validatedPath("name", path, problems);
