@@ -16,6 +16,7 @@ public class Type {
   public static final Type FILE_SET = create("FileSet", FileSet.class);
   public static final Type VOID = create("Void", Void.TYPE);
 
+  static final ImmutableList<Type> SET_ELEM_TYPES = ImmutableList.of(STRING, FILE);
   static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, FILE, FILE_SET, VOID);
   static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, FILE, FILE_SET);
 
@@ -57,6 +58,10 @@ public class Type {
   @Override
   public final int hashCode() {
     return name.hashCode();
+  }
+
+  public static ImmutableList<Type> allowedForSetElem() {
+    return SET_ELEM_TYPES;
   }
 
   public static ImmutableList<TypeLiteral<?>> javaTypesAllowedForResult() {
