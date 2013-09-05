@@ -13,7 +13,6 @@ import org.smoothbuild.builtin.compress.ZipFunction.Parameters;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSet;
 
@@ -24,7 +23,7 @@ public class ZipFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
 
   @Test
-  public void testZipping() throws IOException, FunctionException {
+  public void testZipping() throws IOException {
     TestingFileSet inputFiles = new TestingFileSet();
     inputFiles.createFile(path("fileA.txt")).createContentWithFilePath();
     inputFiles.createFile(path("fileB.txt")).createContentWithFilePath();
@@ -61,7 +60,7 @@ public class ZipFunctionTest {
     };
   }
 
-  private File runExecute(Parameters params) throws FunctionException {
+  private File runExecute(Parameters params) {
     return ZipFunction.execute(sandbox, params);
   }
 }

@@ -15,7 +15,6 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.exc.FunctionException;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSet;
 
@@ -23,7 +22,7 @@ public class UnzipFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
 
   @Test
-  public void testUnzipping() throws IOException, FunctionException {
+  public void testUnzipping() throws IOException {
     Parameters params = params(packedFiles("file/path/file1.txt", "file/path/file2.txt"));
 
     FileSet result = runExecute(params);
@@ -79,7 +78,7 @@ public class UnzipFunctionTest {
     };
   }
 
-  private FileSet runExecute(Parameters params) throws FunctionException {
+  private FileSet runExecute(Parameters params) {
     return UnzipFunction.execute(sandbox, params);
   }
 }
