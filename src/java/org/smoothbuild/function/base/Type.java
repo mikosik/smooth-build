@@ -1,5 +1,6 @@
 package org.smoothbuild.function.base;
 
+import org.smoothbuild.fs.plugin.EmptySet;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.StringSet;
@@ -15,6 +16,7 @@ public class Type {
   public static final Type FILE = create("File", File.class);
   public static final Type FILE_SET = create("FileSet", FileSet.class);
   public static final Type VOID = create("Void", Void.TYPE);
+  public static final Type EMPTY_SET = create("EmptySet", EmptySet.class);
 
   static final ImmutableList<Type> SET_ELEM_TYPES = ImmutableList.of(STRING, FILE);
   static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, STRING_SET, FILE,
@@ -45,7 +47,11 @@ public class Type {
   }
 
   public boolean isAssignableFrom(Type type) {
-    return this.equals(type);
+    if (type == EMPTY_SET) {
+      return this == EMPTY_SET || this == STRING_SET || this == FILE_SET;
+    } else {
+      return this == type;
+    }
   }
 
   @Override
