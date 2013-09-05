@@ -10,6 +10,10 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Path;
 
 public class TestingFile extends MutableStoredFile {
+  public TestingFile(Path path) {
+    this(new TestingFileSystem(), path);
+  }
+
   public TestingFile(FileSystem fileSystem, Path path) {
     super(fileSystem, path);
   }
