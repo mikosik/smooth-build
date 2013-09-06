@@ -1,9 +1,9 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.parse.Argument.explicitArg;
-import static org.smoothbuild.parse.Argument.implicitArg;
+import static org.smoothbuild.parse.def.Argument.explicitArg;
+import static org.smoothbuild.parse.def.Argument.implicitArg;
 
 import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;

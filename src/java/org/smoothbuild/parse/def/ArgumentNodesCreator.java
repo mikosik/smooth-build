@@ -1,4 +1,4 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.def;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -11,11 +11,11 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.StringSetNode;
-import org.smoothbuild.parse.err.DuplicateArgNameProblem;
-import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
-import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
-import org.smoothbuild.parse.err.TypeMismatchProblem;
-import org.smoothbuild.parse.err.UnknownParamNameProblem;
+import org.smoothbuild.parse.def.err.DuplicateArgNameProblem;
+import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
+import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgProblem;
+import org.smoothbuild.parse.def.err.TypeMismatchProblem;
+import org.smoothbuild.parse.def.err.UnknownParamNameProblem;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.Problem;
 import org.smoothbuild.problem.ProblemsListener;

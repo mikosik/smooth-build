@@ -1,4 +1,4 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.def;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,8 +12,8 @@ import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
-import static org.smoothbuild.parse.Argument.explicitArg;
-import static org.smoothbuild.parse.Argument.implicitArg;
+import static org.smoothbuild.parse.def.Argument.explicitArg;
+import static org.smoothbuild.parse.def.Argument.implicitArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.function.plugin.PluginInvoker;
-import org.smoothbuild.parse.err.DuplicateArgNameProblem;
-import org.smoothbuild.parse.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
-import org.smoothbuild.parse.err.NoParamAssignableFromImplicitArgProblem;
-import org.smoothbuild.parse.err.UnknownParamNameProblem;
+import org.smoothbuild.parse.def.err.DuplicateArgNameProblem;
+import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
+import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgProblem;
+import org.smoothbuild.parse.def.err.UnknownParamNameProblem;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
