@@ -2,9 +2,12 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
+import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
+import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
@@ -12,9 +15,11 @@ import org.smoothbuild.plugin.internal.StoredFile;
 
 public class SaveFunction {
   public interface Parameters {
-    // TODO both parameters should be marked as @Required
     public File file();
 
+    public FileSet files();
+
+    // TODO should be marked as @Required
     public String dir();
   }
 
@@ -37,24 +42,45 @@ public class SaveFunction {
       if (dirPath == null) {
         return;
       }
-      saveTo(dirPath, params);
+      File file = params.file();
+      FileSet files = params.files();
+      if (file == null && files == null) {
+        sandbox.report(new EitherFileOrFilesMustBeProvidedError());
+        return;
+      }
+      if (file != null && files != null) {
+        sandbox.report(new FileAndFilesSpecifiedError());
+        return;
+      }
+      if (!canPathBeUsedAsDir(dirPath)) {
+        return;
+      }
+      if (file != null) {
+        save(dirPath, file);
+      } else {
+        save(dirPath, files);
+      }
     }
 
-    private void saveTo(Path dirPath, Parameters params) {
+    private void save(Path dirPath, FileSet files) {
+      for (File file : files) {
+        save(dirPath, file);
+      }
+    }
+
+    private void save(Path dirPath, File file) {
+      Path destination = dirPath.append(file.path());
+
+      if (!canPathBeUsedAsDir(destination.parent())) {
+        return;
+      }
+
+      Path source = ((StoredFile) file).fullPath();
+      sandbox.projectFileSystem().copy(source, destination);
+    }
+
+    private boolean canPathBeUsedAsDir(Path dirPath) {
       FileSystem fileSystem = sandbox.projectFileSystem();
-      if (!canPathBeUsedAsDir(fileSystem, dirPath)) {
-        return;
-      }
-      Path destination = dirPath.append(params.file().path());
-      if (!canPathBeUsedAsDir(fileSystem, destination.parent())) {
-        return;
-      }
-
-      Path source = ((StoredFile) params.file()).fullPath();
-      fileSystem.copy(source, destination);
-    }
-
-    private boolean canPathBeUsedAsDir(FileSystem fileSystem, Path dirPath) {
       if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndIsDirectory(dirPath)) {
         sandbox.report(new PathIsNotADirError("dir", dirPath));
         return false;
