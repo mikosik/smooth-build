@@ -2,6 +2,7 @@ package org.smoothbuild.parse.def;
 
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.def.Argument.explicitArg;
@@ -39,7 +40,6 @@ import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
 import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.CodeLocation;
-import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
@@ -165,12 +165,6 @@ public class DefinedFunctionsCreator {
       }
       throw new RuntimeException("Illegal parse tree: " + SetElemContext.class.getSimpleName()
           + " without children.");
-    }
-
-    private DefinitionNode emptySetNode() {
-      // TODO implement empty set
-      problems.report(new Error("Empty sets are not allowed (yet)"));
-      return new InvalidNode(STRING);
     }
 
     private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<DefinitionNode> elemNodes) {
