@@ -1,7 +1,7 @@
-package org.smoothbuild.parse.err;
+package org.smoothbuild.parse.def.err;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.parse.Argument;
+import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.problem.CodeError;
 
 public class UnknownParamNameProblem extends CodeError {

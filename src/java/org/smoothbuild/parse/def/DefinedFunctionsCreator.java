@@ -1,12 +1,12 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.def;
 
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
-import static org.smoothbuild.parse.Argument.explicitArg;
-import static org.smoothbuild.parse.Argument.implicitArg;
-import static org.smoothbuild.parse.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.def.Argument.explicitArg;
+import static org.smoothbuild.parse.def.Argument.implicitArg;
+import static org.smoothbuild.parse.def.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.List;
@@ -34,6 +34,7 @@ import org.smoothbuild.function.def.FunctionNode;
 import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
+import org.smoothbuild.parse.SymbolTable;
 import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
 import org.smoothbuild.problem.CodeError;
