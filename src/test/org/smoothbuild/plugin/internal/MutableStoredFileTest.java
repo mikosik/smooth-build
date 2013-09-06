@@ -19,7 +19,7 @@ public class MutableStoredFileTest {
 
   @Test
   public void createOutputStream() throws Exception {
-    writeAndClose(storedFile.createOutputStream(), filePath.value());
+    writeAndClose(storedFile.openOutputStream(), filePath.value());
     assertContentHasFilePath(storedFile);
   }
 }

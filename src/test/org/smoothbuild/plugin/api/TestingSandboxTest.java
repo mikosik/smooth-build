@@ -14,7 +14,7 @@ public class TestingSandboxTest {
 
   @Test
   public void createFileCreatesFileOnFileSystem() throws Exception {
-    writeAndClose(testingSandbox.createFile(file).createOutputStream(), file.value());
+    writeAndClose(testingSandbox.createFile(file).openOutputStream(), file.value());
     testingSandbox.projectFileSystem().assertFileContainsItsPath(Path.rootPath(), file);
   }
 }
