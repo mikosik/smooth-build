@@ -17,6 +17,7 @@ import org.smoothbuild.plugin.internal.StoredFileSet;
 
 public class FilesFunction {
   public interface Parameters {
+    // TODO should be marked as @Required
     public String dir();
   }
 
