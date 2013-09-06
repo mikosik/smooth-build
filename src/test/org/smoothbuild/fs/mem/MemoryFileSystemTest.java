@@ -183,7 +183,7 @@ public class MemoryFileSystemTest {
 
     createFile(path, line);
 
-    LineReader reader = new LineReader(new InputStreamReader(fileSystem.createInputStream(path)));
+    LineReader reader = new LineReader(new InputStreamReader(fileSystem.openInputStream(path)));
 
     assertThat(reader.readLine()).isEqualTo(line);
     assertThat(reader.readLine()).isNull();
@@ -193,7 +193,7 @@ public class MemoryFileSystemTest {
   public void cannotCreateOutputStreamWhenFileIsADirectory() throws Exception {
     createEmptyFile("abc/def/file.txt");
     try {
-      fileSystem.createOutputStream(path("abc/def"));
+      fileSystem.openOutputStream(path("abc/def"));
     } catch (FileSystemException e) {
       // expected
     }
@@ -201,14 +201,14 @@ public class MemoryFileSystemTest {
 
   @Test(expected = NoSuchFileException.class)
   public void createInputStreamThrowsExceptionWhenDirDoesNotExist() throws Exception {
-    fileSystem.createInputStream(path("abc"));
+    fileSystem.openInputStream(path("abc"));
   }
 
   @Test
   public void cannotCreateInputStreamWhenFileIsADirectory() throws Exception {
     createEmptyFile("abc/def/file.txt");
     try {
-      fileSystem.createInputStream(path("abc/def"));
+      fileSystem.openInputStream(path("abc/def"));
     } catch (FileSystemException e) {
       // expected
     }
@@ -232,7 +232,7 @@ public class MemoryFileSystemTest {
     fileSystem.copy(sourcePath, destinationPath);
 
     LineReader reader = new LineReader(new InputStreamReader(
-        fileSystem.createInputStream(destinationPath)));
+        fileSystem.openInputStream(destinationPath)));
 
     assertThat(reader.readLine()).isEqualTo(line);
     assertThat(reader.readLine()).isNull();
@@ -327,7 +327,7 @@ public class MemoryFileSystemTest {
   }
 
   private void createFile(Path path, String line) throws IOException {
-    OutputStream outputStream = fileSystem.createOutputStream(path);
+    OutputStream outputStream = fileSystem.openOutputStream(path);
     writeAndClose(outputStream, line);
   }
 }

@@ -30,6 +30,6 @@ public class StoredFile implements File {
 
   @Override
   public InputStream openInputStream() {
-    return fileSystem.createInputStream(path);
+    return fileSystem.openInputStream(path);
   }
 }

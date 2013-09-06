@@ -29,7 +29,7 @@ public interface FileSystem {
 
   public void deleteDirectoryRecursively(Path directory);
 
-  public InputStream createInputStream(Path path);
+  public InputStream openInputStream(Path path);
 
-  public OutputStream createOutputStream(Path path);
+  public OutputStream openOutputStream(Path path);
 }

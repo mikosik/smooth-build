@@ -193,14 +193,14 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     String content = "file content";
     createFileContent(root, fileName, content);
 
-    assertContent(fileSystem.createInputStream(path(fileName)), content);
+    assertContent(fileSystem.openInputStream(path(fileName)), content);
   }
 
   @Test
   public void createInputStreamThrowsExceptionForNonexistentFile() throws Exception {
     Path path = path("nonexistent");
     try {
-      fileSystem.createInputStream(path);
+      fileSystem.openInputStream(path);
       fail("exception should be thrown");
     } catch (NoSuchFileException e) {
       // expected
@@ -213,7 +213,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     createDir(root, dirName);
     Path path = path(dirName);
     try {
-      fileSystem.createInputStream(path);
+      fileSystem.openInputStream(path);
       fail("exception should be thrown");
     } catch (NoSuchFileException e) {
       // expected
@@ -228,7 +228,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     Path path = path(fileName);
     String content = "content";
 
-    writeAndClose(fileSystem.createOutputStream(path), content);
+    writeAndClose(fileSystem.openOutputStream(path), content);
 
     assertContent(root, fileName, content);
   }
@@ -240,7 +240,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     String content = "content";
     createFileContent(root, fileName, "old content");
 
-    writeAndClose(fileSystem.createOutputStream(path), content);
+    writeAndClose(fileSystem.openOutputStream(path), content);
 
     assertContent(root, fileName, content);
   }
@@ -252,7 +252,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     createDir(root, dirName);
 
     try {
-      fileSystem.createOutputStream(path);
+      fileSystem.openOutputStream(path);
       fail("exception should be thrown");
     } catch (CannotCreateFileException e) {
       // expected

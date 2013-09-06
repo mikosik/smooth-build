@@ -77,8 +77,8 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public void copy(Path source, Path destination) {
-    try (InputStream input = createInputStream(source);
-        OutputStream output = createOutputStream(destination);) {
+    try (InputStream input = openInputStream(source);
+        OutputStream output = openOutputStream(destination);) {
       ByteStreams.copy(input, output);
     } catch (IOException e) {
       throw new FileSystemException(
@@ -103,7 +103,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public InputStream createInputStream(Path path) {
+  public InputStream openInputStream(Path path) {
     MemoryElement element = getFile(path);
     if (element.isFile()) {
       return element.createInputStream();
@@ -113,7 +113,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public OutputStream createOutputStream(Path path) {
+  public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
       throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
     }
