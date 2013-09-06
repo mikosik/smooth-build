@@ -5,6 +5,6 @@ import java.io.InputStream;
 public interface File {
   public Path path();
 
-  public InputStream createInputStream();
+  public InputStream openInputStream();
 
 }

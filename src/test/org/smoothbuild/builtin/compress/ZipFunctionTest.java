@@ -34,7 +34,7 @@ public class ZipFunctionTest {
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    try (ZipInputStream zipInputStream = new ZipInputStream(result.createInputStream());) {
+    try (ZipInputStream zipInputStream = new ZipInputStream(result.openInputStream());) {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         fileCount++;

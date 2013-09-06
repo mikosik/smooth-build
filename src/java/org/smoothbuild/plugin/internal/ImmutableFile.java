@@ -26,8 +26,8 @@ public class ImmutableFile implements File {
   }
 
   @Override
-  public InputStream createInputStream() {
-    return file.createInputStream();
+  public InputStream openInputStream() {
+    return file.openInputStream();
   }
 
 }

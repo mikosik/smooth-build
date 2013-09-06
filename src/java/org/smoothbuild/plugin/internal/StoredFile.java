@@ -29,7 +29,7 @@ public class StoredFile implements File {
   }
 
   @Override
-  public InputStream createInputStream() {
+  public InputStream openInputStream() {
     return fileSystem.createInputStream(path);
   }
 }
