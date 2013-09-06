@@ -14,6 +14,7 @@ import org.smoothbuild.plugin.internal.StoredFile;
 public class FileFunction {
 
   public interface Parameters {
+    // TODO should be marked as @Required
     public String path();
   }
 

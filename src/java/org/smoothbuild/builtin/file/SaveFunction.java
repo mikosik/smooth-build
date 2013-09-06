@@ -12,6 +12,7 @@ import org.smoothbuild.plugin.internal.StoredFile;
 
 public class SaveFunction {
   public interface Parameters {
+    // TODO both parameters should be marked as @Required
     public File file();
 
     public String dir();
