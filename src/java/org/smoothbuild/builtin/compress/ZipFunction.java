@@ -58,7 +58,7 @@ public class ZipFunction {
         sandbox.report(new MissingRequiredArgError("files"));
       }
       MutableFile output = sandbox.createFile(path("output.zip"));
-      try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.createOutputStream());) {
+      try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.openOutputStream());) {
         for (File file : params.fileSet()) {
           addEntry(zipOutputStream, file);
         }

@@ -58,7 +58,7 @@ public class UnzipFunction {
     private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, byte[] buffer)
         throws IOException {
       MutableFile file = sandbox.createFile(path(entry.getName()));
-      try (OutputStream outputStream = file.createOutputStream()) {
+      try (OutputStream outputStream = file.openOutputStream()) {
         int len = 0;
         while ((len = zipInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);

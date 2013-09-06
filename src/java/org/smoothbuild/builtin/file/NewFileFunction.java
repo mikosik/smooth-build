@@ -48,7 +48,7 @@ public class NewFileFunction {
 
     private File createFile(Path filePath) {
       MutableFile file = sandbox.createFile(filePath);
-      OutputStreamWriter writer = new OutputStreamWriter(file.createOutputStream(), US_ASCII);
+      OutputStreamWriter writer = new OutputStreamWriter(file.openOutputStream(), US_ASCII);
       try {
         writer.write(params.content());
         writer.close();

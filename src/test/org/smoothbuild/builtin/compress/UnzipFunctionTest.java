@@ -42,7 +42,7 @@ public class UnzipFunctionTest {
 
     TestingFile inputFile = new TestingFileSet().createFile(path("input.zip"));
 
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.createOutputStream());) {
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.openOutputStream());) {
       for (File file : filesToPack) {
         addEntry(zipOutputStream, file);
       }

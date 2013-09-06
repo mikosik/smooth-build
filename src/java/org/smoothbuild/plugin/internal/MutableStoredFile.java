@@ -12,7 +12,7 @@ public class MutableStoredFile extends StoredFile implements MutableFile {
   }
 
   @Override
-  public OutputStream createOutputStream() {
+  public OutputStream openOutputStream() {
     return fileSystem().createOutputStream(path());
   }
 }

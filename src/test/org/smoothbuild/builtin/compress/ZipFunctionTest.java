@@ -39,7 +39,7 @@ public class ZipFunctionTest {
       while ((entry = zipInputStream.getNextEntry()) != null) {
         fileCount++;
         TestingFile file = unpackedFiles.createFile(path(entry.getName()));
-        try (OutputStream outputStream = file.createOutputStream()) {
+        try (OutputStream outputStream = file.openOutputStream()) {
           int len = 0;
           while ((len = zipInputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, len);

@@ -3,5 +3,5 @@ package org.smoothbuild.plugin.api;
 import java.io.OutputStream;
 
 public interface MutableFile extends File {
-  public OutputStream createOutputStream();
+  public OutputStream openOutputStream();
 }

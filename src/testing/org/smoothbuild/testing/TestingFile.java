@@ -19,7 +19,7 @@ public class TestingFile extends MutableStoredFile {
   }
 
   public void createContentWithFilePath() throws IOException {
-    TestingStream.writeAndClose(createOutputStream(), path().value());
+    TestingStream.writeAndClose(openOutputStream(), path().value());
   }
 
   public void assertContentContainsFilePath() throws IOException {
