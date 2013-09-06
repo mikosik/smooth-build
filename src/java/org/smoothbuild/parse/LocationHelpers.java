@@ -4,9 +4,20 @@ import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.smoothbuild.antlr.SmoothParser.ArgContext;
+import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.problem.CodeLocation;
 
 public class LocationHelpers {
+  public static CodeLocation locationOf(ArgContext arg) {
+    ParamNameContext paramName = arg.paramName();
+    if (paramName == null) {
+      return locationOf(arg.expression());
+    } else {
+      return locationOf(paramName);
+    }
+  }
+
   public static CodeLocation locationOf(ParserRuleContext parserRuleContext) {
     Token startToken = parserRuleContext.getStart();
     Token endToken = parserRuleContext.getStop();

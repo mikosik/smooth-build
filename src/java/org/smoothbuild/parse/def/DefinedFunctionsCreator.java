@@ -225,7 +225,7 @@ public class DefinedFunctionsCreator {
       if (argList != null) {
         for (ArgContext arg : argList.arg()) {
           DefinitionNode node = build(arg.expression());
-          result.add(explicitArg(argName(arg), node, argLocation(arg)));
+          result.add(explicitArg(argName(arg), node, locationOf(arg)));
         }
       }
       return result;
@@ -237,15 +237,6 @@ public class DefinedFunctionsCreator {
         return null;
       } else {
         return paramName.getText();
-      }
-    }
-
-    private static CodeLocation argLocation(ArgContext arg) {
-      ParamNameContext paramName = arg.paramName();
-      if (paramName == null) {
-        return locationOf(arg.expression());
-      } else {
-        return locationOf(paramName);
       }
     }
 
