@@ -81,7 +81,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public InputStream createInputStream(Path path) {
+  public InputStream openInputStream(Path path) {
     try {
       return new FileInputStream(jdkFile(path));
     } catch (FileNotFoundException e) {
@@ -90,7 +90,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public OutputStream createOutputStream(Path path) {
+  public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
       throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
     }

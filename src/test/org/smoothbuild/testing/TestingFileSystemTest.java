@@ -21,30 +21,30 @@ public class TestingFileSystemTest {
   @Test
   public void createFileContiningItsPath() throws Exception {
     fileSystem.createFileContainingItsPath(path);
-    assertContent(fileSystem.createInputStream(path), path.value());
+    assertContent(fileSystem.openInputStream(path), path.value());
   }
 
   @Test
   public void createRootedFileContiningItsPath() throws Exception {
     fileSystem.createFileContainingItsPath(root, path);
-    assertContent(fileSystem.createInputStream(root.append(path)), path.value());
+    assertContent(fileSystem.openInputStream(root.append(path)), path.value());
   }
 
   @Test
   public void createFileWithContent() throws Exception {
     fileSystem.createFileWithContent(path, content);
-    assertContent(fileSystem.createInputStream(path), content);
+    assertContent(fileSystem.openInputStream(path), content);
   }
 
   @Test
   public void createEmptyFile() throws IOException {
     fileSystem.createEmptyFile(path);
-    assertContent(fileSystem.createInputStream(path), "");
+    assertContent(fileSystem.openInputStream(path), "");
   }
 
   @Test
   public void assertFileContainsItsPathSucceedsWhenContentMatches() throws Exception {
-    OutputStream os = fileSystem.createOutputStream(root.append(path));
+    OutputStream os = fileSystem.openOutputStream(root.append(path));
     writeAndClose(os, path.value());
 
     fileSystem.assertFileContainsItsPath(root, path);
@@ -52,7 +52,7 @@ public class TestingFileSystemTest {
 
   @Test
   public void assertFileContainsItsPathWhenContentDoesNotMatch() throws Exception {
-    OutputStream os = fileSystem.createOutputStream(root.append(path));
+    OutputStream os = fileSystem.openOutputStream(root.append(path));
     writeAndClose(os, path.value() + "abc");
 
     try {
@@ -66,7 +66,7 @@ public class TestingFileSystemTest {
 
   @Test
   public void assertFileContainsSucceedsWhenContentMatches() throws Exception {
-    OutputStream os = fileSystem.createOutputStream(path);
+    OutputStream os = fileSystem.openOutputStream(path);
     writeAndClose(os, content);
 
     fileSystem.assertFileContains(path, content);
@@ -74,7 +74,7 @@ public class TestingFileSystemTest {
 
   @Test
   public void assertFileContainsFailsWhenContentDoesNotMatch() throws Exception {
-    OutputStream os = fileSystem.createOutputStream(path);
+    OutputStream os = fileSystem.openOutputStream(path);
     writeAndClose(os, content);
 
     try {

@@ -73,7 +73,7 @@ public class SmoothRunner {
 
   private InputStream scriptInputStream(ProblemsListener problems, Path scriptFile) {
     try {
-      return fileSystem.createInputStream(scriptFile);
+      return fileSystem.openInputStream(scriptFile);
     } catch (NoSuchFileException e) {
       problems.report(new ScriptFileNotFoundError(scriptFile));
       return null;

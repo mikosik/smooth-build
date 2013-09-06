@@ -27,7 +27,7 @@ public class TestingFileSystem extends MemoryFileSystem {
   }
 
   public void createFileWithContent(Path path, String content) throws IOException {
-    OutputStream outputStream = createOutputStream(path);
+    OutputStream outputStream = openOutputStream(path);
     TestingStream.writeAndClose(outputStream, content);
   }
 
@@ -37,7 +37,7 @@ public class TestingFileSystem extends MemoryFileSystem {
   }
 
   public void assertFileContains(Path path, String content) throws IOException {
-    InputStream inputStream = createInputStream(path);
+    InputStream inputStream = openInputStream(path);
     assertContent(inputStream, content);
   }
 

@@ -56,13 +56,13 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
-  public InputStream createInputStream(Path path) {
-    return fileSystem.createInputStream(absolutePath(path));
+  public InputStream openInputStream(Path path) {
+    return fileSystem.openInputStream(absolutePath(path));
   }
 
   @Override
-  public OutputStream createOutputStream(Path path) {
-    return fileSystem.createOutputStream(absolutePath(path));
+  public OutputStream openOutputStream(Path path) {
+    return fileSystem.openOutputStream(absolutePath(path));
   }
 
   private Path absolutePath(Path path) {

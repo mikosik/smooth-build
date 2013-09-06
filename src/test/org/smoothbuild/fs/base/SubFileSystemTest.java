@@ -77,15 +77,15 @@ public class SubFileSystemTest {
   @Test
   public void createInputStream() {
     InputStream inputStream = mock(InputStream.class);
-    when(fileSystem.createInputStream(absolutePath)).thenReturn(inputStream);
-    assertThat(subFileSystem.createInputStream(path)).isSameAs(inputStream);
+    when(fileSystem.openInputStream(absolutePath)).thenReturn(inputStream);
+    assertThat(subFileSystem.openInputStream(path)).isSameAs(inputStream);
   }
 
   @Test
   public void createOutputStream() {
     OutputStream outputStream = mock(OutputStream.class);
-    when(fileSystem.createOutputStream(absolutePath)).thenReturn(outputStream);
-    assertThat(subFileSystem.createOutputStream(path)).isSameAs(outputStream);
+    when(fileSystem.openOutputStream(absolutePath)).thenReturn(outputStream);
+    assertThat(subFileSystem.openOutputStream(path)).isSameAs(outputStream);
   }
 
 }
