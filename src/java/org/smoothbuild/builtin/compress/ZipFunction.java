@@ -73,7 +73,7 @@ public class ZipFunction {
       ZipEntry entry = new ZipEntry(file.path().value());
       zipOutputStream.putNextEntry(entry);
 
-      try (InputStream inputStream = file.createInputStream();) {
+      try (InputStream inputStream = file.openInputStream();) {
         int readCount = inputStream.read(buffer);
         while (readCount > 0) {
           zipOutputStream.write(buffer, 0, readCount);

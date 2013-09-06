@@ -30,7 +30,7 @@ public class UnzipFunctionTest {
     int fileCount = 0;
     for (File file : result) {
       fileCount++;
-      assertContent(file.createInputStream(), file.path().value());
+      assertContent(file.openInputStream(), file.path().value());
     }
     assertThat(fileCount).isEqualTo(2);
   }
@@ -58,7 +58,7 @@ public class UnzipFunctionTest {
     ZipEntry entry = new ZipEntry(file.path().value());
     zipOutputStream.putNextEntry(entry);
 
-    try (InputStream inputStream = file.createInputStream();) {
+    try (InputStream inputStream = file.openInputStream();) {
       int readCount = inputStream.read(buffer);
       while (readCount > 0) {
         zipOutputStream.write(buffer, 0, readCount);

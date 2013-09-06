@@ -43,7 +43,7 @@ public class UnzipFunction {
       }
 
       MutableFileSet resultFiles = new MutableFileSet();
-      try (ZipInputStream zipInputStream = new ZipInputStream(params.file().createInputStream());) {
+      try (ZipInputStream zipInputStream = new ZipInputStream(params.file().openInputStream());) {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
           resultFiles.add(unzipEntry(zipInputStream, entry, buffer));

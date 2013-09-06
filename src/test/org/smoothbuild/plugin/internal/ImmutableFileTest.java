@@ -44,6 +44,6 @@ public class ImmutableFileTest {
   }
 
   public static void assertContentHasFilePath(File file) throws IOException, FileNotFoundException {
-    assertContent(file.createInputStream(), file.path().value());
+    assertContent(file.openInputStream(), file.path().value());
   }
 }
