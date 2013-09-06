@@ -6,12 +6,16 @@ import static org.smoothbuild.plugin.api.Path.rootPath;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.SaveFunction.Parameters;
+import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
+import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.plugin.internal.StoredFile;
@@ -26,6 +30,18 @@ public class SaveFunctionTest {
   public void missingDirArgIsReported() throws Exception {
     runExecute(params(mock(File.class), null));
     sandbox.problems().assertOnlyProblem(MissingRequiredArgError.class);
+  }
+
+  @Test
+  public void missingFileAndFileSetAreReported() throws Exception {
+    runExecute(params(null, null, "my/path"));
+    sandbox.problems().assertOnlyProblem(EitherFileOrFilesMustBeProvidedError.class);
+  }
+
+  @Test
+  public void specifyingBotFileAndFileSetIsReported() throws Exception {
+    runExecute(params(mock(File.class), mock(FileSet.class), "my/path"));
+    sandbox.problems().assertOnlyProblem(FileAndFilesSpecifiedError.class);
   }
 
   @Test
@@ -59,24 +75,63 @@ public class SaveFunctionTest {
   }
 
   @Test
-  public void execute() throws Exception {
-    Path destinationDir = path("root/path");
-    Path root = path("file/root");
+  public void executeWithFile() throws Exception {
+    // given
+    Path dir = path("destination/path");
     Path path = path("file/path/file.txt");
 
-    TestingFile file = new TestingFile(new SubFileSystem(fileSystem, root), path);
-    file.createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
+    TestingFile file = new TestingFile(fileSystem, path);
 
-    runExecute(params(file, destinationDir.value()));
+    // when
+    runExecute(params(file, dir.value()));
 
-    fileSystem.assertFileContainsItsPath(destinationDir, path);
+    // then
+    fileSystem.assertFileContainsItsPath(dir, path);
+  }
+
+  @Test
+  public void executeWithFileSet() throws Exception {
+    // given
+    Path destinationDir = path("destination/path");
+    Path path1 = path("file/path/file1.txt");
+    Path path2 = path("file/path/file2.txt");
+
+    fileSystem.createFileContainingItsPath(path1);
+    TestingFile file1 = new TestingFile(fileSystem, path1);
+    fileSystem.createFileContainingItsPath(path2);
+    TestingFile file2 = new TestingFile(fileSystem, path2);
+
+    MutableFileSet fileSet = new MutableFileSet();
+    fileSet.add(file1);
+    fileSet.add(file2);
+
+    // when
+    runExecute(params(fileSet, destinationDir.value()));
+
+    // then
+    fileSystem.assertFileContainsItsPath(destinationDir, path1);
+    fileSystem.assertFileContainsItsPath(destinationDir, path2);
   }
 
   private static Parameters params(final File file, final String dir) {
+    return params(file, null, dir);
+  }
+
+  private static Parameters params(final FileSet fileSet, final String dir) {
+    return params(null, fileSet, dir);
+  }
+
+  private static Parameters params(final File file, final FileSet fileSet, final String dir) {
     return new SaveFunction.Parameters() {
       @Override
       public File file() {
         return file;
+      }
+
+      @Override
+      public FileSet files() {
+        return fileSet;
       }
 
       @Override
