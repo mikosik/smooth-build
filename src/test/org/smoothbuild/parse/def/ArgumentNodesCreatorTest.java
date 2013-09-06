@@ -12,6 +12,7 @@ import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
+import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.parse.def.Argument.explicitArg;
 import static org.smoothbuild.parse.def.Argument.implicitArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
@@ -31,6 +32,7 @@ import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.parse.def.err.DuplicateArgNameProblem;
 import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgProblem;
+import org.smoothbuild.parse.def.err.TypeMismatchProblem;
 import org.smoothbuild.parse.def.err.UnknownParamNameProblem;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
@@ -169,6 +171,53 @@ public class ArgumentNodesCreatorTest {
 
     // then
     problemsListener.assertOnlyProblem(UnknownParamNameProblem.class);
+  }
+
+  @Test
+  public void typeMismatchForStringParam() throws Exception {
+    doTestTypeMismatchForParamProblem(STRING, STRING_SET);
+    doTestTypeMismatchForParamProblem(STRING, FILE);
+    doTestTypeMismatchForParamProblem(STRING, FILE_SET);
+    doTestTypeMismatchForParamProblem(STRING, VOID);
+    doTestTypeMismatchForParamProblem(STRING, EMPTY_SET);
+  }
+
+  @Test
+  public void typeMismatchForStringSetParam() throws Exception {
+    doTestTypeMismatchForParamProblem(STRING_SET, STRING);
+    doTestTypeMismatchForParamProblem(STRING_SET, FILE);
+    doTestTypeMismatchForParamProblem(STRING_SET, FILE_SET);
+    doTestTypeMismatchForParamProblem(STRING_SET, VOID);
+  }
+
+  @Test
+  public void typeMismatchForFileParam() throws Exception {
+    doTestTypeMismatchForParamProblem(FILE, STRING);
+    doTestTypeMismatchForParamProblem(FILE, STRING_SET);
+    doTestTypeMismatchForParamProblem(FILE, FILE_SET);
+    doTestTypeMismatchForParamProblem(FILE, VOID);
+    doTestTypeMismatchForParamProblem(FILE, EMPTY_SET);
+  }
+
+  @Test
+  public void typeMismatchForFileSetParam() throws Exception {
+    doTestTypeMismatchForParamProblem(FILE_SET, STRING);
+    doTestTypeMismatchForParamProblem(FILE_SET, STRING_SET);
+    doTestTypeMismatchForParamProblem(FILE_SET, FILE);
+    doTestTypeMismatchForParamProblem(FILE_SET, VOID);
+  }
+
+  public void doTestTypeMismatchForParamProblem(Type paramType, Type argType) throws Exception {
+    // given
+    problemsListener = new TestingProblemsListener();
+    Param p1 = param(paramType, "name1");
+    Argument a1 = argument(p1.name(), node(argType));
+
+    // when
+    create(params(p1), list(a1));
+
+    // then
+    problemsListener.assertOnlyProblem(TypeMismatchProblem.class);
   }
 
   @Test
