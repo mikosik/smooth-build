@@ -1,8 +1,6 @@
 package org.smoothbuild.integration;
 
-import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.ScriptBuilder.script;
 
 import java.io.IOException;
 
@@ -16,9 +14,8 @@ public class BasicReadAndWriteSmoothTest extends IntegrationTestCase {
 
   @Test
   public void singleFileReadAndWritten_pipe() throws IOException {
-    String script = script("run : file(path='" + file.value() + "') | saveTo(dir='"
-        + destinationDir.value() + "');");
-    fileSystem.createFileWithContent(DEFAULT_SCRIPT, script);
+    script("run : file(path='" + file.value() + "') | saveTo(dir='" + destinationDir.value()
+        + "');");
     fileSystem.createFileContainingItsPath(file);
 
     smoothRunner.run("run");
@@ -29,9 +26,8 @@ public class BasicReadAndWriteSmoothTest extends IntegrationTestCase {
 
   @Test
   public void singleFileReadAndWritten_nestedCalls() throws IOException {
-    String script = script("run : saveTo(dir='" + destinationDir.value() + "', file=file(path='"
-        + file.value() + "') );");
-    fileSystem.createFileWithContent(DEFAULT_SCRIPT, script);
+    script("run : saveTo(dir='" + destinationDir.value() + "', file=file(path='" + file.value()
+        + "') );");
     fileSystem.createFileContainingItsPath(file);
 
     smoothRunner.run("run");
@@ -46,7 +42,7 @@ public class BasicReadAndWriteSmoothTest extends IntegrationTestCase {
     builder.addLine("filename : '" + file.value() + "';");
     builder.addLine("myfile : file(path=filename);");
     builder.addLine("run : saveTo(file=myfile, dir='" + destinationDir.value() + "');");
-    fileSystem.createFileWithContent(DEFAULT_SCRIPT, builder.build());
+    script(builder.build());
     fileSystem.createFileContainingItsPath(file);
 
     smoothRunner.run("run");
