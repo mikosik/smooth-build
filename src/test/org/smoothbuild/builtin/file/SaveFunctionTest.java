@@ -5,7 +5,7 @@ import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.plugin.api.Path.rootPath;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.SaveToFunction.Parameters;
+import org.smoothbuild.builtin.file.SaveFunction.Parameters;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
@@ -18,7 +18,7 @@ import org.smoothbuild.plugin.internal.StoredFile;
 import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSystem;
 
-public class SaveToFunctionTest {
+public class SaveFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
   TestingFileSystem fileSystem = sandbox.projectFileSystem();
 
@@ -73,7 +73,7 @@ public class SaveToFunctionTest {
   }
 
   private static Parameters params(final File file, final String dir) {
-    return new SaveToFunction.Parameters() {
+    return new SaveFunction.Parameters() {
       @Override
       public File file() {
         return file;
@@ -87,6 +87,6 @@ public class SaveToFunctionTest {
   }
 
   private void runExecute(Parameters params) {
-    SaveToFunction.execute(sandbox, params);
+    SaveFunction.execute(sandbox, params);
   }
 }
