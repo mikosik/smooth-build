@@ -20,6 +20,7 @@ public class LocationHelpersTest {
 
   @Test
   public void locationOfArgContextWithExplicitParamName() {
+    // given
     ArgContext argContext = mock(ArgContext.class);
     ParamNameContext paramNameContext = mock(ParamNameContext.class);
     int start = 11;
@@ -32,8 +33,10 @@ public class LocationHelpersTest {
     when(startToken.getLine()).thenReturn(line);
     when(stopToken.getStopIndex()).thenReturn(end);
 
+    // when
     CodeLocation location = LocationHelpers.locationOf(argContext);
 
+    // then
     assertThat(location.line()).isEqualTo(line);
     assertThat(location.start()).isEqualTo(start);
     assertThat(location.end()).isEqualTo(end);
@@ -41,6 +44,7 @@ public class LocationHelpersTest {
 
   @Test
   public void locationOfArgContextWithoutParamName() {
+    // given
     ArgContext argContext = mock(ArgContext.class);
     ExpressionContext expressionContext = mock(ExpressionContext.class);
     int start = 11;
@@ -53,8 +57,10 @@ public class LocationHelpersTest {
     when(startToken.getLine()).thenReturn(line);
     when(stopToken.getStopIndex()).thenReturn(end);
 
+    // when
     CodeLocation location = LocationHelpers.locationOf(argContext);
 
+    // then
     assertThat(location.line()).isEqualTo(line);
     assertThat(location.start()).isEqualTo(start);
     assertThat(location.end()).isEqualTo(end);
@@ -62,6 +68,7 @@ public class LocationHelpersTest {
 
   @Test
   public void locationOfParserRuleContext() {
+    // given
     ParserRuleContext parserRuleContext = mock(ParserRuleContext.class);
     int start = 11;
     int line = 13;
@@ -72,8 +79,10 @@ public class LocationHelpersTest {
     when(startToken.getLine()).thenReturn(line);
     when(stopToken.getStopIndex()).thenReturn(end);
 
+    // when
     CodeLocation location = LocationHelpers.locationOf(parserRuleContext);
 
+    // then
     assertThat(location.line()).isEqualTo(line);
     assertThat(location.start()).isEqualTo(start);
     assertThat(location.end()).isEqualTo(end);
@@ -81,6 +90,7 @@ public class LocationHelpersTest {
 
   @Test
   public void locationOfToken() throws Exception {
+    // given
     int start = 11;
     int line = 13;
     int end = 17;
@@ -88,8 +98,10 @@ public class LocationHelpersTest {
     when(startToken.getLine()).thenReturn(line);
     when(startToken.getStopIndex()).thenReturn(end);
 
+    // when
     CodeLocation location = LocationHelpers.locationOf(startToken);
 
+    // then
     assertThat(location.line()).isEqualTo(line);
     assertThat(location.start()).isEqualTo(start);
     assertThat(location.end()).isEqualTo(end);
@@ -97,9 +109,14 @@ public class LocationHelpersTest {
 
   @Test
   public void locationInToken() throws Exception {
+    // given
     when(startToken.getLine()).thenReturn(7);
     when(startToken.getStartIndex()).thenReturn(11);
 
-    assertThat(locationIn(startToken, 13)).isEqualTo(codeLocation(7, 24, 24));
+    // when
+    CodeLocation codeLocation = locationIn(startToken, 13);
+
+    // then
+    assertThat(codeLocation).isEqualTo(codeLocation(7, 24, 24));
   }
 }
