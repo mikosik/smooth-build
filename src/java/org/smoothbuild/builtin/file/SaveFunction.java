@@ -10,14 +10,14 @@ import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.plugin.internal.StoredFile;
 
-public class SaveToFunction {
+public class SaveFunction {
   public interface Parameters {
     public File file();
 
     public String dir();
   }
 
-  @SmoothFunction("saveTo")
+  @SmoothFunction("save")
   public static void execute(SandboxImpl sandbox, Parameters params) {
     new Worker(sandbox, params).execute();
   }

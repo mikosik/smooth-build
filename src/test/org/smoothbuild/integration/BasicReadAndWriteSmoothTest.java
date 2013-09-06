@@ -14,8 +14,7 @@ public class BasicReadAndWriteSmoothTest extends IntegrationTestCase {
 
   @Test
   public void singleFileReadAndWritten_pipe() throws IOException {
-    script("run : file(path='" + file.value() + "') | saveTo(dir='" + destinationDir.value()
-        + "');");
+    script("run : file(path='" + file.value() + "') | save(dir='" + destinationDir.value() + "');");
     fileSystem.createFileContainingItsPath(file);
 
     smoothRunner.run("run");
@@ -26,7 +25,7 @@ public class BasicReadAndWriteSmoothTest extends IntegrationTestCase {
 
   @Test
   public void singleFileReadAndWritten_nestedCalls() throws IOException {
-    script("run : saveTo(dir='" + destinationDir.value() + "', file=file(path='" + file.value()
+    script("run : save(dir='" + destinationDir.value() + "', file=file(path='" + file.value()
         + "') );");
     fileSystem.createFileContainingItsPath(file);
 
@@ -41,7 +40,7 @@ public class BasicReadAndWriteSmoothTest extends IntegrationTestCase {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("filename : '" + file.value() + "';");
     builder.addLine("myfile : file(path=filename);");
-    builder.addLine("run : saveTo(file=myfile, dir='" + destinationDir.value() + "');");
+    builder.addLine("run : save(file=myfile, dir='" + destinationDir.value() + "');");
     script(builder.build());
     fileSystem.createFileContainingItsPath(file);
 

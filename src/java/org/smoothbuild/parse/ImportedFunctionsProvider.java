@@ -6,7 +6,7 @@ import org.smoothbuild.builtin.compress.UnzipFunction;
 import org.smoothbuild.builtin.compress.ZipFunction;
 import org.smoothbuild.builtin.file.FileFunction;
 import org.smoothbuild.builtin.file.FilesFunction;
-import org.smoothbuild.builtin.file.SaveToFunction;
+import org.smoothbuild.builtin.file.SaveFunction;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.plugin.PluginFactory;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
@@ -27,7 +27,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
 
     importedFunctions.add(createFunction(FileFunction.class));
     importedFunctions.add(createFunction(FilesFunction.class));
-    importedFunctions.add(createFunction(SaveToFunction.class));
+    importedFunctions.add(createFunction(SaveFunction.class));
 
     importedFunctions.add(createFunction(ZipFunction.class));
     importedFunctions.add(createFunction(UnzipFunction.class));
