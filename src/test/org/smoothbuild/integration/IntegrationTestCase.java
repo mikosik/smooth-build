@@ -16,10 +16,9 @@ import org.smoothbuild.testing.problem.TestingProblemsListenerModule;
 import com.google.inject.Injector;
 
 public class IntegrationTestCase {
-
-  TestingFileSystem fileSystem;
-  SmoothRunner smoothRunner;
-  TestingProblemsListener problems;
+  protected TestingFileSystem fileSystem;
+  protected SmoothRunner smoothRunner;
+  protected TestingProblemsListener problems;
 
   @Before
   public void before() {
