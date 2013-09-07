@@ -185,10 +185,10 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     }
   }
 
-  // createInputStream()
+  // openInputStream()
 
   @Test
-  public void createInputStream() throws Exception {
+  public void openInputStream() throws Exception {
     String fileName = "fileName";
     String content = "file content";
     createFileContent(root, fileName, content);
@@ -197,7 +197,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   }
 
   @Test
-  public void createInputStreamThrowsExceptionForNonexistentFile() throws Exception {
+  public void openInputStreamThrowsExceptionForNonexistentFile() throws Exception {
     Path path = path("nonexistent");
     try {
       fileSystem.openInputStream(path);
@@ -208,7 +208,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   }
 
   @Test
-  public void createInputStreamThrowsExceptionForDirFile() throws Exception {
+  public void openInputStreamThrowsExceptionForDirFile() throws Exception {
     String dirName = "dirName";
     createDir(root, dirName);
     Path path = path(dirName);
@@ -220,10 +220,10 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     }
   }
 
-  // createOutputStream()
+  // openOutputStream()
 
   @Test
-  public void createOutputStream() throws Exception {
+  public void openOutputStream() throws Exception {
     String fileName = "fileName";
     Path path = path(fileName);
     String content = "content";
@@ -234,7 +234,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   }
 
   @Test
-  public void createOutputStreamOverwritesExistentFile() throws Exception {
+  public void openOutputStreamOverwritesExistentFile() throws Exception {
     String fileName = "fileName";
     Path path = path(fileName);
     String content = "content";
@@ -246,7 +246,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   }
 
   @Test
-  public void createOutputStreamThrowsExceptionForDirectory() throws Exception {
+  public void openOutputStreamThrowsExceptionForDirectory() throws Exception {
     String dirName = "dirname";
     Path path = path(dirName);
     createDir(root, dirName);
