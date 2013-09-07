@@ -1,5 +1,7 @@
 package org.smoothbuild.fs.base;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -83,7 +85,7 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public InputStream openInputStream(Path path) {
     try {
-      return new FileInputStream(jdkFile(path));
+      return new BufferedInputStream(new FileInputStream(jdkFile(path)));
     } catch (FileNotFoundException e) {
       throw new NoSuchFileException(path, e);
     }
@@ -97,7 +99,7 @@ public class DiskFileSystem implements FileSystem {
     createDirectory(path.parent());
 
     try {
-      return new FileOutputStream(jdkFile(path));
+      return new BufferedOutputStream(new FileOutputStream(jdkFile(path)));
     } catch (FileNotFoundException e) {
       throw new CannotCreateFileException(path, e);
     }

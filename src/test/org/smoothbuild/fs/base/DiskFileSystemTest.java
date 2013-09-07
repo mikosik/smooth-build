@@ -10,6 +10,8 @@ import static org.smoothbuild.testing.TestingJdkFile.createFileContent;
 import static org.smoothbuild.testing.TestingStream.assertContent;
 import static org.smoothbuild.testing.TestingStream.writeAndClose;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -197,6 +199,15 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   }
 
   @Test
+  public void openInputStreamReturnsBufferedStream() throws Exception {
+    String fileName = "fileName";
+    String content = "file content";
+    createFileContent(root, fileName, content);
+
+    assertThat(fileSystem.openInputStream(path(fileName))).isInstanceOf(BufferedInputStream.class);
+  }
+
+  @Test
   public void openInputStreamThrowsExceptionForNonexistentFile() throws Exception {
     Path path = path("nonexistent");
     try {
@@ -231,6 +242,13 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     writeAndClose(fileSystem.openOutputStream(path), content);
 
     assertContent(root, fileName, content);
+  }
+
+  @Test
+  public void openOutputStreamReturnsBufferedStream() throws Exception {
+    Path path = path("fileName");
+
+    assertThat(fileSystem.openOutputStream(path)).isInstanceOf(BufferedOutputStream.class);
   }
 
   @Test
