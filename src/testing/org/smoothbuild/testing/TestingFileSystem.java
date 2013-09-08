@@ -43,6 +43,10 @@ public class TestingFileSystem extends SubFileSystem {
     StreamTester.writeAndClose(outputStream, content);
   }
 
+  public void assertFileContainsItsPath(Path path) throws IOException {
+    assertFileContains(path, path.value());
+  }
+
   public void assertFileContainsItsPath(Path root, Path path) throws IOException,
       FileNotFoundException {
     assertFileContains(fullPath(root, path), path.value());
@@ -51,6 +55,10 @@ public class TestingFileSystem extends SubFileSystem {
   public void assertFileContains(Path path, String content) throws IOException {
     InputStream inputStream = openInputStream(path);
     assertContent(inputStream, content);
+  }
+
+  public TestingFileSystem subFileSystem(Path root) {
+    return new TestingFileSystem(this, root);
   }
 
   private static Path fullPath(Path root, Path path) {
