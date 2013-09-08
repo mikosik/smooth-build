@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.common;
 
 import static org.smoothbuild.fs.base.RecursiveDirectoryDeleter.deleteRecursively;
 

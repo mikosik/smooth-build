@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.testing.common.TestCaseWithTempDir;
 
 public class TestCaseWithTempDirTest {
 

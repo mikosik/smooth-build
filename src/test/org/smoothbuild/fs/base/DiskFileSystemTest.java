@@ -21,7 +21,7 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.TestCaseWithTempDir;
+import org.smoothbuild.testing.common.TestCaseWithTempDir;
 
 public class DiskFileSystemTest extends TestCaseWithTempDir {
   File root = getTempDirectory();

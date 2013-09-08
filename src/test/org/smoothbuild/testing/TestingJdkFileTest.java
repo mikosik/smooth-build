@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.testing.common.TestCaseWithTempDir;
 
 public class TestingJdkFileTest extends TestCaseWithTempDir {
   File root = getTempDirectory();
