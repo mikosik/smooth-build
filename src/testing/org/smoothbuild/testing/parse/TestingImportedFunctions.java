@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.parse;
 
-import static org.smoothbuild.testing.TestingSignature.testingSignature;
+import static org.smoothbuild.function.base.TestSignature.testSignature;
 
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +17,7 @@ public class TestingImportedFunctions implements SymbolTable {
   private final Map<String, Function> map;
 
   public TestingImportedFunctions() {
-    Function function = new PluginFunction(testingSignature(IMPORTED_NAME), null);
+    Function function = new PluginFunction(testSignature(IMPORTED_NAME), null);
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
 

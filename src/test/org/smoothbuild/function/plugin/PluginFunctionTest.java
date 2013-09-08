@@ -3,7 +3,7 @@ package org.smoothbuild.function.plugin;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.testing.TestingSignature.testingSignature;
+import static org.smoothbuild.function.base.TestSignature.testSignature;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
@@ -17,7 +17,7 @@ public class PluginFunctionTest {
   Sandbox sandbox = mock(Sandbox.class);
   String name = "functionName";
 
-  Signature signature = testingSignature("functionName");
+  Signature signature = testSignature("functionName");
   PluginInvoker invoker = mock(PluginInvoker.class);
 
   PluginFunction function = new PluginFunction(signature, invoker);
