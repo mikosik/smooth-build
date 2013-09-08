@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.common;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 
 import com.google.common.io.LineReader;
 
-public class TestingStream {
+public class StreamTester {
 
   public static void writeAndClose(OutputStream outputStream, String content) throws IOException {
     try (OutputStreamWriter writer = new OutputStreamWriter(outputStream);) {
