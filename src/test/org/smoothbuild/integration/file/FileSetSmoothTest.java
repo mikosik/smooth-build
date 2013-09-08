@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class FileSetSmoothTest extends IntegrationTestCase {
 
@@ -33,7 +33,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     problems.assertNoProblems();
-    TestingFileSystem subFileSystem = fileSystem.subFileSystem(dir);
+    TestFileSystem subFileSystem = fileSystem.subFileSystem(dir);
     subFileSystem.assertFileContainsItsPath(file1);
     subFileSystem.assertFileContainsItsPath(file2);
   }

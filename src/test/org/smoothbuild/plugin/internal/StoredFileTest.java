@@ -6,10 +6,10 @@ import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class StoredFileTest {
-  TestingFileSystem fileSystem = new TestingFileSystem();
+  TestFileSystem fileSystem = new TestFileSystem();
   Path filePath = path("xyz/test.txt");
 
   StoredFile storedFile = new StoredFile(fileSystem, filePath);

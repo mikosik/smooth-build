@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.fs.base;
 
 import static org.junit.Assert.fail;
 import static org.smoothbuild.plugin.api.Path.path;
@@ -10,13 +10,14 @@ import java.io.OutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
-public class TestingFileSystemTest {
+public class TestFileSystemTest {
   Path root = path("my/root");
   Path path = path("my/path/file.txt");
   String content = "my content";
 
-  TestingFileSystem fileSystem = new TestingFileSystem();
+  TestFileSystem fileSystem = new TestFileSystem();
 
   @Test
   public void createFileContiningItsPath() throws Exception {

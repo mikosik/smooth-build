@@ -11,14 +11,14 @@ import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class SandboxImplTest {
   Path root = path("my/root");
   Path file = path("my/path/file.txt");
   Path file2 = path("my/path/file2.txt");
 
-  TestingFileSystem fileSystem = new TestingFileSystem();
+  TestFileSystem fileSystem = new TestFileSystem();
   ProblemsListener problems = mock(ProblemsListener.class);
 
   SandboxImpl sandbox = new SandboxImpl(fileSystem, root, problems);

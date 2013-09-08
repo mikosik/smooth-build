@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 import com.google.common.collect.Lists;
 
@@ -46,7 +46,7 @@ public class RecursiveFilesIterableTest {
 
   private void doTestIterable(String rootDir, String[] names, String expectedRootDir,
       String[] expectedNames) throws IOException {
-    TestingFileSystem fileSystem = new TestingFileSystem();
+    TestFileSystem fileSystem = new TestFileSystem();
     for (String name : names) {
       fileSystem.createEmptyFile(path(rootDir).append(path(name)));
     }

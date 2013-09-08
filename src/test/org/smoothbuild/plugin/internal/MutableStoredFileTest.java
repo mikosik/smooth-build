@@ -7,10 +7,10 @@ import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import org.junit.Test;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class MutableStoredFileTest {
-  TestingFileSystem fileSystem = new TestingFileSystem();
+  TestFileSystem fileSystem = new TestFileSystem();
   Path rootDir = path("abc/efg");
   Path filePath = path("xyz/test.txt");
 

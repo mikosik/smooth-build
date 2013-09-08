@@ -9,10 +9,11 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.MutableStoredFile;
 import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class TestingFile extends MutableStoredFile {
   public TestingFile(Path path) {
-    this(new TestingFileSystem(), path);
+    this(new TestFileSystem(), path);
   }
 
   public TestingFile(FileSystem fileSystem, Path path) {

@@ -8,15 +8,15 @@ import java.io.IOException;
 import org.junit.Before;
 import org.smoothbuild.run.SmoothRunner;
 import org.smoothbuild.testing.ScriptBuilder;
-import org.smoothbuild.testing.TestingFileSystem;
 import org.smoothbuild.testing.TestingFileSystemModule;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 import org.smoothbuild.testing.problem.TestingProblemsListenerModule;
 
 import com.google.inject.Injector;
 
 public class IntegrationTestCase {
-  protected TestingFileSystem fileSystem;
+  protected TestFileSystem fileSystem;
   protected SmoothRunner smoothRunner;
   protected TestingProblemsListener problems;
 
@@ -24,7 +24,7 @@ public class IntegrationTestCase {
   public void before() {
     Injector injector = createInjector(new TestingFileSystemModule(),
         new TestingProblemsListenerModule());
-    fileSystem = injector.getInstance(TestingFileSystem.class);
+    fileSystem = injector.getInstance(TestFileSystem.class);
     problems = injector.getInstance(TestingProblemsListener.class);
     smoothRunner = injector.getInstance(SmoothRunner.class);
   }
