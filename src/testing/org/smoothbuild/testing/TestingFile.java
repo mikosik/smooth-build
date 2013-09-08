@@ -25,10 +25,10 @@ public class TestingFile extends MutableStoredFile {
   }
 
   public void assertContentContainsFilePath() throws IOException {
-    assertContentHasFilePath(this);
+    assertContentContainsFilePath(this);
   }
 
-  public static void assertContentHasFilePath(File file) throws IOException {
+  public static void assertContentContainsFilePath(File file) throws IOException {
     assertContent(file.openInputStream(), file.path().value());
   }
 }

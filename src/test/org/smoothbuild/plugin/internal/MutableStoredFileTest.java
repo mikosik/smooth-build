@@ -1,7 +1,7 @@
 package org.smoothbuild.plugin.internal;
 
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
+import static org.smoothbuild.testing.TestingFile.assertContentContainsFilePath;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
@@ -17,6 +17,6 @@ public class MutableStoredFileTest {
   @Test
   public void createOutputStream() throws Exception {
     writeAndClose(storedFile.openOutputStream(), filePath.value());
-    assertContentHasFilePath(storedFile);
+    assertContentContainsFilePath(storedFile);
   }
 }

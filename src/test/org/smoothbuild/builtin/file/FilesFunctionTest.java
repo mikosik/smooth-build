@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
+import static org.smoothbuild.testing.TestingFile.assertContentContainsFilePath;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FilesFunction.Parameters;
@@ -55,7 +55,7 @@ public class FilesFunctionTest {
 
     FileSet fileSet = runExecute(params(rootPath.value()));
 
-    assertContentHasFilePath(fileSet.file(filePath));
+    assertContentContainsFilePath(fileSet.file(filePath));
   }
 
   private static FilesFunction.Parameters params(final String dir) {

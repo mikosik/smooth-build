@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
+import static org.smoothbuild.testing.TestingFile.assertContentContainsFilePath;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FileFunction.Parameters;
@@ -57,7 +57,7 @@ public class FileFunctionTest {
     File file = runExecute(params(filePath.value()));
 
     assertThat(file.path()).isEqualTo(filePath);
-    assertContentHasFilePath(file);
+    assertContentContainsFilePath(file);
   }
 
   private static FileFunction.Parameters params(final String path) {
