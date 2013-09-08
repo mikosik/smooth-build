@@ -1,7 +1,7 @@
 package org.smoothbuild.plugin.api;
 
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingStream.writeAndClose;
+import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.TestingSandbox;

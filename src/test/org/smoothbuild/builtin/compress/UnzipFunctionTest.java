@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingStream.assertContent;
+import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import java.io.IOException;
 import java.io.InputStream;

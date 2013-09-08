@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import org.junit.Test;
+import org.smoothbuild.testing.common.StreamTester;
 
 public class TestingJdkFileTest extends TestCaseWithTempDir {
   File root = getTempDirectory();
@@ -27,7 +28,7 @@ public class TestingJdkFileTest extends TestCaseWithTempDir {
     String fileName = "fileName";
     File created = TestingJdkFile.createEmptyFile(root, fileName);
 
-    TestingStream.assertContent(new FileInputStream(created), "");
+    StreamTester.assertContent(new FileInputStream(created), "");
   }
 
   @Test
@@ -36,7 +37,7 @@ public class TestingJdkFileTest extends TestCaseWithTempDir {
     String content = "content";
     File created = TestingJdkFile.createFileContent(root, fileName, content);
 
-    TestingStream.assertContent(new FileInputStream(created), content);
+    StreamTester.assertContent(new FileInputStream(created), content);
   }
 
   @Test
@@ -44,7 +45,7 @@ public class TestingJdkFileTest extends TestCaseWithTempDir {
     String fileName = "fileName";
     String content = "content";
     File file = new File(root, fileName);
-    TestingStream.writeAndClose(new FileOutputStream(file), content);
+    StreamTester.writeAndClose(new FileOutputStream(file), content);
 
     TestingJdkFile.assertContent(root, fileName, content);
   }
@@ -54,7 +55,7 @@ public class TestingJdkFileTest extends TestCaseWithTempDir {
     String fileName = "fileName";
     String content = "content";
     File file = new File(root, fileName);
-    TestingStream.writeAndClose(new FileOutputStream(file), content);
+    StreamTester.writeAndClose(new FileOutputStream(file), content);
 
     try {
       TestingJdkFile.assertContent(root, fileName, "other contet");

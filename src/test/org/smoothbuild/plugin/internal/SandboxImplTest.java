@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingStream.writeAndClose;
+import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Path;

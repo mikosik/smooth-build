@@ -2,7 +2,7 @@ package org.smoothbuild.plugin.internal;
 
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
-import static org.smoothbuild.testing.TestingStream.writeAndClose;
+import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.SubFileSystem;

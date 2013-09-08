@@ -7,8 +7,8 @@ import static org.smoothbuild.testing.TestingJdkFile.assertContent;
 import static org.smoothbuild.testing.TestingJdkFile.createDir;
 import static org.smoothbuild.testing.TestingJdkFile.createEmptyFile;
 import static org.smoothbuild.testing.TestingJdkFile.createFileContent;
-import static org.smoothbuild.testing.TestingStream.assertContent;
-import static org.smoothbuild.testing.TestingStream.writeAndClose;
+import static org.smoothbuild.testing.common.StreamTester.assertContent;
+import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

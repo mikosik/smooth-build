@@ -1,7 +1,7 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.testing.TestingStream.assertContent;
-import static org.smoothbuild.testing.TestingStream.writeAndClose;
+import static org.smoothbuild.testing.common.StreamTester.assertContent;
+import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestingStreamTest {
+public class StreamTesterTest {
 
   @Test
   public void testWriteAndClose() throws IOException {

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.smoothbuild.testing.common.StreamTester;
+
 public class TestingJdkFile {
 
   public static File createDir(File root, String dirName) {
@@ -21,11 +23,11 @@ public class TestingJdkFile {
       throws IOException {
     File file = new File(root, fileName);
     FileOutputStream outputStream = new FileOutputStream(file);
-    TestingStream.writeAndClose(outputStream, content);
+    StreamTester.writeAndClose(outputStream, content);
     return file;
   }
 
   public static void assertContent(File root, String fileName, String content) throws IOException {
-    TestingStream.assertContent(new FileInputStream(new File(root, fileName)), content);
+    StreamTester.assertContent(new FileInputStream(new File(root, fileName)), content);
   }
 }
