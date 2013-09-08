@@ -7,11 +7,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.common.StreamTester;
 
-public class TestingFileSystem extends MemoryFileSystem {
+public class TestingFileSystem extends SubFileSystem {
+
+  public TestingFileSystem() {
+    this(new MemoryFileSystem(), Path.rootPath());
+  }
+
+  public TestingFileSystem(FileSystem fileSystem, Path root) {
+    super(fileSystem, root);
+  }
+
   public void createFileContainingItsPath(Path path) throws IOException {
     createFileWithContent(path, path.value());
   }
