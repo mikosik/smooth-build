@@ -87,7 +87,7 @@ public class SaveFunctionTest {
     runExecute(params(file, dir.value()));
 
     // then
-    fileSystem.assertFileContainsItsPath(dir, path);
+    fileSystem.subFileSystem(dir).assertFileContainsItsPath(path);
   }
 
   @Test
@@ -110,8 +110,9 @@ public class SaveFunctionTest {
     runExecute(params(fileSet, destinationDir.value()));
 
     // then
-    fileSystem.assertFileContainsItsPath(destinationDir, path1);
-    fileSystem.assertFileContainsItsPath(destinationDir, path2);
+    TestingFileSystem subFileSystem = fileSystem.subFileSystem(destinationDir);
+    subFileSystem.assertFileContainsItsPath(path1);
+    subFileSystem.assertFileContainsItsPath(path2);
   }
 
   private static Parameters params(final File file, final String dir) {
