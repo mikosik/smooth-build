@@ -25,7 +25,7 @@ public class TestingFile extends MutableStoredFile {
   }
 
   public void assertContentContainsFilePath() throws IOException {
-    StreamTester.assertContent(openInputStream(), path().value());
+    assertContentHasFilePath(this);
   }
 
   public static void assertContentHasFilePath(File file) throws IOException {
