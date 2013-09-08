@@ -7,6 +7,7 @@ import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
+import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
@@ -24,8 +25,10 @@ public class SandboxImplTest {
 
   @Test
   public void createFileCreatesFileOnFileSystem() throws Exception {
-    writeAndClose(sandbox.createFile(file).openOutputStream(), file.value());
-    fileSystem.assertFileContainsItsPath(root, file);
+    MutableFile newFile = sandbox.createFile(file);
+    writeAndClose(newFile.openOutputStream(), file.value());
+
+    fileSystem.subFileSystem(root).assertFileContainsItsPath(file);
   }
 
   @Test
