@@ -27,13 +27,6 @@ public class TestingFileSystem extends SubFileSystem {
     createFileWithContent(path, path.value());
   }
 
-  /**
-   * Creates textual file that contains its path.
-   */
-  public void createFileContainingItsPath(Path root, Path path) throws IOException {
-    createFileWithContent(fullPath(root, path), path.value());
-  }
-
   public void createEmptyFile(Path path) throws IOException {
     createFileWithContent(path, "");
   }
