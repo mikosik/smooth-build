@@ -19,8 +19,8 @@ import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.plugin.internal.StoredFile;
-import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.plugin.internal.TestFile;
 
 public class SaveFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
@@ -81,7 +81,7 @@ public class SaveFunctionTest {
     Path path = path("file/path/file.txt");
 
     fileSystem.createFileContainingItsPath(path);
-    TestingFile file = new TestingFile(fileSystem, path);
+    TestFile file = new TestFile(fileSystem, path);
 
     // when
     runExecute(params(file, dir.value()));
@@ -98,9 +98,9 @@ public class SaveFunctionTest {
     Path path2 = path("file/path/file2.txt");
 
     fileSystem.createFileContainingItsPath(path1);
-    TestingFile file1 = new TestingFile(fileSystem, path1);
+    TestFile file1 = new TestFile(fileSystem, path1);
     fileSystem.createFileContainingItsPath(path2);
-    TestingFile file2 = new TestingFile(fileSystem, path2);
+    TestFile file2 = new TestFile(fileSystem, path2);
 
     MutableFileSet fileSet = new MutableFileSet();
     fileSet.add(file1);

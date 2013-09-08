@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.plugin.internal;
 
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
@@ -11,12 +11,12 @@ import org.smoothbuild.plugin.internal.MutableStoredFile;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 
-public class TestingFile extends MutableStoredFile {
-  public TestingFile(Path path) {
+public class TestFile extends MutableStoredFile {
+  public TestFile(Path path) {
     this(new TestFileSystem(), path);
   }
 
-  public TestingFile(FileSystem fileSystem, Path path) {
+  public TestFile(FileSystem fileSystem, Path path) {
     super(fileSystem, path);
   }
 

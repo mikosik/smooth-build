@@ -3,6 +3,7 @@ package org.smoothbuild.testing;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.StoredFileSet;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.plugin.internal.TestFile;
 
 public class TestingFileSet extends StoredFileSet {
   private final TestFileSystem fileSystem;
@@ -21,7 +22,7 @@ public class TestingFileSet extends StoredFileSet {
     return fileSystem;
   }
 
-  public TestingFile createFile(Path path) {
-    return new TestingFile(fileSystem(), path);
+  public TestFile createFile(Path path) {
+    return new TestFile(fileSystem(), path);
   }
 }

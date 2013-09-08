@@ -11,14 +11,14 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
-import org.smoothbuild.testing.TestingFile;
+import org.smoothbuild.testing.plugin.internal.TestFile;
 
 import com.google.common.collect.ImmutableList;
 
 public class FileSetNodeTest {
 
-  File file1 = new TestingFile(path("my/file1"));
-  File file2 = new TestingFile(path("my/file2"));
+  File file1 = new TestFile(path("my/file1"));
+  File file2 = new TestFile(path("my/file2"));
 
   DefinitionNode node1 = fileNode(file1);
   DefinitionNode node2 = fileNode(file2);
