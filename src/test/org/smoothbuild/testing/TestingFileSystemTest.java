@@ -25,12 +25,6 @@ public class TestingFileSystemTest {
   }
 
   @Test
-  public void createRootedFileContiningItsPath() throws Exception {
-    fileSystem.createFileContainingItsPath(root, path);
-    assertContent(fileSystem.openInputStream(root.append(path)), path.value());
-  }
-
-  @Test
   public void createFileWithContent() throws Exception {
     fileSystem.createFileWithContent(path, content);
     assertContent(fileSystem.openInputStream(path), content);
