@@ -51,7 +51,7 @@ public class FilesFunctionTest {
   public void execute() throws Exception {
     Path rootPath = path("root/path");
     Path filePath = path("file/path/file.txt");
-    sandbox.projectFileSystem().createFileContainingItsPath(rootPath, filePath);
+    sandbox.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
 
     FileSet fileSet = runExecute(params(rootPath.value()));
 
