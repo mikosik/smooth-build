@@ -75,7 +75,8 @@ public class SaveFunction {
         return;
       }
 
-      Path source = ((StoredFile) file).fullPath();
+      Path fileSystemRoot = ((StoredFile) file).fileSystem().root();
+      Path source = fileSystemRoot.append(file.path());
       sandbox.projectFileSystem().copy(source, destination);
     }
 
