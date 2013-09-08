@@ -5,17 +5,14 @@ import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class MutableStoredFileTest {
   TestFileSystem fileSystem = new TestFileSystem();
-  Path rootDir = path("abc/efg");
   Path filePath = path("xyz/test.txt");
 
-  MutableStoredFile storedFile = new MutableStoredFile(new SubFileSystem(fileSystem, rootDir),
-      filePath);
+  MutableStoredFile storedFile = new MutableStoredFile(fileSystem, filePath);
 
   @Test
   public void createOutputStream() throws Exception {
