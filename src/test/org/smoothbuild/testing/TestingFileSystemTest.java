@@ -37,28 +37,6 @@ public class TestingFileSystemTest {
   }
 
   @Test
-  public void assertFileContainsItsPathSucceedsWhenContentMatches_legacy() throws Exception {
-    OutputStream os = fileSystem.openOutputStream(root.append(path));
-    writeAndClose(os, path.value());
-
-    fileSystem.assertFileContainsItsPath(root, path);
-  }
-
-  @Test
-  public void assertFileContainsItsPathWhenContentDoesNotMatch_legacy() throws Exception {
-    OutputStream os = fileSystem.openOutputStream(root.append(path));
-    writeAndClose(os, path.value() + "abc");
-
-    try {
-      fileSystem.assertFileContainsItsPath(root, path);
-    } catch (AssertionError e) {
-      // expected
-      return;
-    }
-    fail("exception should be thrown");
-  }
-
-  @Test
   public void assertFileContainsItsPathSucceedsWhenContentMatches() throws Exception {
     OutputStream os = fileSystem.openOutputStream(path);
     writeAndClose(os, path.value());
