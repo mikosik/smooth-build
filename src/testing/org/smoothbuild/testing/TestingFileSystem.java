@@ -2,7 +2,6 @@ package org.smoothbuild.testing;
 
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,11 +39,6 @@ public class TestingFileSystem extends SubFileSystem {
     assertFileContains(path, path.value());
   }
 
-  public void assertFileContainsItsPath(Path root, Path path) throws IOException,
-      FileNotFoundException {
-    assertFileContains(fullPath(root, path), path.value());
-  }
-
   public void assertFileContains(Path path, String content) throws IOException {
     InputStream inputStream = openInputStream(path);
     assertContent(inputStream, content);
@@ -52,9 +46,5 @@ public class TestingFileSystem extends SubFileSystem {
 
   public TestingFileSystem subFileSystem(Path root) {
     return new TestingFileSystem(this, root);
-  }
-
-  private static Path fullPath(Path root, Path path) {
-    return root.append(path);
   }
 }
