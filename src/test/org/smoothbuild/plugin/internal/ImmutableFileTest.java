@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
@@ -17,10 +16,9 @@ import org.smoothbuild.testing.TestingFileSystem;
 
 public class ImmutableFileTest {
   TestingFileSystem fileSystem = new TestingFileSystem();
-  Path root = path("abc/efg");
   Path filePath = path("xyz/test.txt");
 
-  File file = immutableFile(new StoredFile(new SubFileSystem(fileSystem, root), filePath));
+  File file = immutableFile(new StoredFile(fileSystem, filePath));
 
   @Test
   public void immutableFileIsNotMutable() throws Exception {
@@ -39,7 +37,7 @@ public class ImmutableFileTest {
 
   @Test
   public void createInputStream() throws Exception {
-    fileSystem.createFileContainingItsPath(root, filePath);
+    fileSystem.createFileContainingItsPath(filePath);
     assertContentHasFilePath(file);
   }
 
