@@ -8,8 +8,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.smoothbuild.run.SmoothRunner;
 import org.smoothbuild.testing.ScriptBuilder;
-import org.smoothbuild.testing.TestingFileSystemModule;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystemModule;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 import org.smoothbuild.testing.problem.TestingProblemsListenerModule;
 
@@ -22,7 +22,7 @@ public class IntegrationTestCase {
 
   @Before
   public void before() {
-    Injector injector = createInjector(new TestingFileSystemModule(),
+    Injector injector = createInjector(new TestFileSystemModule(),
         new TestingProblemsListenerModule());
     fileSystem = injector.getInstance(TestFileSystem.class);
     problems = injector.getInstance(TestingProblemsListener.class);
