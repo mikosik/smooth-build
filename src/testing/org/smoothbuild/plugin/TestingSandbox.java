@@ -2,25 +2,25 @@ package org.smoothbuild.plugin;
 
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.SandboxImpl;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 public class TestingSandbox extends SandboxImpl {
-  private final TestingFileSystem fileSystem;
+  private final TestFileSystem fileSystem;
   private final TestingProblemsListener problems;
 
   public TestingSandbox() {
-    this(new TestingFileSystem(), new TestingProblemsListener());
+    this(new TestFileSystem(), new TestingProblemsListener());
   }
 
-  public TestingSandbox(TestingFileSystem fileSystem, TestingProblemsListener problemsListener) {
+  public TestingSandbox(TestFileSystem fileSystem, TestingProblemsListener problemsListener) {
     super(fileSystem, Path.rootPath(), problemsListener);
     this.fileSystem = fileSystem;
     this.problems = problemsListener;
   }
 
   @Override
-  public TestingFileSystem projectFileSystem() {
+  public TestFileSystem projectFileSystem() {
     return fileSystem;
   }
 

@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.TestingFile;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 import com.google.common.collect.ImmutableList;
 
 public class StoredFileSetTest {
-  TestingFileSystem fileSystem = new TestingFileSystem();
+  TestFileSystem fileSystem = new TestFileSystem();
 
   StoredFileSet storedFileSet = new StoredFileSet(fileSystem);
 

@@ -12,10 +12,10 @@ import org.junit.Test;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class ImmutableFileTest {
-  TestingFileSystem fileSystem = new TestingFileSystem();
+  TestFileSystem fileSystem = new TestFileSystem();
   Path filePath = path("xyz/test.txt");
 
   File file = immutableFile(new StoredFile(fileSystem, filePath));

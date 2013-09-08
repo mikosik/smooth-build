@@ -20,11 +20,11 @@ import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.plugin.internal.StoredFile;
 import org.smoothbuild.testing.TestingFile;
-import org.smoothbuild.testing.TestingFileSystem;
+import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class SaveFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
-  TestingFileSystem fileSystem = sandbox.projectFileSystem();
+  TestFileSystem fileSystem = sandbox.projectFileSystem();
 
   @Test
   public void missingDirArgIsReported() throws Exception {
@@ -110,7 +110,7 @@ public class SaveFunctionTest {
     runExecute(params(fileSet, destinationDir.value()));
 
     // then
-    TestingFileSystem subFileSystem = fileSystem.subFileSystem(destinationDir);
+    TestFileSystem subFileSystem = fileSystem.subFileSystem(destinationDir);
     subFileSystem.assertFileContainsItsPath(path1);
     subFileSystem.assertFileContainsItsPath(path2);
   }
