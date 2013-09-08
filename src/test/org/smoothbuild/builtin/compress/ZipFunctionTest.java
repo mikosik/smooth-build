@@ -13,8 +13,8 @@ import org.smoothbuild.builtin.compress.ZipFunction.Parameters;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSet;
+import org.smoothbuild.testing.plugin.internal.TestFile;
 
 // TODO pass as argument object that throws exception when second file is
 // created. Or maybe even method that instantiate function given
@@ -38,7 +38,7 @@ public class ZipFunctionTest {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         fileCount++;
-        TestingFile file = unpackedFiles.createFile(path(entry.getName()));
+        TestFile file = unpackedFiles.createFile(path(entry.getName()));
         try (OutputStream outputStream = file.openOutputStream()) {
           int len = 0;
           while ((len = zipInputStream.read(buffer)) > 0) {

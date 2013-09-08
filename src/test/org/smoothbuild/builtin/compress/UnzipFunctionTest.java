@@ -15,8 +15,8 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.testing.TestingFile;
 import org.smoothbuild.testing.TestingFileSet;
+import org.smoothbuild.testing.plugin.internal.TestFile;
 
 public class UnzipFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
@@ -35,12 +35,12 @@ public class UnzipFunctionTest {
     assertThat(fileCount).isEqualTo(2);
   }
 
-  private static TestingFile packedFiles(String path1, String path2) throws IOException {
+  private static TestFile packedFiles(String path1, String path2) throws IOException {
     TestingFileSet filesToPack = new TestingFileSet();
     filesToPack.createFile(path(path1)).createContentWithFilePath();
     filesToPack.createFile(path(path2)).createContentWithFilePath();
 
-    TestingFile inputFile = new TestingFileSet().createFile(path("input.zip"));
+    TestFile inputFile = new TestingFileSet().createFile(path("input.zip"));
 
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.openOutputStream());) {
       for (File file : filesToPack) {

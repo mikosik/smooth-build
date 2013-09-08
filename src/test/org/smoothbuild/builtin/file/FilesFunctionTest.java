@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingFile.assertContentContainsFilePath;
+import static org.smoothbuild.testing.plugin.internal.TestFile.assertContentContainsFilePath;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FilesFunction.Parameters;
