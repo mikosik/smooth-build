@@ -24,10 +24,6 @@ public class StoredFile implements File {
     return fileSystem;
   }
 
-  public Path fullPath() {
-    return fileSystem.root().append(path);
-  }
-
   @Override
   public InputStream openInputStream() {
     return fileSystem.openInputStream(path);

@@ -22,11 +22,6 @@ public class StoredFileTest {
   }
 
   @Test
-  public void fullPath() {
-    assertThat(storedFile.fullPath()).isEqualTo(rootDir.append(filePath));
-  }
-
-  @Test
   public void createInputStream() throws Exception {
     fileSystem.createFileContainingItsPath(rootDir, filePath);
     assertContentHasFilePath(storedFile);
