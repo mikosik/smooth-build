@@ -43,7 +43,7 @@ public class TestingFileSystemTest {
   }
 
   @Test
-  public void assertFileContainsItsPathSucceedsWhenContentMatches() throws Exception {
+  public void assertFileContainsItsPathSucceedsWhenContentMatches_legacy() throws Exception {
     OutputStream os = fileSystem.openOutputStream(root.append(path));
     writeAndClose(os, path.value());
 
@@ -51,12 +51,34 @@ public class TestingFileSystemTest {
   }
 
   @Test
-  public void assertFileContainsItsPathWhenContentDoesNotMatch() throws Exception {
+  public void assertFileContainsItsPathWhenContentDoesNotMatch_legacy() throws Exception {
     OutputStream os = fileSystem.openOutputStream(root.append(path));
     writeAndClose(os, path.value() + "abc");
 
     try {
       fileSystem.assertFileContainsItsPath(root, path);
+    } catch (AssertionError e) {
+      // expected
+      return;
+    }
+    fail("exception should be thrown");
+  }
+
+  @Test
+  public void assertFileContainsItsPathSucceedsWhenContentMatches() throws Exception {
+    OutputStream os = fileSystem.openOutputStream(path);
+    writeAndClose(os, path.value());
+
+    fileSystem.assertFileContainsItsPath(path);
+  }
+
+  @Test
+  public void assertFileContainsItsPathWhenContentDoesNotMatch() throws Exception {
+    OutputStream os = fileSystem.openOutputStream(path);
+    writeAndClose(os, path.value() + "abc");
+
+    try {
+      fileSystem.assertFileContainsItsPath(path);
     } catch (AssertionError e) {
       // expected
       return;
@@ -84,5 +106,13 @@ public class TestingFileSystemTest {
       return;
     }
     fail("exception should be thrown");
+  }
+
+  @Test
+  public void subFileSystem() throws Exception {
+    OutputStream os = fileSystem.openOutputStream(root.append(path));
+    writeAndClose(os, path.value());
+
+    fileSystem.subFileSystem(root).assertFileContainsItsPath(path);
   }
 }
