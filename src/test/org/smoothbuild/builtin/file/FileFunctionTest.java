@@ -52,7 +52,7 @@ public class FileFunctionTest {
   @Test
   public void execute() throws Exception {
     Path filePath = path("file/path/file.txt");
-    sandbox.projectFileSystem().createFileContainingItsPath(Path.rootPath(), filePath);
+    sandbox.projectFileSystem().createFileContainingItsPath(filePath);
 
     File file = runExecute(params(filePath.value()));
 
