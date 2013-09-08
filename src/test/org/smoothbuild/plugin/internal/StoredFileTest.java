@@ -2,7 +2,7 @@ package org.smoothbuild.plugin.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingFile.assertContentHasFilePath;
+import static org.smoothbuild.testing.TestingFile.assertContentContainsFilePath;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Path;
@@ -27,7 +27,7 @@ public class StoredFileTest {
   @Test
   public void createInputStream() throws Exception {
     fileSystem.createFileContainingItsPath(filePath);
-    assertContentHasFilePath(storedFile);
+    assertContentContainsFilePath(storedFile);
   }
 
 }
