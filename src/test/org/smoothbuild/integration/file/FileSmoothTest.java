@@ -24,7 +24,7 @@ public class FileSmoothTest extends IntegrationTestCase {
 
     // then
     problems.assertNoProblems();
-    fileSystem.assertFileContainsItsPath(dir, file);
+    fileSystem.subFileSystem(dir).assertFileContainsItsPath(file);
   }
 
   @Test
@@ -40,7 +40,7 @@ public class FileSmoothTest extends IntegrationTestCase {
 
     // then
     problems.assertNoProblems();
-    fileSystem.assertFileContainsItsPath(dir, file);
+    fileSystem.subFileSystem(dir).assertFileContainsItsPath(file);
   }
 
   @Test
@@ -60,6 +60,6 @@ public class FileSmoothTest extends IntegrationTestCase {
 
     // then
     problems.assertNoProblems();
-    fileSystem.assertFileContainsItsPath(dir, file);
+    fileSystem.subFileSystem(dir).assertFileContainsItsPath(file);
   }
 }
