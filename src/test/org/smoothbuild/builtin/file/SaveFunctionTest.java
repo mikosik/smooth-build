@@ -79,9 +79,7 @@ public class SaveFunctionTest {
     // given
     Path dir = path("destination/path");
     Path path = path("file/path/file.txt");
-
-    fileSystem.createFileContainingItsPath(path);
-    TestFile file = new TestFile(fileSystem, path);
+    TestFile file = fileSystem.createFileContainingItsPath(path);
 
     // when
     runExecute(params(file, dir.value()));
@@ -97,10 +95,8 @@ public class SaveFunctionTest {
     Path path1 = path("file/path/file1.txt");
     Path path2 = path("file/path/file2.txt");
 
-    fileSystem.createFileContainingItsPath(path1);
-    TestFile file1 = new TestFile(fileSystem, path1);
-    fileSystem.createFileContainingItsPath(path2);
-    TestFile file2 = new TestFile(fileSystem, path2);
+    TestFile file1 = fileSystem.createFileContainingItsPath(path1);
+    TestFile file2 = fileSystem.createFileContainingItsPath(path2);
 
     MutableFileSet fileSet = new MutableFileSet();
     fileSet.add(file1);
