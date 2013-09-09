@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.function.base.TestSignature.testSignature;
 import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 
 import java.lang.reflect.InvocationTargetException;
 
