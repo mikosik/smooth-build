@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -8,16 +8,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import org.junit.Test;
+import org.smoothbuild.testing.common.JdkFileTester;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.common.TestCaseWithTempDir;
 
-public class TestingJdkFileTest extends TestCaseWithTempDir {
+public class JdkFileTesterTest extends TestCaseWithTempDir {
   File root = getTempDirectory();
 
   @Test
   public void testCreateDir() {
     String dirName = "myDir";
-    File created = TestingJdkFile.createDir(root, dirName);
+    File created = JdkFileTester.createDir(root, dirName);
 
     File expected = new File(root, dirName);
     assertThat(expected.exists()).isTrue();
@@ -27,7 +28,7 @@ public class TestingJdkFileTest extends TestCaseWithTempDir {
   @Test
   public void testCreateEmptyFile() throws Exception {
     String fileName = "fileName";
-    File created = TestingJdkFile.createEmptyFile(root, fileName);
+    File created = JdkFileTester.createEmptyFile(root, fileName);
 
     StreamTester.assertContent(new FileInputStream(created), "");
   }
@@ -36,7 +37,7 @@ public class TestingJdkFileTest extends TestCaseWithTempDir {
   public void testCreateFileContent() throws Exception {
     String fileName = "fileName";
     String content = "content";
-    File created = TestingJdkFile.createFileContent(root, fileName, content);
+    File created = JdkFileTester.createFileContent(root, fileName, content);
 
     StreamTester.assertContent(new FileInputStream(created), content);
   }
@@ -48,7 +49,7 @@ public class TestingJdkFileTest extends TestCaseWithTempDir {
     File file = new File(root, fileName);
     StreamTester.writeAndClose(new FileOutputStream(file), content);
 
-    TestingJdkFile.assertContent(root, fileName, content);
+    JdkFileTester.assertContent(root, fileName, content);
   }
 
   @Test
@@ -59,7 +60,7 @@ public class TestingJdkFileTest extends TestCaseWithTempDir {
     StreamTester.writeAndClose(new FileOutputStream(file), content);
 
     try {
-      TestingJdkFile.assertContent(root, fileName, "other contet");
+      JdkFileTester.assertContent(root, fileName, "other contet");
     } catch (AssertionError e) {
       // expected
       return;

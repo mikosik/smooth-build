@@ -1,13 +1,12 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.common;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.smoothbuild.testing.common.StreamTester;
 
-public class TestingJdkFile {
+public class JdkFileTester {
 
   public static File createDir(File root, String dirName) {
     File dir = new File(root, dirName);

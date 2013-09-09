@@ -1,8 +1,8 @@
 package org.smoothbuild.fs.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.TestingJdkFile.createDir;
-import static org.smoothbuild.testing.TestingJdkFile.createEmptyFile;
+import static org.smoothbuild.testing.common.JdkFileTester.createDir;
+import static org.smoothbuild.testing.common.JdkFileTester.createEmptyFile;
 
 import java.io.File;
 import java.io.IOException;
