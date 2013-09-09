@@ -12,7 +12,7 @@ public class TestingFileSet extends StoredFileSet {
     this(new TestFileSystem());
   }
 
-  public TestingFileSet(TestFileSystem fileSystem) {
+  private TestingFileSet(TestFileSystem fileSystem) {
     super(fileSystem);
     this.fileSystem = fileSystem;
   }
