@@ -10,7 +10,7 @@ import java.io.OutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.plugin.internal.TestFile;
 
 public class TestFileSystemTest {
   Path root = path("my/root");
@@ -21,20 +21,26 @@ public class TestFileSystemTest {
 
   @Test
   public void createFileContiningItsPath() throws Exception {
-    fileSystem.createFileContainingItsPath(path);
+    TestFile file = fileSystem.createFileContainingItsPath(path);
+
     assertContent(fileSystem.openInputStream(path), path.value());
+    assertContent(file.openInputStream(), path.value());
   }
 
   @Test
   public void createFileWithContent() throws Exception {
-    fileSystem.createFileWithContent(path, content);
+    TestFile file = fileSystem.createFileWithContent(path, content);
+
     assertContent(fileSystem.openInputStream(path), content);
+    assertContent(file.openInputStream(), content);
   }
 
   @Test
   public void createEmptyFile() throws IOException {
-    fileSystem.createEmptyFile(path);
+    TestFile file = fileSystem.createEmptyFile(path);
+
     assertContent(fileSystem.openInputStream(path), "");
+    assertContent(file.openInputStream(), "");
   }
 
   @Test
