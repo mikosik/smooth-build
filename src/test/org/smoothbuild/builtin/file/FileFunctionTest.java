@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.plugin.internal.TestFile.assertContentContainsFilePath;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FileFunction.Parameters;
@@ -14,6 +13,7 @@ import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
+import org.smoothbuild.testing.plugin.internal.FileTester;
 
 public class FileFunctionTest {
   TestingSandbox sandbox = new TestingSandbox();
@@ -57,7 +57,7 @@ public class FileFunctionTest {
     File file = runExecute(params(filePath.value()));
 
     assertThat(file.path()).isEqualTo(filePath);
-    assertContentContainsFilePath(file);
+    FileTester.assertContentContainsFilePath(file);
   }
 
   private static FileFunction.Parameters params(final String path) {

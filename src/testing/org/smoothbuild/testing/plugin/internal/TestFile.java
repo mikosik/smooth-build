@@ -1,11 +1,9 @@
 package org.smoothbuild.testing.plugin.internal;
 
-import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import java.io.IOException;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.MutableStoredFile;
 import org.smoothbuild.testing.common.StreamTester;
@@ -25,10 +23,6 @@ public class TestFile extends MutableStoredFile {
   }
 
   public void assertContentContainsFilePath() throws IOException {
-    assertContentContainsFilePath(this);
-  }
-
-  public static void assertContentContainsFilePath(File file) throws IOException {
-    assertContent(file.openInputStream(), file.path().value());
+    FileTester.assertContentContainsFilePath(this);
   }
 }
