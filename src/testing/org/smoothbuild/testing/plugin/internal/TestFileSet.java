@@ -1,18 +1,17 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.plugin.internal;
 
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.StoredFileSet;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.plugin.internal.TestFile;
 
-public class TestingFileSet extends StoredFileSet {
+public class TestFileSet extends StoredFileSet {
   private final TestFileSystem fileSystem;
 
-  public TestingFileSet() {
+  public TestFileSet() {
     this(new TestFileSystem());
   }
 
-  private TestingFileSet(TestFileSystem fileSystem) {
+  private TestFileSet(TestFileSystem fileSystem) {
     super(fileSystem);
     this.fileSystem = fileSystem;
   }
