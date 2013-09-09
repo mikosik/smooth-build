@@ -11,12 +11,12 @@ import org.smoothbuild.parse.SymbolTable;
 
 import com.google.common.collect.ImmutableMap;
 
-public class TestingImportedFunctions implements SymbolTable {
+public class TestImportedFunctions implements SymbolTable {
   public static final String IMPORTED_NAME = "imported";
 
   private final Map<String, Function> map;
 
-  public TestingImportedFunctions() {
+  public TestImportedFunctions() {
     Function function = new PluginFunction(testSignature(IMPORTED_NAME), null);
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }

@@ -1,9 +1,9 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.parse.TestingFunction.function;
-import static org.smoothbuild.testing.parse.TestingImportedFunctions.IMPORTED_NAME;
-import static org.smoothbuild.testing.parse.TestingModule.module;
+import static org.smoothbuild.testing.parse.TestFunction.function;
+import static org.smoothbuild.testing.parse.TestImportedFunctions.IMPORTED_NAME;
+import static org.smoothbuild.testing.parse.TestModule.module;
 
 import java.util.Map;
 
@@ -12,8 +12,8 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
-import org.smoothbuild.testing.parse.TestingImportedFunctions;
-import org.smoothbuild.testing.parse.TestingModule;
+import org.smoothbuild.testing.parse.TestImportedFunctions;
+import org.smoothbuild.testing.parse.TestModule;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 public class FunctionsCollectorTest {
 
   TestingProblemsListener problemsListener = new TestingProblemsListener();
-  SymbolTable importedFunctions = new TestingImportedFunctions();
+  SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test
   public void visitedFunctionNamesAreReturned() throws Exception {
@@ -30,7 +30,7 @@ public class FunctionsCollectorTest {
 
     FunctionContext function1 = function(name1);
     FunctionContext function2 = function(name2);
-    TestingModule module = module(function1, function2);
+    TestModule module = module(function1, function2);
 
     ImmutableMap<String, FunctionContext> expected = ImmutableMap.of(name1, function1, name2,
         function2);
@@ -55,7 +55,7 @@ public class FunctionsCollectorTest {
     problemsListener.assertOnlyProblem(OverridenImportError.class);
   }
 
-  private Map<String, FunctionContext> collectFunctions(TestingModule module) {
+  private Map<String, FunctionContext> collectFunctions(TestModule module) {
     return FunctionsCollector.collectFunctions(problemsListener, importedFunctions, module);
   }
 }

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
+import static org.smoothbuild.testing.parse.TestDependency.dependencies;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.mockito.Matchers;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.problem.ProblemsListener;
-import org.smoothbuild.testing.parse.TestingImportedFunctions;
+import org.smoothbuild.testing.parse.TestImportedFunctions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -28,7 +28,7 @@ public class DependencySorterTest {
   private static final String NAME6 = "funcation6";
 
   ProblemsListener problemsListener = mock(ProblemsListener.class);
-  SymbolTable importedFunctions = new TestingImportedFunctions();
+  SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test
   public void linearDependency() {
