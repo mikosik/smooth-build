@@ -14,13 +14,13 @@ import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 import org.smoothbuild.testing.parse.TestModule;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
+import org.smoothbuild.testing.problem.TestProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
 
 public class FunctionsCollectorTest {
 
-  TestingProblemsListener problemsListener = new TestingProblemsListener();
+  TestProblemsListener problemsListener = new TestProblemsListener();
   SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test

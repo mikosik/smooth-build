@@ -6,10 +6,10 @@ import org.smoothbuild.problem.ProblemsListener;
 
 import com.google.inject.AbstractModule;
 
-public class TestingProblemsListenerModule extends AbstractModule {
+public class TestProblemsListenerModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(TestingProblemsListener.class).in(Singleton.class);
-    bind(ProblemsListener.class).to(TestingProblemsListener.class);
+    bind(TestProblemsListener.class).in(Singleton.class);
+    bind(ProblemsListener.class).to(TestProblemsListener.class);
   }
 }

@@ -3,17 +3,17 @@ package org.smoothbuild.plugin;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
+import org.smoothbuild.testing.problem.TestProblemsListener;
 
 public class TestingSandbox extends SandboxImpl {
   private final TestFileSystem fileSystem;
-  private final TestingProblemsListener problems;
+  private final TestProblemsListener problems;
 
   public TestingSandbox() {
-    this(new TestFileSystem(), new TestingProblemsListener());
+    this(new TestFileSystem(), new TestProblemsListener());
   }
 
-  public TestingSandbox(TestFileSystem fileSystem, TestingProblemsListener problemsListener) {
+  public TestingSandbox(TestFileSystem fileSystem, TestProblemsListener problemsListener) {
     super(fileSystem, Path.rootPath(), problemsListener);
     this.fileSystem = fileSystem;
     this.problems = problemsListener;
@@ -24,7 +24,7 @@ public class TestingSandbox extends SandboxImpl {
     return fileSystem;
   }
 
-  public TestingProblemsListener problems() {
+  public TestProblemsListener problems() {
     return problems;
   }
 }
