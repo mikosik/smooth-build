@@ -10,17 +10,17 @@ import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.ZipFunction.Parameters;
-import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
+import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 // TODO pass as argument object that throws exception when second file is
 // created. Or maybe even method that instantiate function given
 // ZipFunction.class
 public class ZipFunctionTest {
-  TestingSandbox sandbox = new TestingSandbox();
+  TestSandbox sandbox = new TestSandbox();
 
   @Test
   public void testZipping() throws IOException {

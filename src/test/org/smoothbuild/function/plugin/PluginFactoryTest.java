@@ -24,7 +24,6 @@ import org.smoothbuild.function.plugin.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.function.plugin.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.plugin.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.plugin.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
@@ -33,13 +32,14 @@ import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.task.err.UnexpectedError;
+import org.smoothbuild.testing.plugin.internal.TestSandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 
 public class PluginFactoryTest {
-  TestingSandbox sandbox = new TestingSandbox();
+  TestSandbox sandbox = new TestSandbox();
   Path tempDir = path("tem/dir");
   PluginFactory pluginFactory;
 

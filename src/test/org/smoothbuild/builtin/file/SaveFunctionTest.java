@@ -12,7 +12,6 @@ import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFileSet;
@@ -21,9 +20,10 @@ import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.plugin.internal.StoredFile;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class SaveFunctionTest {
-  TestingSandbox sandbox = new TestingSandbox();
+  TestSandbox sandbox = new TestSandbox();
   TestFileSystem fileSystem = sandbox.projectFileSystem();
 
   @Test
@@ -47,7 +47,7 @@ public class SaveFunctionTest {
   @Test
   public void illegalPathsAreReported() {
     for (String path : PathTest.listOfInvalidPaths()) {
-      sandbox = new TestingSandbox();
+      sandbox = new TestSandbox();
       runExecute(params(mock(File.class), path));
       sandbox.problems().assertOnlyProblem(IllegalPathError.class);
     }

@@ -9,14 +9,14 @@ import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
-import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.testing.plugin.internal.FileTester;
+import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class FileFunctionTest {
-  TestingSandbox sandbox = new TestingSandbox();
+  TestSandbox sandbox = new TestSandbox();
 
   @Test
   public void missingPathArgIsReported() throws Exception {
@@ -27,7 +27,7 @@ public class FileFunctionTest {
   @Test
   public void illegalPathIsReported() {
     for (String path : PathTest.listOfInvalidPaths()) {
-      sandbox = new TestingSandbox();
+      sandbox = new TestSandbox();
       runExecute(params(path));
       sandbox.problems().assertOnlyProblem(IllegalPathError.class);
     }
