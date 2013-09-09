@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.ScriptBuilder;
+import org.smoothbuild.testing.parse.ScriptBuilder;
 
 public class FileSmoothTest extends IntegrationTestCase {
 
