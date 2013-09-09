@@ -13,19 +13,19 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.plugin.PluginInvoker;
-import org.smoothbuild.plugin.TestingSandbox;
 import org.smoothbuild.problem.Problem;
 import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
 import org.smoothbuild.task.err.UnexpectedError;
+import org.smoothbuild.testing.plugin.internal.TestSandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
 public class PluginTaskTest {
   PluginInvoker pluginInvoker = mock(PluginInvoker.class);
-  TestingSandbox sandbox = new TestingSandbox();
+  TestSandbox sandbox = new TestSandbox();
 
   PluginTask pluginTask = new PluginTask(testSignature(), pluginInvoker, Empty.stringTaskMap());
 
