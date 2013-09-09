@@ -1,9 +1,10 @@
 package org.smoothbuild.testing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.ScriptBuilder.script;
+import static org.smoothbuild.testing.parse.ScriptBuilder.script;
 
 import org.junit.Test;
+import org.smoothbuild.testing.parse.ScriptBuilder;
 
 public class ScriptBuilderTest {
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing;
+package org.smoothbuild.testing.parse;
 
 /**
  * Builder for easy creation of sample script in tests. All single quote

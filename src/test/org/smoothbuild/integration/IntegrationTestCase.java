@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.smoothbuild.run.SmoothRunner;
-import org.smoothbuild.testing.ScriptBuilder;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.fs.base.TestFileSystemModule;
+import org.smoothbuild.testing.parse.ScriptBuilder;
 import org.smoothbuild.testing.problem.TestingProblemsListener;
 import org.smoothbuild.testing.problem.TestingProblemsListenerModule;
 
