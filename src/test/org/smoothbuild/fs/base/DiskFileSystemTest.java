@@ -3,10 +3,10 @@ package org.smoothbuild.fs.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.testing.TestingJdkFile.assertContent;
-import static org.smoothbuild.testing.TestingJdkFile.createDir;
-import static org.smoothbuild.testing.TestingJdkFile.createEmptyFile;
-import static org.smoothbuild.testing.TestingJdkFile.createFileContent;
+import static org.smoothbuild.testing.common.JdkFileTester.assertContent;
+import static org.smoothbuild.testing.common.JdkFileTester.createDir;
+import static org.smoothbuild.testing.common.JdkFileTester.createEmptyFile;
+import static org.smoothbuild.testing.common.JdkFileTester.createFileContent;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
