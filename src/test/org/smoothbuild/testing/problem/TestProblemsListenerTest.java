@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.smoothbuild.problem.Problem;
 import org.smoothbuild.problem.Warning;
 
-public class TestingProblemsListenerTest {
-  TestingProblemsListener testingProblemListener = new TestingProblemsListener();
+public class TestProblemsListenerTest {
+  TestProblemsListener testingProblemListener = new TestProblemsListener();
 
   @Test(expected = AssertionError.class)
   public void problemsFoundFailesWhenNothingFound() throws Exception {

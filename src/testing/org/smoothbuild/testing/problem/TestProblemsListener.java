@@ -9,7 +9,7 @@ import org.smoothbuild.problem.ProblemsListener;
 
 import com.google.common.collect.Lists;
 
-public class TestingProblemsListener implements ProblemsListener {
+public class TestProblemsListener implements ProblemsListener {
   private final List<Problem> list = Lists.newArrayList();
 
   @Override

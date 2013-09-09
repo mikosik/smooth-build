@@ -35,13 +35,13 @@ import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.def.err.TypeMismatchProblem;
 import org.smoothbuild.parse.def.err.UnknownParamNameProblem;
 import org.smoothbuild.task.Task;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
+import org.smoothbuild.testing.problem.TestProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ArgumentNodesCreatorTest {
 
-  TestingProblemsListener problemsListener = new TestingProblemsListener();
+  TestProblemsListener problemsListener = new TestProblemsListener();
 
   @Test
   public void convertingExplicitStringArgument() {
@@ -147,7 +147,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestDuplicatedExplicitEmptySetNames(Type type) {
     // given
-    problemsListener = new TestingProblemsListener();
+    problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
 
     Argument a1 = argument(p1.name(), node(EMPTY_SET));
@@ -209,7 +209,7 @@ public class ArgumentNodesCreatorTest {
 
   public void doTestTypeMismatchForParamProblem(Type paramType, Type argType) throws Exception {
     // given
-    problemsListener = new TestingProblemsListener();
+    problemsListener = new TestProblemsListener();
     Param p1 = param(paramType, "name1");
     Argument a1 = argument(p1.name(), node(argType));
 
@@ -400,7 +400,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestAmbiguousImplicitArgument(Type paramType, Type argType) {
     // given
-    problemsListener = new TestingProblemsListener();
+    problemsListener = new TestProblemsListener();
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType, "name2");
 
@@ -416,7 +416,7 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void ambiguousImplicitEmptySetArgument() {
     // given
-    problemsListener = new TestingProblemsListener();
+    problemsListener = new TestProblemsListener();
     Param p1 = param(STRING_SET, "name1");
     Param p2 = param(FILE_SET, "name2");
 
@@ -465,7 +465,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestNoParamWithProperTypeForImplicitArgument(Type type, Type otherType) {
     // given
-    problemsListener = new TestingProblemsListener();
+    problemsListener = new TestProblemsListener();
     Param p1 = param(otherType, "name1");
     Argument a1 = argument(node(type));
 

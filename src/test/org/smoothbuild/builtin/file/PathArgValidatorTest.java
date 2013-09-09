@@ -4,10 +4,10 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.plugin.api.PathTest;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
+import org.smoothbuild.testing.problem.TestProblemsListener;
 
 public class PathArgValidatorTest {
-  TestingProblemsListener problems = new TestingProblemsListener();
+  TestProblemsListener problems = new TestProblemsListener();
 
   @Test
   public void missingDirArgIsReported() throws Exception {
@@ -20,7 +20,7 @@ public class PathArgValidatorTest {
   public void illegalPathsAreReported() {
     String name = "name";
     for (String path : PathTest.listOfInvalidPaths()) {
-      TestingProblemsListener problems = new TestingProblemsListener();
+      TestProblemsListener problems = new TestProblemsListener();
       PathArgValidator.validatedPath(name, path, problems);
       problems.assertOnlyProblem(IllegalPathError.class);
     }
@@ -29,7 +29,7 @@ public class PathArgValidatorTest {
   @Test
   public void validPathsAreAccepted() {
     for (String path : PathTest.listOfCorrectPaths()) {
-      TestingProblemsListener problems = new TestingProblemsListener();
+      TestProblemsListener problems = new TestProblemsListener();
       PathArgValidator.validatedPath("name", path, problems);
       problems.assertNoProblems();
     }

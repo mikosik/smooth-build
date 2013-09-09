@@ -7,12 +7,12 @@ import static org.smoothbuild.function.base.Name.simpleName;
 import org.junit.Test;
 import org.smoothbuild.command.err.CommandLineError;
 import org.smoothbuild.command.err.NothingToDoError;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
+import org.smoothbuild.testing.problem.TestProblemsListener;
 
 public class CommandLineParserTest {
   String functionName = "function1";
   CommandLineParser parser = new CommandLineParser();
-  TestingProblemsListener problems = new TestingProblemsListener();
+  TestProblemsListener problems = new TestProblemsListener();
 
   @Test
   public void functionToRun() {

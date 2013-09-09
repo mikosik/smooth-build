@@ -17,14 +17,14 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.problem.Error;
 import org.smoothbuild.problem.ProblemsListener;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.problem.TestingProblemsListener;
+import org.smoothbuild.testing.problem.TestProblemsListener;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
 
 public class TaskExecutorTest {
   TestFileSystem fileSystem = new TestFileSystem();
-  TestingProblemsListener problems = new TestingProblemsListener();
+  TestProblemsListener problems = new TestProblemsListener();
 
   TaskExecutor taskExecutor = new TaskExecutor(fileSystem);
 
