@@ -2,10 +2,6 @@ package org.smoothbuild.function.base;
 
 import static org.smoothbuild.function.base.Name.simpleName;
 
-import org.smoothbuild.function.base.Name;
-import org.smoothbuild.function.base.Param;
-import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.function.base.Type;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
