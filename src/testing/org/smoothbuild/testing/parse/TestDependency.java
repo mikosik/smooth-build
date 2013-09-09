@@ -8,7 +8,7 @@ import org.smoothbuild.parse.Dependency;
 
 import com.google.common.collect.Sets;
 
-public class TestingDependency {
+public class TestDependency {
   public static Set<Dependency> dependencies(String... names) {
     Set<Dependency> result = Sets.newHashSet();
     for (String name : names) {

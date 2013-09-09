@@ -2,16 +2,16 @@ package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
-import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
-import static org.smoothbuild.testing.parse.TestingModule.module;
+import static org.smoothbuild.testing.parse.TestDependency.dependencies;
+import static org.smoothbuild.testing.parse.TestModule.module;
 
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.testing.parse.TestingFunction;
-import org.smoothbuild.testing.parse.TestingModule;
-import org.smoothbuild.testing.parse.TestingPipe;
+import org.smoothbuild.testing.parse.TestFunction;
+import org.smoothbuild.testing.parse.TestModule;
+import org.smoothbuild.testing.parse.TestPipe;
 
 import com.google.common.collect.Maps;
 
@@ -28,9 +28,9 @@ public class DependencyCollectorTest {
     String dep1 = "dep1";
     String dep2 = "dep2";
 
-    TestingModule module = module();
-    TestingFunction function = module.addFunction(name);
-    TestingPipe pipe = function.addPipeExpression();
+    TestModule module = module();
+    TestFunction function = module.addFunction(name);
+    TestPipe pipe = function.addPipeExpression();
     pipe.addFunctionCall(dep1);
     pipe.addFunctionCall(dep2);
 
@@ -45,15 +45,15 @@ public class DependencyCollectorTest {
     String name1 = "funcation1";
     String name2 = "funcation2";
 
-    TestingModule module = module();
+    TestModule module = module();
     {
-      TestingFunction function = module.addFunction(name1);
-      TestingPipe pipe = function.addPipeExpression();
+      TestFunction function = module.addFunction(name1);
+      TestPipe pipe = function.addPipeExpression();
       pipe.addFunctionCall(name2);
     }
     {
-      TestingFunction function = module.addFunction(name2);
-      TestingPipe pipe = function.addPipeExpression();
+      TestFunction function = module.addFunction(name2);
+      TestPipe pipe = function.addPipeExpression();
       pipe.addFunctionCall(name1);
     }
 

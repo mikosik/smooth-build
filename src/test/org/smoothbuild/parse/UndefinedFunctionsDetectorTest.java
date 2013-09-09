@@ -5,7 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.parse.UndefinedFunctionsDetector.detectUndefinedFunctions;
-import static org.smoothbuild.testing.parse.TestingDependency.dependencies;
+import static org.smoothbuild.testing.parse.TestDependency.dependencies;
 
 import java.util.Map;
 import java.util.Set;
