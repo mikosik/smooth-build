@@ -1,13 +1,19 @@
 package org.smoothbuild.task;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Set;
 
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Sandbox;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.ByteStreams;
 
 public class FileSetTask extends AbstractTask {
   private final ImmutableSet<Task> dependencies;
@@ -18,12 +24,20 @@ public class FileSetTask extends AbstractTask {
 
   @Override
   public void execute(Sandbox sandbox) {
-    MutableFileSet fileSet = new MutableFileSet();
+    MutableFileSet result = sandbox.resultFileSet();
+
     for (Task entry : dependencies) {
-      fileSet.add((File) entry.result());
+      File from = (File) entry.result();
+      MutableFile to = result.createFile(from.path());
+
+      try (InputStream is = from.openInputStream(); OutputStream os = to.openOutputStream();) {
+        ByteStreams.copy(is, os);
+      } catch (IOException e) {
+        throw new FileSystemException(e);
+      }
     }
 
-    setResult(fileSet);
+    setResult(result);
   }
 
   @Override
