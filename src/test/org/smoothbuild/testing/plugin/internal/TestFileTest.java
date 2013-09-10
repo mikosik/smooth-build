@@ -40,4 +40,24 @@ public class TestFileTest {
     }
     fail("exception should be thrown");
   }
+
+  @Test
+  public void assertContentContainsSucceeds() throws Exception {
+    String content = "content";
+    StreamTester.writeAndClose(fileSystem.openOutputStream(path), content);
+    testFile.assertContentContains(content);
+  }
+
+  @Test
+  public void assertContentContainsFails() throws Exception {
+    String content = "content";
+    StreamTester.writeAndClose(fileSystem.openOutputStream(path), content);
+    try {
+      testFile.assertContentContains(content + "suffix");
+    } catch (AssertionError e) {
+      // expected
+      return;
+    }
+    fail("exception should be thrown");
+  }
 }

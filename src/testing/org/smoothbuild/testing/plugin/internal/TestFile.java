@@ -1,6 +1,5 @@
 package org.smoothbuild.testing.plugin.internal;
 
-
 import java.io.IOException;
 
 import org.smoothbuild.fs.base.FileSystem;
@@ -24,5 +23,9 @@ public class TestFile extends MutableStoredFile {
 
   public void assertContentContainsFilePath() throws IOException {
     FileTester.assertContentContainsFilePath(this);
+  }
+
+  public void assertContentContains(String content) throws IOException {
+    FileTester.assertContentContains(this, content);
   }
 }
