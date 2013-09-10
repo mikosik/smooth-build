@@ -1,4 +1,4 @@
-package org.smoothbuild.plugin.internal;
+package org.smoothbuild.testing.plugin.internal;
 
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
@@ -19,6 +19,7 @@ public class TestSandboxTest {
     MutableFile newFile = testSandbox.createFile(file);
     writeAndClose(newFile.openOutputStream(), file.value());
 
-    testSandbox.projectFileSystem().assertFileContainsItsPath(file);
+    testSandbox.projectFileSystem().assertFileContains(TestSandbox.SANDBOX_ROOT.append(file),
+        file.value());
   }
 }
