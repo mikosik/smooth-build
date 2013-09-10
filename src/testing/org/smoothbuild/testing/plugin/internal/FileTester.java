@@ -7,9 +7,12 @@ import java.io.IOException;
 import org.smoothbuild.plugin.api.File;
 
 public class FileTester {
-
   public static void assertContentContainsFilePath(File file) throws IOException {
-    assertContent(file.openInputStream(), file.path().value());
+    assertContentContains(file, file.path().value());
   }
 
+  public static void assertContentContains(File file, String content) throws IOException,
+      AssertionError {
+    assertContent(file.openInputStream(), content);
+  }
 }
