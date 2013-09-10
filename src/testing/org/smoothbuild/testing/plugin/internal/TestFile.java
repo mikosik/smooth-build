@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.MutableStoredFile;
-import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class TestFile extends MutableStoredFile {
@@ -18,7 +17,7 @@ public class TestFile extends MutableStoredFile {
   }
 
   public void createContentWithFilePath() throws IOException {
-    StreamTester.writeAndClose(openOutputStream(), path().value());
+    FileTester.createContentWithFilePath(this);
   }
 
   public void assertContentContainsFilePath() throws IOException {

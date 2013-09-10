@@ -1,22 +1,35 @@
 package org.smoothbuild.testing.plugin.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamWithContent;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
 
 public class FileTesterTest {
   String content = "some content";
   Path path = path("my/path");
-  File file = mock(File.class);
+  MutableFile file = mock(MutableFile.class);
+
+  @Test
+  public void testCreateContentWithFilePath() throws Exception {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    when(file.openOutputStream()).thenReturn(outputStream);
+    when(file.path()).thenReturn(path);
+
+    FileTester.createContentWithFilePath(file);
+
+    assertThat(new String(outputStream.toByteArray())).isEqualTo(path.value());
+  }
 
   @Test
   public void assertFileContainsSucceedsWhenContentIsEqualToExpected() throws IOException {
