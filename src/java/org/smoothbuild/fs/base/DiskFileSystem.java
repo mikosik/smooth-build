@@ -1,5 +1,7 @@
 package org.smoothbuild.fs.base;
 
+import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -69,7 +71,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public Iterable<Path> filesFrom(Path directory) {
-    return new RecursiveFilesIterable(this, directory);
+    return recursiveFilesIterable(this, directory);
   }
 
   private void createDirectory(Path path) {

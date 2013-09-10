@@ -167,13 +167,8 @@ public class MemoryFileSystemTest {
   }
 
   @Test
-  public void filesFromThrowsExceptionWhenPathDoesNotExist() throws Exception {
-    try {
-      fileSystem.filesFrom(path("abc")).iterator().hasNext();
-      Assert.fail("exception expected");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+  public void filesFromReturnsEmptyIterableForNonexistentDir() throws Exception {
+    assertThat(fileSystem.filesFrom(path("nonexistent"))).isEmpty();
   }
 
   @Test
