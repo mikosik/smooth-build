@@ -30,4 +30,9 @@ public class StoredFileTest {
     FileTester.assertContentContainsFilePath(storedFile);
   }
 
+  @Test
+  public void testToString() throws Exception {
+    assertThat(storedFile.toString()).isEqualTo("StoredFile(" + filePath.toString() + ")");
+  }
+
 }

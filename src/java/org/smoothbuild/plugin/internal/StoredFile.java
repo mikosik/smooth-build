@@ -28,4 +28,9 @@ public class StoredFile implements File {
   public InputStream openInputStream() {
     return fileSystem.openInputStream(path);
   }
+
+  @Override
+  public String toString() {
+    return "StoredFile(" + path + ")";
+  }
 }
