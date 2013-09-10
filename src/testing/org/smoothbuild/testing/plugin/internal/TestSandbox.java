@@ -15,15 +15,27 @@ public class TestSandbox extends SandboxImpl {
 
   private final TestFileSystem fileSystem;
   private final TestProblemsListener problems;
+  private final TestFileSet resultFileSet;
 
   public TestSandbox() {
-    this(new TestFileSystem(), new TestProblemsListener());
+    this(new TestFileSystem());
   }
 
-  public TestSandbox(TestFileSystem fileSystem, TestProblemsListener problemsListener) {
-    super(fileSystem, SANDBOX_ROOT, problemsListener);
+  public TestSandbox(TestFileSystem fileSystem) {
+    this(fileSystem, new TestFileSystem(fileSystem, SANDBOX_ROOT), new TestProblemsListener());
+  }
+
+  public TestSandbox(TestFileSystem fileSystem, TestFileSystem sandboxFileSystem,
+      TestProblemsListener problemsListener) {
+    super(fileSystem, sandboxFileSystem, problemsListener);
     this.fileSystem = fileSystem;
     this.problems = problemsListener;
+    this.resultFileSet = new TestFileSet(sandboxFileSystem);
+  }
+
+  @Override
+  public TestFileSet resultFileSet() {
+    return resultFileSet;
   }
 
   @Override

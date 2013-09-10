@@ -29,24 +29,24 @@ public class UnzipFunction {
   private static class Worker {
     private final Sandbox sandbox;
     private final Parameters params;
+    byte[] buffer;
 
     public Worker(Sandbox sandbox, Parameters params) {
       this.sandbox = sandbox;
       this.params = params;
+      this.buffer = new byte[1024];
     }
 
     public FileSet execute() {
-      byte[] buffer = new byte[1024];
-
       if (params.file() == null) {
         sandbox.report(new MissingRequiredArgError("file"));
       }
 
-      MutableFileSet resultFiles = new MutableFileSet();
+      MutableFileSet resultFiles = sandbox.resultFileSet();
       try (ZipInputStream zipInputStream = new ZipInputStream(params.file().openInputStream());) {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
-          resultFiles.add(unzipEntry(zipInputStream, entry, buffer));
+          unzipEntry(zipInputStream, entry, resultFiles);
         }
       } catch (IOException e) {
         throw new FileSystemException(e);
@@ -55,9 +55,9 @@ public class UnzipFunction {
       return resultFiles;
     }
 
-    private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, byte[] buffer)
-        throws IOException {
-      MutableFile file = sandbox.createFile(path(entry.getName()));
+    private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry,
+        MutableFileSet resultFiles) throws IOException {
+      MutableFile file = resultFiles.createFile(path(entry.getName()));
       try (OutputStream outputStream = file.openOutputStream()) {
         int len = 0;
         while ((len = zipInputStream.read(buffer)) > 0) {

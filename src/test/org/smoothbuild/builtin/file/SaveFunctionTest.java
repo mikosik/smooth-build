@@ -14,12 +14,12 @@ import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.plugin.internal.StoredFile;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.plugin.internal.TestFileSet;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class SaveFunctionTest {
@@ -95,15 +95,12 @@ public class SaveFunctionTest {
     Path path1 = path("file/path/file1.txt");
     Path path2 = path("file/path/file2.txt");
 
-    TestFile file1 = fileSystem.createFileContainingItsPath(path1);
-    TestFile file2 = fileSystem.createFileContainingItsPath(path2);
-
-    MutableFileSet fileSet = new MutableFileSet();
-    fileSet.add(file1);
-    fileSet.add(file2);
+    TestFileSet sourceFileSet = new TestFileSet(fileSystem);
+    sourceFileSet.createFile(path1).createContentWithFilePath();
+    sourceFileSet.createFile(path2).createContentWithFilePath();
 
     // when
-    runExecute(params(fileSet, destinationDir.value()));
+    runExecute(params(sourceFileSet, destinationDir.value()));
 
     // then
     TestFileSystem subFileSystem = fileSystem.subFileSystem(destinationDir);

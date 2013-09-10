@@ -35,6 +35,7 @@ import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgProblem;
 import org.smoothbuild.parse.def.err.TypeMismatchProblem;
 import org.smoothbuild.parse.def.err.UnknownParamNameProblem;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.testing.plugin.internal.TestSandbox;
 import org.smoothbuild.testing.problem.TestProblemsListener;
 
 import com.google.common.collect.ImmutableMap;
@@ -505,7 +506,7 @@ public class ArgumentNodesCreatorTest {
 
   private static void assertThatNodeHasEmptySet(DefinitionNode node) {
     Task task = node.generateTask();
-    task.execute(null);
+    task.execute(new TestSandbox());
     assertThat((Iterable<?>) task.result()).isEmpty();
   }
 }
