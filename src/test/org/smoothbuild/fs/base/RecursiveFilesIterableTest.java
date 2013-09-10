@@ -1,6 +1,8 @@
 package org.smoothbuild.fs.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
+import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import java.io.IOException;
@@ -44,6 +46,28 @@ public class RecursiveFilesIterableTest {
     doTestIterable("abc/xyz/prs", names, "abc", expectedNames);
   }
 
+  @Test
+  public void isEmptyWhenDirectoryDoesNotExist() throws Exception {
+    TestFileSystem fileSystem = new TestFileSystem();
+    Path path = path("my/file");
+
+    assertThat(recursiveFilesIterable(fileSystem, path)).isEmpty();
+  }
+
+  @Test
+  public void throwsExceptionWhenDirectoryIsAFile() throws Exception {
+    TestFileSystem fileSystem = new TestFileSystem();
+    Path path = path("my/file");
+    fileSystem.createEmptyFile(path);
+
+    try {
+      recursiveFilesIterable(fileSystem, path);
+      fail("exception should be thrown");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
   private void doTestIterable(String rootDir, String[] names, String expectedRootDir,
       String[] expectedNames) throws IOException {
     TestFileSystem fileSystem = new TestFileSystem();
@@ -56,7 +80,7 @@ public class RecursiveFilesIterableTest {
       created.add(path(name));
     }
 
-    assertThat(new RecursiveFilesIterable(fileSystem, path(expectedRootDir))).containsOnly(
+    assertThat(recursiveFilesIterable(fileSystem, path(expectedRootDir))).containsOnly(
         created.toArray(new Path[] {}));
   }
 }

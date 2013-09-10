@@ -1,5 +1,7 @@
 package org.smoothbuild.fs.mem;
 
+import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.RecursiveFilesIterable;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
@@ -50,7 +51,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public Iterable<Path> filesFrom(Path directory) {
-    return new RecursiveFilesIterable(this, directory);
+    return recursiveFilesIterable(this, directory);
   }
 
   private MemoryDirectory createDirectory(Path directory) {

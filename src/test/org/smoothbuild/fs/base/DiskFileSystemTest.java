@@ -169,9 +169,9 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     assertThat(fileSystem.filesFrom(path(mainDirName))).containsOnly(first, second);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void filesFromThrowsExceptionForNonexistentDir() throws Exception {
-    fileSystem.filesFrom(path("nonexistent"));
+  @Test
+  public void filesFromReturnsEmptyIterableForNonexistentDir() throws Exception {
+    assertThat(fileSystem.filesFrom(path("nonexistent"))).isEmpty();
   }
 
   @Test
