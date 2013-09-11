@@ -38,6 +38,26 @@ public class ParamTest {
     }
   }
 
+  @Test(expected = NullPointerException.class)
+  public void nullTypeIsForbidden() throws Exception {
+    param(null, "name");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void nullNameIsForbidden() throws Exception {
+    param(Type.STRING, null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void creatingVoidParamIsForbidden() throws Exception {
+    param(Type.VOID, "name");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void creatingEmptySetParamIsForbidden() throws Exception {
+    param(Type.EMPTY_SET, "name");
+  }
+
   @Test
   public void type() throws Exception {
     assertThat(param(Type.STRING, "name").type()).isEqualTo(Type.STRING);
