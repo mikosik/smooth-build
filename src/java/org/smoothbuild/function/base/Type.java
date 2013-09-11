@@ -73,6 +73,10 @@ public class Type {
     return SET_ELEM_TYPES;
   }
 
+  public static ImmutableList<Type> allowedForParam() {
+    return PARAM_TYPES;
+  }
+
   public static ImmutableList<TypeLiteral<?>> javaTypesAllowedForResult() {
     return RESULT_JAVA_TYPES;
   }
