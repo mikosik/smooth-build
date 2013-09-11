@@ -23,6 +23,8 @@ public class Type {
       FILE_SET, VOID);
   static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, STRING_SET, FILE,
       FILE_SET);
+  static final ImmutableList<Type> ARGS_TYPES = ImmutableList.of(STRING, STRING_SET, FILE,
+      FILE_SET, EMPTY_SET);
 
   static final ImmutableList<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
   static final ImmutableList<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
@@ -75,6 +77,10 @@ public class Type {
 
   public static ImmutableList<Type> allowedForParam() {
     return PARAM_TYPES;
+  }
+
+  public static ImmutableList<Type> allowedForArgs() {
+    return ARGS_TYPES;
   }
 
   public static ImmutableList<TypeLiteral<?>> javaTypesAllowedForResult() {
