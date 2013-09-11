@@ -5,9 +5,8 @@ import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.StringSet;
 import org.smoothbuild.plugin.internal.EmptySet;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class Type {
@@ -18,16 +17,15 @@ public class Type {
   public static final Type VOID = create("Void", Void.TYPE);
   public static final Type EMPTY_SET = create("EmptySet", EmptySet.class);
 
-  static final ImmutableList<Type> SET_ELEM_TYPES = ImmutableList.of(STRING, FILE);
-  static final ImmutableList<Type> RESULT_TYPES = ImmutableList.of(STRING, STRING_SET, FILE,
+  static final ImmutableSet<Type> SET_ELEM_TYPES = ImmutableSet.of(STRING, FILE);
+  static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE,
       FILE_SET, VOID);
-  static final ImmutableList<Type> PARAM_TYPES = ImmutableList.of(STRING, STRING_SET, FILE,
-      FILE_SET);
-  static final ImmutableList<Type> ARGS_TYPES = ImmutableList.of(STRING, STRING_SET, FILE,
-      FILE_SET, EMPTY_SET);
+  static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET);
+  static final ImmutableSet<Type> ARGS_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET,
+      EMPTY_SET);
 
-  static final ImmutableList<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
-  static final ImmutableList<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
+  static final ImmutableSet<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
+  static final ImmutableSet<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
 
   static final ImmutableMap<TypeLiteral<?>, Type> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
   static final ImmutableMap<TypeLiteral<?>, Type> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
@@ -71,23 +69,23 @@ public class Type {
     return "'" + name + "'";
   }
 
-  public static ImmutableList<Type> allowedForSetElem() {
+  public static ImmutableSet<Type> allowedForSetElem() {
     return SET_ELEM_TYPES;
   }
 
-  public static ImmutableList<Type> allowedForParam() {
+  public static ImmutableSet<Type> allowedForParam() {
     return PARAM_TYPES;
   }
 
-  public static ImmutableList<Type> allowedForArgs() {
+  public static ImmutableSet<Type> allowedForArgs() {
     return ARGS_TYPES;
   }
 
-  public static ImmutableList<TypeLiteral<?>> javaTypesAllowedForResult() {
+  public static ImmutableSet<TypeLiteral<?>> javaTypesAllowedForResult() {
     return RESULT_JAVA_TYPES;
   }
 
-  public static ImmutableList<TypeLiteral<?>> javaTypesAllowedForParam() {
+  public static ImmutableSet<TypeLiteral<?>> javaTypesAllowedForParam() {
     return PARAM_JAVA_TYPES;
   }
 
@@ -99,8 +97,8 @@ public class Type {
     return JAVA_RESULT_TO_SMOOTH.get(javaType);
   }
 
-  private static ImmutableList<TypeLiteral<?>> toJavaTypes(Iterable<Type> types) {
-    Builder<TypeLiteral<?>> builder = ImmutableList.builder();
+  private static ImmutableSet<TypeLiteral<?>> toJavaTypes(Iterable<Type> types) {
+    ImmutableSet.Builder<TypeLiteral<?>> builder = ImmutableSet.builder();
 
     for (Type type : types) {
       builder.add(type.javaType);
