@@ -11,11 +11,11 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.StringSetNode;
-import org.smoothbuild.parse.def.err.DuplicateArgNameProblem;
-import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
-import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgProblem;
-import org.smoothbuild.parse.def.err.TypeMismatchProblem;
-import org.smoothbuild.parse.def.err.UnknownParamNameProblem;
+import org.smoothbuild.parse.def.err.DuplicateArgNameError;
+import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgError;
+import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgError;
+import org.smoothbuild.parse.def.err.TypeMismatchError;
+import org.smoothbuild.parse.def.err.UnknownParamNameError;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.Problem;
 import org.smoothbuild.problem.ProblemsListener;
@@ -68,13 +68,13 @@ public class ArgumentNodesCreator {
           DefinitionNode argNode = argument.definitionNode();
           Param param = params.get(argName);
           if (param == null) {
-            problems.report(new UnknownParamNameProblem(function.name(), argument));
+            problems.report(new UnknownParamNameError(function.name(), argument));
             success = false;
           } else if (explicitArgs.containsKey(argName)) {
-            problems.report(new DuplicateArgNameProblem(argument));
+            problems.report(new DuplicateArgNameError(argument));
             success = false;
           } else if (!param.type().isAssignableFrom(argNode.type())) {
-            problems.report(new TypeMismatchProblem(argument, param.type()));
+            problems.report(new TypeMismatchError(argument, param.type()));
             success = false;
           } else {
             explicitArgs.put(argName, convert(param.type(), argNode));
@@ -131,7 +131,7 @@ public class ArgumentNodesCreator {
         for (Param param : params.values()) {
           if (param.type().isAssignableFrom(type) && !explicitArgs.containsKey(param.name())) {
             if (found) {
-              Problem problem = new ManyAmbigiousParamsAssignableFromImplicitArgProblem(
+              Problem problem = new ManyAmbigiousParamsAssignableFromImplicitArgError(
                   onlyImplicit);
               problems.report(problem);
               return;
@@ -142,7 +142,7 @@ public class ArgumentNodesCreator {
           }
         }
         if (!found) {
-          Problem problem = new NoParamAssignableFromImplicitArgProblem(onlyImplicit);
+          Problem problem = new NoParamAssignableFromImplicitArgError(onlyImplicit);
           problems.report(problem);
         }
       }

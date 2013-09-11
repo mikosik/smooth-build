@@ -4,8 +4,8 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.problem.CodeError;
 
-public class UnknownParamNameProblem extends CodeError {
-  public UnknownParamNameProblem(Name name, Argument argument) {
+public class UnknownParamNameError extends CodeError {
+  public UnknownParamNameError(Name name, Argument argument) {
     super(argument.codeLocation(), "Function " + name + " has no parameter named '"
         + argument.name() + "'.");
   }
