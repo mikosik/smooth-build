@@ -29,11 +29,11 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.function.plugin.PluginInvoker;
-import org.smoothbuild.parse.def.err.DuplicateArgNameProblem;
-import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgProblem;
-import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgProblem;
-import org.smoothbuild.parse.def.err.TypeMismatchProblem;
-import org.smoothbuild.parse.def.err.UnknownParamNameProblem;
+import org.smoothbuild.parse.def.err.DuplicateArgNameError;
+import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgError;
+import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgError;
+import org.smoothbuild.parse.def.err.TypeMismatchError;
+import org.smoothbuild.parse.def.err.UnknownParamNameError;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 import org.smoothbuild.testing.problem.TestProblemsListener;
@@ -137,7 +137,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1, a2));
 
     // then
-    problemsListener.assertOnlyProblem(DuplicateArgNameProblem.class);
+    problemsListener.assertOnlyProblem(DuplicateArgNameError.class);
   }
 
   @Test
@@ -158,7 +158,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1, a2));
 
     // then
-    problemsListener.assertOnlyProblem(DuplicateArgNameProblem.class);
+    problemsListener.assertOnlyProblem(DuplicateArgNameError.class);
   }
 
   @Test
@@ -171,7 +171,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(UnknownParamNameProblem.class);
+    problemsListener.assertOnlyProblem(UnknownParamNameError.class);
   }
 
   @Test
@@ -218,7 +218,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(TypeMismatchProblem.class);
+    problemsListener.assertOnlyProblem(TypeMismatchError.class);
   }
 
   @Test
@@ -411,7 +411,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgProblem.class);
+    problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgError.class);
   }
 
   @Test
@@ -427,7 +427,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgProblem.class);
+    problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgError.class);
   }
 
   @Test
@@ -474,7 +474,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(NoParamAssignableFromImplicitArgProblem.class);
+    problemsListener.assertOnlyProblem(NoParamAssignableFromImplicitArgError.class);
   }
 
   private static Argument argument(DefinitionNode node) {
