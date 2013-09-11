@@ -16,9 +16,7 @@ import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
-// TODO pass as argument object that throws exception when second file is
-// created. Or maybe even method that instantiate function given
-// ZipFunction.class
+// TODO add smooth-integration tests, the same for UnzipFunction
 public class ZipFunctionTest {
   TestSandbox sandbox = new TestSandbox();
 
