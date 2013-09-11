@@ -8,10 +8,22 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.java.javac.err.JavaCompilerError;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
 
 public class JavacSmoothTest extends IntegrationTestCase {
+
+  @Test
+  public void errorIsReportedForCompilationErrors() throws Exception {
+    Path path = path("MyClass.java");
+    fileSystem.createFileWithContent(path, "public private class MyClass {}");
+
+    script("run : [ file(path='" + path.value() + "') ] | javac ;");
+    smoothRunner.run("run");
+
+    problems.assertOnlyProblem(JavaCompilerError.class);
+  }
 
   @Test
   public void compileOneFile() throws Exception {
