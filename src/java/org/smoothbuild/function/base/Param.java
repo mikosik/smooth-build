@@ -1,6 +1,8 @@
 package org.smoothbuild.function.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.function.base.Type.allowedForParam;
 
 import java.util.Set;
 
@@ -32,8 +34,14 @@ public class Param {
   }
 
   protected Param(Type type, String name) {
-    this.type = checkNotNull(type);
+    this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
+  }
+
+  private Type checkAllowedType(Type type) {
+    checkNotNull(type);
+    checkArgument(allowedForParam().contains(type));
+    return type;
   }
 
   public Type type() {
