@@ -218,19 +218,21 @@ public class DefinedFunctionsCreator {
       List<Argument> result = Lists.newArrayList();
       if (argList != null) {
         for (ArgContext arg : argList.arg()) {
-          DefinitionNode node = build(arg.expression());
-          result.add(explicitArg(argName(arg), node, locationOf(arg)));
+          result.add(build(arg));
         }
       }
       return result;
     }
 
-    private static String argName(ArgContext arg) {
+    private Argument build(ArgContext arg) {
+      DefinitionNode node = build(arg.expression());
+
+      CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
       if (paramName == null) {
-        return null;
+        return implicitArg(node, location);
       } else {
-        return paramName.getText();
+        return explicitArg(paramName.getText(), node, location);
       }
     }
 
