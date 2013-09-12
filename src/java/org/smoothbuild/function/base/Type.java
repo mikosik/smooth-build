@@ -11,11 +11,11 @@ import com.google.inject.TypeLiteral;
 
 public class Type {
   public static final Type STRING = create("String", String.class);
-  public static final Type STRING_SET = create("StringSet", StringSet.class);
+  public static final Type STRING_SET = create("String*", StringSet.class);
   public static final Type FILE = create("File", File.class);
-  public static final Type FILE_SET = create("FileSet", FileSet.class);
+  public static final Type FILE_SET = create("File*", FileSet.class);
   public static final Type VOID = create("Void", Void.TYPE);
-  public static final Type EMPTY_SET = create("EmptySet", EmptySet.class);
+  public static final Type EMPTY_SET = create("Any*", EmptySet.class);
 
   static final ImmutableSet<Type> SET_ELEM_TYPES = ImmutableSet.of(STRING, FILE);
   static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE,
