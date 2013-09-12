@@ -18,7 +18,7 @@ public class Argument {
   private final CodeLocation codeLocation;
 
   public static Argument explicitArg(String name, DefinitionNode node, CodeLocation codeLocation) {
-    return new Argument(name, node, codeLocation);
+    return new Argument(checkNotNull(name), node, codeLocation);
   }
 
   public static Argument implicitArg(DefinitionNode node, CodeLocation codeLocation) {
