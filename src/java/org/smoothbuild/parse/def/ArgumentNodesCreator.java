@@ -96,7 +96,7 @@ public class ArgumentNodesCreator {
 
     private void detectVoidArguments() {
       for (Argument argument : allArguments) {
-        if (argument.definitionNode().type() == Type.VOID) {
+        if (argument.type() == Type.VOID) {
           problems.report(new VoidArgError(argument));
         }
       }
@@ -107,13 +107,12 @@ public class ArgumentNodesCreator {
       for (Argument argument : explicitArgs) {
         if (argument.isExplicit()) {
           String name = argument.name();
-          DefinitionNode node = argument.definitionNode();
           Param param = paramsPool.takeByName(name);
           Type paramType = param.type();
-          if (!paramType.isAssignableFrom(node.type())) {
+          if (!paramType.isAssignableFrom(argument.type())) {
             problems.report(new TypeMismatchError(argument, paramType));
           } else {
-            assignedArgs.put(name, convert(paramType, node));
+            assignedArgs.put(name, convert(paramType, argument.definitionNode()));
           }
         }
       }
