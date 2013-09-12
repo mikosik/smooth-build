@@ -76,6 +76,16 @@ public class ArgumentTest {
   }
 
   @Test
+  public void explicitNameSanitized() throws Exception {
+    assertThat(explicit(name).nameSanitized()).isEqualTo(name);
+  }
+
+  @Test
+  public void implicitNameSanitized() throws Exception {
+    assertThat(implicit().nameSanitized()).isEqualTo("<implicit>");
+  }
+
+  @Test
   public void explicitToString() throws Exception {
     when(node.type()).thenReturn(STRING);
     assertThat(explicitArg(name, node, codeLocation).toString()).isEqualTo("String:" + name);
