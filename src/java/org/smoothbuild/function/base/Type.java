@@ -21,8 +21,8 @@ public class Type {
   static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE,
       FILE_SET, VOID);
   static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET);
-  static final ImmutableSet<Type> ARGS_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET,
-      EMPTY_SET);
+  static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET,
+      VOID, EMPTY_SET);
 
   static final ImmutableSet<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
   static final ImmutableSet<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
@@ -77,8 +77,8 @@ public class Type {
     return PARAM_TYPES;
   }
 
-  public static ImmutableSet<Type> allowedForArgs() {
-    return ARGS_TYPES;
+  public static ImmutableSet<Type> allTypes() {
+    return ALL_TYPES;
   }
 
   public static ImmutableSet<TypeLiteral<?>> javaTypesAllowedForResult() {
