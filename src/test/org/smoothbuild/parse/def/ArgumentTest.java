@@ -29,6 +29,11 @@ public class ArgumentTest {
   CodeLocation codeLocation = mock(CodeLocation.class);
 
   @Test(expected = NullPointerException.class)
+  public void nullNameIsForbiddenInExplicitArg() {
+    explicitArg(null, node, codeLocation);
+  }
+
+  @Test(expected = NullPointerException.class)
   public void nullDefinitionNodeIsForbiddenInExplicitArg() {
     explicitArg(name, null, codeLocation);
   }
