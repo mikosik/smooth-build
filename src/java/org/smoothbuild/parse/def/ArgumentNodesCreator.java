@@ -7,7 +7,6 @@ import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,8 +14,6 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.FileSetNode;
-import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.parse.def.err.AmbiguousImplicitArgsError;
 import org.smoothbuild.parse.def.err.DuplicateArgNameError;
 import org.smoothbuild.parse.def.err.TypeMismatchError;
@@ -27,7 +24,6 @@ import org.smoothbuild.problem.ProblemsListener;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class ArgumentNodesCreator {
@@ -64,18 +60,18 @@ public class ArgumentNodesCreator {
         return null;
       }
 
-      Map<String, DefinitionNode> result = processExplicitArguments(explicitArgs);
+      AssignmentList assignmentList = new AssignmentList();
+      processExplicitArguments(assignmentList, explicitArgs);
       if (problems.errorDetected()) {
         return null;
       }
 
-      Map<String, DefinitionNode> implicit = processImplicitArguments();
+      processImplicitArguments(assignmentList);
       if (problems.errorDetected()) {
         return null;
       }
 
-      result.putAll(implicit);
-      return result;
+      return assignmentList.createNodesMap();
     }
 
     private void detectDuplicatedAndUnknownArgNames(Collection<Argument> explicitArgs) {
@@ -102,8 +98,8 @@ public class ArgumentNodesCreator {
       }
     }
 
-    private Map<String, DefinitionNode> processExplicitArguments(Collection<Argument> explicitArgs) {
-      HashMap<String, DefinitionNode> assignedArgs = Maps.newHashMap();
+    private void processExplicitArguments(AssignmentList assignmentList,
+        Collection<Argument> explicitArgs) {
       for (Argument argument : explicitArgs) {
         if (argument.isExplicit()) {
           String name = argument.name();
@@ -112,11 +108,10 @@ public class ArgumentNodesCreator {
           if (!paramType.isAssignableFrom(argument.type())) {
             problems.report(new TypeMismatchError(argument, paramType));
           } else {
-            assignedArgs.put(name, convert(paramType, argument.definitionNode()));
+            assignmentList.add(param, argument);
           }
         }
       }
-      return assignedArgs;
     }
 
     // EMPTY_SET has to be handled after STRING_SET and FILE_SET.
@@ -139,9 +134,8 @@ public class ArgumentNodesCreator {
     private static final ImmutableList<Type> TYPES_ORDER = ImmutableList.of(STRING, FILE,
         STRING_SET, FILE_SET, EMPTY_SET);
 
-    private HashMap<String, DefinitionNode> processImplicitArguments() {
+    private void processImplicitArguments(AssignmentList assignmentList) {
       ImmutableMap<Type, Set<Argument>> implicitArgs = Argument.filterImplicit(allArguments);
-      HashMap<String, DefinitionNode> assignedArgs = Maps.newHashMap();
 
       for (Type type : TYPES_ORDER) {
         Set<Argument> availableArgs = implicitArgs.get(type);
@@ -153,32 +147,17 @@ public class ArgumentNodesCreator {
           if (argsSize == 1 && paramsSize == 1) {
             Argument onlyArg = availableArgs.iterator().next();
             Param onlyParam = availableParams.iterator().next();
-            DefinitionNode node = convert(onlyParam.type(), onlyArg.definitionNode());
-            assignedArgs.put(onlyParam.name(), node);
+            // DefinitionNode node = convert(onlyParam.type(),
+            // onlyArg.definitionNode());
+            assignmentList.add(onlyParam, onlyArg);
             paramsPool.take(onlyParam);
           } else {
             AmbiguousImplicitArgsError error = new AmbiguousImplicitArgsError(availableArgs,
                 availableParams);
             problems.report(error);
-            return null;
+            return;
           }
         }
-      }
-
-      return assignedArgs;
-    }
-
-    private static DefinitionNode convert(Type type, DefinitionNode argNode) {
-      if (argNode.type() == Type.EMPTY_SET) {
-        if (type == Type.STRING_SET) {
-          return new StringSetNode(ImmutableList.<DefinitionNode> of());
-        } else if (type == Type.FILE_SET) {
-          return new FileSetNode(ImmutableList.<DefinitionNode> of());
-        } else {
-          throw new RuntimeException("Cannot convert from " + argNode.type() + " to " + type + ".");
-        }
-      } else {
-        return argNode;
       }
     }
   }
