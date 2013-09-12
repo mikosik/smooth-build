@@ -60,6 +60,11 @@ public class ArgumentTest {
     assertThat(arg).isEqualTo(FILE);
   }
 
+  @Test(expected = UnsupportedOperationException.class)
+  public void implicitArgThrowsExceptionWhenAskedForName() throws Exception {
+    implicit().name();
+  }
+
   @Test
   public void explicitArgIsExplicit() throws Exception {
     assertThat(explicitArg(name, node, codeLocation).isExplicit()).isTrue();
