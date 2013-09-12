@@ -38,6 +38,10 @@ public class Argument {
     return name;
   }
 
+  public String nameSanitized() {
+    return name == null ? "<implicit>" : name;
+  }
+
   public Type type() {
     return node.type();
   }
@@ -56,8 +60,7 @@ public class Argument {
 
   @Override
   public String toString() {
-    String safeName = name == null ? "<implicit>" : name;
-    return type().name() + ":" + safeName;
+    return type().name() + ":" + nameSanitized();
   }
 
   public static ImmutableList<Argument> filterExplicit(Collection<Argument> arguments) {
