@@ -6,7 +6,7 @@ pipe: expression ( p+='|' call )* ;
 expression : call | STRING | set;
 call: functionName ( '(' argList? ')' )? ;
 argList: arg ( ',' arg )* ;
-arg: paramName '=' expression ; 
+arg: ( paramName '=' )? expression ; 
 set: '[' ( setElem (',' setElem)* )?  ']' ;
 setElem: call | STRING ;
 
