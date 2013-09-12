@@ -35,6 +35,10 @@ public class Argument {
     return name;
   }
 
+  public Type type() {
+    return node.type();
+  }
+
   public DefinitionNode definitionNode() {
     return node;
   }
