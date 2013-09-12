@@ -32,6 +32,9 @@ public class Argument {
   }
 
   public String name() {
+    if (name == null) {
+      throw new UnsupportedOperationException("Implicit argument does not have name.");
+    }
     return name;
   }
 
