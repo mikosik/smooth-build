@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.parse.def.Argument.explicitArg;
+import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.Map;
 
@@ -105,14 +107,41 @@ public class AssignmentListTest {
     assertThat(actual).isEqualTo(expected);
   }
 
+  @Test
+  public void testToString() throws Exception {
+    // given
+    Param param1 = param(STRING, "name1-that-is-long");
+    Param param2 = param(STRING, "name2");
+    Param param3 = param(FILE, "name3");
+
+    Argument arg1 = arg(STRING, "name4");
+    Argument arg2 = arg(STRING, "name5");
+    Argument arg3 = arg(FILE, "name6-that-is-long");
+
+    assignmentList.add(param1, arg1);
+    assignmentList.add(param2, arg2);
+    assignmentList.add(param3, arg3);
+
+    // when
+    String actual = assignmentList.toString();
+
+    // then
+    StringBuilder expected = new StringBuilder();
+    expected.append("String: name1-that-is-long <- String: name4              [1:2-3]\n");
+    expected.append("String: name2              <- String: name5              [1:2-3]\n");
+    expected.append("File  : name3              <- File  : name6-that-is-long [1:2-3]\n");
+
+    assertThat(actual).isEqualTo(expected.toString());
+  }
+
   private static Argument arg(Type type) {
+    return arg(type, "name");
+  }
+
+  private static Argument arg(Type type, String name) {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
 
-    Argument result = mock(Argument.class);
-    when(result.definitionNode()).thenReturn(node);
-    when(result.type()).thenReturn(type);
-    return result;
+    return explicitArg(name, node, codeLocation(1, 2, 3));
   }
-
 }
