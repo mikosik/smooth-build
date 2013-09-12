@@ -1,6 +1,7 @@
 package org.smoothbuild.parse.def;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.padEnd;
 
 import java.util.Collection;
 import java.util.Set;
@@ -56,6 +57,13 @@ public class Argument {
 
   public boolean isExplicit() {
     return name != null;
+  }
+
+  public String toPaddedString(int minTypeLength, int minNameLength) {
+    String type = padEnd(type().name(), minTypeLength, ' ') + ": ";
+    String name = padEnd(nameSanitized(), minNameLength, ' ');
+    String location = codeLocation.toString();
+    return type + name + " " + location;
   }
 
   @Override
