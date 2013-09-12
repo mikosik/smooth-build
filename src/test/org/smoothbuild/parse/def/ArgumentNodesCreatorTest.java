@@ -13,6 +13,7 @@ import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
 import static org.smoothbuild.parse.def.Argument.explicitArg;
 import static org.smoothbuild.parse.def.Argument.implicitArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
@@ -29,11 +30,11 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.function.plugin.PluginInvoker;
+import org.smoothbuild.parse.def.err.AmbiguousImplicitArgsError;
 import org.smoothbuild.parse.def.err.DuplicateArgNameError;
-import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgError;
-import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgError;
 import org.smoothbuild.parse.def.err.TypeMismatchError;
 import org.smoothbuild.parse.def.err.UnknownParamNameError;
+import org.smoothbuild.parse.def.err.VoidArgError;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 import org.smoothbuild.testing.problem.TestProblemsListener;
@@ -42,30 +43,19 @@ import com.google.common.collect.ImmutableMap;
 
 public class ArgumentNodesCreatorTest {
 
-  TestProblemsListener problemsListener = new TestProblemsListener();
+  TestProblemsListener problemsListener;
 
   @Test
-  public void convertingExplicitStringArgument() {
+  public void convertingExplicitArgument() {
     doTestConvertingExplicitArgument(STRING);
-  }
-
-  @Test
-  public void convertingExplicitStringSetArgument() {
     doTestConvertingExplicitArgument(STRING_SET);
-  }
-
-  @Test
-  public void convertingExplicitFileArgument() {
     doTestConvertingExplicitArgument(FILE);
-  }
-
-  @Test
-  public void convertingExplicitFileSetArgument() {
     doTestConvertingExplicitArgument(FILE_SET);
   }
 
   private void doTestConvertingExplicitArgument(Type type) {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
@@ -81,21 +71,18 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingExplicitEmptySetToStringSetArgument() {
+  public void convertingExplicitEmptySetArgument() {
     doTestConvertingExplicitEmptySetArgument(STRING_SET);
-  }
-
-  @Test
-  public void convertingExplicitEmptySetToFileSetArgument() {
     doTestConvertingExplicitEmptySetArgument(FILE_SET);
   }
 
   private void doTestConvertingExplicitEmptySetArgument(Type type) {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
-    Argument a1 = argument(p1.name(), node(EMPTY_SET));
+    Argument a1 = argument(p1.name(), emptySetNode());
 
     // when
     Map<String, DefinitionNode> result = create(params(p1, p2), list(a1));
@@ -107,27 +94,16 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void duplicatedExplicitStringNames() {
+  public void duplicatedExplicitNames() {
     doTestDuplicatedExplicitNames(STRING);
-  }
-
-  @Test
-  public void duplicatedExplicitStringSetNames() {
     doTestDuplicatedExplicitNames(STRING_SET);
-  }
-
-  @Test
-  public void duplicatedExplicitFileNames() {
     doTestDuplicatedExplicitNames(FILE);
-  }
-
-  @Test
-  public void duplicatedExplicitFileSetNames() {
     doTestDuplicatedExplicitNames(FILE_SET);
   }
 
   private void doTestDuplicatedExplicitNames(Type type) {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
 
     Argument a1 = argument(p1.name(), node(type));
@@ -164,6 +140,7 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void unknownParamName() {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(STRING, "name1");
     Argument a1 = argument("otherName", node(STRING));
 
@@ -179,7 +156,6 @@ public class ArgumentNodesCreatorTest {
     doTestTypeMismatchForParamProblem(STRING, STRING_SET);
     doTestTypeMismatchForParamProblem(STRING, FILE);
     doTestTypeMismatchForParamProblem(STRING, FILE_SET);
-    doTestTypeMismatchForParamProblem(STRING, VOID);
     doTestTypeMismatchForParamProblem(STRING, EMPTY_SET);
   }
 
@@ -188,7 +164,6 @@ public class ArgumentNodesCreatorTest {
     doTestTypeMismatchForParamProblem(STRING_SET, STRING);
     doTestTypeMismatchForParamProblem(STRING_SET, FILE);
     doTestTypeMismatchForParamProblem(STRING_SET, FILE_SET);
-    doTestTypeMismatchForParamProblem(STRING_SET, VOID);
   }
 
   @Test
@@ -196,7 +171,6 @@ public class ArgumentNodesCreatorTest {
     doTestTypeMismatchForParamProblem(FILE, STRING);
     doTestTypeMismatchForParamProblem(FILE, STRING_SET);
     doTestTypeMismatchForParamProblem(FILE, FILE_SET);
-    doTestTypeMismatchForParamProblem(FILE, VOID);
     doTestTypeMismatchForParamProblem(FILE, EMPTY_SET);
   }
 
@@ -205,10 +179,9 @@ public class ArgumentNodesCreatorTest {
     doTestTypeMismatchForParamProblem(FILE_SET, STRING);
     doTestTypeMismatchForParamProblem(FILE_SET, STRING_SET);
     doTestTypeMismatchForParamProblem(FILE_SET, FILE);
-    doTestTypeMismatchForParamProblem(FILE_SET, VOID);
   }
 
-  public void doTestTypeMismatchForParamProblem(Type paramType, Type argType) throws Exception {
+  private void doTestTypeMismatchForParamProblem(Type paramType, Type argType) throws Exception {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(paramType, "name1");
@@ -222,8 +195,51 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
+  public void voidTypeOfExplicitArgument() throws Exception {
+    doTestVoidTypeOfExplicitArgument(STRING);
+    doTestVoidTypeOfExplicitArgument(STRING_SET);
+    doTestVoidTypeOfExplicitArgument(FILE);
+    doTestVoidTypeOfExplicitArgument(FILE_SET);
+  }
+
+  private void doTestVoidTypeOfExplicitArgument(Type paramType) throws Exception {
+    // given
+    problemsListener = new TestProblemsListener();
+    Param p1 = param(paramType, "name1");
+    Argument a1 = argument(p1.name(), node(VOID));
+
+    // when
+    create(params(p1), list(a1));
+
+    // then
+    problemsListener.assertOnlyProblem(VoidArgError.class);
+  }
+
+  @Test
+  public void voidTypeOfImplicitArgument() throws Exception {
+    doTestVoidTypeOfImplicitArgument(STRING);
+    doTestVoidTypeOfImplicitArgument(STRING_SET);
+    doTestVoidTypeOfImplicitArgument(FILE);
+    doTestVoidTypeOfImplicitArgument(FILE_SET);
+  }
+
+  private void doTestVoidTypeOfImplicitArgument(Type paramType) throws Exception {
+    // given
+    problemsListener = new TestProblemsListener();
+    Param p1 = param(paramType, "name1");
+    Argument a1 = argument(node(VOID));
+
+    // when
+    create(params(p1), list(a1));
+
+    // then
+    problemsListener.assertOnlyProblem(VoidArgError.class);
+  }
+
+  @Test
   public void convertingEmptyList() throws Exception {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(STRING, "name1");
 
     // when
@@ -264,6 +280,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleImplicitArgument(Type type, Type otherType) {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(otherType, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(otherType, "name3");
@@ -290,6 +307,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleImplicitEmptySetArgument(Type type, Type otherType) {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(otherType, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(otherType, "name3");
@@ -306,27 +324,16 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleImplicitStringArgumentWithOtherExplicit() {
-    doTestConvertingSingleImplicitArgumentWhitOtherExplicit(STRING);
+  public void convertingSingleImplicitArgumentWithOtherExplicit() {
+    doTestConvertingSingleImplicitArgumentWhitOthersExplicit(STRING);
+    doTestConvertingSingleImplicitArgumentWhitOthersExplicit(STRING_SET);
+    doTestConvertingSingleImplicitArgumentWhitOthersExplicit(FILE);
+    doTestConvertingSingleImplicitArgumentWhitOthersExplicit(FILE_SET);
   }
 
-  @Test
-  public void convertingSingleImplicitStringSetArgumentWithOtherExplicit() {
-    doTestConvertingSingleImplicitArgumentWhitOtherExplicit(STRING_SET);
-  }
-
-  @Test
-  public void convertingSingleImplicitFileArgumentWithOtherExplicit() {
-    doTestConvertingSingleImplicitArgumentWhitOtherExplicit(FILE);
-  }
-
-  @Test
-  public void convertingSingleImplicitFileSetArgumentWithOtherExplicit() {
-    doTestConvertingSingleImplicitArgumentWhitOtherExplicit(FILE_SET);
-  }
-
-  private void doTestConvertingSingleImplicitArgumentWhitOtherExplicit(Type type) {
+  private void doTestConvertingSingleImplicitArgumentWhitOthersExplicit(Type type) {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
@@ -347,6 +354,44 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
+  public void convertingTwoImplicitArgumentsWithDifferentType() throws Exception {
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING, STRING_SET);
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING, FILE);
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING, FILE_SET);
+
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING_SET, STRING);
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING_SET, FILE);
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING_SET, FILE_SET);
+
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE, STRING);
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE, STRING_SET);
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE, FILE_SET);
+
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE_SET, STRING);
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE_SET, STRING_SET);
+    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE_SET, FILE);
+  }
+
+  private void doTestConvertingTwoImplicitArgumentsWithDifferentType(Type type1, Type type2) {
+    // given
+    problemsListener = new TestProblemsListener();
+    Param p1 = param(type1, "name1");
+    Param p2 = param(type2, "name2");
+
+    Argument a1 = argument(node(type1));
+    Argument a2 = argument(node(type2));
+
+    // when
+    Map<String, DefinitionNode> result = create(params(p1, p2), list(a1, a2));
+
+    // then
+    problemsListener.assertNoProblems();
+    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
+    assertThat(result.get(p2.name())).isSameAs(a2.definitionNode());
+    assertThat(result.size()).isEqualTo(2);
+  }
+
+  @Test
   public void convertingSingleImplicitSetArgumentWhitOtherExplicit() throws Exception {
     doTestConvertingSingleImplicitSetArgumentWhitOtherExplicit(STRING_SET);
     doTestConvertingSingleImplicitSetArgumentWhitOtherExplicit(FILE_SET);
@@ -354,6 +399,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleImplicitSetArgumentWhitOtherExplicit(Type type) {
     // given
+    problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
@@ -374,27 +420,38 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void ambigiuousImplicitStringArgument() throws Exception {
+  public void convertingImplicitEmptySetArgWithOtherExplicitSet() throws Exception {
+    doTestConvertingImplicitEmptySetArgWithOtherExplicitSet(STRING_SET, FILE_SET);
+    doTestConvertingImplicitEmptySetArgWithOtherExplicitSet(FILE_SET, STRING_SET);
+  }
+
+  private void doTestConvertingImplicitEmptySetArgWithOtherExplicitSet(Type setType,
+      Type otherSetType) {
+    // given
+    problemsListener = new TestProblemsListener();
+    Param p1 = param(setType, "name1");
+    Param p2 = param(otherSetType, "name2");
+
+    Argument a1 = argument(p1.name(), node(setType));
+    Argument a2 = argument(node(EMPTY_SET));
+
+    // when
+    Map<String, DefinitionNode> result = create(params(p1, p2), list(a1, a2));
+
+    // then
+    problemsListener.assertNoProblems();
+    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
+    assertThatNodeHasEmptySet(result.get(p2.name()));
+    assertThat(result.size()).isEqualTo(2);
+  }
+
+  @Test
+  public void ambigiuousImplicitArgument() throws Exception {
     doTestAmbiguousImplicitArgument(STRING, STRING);
-  }
-
-  @Test
-  public void ambigiuousImplicitStringSetArgument() throws Exception {
     doTestAmbiguousImplicitArgument(STRING_SET, STRING_SET);
-  }
-
-  @Test
-  public void ambigiuousImplicitFileArgument() throws Exception {
     doTestAmbiguousImplicitArgument(FILE, FILE);
-  }
-
-  @Test
-  public void ambigiuousImplicitFileSetArgument() throws Exception {
     doTestAmbiguousImplicitArgument(FILE_SET, FILE_SET);
-  }
 
-  @Test
-  public void ambigiuousImplicitEmptySetArgument() throws Exception {
     doTestAmbiguousImplicitArgument(FILE_SET, EMPTY_SET);
     doTestAmbiguousImplicitArgument(STRING_SET, EMPTY_SET);
   }
@@ -411,7 +468,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgError.class);
+    problemsListener.assertOnlyProblem(AmbiguousImplicitArgsError.class);
   }
 
   @Test
@@ -427,7 +484,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(ManyAmbigiousParamsAssignableFromImplicitArgError.class);
+    problemsListener.assertOnlyProblem(AmbiguousImplicitArgsError.class);
   }
 
   @Test
@@ -474,7 +531,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(NoParamAssignableFromImplicitArgError.class);
+    problemsListener.assertOnlyProblem(AmbiguousImplicitArgsError.class);
   }
 
   private static Argument argument(DefinitionNode node) {

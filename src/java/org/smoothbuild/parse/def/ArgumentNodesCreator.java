@@ -1,9 +1,15 @@
 package org.smoothbuild.parse.def;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.function.base.Type.EMPTY_SET;
+import static org.smoothbuild.function.base.Type.FILE;
+import static org.smoothbuild.function.base.Type.FILE_SET;
+import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.function.base.Type.STRING_SET;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
@@ -11,19 +17,18 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.StringSetNode;
+import org.smoothbuild.parse.def.err.AmbiguousImplicitArgsError;
 import org.smoothbuild.parse.def.err.DuplicateArgNameError;
-import org.smoothbuild.parse.def.err.ManyAmbigiousParamsAssignableFromImplicitArgError;
-import org.smoothbuild.parse.def.err.NoParamAssignableFromImplicitArgError;
 import org.smoothbuild.parse.def.err.TypeMismatchError;
 import org.smoothbuild.parse.def.err.UnknownParamNameError;
+import org.smoothbuild.parse.def.err.VoidArgError;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
-import org.smoothbuild.problem.Problem;
 import org.smoothbuild.problem.ProblemsListener;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class ArgumentNodesCreator {
 
@@ -35,57 +40,133 @@ public class ArgumentNodesCreator {
   private static class Worker {
     private final DetectingErrorsProblemsListener problems;
     private final Function function;
-    private final Collection<Argument> arguments;
+    private final ParamsPool paramsPool;
+    private final Collection<Argument> allArguments;
 
-    public Worker(ProblemsListener problems, Function function, Collection<Argument> arguments) {
-      this.problems = new DetectingErrorsProblemsListener(problems);
+    public Worker(ProblemsListener problemsListener, Function function,
+        Collection<Argument> arguments) {
+      this.problems = new DetectingErrorsProblemsListener(problemsListener);
       this.function = function;
-      this.arguments = arguments;
+      this.paramsPool = new ParamsPool(function.params());
+      this.allArguments = arguments;
     }
 
     public Map<String, DefinitionNode> convert() {
-      ImmutableMap<String, Param> params = function.params();
-      Map<String, DefinitionNode> explicitArgs = processExplicitArguments(params);
+      ImmutableList<Argument> explicitArgs = Argument.filterExplicit(allArguments);
+
+      detectDuplicatedAndUnknownArgNames(explicitArgs);
       if (problems.errorDetected()) {
         return null;
       }
 
-      convertImplicitToExplicit(params, implicitArgs(arguments), explicitArgs);
+      detectVoidArguments();
       if (problems.errorDetected()) {
         return null;
       }
 
-      return explicitArgs;
+      Map<String, DefinitionNode> result = processExplicitArguments(explicitArgs);
+      if (problems.errorDetected()) {
+        return null;
+      }
+
+      Map<String, DefinitionNode> implicit = processImplicitArguments();
+      if (problems.errorDetected()) {
+        return null;
+      }
+
+      result.putAll(implicit);
+      return result;
     }
 
-    private Map<String, DefinitionNode> processExplicitArguments(ImmutableMap<String, Param> params) {
-      Map<String, DefinitionNode> explicitArgs = Maps.newHashMap();
-      boolean success = true;
-
-      for (Argument argument : arguments) {
+    private void detectDuplicatedAndUnknownArgNames(Collection<Argument> explicitArgs) {
+      Set<String> explicitNames = Sets.newHashSet();
+      for (Argument argument : explicitArgs) {
         if (argument.isExplicit()) {
-          String argName = argument.name();
-          DefinitionNode argNode = argument.definitionNode();
-          Param param = params.get(argName);
-          if (param == null) {
-            problems.report(new UnknownParamNameError(function.name(), argument));
-            success = false;
-          } else if (explicitArgs.containsKey(argName)) {
+          String name = argument.name();
+          if (explicitNames.contains(name)) {
             problems.report(new DuplicateArgNameError(argument));
-            success = false;
-          } else if (!param.type().isAssignableFrom(argNode.type())) {
-            problems.report(new TypeMismatchError(argument, param.type()));
-            success = false;
+          } else if (!function.params().containsKey(name)) {
+            problems.report(new UnknownParamNameError(function.name(), argument));
           } else {
-            explicitArgs.put(argName, convert(param.type(), argNode));
+            explicitNames.add(name);
           }
         }
       }
-      if (success) {
-        return explicitArgs;
-      } else {
-        return null;
+    }
+
+    private void detectVoidArguments() {
+      for (Argument argument : allArguments) {
+        if (argument.definitionNode().type() == Type.VOID) {
+          problems.report(new VoidArgError(argument));
+        }
       }
+    }
+
+    private Map<String, DefinitionNode> processExplicitArguments(Collection<Argument> explicitArgs) {
+      HashMap<String, DefinitionNode> assignedArgs = Maps.newHashMap();
+      for (Argument argument : explicitArgs) {
+        if (argument.isExplicit()) {
+          String name = argument.name();
+          DefinitionNode node = argument.definitionNode();
+          Param param = paramsPool.takeByName(name);
+          Type paramType = param.type();
+          if (!paramType.isAssignableFrom(node.type())) {
+            problems.report(new TypeMismatchError(argument, paramType));
+          } else {
+            assignedArgs.put(name, convert(paramType, node));
+          }
+        }
+      }
+      return assignedArgs;
+    }
+
+    // EMPTY_SET has to be handled after STRING_SET and FILE_SET.
+    // This way assignment algorithm is more powerful. Consider smooth function
+    // named 'myFunction' that has exactly two parameters:
+    //
+    // - 'files' parameter of type FILE_SET
+    // - 'strings' parameter of type STRING_SET
+    //
+    // arguments in the following call:
+    //
+    // myFunction([], [ "stringA", "stringB" ])
+    //
+    // can be correctly assigned to proper parameters only when we handle second
+    // argument (of type STRING_SET) first (assigning it to 'files' parameter)
+    // and then assigning empty list to the only left parameter which is 'files'
+    // (of FILE_SET type). If we start with empty list argument we would not be
+    // able to decide to which parameter it should be assigned to as both
+    // (STRING_SET and FILE_SET) can be assigned from empty set.
+    private static final ImmutableList<Type> TYPES_ORDER = ImmutableList.of(STRING, FILE,
+        STRING_SET, FILE_SET, EMPTY_SET);
+
+    private HashMap<String, DefinitionNode> processImplicitArguments() {
+      ImmutableMap<Type, Set<Argument>> implicitArgs = Argument.filterImplicit(allArguments);
+      HashMap<String, DefinitionNode> assignedArgs = Maps.newHashMap();
+
+      for (Type type : TYPES_ORDER) {
+        Set<Argument> availableArgs = implicitArgs.get(type);
+        int argsSize = availableArgs.size();
+        if (0 < argsSize) {
+          Set<Param> availableParams = paramsPool.availableForType(type);
+          int paramsSize = availableParams.size();
+
+          if (argsSize == 1 && paramsSize == 1) {
+            Argument onlyArg = availableArgs.iterator().next();
+            Param onlyParam = availableParams.iterator().next();
+            DefinitionNode node = convert(onlyParam.type(), onlyArg.definitionNode());
+            assignedArgs.put(onlyParam.name(), node);
+            paramsPool.take(onlyParam);
+          } else {
+            AmbiguousImplicitArgsError error = new AmbiguousImplicitArgsError(availableArgs,
+                availableParams);
+            problems.report(error);
+            return null;
+          }
+        }
+      }
+
+      return assignedArgs;
     }
 
     private static DefinitionNode convert(Type type, DefinitionNode argNode) {
@@ -99,52 +180,6 @@ public class ArgumentNodesCreator {
         }
       } else {
         return argNode;
-      }
-    }
-
-    private ImmutableList<Argument> implicitArgs(Collection<Argument> arguments) {
-      Builder<Argument> builder = ImmutableList.builder();
-      for (Argument argument : arguments) {
-        if (!argument.isExplicit()) {
-          builder.add(argument);
-        }
-      }
-      return builder.build();
-    }
-
-    private void convertImplicitToExplicit(Map<String, Param> params,
-        Collection<Argument> arguments, Map<String, DefinitionNode> explicitArgs) {
-
-      // TODO Implicit arguments are allowed only in pipes so there can be at
-      // most one implicit argument
-      checkArgument(arguments.size() <= 1);
-
-      if (arguments.size() == 1) {
-        // TODO Once implicit arguments are allowed, error messages have to
-        // be more detailed. Ideally they should contain info about all
-        // successful assignments of implicit arguments to param names and the
-        // failed one.
-
-        Argument onlyImplicit = arguments.iterator().next();
-        Type type = onlyImplicit.definitionNode().type();
-        boolean found = false;
-        for (Param param : params.values()) {
-          if (param.type().isAssignableFrom(type) && !explicitArgs.containsKey(param.name())) {
-            if (found) {
-              Problem problem = new ManyAmbigiousParamsAssignableFromImplicitArgError(
-                  onlyImplicit);
-              problems.report(problem);
-              return;
-            } else {
-              explicitArgs.put(param.name(), convert(param.type(), onlyImplicit.definitionNode()));
-              found = true;
-            }
-          }
-        }
-        if (!found) {
-          Problem problem = new NoParamAssignableFromImplicitArgError(onlyImplicit);
-          problems.report(problem);
-        }
       }
     }
   }
