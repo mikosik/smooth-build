@@ -2,6 +2,7 @@ package org.smoothbuild.function.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.padEnd;
 import static org.smoothbuild.function.base.Type.allowedForParam;
 
 import java.util.Set;
@@ -64,6 +65,12 @@ public class Param {
   @Override
   public final int hashCode() {
     return 17 * type.hashCode() + name.hashCode();
+  }
+
+  public String toPaddedString(int minTypeLength, int minNameLength) {
+    String typePart = padEnd(type.name(), minTypeLength, ' ') + ": ";
+    String namePart = padEnd(name, minNameLength, ' ');
+    return typePart + namePart;
   }
 
   @Override
