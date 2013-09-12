@@ -54,6 +54,13 @@ public class ArgumentTest {
   }
 
   @Test
+  public void typeReturnsTypeOfDefinitionNode() throws Exception {
+    when(node.type()).thenReturn(FILE);
+    Type arg = explicitArg(name, node, codeLocation).type();
+    assertThat(arg).isEqualTo(FILE);
+  }
+
+  @Test
   public void explicitArgIsExplicit() throws Exception {
     assertThat(explicitArg(name, node, codeLocation).isExplicit()).isTrue();
   }
