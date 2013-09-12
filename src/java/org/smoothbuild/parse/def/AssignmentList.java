@@ -61,7 +61,7 @@ public class AssignmentList {
       String paramPart = assignment.param().toPaddedString(maxParamType, maxParamName);
       Argument argument = assignment.argument();
       String argPart = argument.toPaddedString(maxArgType, maxArgName, maxNumber);
-      builder.append(paramPart + " <- " + argPart + "\n");
+      builder.append("  " + paramPart + " <- " + argPart + "\n");
     }
     return builder.toString();
   }

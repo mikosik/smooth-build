@@ -127,9 +127,9 @@ public class AssignmentListTest {
 
     // then
     StringBuilder expected = new StringBuilder();
-    expected.append("String: name1-that-is-long <- String: name4              #1    [1:2-3]\n");
-    expected.append("String: name2              <- String: name5              #1234 [1:2-3]\n");
-    expected.append("File  : name3              <- File  : name6-that-is-long #7    [1:2-3]\n");
+    expected.append("  String: name1-that-is-long <- String: name4              #1    [1:2-3]\n");
+    expected.append("  String: name2              <- String: name5              #1234 [1:2-3]\n");
+    expected.append("  File  : name3              <- File  : name6-that-is-long #7    [1:2-3]\n");
 
     assertThat(actual).isEqualTo(expected.toString());
   }
