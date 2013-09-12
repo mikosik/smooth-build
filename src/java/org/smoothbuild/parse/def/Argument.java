@@ -13,6 +13,7 @@ import org.smoothbuild.problem.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Ordering;
 
 public class Argument {
   private final int number;
@@ -115,4 +116,20 @@ public class Argument {
     }
     return result;
   }
+
+  public static final Ordering<Argument> NUMBER_ORDERING = new Ordering<Argument>() {
+    @Override
+    public int compare(Argument arg1, Argument arg2) {
+      int number1 = arg1.number();
+      int number2 = arg2.number();
+      if (number1 == number2) {
+        return 0;
+      }
+      if (number1 < number2) {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+  };
 }
