@@ -48,6 +48,56 @@ public class AssignmentList {
     return builder.build();
   }
 
+  @Override
+  public String toString() {
+    int maxParamType = calculateLongestParamType(assignments);
+    int maxParamName = calculateLongestParamName(assignments);
+    int maxArgType = calculateLongestArgType(assignments);
+    int maxArgName = calculateLongestArgName(assignments);
+
+    StringBuilder builder = new StringBuilder();
+
+    for (Assignment assignment : assignments) {
+      String paramPart = assignment.param().toPaddedString(maxParamType, maxParamName);
+      Argument argument = assignment.argument();
+      String argPart = argument.toPaddedString(maxArgType, maxArgName);
+      builder.append(paramPart + " <- " + argPart + "\n");
+    }
+    return builder.toString();
+  }
+
+  private static int calculateLongestParamType(List<Assignment> assignments) {
+    int result = 0;
+    for (Assignment assignment : assignments) {
+      result = Math.max(result, assignment.param().type().name().length());
+    }
+    return result;
+  }
+
+  private static int calculateLongestParamName(List<Assignment> assignments) {
+    int result = 0;
+    for (Assignment assignment : assignments) {
+      result = Math.max(result, assignment.param().name().length());
+    }
+    return result;
+  }
+
+  private static int calculateLongestArgType(List<Assignment> assignments) {
+    int result = 0;
+    for (Assignment assignment : assignments) {
+      result = Math.max(result, assignment.argument().type().name().length());
+    }
+    return result;
+  }
+
+  private static int calculateLongestArgName(List<Assignment> assignments) {
+    int result = 0;
+    for (Assignment assignment : assignments) {
+      result = Math.max(result, assignment.argument().nameSanitized().length());
+    }
+    return result;
+  }
+
   private static DefinitionNode convert(Type type, DefinitionNode argNode) {
     if (argNode.type() == Type.EMPTY_SET) {
       if (type == Type.STRING_SET) {
