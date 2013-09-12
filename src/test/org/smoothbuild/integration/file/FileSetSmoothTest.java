@@ -20,9 +20,8 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     Path file2 = path("file/path/file2.txt");
 
     StringBuilder builder = new StringBuilder();
-    builder.append("myfiles : [ file(path='" + file1.value() + "'), file(path='" + file2.value()
-        + "') ];\n");
-    builder.append("run : myfiles | save(dir='" + dir.value() + "');\n");
+    builder.append("myfiles : [ file(" + file1 + "), file(" + file2 + ") ];\n");
+    builder.append("run : myfiles | save(" + dir + ");\n");
     script(builder.toString());
 
     fileSystem.createFileContainingItsPath(file1);
@@ -45,8 +44,8 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     Path file1 = path("file/path/file1.txt");
 
     StringBuilder builder = new StringBuilder();
-    builder.append("myfiles : [ file(path='" + file1.value() + "') ];\n");
-    builder.append("run : myfiles | save(dir='" + dir.value() + "');\n");
+    builder.append("myfiles : [ file(" + file1 + ") ];\n");
+    builder.append("run : myfiles | save(" + dir + ");\n");
     script(builder.toString());
 
     fileSystem.createFileContainingItsPath(file1);
@@ -66,7 +65,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     StringBuilder builder = new StringBuilder();
     builder.append("myfiles : [ ];\n");
-    builder.append("run : myfiles | save(dir='" + dir.value() + "');\n");
+    builder.append("run : myfiles | save(" + dir + ");\n");
     script(builder.toString());
 
     // when

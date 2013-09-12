@@ -16,7 +16,7 @@ public class FileSmoothTest extends IntegrationTestCase {
     // given
     Path file = path("file/path/file.txt");
     Path dir = path("destination/dir");
-    script("run : file(path='" + file.value() + "') | save(dir='" + dir.value() + "');");
+    script("run : file(" + file + ") | save(" + dir + ");");
     fileSystem.createFileContainingItsPath(file);
 
     // when
@@ -32,7 +32,7 @@ public class FileSmoothTest extends IntegrationTestCase {
     // given
     Path file = path("file/path/file.txt");
     Path dir = path("destination/dir");
-    script("run : save(dir='" + dir.value() + "', file=file(path='" + file.value() + "') );");
+    script("run : save(" + dir + ", file(" + file + ") );");
     fileSystem.createFileContainingItsPath(file);
 
     // when
@@ -49,9 +49,9 @@ public class FileSmoothTest extends IntegrationTestCase {
     Path file = path("file/path/file.txt");
     Path dir = path("destination/dir");
     ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("filename : '" + file.value() + "';");
-    builder.addLine("myfile : file(path=filename);");
-    builder.addLine("run : save(file=myfile, dir='" + dir.value() + "');");
+    builder.addLine("filename : " + file + ";");
+    builder.addLine("myfile : file(filename);");
+    builder.addLine("run : save(myfile, " + dir + ");");
     script(builder.build());
     fileSystem.createFileContainingItsPath(file);
 
