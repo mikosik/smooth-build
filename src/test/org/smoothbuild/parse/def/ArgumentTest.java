@@ -98,6 +98,28 @@ public class ArgumentTest {
   }
 
   @Test
+  public void toPaddedString() throws Exception {
+    DefinitionNode node = mock(DefinitionNode.class);
+    when(node.type()).thenReturn(STRING);
+
+    Argument arg = explicitArg("myName", node, codeLocation(1, 2, 3));
+    String actual = arg.toPaddedString(10, 13);
+
+    assertThat(actual).isEqualTo("String    : myName        [1:2-3]");
+  }
+
+  @Test
+  public void toPaddedStringForShortLimits() throws Exception {
+    DefinitionNode node = mock(DefinitionNode.class);
+    when(node.type()).thenReturn(STRING);
+
+    Argument arg = explicitArg("myName", node, codeLocation(1, 2, 3));
+    String actual = arg.toPaddedString(1, 1);
+
+    assertThat(actual).isEqualTo("String: myName [1:2-3]");
+  }
+
+  @Test
   public void filterExplicit() throws Exception {
     Argument explicit1 = explicit("name1");
     Argument explicit2 = explicit("name2");
