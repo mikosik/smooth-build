@@ -202,8 +202,7 @@ public class DefinedFunctionsCreator {
 
     private Function getFunction(String functionName) {
       // UndefinedFunctionDetector has been run already so we can be sure at
-      // this
-      // point that function with given name exists either among imported
+      // this point that function with given name exists either among imported
       // functions or among already handled defined functions.
 
       Function function = symbolTable.getFunction(functionName);
