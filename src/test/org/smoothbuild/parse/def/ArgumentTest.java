@@ -71,6 +71,18 @@ public class ArgumentTest {
   }
 
   @Test
+  public void explicitToString() throws Exception {
+    when(node.type()).thenReturn(STRING);
+    assertThat(explicitArg(name, node, codeLocation).toString()).isEqualTo("String:" + name);
+  }
+
+  @Test
+  public void implicitToString() throws Exception {
+    when(node.type()).thenReturn(STRING);
+    assertThat(implicitArg(node, codeLocation).toString()).isEqualTo("String:<implicit>");
+  }
+
+  @Test
   public void filterExplicit() throws Exception {
     Argument explicit1 = explicit("name1");
     Argument explicit2 = explicit("name2");

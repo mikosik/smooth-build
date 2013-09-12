@@ -51,6 +51,12 @@ public class Argument {
     return name != null;
   }
 
+  @Override
+  public String toString() {
+    String safeName = name == null ? "<implicit>" : name;
+    return type().name() + ":" + safeName;
+  }
+
   public static ImmutableList<Argument> filterExplicit(Collection<Argument> arguments) {
     ImmutableList.Builder<Argument> builder = ImmutableList.builder();
     for (Argument argument : arguments) {
