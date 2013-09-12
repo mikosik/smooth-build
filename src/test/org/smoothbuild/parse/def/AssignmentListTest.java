@@ -22,7 +22,7 @@ public class AssignmentListTest {
 
   @Test
   public void nullParamThrowsException() throws Exception {
-    Argument arg1 = node(STRING);
+    Argument arg1 = arg(STRING);
     try {
       assignmentList.add(null, arg1);
       fail("exception should be thrown");
@@ -48,8 +48,8 @@ public class AssignmentListTest {
     Param param1 = param(STRING, name);
     Param param2 = param(FILE, name);
 
-    Argument arg1 = node(STRING);
-    Argument arg2 = node(FILE);
+    Argument arg1 = arg(STRING);
+    Argument arg2 = arg(FILE);
 
     assignmentList.add(param1, arg1);
     try {
@@ -67,7 +67,7 @@ public class AssignmentListTest {
 
   private void doTestAssigningIncorrectTypeThrowsException(Type paramType, Type argType) {
     Param param = param(paramType, "name");
-    Argument arg = node(argType);
+    Argument arg = arg(argType);
 
     try {
       assignmentList.add(param, arg);
@@ -88,9 +88,9 @@ public class AssignmentListTest {
     Param param2 = param(STRING, name2);
     Param param3 = param(STRING, name3);
 
-    Argument arg1 = node(STRING);
-    Argument arg2 = node(STRING);
-    Argument arg3 = node(STRING);
+    Argument arg1 = arg(STRING);
+    Argument arg2 = arg(STRING);
+    Argument arg3 = arg(STRING);
 
     assignmentList.add(param1, arg1);
     assignmentList.add(param2, arg2);
@@ -105,7 +105,7 @@ public class AssignmentListTest {
     assertThat(actual).isEqualTo(expected);
   }
 
-  private static Argument node(Type type) {
+  private static Argument arg(Type type) {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
 
