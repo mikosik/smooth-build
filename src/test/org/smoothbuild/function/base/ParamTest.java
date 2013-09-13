@@ -1,14 +1,18 @@
 package org.smoothbuild.function.base;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Param.param;
+import static org.smoothbuild.function.base.Param.paramsToString;
+import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 
 import java.util.Map;
+import java.util.Set;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -106,5 +110,21 @@ public class ParamTest {
   @Test
   public void testToString() throws Exception {
     assertThat(param(Type.STRING, "name").toString()).isEqualTo("Param(String: name)");
+  }
+
+  @Test
+  public void testParamsToString() throws Exception {
+    Set<Param> params = newHashSet();
+    params.add(param(STRING, "param1", false));
+    params.add(param(STRING, "param2-with-very-long", false));
+    params.add(param(FILE_SET, "param3", true));
+
+    String actual = paramsToString(params);
+
+    StringBuilder builder = new StringBuilder();
+    builder.append("  String: param1               \n");
+    builder.append("  File* : param3               \n");
+    builder.append("  String: param2-with-very-long\n");
+    assertThat(actual).isEqualTo(builder.toString());
   }
 }

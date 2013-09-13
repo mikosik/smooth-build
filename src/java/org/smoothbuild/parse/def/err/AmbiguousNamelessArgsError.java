@@ -1,5 +1,7 @@
 package org.smoothbuild.parse.def.err;
 
+import static org.smoothbuild.function.base.Param.paramsToString;
+
 import java.util.List;
 import java.util.Set;
 
@@ -36,19 +38,8 @@ public class AmbiguousNamelessArgsError extends CodeError {
           + "List of nameless arguments that caused problems:\n"
           + argsToList(availableArgs)
           + "List of unassigned parameters of desired type is following:\n"
-          + paramsToList(availableParams);
+          + paramsToString(availableParams);
     }
-  }
-
-  private static String paramsToList(Set<Param> params) {
-    int typeLength = longestParamType(params);
-    int nameLength = longestParamName(params);
-
-    StringBuilder builder = new StringBuilder();
-    for (Param param : params) {
-      builder.append("  " + param.toPaddedString(typeLength, nameLength) + "\n");
-    }
-    return builder.toString();
   }
 
   private static String argsToList(List<Argument> args) {
@@ -61,22 +52,6 @@ public class AmbiguousNamelessArgsError extends CodeError {
       builder.append("  " + arg.toPaddedString(typeLength, nameLength, numberLength) + "\n");
     }
     return builder.toString();
-  }
-
-  private static int longestParamType(Set<Param> params) {
-    int result = 0;
-    for (Param param : params) {
-      result = Math.max(result, param.type().name().length());
-    }
-    return result;
-  }
-
-  private static int longestParamName(Set<Param> params) {
-    int result = 0;
-    for (Param param : params) {
-      result = Math.max(result, param.name().length());
-    }
-    return result;
   }
 
   private static int longestArgType(List<Argument> args) {

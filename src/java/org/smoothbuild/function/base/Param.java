@@ -87,4 +87,31 @@ public class Param {
   public String toString() {
     return "Param(" + type.name() + ": " + name + ")";
   }
+
+  public static String paramsToString(Set<Param> params) {
+    int typeLength = longestParamType(params);
+    int nameLength = longestParamName(params);
+
+    StringBuilder builder = new StringBuilder();
+    for (Param param : params) {
+      builder.append("  " + param.toPaddedString(typeLength, nameLength) + "\n");
+    }
+    return builder.toString();
+  }
+
+  private static int longestParamType(Set<Param> params) {
+    int result = 0;
+    for (Param param : params) {
+      result = Math.max(result, param.type().name().length());
+    }
+    return result;
+  }
+
+  private static int longestParamName(Set<Param> params) {
+    int result = 0;
+    for (Param param : params) {
+      result = Math.max(result, param.name().length());
+    }
+    return result;
+  }
 }
