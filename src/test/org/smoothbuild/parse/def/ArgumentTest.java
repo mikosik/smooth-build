@@ -9,8 +9,8 @@ import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
-import static org.smoothbuild.parse.def.Argument.explicitArg;
-import static org.smoothbuild.parse.def.Argument.implicitArg;
+import static org.smoothbuild.parse.def.Argument.namedArg;
+import static org.smoothbuild.parse.def.Argument.namelessArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.Set;
@@ -29,72 +29,72 @@ public class ArgumentTest {
   CodeLocation codeLocation = mock(CodeLocation.class);
 
   @Test(expected = NullPointerException.class)
-  public void nullNameIsForbiddenInExplicitArg() {
-    explicitArg(null, node, codeLocation);
+  public void nullNameIsForbiddenInNamedArg() {
+    namedArg(null, node, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullDefinitionNodeIsForbiddenInExplicitArg() {
-    explicitArg(name, null, codeLocation);
+  public void nullDefinitionNodeIsForbiddenInNamedArg() {
+    namedArg(name, null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullDefinitionNodeIsForbiddenInImplicitArg() {
-    implicitArg(null, codeLocation);
+  public void nullDefinitionNodeIsForbiddenInNamelessArg() {
+    namelessArg(null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullSourceLocationIsForbiddenInExplicitArg() {
-    explicitArg(name, node, null);
+  public void nullSourceLocationIsForbiddenInNamedArg() {
+    namedArg(name, node, null);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullSourceLocationIsForbiddenInImplicitArg() {
-    implicitArg(node, null);
+  public void nullSourceLocationIsForbiddenInNamelessArg() {
+    namelessArg(node, null);
   }
 
   @Test
   public void typeReturnsTypeOfDefinitionNode() throws Exception {
     when(node.type()).thenReturn(FILE);
-    Type arg = explicitArg(name, node, codeLocation).type();
+    Type arg = namedArg(name, node, codeLocation).type();
     assertThat(arg).isEqualTo(FILE);
   }
 
   @Test(expected = UnsupportedOperationException.class)
-  public void implicitArgThrowsExceptionWhenAskedForName() throws Exception {
-    implicit().name();
+  public void namelessArgThrowsExceptionWhenAskedForName() throws Exception {
+    nameless().name();
   }
 
   @Test
-  public void explicitArgIsExplicit() throws Exception {
-    assertThat(explicitArg(name, node, codeLocation).isExplicit()).isTrue();
+  public void namedArgHasName() throws Exception {
+    assertThat(namedArg(name, node, codeLocation).hasName()).isTrue();
   }
 
   @Test
-  public void implicitArgIsNotExplicit() throws Exception {
-    assertThat(implicitArg(node, codeLocation).isExplicit()).isFalse();
+  public void namelessArgDoesNotHaveName() throws Exception {
+    assertThat(namelessArg(node, codeLocation).hasName()).isFalse();
   }
 
   @Test
-  public void explicitNameSanitized() throws Exception {
-    assertThat(explicit(name).nameSanitized()).isEqualTo(name);
+  public void sanitizedNamedOfNamedArg() throws Exception {
+    assertThat(named(name).nameSanitized()).isEqualTo(name);
   }
 
   @Test
-  public void implicitNameSanitized() throws Exception {
-    assertThat(implicit().nameSanitized()).isEqualTo("<implicit>");
+  public void sanitizedNamedOfNamelessArg() throws Exception {
+    assertThat(nameless().nameSanitized()).isEqualTo("<nameless>");
   }
 
   @Test
-  public void explicitToString() throws Exception {
+  public void namedArgToString() throws Exception {
     when(node.type()).thenReturn(STRING);
-    assertThat(explicitArg(name, node, codeLocation).toString()).isEqualTo("String:" + name);
+    assertThat(namedArg(name, node, codeLocation).toString()).isEqualTo("String:" + name);
   }
 
   @Test
-  public void implicitToString() throws Exception {
+  public void namelessArgToString() throws Exception {
     when(node.type()).thenReturn(STRING);
-    assertThat(implicitArg(node, codeLocation).toString()).isEqualTo("String:<implicit>");
+    assertThat(namelessArg(node, codeLocation).toString()).isEqualTo("String:<nameless>");
   }
 
   @Test
@@ -102,7 +102,7 @@ public class ArgumentTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = explicitArg("myName", node, codeLocation(1, 2, 3));
+    Argument arg = namedArg("myName", node, codeLocation(1, 2, 3));
     String actual = arg.toPaddedString(10, 13);
 
     assertThat(actual).isEqualTo("String    : myName        [1:2-3]");
@@ -113,57 +113,57 @@ public class ArgumentTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = explicitArg("myName", node, codeLocation(1, 2, 3));
+    Argument arg = namedArg("myName", node, codeLocation(1, 2, 3));
     String actual = arg.toPaddedString(1, 1);
 
     assertThat(actual).isEqualTo("String: myName [1:2-3]");
   }
 
   @Test
-  public void filterExplicit() throws Exception {
-    Argument explicit1 = explicit("name1");
-    Argument explicit2 = explicit("name2");
-    Argument implicit1 = implicit();
-    Argument implicit2 = implicit();
+  public void filterNamed() throws Exception {
+    Argument named1 = named("name1");
+    Argument named2 = named("name2");
+    Argument nameless1 = nameless();
+    Argument nameless2 = nameless();
 
-    ImmutableList<Argument> actual = Argument.filterExplicit(ImmutableList.of(explicit1, explicit2,
-        implicit1, implicit2));
+    ImmutableList<Argument> actual = Argument.filterNamed(ImmutableList.of(named1, named2,
+        nameless1, nameless2));
 
-    assertThat(actual).containsOnly(explicit1, explicit2);
+    assertThat(actual).containsOnly(named1, named2);
   }
 
   @Test
-  public void filterImplicit() throws Exception {
-    doTestFilterImplicit(STRING);
-    doTestFilterImplicit(STRING_SET);
-    doTestFilterImplicit(FILE);
-    doTestFilterImplicit(FILE_SET);
-    doTestFilterImplicit(VOID);
-    doTestFilterImplicit(EMPTY_SET);
+  public void filterNameless() throws Exception {
+    doTestFilterNameless(STRING);
+    doTestFilterNameless(STRING_SET);
+    doTestFilterNameless(FILE);
+    doTestFilterNameless(FILE_SET);
+    doTestFilterNameless(VOID);
+    doTestFilterNameless(EMPTY_SET);
   }
 
-  private void doTestFilterImplicit(Type type) {
-    Argument explicit1 = explicit("name1");
-    Argument explicit2 = explicit("name2");
-    Argument implicit = implicit(type);
+  private void doTestFilterNameless(Type type) {
+    Argument named1 = named("name1");
+    Argument named2 = named("name2");
+    Argument nameless = nameless(type);
 
-    ImmutableMap<Type, Set<Argument>> actual = Argument.filterImplicit(ImmutableList.of(explicit1,
-        explicit2, implicit));
+    ImmutableMap<Type, Set<Argument>> actual = Argument.filterNameless(ImmutableList.of(named1,
+        named2, nameless));
 
-    assertThat(actual.get(type)).containsOnly(implicit);
+    assertThat(actual.get(type)).containsOnly(nameless);
   }
 
-  private static Argument explicit(String name) {
-    return Argument.explicitArg(name, mock(DefinitionNode.class), codeLocation(1, 2, 3));
+  private static Argument named(String name) {
+    return Argument.namedArg(name, mock(DefinitionNode.class), codeLocation(1, 2, 3));
   }
 
-  private static Argument implicit() {
-    return implicit(Type.STRING);
+  private static Argument nameless() {
+    return nameless(Type.STRING);
   }
 
-  private static Argument implicit(Type type) {
+  private static Argument nameless(Type type) {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
-    return Argument.implicitArg(node, codeLocation(1, 2, 3));
+    return Argument.namelessArg(node, codeLocation(1, 2, 3));
   }
 }

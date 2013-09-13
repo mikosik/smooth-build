@@ -14,7 +14,7 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.parse.def.err.AmbiguousImplicitArgsError;
+import org.smoothbuild.parse.def.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.parse.def.err.DuplicateArgNameError;
 import org.smoothbuild.parse.def.err.TypeMismatchError;
 import org.smoothbuild.parse.def.err.UnknownParamNameError;
@@ -48,9 +48,9 @@ public class ArgumentNodesCreator {
     }
 
     public Map<String, DefinitionNode> convert() {
-      ImmutableList<Argument> explicitArgs = Argument.filterExplicit(allArguments);
+      ImmutableList<Argument> namedArgs = Argument.filterNamed(allArguments);
 
-      detectDuplicatedAndUnknownArgNames(explicitArgs);
+      detectDuplicatedAndUnknownArgNames(namedArgs);
       if (problems.errorDetected()) {
         return null;
       }
@@ -61,12 +61,12 @@ public class ArgumentNodesCreator {
       }
 
       AssignmentList assignmentList = new AssignmentList();
-      processExplicitArguments(assignmentList, explicitArgs);
+      processNamedArguments(assignmentList, namedArgs);
       if (problems.errorDetected()) {
         return null;
       }
 
-      processImplicitArguments(assignmentList);
+      processNamelessArguments(assignmentList);
       if (problems.errorDetected()) {
         return null;
       }
@@ -74,17 +74,17 @@ public class ArgumentNodesCreator {
       return assignmentList.createNodesMap();
     }
 
-    private void detectDuplicatedAndUnknownArgNames(Collection<Argument> explicitArgs) {
-      Set<String> explicitNames = Sets.newHashSet();
-      for (Argument argument : explicitArgs) {
-        if (argument.isExplicit()) {
+    private void detectDuplicatedAndUnknownArgNames(Collection<Argument> namedArgs) {
+      Set<String> names = Sets.newHashSet();
+      for (Argument argument : namedArgs) {
+        if (argument.hasName()) {
           String name = argument.name();
-          if (explicitNames.contains(name)) {
+          if (names.contains(name)) {
             problems.report(new DuplicateArgNameError(argument));
           } else if (!function.params().containsKey(name)) {
             problems.report(new UnknownParamNameError(function.name(), argument));
           } else {
-            explicitNames.add(name);
+            names.add(name);
           }
         }
       }
@@ -98,10 +98,10 @@ public class ArgumentNodesCreator {
       }
     }
 
-    private void processExplicitArguments(AssignmentList assignmentList,
-        Collection<Argument> explicitArgs) {
-      for (Argument argument : explicitArgs) {
-        if (argument.isExplicit()) {
+    private void processNamedArguments(AssignmentList assignmentList,
+        Collection<Argument> namedArgs) {
+      for (Argument argument : namedArgs) {
+        if (argument.hasName()) {
           String name = argument.name();
           Param param = paramsPool.takeByName(name);
           Type paramType = param.type();
@@ -134,11 +134,11 @@ public class ArgumentNodesCreator {
     private static final ImmutableList<Type> TYPES_ORDER = ImmutableList.of(STRING, FILE,
         STRING_SET, FILE_SET, EMPTY_SET);
 
-    private void processImplicitArguments(AssignmentList assignmentList) {
-      ImmutableMap<Type, Set<Argument>> implicitArgs = Argument.filterImplicit(allArguments);
+    private void processNamelessArguments(AssignmentList assignmentList) {
+      ImmutableMap<Type, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
 
       for (Type type : TYPES_ORDER) {
-        Set<Argument> availableArgs = implicitArgs.get(type);
+        Set<Argument> availableArgs = namelessArgs.get(type);
         int argsSize = availableArgs.size();
         if (0 < argsSize) {
           Set<Param> availableParams = paramsPool.availableForType(type);
@@ -152,7 +152,7 @@ public class ArgumentNodesCreator {
             assignmentList.add(onlyParam, onlyArg);
             paramsPool.take(onlyParam);
           } else {
-            AmbiguousImplicitArgsError error = new AmbiguousImplicitArgsError(availableArgs,
+            AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(availableArgs,
                 availableParams);
             problems.report(error);
             return;

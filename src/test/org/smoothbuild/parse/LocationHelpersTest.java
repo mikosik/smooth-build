@@ -19,7 +19,7 @@ public class LocationHelpersTest {
   Token stopToken = mock(Token.class);
 
   @Test
-  public void locationOfArgContextWithExplicitParamName() {
+  public void locationOfArgContextWithName() {
     // given
     ArgContext argContext = mock(ArgContext.class);
     ParamNameContext paramNameContext = mock(ParamNameContext.class);
