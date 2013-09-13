@@ -14,9 +14,9 @@ import com.google.common.collect.ImmutableMap;
 
 public class ParamsPoolTest {
   Param string1 = param(Type.STRING, "string1");
-  Param string2 = param(Type.STRING, "string2");
+  Param string2 = param(Type.STRING, "string2", true);
   Param file1 = param(Type.FILE, "file1");
-  Param file2 = param(Type.FILE, "file2");
+  Param file2 = param(Type.FILE, "file2", true);
 
   ImmutableMap<String, Param> params = params(string1, string2, file1, file2);
   ParamsPool paramsPool = new ParamsPool(params);
@@ -90,4 +90,14 @@ public class ParamsPoolTest {
     assertThat(paramsPool.availableForType(STRING)).containsOnly(string2);
   }
 
+  @Test
+  public void availableRequiredParams() throws Exception {
+    assertThat(paramsPool.availableRequiredParams()).containsOnly(string2, file2);
+  }
+
+  @Test
+  public void availableRequiredParamsDoesNotContainsTakenParams() throws Exception {
+    paramsPool.take(string2);
+    assertThat(paramsPool.availableRequiredParams()).containsOnly(file2);
+  }
 }
