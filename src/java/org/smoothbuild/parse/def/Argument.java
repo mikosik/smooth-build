@@ -18,11 +18,11 @@ public class Argument {
   private final DefinitionNode node;
   private final CodeLocation codeLocation;
 
-  public static Argument explicitArg(String name, DefinitionNode node, CodeLocation codeLocation) {
+  public static Argument namedArg(String name, DefinitionNode node, CodeLocation codeLocation) {
     return new Argument(checkNotNull(name), node, codeLocation);
   }
 
-  public static Argument implicitArg(DefinitionNode node, CodeLocation codeLocation) {
+  public static Argument namelessArg(DefinitionNode node, CodeLocation codeLocation) {
     return new Argument(null, node, codeLocation);
   }
 
@@ -34,13 +34,13 @@ public class Argument {
 
   public String name() {
     if (name == null) {
-      throw new UnsupportedOperationException("Implicit argument does not have name.");
+      throw new UnsupportedOperationException("Nameless argument does not have name.");
     }
     return name;
   }
 
   public String nameSanitized() {
-    return name == null ? "<implicit>" : name;
+    return name == null ? "<nameless>" : name;
   }
 
   public Type type() {
@@ -55,7 +55,7 @@ public class Argument {
     return codeLocation;
   }
 
-  public boolean isExplicit() {
+  public boolean hasName() {
     return name != null;
   }
 
@@ -71,20 +71,20 @@ public class Argument {
     return type().name() + ":" + nameSanitized();
   }
 
-  public static ImmutableList<Argument> filterExplicit(Collection<Argument> arguments) {
+  public static ImmutableList<Argument> filterNamed(Collection<Argument> arguments) {
     ImmutableList.Builder<Argument> builder = ImmutableList.builder();
     for (Argument argument : arguments) {
-      if (argument.isExplicit()) {
+      if (argument.hasName()) {
         builder.add(argument);
       }
     }
     return builder.build();
   }
 
-  public static ImmutableMap<Type, Set<Argument>> filterImplicit(Collection<Argument> arguments) {
+  public static ImmutableMap<Type, Set<Argument>> filterNameless(Collection<Argument> arguments) {
     ImmutableMap<Type, Set<Argument>> result = Helpers.createMap(Type.allTypes());
     for (Argument argument : arguments) {
-      if (!argument.isExplicit()) {
+      if (!argument.hasName()) {
         Type type = argument.definitionNode().type();
         result.get(type).add(argument);
       }

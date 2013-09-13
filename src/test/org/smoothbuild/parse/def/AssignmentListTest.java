@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
-import static org.smoothbuild.parse.def.Argument.explicitArg;
+import static org.smoothbuild.parse.def.Argument.namedArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.Map;
@@ -142,6 +142,6 @@ public class AssignmentListTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
 
-    return explicitArg(name, node, codeLocation(1, 2, 3));
+    return namedArg(name, node, codeLocation(1, 2, 3));
   }
 }

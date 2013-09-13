@@ -14,8 +14,8 @@ import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
-import static org.smoothbuild.parse.def.Argument.explicitArg;
-import static org.smoothbuild.parse.def.Argument.implicitArg;
+import static org.smoothbuild.parse.def.Argument.namedArg;
+import static org.smoothbuild.parse.def.Argument.namelessArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.plugin.PluginFunction;
 import org.smoothbuild.function.plugin.PluginInvoker;
-import org.smoothbuild.parse.def.err.AmbiguousImplicitArgsError;
+import org.smoothbuild.parse.def.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.parse.def.err.DuplicateArgNameError;
 import org.smoothbuild.parse.def.err.TypeMismatchError;
 import org.smoothbuild.parse.def.err.UnknownParamNameError;
@@ -46,14 +46,14 @@ public class ArgumentNodesCreatorTest {
   TestProblemsListener problemsListener;
 
   @Test
-  public void convertingExplicitArgument() {
-    doTestConvertingExplicitArgument(STRING);
-    doTestConvertingExplicitArgument(STRING_SET);
-    doTestConvertingExplicitArgument(FILE);
-    doTestConvertingExplicitArgument(FILE_SET);
+  public void convertingNamedArgument() {
+    doTestConvertingNamedArgument(STRING);
+    doTestConvertingNamedArgument(STRING_SET);
+    doTestConvertingNamedArgument(FILE);
+    doTestConvertingNamedArgument(FILE_SET);
   }
 
-  private void doTestConvertingExplicitArgument(Type type) {
+  private void doTestConvertingNamedArgument(Type type) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
@@ -71,12 +71,12 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingExplicitEmptySetArgument() {
-    doTestConvertingExplicitEmptySetArgument(STRING_SET);
-    doTestConvertingExplicitEmptySetArgument(FILE_SET);
+  public void convertingNamedEmptySetArgument() {
+    doTestConvertingNamedEmptySetArgument(STRING_SET);
+    doTestConvertingNamedEmptySetArgument(FILE_SET);
   }
 
-  private void doTestConvertingExplicitEmptySetArgument(Type type) {
+  private void doTestConvertingNamedEmptySetArgument(Type type) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
@@ -94,14 +94,14 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void duplicatedExplicitNames() {
-    doTestDuplicatedExplicitNames(STRING);
-    doTestDuplicatedExplicitNames(STRING_SET);
-    doTestDuplicatedExplicitNames(FILE);
-    doTestDuplicatedExplicitNames(FILE_SET);
+  public void duplicatedNames() {
+    doTestDuplicatedNames(STRING);
+    doTestDuplicatedNames(STRING_SET);
+    doTestDuplicatedNames(FILE);
+    doTestDuplicatedNames(FILE_SET);
   }
 
-  private void doTestDuplicatedExplicitNames(Type type) {
+  private void doTestDuplicatedNames(Type type) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
@@ -117,12 +117,12 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void duplicatedExplicitEmptySetNames() {
-    doTestDuplicatedExplicitEmptySetNames(STRING_SET);
-    doTestDuplicatedExplicitEmptySetNames(FILE_SET);
+  public void duplicatedNamedEmptySetNames() {
+    doTestDuplicatedNamedEmptySetNames(STRING_SET);
+    doTestDuplicatedNamedEmptySetNames(FILE_SET);
   }
 
-  private void doTestDuplicatedExplicitEmptySetNames(Type type) {
+  private void doTestDuplicatedNamedEmptySetNames(Type type) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
@@ -195,14 +195,14 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void voidTypeOfExplicitArgument() throws Exception {
-    doTestVoidTypeOfExplicitArgument(STRING);
-    doTestVoidTypeOfExplicitArgument(STRING_SET);
-    doTestVoidTypeOfExplicitArgument(FILE);
-    doTestVoidTypeOfExplicitArgument(FILE_SET);
+  public void voidTypeOfNamedArgument() throws Exception {
+    doTestVoidTypeOfNamedArgument(STRING);
+    doTestVoidTypeOfNamedArgument(STRING_SET);
+    doTestVoidTypeOfNamedArgument(FILE);
+    doTestVoidTypeOfNamedArgument(FILE_SET);
   }
 
-  private void doTestVoidTypeOfExplicitArgument(Type paramType) throws Exception {
+  private void doTestVoidTypeOfNamedArgument(Type paramType) throws Exception {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(paramType, "name1");
@@ -216,14 +216,14 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void voidTypeOfImplicitArgument() throws Exception {
-    doTestVoidTypeOfImplicitArgument(STRING);
-    doTestVoidTypeOfImplicitArgument(STRING_SET);
-    doTestVoidTypeOfImplicitArgument(FILE);
-    doTestVoidTypeOfImplicitArgument(FILE_SET);
+  public void voidTypeOfNamelessArgument() throws Exception {
+    doTestVoidTypeOfNamelessArgument(STRING);
+    doTestVoidTypeOfNamelessArgument(STRING_SET);
+    doTestVoidTypeOfNamelessArgument(FILE);
+    doTestVoidTypeOfNamelessArgument(FILE_SET);
   }
 
-  private void doTestVoidTypeOfImplicitArgument(Type paramType) throws Exception {
+  private void doTestVoidTypeOfNamelessArgument(Type paramType) throws Exception {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(paramType, "name1");
@@ -251,34 +251,34 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleImplicitStringArgument() {
-    doTestConvertingSingleImplicitArgument(STRING, STRING_SET);
-    doTestConvertingSingleImplicitArgument(STRING, FILE);
-    doTestConvertingSingleImplicitArgument(STRING, FILE_SET);
+  public void convertingSingleNamelessStringArgument() {
+    doTestConvertingSingleNamelessArgument(STRING, STRING_SET);
+    doTestConvertingSingleNamelessArgument(STRING, FILE);
+    doTestConvertingSingleNamelessArgument(STRING, FILE_SET);
   }
 
   @Test
-  public void convertingSingleImplicitStringSetArgument() {
-    doTestConvertingSingleImplicitArgument(STRING_SET, STRING);
-    doTestConvertingSingleImplicitArgument(STRING_SET, FILE);
-    doTestConvertingSingleImplicitArgument(STRING_SET, FILE_SET);
+  public void convertingSingleNamelessStringSetArgument() {
+    doTestConvertingSingleNamelessArgument(STRING_SET, STRING);
+    doTestConvertingSingleNamelessArgument(STRING_SET, FILE);
+    doTestConvertingSingleNamelessArgument(STRING_SET, FILE_SET);
   }
 
   @Test
-  public void convertingSingleImplicitFileArgument() {
-    doTestConvertingSingleImplicitArgument(FILE, STRING);
-    doTestConvertingSingleImplicitArgument(FILE, STRING_SET);
-    doTestConvertingSingleImplicitArgument(FILE, FILE_SET);
+  public void convertingSingleNamelessFileArgument() {
+    doTestConvertingSingleNamelessArgument(FILE, STRING);
+    doTestConvertingSingleNamelessArgument(FILE, STRING_SET);
+    doTestConvertingSingleNamelessArgument(FILE, FILE_SET);
   }
 
   @Test
-  public void convertingSingleImplicitFileSetArgument() {
-    doTestConvertingSingleImplicitArgument(FILE_SET, STRING);
-    doTestConvertingSingleImplicitArgument(FILE_SET, STRING_SET);
-    doTestConvertingSingleImplicitArgument(FILE_SET, FILE);
+  public void convertingSingleNamelessFileSetArgument() {
+    doTestConvertingSingleNamelessArgument(FILE_SET, STRING);
+    doTestConvertingSingleNamelessArgument(FILE_SET, STRING_SET);
+    doTestConvertingSingleNamelessArgument(FILE_SET, FILE);
   }
 
-  private void doTestConvertingSingleImplicitArgument(Type type, Type otherType) {
+  private void doTestConvertingSingleNamelessArgument(Type type, Type otherType) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(otherType, "name1");
@@ -297,15 +297,15 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleImplicitEmptySetArgument() throws Exception {
-    doTestConvertingSingleImplicitEmptySetArgument(STRING_SET, STRING);
-    doTestConvertingSingleImplicitEmptySetArgument(STRING_SET, FILE);
+  public void convertingSingleNamelessEmptySetArgument() throws Exception {
+    doTestConvertingSingleNamelessEmptySetArgument(STRING_SET, STRING);
+    doTestConvertingSingleNamelessEmptySetArgument(STRING_SET, FILE);
 
-    doTestConvertingSingleImplicitEmptySetArgument(FILE_SET, STRING);
-    doTestConvertingSingleImplicitEmptySetArgument(FILE_SET, FILE);
+    doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, STRING);
+    doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, FILE);
   }
 
-  private void doTestConvertingSingleImplicitEmptySetArgument(Type type, Type otherType) {
+  private void doTestConvertingSingleNamelessEmptySetArgument(Type type, Type otherType) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(otherType, "name1");
@@ -324,14 +324,14 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleImplicitArgumentWithOtherExplicit() {
-    doTestConvertingSingleImplicitArgumentWhitOthersExplicit(STRING);
-    doTestConvertingSingleImplicitArgumentWhitOthersExplicit(STRING_SET);
-    doTestConvertingSingleImplicitArgumentWhitOthersExplicit(FILE);
-    doTestConvertingSingleImplicitArgumentWhitOthersExplicit(FILE_SET);
+  public void convertingSingleNamelessArgumentWithOtherNamed() {
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING);
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING_SET);
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE);
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE_SET);
   }
 
-  private void doTestConvertingSingleImplicitArgumentWhitOthersExplicit(Type type) {
+  private void doTestConvertingSingleNamelessArgumentWhitOthersNamed(Type type) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
@@ -354,25 +354,25 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingTwoImplicitArgumentsWithDifferentType() throws Exception {
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING, STRING_SET);
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING, FILE);
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING, FILE_SET);
+  public void convertingTwoNamelessArgumentsWithDifferentType() throws Exception {
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE_SET);
 
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING_SET, STRING);
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING_SET, FILE);
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(STRING_SET, FILE_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, FILE);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, FILE_SET);
 
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE, STRING);
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE, STRING_SET);
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE, FILE_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, FILE_SET);
 
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE_SET, STRING);
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE_SET, STRING_SET);
-    doTestConvertingTwoImplicitArgumentsWithDifferentType(FILE_SET, FILE);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, FILE);
   }
 
-  private void doTestConvertingTwoImplicitArgumentsWithDifferentType(Type type1, Type type2) {
+  private void doTestConvertingTwoNamelessArgumentsWithDifferentType(Type type1, Type type2) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(type1, "name1");
@@ -392,12 +392,12 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleImplicitSetArgumentWhitOtherExplicit() throws Exception {
-    doTestConvertingSingleImplicitSetArgumentWhitOtherExplicit(STRING_SET);
-    doTestConvertingSingleImplicitSetArgumentWhitOtherExplicit(FILE_SET);
+  public void convertingSingleNamelessSetArgumentWhitOtherNamed() throws Exception {
+    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(STRING_SET);
+    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(FILE_SET);
   }
 
-  private void doTestConvertingSingleImplicitSetArgumentWhitOtherExplicit(Type type) {
+  private void doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(Type type) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(type, "name1");
@@ -420,12 +420,12 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingImplicitEmptySetArgWithOtherExplicitSet() throws Exception {
-    doTestConvertingImplicitEmptySetArgWithOtherExplicitSet(STRING_SET, FILE_SET);
-    doTestConvertingImplicitEmptySetArgWithOtherExplicitSet(FILE_SET, STRING_SET);
+  public void convertingNamelessEmptySetArgWithOtherNamedSet() throws Exception {
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_SET, FILE_SET);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_SET, STRING_SET);
   }
 
-  private void doTestConvertingImplicitEmptySetArgWithOtherExplicitSet(Type setType,
+  private void doTestConvertingNamelessEmptySetArgWithOtherNamedSet(Type setType,
       Type otherSetType) {
     // given
     problemsListener = new TestProblemsListener();
@@ -446,17 +446,17 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void ambigiuousImplicitArgument() throws Exception {
-    doTestAmbiguousImplicitArgument(STRING, STRING);
-    doTestAmbiguousImplicitArgument(STRING_SET, STRING_SET);
-    doTestAmbiguousImplicitArgument(FILE, FILE);
-    doTestAmbiguousImplicitArgument(FILE_SET, FILE_SET);
+  public void ambigiuousNamelessArgument() throws Exception {
+    doTestAmbiguousNamelessArgument(STRING, STRING);
+    doTestAmbiguousNamelessArgument(STRING_SET, STRING_SET);
+    doTestAmbiguousNamelessArgument(FILE, FILE);
+    doTestAmbiguousNamelessArgument(FILE_SET, FILE_SET);
 
-    doTestAmbiguousImplicitArgument(FILE_SET, EMPTY_SET);
-    doTestAmbiguousImplicitArgument(STRING_SET, EMPTY_SET);
+    doTestAmbiguousNamelessArgument(FILE_SET, EMPTY_SET);
+    doTestAmbiguousNamelessArgument(STRING_SET, EMPTY_SET);
   }
 
-  private void doTestAmbiguousImplicitArgument(Type paramType, Type argType) {
+  private void doTestAmbiguousNamelessArgument(Type paramType, Type argType) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(paramType, "name1");
@@ -468,11 +468,11 @@ public class ArgumentNodesCreatorTest {
     create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(AmbiguousImplicitArgsError.class);
+    problemsListener.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
   @Test
-  public void ambiguousImplicitEmptySetArgument() {
+  public void ambiguousNamelessEmptySetArgument() {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(STRING_SET, "name1");
@@ -484,44 +484,44 @@ public class ArgumentNodesCreatorTest {
     create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(AmbiguousImplicitArgsError.class);
+    problemsListener.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
   @Test
-  public void noParamWithProperTypeForImplicitStringArgument() throws Exception {
-    doTestNoParamWithProperTypeForImplicitArgument(STRING, STRING_SET);
-    doTestNoParamWithProperTypeForImplicitArgument(STRING, FILE);
-    doTestNoParamWithProperTypeForImplicitArgument(STRING, FILE_SET);
+  public void noParamWithProperTypeForNamelessStringArgument() throws Exception {
+    doTestNoParamWithProperTypeForNamelessArgument(STRING, STRING_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE_SET);
   }
 
   @Test
-  public void noParamWithProperTypeForImplicitStringSetArgument() throws Exception {
-    doTestNoParamWithProperTypeForImplicitArgument(STRING_SET, STRING);
-    doTestNoParamWithProperTypeForImplicitArgument(STRING_SET, FILE);
-    doTestNoParamWithProperTypeForImplicitArgument(STRING_SET, FILE_SET);
+  public void noParamWithProperTypeForNamelessStringSetArgument() throws Exception {
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, FILE);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, FILE_SET);
   }
 
   @Test
-  public void noParamWithProperTypeForImplicitFileArgument() throws Exception {
-    doTestNoParamWithProperTypeForImplicitArgument(FILE, STRING);
-    doTestNoParamWithProperTypeForImplicitArgument(FILE, STRING_SET);
-    doTestNoParamWithProperTypeForImplicitArgument(FILE, FILE_SET);
+  public void noParamWithProperTypeForNamelessFileArgument() throws Exception {
+    doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE, FILE_SET);
   }
 
   @Test
-  public void noParamWithProperTypeForImplicitFileSetArgument() throws Exception {
-    doTestNoParamWithProperTypeForImplicitArgument(FILE_SET, STRING);
-    doTestNoParamWithProperTypeForImplicitArgument(FILE_SET, STRING_SET);
-    doTestNoParamWithProperTypeForImplicitArgument(FILE_SET, FILE);
+  public void noParamWithProperTypeForNamelessFileSetArgument() throws Exception {
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, STRING_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, FILE);
   }
 
   @Test
-  public void noParamWithProperTypeForImplicitEmptySetArgument() throws Exception {
-    doTestNoParamWithProperTypeForImplicitArgument(EMPTY_SET, STRING);
-    doTestNoParamWithProperTypeForImplicitArgument(EMPTY_SET, FILE);
+  public void noParamWithProperTypeForNamelessEmptySetArgument() throws Exception {
+    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_SET, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_SET, FILE);
   }
 
-  private void doTestNoParamWithProperTypeForImplicitArgument(Type type, Type otherType) {
+  private void doTestNoParamWithProperTypeForNamelessArgument(Type type, Type otherType) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(otherType, "name1");
@@ -531,15 +531,15 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(AmbiguousImplicitArgsError.class);
+    problemsListener.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
   private static Argument argument(DefinitionNode node) {
-    return implicitArg(node, codeLocation(1, 2, 3));
+    return namelessArg(node, codeLocation(1, 2, 3));
   }
 
   private static Argument argument(String name, DefinitionNode node) {
-    return explicitArg(name, node, codeLocation(1, 2, 3));
+    return namedArg(name, node, codeLocation(1, 2, 3));
   }
 
   private static DefinitionNode node(Type type) {

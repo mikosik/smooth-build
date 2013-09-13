@@ -5,8 +5,8 @@ import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.def.Argument.explicitArg;
-import static org.smoothbuild.parse.def.Argument.implicitArg;
+import static org.smoothbuild.parse.def.Argument.namedArg;
+import static org.smoothbuild.parse.def.Argument.namelessArg;
 import static org.smoothbuild.parse.def.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -98,9 +98,9 @@ public class DefinedFunctionsCreator {
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
         List<Argument> arguments = build(call.argList());
-        // implicit piped argument's location is set to the pipe character '|'
+        // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipe.p.get(i));
-        arguments.add(implicitArg(result, codeLocation));
+        arguments.add(namelessArg(result, codeLocation));
         result = build(call, arguments);
       }
       return result;
@@ -191,12 +191,12 @@ public class DefinedFunctionsCreator {
 
       Function function = getFunction(functionName);
 
-      Map<String, DefinitionNode> explicitArgs = createArgumentNodes(problems, function, args);
+      Map<String, DefinitionNode> namedArgs = createArgumentNodes(problems, function, args);
 
-      if (explicitArgs == null) {
+      if (namedArgs == null) {
         return new InvalidNode(function.type());
       } else {
-        return new FunctionNode(function, explicitArgs);
+        return new FunctionNode(function, namedArgs);
       }
     }
 
@@ -229,9 +229,9 @@ public class DefinedFunctionsCreator {
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
       if (paramName == null) {
-        return implicitArg(node, location);
+        return namelessArg(node, location);
       } else {
-        return explicitArg(paramName.getText(), node, location);
+        return namedArg(paramName.getText(), node, location);
       }
     }
 
