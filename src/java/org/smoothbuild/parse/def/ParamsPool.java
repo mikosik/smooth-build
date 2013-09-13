@@ -42,6 +42,18 @@ public class ParamsPool {
     }
   }
 
+  public Set<Param> availableRequiredParams() {
+    Set<Param> result = Sets.newHashSet();
+    for (Set<Param> set : typePools.values()) {
+      for (Param param : set) {
+        if (param.isRequired()) {
+          result.add(param);
+        }
+      }
+    }
+    return result;
+  }
+
   private static ImmutableMap<Type, Set<Param>> createTypePools(
       ImmutableMap<String, Param> allParams) {
     ImmutableMap<Type, Set<Param>> result = Helpers.createMap(Type.allowedForParam());
