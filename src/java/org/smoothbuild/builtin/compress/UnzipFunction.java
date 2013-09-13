@@ -7,17 +7,18 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
+import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 
 public class UnzipFunction {
   public interface Parameters {
+    @Required
     public File file();
   }
 
@@ -38,10 +39,6 @@ public class UnzipFunction {
     }
 
     public FileSet execute() {
-      if (params.file() == null) {
-        sandbox.report(new MissingRequiredArgError("file"));
-      }
-
       MutableFileSet resultFiles = sandbox.resultFileSet();
       try (ZipInputStream zipInputStream = new ZipInputStream(params.file().openInputStream());) {
         ZipEntry entry = null;

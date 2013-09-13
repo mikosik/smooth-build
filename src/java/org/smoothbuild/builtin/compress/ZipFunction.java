@@ -7,20 +7,18 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFile;
+import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 
 public class ZipFunction {
 
   public interface Parameters {
-    /**
-     * Files to be zipped.
-     */
+    @Required
     public FileSet fileSet();
   }
 
@@ -54,9 +52,6 @@ public class ZipFunction {
     }
 
     public File execute() {
-      if (params.fileSet() == null) {
-        sandbox.report(new MissingRequiredArgError("files"));
-      }
       MutableFile output = sandbox.createFile(path("output.zip"));
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.openOutputStream());) {
         for (File file : params.fileSet()) {
