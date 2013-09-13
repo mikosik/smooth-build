@@ -27,6 +27,7 @@ import org.smoothbuild.function.plugin.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.PrecalculatedTask;
@@ -110,6 +111,26 @@ public class PluginFactoryTest {
     public static String execute(Sandbox sandbox, Parameters params) {
       return params.stringA() + params.stringB();
     }
+  }
+
+  @Test
+  public void paramsAnnotatedAsRequiredAreRequired() throws Exception {
+    Function f = pluginFactory.create(MyPluginWithAnnotatedParams.class);
+    ImmutableMap<String, Param> params = f.params();
+    assertThat(params.get("string1").isRequired()).isTrue();
+    assertThat(params.get("string2").isRequired()).isFalse();
+  }
+
+  public interface AnnotatedParameters {
+    @Required
+    public String string1();
+
+    public String string2();
+  }
+
+  public static class MyPluginWithAnnotatedParams {
+    @SmoothFunction("my.package.myFunction")
+    public static void execute(Sandbox sandbox, AnnotatedParameters params) {}
   }
 
   @Test
