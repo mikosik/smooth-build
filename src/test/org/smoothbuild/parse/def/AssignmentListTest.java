@@ -114,9 +114,9 @@ public class AssignmentListTest {
     Param param2 = param(STRING, "name2");
     Param param3 = param(FILE, "name3");
 
-    Argument arg1 = arg(STRING, "name4");
-    Argument arg2 = arg(STRING, "name5");
-    Argument arg3 = arg(FILE, "name6-that-is-long");
+    Argument arg1 = arg(1, STRING, "name4");
+    Argument arg2 = arg(1234, STRING, "name5");
+    Argument arg3 = arg(7, FILE, "name6-that-is-long");
 
     assignmentList.add(param1, arg1);
     assignmentList.add(param2, arg2);
@@ -127,9 +127,9 @@ public class AssignmentListTest {
 
     // then
     StringBuilder expected = new StringBuilder();
-    expected.append("String: name1-that-is-long <- String: name4              [1:2-3]\n");
-    expected.append("String: name2              <- String: name5              [1:2-3]\n");
-    expected.append("File  : name3              <- File  : name6-that-is-long [1:2-3]\n");
+    expected.append("String: name1-that-is-long <- String: name4              #1    [1:2-3]\n");
+    expected.append("String: name2              <- String: name5              #1234 [1:2-3]\n");
+    expected.append("File  : name3              <- File  : name6-that-is-long #7    [1:2-3]\n");
 
     assertThat(actual).isEqualTo(expected.toString());
   }
@@ -139,9 +139,13 @@ public class AssignmentListTest {
   }
 
   private static Argument arg(Type type, String name) {
+    return arg(1, type, name);
+  }
+
+  private static Argument arg(int number, Type type, String name) {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
 
-    return namedArg(1, name, node, codeLocation(1, 2, 3));
+    return namedArg(number, name, node, codeLocation(1, 2, 3));
   }
 }

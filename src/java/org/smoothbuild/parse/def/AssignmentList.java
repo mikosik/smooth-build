@@ -54,13 +54,13 @@ public class AssignmentList {
     int maxParamName = calculateLongestParamName(assignments);
     int maxArgType = calculateLongestArgType(assignments);
     int maxArgName = calculateLongestArgName(assignments);
-
+    int maxNumber = calculateLongestArgNumber(assignments);
     StringBuilder builder = new StringBuilder();
 
     for (Assignment assignment : assignments) {
       String paramPart = assignment.param().toPaddedString(maxParamType, maxParamName);
       Argument argument = assignment.argument();
-      String argPart = argument.toPaddedString(maxArgType, maxArgName);
+      String argPart = argument.toPaddedString(maxArgType, maxArgName, maxNumber);
       builder.append(paramPart + " <- " + argPart + "\n");
     }
     return builder.toString();
@@ -96,6 +96,14 @@ public class AssignmentList {
       result = Math.max(result, assignment.argument().nameSanitized().length());
     }
     return result;
+  }
+
+  private static int calculateLongestArgNumber(List<Assignment> assignments) {
+    int maxNumber = 0;
+    for (Assignment assignment : assignments) {
+      maxNumber = Math.max(maxNumber, assignment.argument().number());
+    }
+    return Integer.toString(maxNumber).length();
   }
 
   private static DefinitionNode convert(Type type, DefinitionNode argNode) {
