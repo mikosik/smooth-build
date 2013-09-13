@@ -15,6 +15,7 @@ import org.smoothbuild.function.plugin.exc.MissingNameException;
 import org.smoothbuild.function.plugin.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.plugin.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
+import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 
 import com.google.common.collect.ImmutableMap;
@@ -80,6 +81,7 @@ public class PluginSignatureFactory {
       throw new ForbiddenParamTypeException(method, paramMethod, javaType);
     }
 
-    return Param.param(type, paramMethod.getName());
+    boolean isRequired = paramMethod.getAnnotation(Required.class) != null;
+    return Param.param(type, paramMethod.getName(), isRequired);
   }
 }
