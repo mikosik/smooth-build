@@ -15,12 +15,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class Argument {
-  /**
-   * Number of position of this argument in function call's argument list. Value
-   * zero denotes piped argument. Value one denotes first argument on the list.
-   */
-  // TODO use in toPaddedString() method
-  @SuppressWarnings("unused")
   private final int number;
   private final String name;
   private final DefinitionNode node;
@@ -47,6 +41,14 @@ public class Argument {
     this.name = name;
     this.node = checkNotNull(node);
     this.codeLocation = checkNotNull(codeLocation);
+  }
+
+  /**
+   * Number of position of this argument in function call's argument list. Value
+   * zero denotes piped argument. Value one denotes first argument on the list.
+   */
+  public int number() {
+    return number;
   }
 
   public String name() {
@@ -76,11 +78,16 @@ public class Argument {
     return name != null;
   }
 
-  public String toPaddedString(int minTypeLength, int minNameLength) {
+  public String toPaddedString(int minTypeLength, int minNameLength, int minNumberLength) {
     String type = padEnd(type().name(), minTypeLength, ' ') + ": ";
     String name = padEnd(nameSanitized(), minNameLength, ' ');
+    String number = padEnd(numberString(), minNumberLength, ' ');
     String location = codeLocation.toString();
-    return type + name + " " + location;
+    return type + name + " #" + number + " " + location;
+  }
+
+  private String numberString() {
+    return number == 0 ? "|" : Integer.toString(number);
   }
 
   @Override
