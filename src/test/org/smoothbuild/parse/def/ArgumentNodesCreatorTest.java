@@ -425,8 +425,7 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_SET, STRING_SET);
   }
 
-  private void doTestConvertingNamelessEmptySetArgWithOtherNamedSet(Type setType,
-      Type otherSetType) {
+  private void doTestConvertingNamelessEmptySetArgWithOtherNamedSet(Type setType, Type otherSetType) {
     // given
     problemsListener = new TestProblemsListener();
     Param p1 = param(setType, "name1");
@@ -535,11 +534,11 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static Argument argument(DefinitionNode node) {
-    return namelessArg(node, codeLocation(1, 2, 3));
+    return namelessArg(1, node, codeLocation(1, 2, 3));
   }
 
   private static Argument argument(String name, DefinitionNode node) {
-    return namedArg(name, node, codeLocation(1, 2, 3));
+    return namedArg(1, name, node, codeLocation(1, 2, 3));
   }
 
   private static DefinitionNode node(Type type) {

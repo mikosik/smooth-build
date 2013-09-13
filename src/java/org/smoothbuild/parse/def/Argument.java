@@ -1,5 +1,6 @@
 package org.smoothbuild.parse.def;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 
@@ -14,19 +15,35 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class Argument {
+  /**
+   * Number of position of this argument in function call's argument list. Value
+   * zero denotes piped argument. Value one denotes first argument on the list.
+   */
+  // TODO use in toPaddedString() method
+  @SuppressWarnings("unused")
+  private final int number;
   private final String name;
   private final DefinitionNode node;
   private final CodeLocation codeLocation;
 
-  public static Argument namedArg(String name, DefinitionNode node, CodeLocation codeLocation) {
-    return new Argument(checkNotNull(name), node, codeLocation);
+  public static Argument namedArg(int number, String name, DefinitionNode node,
+      CodeLocation codeLocation) {
+    checkArgument(0 < number);
+    return new Argument(number, checkNotNull(name), node, codeLocation);
   }
 
-  public static Argument namelessArg(DefinitionNode node, CodeLocation codeLocation) {
-    return new Argument(null, node, codeLocation);
+  public static Argument namelessArg(int number, DefinitionNode node, CodeLocation codeLocation) {
+    checkArgument(0 < number);
+    return new Argument(number, null, node, codeLocation);
   }
 
-  private Argument(String name, DefinitionNode node, CodeLocation codeLocation) {
+  public static Argument pipedArg(DefinitionNode node, CodeLocation codeLocation) {
+    return new Argument(0, null, node, codeLocation);
+  }
+
+  private Argument(int number, String name, DefinitionNode node, CodeLocation codeLocation) {
+    checkArgument(0 <= number);
+    this.number = number;
     this.name = name;
     this.node = checkNotNull(node);
     this.codeLocation = checkNotNull(codeLocation);

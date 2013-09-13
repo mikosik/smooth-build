@@ -11,6 +11,7 @@ import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.parse.def.Argument.namedArg;
 import static org.smoothbuild.parse.def.Argument.namelessArg;
+import static org.smoothbuild.parse.def.Argument.pipedArg;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.Set;
@@ -28,35 +29,65 @@ public class ArgumentTest {
   DefinitionNode node = mock(DefinitionNode.class);
   CodeLocation codeLocation = mock(CodeLocation.class);
 
+  @Test(expected = IllegalArgumentException.class)
+  public void negativeIndexIsForbiddenInNamedArg() {
+    namedArg(-1, name, node, codeLocation);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void zeroIndexIsForbiddenInNamedArg() {
+    namedArg(0, name, node, codeLocation);
+  }
+
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbiddenInNamedArg() {
-    namedArg(null, node, codeLocation);
+    namedArg(1, null, node, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullDefinitionNodeIsForbiddenInNamedArg() {
-    namedArg(name, null, codeLocation);
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void nullDefinitionNodeIsForbiddenInNamelessArg() {
-    namelessArg(null, codeLocation);
+    namedArg(1, name, null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullSourceLocationIsForbiddenInNamedArg() {
-    namedArg(name, node, null);
+    namedArg(1, name, node, null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void negativeIndexIsForbiddenInNamelessArg() {
+    namelessArg(-1, node, codeLocation);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void zeroIndexIsForbiddenInNamelessArg() {
+    namelessArg(0, node, codeLocation);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void nullDefinitionNodeIsForbiddenInNamelessArg() {
+    namelessArg(1, null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullSourceLocationIsForbiddenInNamelessArg() {
-    namelessArg(node, null);
+    namelessArg(1, node, null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void nullDefinitionNodeIsForbiddenInPipedArg() {
+    pipedArg(null, codeLocation);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void nullSourceLocationIsForbiddenInPipedArg() {
+    pipedArg(node, null);
   }
 
   @Test
   public void typeReturnsTypeOfDefinitionNode() throws Exception {
     when(node.type()).thenReturn(FILE);
-    Type arg = namedArg(name, node, codeLocation).type();
+    Type arg = namedArg(1, name, node, codeLocation).type();
     assertThat(arg).isEqualTo(FILE);
   }
 
@@ -67,12 +98,17 @@ public class ArgumentTest {
 
   @Test
   public void namedArgHasName() throws Exception {
-    assertThat(namedArg(name, node, codeLocation).hasName()).isTrue();
+    assertThat(namedArg(1, name, node, codeLocation).hasName()).isTrue();
   }
 
   @Test
   public void namelessArgDoesNotHaveName() throws Exception {
-    assertThat(namelessArg(node, codeLocation).hasName()).isFalse();
+    assertThat(namelessArg(1, node, codeLocation).hasName()).isFalse();
+  }
+
+  @Test
+  public void pipedArgDoesNotHaveName() throws Exception {
+    assertThat(pipedArg(node, codeLocation).hasName()).isFalse();
   }
 
   @Test
@@ -88,13 +124,13 @@ public class ArgumentTest {
   @Test
   public void namedArgToString() throws Exception {
     when(node.type()).thenReturn(STRING);
-    assertThat(namedArg(name, node, codeLocation).toString()).isEqualTo("String:" + name);
+    assertThat(namedArg(1, name, node, codeLocation).toString()).isEqualTo("String:" + name);
   }
 
   @Test
   public void namelessArgToString() throws Exception {
     when(node.type()).thenReturn(STRING);
-    assertThat(namelessArg(node, codeLocation).toString()).isEqualTo("String:<nameless>");
+    assertThat(namelessArg(1, node, codeLocation).toString()).isEqualTo("String:<nameless>");
   }
 
   @Test
@@ -102,7 +138,7 @@ public class ArgumentTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = namedArg("myName", node, codeLocation(1, 2, 3));
+    Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 3));
     String actual = arg.toPaddedString(10, 13);
 
     assertThat(actual).isEqualTo("String    : myName        [1:2-3]");
@@ -113,7 +149,7 @@ public class ArgumentTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = namedArg("myName", node, codeLocation(1, 2, 3));
+    Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 3));
     String actual = arg.toPaddedString(1, 1);
 
     assertThat(actual).isEqualTo("String: myName [1:2-3]");
@@ -154,7 +190,7 @@ public class ArgumentTest {
   }
 
   private static Argument named(String name) {
-    return Argument.namedArg(name, mock(DefinitionNode.class), codeLocation(1, 2, 3));
+    return Argument.namedArg(1, name, mock(DefinitionNode.class), codeLocation(1, 2, 3));
   }
 
   private static Argument nameless() {
@@ -164,6 +200,6 @@ public class ArgumentTest {
   private static Argument nameless(Type type) {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
-    return Argument.namelessArg(node, codeLocation(1, 2, 3));
+    return Argument.namelessArg(1, node, codeLocation(1, 2, 3));
   }
 }
