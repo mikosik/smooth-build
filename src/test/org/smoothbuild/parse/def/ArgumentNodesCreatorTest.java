@@ -16,6 +16,7 @@ import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
 import static org.smoothbuild.parse.def.Argument.namedArg;
 import static org.smoothbuild.parse.def.Argument.namelessArg;
+import static org.smoothbuild.parse.def.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.ArrayList;
@@ -548,7 +549,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   private Map<String, DefinitionNode> create(ImmutableMap<String, Param> params, List<Argument> args) {
-    return ArgumentNodesCreator.createArgumentNodes(problemsListener, function(params), args);
+    return createArgumentNodes(codeLocation(1, 2, 3), problemsListener, function(params), args);
   }
 
   private static Function function(ImmutableMap<String, Param> params) {
