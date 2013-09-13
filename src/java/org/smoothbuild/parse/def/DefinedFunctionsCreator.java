@@ -192,7 +192,9 @@ public class DefinedFunctionsCreator {
 
       Function function = getFunction(functionName);
 
-      Map<String, DefinitionNode> namedArgs = createArgumentNodes(problems, function, args);
+      CodeLocation codeLocation = locationOf(call.functionName());
+      Map<String, DefinitionNode> namedArgs = createArgumentNodes(codeLocation, problems, function,
+          args);
 
       if (namedArgs == null) {
         return new InvalidNode(function.type());

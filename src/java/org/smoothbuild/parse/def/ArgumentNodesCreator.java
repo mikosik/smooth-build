@@ -16,9 +16,11 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.parse.def.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.parse.def.err.DuplicateArgNameError;
+import org.smoothbuild.parse.def.err.MissingRequiredArgsError;
 import org.smoothbuild.parse.def.err.TypeMismatchError;
 import org.smoothbuild.parse.def.err.UnknownParamNameError;
 import org.smoothbuild.parse.def.err.VoidArgError;
+import org.smoothbuild.problem.CodeLocation;
 import org.smoothbuild.problem.DetectingErrorsProblemsListener;
 import org.smoothbuild.problem.ProblemsListener;
 
@@ -28,19 +30,21 @@ import com.google.common.collect.Sets;
 
 public class ArgumentNodesCreator {
 
-  public static Map<String, DefinitionNode> createArgumentNodes(ProblemsListener problems,
-      Function function, Collection<Argument> arguments) {
-    return new Worker(problems, function, arguments).convert();
+  public static Map<String, DefinitionNode> createArgumentNodes(CodeLocation codeLocation,
+      ProblemsListener problems, Function function, Collection<Argument> arguments) {
+    return new Worker(codeLocation, problems, function, arguments).convert();
   }
 
   private static class Worker {
+    private final CodeLocation codeLocation;
     private final DetectingErrorsProblemsListener problems;
     private final Function function;
     private final ParamsPool paramsPool;
     private final Collection<Argument> allArguments;
 
-    public Worker(ProblemsListener problemsListener, Function function,
+    public Worker(CodeLocation codeLocation, ProblemsListener problemsListener, Function function,
         Collection<Argument> arguments) {
+      this.codeLocation = codeLocation;
       this.problems = new DetectingErrorsProblemsListener(problemsListener);
       this.function = function;
       this.paramsPool = new ParamsPool(function.params());
@@ -71,6 +75,12 @@ public class ArgumentNodesCreator {
         return null;
       }
 
+      Set<Param> missingRequiredParams = paramsPool.availableRequiredParams();
+      if (missingRequiredParams.size() != 0) {
+        problems.report(new MissingRequiredArgsError(codeLocation, function, assignmentList,
+            missingRequiredParams));
+        return null;
+      }
       return assignmentList.createNodesMap();
     }
 
@@ -98,8 +108,7 @@ public class ArgumentNodesCreator {
       }
     }
 
-    private void processNamedArguments(AssignmentList assignmentList,
-        Collection<Argument> namedArgs) {
+    private void processNamedArguments(AssignmentList assignmentList, Collection<Argument> namedArgs) {
       for (Argument argument : namedArgs) {
         if (argument.hasName()) {
           String name = argument.name();
