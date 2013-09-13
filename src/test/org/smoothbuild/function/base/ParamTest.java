@@ -43,32 +43,37 @@ public class ParamTest {
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() throws Exception {
-    param(null, "name");
+    param(null, "name", true);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbidden() throws Exception {
-    param(Type.STRING, null);
+    param(Type.STRING, null, true);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void creatingVoidParamIsForbidden() throws Exception {
-    param(Type.VOID, "name");
+    param(Type.VOID, "name", true);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void creatingEmptySetParamIsForbidden() throws Exception {
-    param(Type.EMPTY_SET, "name");
+    param(Type.EMPTY_SET, "name", true);
   }
 
   @Test
   public void type() throws Exception {
-    assertThat(param(Type.STRING, "name").type()).isEqualTo(Type.STRING);
+    assertThat(param(Type.STRING, "name", true).type()).isEqualTo(Type.STRING);
   }
 
   @Test
   public void name() throws Exception {
-    assertThat(param(Type.STRING, "name").name()).isEqualTo("name");
+    assertThat(param(Type.STRING, "name", true).name()).isEqualTo("name");
+  }
+
+  @Test
+  public void isRequired() throws Exception {
+    assertThat(param(Type.STRING, "name", true).isRequired()).isTrue();
   }
 
   @Test

@@ -14,9 +14,14 @@ import com.google.common.collect.Sets;
 public class Param {
   private final Type type;
   private final String name;
+  private final boolean isRequired;
 
   public static Param param(Type type, String name) {
-    return new Param(type, name);
+    return new Param(type, name, false);
+  }
+
+  public static Param param(Type type, String name, boolean isRequired) {
+    return new Param(type, name, isRequired);
   }
 
   public static ImmutableMap<String, Param> params(Param... params) {
@@ -34,9 +39,10 @@ public class Param {
     return builder.build();
   }
 
-  protected Param(Type type, String name) {
+  protected Param(Type type, String name, boolean isRequired) {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
+    this.isRequired = isRequired;
   }
 
   private Type checkAllowedType(Type type) {
@@ -51,6 +57,10 @@ public class Param {
 
   public String name() {
     return name;
+  }
+
+  public boolean isRequired() {
+    return isRequired;
   }
 
   @Override
