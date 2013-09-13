@@ -7,6 +7,7 @@ import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.def.Argument.namedArg;
 import static org.smoothbuild.parse.def.Argument.namelessArg;
+import static org.smoothbuild.parse.def.Argument.pipedArg;
 import static org.smoothbuild.parse.def.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -100,7 +101,7 @@ public class DefinedFunctionsCreator {
         List<Argument> arguments = build(call.argList());
         // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipe.p.get(i));
-        arguments.add(namelessArg(result, codeLocation));
+        arguments.add(pipedArg(result, codeLocation));
         result = build(call, arguments);
       }
       return result;
@@ -216,22 +217,23 @@ public class DefinedFunctionsCreator {
     private List<Argument> build(ArgListContext argList) {
       List<Argument> result = Lists.newArrayList();
       if (argList != null) {
-        for (ArgContext arg : argList.arg()) {
-          result.add(build(arg));
+        List<ArgContext> argContextList = argList.arg();
+        for (int i = 0; i < argContextList.size(); i++) {
+          result.add(build(i, argContextList.get(i)));
         }
       }
       return result;
     }
 
-    private Argument build(ArgContext arg) {
+    private Argument build(int index, ArgContext arg) {
       DefinitionNode node = build(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
       if (paramName == null) {
-        return namelessArg(node, location);
+        return namelessArg(index + 1, node, location);
       } else {
-        return namedArg(paramName.getText(), node, location);
+        return namedArg(index + 1, paramName.getText(), node, location);
       }
     }
 

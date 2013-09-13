@@ -142,6 +142,6 @@ public class AssignmentListTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
 
-    return namedArg(name, node, codeLocation(1, 2, 3));
+    return namedArg(1, name, node, codeLocation(1, 2, 3));
   }
 }
