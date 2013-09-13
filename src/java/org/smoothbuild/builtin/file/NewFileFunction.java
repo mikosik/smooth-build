@@ -10,6 +10,7 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
@@ -18,9 +19,10 @@ public class NewFileFunction {
   public static final Charset US_ASCII = Charset.forName("US-ASCII");
 
   public interface Parameters {
-    // TODO params should be marked as @Required
+    @Required
     public String path();
 
+    @Required
     public String content();
   }
 

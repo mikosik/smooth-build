@@ -7,6 +7,7 @@ import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.plugin.internal.StoredFile;
@@ -14,7 +15,7 @@ import org.smoothbuild.plugin.internal.StoredFile;
 public class FileFunction {
 
   public interface Parameters {
-    // TODO should be marked as @Required
+    @Required
     public String path();
   }
 

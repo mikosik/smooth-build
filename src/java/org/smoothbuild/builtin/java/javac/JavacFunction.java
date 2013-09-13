@@ -17,6 +17,7 @@ import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
 
@@ -26,7 +27,7 @@ import com.google.common.collect.FluentIterable;
 public class JavacFunction {
 
   public interface Parameters {
-    // TODO add @Required
+    @Required
     FileSet sources();
   }
 

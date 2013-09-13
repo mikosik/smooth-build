@@ -5,7 +5,6 @@ import static org.smoothbuild.plugin.api.Path.path;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FilesFunction.Parameters;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
-import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.plugin.api.FileSet;
@@ -16,12 +15,6 @@ import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class FilesFunctionTest {
   TestSandbox sandbox = new TestSandbox();
-
-  @Test
-  public void missingDirArgIsReported() throws Exception {
-    runExecute(params(null));
-    sandbox.problems().assertOnlyProblem(MissingRequiredArgError.class);
-  }
 
   @Test
   public void illegalPathsAreReported() {

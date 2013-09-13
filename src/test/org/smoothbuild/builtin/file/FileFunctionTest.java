@@ -6,7 +6,6 @@ import static org.smoothbuild.plugin.api.Path.path;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FileFunction.Parameters;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
-import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
 import org.smoothbuild.plugin.api.File;
@@ -17,12 +16,6 @@ import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class FileFunctionTest {
   TestSandbox sandbox = new TestSandbox();
-
-  @Test
-  public void missingPathArgIsReported() throws Exception {
-    runExecute(params(null));
-    sandbox.problems().assertOnlyProblem(MissingRequiredArgError.class);
-  }
 
   @Test
   public void illegalPathIsReported() {

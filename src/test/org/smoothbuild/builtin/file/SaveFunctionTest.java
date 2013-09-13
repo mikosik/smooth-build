@@ -9,7 +9,6 @@ import org.smoothbuild.builtin.file.SaveFunction.Parameters;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
 import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
-import org.smoothbuild.builtin.file.err.MissingRequiredArgError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.File;
@@ -25,12 +24,6 @@ import org.smoothbuild.testing.plugin.internal.TestSandbox;
 public class SaveFunctionTest {
   TestSandbox sandbox = new TestSandbox();
   TestFileSystem fileSystem = sandbox.projectFileSystem();
-
-  @Test
-  public void missingDirArgIsReported() throws Exception {
-    runExecute(params(mock(File.class), null));
-    sandbox.problems().assertOnlyProblem(MissingRequiredArgError.class);
-  }
 
   @Test
   public void missingFileAndFileSetAreReported() throws Exception {

@@ -9,6 +9,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.plugin.internal.StoredFile;
@@ -19,7 +20,7 @@ public class SaveFunction {
 
     public FileSet files();
 
-    // TODO should be marked as @Required
+    @Required
     public String dir();
   }
 
