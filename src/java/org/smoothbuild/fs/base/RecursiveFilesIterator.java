@@ -42,12 +42,12 @@ public class RecursiveFilesIterator implements Iterator<Path> {
       if (fileStack.isEmpty()) {
         Path dir = directoryStack.remove();
         for (String name : fileSystem.childNames(dir)) {
-          fileStack.add(dir.append(Path.path(name)));
+          fileStack.push(dir.append(Path.path(name)));
         }
       } else {
         Path file = fileStack.remove();
         if (fileSystem.pathExistsAndIsDirectory(file)) {
-          directoryStack.add(file);
+          directoryStack.push(file);
         } else {
           return file;
         }
