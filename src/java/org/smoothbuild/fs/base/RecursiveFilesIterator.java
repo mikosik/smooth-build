@@ -9,15 +9,13 @@ import org.smoothbuild.plugin.api.Path;
 
 public class RecursiveFilesIterator implements Iterator<Path> {
   private final FileSystem fileSystem;
-  private final Path rootPath;
 
   private final ArrayDeque<Path> directoryStack;
   private final ArrayDeque<Path> fileStack;
   private Path nextFile;
 
-  public RecursiveFilesIterator(FileSystem fileSystem, Path rootPath) {
+  public RecursiveFilesIterator(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-    this.rootPath = rootPath;
     this.directoryStack = new ArrayDeque<Path>();
     this.fileStack = new ArrayDeque<Path>();
     this.directoryStack.push(Path.rootPath());
@@ -43,14 +41,12 @@ public class RecursiveFilesIterator implements Iterator<Path> {
     while (!fileStack.isEmpty() || !directoryStack.isEmpty()) {
       if (fileStack.isEmpty()) {
         Path dir = directoryStack.remove();
-        Path dirFullPath = rootPath.append(dir);
-        for (String name : fileSystem.childNames(dirFullPath)) {
+        for (String name : fileSystem.childNames(dir)) {
           fileStack.add(dir.append(Path.path(name)));
         }
       } else {
         Path file = fileStack.remove();
-        Path fullPath = rootPath.append(file);
-        if (fileSystem.pathExistsAndIsDirectory(fullPath)) {
+        if (fileSystem.pathExistsAndIsDirectory(file)) {
           directoryStack.add(file);
         } else {
           return file;
