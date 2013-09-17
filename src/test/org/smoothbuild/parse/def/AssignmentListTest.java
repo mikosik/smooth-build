@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.def.Argument.namedArg;
-import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.Map;
 

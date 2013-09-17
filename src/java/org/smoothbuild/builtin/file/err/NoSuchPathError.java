@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file.err;
 
+import org.smoothbuild.message.Error;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.problem.Error;
 
 public class NoSuchPathError extends Error {
   public NoSuchPathError(String paramName, Path dirPath) {

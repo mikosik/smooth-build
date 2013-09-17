@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.problem.CodeLocation.codeLocation;
+import static org.smoothbuild.message.CodeLocation.codeLocation;
 
 import java.util.NoSuchElementException;
 

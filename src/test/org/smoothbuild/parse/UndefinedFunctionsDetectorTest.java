@@ -12,8 +12,8 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.mockito.Matchers;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
-import org.smoothbuild.problem.MessageListener;
 
 import com.google.common.collect.Maps;
 

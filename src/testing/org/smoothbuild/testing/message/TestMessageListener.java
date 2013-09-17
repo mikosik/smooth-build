@@ -1,12 +1,12 @@
-package org.smoothbuild.testing.problem;
+package org.smoothbuild.testing.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.smoothbuild.problem.Message;
-import org.smoothbuild.problem.MessageListener;
-import org.smoothbuild.problem.MessageType;
+import org.smoothbuild.message.Message;
+import org.smoothbuild.message.MessageListener;
+import org.smoothbuild.message.MessageType;
 
 import com.google.common.collect.Lists;
 

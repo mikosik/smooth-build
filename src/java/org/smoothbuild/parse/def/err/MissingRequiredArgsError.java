@@ -6,9 +6,9 @@ import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.message.CodeError;
+import org.smoothbuild.message.CodeLocation;
 import org.smoothbuild.parse.def.AssignmentList;
-import org.smoothbuild.problem.CodeError;
-import org.smoothbuild.problem.CodeLocation;
 
 public class MissingRequiredArgsError extends CodeError {
   public MissingRequiredArgsError(CodeLocation codeLocation, Function function,

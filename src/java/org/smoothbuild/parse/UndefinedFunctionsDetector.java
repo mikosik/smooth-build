@@ -3,8 +3,8 @@ package org.smoothbuild.parse;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
-import org.smoothbuild.problem.MessageListener;
 
 /**
  * Detects calls to functions that are neither declared nor imported.

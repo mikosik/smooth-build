@@ -1,8 +1,8 @@
-package org.smoothbuild.testing.problem;
+package org.smoothbuild.testing.message;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.problem.MessageListener;
+import org.smoothbuild.message.MessageListener;
 
 import com.google.inject.AbstractModule;
 

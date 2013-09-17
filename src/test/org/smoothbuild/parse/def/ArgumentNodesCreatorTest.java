@@ -14,10 +14,10 @@ import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
+import static org.smoothbuild.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.def.Argument.namedArg;
 import static org.smoothbuild.parse.def.Argument.namelessArg;
 import static org.smoothbuild.parse.def.ArgumentNodesCreator.createArgumentNodes;
-import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +37,8 @@ import org.smoothbuild.parse.def.err.TypeMismatchError;
 import org.smoothbuild.parse.def.err.UnknownParamNameError;
 import org.smoothbuild.parse.def.err.VoidArgError;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
-import org.smoothbuild.testing.problem.TestMessageListener;
 
 import com.google.common.collect.ImmutableMap;
 

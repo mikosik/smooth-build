@@ -1,4 +1,4 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
 public enum MessageType {
   ERROR, WARNING, INFO

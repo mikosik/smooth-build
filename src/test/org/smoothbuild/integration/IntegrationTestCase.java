@@ -9,9 +9,9 @@ import org.junit.Before;
 import org.smoothbuild.run.SmoothRunner;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.fs.base.TestFileSystemModule;
+import org.smoothbuild.testing.message.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageListenerModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.problem.TestMessageListener;
-import org.smoothbuild.testing.problem.TestMessageListenerModule;
 
 import com.google.inject.Injector;
 

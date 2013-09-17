@@ -4,8 +4,8 @@ import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.plugin.api.Path.validationError;
 
 import org.smoothbuild.builtin.file.err.IllegalPathError;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.problem.MessageListener;
 
 public class PathArgValidator {
   public static Path validatedPath(String name, String value, MessageListener messages) {

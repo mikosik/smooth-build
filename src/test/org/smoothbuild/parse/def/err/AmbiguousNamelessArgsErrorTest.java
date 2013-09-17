@@ -11,10 +11,10 @@ import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.def.Argument.namedArg;
 import static org.smoothbuild.parse.def.Argument.namelessArg;
 import static org.smoothbuild.parse.def.Argument.pipedArg;
-import static org.smoothbuild.problem.CodeLocation.codeLocation;
 
 import java.util.Set;
 

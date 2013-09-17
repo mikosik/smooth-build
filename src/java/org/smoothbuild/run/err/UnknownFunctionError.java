@@ -3,7 +3,7 @@ package org.smoothbuild.run.err;
 import java.util.Collection;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.problem.Error;
+import org.smoothbuild.message.Error;
 
 public class UnknownFunctionError extends Error {
 

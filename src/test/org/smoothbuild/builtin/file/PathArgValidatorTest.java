@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.file;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.plugin.api.PathTest;
-import org.smoothbuild.testing.problem.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageListener;
 
 public class PathArgValidatorTest {
   TestMessageListener messages = new TestMessageListener();

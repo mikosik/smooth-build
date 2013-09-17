@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.message.CodeError;
 import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.parse.def.AssignmentList;
-import org.smoothbuild.problem.CodeError;
 
 public class AmbiguousNamelessArgsError extends CodeError {
 

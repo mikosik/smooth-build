@@ -2,12 +2,12 @@ package org.smoothbuild.plugin.internal;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
+import org.smoothbuild.message.Message;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.problem.Message;
-import org.smoothbuild.problem.MessageListener;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;

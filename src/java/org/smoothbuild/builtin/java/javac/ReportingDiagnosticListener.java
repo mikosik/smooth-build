@@ -5,7 +5,7 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerError;
-import org.smoothbuild.problem.MessageListener;
+import org.smoothbuild.message.MessageListener;
 
 public class ReportingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
   private final MessageListener messages;

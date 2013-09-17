@@ -1,6 +1,6 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
-import static org.smoothbuild.problem.MessageType.ERROR;
+import static org.smoothbuild.message.MessageType.ERROR;
 
 public class Error extends Message {
   public Error(String message) {
