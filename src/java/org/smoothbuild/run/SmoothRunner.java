@@ -12,6 +12,7 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.DetectingErrorsMessageListener;
+import org.smoothbuild.message.Info;
 import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.plugin.api.Path;
@@ -69,6 +70,11 @@ public class SmoothRunner {
 
     taskExecutor.execute(messages, function.generateTask(Empty.stringTaskMap()));
 
+    if (messages.errorDetected()) {
+      messages.report(new Info("BUILD FAILED"));
+    } else {
+      messages.report(new Info("SUCCESS"));
+    }
   }
 
   private InputStream scriptInputStream(MessageListener messages, Path scriptFile) {
