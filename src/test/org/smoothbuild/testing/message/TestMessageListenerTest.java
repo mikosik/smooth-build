@@ -12,12 +12,12 @@ public class TestMessageListenerTest {
   TestMessageListener testingProblemListener = new TestMessageListener();
 
   @Test(expected = AssertionError.class)
-  public void problemsFoundFailesWhenNothingFound() throws Exception {
+  public void problemsFoundFailsWhenNothingFound() throws Exception {
     testingProblemListener.assertProblemsFound();
   }
 
   @Test(expected = AssertionError.class)
-  public void problemsFoundFailesWhenInfoWasReported() throws Exception {
+  public void problemsFoundFailsWhenInfoWasReported() throws Exception {
     testingProblemListener.report(new Message(INFO, "message"));
     testingProblemListener.assertProblemsFound();
   }
