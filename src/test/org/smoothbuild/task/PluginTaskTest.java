@@ -8,12 +8,15 @@ import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.message.Message;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
@@ -44,6 +47,14 @@ public class PluginTaskTest {
 
     pluginTask.execute(sandbox);
     assertThat(pluginTask.result()).isSameAs(result);
+  }
+
+  @Test
+  public void printsInfoMessageUponSuccess() throws Exception {
+    when(pluginInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Object>> any()))
+        .thenReturn("result");
+    pluginTask.execute(sandbox);
+    sandbox.messages().assertOnlyInfo(PluginTaskCompletedMessage.class);
   }
 
   @Test
