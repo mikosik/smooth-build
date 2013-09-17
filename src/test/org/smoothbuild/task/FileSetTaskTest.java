@@ -54,4 +54,13 @@ public class FileSetTaskTest {
     FileTester.assertContentContainsFilePath(res2);
   }
 
+  @Test
+  public void duplicatedFileCausesError() throws IOException {
+    file1.createContentWithFilePath();
+    FileSetTask fileSetTask = new FileSetTask(ImmutableSet.of(task1, task1));
+
+    fileSetTask.execute(sandbox);
+
+    sandbox.messages().assertOnlyProblem(DuplicatedPathError.class);
+  }
 }
