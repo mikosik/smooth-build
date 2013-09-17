@@ -5,6 +5,7 @@ import static org.smoothbuild.message.MessageType.INFO;
 import static org.smoothbuild.message.MessageType.WARNING;
 
 import org.junit.Test;
+import org.smoothbuild.message.Info;
 import org.smoothbuild.message.Message;
 import org.smoothbuild.message.Warning;
 
@@ -32,6 +33,31 @@ public class TestMessageListenerTest {
   public void problemsFoundSucceedsWhenWarningWasReported() throws Exception {
     testingProblemListener.report(new Message(WARNING, "message"));
     testingProblemListener.assertProblemsFound();
+  }
+
+  @Test
+  public void assertingThatOnlyOneInfoExistsSucceedsWhenOneExists() {
+    testingProblemListener.report(new MyInfo());
+    testingProblemListener.assertOnlyInfo(MyInfo.class);
+  }
+
+  @Test(expected = AssertionError.class)
+  public void assertingThatOnlyOneInfoExistsFailsWhenNoOneExists() {
+    testingProblemListener.assertOnlyInfo(MyInfo.class);
+  }
+
+  @Test(expected = AssertionError.class)
+  public void assertingThatOnlyOneInfoExistsFailsWhenTwoProblemsExist() {
+    testingProblemListener.report(new MyInfo());
+    testingProblemListener.report(new MyInfo());
+
+    testingProblemListener.assertOnlyInfo(MyInfo.class);
+  }
+
+  @Test(expected = AssertionError.class)
+  public void assertingThatOnlyOneInfoExistsFailsWhenOneProblemOfWrongTypeExists() {
+    testingProblemListener.report(new Info("message"));
+    testingProblemListener.assertOnlyInfo(MyInfo.class);
   }
 
   @Test
@@ -74,6 +100,12 @@ public class TestMessageListenerTest {
   private static class MyProblem extends Message {
     public MyProblem() {
       super(ERROR, "message");
+    }
+  }
+
+  private static class MyInfo extends Message {
+    public MyInfo() {
+      super(INFO, "message");
     }
   }
 }
