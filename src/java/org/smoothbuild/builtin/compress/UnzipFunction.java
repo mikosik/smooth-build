@@ -18,13 +18,28 @@ public class UnzipFunction {
 
   @SmoothFunction("unzip")
   public static FileSet execute(Sandbox sandbox, Parameters params) {
-    Unzipper unzipper = new Unzipper();
-    MutableFileSet result = sandbox.resultFileSet();
-    try {
-      unzipper.unzipFile(params.file(), result);
-    } catch (IOException e) {
-      throw new FileSystemException(e);
+    return new Worker().execute(sandbox, params);
+  }
+
+  public static class Worker {
+    private final Unzipper unzipper;
+
+    public Worker() {
+      this(new Unzipper());
     }
-    return result;
+
+    public Worker(Unzipper unzipper) {
+      this.unzipper = unzipper;
+    }
+
+    public FileSet execute(Sandbox sandbox, Parameters params) {
+      MutableFileSet result = sandbox.resultFileSet();
+      try {
+        unzipper.unzipFile(params.file(), result);
+      } catch (IOException e) {
+        throw new FileSystemException(e);
+      }
+      return result;
+    }
   }
 }
