@@ -11,30 +11,40 @@ import org.smoothbuild.message.MessageType;
 import com.google.common.collect.Lists;
 
 public class TestMessageListener implements MessageListener {
-  private final List<Message> list = Lists.newArrayList();
+  private final List<Message> problems = Lists.newArrayList();
+  private final List<Message> infos = Lists.newArrayList();
 
   @Override
   public void report(Message message) {
-    if (message.type() != MessageType.INFO) {
-      list.add(message);
+    if (message.type() == MessageType.INFO) {
+      infos.add(message);
+    } else {
+      problems.add(message);
     }
   }
 
   public void assertProblemsFound() {
-    assertThat(list.isEmpty()).isFalse();
+    assertThat(problems.isEmpty()).isFalse();
+  }
+
+  public void assertOnlyInfo(Class<? extends Message> klass) {
+    if (infos.size() != 1) {
+      throw new AssertionError("Expected one info ,\nbut got:\n" + infos.toString());
+    }
+    assertThat(infos.get(0)).isInstanceOf(klass);
   }
 
   public void assertOnlyProblem(Class<? extends Message> klass) {
-    if (list.size() != 1) {
-      throw new AssertionError("Expected one problem,\nbut got:\n" + list.toString());
+    if (problems.size() != 1) {
+      throw new AssertionError("Expected one problem,\nbut got:\n" + problems.toString());
     }
-    assertThat(list.get(0)).isInstanceOf(klass);
+    assertThat(problems.get(0)).isInstanceOf(klass);
   }
 
   public void assertNoProblems() {
-    if (!list.isEmpty()) {
+    if (!problems.isEmpty()) {
       StringBuilder builder = new StringBuilder("Expected zero problems, but got:\n");
-      for (Message message : list) {
+      for (Message message : problems) {
         builder.append(message.toString());
         builder.append("\n");
       }
