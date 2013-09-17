@@ -4,24 +4,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.smoothbuild.problem.Problem;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.Message;
+import org.smoothbuild.problem.MessageListener;
+import org.smoothbuild.problem.MessageType;
 
 import com.google.common.collect.Lists;
 
-public class TestProblemsListener implements ProblemsListener {
-  private final List<Problem> list = Lists.newArrayList();
+public class TestMessageListener implements MessageListener {
+  private final List<Message> list = Lists.newArrayList();
 
   @Override
-  public void report(Problem problem) {
-    list.add(problem);
+  public void report(Message message) {
+    if (message.type() != MessageType.INFO) {
+      list.add(message);
+    }
   }
 
   public void assertProblemsFound() {
     assertThat(list.isEmpty()).isFalse();
   }
 
-  public void assertOnlyProblem(Class<? extends Problem> klass) {
+  public void assertOnlyProblem(Class<? extends Message> klass) {
     if (list.size() != 1) {
       throw new AssertionError("Expected one problem,\nbut got:\n" + list.toString());
     }
@@ -31,8 +34,8 @@ public class TestProblemsListener implements ProblemsListener {
   public void assertNoProblems() {
     if (!list.isEmpty()) {
       StringBuilder builder = new StringBuilder("Expected zero problems, but got:\n");
-      for (Problem problem : list) {
-        builder.append(problem.toString());
+      for (Message message : list) {
+        builder.append(message.toString());
         builder.append("\n");
       }
       throw new AssertionError(builder.toString());

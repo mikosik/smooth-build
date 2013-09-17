@@ -16,7 +16,7 @@ import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
 import org.smoothbuild.problem.CodeLocation;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 
 import com.google.common.collect.Maps;
 
@@ -27,22 +27,22 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<String, FunctionContext> collectFunctions(ProblemsListener problems,
+  public static Map<String, FunctionContext> collectFunctions(MessageListener messages,
       SymbolTable importedFunctions, ModuleContext module) {
-    Worker worker = new Worker(problems, importedFunctions);
+    Worker worker = new Worker(messages, importedFunctions);
     worker.visit(module);
     return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final SymbolTable importedFunctions;
-    private final ProblemsListener problems;
+    private final MessageListener messages;
     private final Map<String, FunctionContext> functions;
 
     @Inject
-    public Worker(ProblemsListener problems, SymbolTable importedFunctions) {
+    public Worker(MessageListener messages, SymbolTable importedFunctions) {
       this.importedFunctions = importedFunctions;
-      this.problems = problems;
+      this.messages = messages;
       this.functions = Maps.newHashMap();
     }
 
@@ -52,18 +52,18 @@ public class FunctionsCollector {
       String name = nameContext.getText();
 
       if (!isLegalSimpleName(name)) {
-        problems.report(new IllegalFunctionNameError(locationOf(nameContext), name));
+        messages.report(new IllegalFunctionNameError(locationOf(nameContext), name));
         return null;
       }
 
       if (functions.keySet().contains(name)) {
-        problems.report(new DuplicateFunctionError(locationOf(nameContext), name));
+        messages.report(new DuplicateFunctionError(locationOf(nameContext), name));
         return null;
       }
       if (importedFunctions.containsFunction(name)) {
         Name importedName = importedFunctions.getFunction(name).name();
         CodeLocation location = locationOf(nameContext);
-        problems.report(new OverridenImportError(location, name, importedName));
+        messages.report(new OverridenImportError(location, name, importedName));
         return null;
       }
 

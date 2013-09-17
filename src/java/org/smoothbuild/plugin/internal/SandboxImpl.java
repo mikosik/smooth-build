@@ -6,22 +6,22 @@ import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.problem.Problem;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.Message;
+import org.smoothbuild.problem.MessageListener;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MutableStoredFileSet resultFileSet;
-  private final ProblemsListener problems;
+  private final MessageListener messages;
 
-  public SandboxImpl(FileSystem fileSystem, Path root, ProblemsListener problems) {
-    this(fileSystem, new SubFileSystem(fileSystem, root), problems);
+  public SandboxImpl(FileSystem fileSystem, Path root, MessageListener messages) {
+    this(fileSystem, new SubFileSystem(fileSystem, root), messages);
   }
 
-  public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem, ProblemsListener problems) {
+  public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem, MessageListener messages) {
     this.projectFileSystem = fileSystem;
     this.resultFileSet = new MutableStoredFileSet(sandboxFileSystem);
-    this.problems = problems;
+    this.messages = messages;
   }
 
   @Override
@@ -39,11 +39,11 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
-  public void report(Problem problem) {
+  public void report(Message message) {
     // TODO Smooth StackTrace (list of CodeLocations) should be added here. This
     // will be possible when each Task will have parent field pointing in
     // direction to nearest root node (build run can have more than one
     // task-to-run [soon]).
-    problems.report(problem);
+    messages.report(message);
   }
 }

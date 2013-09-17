@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.Error;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 
@@ -21,9 +21,9 @@ public class SandboxImplTest {
   Path path2 = path("my/path/file2.txt");
 
   TestFileSystem fileSystem = new TestFileSystem();
-  ProblemsListener problems = mock(ProblemsListener.class);
+  MessageListener messages = mock(MessageListener.class);
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, root, problems);
+  SandboxImpl sandbox = new SandboxImpl(fileSystem, root, messages);
 
   @Test
   public void createFileCreatesFileOnFileSystem() throws Exception {
@@ -50,6 +50,6 @@ public class SandboxImplTest {
   public void reportError() throws Exception {
     Error error = new Error("message");
     sandbox.report(error);
-    verify(problems).report(error);
+    verify(messages).report(error);
   }
 }

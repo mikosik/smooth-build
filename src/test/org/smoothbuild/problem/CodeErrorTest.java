@@ -2,7 +2,7 @@ package org.smoothbuild.problem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
-import static org.smoothbuild.problem.ProblemType.ERROR;
+import static org.smoothbuild.problem.MessageType.ERROR;
 
 import org.junit.Test;
 

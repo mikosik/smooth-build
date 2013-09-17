@@ -1,7 +1,7 @@
 package org.smoothbuild.problem;
 
-public class CodeError extends CodeProblem {
+public class CodeError extends CodeMessage {
   public CodeError(CodeLocation codeLocation, String message) {
-    super(ProblemType.ERROR, codeLocation, message);
+    super(MessageType.ERROR, codeLocation, message);
   }
 }

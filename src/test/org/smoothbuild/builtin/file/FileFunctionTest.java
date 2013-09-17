@@ -22,14 +22,14 @@ public class FileFunctionTest {
     for (String path : PathTest.listOfInvalidPaths()) {
       sandbox = new TestSandbox();
       runExecute(params(path));
-      sandbox.problems().assertOnlyProblem(IllegalPathError.class);
+      sandbox.messages().assertOnlyProblem(IllegalPathError.class);
     }
   }
 
   @Test
   public void nonexistentPathIsReported() throws Exception {
     runExecute(params("some/path/file.txt"));
-    sandbox.problems().assertOnlyProblem(NoSuchPathError.class);
+    sandbox.messages().assertOnlyProblem(NoSuchPathError.class);
   }
 
   @Test
@@ -39,7 +39,7 @@ public class FileFunctionTest {
     sandbox.projectFileSystem().createEmptyFile(file);
 
     runExecute(params(dir.value()));
-    sandbox.problems().assertOnlyProblem(PathIsNotAFileError.class);
+    sandbox.messages().assertOnlyProblem(PathIsNotAFileError.class);
   }
 
   @Test

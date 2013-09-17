@@ -3,27 +3,27 @@ package org.smoothbuild.builtin.file;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.plugin.api.PathTest;
-import org.smoothbuild.testing.problem.TestProblemsListener;
+import org.smoothbuild.testing.problem.TestMessageListener;
 
 public class PathArgValidatorTest {
-  TestProblemsListener problems = new TestProblemsListener();
+  TestMessageListener messages = new TestMessageListener();
 
   @Test
   public void illegalPathsAreReported() {
     String name = "name";
     for (String path : PathTest.listOfInvalidPaths()) {
-      TestProblemsListener problems = new TestProblemsListener();
-      PathArgValidator.validatedPath(name, path, problems);
-      problems.assertOnlyProblem(IllegalPathError.class);
+      TestMessageListener messages = new TestMessageListener();
+      PathArgValidator.validatedPath(name, path, messages);
+      messages.assertOnlyProblem(IllegalPathError.class);
     }
   }
 
   @Test
   public void validPathsAreAccepted() {
     for (String path : PathTest.listOfCorrectPaths()) {
-      TestProblemsListener problems = new TestProblemsListener();
-      PathArgValidator.validatedPath("name", path, problems);
-      problems.assertNoProblems();
+      TestMessageListener messages = new TestMessageListener();
+      PathArgValidator.validatedPath("name", path, messages);
+      messages.assertNoProblems();
     }
   }
 }

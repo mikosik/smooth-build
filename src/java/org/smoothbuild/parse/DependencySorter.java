@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -20,24 +20,24 @@ import com.google.common.collect.Sets;
  * function in returned list. Detects cycles in dependency graph.
  */
 public class DependencySorter {
-  public static List<String> sortDependencies(ProblemsListener problems,
+  public static List<String> sortDependencies(MessageListener messages,
       SymbolTable importedFunctions, Map<String, Set<Dependency>> dependenciesOrig) {
 
-    Worker worker = new Worker(problems, importedFunctions, dependenciesOrig);
+    Worker worker = new Worker(messages, importedFunctions, dependenciesOrig);
     worker.work();
     return worker.result();
   }
 
   private static class Worker {
-    private final ProblemsListener problems;
+    private final MessageListener messages;
     private final HashMap<String, Set<Dependency>> notSorted;
     private final HashSet<String> reachableNames;
     private final List<String> sorted;
     private final DependencyStack stack;
 
-    public Worker(ProblemsListener problems, SymbolTable importedFunctions,
+    public Worker(MessageListener messages, SymbolTable importedFunctions,
         Map<String, Set<Dependency>> dependenciesOrig) {
-      this.problems = problems;
+      this.messages = messages;
       this.notSorted = Maps.newHashMap(dependenciesOrig);
       this.reachableNames = Sets.newHashSet(importedFunctions.names());
       this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
@@ -73,7 +73,7 @@ public class DependencySorter {
       // DependencyCollector made sure that all dependency exists so the
       // only possibility at this point is that missing dependency is on
       // stack and we have cycle in call graph.
-      problems.report(stack.createCycleProblem());
+      messages.report(stack.createCycleError());
       addStackTopToSorted();
     }
 

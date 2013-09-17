@@ -2,20 +2,20 @@ package org.smoothbuild.problem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.problem.CodeLocation.codeLocation;
-import static org.smoothbuild.problem.ProblemType.WARNING;
+import static org.smoothbuild.problem.MessageType.WARNING;
 
 import org.junit.Test;
 
-public class CodeProblemTest {
+public class CodeMessageTest {
 
   @Test(expected = NullPointerException.class)
   public void nullSourceLocationIsForbidden() throws Exception {
-    new CodeProblem(WARNING, null, "message");
+    new CodeMessage(WARNING, null, "message");
   }
 
   @Test
   public void testToString() throws Exception {
-    Problem problem = new CodeProblem(WARNING, codeLocation(1, 2, 3), "problem description");
-    assertThat(problem.toString()).isEqualTo("WARNING[1:2-3]: problem description");
+    Message message = new CodeMessage(WARNING, codeLocation(1, 2, 3), "problem description");
+    assertThat(message.toString()).isEqualTo("WARNING[1:2-3]: problem description");
   }
 }

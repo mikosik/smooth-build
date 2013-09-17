@@ -15,16 +15,16 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.problem.Error;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.problem.TestProblemsListener;
+import org.smoothbuild.testing.problem.TestMessageListener;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
 
 public class TaskExecutorTest {
   TestFileSystem fileSystem = new TestFileSystem();
-  TestProblemsListener problems = new TestProblemsListener();
+  TestMessageListener messages = new TestMessageListener();
 
   TaskExecutor taskExecutor = new TaskExecutor(fileSystem);
 
@@ -36,7 +36,7 @@ public class TaskExecutorTest {
     when(subTask.dependencies()).thenReturn(Empty.taskList());
     when(task.dependencies()).thenReturn(ImmutableList.of(subTask));
 
-    taskExecutor.execute(problems, task);
+    taskExecutor.execute(messages, task);
 
     InOrder inOrder = inOrder(task, subTask);
     inOrder.verify(subTask).execute(any(Sandbox.class));
@@ -55,15 +55,15 @@ public class TaskExecutorTest {
     Mockito.doAnswer(new Answer<Void>() {
       @Override
       public Void answer(InvocationOnMock invocation) throws Throwable {
-        ProblemsListener problems = (ProblemsListener) invocation.getArguments()[0];
-        problems.report(new Error(""));
+        MessageListener messages = (MessageListener) invocation.getArguments()[0];
+        messages.report(new Error(""));
         return null;
       }
     }).when(subTask).execute(Matchers.<Sandbox> any());
 
-    taskExecutor.execute(problems, task);
+    taskExecutor.execute(messages, task);
 
-    problems.assertOnlyProblem(Error.class);
+    messages.assertOnlyProblem(Error.class);
     verify(task, times(0)).execute(Matchers.<Sandbox> any());
   }
 }

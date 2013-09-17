@@ -1,22 +1,36 @@
 package org.smoothbuild.testing.problem;
 
-import static org.smoothbuild.problem.ProblemType.ERROR;
+import static org.smoothbuild.problem.MessageType.ERROR;
+import static org.smoothbuild.problem.MessageType.INFO;
+import static org.smoothbuild.problem.MessageType.WARNING;
 
 import org.junit.Test;
-import org.smoothbuild.problem.Problem;
+import org.smoothbuild.problem.Message;
 import org.smoothbuild.problem.Warning;
 
-public class TestProblemsListenerTest {
-  TestProblemsListener testingProblemListener = new TestProblemsListener();
+public class TestMessageListenerTest {
+  TestMessageListener testingProblemListener = new TestMessageListener();
 
   @Test(expected = AssertionError.class)
   public void problemsFoundFailesWhenNothingFound() throws Exception {
     testingProblemListener.assertProblemsFound();
   }
 
+  @Test(expected = AssertionError.class)
+  public void problemsFoundFailesWhenInfoWasReported() throws Exception {
+    testingProblemListener.report(new Message(INFO, "message"));
+    testingProblemListener.assertProblemsFound();
+  }
+
   @Test
-  public void problemsFoundSucceedsWhenProblemsWereReported() throws Exception {
-    testingProblemListener.report(new MyProblem());
+  public void problemsFoundSucceedsWhenErrorWasReported() throws Exception {
+    testingProblemListener.report(new Message(ERROR, "message"));
+    testingProblemListener.assertProblemsFound();
+  }
+
+  @Test
+  public void problemsFoundSucceedsWhenWarningWasReported() throws Exception {
+    testingProblemListener.report(new Message(WARNING, "message"));
     testingProblemListener.assertProblemsFound();
   }
 
@@ -57,7 +71,7 @@ public class TestProblemsListenerTest {
     testingProblemListener.assertNoProblems();
   }
 
-  private static class MyProblem extends Problem {
+  private static class MyProblem extends Message {
     public MyProblem() {
       super(ERROR, "message");
     }

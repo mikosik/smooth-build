@@ -56,7 +56,7 @@ public class SandboxedJavaFileManagerTest {
     StreamTester.writeAndClose(javaFile.openOutputStream(), content);
 
     assertThat(javaFile).isInstanceOf(DummyOutputClassFile.class);
-    sandbox.problems().assertOnlyProblem(IncorrectClassNameGivenByJavaCompilerError.class);
+    sandbox.messages().assertOnlyProblem(IncorrectClassNameGivenByJavaCompilerError.class);
     verifyZeroInteractions(sfm);
   }
 

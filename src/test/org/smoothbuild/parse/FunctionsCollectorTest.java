@@ -14,13 +14,13 @@ import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 import org.smoothbuild.testing.parse.TestModule;
-import org.smoothbuild.testing.problem.TestProblemsListener;
+import org.smoothbuild.testing.problem.TestMessageListener;
 
 import com.google.common.collect.ImmutableMap;
 
 public class FunctionsCollectorTest {
 
-  TestProblemsListener problemsListener = new TestProblemsListener();
+  TestMessageListener messages = new TestMessageListener();
   SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test
@@ -40,22 +40,22 @@ public class FunctionsCollectorTest {
   @Test
   public void illegalFunctionNameIsReported() {
     collectFunctions(module(function("function-name")));
-    problemsListener.assertOnlyProblem(IllegalFunctionNameError.class);
+    messages.assertOnlyProblem(IllegalFunctionNameError.class);
   }
 
   @Test
   public void duplicateFunction() throws Exception {
     collectFunctions(module(function("functionA"), function("functionA")));
-    problemsListener.assertOnlyProblem(DuplicateFunctionError.class);
+    messages.assertOnlyProblem(DuplicateFunctionError.class);
   }
 
   @Test
   public void overridenImport() throws Exception {
     collectFunctions(module(function(IMPORTED_NAME)));
-    problemsListener.assertOnlyProblem(OverridenImportError.class);
+    messages.assertOnlyProblem(OverridenImportError.class);
   }
 
   private Map<String, FunctionContext> collectFunctions(TestModule module) {
-    return FunctionsCollector.collectFunctions(problemsListener, importedFunctions, module);
+    return FunctionsCollector.collectFunctions(messages, importedFunctions, module);
   }
 }

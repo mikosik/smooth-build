@@ -25,7 +25,7 @@ public class DependencyStack {
     return stack.getLast();
   }
 
-  public CycleInCallGraphError createCycleProblem() {
+  public CycleInCallGraphError createCycleError() {
     String lastMissing = peek().missing().functionName();
     int first = -1;
     DependencyStackElem[] array = stack.toArray(new DependencyStackElem[stack.size()]);
@@ -47,7 +47,6 @@ public class DependencyStack {
 
     CodeLocation location = array[first].missing().location();
     String message = builder.toString();
-    CycleInCallGraphError problem = new CycleInCallGraphError(location, message);
-    return problem;
+    return new CycleInCallGraphError(location, message);
   }
 }

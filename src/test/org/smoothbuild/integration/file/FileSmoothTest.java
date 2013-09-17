@@ -23,7 +23,7 @@ public class FileSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    problems.assertNoProblems();
+    messages.assertNoProblems();
     fileSystem.subFileSystem(dir).assertFileContainsItsPath(file);
   }
 
@@ -39,7 +39,7 @@ public class FileSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    problems.assertNoProblems();
+    messages.assertNoProblems();
     fileSystem.subFileSystem(dir).assertFileContainsItsPath(file);
   }
 
@@ -59,7 +59,7 @@ public class FileSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    problems.assertNoProblems();
+    messages.assertNoProblems();
     fileSystem.subFileSystem(dir).assertFileContainsItsPath(file);
   }
 }

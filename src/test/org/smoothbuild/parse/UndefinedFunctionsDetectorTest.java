@@ -13,19 +13,19 @@ import java.util.Set;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 
 import com.google.common.collect.Maps;
 
 public class UndefinedFunctionsDetectorTest {
-  ProblemsListener problemsListener = mock(ProblemsListener.class);
+  MessageListener messageListener = mock(MessageListener.class);
   SymbolTable importedFunctions = mock(SymbolTable.class);
 
   @Test
   public void emptyFunctionSetHasNoProblems() {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
-    detectUndefinedFunctions(problemsListener, importedFunctions, map);
-    verifyZeroInteractions(problemsListener);
+    detectUndefinedFunctions(messageListener, importedFunctions, map);
+    verifyZeroInteractions(messageListener);
   }
 
   @Test
@@ -35,8 +35,8 @@ public class UndefinedFunctionsDetectorTest {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
     map.put("function1", dependencies(imported));
 
-    detectUndefinedFunctions(problemsListener, importedFunctions, map);
-    verifyZeroInteractions(problemsListener);
+    detectUndefinedFunctions(messageListener, importedFunctions, map);
+    verifyZeroInteractions(messageListener);
   }
 
   @Test
@@ -47,8 +47,8 @@ public class UndefinedFunctionsDetectorTest {
     map.put(fun1, dependencies(fun2));
     map.put(fun2, dependencies(fun1));
 
-    detectUndefinedFunctions(problemsListener, importedFunctions, map);
-    verifyZeroInteractions(problemsListener);
+    detectUndefinedFunctions(messageListener, importedFunctions, map);
+    verifyZeroInteractions(messageListener);
   }
 
   @Test
@@ -56,7 +56,7 @@ public class UndefinedFunctionsDetectorTest {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
     map.put("function1", dependencies("function2"));
 
-    detectUndefinedFunctions(problemsListener, importedFunctions, map);
-    verify(problemsListener).report(Matchers.isA(UndefinedFunctionError.class));
+    detectUndefinedFunctions(messageListener, importedFunctions, map);
+    verify(messageListener).report(Matchers.isA(UndefinedFunctionError.class));
   }
 }

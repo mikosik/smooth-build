@@ -72,7 +72,7 @@ public class PluginFactoryTest {
         stringReturningTask("abc"), "stringB", stringReturningTask("def"));
     Task task = function.generateTask(dependencies);
     task.execute(sandbox);
-    sandbox.problems().assertNoProblems();
+    sandbox.messages().assertNoProblems();
     assertThat(task.result()).isEqualTo("abcdef");
   }
 
@@ -249,7 +249,7 @@ public class PluginFactoryTest {
   public void runtimeExceptionThrownAreReported() throws Exception {
     Function function = pluginFactory.create(MyPluginWithThrowingSmoothMethod.class);
     function.generateTask(Empty.stringTaskMap()).execute(sandbox);
-    sandbox.problems().assertOnlyProblem(UnexpectedError.class);
+    sandbox.messages().assertOnlyProblem(UnexpectedError.class);
   }
 
   public static class MyPluginWithThrowingSmoothMethod {

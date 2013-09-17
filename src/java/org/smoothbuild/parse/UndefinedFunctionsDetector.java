@@ -4,13 +4,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.parse.err.UndefinedFunctionError;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 
 /**
  * Detects calls to functions that are neither declared nor imported.
  */
 public class UndefinedFunctionsDetector {
-  public static void detectUndefinedFunctions(ProblemsListener problems,
+  public static void detectUndefinedFunctions(MessageListener messages,
       SymbolTable importedFunctions, Map<String, Set<Dependency>> dependencies) {
 
     Set<String> declaredFunctions = dependencies.keySet();
@@ -19,7 +19,7 @@ public class UndefinedFunctionsDetector {
       for (Dependency dependency : functionDependecies) {
         String name = dependency.functionName();
         if (!importedFunctions.containsFunction(name) && !declaredFunctions.contains(name)) {
-          problems.report(new UndefinedFunctionError(dependency.location(), name));
+          messages.report(new UndefinedFunctionError(dependency.location(), name));
         }
       }
     }

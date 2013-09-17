@@ -10,8 +10,8 @@ import javax.inject.Inject;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.SandboxImpl;
-import org.smoothbuild.problem.DetectingErrorsProblemsListener;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.DetectingErrorsMessageListener;
+import org.smoothbuild.problem.MessageListener;
 
 public class TaskExecutor {
   private final FileSystem fileSystem;
@@ -21,27 +21,27 @@ public class TaskExecutor {
     this.fileSystem = fileSystem;
   }
 
-  public void execute(ProblemsListener problemsListener, Task task) {
-    new Worker(problemsListener).execute(task);
+  public void execute(MessageListener messageListener, Task task) {
+    new Worker(messageListener).execute(task);
   }
 
   private class Worker {
-    private final DetectingErrorsProblemsListener problems;
+    private final DetectingErrorsMessageListener messages;
     private int temptDirCount = 0;
 
-    public Worker(ProblemsListener problemsListener) {
-      this.problems = new DetectingErrorsProblemsListener(problemsListener);
+    public Worker(MessageListener messageListener) {
+      this.messages = new DetectingErrorsMessageListener(messageListener);
     }
 
     private void execute(Task task) {
       calculateTasks(task.dependencies());
 
-      if (problems.errorDetected()) {
+      if (messages.errorDetected()) {
         return;
       }
 
       Path tempPath = BUILD_DIR.append(path(Integer.toString(temptDirCount++)));
-      task.execute(new SandboxImpl(fileSystem, tempPath, problems));
+      task.execute(new SandboxImpl(fileSystem, tempPath, messages));
     }
 
     private void calculateTasks(Collection<Task> tasks) {
@@ -49,7 +49,7 @@ public class TaskExecutor {
         if (!task.isResultCalculated()) {
           execute(task);
         }
-        if (problems.errorDetected()) {
+        if (messages.errorDetected()) {
           return;
         }
       }

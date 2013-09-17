@@ -13,7 +13,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 
 import com.google.common.collect.ImmutableList;
@@ -27,7 +27,7 @@ public class DependencySorterTest {
   private static final String NAME5 = "funcation5";
   private static final String NAME6 = "funcation6";
 
-  ProblemsListener problemsListener = mock(ProblemsListener.class);
+  MessageListener messageListener = mock(MessageListener.class);
   SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test
@@ -39,7 +39,7 @@ public class DependencySorterTest {
     map.put(NAME2, dependencies(NAME3));
 
     assertThat(sort(map)).isEqualTo(ImmutableList.of(NAME4, NAME3, NAME2, NAME1));
-    verifyZeroInteractions(problemsListener);
+    verifyZeroInteractions(messageListener);
   }
 
   @Test
@@ -57,7 +57,7 @@ public class DependencySorterTest {
     assertThat(actual).containsSubsequence(NAME4, NAME2, NAME1);
     assertThat(actual).containsSubsequence(NAME6, NAME5, NAME3, NAME1);
 
-    verifyZeroInteractions(problemsListener);
+    verifyZeroInteractions(messageListener);
   }
 
   @Test
@@ -67,7 +67,7 @@ public class DependencySorterTest {
 
     sort(map);
 
-    verify(problemsListener).report(Matchers.isA(CycleInCallGraphError.class));
+    verify(messageListener).report(Matchers.isA(CycleInCallGraphError.class));
   }
 
   @Test
@@ -79,10 +79,10 @@ public class DependencySorterTest {
 
     sort(map);
 
-    verify(problemsListener).report(Matchers.isA(CycleInCallGraphError.class));
+    verify(messageListener).report(Matchers.isA(CycleInCallGraphError.class));
   }
 
   private List<String> sort(Map<String, Set<Dependency>> map) {
-    return DependencySorter.sortDependencies(problemsListener, importedFunctions, map);
+    return DependencySorter.sortDependencies(messageListener, importedFunctions, map);
   }
 }

@@ -2,16 +2,16 @@ package org.smoothbuild.problem;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class Problem {
-  private final ProblemType type;
+public class Message {
+  private final MessageType type;
   private final String message;
 
-  public Problem(ProblemType type, String message) {
+  public Message(MessageType type, String message) {
     this.type = checkNotNull(type);
     this.message = checkNotNull(message);
   }
 
-  public ProblemType type() {
+  public MessageType type() {
     return type;
   }
 
@@ -21,8 +21,8 @@ public class Problem {
 
   @Override
   public final boolean equals(Object object) {
-    if (object instanceof Problem) {
-      Problem that = (Problem) object;
+    if (object instanceof Message) {
+      Message that = (Message) object;
       return this.type == that.type && this.message.equals(that.message);
     }
     return false;

@@ -5,13 +5,13 @@ import static org.smoothbuild.plugin.api.Path.validationError;
 
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 
 public class PathArgValidator {
-  public static Path validatedPath(String name, String value, ProblemsListener problems) {
+  public static Path validatedPath(String name, String value, MessageListener messages) {
     String message = validationError(value);
     if (message != null) {
-      problems.report(new IllegalPathError(name, message));
+      messages.report(new IllegalPathError(name, message));
       return null;
     }
 

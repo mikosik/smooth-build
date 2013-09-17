@@ -122,13 +122,13 @@ public class DependencyStackTest {
   }
 
   @Test
-  public void createCycleProblem() throws Exception {
+  public void createCycleError() throws Exception {
     dependencyStack.push(elem("name1", "name2", 1));
     dependencyStack.push(elem("name2", "name3", 2));
     dependencyStack.push(elem("name3", "name4", 3));
     dependencyStack.push(elem("name4", "name2", 4));
 
-    CycleInCallGraphError problem = dependencyStack.createCycleProblem();
+    CycleInCallGraphError error = dependencyStack.createCycleError();
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
@@ -136,21 +136,21 @@ public class DependencyStackTest {
     builder.append("name3[3:3-3] -> name4\n");
     builder.append("name4[4:4-4] -> name2\n");
 
-    assertThat(problem.message()).isEqualTo(builder.toString());
+    assertThat(error.message()).isEqualTo(builder.toString());
   }
 
   @Test
-  public void createCycleProblemForRecursiveCall() throws Exception {
+  public void createCycleErrorForRecursiveCall() throws Exception {
     dependencyStack.push(elem("name1", "name2", 1));
     dependencyStack.push(elem("name2", "name2", 2));
 
-    CycleInCallGraphError problem = dependencyStack.createCycleProblem();
+    CycleInCallGraphError error = dependencyStack.createCycleError();
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
     builder.append("name2[2:2-2] -> name2\n");
 
-    assertThat(problem.message()).isEqualTo(builder.toString());
+    assertThat(error.message()).isEqualTo(builder.toString());
   }
 
   private DependencyStackElem elem(String from, String to, int location) {

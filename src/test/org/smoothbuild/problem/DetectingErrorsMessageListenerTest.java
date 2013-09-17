@@ -6,17 +6,17 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 
-public class DetectingErrorsProblemsListenerTest {
-  ProblemsListener wrapped = mock(ProblemsListener.class);
-  DetectingErrorsProblemsListener listener = new DetectingErrorsProblemsListener(wrapped);
+public class DetectingErrorsMessageListenerTest {
+  MessageListener wrapped = mock(MessageListener.class);
+  DetectingErrorsMessageListener listener = new DetectingErrorsMessageListener(wrapped);
 
   @Test
-  public void problemsAreForwarded() {
-    Problem problem = new Problem(ProblemType.ERROR, "message");
+  public void messagesAreForwarded() {
+    Message message = new Message(MessageType.ERROR, "message");
 
-    listener.report(problem);
+    listener.report(message);
 
-    verify(wrapped).report(problem);
+    verify(wrapped).report(message);
   }
 
   @Test
