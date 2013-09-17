@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.problem.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageListener;
 
 public class ScriptParserTest {
 

@@ -1,8 +1,8 @@
 package org.smoothbuild.parse.err;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.problem.CodeError;
-import org.smoothbuild.problem.CodeLocation;
+import org.smoothbuild.message.CodeError;
+import org.smoothbuild.message.CodeLocation;
 
 public class OverridenImportError extends CodeError {
   public OverridenImportError(CodeLocation codeLocation, String name, Name imported) {

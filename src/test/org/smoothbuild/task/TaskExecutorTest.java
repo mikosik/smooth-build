@@ -13,11 +13,11 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.smoothbuild.message.Error;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.problem.Error;
-import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.problem.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;

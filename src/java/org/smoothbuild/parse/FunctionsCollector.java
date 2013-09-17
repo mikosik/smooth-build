@@ -12,11 +12,11 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.function.base.Name;
+import org.smoothbuild.message.CodeLocation;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
-import org.smoothbuild.problem.CodeLocation;
-import org.smoothbuild.problem.MessageListener;
 
 import com.google.common.collect.Maps;
 

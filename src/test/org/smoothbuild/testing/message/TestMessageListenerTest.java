@@ -1,12 +1,12 @@
-package org.smoothbuild.testing.problem;
+package org.smoothbuild.testing.message;
 
-import static org.smoothbuild.problem.MessageType.ERROR;
-import static org.smoothbuild.problem.MessageType.INFO;
-import static org.smoothbuild.problem.MessageType.WARNING;
+import static org.smoothbuild.message.MessageType.ERROR;
+import static org.smoothbuild.message.MessageType.INFO;
+import static org.smoothbuild.message.MessageType.WARNING;
 
 import org.junit.Test;
-import org.smoothbuild.problem.Message;
-import org.smoothbuild.problem.Warning;
+import org.smoothbuild.message.Message;
+import org.smoothbuild.message.Warning;
 
 public class TestMessageListenerTest {
   TestMessageListener testingProblemListener = new TestMessageListener();

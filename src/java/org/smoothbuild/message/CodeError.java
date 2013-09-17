@@ -1,4 +1,4 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
 public class CodeError extends CodeMessage {
   public CodeError(CodeLocation codeLocation, String message) {

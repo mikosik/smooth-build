@@ -1,8 +1,8 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.problem.MessageType.ERROR;
+import static org.smoothbuild.message.MessageType.ERROR;
 
 import java.io.PrintStream;
 

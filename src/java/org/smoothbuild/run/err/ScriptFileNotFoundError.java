@@ -1,7 +1,7 @@
 package org.smoothbuild.run.err;
 
+import org.smoothbuild.message.Error;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.problem.Error;
 
 public class ScriptFileNotFoundError extends Error {
   public ScriptFileNotFoundError(Path scriptFile) {

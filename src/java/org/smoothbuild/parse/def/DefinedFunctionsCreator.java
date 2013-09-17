@@ -36,12 +36,12 @@ import org.smoothbuild.function.def.FunctionNode;
 import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
+import org.smoothbuild.message.CodeError;
+import org.smoothbuild.message.CodeLocation;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.parse.SymbolTable;
 import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
-import org.smoothbuild.problem.CodeError;
-import org.smoothbuild.problem.CodeLocation;
-import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 

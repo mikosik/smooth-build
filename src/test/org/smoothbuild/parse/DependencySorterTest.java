@@ -12,8 +12,8 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.mockito.Matchers;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 
 import com.google.common.collect.ImmutableList;

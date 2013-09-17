@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import org.smoothbuild.problem.Error;
+import org.smoothbuild.message.Error;
 
 public class NoCompilerAvailableError extends Error {
   public NoCompilerAvailableError() {

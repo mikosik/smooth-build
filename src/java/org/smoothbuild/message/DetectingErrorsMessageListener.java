@@ -1,4 +1,4 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
 public class DetectingErrorsMessageListener extends ForwardingMessageListener {
   private boolean detected = false;

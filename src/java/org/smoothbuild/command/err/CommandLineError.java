@@ -1,6 +1,6 @@
 package org.smoothbuild.command.err;
 
-import org.smoothbuild.problem.Error;
+import org.smoothbuild.message.Error;
 
 public class CommandLineError extends Error {
   public CommandLineError(String message) {

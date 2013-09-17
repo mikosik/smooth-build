@@ -3,7 +3,7 @@ package org.smoothbuild.task.err;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.problem.Error;
+import org.smoothbuild.message.Error;
 
 import com.google.common.base.Throwables;
 

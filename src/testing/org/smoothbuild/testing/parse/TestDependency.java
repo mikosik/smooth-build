@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.parse;
 
-import static org.smoothbuild.problem.CodeLocation.codeLocation;
+import static org.smoothbuild.message.CodeLocation.codeLocation;
 
 import java.util.Set;
 

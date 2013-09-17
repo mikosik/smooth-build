@@ -19,9 +19,9 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
+import org.smoothbuild.message.DetectingErrorsMessageListener;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.problem.DetectingErrorsMessageListener;
-import org.smoothbuild.problem.MessageListener;
 
 public class ModuleParser {
   private final ImportedFunctions importedFunctions;

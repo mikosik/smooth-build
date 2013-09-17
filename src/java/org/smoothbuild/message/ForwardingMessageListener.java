@@ -1,4 +1,4 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
 public abstract class ForwardingMessageListener implements MessageListener {
   private final MessageListener wrapped;

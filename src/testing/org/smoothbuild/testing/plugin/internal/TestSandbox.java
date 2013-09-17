@@ -5,7 +5,7 @@ import static org.smoothbuild.plugin.api.Path.path;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.problem.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageListener;
 
 import com.google.common.annotations.VisibleForTesting;
 

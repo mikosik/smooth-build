@@ -1,6 +1,6 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
-import static org.smoothbuild.problem.MessageType.WARNING;
+import static org.smoothbuild.message.MessageType.WARNING;
 
 public class CodeWarning extends CodeMessage {
   public CodeWarning(CodeLocation codeLocation, String message) {

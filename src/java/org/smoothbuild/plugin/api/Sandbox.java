@@ -1,6 +1,6 @@
 package org.smoothbuild.plugin.api;
 
-import org.smoothbuild.problem.MessageListener;
+import org.smoothbuild.message.MessageListener;
 
 public interface Sandbox extends MessageListener {
   public MutableFileSet resultFileSet();

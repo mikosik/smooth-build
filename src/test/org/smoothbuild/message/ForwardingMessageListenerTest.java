@@ -1,4 +1,4 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

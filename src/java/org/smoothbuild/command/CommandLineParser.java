@@ -7,7 +7,7 @@ import static org.smoothbuild.function.base.Name.qualifiedName;
 import org.smoothbuild.command.err.CommandLineError;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.command.err.NothingToDoError;
-import org.smoothbuild.problem.MessageListener;
+import org.smoothbuild.message.MessageListener;
 
 public class CommandLineParser {
   public CommandLineArguments parse(MessageListener messages, String... args) {

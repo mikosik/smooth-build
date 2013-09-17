@@ -1,4 +1,4 @@
-package org.smoothbuild.problem;
+package org.smoothbuild.message;
 
 import com.google.inject.ImplementedBy;
 

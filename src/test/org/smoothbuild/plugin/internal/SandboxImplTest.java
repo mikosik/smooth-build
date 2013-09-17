@@ -8,10 +8,10 @@ import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.testing.plugin.internal.FileTester.createContentWithFilePath;
 
 import org.junit.Test;
+import org.smoothbuild.message.Error;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.problem.Error;
-import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 

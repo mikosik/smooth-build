@@ -10,7 +10,7 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerError;
-import org.smoothbuild.problem.MessageListener;
+import org.smoothbuild.message.MessageListener;
 
 public class ReportingDiagnosticListenerTest {
   @SuppressWarnings("unchecked")

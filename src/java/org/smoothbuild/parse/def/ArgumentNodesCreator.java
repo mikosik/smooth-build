@@ -14,15 +14,15 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.message.CodeLocation;
+import org.smoothbuild.message.DetectingErrorsMessageListener;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.parse.def.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.parse.def.err.DuplicateArgNameError;
 import org.smoothbuild.parse.def.err.MissingRequiredArgsError;
 import org.smoothbuild.parse.def.err.TypeMismatchError;
 import org.smoothbuild.parse.def.err.UnknownParamNameError;
 import org.smoothbuild.parse.def.err.VoidArgError;
-import org.smoothbuild.problem.CodeLocation;
-import org.smoothbuild.problem.DetectingErrorsMessageListener;
-import org.smoothbuild.problem.MessageListener;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

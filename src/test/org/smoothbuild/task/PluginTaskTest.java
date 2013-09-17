@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.plugin.PluginInvoker;
-import org.smoothbuild.problem.Message;
+import org.smoothbuild.message.Message;
 import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;

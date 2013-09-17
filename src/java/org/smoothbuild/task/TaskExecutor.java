@@ -8,10 +8,10 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.message.DetectingErrorsMessageListener;
+import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.SandboxImpl;
-import org.smoothbuild.problem.DetectingErrorsMessageListener;
-import org.smoothbuild.problem.MessageListener;
 
 public class TaskExecutor {
   private final FileSystem fileSystem;

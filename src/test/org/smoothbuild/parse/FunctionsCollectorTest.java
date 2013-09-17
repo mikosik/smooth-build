@@ -12,9 +12,9 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
+import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 import org.smoothbuild.testing.parse.TestModule;
-import org.smoothbuild.testing.problem.TestMessageListener;
 
 import com.google.common.collect.ImmutableMap;
 
