@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.task.DuplicatedPathError;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class FileSetSmoothTest extends IntegrationTestCase {
@@ -74,5 +75,21 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     // then
     messages.assertNoProblems();
     assertThat(fileSystem.pathExists(dir)).isFalse();
+  }
+
+  @Test
+  public void fileSetWith() throws Exception {
+    // given
+    Path file1 = path("file/path/file1.txt");
+
+    script("run : [ file(" + file1 + "), file(" + file1 + ") ];\n");
+
+    fileSystem.createFileContainingItsPath(file1);
+
+    // when
+    smoothRunner.run("run");
+
+    // then
+    messages.assertOnlyProblem(DuplicatedPathError.class);
   }
 }
