@@ -21,8 +21,8 @@ import org.smoothbuild.parse.def.err.TypeMismatchError;
 import org.smoothbuild.parse.def.err.UnknownParamNameError;
 import org.smoothbuild.parse.def.err.VoidArgError;
 import org.smoothbuild.problem.CodeLocation;
-import org.smoothbuild.problem.DetectingErrorsProblemsListener;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.DetectingErrorsMessageListener;
+import org.smoothbuild.problem.MessageListener;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -31,21 +31,21 @@ import com.google.common.collect.Sets;
 public class ArgumentNodesCreator {
 
   public static Map<String, DefinitionNode> createArgumentNodes(CodeLocation codeLocation,
-      ProblemsListener problems, Function function, Collection<Argument> arguments) {
-    return new Worker(codeLocation, problems, function, arguments).convert();
+      MessageListener messages, Function function, Collection<Argument> arguments) {
+    return new Worker(codeLocation, messages, function, arguments).convert();
   }
 
   private static class Worker {
     private final CodeLocation codeLocation;
-    private final DetectingErrorsProblemsListener problems;
+    private final DetectingErrorsMessageListener messages;
     private final Function function;
     private final ParamsPool paramsPool;
     private final Collection<Argument> allArguments;
 
-    public Worker(CodeLocation codeLocation, ProblemsListener problemsListener, Function function,
+    public Worker(CodeLocation codeLocation, MessageListener messageListener, Function function,
         Collection<Argument> arguments) {
       this.codeLocation = codeLocation;
-      this.problems = new DetectingErrorsProblemsListener(problemsListener);
+      this.messages = new DetectingErrorsMessageListener(messageListener);
       this.function = function;
       this.paramsPool = new ParamsPool(function.params());
       this.allArguments = arguments;
@@ -55,29 +55,29 @@ public class ArgumentNodesCreator {
       ImmutableList<Argument> namedArgs = Argument.filterNamed(allArguments);
 
       detectDuplicatedAndUnknownArgNames(namedArgs);
-      if (problems.errorDetected()) {
+      if (messages.errorDetected()) {
         return null;
       }
 
       detectVoidArguments();
-      if (problems.errorDetected()) {
+      if (messages.errorDetected()) {
         return null;
       }
 
       AssignmentList assignmentList = new AssignmentList();
       processNamedArguments(assignmentList, namedArgs);
-      if (problems.errorDetected()) {
+      if (messages.errorDetected()) {
         return null;
       }
 
       processNamelessArguments(assignmentList);
-      if (problems.errorDetected()) {
+      if (messages.errorDetected()) {
         return null;
       }
 
       Set<Param> missingRequiredParams = paramsPool.availableRequiredParams();
       if (missingRequiredParams.size() != 0) {
-        problems.report(new MissingRequiredArgsError(codeLocation, function, assignmentList,
+        messages.report(new MissingRequiredArgsError(codeLocation, function, assignmentList,
             missingRequiredParams));
         return null;
       }
@@ -90,9 +90,9 @@ public class ArgumentNodesCreator {
         if (argument.hasName()) {
           String name = argument.name();
           if (names.contains(name)) {
-            problems.report(new DuplicateArgNameError(argument));
+            messages.report(new DuplicateArgNameError(argument));
           } else if (!function.params().containsKey(name)) {
-            problems.report(new UnknownParamNameError(function.name(), argument));
+            messages.report(new UnknownParamNameError(function.name(), argument));
           } else {
             names.add(name);
           }
@@ -103,7 +103,7 @@ public class ArgumentNodesCreator {
     private void detectVoidArguments() {
       for (Argument argument : allArguments) {
         if (argument.type() == Type.VOID) {
-          problems.report(new VoidArgError(argument));
+          messages.report(new VoidArgError(argument));
         }
       }
     }
@@ -115,7 +115,7 @@ public class ArgumentNodesCreator {
           Param param = paramsPool.takeByName(name);
           Type paramType = param.type();
           if (!paramType.isAssignableFrom(argument.type())) {
-            problems.report(new TypeMismatchError(argument, paramType));
+            messages.report(new TypeMismatchError(argument, paramType));
           } else {
             assignmentList.add(param, argument);
           }
@@ -163,7 +163,7 @@ public class ArgumentNodesCreator {
           } else {
             AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(assignmentList,
                 availableArgs, availableParams);
-            problems.report(error);
+            messages.report(error);
             return;
           }
         }

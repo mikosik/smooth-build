@@ -26,18 +26,18 @@ import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.CodeLocation;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(ProblemsListener problems, InputStream inputStream,
+  public static ModuleContext parseScript(MessageListener messages, InputStream inputStream,
       Path scriptFile) {
-    ErrorListener errorListener = new ErrorListener(problems);
+    ErrorListener errorListener = new ErrorListener(messages);
 
     ANTLRInputStream antlrInputStream;
     try {
       antlrInputStream = new ANTLRInputStream(inputStream);
     } catch (IOException e) {
-      problems.report(new CannotReadScriptError(scriptFile, e));
+      messages.report(new CannotReadScriptError(scriptFile, e));
       return null;
     }
 
@@ -53,17 +53,17 @@ public class ScriptParser {
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final ProblemsListener problems;
+    private final MessageListener messages;
 
-    public ErrorListener(ProblemsListener problems) {
-      this.problems = problems;
+    public ErrorListener(MessageListener messages) {
+      this.messages = messages;
     }
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol,
         int line, int charPositionInLine, String msg, @Nullable RecognitionException e) {
       CodeLocation location = createLocation(offendingSymbol, line, charPositionInLine);
-      problems.report(new SyntaxError(location, msg));
+      messages.report(new SyntaxError(location, msg));
     }
 
     private CodeLocation createLocation(Object offendingSymbol, int line, int charPositionInLine) {
@@ -79,25 +79,25 @@ public class ScriptParser {
     @Override
     public void reportAmbiguity(@NotNull Parser recognizer, @NotNull DFA dfa, int startIndex,
         int stopIndex, boolean exact, @NotNull BitSet ambigAlts, @NotNull ATNConfigSet configs) {
-      reportProblem(recognizer, startIndex, "Ambiguity in grammar");
+      reportError(recognizer, startIndex, "Ambiguity in grammar");
     }
 
     @Override
     public void reportAttemptingFullContext(@NotNull Parser recognizer, @NotNull DFA dfa,
         int startIndex, int stopIndex, @Nullable BitSet conflictingAlts,
         @NotNull ATNConfigSet configs) {
-      reportProblem(recognizer, startIndex, "Attempting full context");
+      reportError(recognizer, startIndex, "Attempting full context");
     }
 
     @Override
     public void reportContextSensitivity(@NotNull Parser recognizer, @NotNull DFA dfa,
         int startIndex, int stopIndex, int prediction, @NotNull ATNConfigSet configs) {
-      reportProblem(recognizer, startIndex, "Context sensitivity");
+      reportError(recognizer, startIndex, "Context sensitivity");
     }
 
-    private void reportProblem(Parser recognizer, int startIndex, String message) {
+    private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      problems.report(new CodeError(locationOf(token), message));
+      messages.report(new CodeError(locationOf(token), message));
     }
   }
 }

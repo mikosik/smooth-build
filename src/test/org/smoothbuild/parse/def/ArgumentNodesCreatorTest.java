@@ -38,13 +38,13 @@ import org.smoothbuild.parse.def.err.UnknownParamNameError;
 import org.smoothbuild.parse.def.err.VoidArgError;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
-import org.smoothbuild.testing.problem.TestProblemsListener;
+import org.smoothbuild.testing.problem.TestMessageListener;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ArgumentNodesCreatorTest {
 
-  TestProblemsListener problemsListener;
+  TestMessageListener messages;
 
   @Test
   public void convertingNamedArgument() {
@@ -56,7 +56,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingNamedArgument(Type type) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
@@ -66,7 +66,7 @@ public class ArgumentNodesCreatorTest {
     Map<String, DefinitionNode> result = create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
     assertThat(result.size()).isEqualTo(1);
   }
@@ -79,7 +79,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingNamedEmptySetArgument(Type type) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
@@ -89,7 +89,7 @@ public class ArgumentNodesCreatorTest {
     Map<String, DefinitionNode> result = create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.size()).isEqualTo(1);
     assertThatNodeHasEmptySet(result.get(p1.name()));
   }
@@ -104,7 +104,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestDuplicatedNames(Type type) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(type, "name1");
 
     Argument a1 = argument(p1.name(), node(type));
@@ -114,7 +114,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1, a2));
 
     // then
-    problemsListener.assertOnlyProblem(DuplicateArgNameError.class);
+    messages.assertOnlyProblem(DuplicateArgNameError.class);
   }
 
   @Test
@@ -125,7 +125,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestDuplicatedNamedEmptySetNames(Type type) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(type, "name1");
 
     Argument a1 = argument(p1.name(), node(EMPTY_SET));
@@ -135,13 +135,13 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1, a2));
 
     // then
-    problemsListener.assertOnlyProblem(DuplicateArgNameError.class);
+    messages.assertOnlyProblem(DuplicateArgNameError.class);
   }
 
   @Test
   public void unknownParamName() {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(STRING, "name1");
     Argument a1 = argument("otherName", node(STRING));
 
@@ -149,7 +149,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(UnknownParamNameError.class);
+    messages.assertOnlyProblem(UnknownParamNameError.class);
   }
 
   @Test
@@ -184,7 +184,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestTypeMismatchForParamProblem(Type paramType, Type argType) throws Exception {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(paramType, "name1");
     Argument a1 = argument(p1.name(), node(argType));
 
@@ -192,7 +192,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(TypeMismatchError.class);
+    messages.assertOnlyProblem(TypeMismatchError.class);
   }
 
   @Test
@@ -205,7 +205,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestVoidTypeOfNamedArgument(Type paramType) throws Exception {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(paramType, "name1");
     Argument a1 = argument(p1.name(), node(VOID));
 
@@ -213,7 +213,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(VoidArgError.class);
+    messages.assertOnlyProblem(VoidArgError.class);
   }
 
   @Test
@@ -226,7 +226,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestVoidTypeOfNamelessArgument(Type paramType) throws Exception {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(paramType, "name1");
     Argument a1 = argument(node(VOID));
 
@@ -234,20 +234,20 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(VoidArgError.class);
+    messages.assertOnlyProblem(VoidArgError.class);
   }
 
   @Test
   public void convertingEmptyList() throws Exception {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(STRING, "name1");
 
     // when
     Map<String, DefinitionNode> result = create(params(p1), list());
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.size()).isEqualTo(0);
   }
 
@@ -281,7 +281,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleNamelessArgument(Type type, Type otherType) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(otherType, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(otherType, "name3");
@@ -292,7 +292,7 @@ public class ArgumentNodesCreatorTest {
     Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1));
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.get(p2.name())).isSameAs(a1.definitionNode());
     assertThat(result.size()).isEqualTo(1);
   }
@@ -308,7 +308,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleNamelessEmptySetArgument(Type type, Type otherType) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(otherType, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(otherType, "name3");
@@ -319,7 +319,7 @@ public class ArgumentNodesCreatorTest {
     Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1));
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.size()).isEqualTo(1);
     assertThatNodeHasEmptySet(result.get(p2.name()));
   }
@@ -334,7 +334,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleNamelessArgumentWhitOthersNamed(Type type) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
@@ -347,7 +347,7 @@ public class ArgumentNodesCreatorTest {
     Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
     assertThat(result.get(p2.name())).isSameAs(a2.definitionNode());
     assertThat(result.get(p3.name())).isSameAs(a3.definitionNode());
@@ -375,7 +375,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingTwoNamelessArgumentsWithDifferentType(Type type1, Type type2) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(type1, "name1");
     Param p2 = param(type2, "name2");
 
@@ -386,7 +386,7 @@ public class ArgumentNodesCreatorTest {
     Map<String, DefinitionNode> result = create(params(p1, p2), list(a1, a2));
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
     assertThat(result.get(p2.name())).isSameAs(a2.definitionNode());
     assertThat(result.size()).isEqualTo(2);
@@ -400,7 +400,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(Type type) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
@@ -413,7 +413,7 @@ public class ArgumentNodesCreatorTest {
     Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
     assertThatNodeHasEmptySet(result.get(p2.name()));
     assertThat(result.get(p3.name())).isSameAs(a3.definitionNode());
@@ -428,7 +428,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingNamelessEmptySetArgWithOtherNamedSet(Type setType, Type otherSetType) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(setType, "name1");
     Param p2 = param(otherSetType, "name2");
 
@@ -439,7 +439,7 @@ public class ArgumentNodesCreatorTest {
     Map<String, DefinitionNode> result = create(params(p1, p2), list(a1, a2));
 
     // then
-    problemsListener.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
     assertThatNodeHasEmptySet(result.get(p2.name()));
     assertThat(result.size()).isEqualTo(2);
@@ -458,7 +458,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestAmbiguousNamelessArgument(Type paramType, Type argType) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType, "name2");
 
@@ -468,13 +468,13 @@ public class ArgumentNodesCreatorTest {
     create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(AmbiguousNamelessArgsError.class);
+    messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
   @Test
   public void ambiguousNamelessEmptySetArgument() {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(STRING_SET, "name1");
     Param p2 = param(FILE_SET, "name2");
 
@@ -484,7 +484,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1, p2), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(AmbiguousNamelessArgsError.class);
+    messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
   @Test
@@ -523,7 +523,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestNoParamWithProperTypeForNamelessArgument(Type type, Type otherType) {
     // given
-    problemsListener = new TestProblemsListener();
+    messages = new TestMessageListener();
     Param p1 = param(otherType, "name1");
     Argument a1 = argument(node(type));
 
@@ -531,7 +531,7 @@ public class ArgumentNodesCreatorTest {
     create(params(p1), list(a1));
 
     // then
-    problemsListener.assertOnlyProblem(AmbiguousNamelessArgsError.class);
+    messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
   private static Argument argument(DefinitionNode node) {
@@ -549,7 +549,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   private Map<String, DefinitionNode> create(ImmutableMap<String, Param> params, List<Argument> args) {
-    return createArgumentNodes(codeLocation(1, 2, 3), problemsListener, function(params), args);
+    return createArgumentNodes(codeLocation(1, 2, 3), messages, function(params), args);
   }
 
   private static Function function(ImmutableMap<String, Param> params) {

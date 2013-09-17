@@ -10,22 +10,22 @@ import org.smoothbuild.run.SmoothRunner;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.fs.base.TestFileSystemModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.problem.TestProblemsListener;
-import org.smoothbuild.testing.problem.TestProblemsListenerModule;
+import org.smoothbuild.testing.problem.TestMessageListener;
+import org.smoothbuild.testing.problem.TestMessageListenerModule;
 
 import com.google.inject.Injector;
 
 public class IntegrationTestCase {
   protected TestFileSystem fileSystem;
   protected SmoothRunner smoothRunner;
-  protected TestProblemsListener problems;
+  protected TestMessageListener messages;
 
   @Before
   public void before() {
     Injector injector = createInjector(new TestFileSystemModule(),
-        new TestProblemsListenerModule());
+        new TestMessageListenerModule());
     fileSystem = injector.getInstance(TestFileSystem.class);
-    problems = injector.getInstance(TestProblemsListener.class);
+    messages = injector.getInstance(TestMessageListener.class);
     smoothRunner = injector.getInstance(SmoothRunner.class);
   }
 

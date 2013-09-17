@@ -19,7 +19,7 @@ public class NewFileSmoothTest extends IntegrationTestCase {
 
     smoothRunner.run("run");
 
-    problems.assertNoProblems();
+    messages.assertNoProblems();
     fileSystem.assertFileContains(file, content);
   }
 }

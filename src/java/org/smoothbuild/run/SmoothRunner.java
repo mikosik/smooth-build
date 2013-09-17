@@ -13,15 +13,15 @@ import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.problem.DetectingErrorsProblemsListener;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.DetectingErrorsMessageListener;
+import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
 import org.smoothbuild.run.err.UnknownFunctionError;
 import org.smoothbuild.task.TaskExecutor;
 import org.smoothbuild.util.Empty;
 
 public class SmoothRunner {
-  private final DetectingErrorsProblemsListener problems;
+  private final DetectingErrorsMessageListener messages;
   private final Cleaner cleaner;
   private final CommandLineParser commandLineParser;
   private final FileSystem fileSystem;
@@ -29,11 +29,11 @@ public class SmoothRunner {
   private final TaskExecutor taskExecutor;
 
   @Inject
-  public SmoothRunner(ProblemsListener problemsListener, Cleaner cleaner,
+  public SmoothRunner(MessageListener messageListener, Cleaner cleaner,
       CommandLineParser commandLineParser, FileSystem fileSystem, ModuleParser moduleParser,
       TaskExecutor taskExecutor) {
     this.taskExecutor = taskExecutor;
-    this.problems = new DetectingErrorsProblemsListener(problemsListener);
+    this.messages = new DetectingErrorsMessageListener(messageListener);
     this.cleaner = cleaner;
     this.commandLineParser = commandLineParser;
     this.fileSystem = fileSystem;
@@ -43,39 +43,39 @@ public class SmoothRunner {
   public void run(String... commandLine) {
     cleaner.clearBuildDir();
 
-    CommandLineArguments args = commandLineParser.parse(problems, commandLine);
-    if (problems.errorDetected()) {
+    CommandLineArguments args = commandLineParser.parse(messages, commandLine);
+    if (messages.errorDetected()) {
       return;
     }
 
     Path scriptFile = args.scriptFile();
 
-    InputStream inputStream = scriptInputStream(problems, scriptFile);
-    if (problems.errorDetected()) {
+    InputStream inputStream = scriptInputStream(messages, scriptFile);
+    if (messages.errorDetected()) {
       return;
     }
 
-    Module module = moduleParser.createModule(problems, inputStream, scriptFile);
-    if (problems.errorDetected()) {
+    Module module = moduleParser.createModule(messages, inputStream, scriptFile);
+    if (messages.errorDetected()) {
       return;
     }
 
     Name name = args.functionToRun();
     Function function = module.getFunction(name);
     if (function == null) {
-      problems.report(new UnknownFunctionError(name, module.availableNames()));
+      messages.report(new UnknownFunctionError(name, module.availableNames()));
       return;
     }
 
-    taskExecutor.execute(problems, function.generateTask(Empty.stringTaskMap()));
+    taskExecutor.execute(messages, function.generateTask(Empty.stringTaskMap()));
 
   }
 
-  private InputStream scriptInputStream(ProblemsListener problems, Path scriptFile) {
+  private InputStream scriptInputStream(MessageListener messages, Path scriptFile) {
     try {
       return fileSystem.openInputStream(scriptFile);
     } catch (NoSuchFileException e) {
-      problems.report(new ScriptFileNotFoundError(scriptFile));
+      messages.report(new ScriptFileNotFoundError(scriptFile));
       return null;
     }
   }

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.problem.TestProblemsListener;
+import org.smoothbuild.testing.problem.TestMessageListener;
 
 public class ScriptParserTest {
 
@@ -69,19 +69,19 @@ public class ScriptParserTest {
   }
 
   private static void assertParsingSucceeds(String scriptText) throws IOException {
-    TestProblemsListener problems = parse(scriptText);
-    problems.assertNoProblems();
+    TestMessageListener messages = parse(scriptText);
+    messages.assertNoProblems();
   }
 
   private static void assertParsingFails(String script) throws IOException {
-    TestProblemsListener problems = parse(script);
-    problems.assertOnlyProblem(SyntaxError.class);
+    TestMessageListener messages = parse(script);
+    messages.assertOnlyProblem(SyntaxError.class);
   }
 
-  private static TestProblemsListener parse(String string) throws IOException {
-    TestProblemsListener problems = new TestProblemsListener();
+  private static TestMessageListener parse(String string) throws IOException {
+    TestMessageListener messages = new TestMessageListener();
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
-    ScriptParser.parseScript(problems, inputStream, path("filename.smooth"));
-    return problems;
+    ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));
+    return messages;
   }
 }

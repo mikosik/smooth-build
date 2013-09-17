@@ -2,10 +2,10 @@ package org.smoothbuild.problem;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CodeProblem extends Problem {
+public class CodeMessage extends Message {
   private final CodeLocation codeLocation;
 
-  public CodeProblem(ProblemType type, CodeLocation codeLocation, String message) {
+  public CodeMessage(MessageType type, CodeLocation codeLocation, String message) {
     super(type, message);
     this.codeLocation = checkNotNull(codeLocation);
   }

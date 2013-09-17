@@ -28,13 +28,13 @@ public class SaveFunctionTest {
   @Test
   public void missingFileAndFileSetAreReported() throws Exception {
     runExecute(params(null, null, "my/path"));
-    sandbox.problems().assertOnlyProblem(EitherFileOrFilesMustBeProvidedError.class);
+    sandbox.messages().assertOnlyProblem(EitherFileOrFilesMustBeProvidedError.class);
   }
 
   @Test
   public void specifyingBotFileAndFileSetIsReported() throws Exception {
     runExecute(params(mock(File.class), mock(FileSet.class), "my/path"));
-    sandbox.problems().assertOnlyProblem(FileAndFilesSpecifiedError.class);
+    sandbox.messages().assertOnlyProblem(FileAndFilesSpecifiedError.class);
   }
 
   @Test
@@ -42,7 +42,7 @@ public class SaveFunctionTest {
     for (String path : PathTest.listOfInvalidPaths()) {
       sandbox = new TestSandbox();
       runExecute(params(mock(File.class), path));
-      sandbox.problems().assertOnlyProblem(IllegalPathError.class);
+      sandbox.messages().assertOnlyProblem(IllegalPathError.class);
     }
   }
 
@@ -52,7 +52,7 @@ public class SaveFunctionTest {
     fileSystem.createEmptyFile(file);
 
     runExecute(params(mock(File.class), file.value()));
-    sandbox.problems().assertOnlyProblem(PathIsNotADirError.class);
+    sandbox.messages().assertOnlyProblem(PathIsNotADirError.class);
   }
 
   @Test
@@ -64,7 +64,7 @@ public class SaveFunctionTest {
     StoredFile file = new StoredFile(new SubFileSystem(fileSystem, rootPath()), filePath);
 
     runExecute(params(file, destinationDir.value()));
-    sandbox.problems().assertOnlyProblem(PathIsNotADirError.class);
+    sandbox.messages().assertOnlyProblem(PathIsNotADirError.class);
   }
 
   @Test

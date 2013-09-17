@@ -41,7 +41,7 @@ import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
 import org.smoothbuild.problem.CodeError;
 import org.smoothbuild.problem.CodeLocation;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -53,22 +53,22 @@ import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
 
-  public static Map<Name, DefinedFunction> createDefinedFunctions(ProblemsListener problems,
+  public static Map<Name, DefinedFunction> createDefinedFunctions(MessageListener messages,
       SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
-    return new Worker(problems, symbolTable, functionContexts, sorted).run();
+    return new Worker(messages, symbolTable, functionContexts, sorted).run();
   }
 
   private static class Worker {
-    private final ProblemsListener problems;
+    private final MessageListener messages;
     private final SymbolTable symbolTable;
     private final Map<String, FunctionContext> functionContexts;
     private final List<String> sorted;
 
     private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
 
-    public Worker(ProblemsListener problems, SymbolTable symbolTable,
+    public Worker(MessageListener messages, SymbolTable symbolTable,
         Map<String, FunctionContext> functionContexts, List<String> sorted) {
-      this.problems = problems;
+      this.messages = messages;
       this.symbolTable = symbolTable;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
@@ -149,7 +149,7 @@ public class DefinedFunctionsCreator {
       for (SetElemContext elem : elems) {
         DefinitionNode node = build(elem);
         if (!Type.allowedForSetElem().contains(node.type())) {
-          problems.report(new ForbiddenSetElemTypeError(locationOf(elem), node.type()));
+          messages.report(new ForbiddenSetElemTypeError(locationOf(elem), node.type()));
         } else {
           builder.add(node);
         }
@@ -175,7 +175,7 @@ public class DefinedFunctionsCreator {
         DefinitionNode elemNode = elemNodes.get(i);
         if (elemNode.type() != firstType) {
           CodeLocation location = locationOf(elems.get(i));
-          problems.report(new IncompatibleSetElemsError(location, firstType, i, elemNode.type()));
+          messages.report(new IncompatibleSetElemsError(location, firstType, i, elemNode.type()));
           success = false;
         }
       }
@@ -193,7 +193,7 @@ public class DefinedFunctionsCreator {
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, DefinitionNode> namedArgs = createArgumentNodes(codeLocation, problems, function,
+      Map<String, DefinitionNode> namedArgs = createArgumentNodes(codeLocation, messages, function,
           args);
 
       if (namedArgs == null) {
@@ -246,7 +246,7 @@ public class DefinedFunctionsCreator {
         return new StringNode(unescaped(string));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
-        problems.report(new CodeError(location, e.getMessage()));
+        messages.report(new CodeError(location, e.getMessage()));
         return new InvalidNode(STRING);
       }
     }

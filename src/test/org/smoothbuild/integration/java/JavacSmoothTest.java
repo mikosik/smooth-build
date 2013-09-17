@@ -22,7 +22,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path='" + path.value() + "') ] | javac ;");
     smoothRunner.run("run");
 
-    problems.assertOnlyProblem(JavaCompilerError.class);
+    messages.assertOnlyProblem(JavaCompilerError.class);
   }
 
   @Test
@@ -42,7 +42,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path='" + path.value() + "') ] | javac | save(dir='.');");
     smoothRunner.run("run");
 
-    problems.assertNoProblems();
+    messages.assertNoProblems();
 
     Class<?> klass = loadClass(byteCode(path("MyClass.class")));
     Object result = klass.getMethod("myMethod").invoke(null);

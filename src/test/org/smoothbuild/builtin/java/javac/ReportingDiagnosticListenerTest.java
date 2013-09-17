@@ -10,18 +10,18 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerError;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.MessageListener;
 
 public class ReportingDiagnosticListenerTest {
   @SuppressWarnings("unchecked")
   Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
-  ProblemsListener problems = mock(ProblemsListener.class);
-  ReportingDiagnosticListener listener = new ReportingDiagnosticListener(problems);
+  MessageListener messages = mock(MessageListener.class);
+  ReportingDiagnosticListener listener = new ReportingDiagnosticListener(messages);
 
   @Test
   public void diagnosticIsReportedAsError() {
     listener.report(diagnostic);
-    verify(problems).report(isA(JavaCompilerError.class));
+    verify(messages).report(isA(JavaCompilerError.class));
   }
 
   @Test

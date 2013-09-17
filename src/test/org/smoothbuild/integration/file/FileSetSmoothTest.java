@@ -31,7 +31,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    problems.assertNoProblems();
+    messages.assertNoProblems();
     TestFileSystem subFileSystem = fileSystem.subFileSystem(dir);
     subFileSystem.assertFileContainsItsPath(file1);
     subFileSystem.assertFileContainsItsPath(file2);
@@ -54,7 +54,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    problems.assertNoProblems();
+    messages.assertNoProblems();
     fileSystem.subFileSystem(dir).assertFileContainsItsPath(file1);
   }
 
@@ -72,7 +72,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    problems.assertNoProblems();
+    messages.assertNoProblems();
     assertThat(fileSystem.pathExists(dir)).isFalse();
   }
 }

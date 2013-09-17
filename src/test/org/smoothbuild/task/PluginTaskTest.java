@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.plugin.PluginInvoker;
-import org.smoothbuild.problem.Problem;
+import org.smoothbuild.problem.Message;
 import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
@@ -53,7 +53,7 @@ public class PluginTaskTest {
 
     pluginTask.execute(sandbox);
 
-    sandbox.problems().assertOnlyProblem(NullResultError.class);
+    sandbox.messages().assertOnlyProblem(NullResultError.class);
     assertThat(pluginTask.isResultCalculated()).isFalse();
   }
 
@@ -65,7 +65,7 @@ public class PluginTaskTest {
 
     pluginTask.execute(sandbox);
 
-    sandbox.problems().assertNoProblems();
+    sandbox.messages().assertNoProblems();
     assertThat(pluginTask.isResultCalculated()).isTrue();
   }
 
@@ -87,12 +87,12 @@ public class PluginTaskTest {
   }
 
   private void assertExceptionIsReportedAsProblem(Throwable thrown,
-      Class<? extends Problem> expected) throws Exception {
+      Class<? extends Message> expected) throws Exception {
     when(pluginInvoker.invoke(sandbox, Empty.stringObjectMap())).thenThrow(thrown);
 
     pluginTask.execute(sandbox);
 
-    sandbox.problems().assertOnlyProblem(expected);
+    sandbox.messages().assertOnlyProblem(expected);
     assertThat(pluginTask.isResultCalculated()).isFalse();
   }
 

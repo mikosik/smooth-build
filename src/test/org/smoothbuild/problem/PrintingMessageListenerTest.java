@@ -2,27 +2,27 @@ package org.smoothbuild.problem;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.problem.ProblemType.ERROR;
+import static org.smoothbuild.problem.MessageType.ERROR;
 
 import java.io.PrintStream;
 
 import org.junit.Test;
 
-public class PrintingProblemsListenerTest {
+public class PrintingMessageListenerTest {
   PrintStream printStream = mock(PrintStream.class);
-  PrintingProblemsListener printingProblemsListener = new PrintingProblemsListener(printStream);
+  PrintingMessageListener printingMessageListener = new PrintingMessageListener(printStream);
 
   @Test
-  public void problemIsPrinted() throws Exception {
+  public void messageIsPrinted() throws Exception {
     String message = "message string";
-    printingProblemsListener.report(new MyProblem(message));
+    printingMessageListener.report(new MyMessage(message));
     verify(printStream).println(message);
   }
 
-  public static class MyProblem extends Problem {
+  public static class MyMessage extends Message {
     private final String toStrigValue;
 
-    public MyProblem(String toStringValue) {
+    public MyMessage(String toStringValue) {
       super(ERROR, "");
       this.toStrigValue = toStringValue;
     }

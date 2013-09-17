@@ -20,8 +20,8 @@ import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.problem.DetectingErrorsProblemsListener;
-import org.smoothbuild.problem.ProblemsListener;
+import org.smoothbuild.problem.DetectingErrorsMessageListener;
+import org.smoothbuild.problem.MessageListener;
 
 public class ModuleParser {
   private final ImportedFunctions importedFunctions;
@@ -31,39 +31,39 @@ public class ModuleParser {
     this.importedFunctions = importedFunctions;
   }
 
-  public Module createModule(ProblemsListener problemsListener, InputStream inputStream,
+  public Module createModule(MessageListener messageListener, InputStream inputStream,
       Path scriptFile) {
-    DetectingErrorsProblemsListener problems = new DetectingErrorsProblemsListener(problemsListener);
-    return createModule(problems, inputStream, scriptFile);
+    DetectingErrorsMessageListener messages = new DetectingErrorsMessageListener(messageListener);
+    return createModule(messages, inputStream, scriptFile);
   }
 
-  private Module createModule(DetectingErrorsProblemsListener problems, InputStream inputStream,
+  private Module createModule(DetectingErrorsMessageListener messages, InputStream inputStream,
       Path scriptFile) {
-    ModuleContext module = parseScript(problems, inputStream, scriptFile);
-    if (problems.errorDetected()) {
+    ModuleContext module = parseScript(messages, inputStream, scriptFile);
+    if (messages.errorDetected()) {
       return null;
     }
 
-    Map<String, FunctionContext> functions = collectFunctions(problems, importedFunctions, module);
-    if (problems.errorDetected()) {
+    Map<String, FunctionContext> functions = collectFunctions(messages, importedFunctions, module);
+    if (messages.errorDetected()) {
       return null;
     }
 
     Map<String, Set<Dependency>> dependencies = collectDependencies(module);
 
-    detectUndefinedFunctions(problems, importedFunctions, dependencies);
-    if (problems.errorDetected()) {
+    detectUndefinedFunctions(messages, importedFunctions, dependencies);
+    if (messages.errorDetected()) {
       return null;
     }
 
-    List<String> sorted = sortDependencies(problems, importedFunctions, dependencies);
-    if (problems.errorDetected()) {
+    List<String> sorted = sortDependencies(messages, importedFunctions, dependencies);
+    if (messages.errorDetected()) {
       return null;
     }
 
-    Map<Name, DefinedFunction> definedFunctions = createDefinedFunctions(problems,
+    Map<Name, DefinedFunction> definedFunctions = createDefinedFunctions(messages,
         importedFunctions, functions, sorted);
-    if (problems.errorDetected()) {
+    if (messages.errorDetected()) {
       return null;
     }
 
