@@ -12,7 +12,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipException;
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
@@ -59,8 +58,6 @@ public class UnzipperTest {
       for (String fileName : fileNames) {
         addEntry(zipOutputStream, fileName);
       }
-    } catch (IOException e) {
-      throw new FileSystemException(e);
     }
     return inputFile;
   }

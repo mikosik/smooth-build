@@ -12,7 +12,6 @@ import java.util.jar.JarOutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
@@ -59,8 +58,6 @@ public class UnjarerTest {
       for (String fileName : fileNames) {
         addEntry(jarOutputStream, fileName);
       }
-    } catch (IOException e) {
-      throw new FileSystemException(e);
     }
     return inputFile;
   }
