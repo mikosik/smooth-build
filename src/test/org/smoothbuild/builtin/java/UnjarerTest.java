@@ -7,6 +7,7 @@ import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
@@ -15,6 +16,8 @@ import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
+
+import com.google.common.base.Predicates;
 
 public class UnjarerTest {
   String fileName1 = "file/path/file1.txt";
@@ -35,6 +38,18 @@ public class UnjarerTest {
       assertContent(file.openInputStream(), file.path().value());
     }
     assertThat(fileCount).isEqualTo(2);
+  }
+
+  @Test
+  public void unjaringWithFilter() throws Exception {
+    TestFile jarFile = jaredFiles(fileName1, fileName2);
+
+    unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2), resultFileSet);
+
+    Iterator<File> it = resultFileSet.iterator();
+    File file = it.next();
+    assertThat(file.path().value()).isEqualTo(fileName2);
+    assertThat(it.hasNext()).isFalse();
   }
 
   @Test
