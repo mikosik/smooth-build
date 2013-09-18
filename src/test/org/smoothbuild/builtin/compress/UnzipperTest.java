@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
@@ -23,7 +24,7 @@ public class UnzipperTest {
   Unzipper unzipper = new Unzipper();
 
   @Test
-  public void testUnzipping() throws Exception {
+  public void unzipping() throws Exception {
     TestFile zipFile = zippedFiles(fileName1, fileName2);
 
     unzipper.unzipFile(zipFile, resultFileSet);
@@ -34,6 +35,20 @@ public class UnzipperTest {
       assertContent(file.openInputStream(), file.path().value());
     }
     assertThat(fileCount).isEqualTo(2);
+  }
+
+  @Test
+  public void entryWithIllegalName() throws Exception {
+    String illegalFileName = "/leading/slash/is/forbidden";
+    TestFile zipFile = zippedFiles(illegalFileName);
+
+    try {
+      unzipper.unzipFile(zipFile, resultFileSet);
+      fail("exception should be thrown");
+    } catch (IllegalPathInZipException e) {
+      // expected
+      assertThat(e.fileName()).isEqualTo(illegalFileName);
+    }
   }
 
   private static TestFile zippedFiles(String... fileNames) throws IOException {

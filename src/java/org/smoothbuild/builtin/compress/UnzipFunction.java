@@ -40,6 +40,8 @@ public class UnzipFunction {
         throw new FileSystemException(e);
       } catch (DuplicatePathException e) {
         sandbox.report(new DuplicatePathError(e.path()));
+      } catch (IllegalPathInZipException e) {
+        sandbox.report(new IllegalPathInZipError(e.fileName()));
       }
       return result;
     }

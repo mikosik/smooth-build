@@ -32,7 +32,7 @@ public class UnzipFunctionTest {
   }
 
   @Test
-  public void testExceptionIsForwarded() throws Exception {
+  public void ioExceptionIsReported() throws Exception {
     when(parameters.file()).thenReturn(file);
     doThrow(IOException.class).when(unzipper).unzipFile(file, sandbox.resultFileSet());
 
@@ -42,5 +42,15 @@ public class UnzipFunctionTest {
     } catch (FileSystemException e) {
       // expected
     }
+  }
+
+  @Test
+  public void illegalPathInZipExceptionIsReported() throws Exception {
+    when(parameters.file()).thenReturn(file);
+    doThrow(IllegalPathInZipException.class).when(unzipper)
+        .unzipFile(file, sandbox.resultFileSet());
+
+    new UnzipFunction.Worker(unzipper).execute(sandbox, parameters);
+    sandbox.messages().assertOnlyProblem(IllegalPathInZipError.class);
   }
 }
