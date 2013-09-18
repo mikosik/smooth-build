@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.plugin.api.Path.validationError;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,7 +17,7 @@ public class Unzipper {
   private final byte[] buffer = new byte[1024];;
 
   public void unzipFile(File zipFile, MutableFileSet resultFiles) throws IOException,
-      DuplicatePathException {
+      DuplicatePathException, IllegalPathInZipException {
     try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
@@ -26,8 +27,13 @@ public class Unzipper {
   }
 
   private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, MutableFileSet resultFiles)
-      throws IOException, DuplicatePathException {
-    Path path = path(entry.getName());
+      throws IOException, DuplicatePathException, IllegalPathInZipException {
+    String fileName = entry.getName();
+    String errorMessage = validationError(fileName);
+    if (errorMessage != null) {
+      throw new IllegalPathInZipException(fileName);
+    }
+    Path path = path(fileName);
     if (resultFiles.contains(path)) {
       throw new DuplicatePathException(path);
     }
