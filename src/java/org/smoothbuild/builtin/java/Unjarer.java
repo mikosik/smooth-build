@@ -16,22 +16,32 @@ import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+
 public class Unjarer {
   private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
   public void unjarFile(File jarFile, MutableFileSet resultFiles) throws IOException,
       DuplicatePathInJarException, IllegalPathInJarException {
+    unjarFile(jarFile, Predicates.<String> alwaysTrue(), resultFiles);
+  }
+
+  public void unjarFile(File jarFile, Predicate<String> nameFilter, MutableFileSet resultFiles)
+      throws IOException, DuplicatePathInJarException, IllegalPathInJarException {
     try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {
-        unjarEntry(jarInputStream, entry, resultFiles);
+        String fileName = entry.getName();
+        if (nameFilter.apply(fileName)) {
+          unjarEntry(jarInputStream, fileName, resultFiles);
+        }
       }
     }
   }
 
-  private File unjarEntry(JarInputStream jarInputStream, JarEntry entry, MutableFileSet resultFiles)
-      throws IOException, DuplicatePathInJarException, IllegalPathInJarException {
-    String fileName = entry.getName();
+  private File unjarEntry(JarInputStream jarInputStream, String fileName, MutableFileSet resultFiles)
+      throws IllegalPathInJarException, DuplicatePathInJarException, IOException {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
       throw new IllegalPathInJarException(fileName);
