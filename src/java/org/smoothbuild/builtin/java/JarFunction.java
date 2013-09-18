@@ -8,6 +8,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
+import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
@@ -34,7 +35,7 @@ public class JarFunction {
     private final Sandbox sandbox;
     private final Parameters params;
 
-    private final byte[] buffer = new byte[1024];
+    private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
     public Worker(Sandbox sandbox, Parameters params) {
       this.sandbox = sandbox;

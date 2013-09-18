@@ -44,7 +44,7 @@ public class ZipFunction {
     private final Sandbox sandbox;
     private final Parameters params;
 
-    private final byte[] buffer = new byte[1024];
+    private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
     public Worker(Sandbox sandbox, Parameters params) {
       this.sandbox = sandbox;
