@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.smoothbuild.builtin.compress.err.DuplicatePathInZipException;
+import org.smoothbuild.builtin.compress.err.IllegalPathInZipException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
@@ -17,7 +19,7 @@ public class Unzipper {
   private final byte[] buffer = new byte[1024];;
 
   public void unzipFile(File zipFile, MutableFileSet resultFiles) throws IOException,
-      DuplicatePathException, IllegalPathInZipException {
+      DuplicatePathInZipException, IllegalPathInZipException {
     try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
@@ -27,7 +29,7 @@ public class Unzipper {
   }
 
   private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, MutableFileSet resultFiles)
-      throws IOException, DuplicatePathException, IllegalPathInZipException {
+      throws IOException, DuplicatePathInZipException, IllegalPathInZipException {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
@@ -35,7 +37,7 @@ public class Unzipper {
     }
     Path path = path(fileName);
     if (resultFiles.contains(path)) {
-      throw new DuplicatePathException(path);
+      throw new DuplicatePathInZipException(path);
     }
     MutableFile file = resultFiles.createFile(path);
     try (OutputStream outputStream = file.openOutputStream()) {

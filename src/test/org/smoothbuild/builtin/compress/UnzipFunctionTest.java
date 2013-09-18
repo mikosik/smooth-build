@@ -10,6 +10,8 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
+import org.smoothbuild.builtin.compress.err.IllegalPathInZipException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;

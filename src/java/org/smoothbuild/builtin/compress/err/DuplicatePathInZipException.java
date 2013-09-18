@@ -1,12 +1,12 @@
-package org.smoothbuild.builtin.compress;
+package org.smoothbuild.builtin.compress.err;
 
 import org.smoothbuild.plugin.api.Path;
 
 @SuppressWarnings("serial")
-public class DuplicatePathException extends Exception {
+public class DuplicatePathInZipException extends Exception {
   private final Path path;
 
-  public DuplicatePathException(Path path) {
+  public DuplicatePathInZipException(Path path) {
     super("Zip file contains two files with the same path " + path);
     this.path = path;
   }
