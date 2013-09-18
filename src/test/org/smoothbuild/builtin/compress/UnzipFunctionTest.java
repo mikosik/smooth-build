@@ -22,7 +22,7 @@ public class UnzipFunctionTest {
   Unzipper unzipper = mock(Unzipper.class);
 
   @Test
-  public void testUnzipping() throws IOException {
+  public void testUnzipping() throws Exception {
     when(parameters.file()).thenReturn(file);
 
     FileSet result = new UnzipFunction.Worker(unzipper).execute(sandbox, parameters);
