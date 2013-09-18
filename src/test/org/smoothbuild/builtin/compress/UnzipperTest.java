@@ -16,12 +16,15 @@ import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
 public class UnzipperTest {
+  String fileName1 = "file/path/file1.txt";
+  String fileName2 = "file/path/file2.txt";
+
   TestFileSet resultFileSet = new TestFileSet();
   Unzipper unzipper = new Unzipper();
 
   @Test
-  public void testUnzipping() throws IOException {
-    TestFile zipFile = zippedFiles("file/path/file1.txt", "file/path/file2.txt");
+  public void testUnzipping() throws Exception {
+    TestFile zipFile = zippedFiles(fileName1, fileName2);
 
     unzipper.unzipFile(zipFile, resultFileSet);
 

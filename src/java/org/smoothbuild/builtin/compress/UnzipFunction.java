@@ -38,6 +38,8 @@ public class UnzipFunction {
         unzipper.unzipFile(params.file(), result);
       } catch (IOException e) {
         throw new FileSystemException(e);
+      } catch (DuplicatePathException e) {
+        sandbox.report(new DuplicatePathError(e.path()));
       }
       return result;
     }
