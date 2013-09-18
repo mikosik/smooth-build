@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.DuplicatePathInJarException;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
 import org.smoothbuild.plugin.api.File;
@@ -16,8 +17,7 @@ import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 
 public class Unjarer {
-  // TODO extract constant
-  private final byte[] buffer = new byte[1024];
+  private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
   public void unjarFile(File jarFile, MutableFileSet resultFiles) throws IOException,
       DuplicatePathInJarException, IllegalPathInJarException {
