@@ -1,4 +1,4 @@
-package org.smoothbuild.builtin.compress;
+package org.smoothbuild.builtin.compress.err;
 
 @SuppressWarnings("serial")
 public class IllegalPathInZipException extends Exception {

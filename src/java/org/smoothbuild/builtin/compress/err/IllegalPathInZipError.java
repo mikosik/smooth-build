@@ -1,4 +1,4 @@
-package org.smoothbuild.builtin.compress;
+package org.smoothbuild.builtin.compress.err;
 
 import org.smoothbuild.message.Error;
 
