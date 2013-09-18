@@ -5,7 +5,7 @@ import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -33,16 +33,12 @@ public class UnzipperTest {
     assertThat(fileCount).isEqualTo(2);
   }
 
-  private static TestFile zippedFiles(String path1, String path2) throws IOException {
-    TestFileSet filesToPack = new TestFileSet();
-    filesToPack.createFile(path(path1)).createContentWithFilePath();
-    filesToPack.createFile(path(path2)).createContentWithFilePath();
-
+  private static TestFile zippedFiles(String... fileNames) throws IOException {
     TestFile inputFile = new TestFileSet().createFile(path("input.zip"));
 
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.openOutputStream());) {
-      for (File file : filesToPack) {
-        addEntry(zipOutputStream, file);
+      for (String fileName : fileNames) {
+        addEntry(zipOutputStream, fileName);
       }
     } catch (IOException e) {
       throw new FileSystemException(e);
@@ -50,19 +46,13 @@ public class UnzipperTest {
     return inputFile;
   }
 
-  private static void addEntry(ZipOutputStream zipOutputStream, File file) throws IOException {
-    byte[] buffer = new byte[1024];
-
-    ZipEntry entry = new ZipEntry(file.path().value());
+  private static void addEntry(ZipOutputStream zipOutputStream, String fileName) throws IOException {
+    ZipEntry entry = new ZipEntry(fileName);
     zipOutputStream.putNextEntry(entry);
 
-    try (InputStream inputStream = file.openInputStream();) {
-      int readCount = inputStream.read(buffer);
-      while (readCount > 0) {
-        zipOutputStream.write(buffer, 0, readCount);
-        readCount = inputStream.read(buffer);
-      }
-    }
+    OutputStreamWriter writer = new OutputStreamWriter(zipOutputStream);
+    writer.write(fileName);
+    writer.flush();
 
     zipOutputStream.closeEntry();
   }
