@@ -16,7 +16,7 @@ import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 
 public class Unzipper {
-  private final byte[] buffer = new byte[1024];;
+  private final byte[] buffer = new byte[1024];
 
   public void unzipFile(File zipFile, MutableFileSet resultFiles) throws IOException,
       DuplicatePathInZipException, IllegalPathInZipException {
