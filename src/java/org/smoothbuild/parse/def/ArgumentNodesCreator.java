@@ -150,19 +150,18 @@ public class ArgumentNodesCreator {
         Set<Argument> availableArgs = namelessArgs.get(type);
         int argsSize = availableArgs.size();
         if (0 < argsSize) {
-          Set<Param> availableParams = paramsPool.availableForType(type);
-          int paramsSize = availableParams.size();
+          TypedParamsPool availableTypedParams = paramsPool.availableForType(type);
 
-          if (argsSize == 1 && paramsSize == 1) {
+          if (argsSize == 1 && availableTypedParams.hasCandidate()) {
             Argument onlyArg = availableArgs.iterator().next();
-            Param onlyParam = availableParams.iterator().next();
+            Param candidateParam = availableTypedParams.candidate();
             // DefinitionNode node = convert(onlyParam.type(),
             // onlyArg.definitionNode());
-            assignmentList.add(onlyParam, onlyArg);
-            paramsPool.take(onlyParam);
+            assignmentList.add(candidateParam, onlyArg);
+            paramsPool.take(candidateParam);
           } else {
             AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(assignmentList,
-                availableArgs, availableParams);
+                availableArgs, availableTypedParams);
             messages.report(error);
             return;
           }

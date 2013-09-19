@@ -1,31 +1,29 @@
 package org.smoothbuild.parse.def.err;
 
-import static org.smoothbuild.function.base.Param.paramsToString;
-
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.function.base.Param;
 import org.smoothbuild.message.CodeError;
 import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.parse.def.AssignmentList;
+import org.smoothbuild.parse.def.TypedParamsPool;
 
 public class AmbiguousNamelessArgsError extends CodeError {
 
   public AmbiguousNamelessArgsError(AssignmentList assignmentList, Set<Argument> availableArgs,
-      Set<Param> availableParams) {
-    this(assignmentList, Argument.NUMBER_ORDERING.sortedCopy(availableArgs), availableParams);
+      TypedParamsPool availableTypedParams) {
+    this(assignmentList, Argument.NUMBER_ORDERING.sortedCopy(availableArgs), availableTypedParams);
   }
 
   public AmbiguousNamelessArgsError(AssignmentList assignmentList, List<Argument> availableArgs,
-      Set<Param> availableParams) {
+      TypedParamsPool availableTypedParams) {
     super(availableArgs.iterator().next().codeLocation(), message(assignmentList, availableArgs,
-        availableParams));
+        availableTypedParams));
   }
 
   private static String message(AssignmentList assignmentList, List<Argument> availableArgs,
-      Set<Param> availableParams) {
-    if (availableParams.size() == 0) {
+      TypedParamsPool availableTypedParams) {
+    if (availableTypedParams.size() == 0) {
       return "Couldn't find parameter(s) of proper type for some nameless argument(s):\n"
           + "List of assignments that were successfully detected so far is following:\n"
           + assignmentList.toString()
@@ -38,7 +36,7 @@ public class AmbiguousNamelessArgsError extends CodeError {
           + "List of nameless arguments that caused problems:\n"
           + argsToList(availableArgs)
           + "List of unassigned parameters of desired type is following:\n"
-          + paramsToString(availableParams);
+          + availableTypedParams.toFormattedString();
     }
   }
 

@@ -24,6 +24,7 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.parse.def.AssignmentList;
+import org.smoothbuild.parse.def.TypedParamsPool;
 
 public class AmbiguousNamelessArgsErrorTest {
 
@@ -47,7 +48,7 @@ public class AmbiguousNamelessArgsErrorTest {
     availableArgs.add(namedArg(3, "arg4", node(EMPTY_SET), codeLocation(6, 9, 14)));
     availableArgs.add(namedArg(7, "arg5", node(VOID), codeLocation(16, 19, 21)));
 
-    Set<Param> availableParams = newHashSet();
+    TypedParamsPool availableParams = new TypedParamsPool();
     availableParams.add(param(FILE_SET, "param4"));
     availableParams.add(param(STRING_SET, "param6"));
 
