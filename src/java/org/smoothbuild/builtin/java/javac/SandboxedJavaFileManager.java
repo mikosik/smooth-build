@@ -18,15 +18,16 @@ import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Sandbox;
 
-import com.google.common.collect.ImmutableList;
-
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final Sandbox sandbox;
+  private final LibraryClasses libraryClasses;
   private final MutableFileSet resultClassFiles;
 
-  SandboxedJavaFileManager(StandardJavaFileManager fileManager, Sandbox sandbox) {
+  SandboxedJavaFileManager(StandardJavaFileManager fileManager, Sandbox sandbox,
+      LibraryClasses libraryClasses) {
     super(fileManager);
     this.sandbox = sandbox;
+    this.libraryClasses = libraryClasses;
     this.resultClassFiles = sandbox.resultFileSet();
   }
 
@@ -52,12 +53,23 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
   }
 
   @Override
+  public String inferBinaryName(Location location, JavaFileObject file) {
+    if (file instanceof InputClassFile) {
+      return ((InputClassFile) file).binaryName();
+    } else {
+      return super.inferBinaryName(location, file);
+    }
+  }
+
+  @Override
   public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds,
       boolean recurse) throws IOException {
     if (location == StandardLocation.CLASS_PATH) {
-      // TODO Classes from user libraries should be returned here once
-      // JavacFunction supports it.
-      return ImmutableList.of();
+      if (recurse) {
+        throw new UnsupportedOperationException(
+            "recurse is not supported by SandboxedJavaFileManager.list()");
+      }
+      return libraryClasses.classesInPackage(packageName);
     } else {
       return super.list(location, packageName, kinds, recurse);
     }

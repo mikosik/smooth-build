@@ -11,6 +11,8 @@ import javax.tools.JavaFileManager;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import org.smoothbuild.builtin.java.err.DuplicatePathInJarException;
+import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
 import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
@@ -23,12 +25,15 @@ import org.smoothbuild.plugin.internal.SandboxImpl;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 
 public class JavacFunction {
 
   public interface Parameters {
     @Required
     FileSet sources();
+
+    FileSet libs();
   }
 
   @SmoothFunction("javac")
@@ -86,7 +91,28 @@ public class JavacFunction {
     private SandboxedJavaFileManager fileManager(ReportingDiagnosticListener diagnostic) {
       StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostic, null,
           defaultCharset());
-      return new SandboxedJavaFileManager(fileManager, sandbox);
+      return new SandboxedJavaFileManager(fileManager, sandbox, libsClasses());
+    }
+
+    private LibraryClasses libsClasses() {
+      try {
+        if (params.libs() == null) {
+          return LibraryClasses.libraryClasses(ImmutableList.<File> of());
+        } else {
+          return LibraryClasses.libraryClasses(params.libs());
+        }
+      } catch (IOException e) {
+        throw new FileSystemException(e);
+      } catch (DuplicatePathInJarException e) {
+        // TODO Plugin should be able to report error by throwing exception
+        throw new RuntimeException("fixme");
+      } catch (IllegalPathInJarException e) {
+        // TODO Plugin should be able to report error by throwing exception
+        throw new RuntimeException("fixme");
+      } catch (DuplicatedClassFileException e) {
+        // TODO Plugin should be able to report error by throwing exception
+        throw new RuntimeException("fixme");
+      }
     }
 
     private static void closeFileManager(JavaFileManager fileManager) {
