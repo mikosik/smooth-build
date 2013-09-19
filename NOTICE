@@ -3,7 +3,6 @@ smooth-build licence: Apache License 2.0
 libraries:
 
 antlr: BSD License
-fest-assert: Apache License 2.0
-fest-util: Apache License 2.0
 guava: Apache License 2.0
+guice: Apache License 2.0
 
