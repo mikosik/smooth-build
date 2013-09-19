@@ -19,13 +19,14 @@ import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.plugin.internal.FileTester;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 public class SandboxedJavaFileManagerTest {
   StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
   TestSandbox sandbox = new TestSandbox();
+  LibraryClasses libraryClasses = mock(LibraryClasses.class);
 
-  SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, sandbox);
+  SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, sandbox, libraryClasses);
 
   @Test
   public void getJavaFileOutput() throws IOException {
@@ -57,15 +58,6 @@ public class SandboxedJavaFileManagerTest {
 
     assertThat(javaFile).isInstanceOf(DummyOutputClassFile.class);
     sandbox.messages().assertOnlyProblem(IncorrectClassNameGivenByJavaCompilerError.class);
-    verifyZeroInteractions(sfm);
-  }
-
-  @Test
-  public void listingClassPathAlwaysReturnsEmptyIterable() throws IOException {
-    Iterable<?> result = manager.list(StandardLocation.CLASS_PATH, "my.package",
-        ImmutableSet.of(Kind.CLASS), false);
-
-    assertThat(result).isEmpty();
     verifyZeroInteractions(sfm);
   }
 }
