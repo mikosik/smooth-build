@@ -41,11 +41,7 @@ public class NewFileFunction {
     }
 
     public File execute() {
-      Path filePath = validatedPath("path", params.path(), sandbox);
-      if (filePath == null) {
-        return null;
-      }
-      return createFile(filePath);
+      return createFile(validatedPath("path", params.path()));
     }
 
     private File createFile(Path filePath) {

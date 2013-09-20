@@ -37,11 +37,7 @@ public class FilesFunction {
     }
 
     public FileSet execute() {
-      Path dirPath = validatedPath("dir", params.dir(), sandbox);
-      if (dirPath == null) {
-        return null;
-      }
-      return createFiles(dirPath);
+      return createFiles(validatedPath("dir", params.dir()));
     }
 
     private FileSet createFiles(Path dirPath) {

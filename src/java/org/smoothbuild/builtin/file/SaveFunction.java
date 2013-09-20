@@ -39,10 +39,7 @@ public class SaveFunction {
     }
 
     public void execute() {
-      Path dirPath = validatedPath("dir", params.dir(), sandbox);
-      if (dirPath == null) {
-        return;
-      }
+      Path dirPath = validatedPath("dir", params.dir());
       File file = params.file();
       FileSet files = params.files();
       if (file == null && files == null) {
