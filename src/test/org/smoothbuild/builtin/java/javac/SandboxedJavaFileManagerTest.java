@@ -19,8 +19,6 @@ import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.plugin.internal.FileTester;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
-import com.google.common.collect.ImmutableList;
-
 public class SandboxedJavaFileManagerTest {
   StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
   TestSandbox sandbox = new TestSandbox();
