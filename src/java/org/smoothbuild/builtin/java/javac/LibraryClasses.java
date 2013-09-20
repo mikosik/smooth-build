@@ -5,8 +5,6 @@ import java.io.IOException;
 import javax.tools.JavaFileObject;
 
 import org.smoothbuild.builtin.java.Unjarer;
-import org.smoothbuild.builtin.java.err.DuplicatePathInJarException;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
 import org.smoothbuild.builtin.java.javac.err.DuplicatedClassFileError;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.plugin.api.File;
@@ -23,8 +21,7 @@ public class LibraryClasses {
 
   private final Multimap<String, JavaFileObject> packageToClassesMap;
 
-  public static LibraryClasses libraryClasses(Iterable<File> libraryJars) throws IOException,
-      DuplicatePathInJarException, IllegalPathInJarException {
+  public static LibraryClasses libraryClasses(Iterable<File> libraryJars) throws IOException {
     Unjarer unjarer = new Unjarer();
     Multimap<String, JavaFileObject> map = HashMultimap.create();
 

@@ -11,8 +11,6 @@ import javax.tools.JavaFileManager;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.builtin.java.err.DuplicatePathInJarException;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
 import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
@@ -103,12 +101,6 @@ public class JavacFunction {
         }
       } catch (IOException e) {
         throw new FileSystemException(e);
-      } catch (DuplicatePathInJarException e) {
-        // TODO Plugin should be able to report error by throwing exception
-        throw new RuntimeException("fixme");
-      } catch (IllegalPathInJarException e) {
-        // TODO Plugin should be able to report error by throwing exception
-        throw new RuntimeException("fixme");
       }
     }
 
