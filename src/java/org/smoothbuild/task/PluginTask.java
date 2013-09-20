@@ -8,6 +8,7 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.plugin.PluginInvoker;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
@@ -45,6 +46,8 @@ public class PluginTask extends AbstractTask {
       Throwable cause = e.getCause();
       if (cause instanceof FileSystemException) {
         sandbox.report(new FileSystemError(functionName(), cause));
+      } else if (cause instanceof PluginErrorException) {
+        sandbox.report(((PluginErrorException) cause).error());
       } else {
         sandbox.report(new UnexpectedError(functionName(), cause));
       }
