@@ -2,10 +2,6 @@ package org.smoothbuild.builtin.compress;
 
 import java.io.IOException;
 
-import org.smoothbuild.builtin.compress.err.DuplicatePathInZipError;
-import org.smoothbuild.builtin.compress.err.DuplicatePathInZipException;
-import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.builtin.compress.err.IllegalPathInZipException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
@@ -42,10 +38,6 @@ public class UnzipFunction {
         unzipper.unzipFile(params.file(), result);
       } catch (IOException e) {
         throw new FileSystemException(e);
-      } catch (DuplicatePathInZipException e) {
-        sandbox.report(new DuplicatePathInZipError(e.path()));
-      } catch (IllegalPathInZipException e) {
-        sandbox.report(new IllegalPathInZipError(e.fileName()));
       }
       return result;
     }
