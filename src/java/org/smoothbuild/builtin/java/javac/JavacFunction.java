@@ -109,9 +109,6 @@ public class JavacFunction {
       } catch (IllegalPathInJarException e) {
         // TODO Plugin should be able to report error by throwing exception
         throw new RuntimeException("fixme");
-      } catch (DuplicatedClassFileException e) {
-        // TODO Plugin should be able to report error by throwing exception
-        throw new RuntimeException("fixme");
       }
     }
 
