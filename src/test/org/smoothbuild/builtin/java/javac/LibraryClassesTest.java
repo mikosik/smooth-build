@@ -13,7 +13,9 @@ import java.util.jar.JarOutputStream;
 import javax.tools.JavaFileObject;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.java.javac.err.DuplicatedClassFileError;
 import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
@@ -44,7 +46,8 @@ public class LibraryClassesTest {
     try {
       libraryClasses(ImmutableList.of(file1, file2));
       fail("exception should be thrown");
-    } catch (DuplicatedClassFileException e) {
+    } catch (PluginErrorException e) {
+      assertThat(e.error()).isInstanceOf(DuplicatedClassFileError.class);
       // expected
     }
   }

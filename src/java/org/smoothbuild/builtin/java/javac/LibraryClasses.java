@@ -7,8 +7,10 @@ import javax.tools.JavaFileObject;
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.err.DuplicatePathInJarException;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
+import org.smoothbuild.builtin.java.javac.err.DuplicatedClassFileError;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.plugin.internal.MutableStoredFileSet;
 import org.smoothbuild.util.EndsWithPredicate;
 
@@ -22,7 +24,7 @@ public class LibraryClasses {
   private final Multimap<String, JavaFileObject> packageToClassesMap;
 
   public static LibraryClasses libraryClasses(Iterable<File> libraryJars) throws IOException,
-      DuplicatePathInJarException, IllegalPathInJarException, DuplicatedClassFileException {
+      DuplicatePathInJarException, IllegalPathInJarException {
     Unjarer unjarer = new Unjarer();
     Multimap<String, JavaFileObject> map = HashMultimap.create();
 
@@ -35,8 +37,9 @@ public class LibraryClasses {
         String aPackage = inputClassFile.aPackage();
         if (map.containsEntry(aPackage, inputClassFile)) {
           InputClassFile otherInputClassFile = (InputClassFile) map.get(aPackage).iterator().next();
-          throw new DuplicatedClassFileException(classFile.path(),
-              otherInputClassFile.jarFileName(), jarFile.path().value());
+          String otherJarFileName = otherInputClassFile.jarFileName();
+          throw new PluginErrorException(new DuplicatedClassFileError(classFile.path(),
+              otherJarFileName, jarFileName));
         } else {
           map.put(aPackage, inputClassFile);
         }
