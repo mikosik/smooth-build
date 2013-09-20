@@ -10,11 +10,10 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.builtin.compress.err.IllegalPathInZipException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class UnzipFunctionTest {
@@ -47,12 +46,15 @@ public class UnzipFunctionTest {
   }
 
   @Test
-  public void illegalPathInZipExceptionIsReported() throws Exception {
+  public void pluginErrorException() throws Exception {
     when(parameters.file()).thenReturn(file);
-    doThrow(IllegalPathInZipException.class).when(unzipper)
-        .unzipFile(file, sandbox.resultFileSet());
+    doThrow(PluginErrorException.class).when(unzipper).unzipFile(file, sandbox.resultFileSet());
 
-    new UnzipFunction.Worker(unzipper).execute(sandbox, parameters);
-    sandbox.messages().assertOnlyProblem(IllegalPathInZipError.class);
+    try {
+      new UnzipFunction.Worker(unzipper).execute(sandbox, parameters);
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+    }
   }
 }

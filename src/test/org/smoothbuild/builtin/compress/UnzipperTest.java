@@ -11,8 +11,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.compress.err.IllegalPathInZipException;
+import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
@@ -45,9 +46,9 @@ public class UnzipperTest {
     try {
       unzipper.unzipFile(zipFile, resultFileSet);
       fail("exception should be thrown");
-    } catch (IllegalPathInZipException e) {
+    } catch (PluginErrorException e) {
       // expected
-      assertThat(e.fileName()).isEqualTo(illegalFileName);
+      assertThat(e.error()).isInstanceOf(IllegalPathInZipError.class);
     }
   }
 
