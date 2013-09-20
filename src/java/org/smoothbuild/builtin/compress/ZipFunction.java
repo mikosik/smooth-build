@@ -20,20 +20,9 @@ public class ZipFunction {
   public interface Parameters {
     @Required
     public FileSet fileSet();
+
+    // add missing parameters: level, comment, method
   }
-
-  // TODO add missing parameters: level, comment, method
-
-  // TODO investigate zip64 format.
-  // Article
-  // https://blogs.oracle.com/xuemingshen/entry/zip64_support_for_4g_zipfile
-  // suggests that zip64 support has been added in OpenJDK7-b55 which will
-  // happen automatically. This way we cannot add 'forbidZip64' param to
-  // ZipFunction that is needed when user wants to create non zip64 file
-  // or fail the build when it is not possible.
-  // Alternative solution is to use apache common-compress
-  // http://commons.apache.org/proper/commons-compress/zip.html
-  // which provides setUseZip64 method that allows specifying zip64 behaviour.
 
   @SmoothFunction("zip")
   public static File execute(Sandbox sandbox, Parameters params) {
