@@ -61,6 +61,6 @@ public class FileSetTaskTest {
 
     fileSetTask.execute(sandbox);
 
-    sandbox.messages().assertOnlyProblem(DuplicatedPathError.class);
+    sandbox.messages().assertOnlyProblem(DuplicatePathError.class);
   }
 }

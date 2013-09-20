@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.DuplicatedPathError;
+import org.smoothbuild.task.DuplicatePathError;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 
 public class FileSetSmoothTest extends IntegrationTestCase {
@@ -90,6 +90,6 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    messages.assertOnlyProblem(DuplicatedPathError.class);
+    messages.assertOnlyProblem(DuplicatePathError.class);
   }
 }

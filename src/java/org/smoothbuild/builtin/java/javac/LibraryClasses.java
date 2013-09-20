@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.tools.JavaFileObject;
 
 import org.smoothbuild.builtin.java.Unjarer;
-import org.smoothbuild.builtin.java.javac.err.DuplicatedClassFileError;
+import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.PluginErrorException;
@@ -35,7 +35,7 @@ public class LibraryClasses {
         if (map.containsEntry(aPackage, inputClassFile)) {
           InputClassFile otherInputClassFile = (InputClassFile) map.get(aPackage).iterator().next();
           String otherJarFileName = otherInputClassFile.jarFileName();
-          throw new PluginErrorException(new DuplicatedClassFileError(classFile.path(),
+          throw new PluginErrorException(new DuplicateClassFileError(classFile.path(),
               otherJarFileName, jarFileName));
         } else {
           map.put(aPackage, inputClassFile);
