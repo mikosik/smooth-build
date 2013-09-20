@@ -29,7 +29,7 @@ public class FileSetTask extends AbstractTask {
     for (Task entry : dependencies) {
       File from = (File) entry.result();
       if (result.contains(from.path())) {
-        sandbox.report(new DuplicatedPathError(from.path()));
+        sandbox.report(new DuplicatePathError(from.path()));
       }
       MutableFile to = result.createFile(from.path());
 
