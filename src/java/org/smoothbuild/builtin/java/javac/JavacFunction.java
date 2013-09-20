@@ -65,7 +65,7 @@ public class JavacFunction {
       ReportingDiagnosticListener diagnostic = new ReportingDiagnosticListener(sandbox);
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
-      // TODO add handling of various compiler options 'source', 'target', etc
+      // add handling of various compiler options 'source', 'target', etc
       Iterable<String> options = null;
       Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files);
 
