@@ -10,11 +10,10 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class UnjarFunctionTest {
@@ -48,11 +47,15 @@ public class UnjarFunctionTest {
   }
 
   @Test
-  public void illegalPathInJarExceptionIsReported() throws Exception {
+  public void exceptionFromUnjarFile() throws Exception {
     when(parameters.file()).thenReturn(file);
-    doThrow(IllegalPathInJarException.class).when(unjarer).unjarFile(file, sandbox.resultFileSet());
+    doThrow(PluginErrorException.class).when(unjarer).unjarFile(file, sandbox.resultFileSet());
 
-    new UnjarFunction.Worker(unjarer).execute(sandbox, parameters);
-    sandbox.messages().assertOnlyProblem(IllegalPathInJarError.class);
+    try {
+      new UnjarFunction.Worker(unjarer).execute(sandbox, parameters);
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+    }
   }
 }

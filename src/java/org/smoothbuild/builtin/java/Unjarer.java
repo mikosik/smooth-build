@@ -9,12 +9,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.builtin.compress.Constants;
-import org.smoothbuild.builtin.java.err.DuplicatePathInJarException;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
+import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
+import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.PluginErrorException;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -22,13 +23,12 @@ import com.google.common.base.Predicates;
 public class Unjarer {
   private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
-  public void unjarFile(File jarFile, MutableFileSet resultFiles) throws IOException,
-      DuplicatePathInJarException, IllegalPathInJarException {
+  public void unjarFile(File jarFile, MutableFileSet resultFiles) throws IOException {
     unjarFile(jarFile, Predicates.<String> alwaysTrue(), resultFiles);
   }
 
   public void unjarFile(File jarFile, Predicate<String> nameFilter, MutableFileSet resultFiles)
-      throws IOException, DuplicatePathInJarException, IllegalPathInJarException {
+      throws IOException {
     try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {
@@ -41,14 +41,14 @@ public class Unjarer {
   }
 
   private File unjarEntry(JarInputStream jarInputStream, String fileName, MutableFileSet resultFiles)
-      throws IllegalPathInJarException, DuplicatePathInJarException, IOException {
+      throws IOException {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new IllegalPathInJarException(fileName);
+      throw new PluginErrorException(new IllegalPathInJarError(fileName));
     }
     Path path = path(fileName);
     if (resultFiles.contains(path)) {
-      throw new DuplicatePathInJarException(path);
+      throw new PluginErrorException(new DuplicatePathInJarError(path));
     }
     MutableFile file = resultFiles.createFile(path);
     try (OutputStream outputStream = file.openOutputStream()) {

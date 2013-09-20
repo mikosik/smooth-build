@@ -12,8 +12,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
+import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
@@ -60,9 +61,9 @@ public class UnjarerTest {
     try {
       unjarer.unjarFile(jarFile, resultFileSet);
       fail("exception should be thrown");
-    } catch (IllegalPathInJarException e) {
+    } catch (PluginErrorException e) {
       // expected
-      assertThat(e.fileName()).isEqualTo(illegalFileName);
+      assertThat(e.error()).isInstanceOf(IllegalPathInJarError.class);
     }
   }
 

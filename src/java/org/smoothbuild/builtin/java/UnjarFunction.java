@@ -2,10 +2,6 @@ package org.smoothbuild.builtin.java;
 
 import java.io.IOException;
 
-import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
-import org.smoothbuild.builtin.java.err.DuplicatePathInJarException;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
@@ -42,10 +38,6 @@ public class UnjarFunction {
         unjarer.unjarFile(params.file(), result);
       } catch (IOException e) {
         throw new FileSystemException(e);
-      } catch (DuplicatePathInJarException e) {
-        sandbox.report(new DuplicatePathInJarError(e.path()));
-      } catch (IllegalPathInJarException e) {
-        sandbox.report(new IllegalPathInJarError(e.fileName()));
       }
       return result;
     }
