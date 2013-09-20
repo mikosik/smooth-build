@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.testing.plugin.internal.FileTester;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
@@ -21,8 +23,13 @@ public class FileFunctionTest {
   public void illegalPathIsReported() {
     for (String path : PathTest.listOfInvalidPaths()) {
       sandbox = new TestSandbox();
-      runExecute(params(path));
-      sandbox.messages().assertOnlyProblem(IllegalPathError.class);
+      try {
+        runExecute(params(path));
+        fail("exception should be thrown");
+      } catch (PluginErrorException e) {
+        // expected
+        assertThat(e.error()).isInstanceOf(IllegalPathError.class);
+      }
     }
   }
 
