@@ -59,8 +59,13 @@ public class FilesFunctionTest {
 
   @Test
   public void nonexistentPathIsReported() throws Exception {
-    runExecute(params("some/path"));
-    sandbox.messages().assertOnlyProblem(NoSuchPathError.class);
+    try {
+      runExecute(params("some/path"));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(NoSuchPathError.class);
+    }
   }
 
   @Test
@@ -68,8 +73,13 @@ public class FilesFunctionTest {
     Path filePath = path("some/path/file.txt");
     sandbox.projectFileSystem().createEmptyFile(filePath);
 
-    runExecute(params(filePath.value()));
-    sandbox.messages().assertOnlyProblem(PathIsNotADirError.class);
+    try {
+      runExecute(params(filePath.value()));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(PathIsNotADirError.class);
+    }
   }
 
   @Test
