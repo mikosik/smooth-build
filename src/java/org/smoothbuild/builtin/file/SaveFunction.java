@@ -89,6 +89,8 @@ public class SaveFunction {
       if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndIsDirectory(dirPath)) {
         throw new PluginErrorException(new PathIsNotADirError("dir", dirPath));
       }
+      // TODO handle case when dir doesn't exist but one of its ancestors exists
+      // and is a file
     }
   }
 }
