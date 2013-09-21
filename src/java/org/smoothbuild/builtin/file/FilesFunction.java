@@ -1,20 +1,20 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
+import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
+import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.plugin.internal.StoredFileSet;
-
-// TODO forbid dir that points to temporary files created by smooth-build
-// tool
 
 public class FilesFunction {
   public interface Parameters {
@@ -42,6 +42,10 @@ public class FilesFunction {
 
     private FileSet createFiles(Path path) {
       FileSystem fileSystem = sandbox.projectFileSystem();
+
+      if (!path.isRoot() && path.firstElement().equals(BUILD_DIR)) {
+        throw new PluginErrorException(new AccessToSmoothDirError());
+      }
 
       if (!fileSystem.pathExists(path)) {
         sandbox.report(new NoSuchPathError("dir", path));

@@ -2,10 +2,12 @@ package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FilesFunction.Parameters;
+import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
@@ -18,6 +20,28 @@ import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class FilesFunctionTest {
   TestSandbox sandbox = new TestSandbox();
+
+  @Test
+  public void accessToSmoothDirIsReported() throws Exception {
+    try {
+      runExecute(params(BUILD_DIR.value()));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(AccessToSmoothDirError.class);
+    }
+  }
+
+  @Test
+  public void accessToSmoothSubDirIsReported() throws Exception {
+    try {
+      runExecute(params(BUILD_DIR.append(path("abc")).value()));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(AccessToSmoothDirError.class);
+    }
+  }
 
   @Test
   public void illegalPathsAreReported() {
