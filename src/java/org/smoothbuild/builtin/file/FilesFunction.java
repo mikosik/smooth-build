@@ -4,6 +4,7 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
+import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
 import org.smoothbuild.fs.base.FileSystem;
@@ -43,7 +44,11 @@ public class FilesFunction {
     private FileSet createFiles(Path path) {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
-      if (!path.isRoot() && path.firstElement().equals(BUILD_DIR)) {
+      if (path.isRoot()) {
+        throw new PluginErrorException(new CannotListRootDirError());
+      }
+
+      if (path.firstElement().equals(BUILD_DIR)) {
         throw new PluginErrorException(new AccessToSmoothDirError());
       }
 
