@@ -40,19 +40,20 @@ public class FilesFunction {
       return createFiles(validatedPath("dir", params.dir()));
     }
 
-    private FileSet createFiles(Path dirPath) {
+    private FileSet createFiles(Path path) {
       FileSystem fileSystem = sandbox.projectFileSystem();
-      if (!fileSystem.pathExists(dirPath)) {
-        sandbox.report(new NoSuchPathError("dir", dirPath));
+
+      if (!fileSystem.pathExists(path)) {
+        sandbox.report(new NoSuchPathError("dir", path));
         return null;
       }
 
-      if (fileSystem.pathExistsAndIsDirectory(dirPath)) {
-        return new StoredFileSet(new SubFileSystem(fileSystem, dirPath));
-      } else {
-        sandbox.report(new PathIsNotADirError("dir", dirPath));
+      if (!fileSystem.pathExistsAndIsDirectory(path)) {
+        sandbox.report(new PathIsNotADirError("dir", path));
         return null;
       }
+
+      return new StoredFileSet(new SubFileSystem(fileSystem, path));
     }
   }
 }
