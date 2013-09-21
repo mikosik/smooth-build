@@ -282,6 +282,30 @@ public class PathTest {
   }
 
   @Test
+  public void firstElementOfRootDirThrowsException() throws Exception {
+    try {
+      rootPath().firstElement();
+      Assert.fail("exception should be thrown");
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void testFirstElement() throws Exception {
+    assertFirstElement(" ", " ");
+    assertFirstElement(" / ", " ");
+
+    assertFirstElement("abc", "abc");
+    assertFirstElement("abc/def", "abc");
+    assertFirstElement("abc/def/ghi", "abc");
+  }
+
+  private static void assertFirstElement(String input, String expected) {
+    assertThat(path(input).firstElement()).isEqualTo(path(expected));
+  }
+
+  @Test
   public void testEqualsAndHashCode() {
     EqualsVerifier.forExamples(path("a"), path("b"), listOfCorrectNonEqualPaths().toArray())
         .suppress(NULL_FIELDS).verify();
