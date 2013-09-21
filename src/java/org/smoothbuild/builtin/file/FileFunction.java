@@ -7,6 +7,7 @@ import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
@@ -41,13 +42,11 @@ public class FileFunction {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
       if (!fileSystem.pathExists(path)) {
-        sandbox.report(new NoSuchPathError("path", path));
-        return null;
+        throw new PluginErrorException(new NoSuchPathError("path", path));
       }
 
       if (fileSystem.pathExistsAndIsDirectory(path)) {
-        sandbox.report(new PathIsNotAFileError("path", path));
-        return null;
+        throw new PluginErrorException(new PathIsNotAFileError("path", path));
       }
 
       return new StoredFile(fileSystem, path);
