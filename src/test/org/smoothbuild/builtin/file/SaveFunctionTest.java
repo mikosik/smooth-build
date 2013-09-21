@@ -30,14 +30,24 @@ public class SaveFunctionTest {
 
   @Test
   public void missingFileAndFileSetAreReported() throws Exception {
-    runExecute(params(null, null, "my/path"));
-    sandbox.messages().assertOnlyProblem(EitherFileOrFilesMustBeProvidedError.class);
+    try {
+      runExecute(params(null, null, "my/path"));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(EitherFileOrFilesMustBeProvidedError.class);
+    }
   }
 
   @Test
   public void specifyingBotFileAndFileSetIsReported() throws Exception {
-    runExecute(params(mock(File.class), mock(FileSet.class), "my/path"));
-    sandbox.messages().assertOnlyProblem(FileAndFilesSpecifiedError.class);
+    try {
+      runExecute(params(mock(File.class), mock(FileSet.class), "my/path"));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(FileAndFilesSpecifiedError.class);
+    }
   }
 
   @Test
@@ -59,8 +69,13 @@ public class SaveFunctionTest {
     Path file = path("some/path/file.txt");
     fileSystem.createEmptyFile(file);
 
-    runExecute(params(mock(File.class), file.value()));
-    sandbox.messages().assertOnlyProblem(PathIsNotADirError.class);
+    try {
+      runExecute(params(mock(File.class), file.value()));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(PathIsNotADirError.class);
+    }
   }
 
   @Test
@@ -71,8 +86,13 @@ public class SaveFunctionTest {
 
     StoredFile file = new StoredFile(new SubFileSystem(fileSystem, rootPath()), filePath);
 
-    runExecute(params(file, destinationDir.value()));
-    sandbox.messages().assertOnlyProblem(PathIsNotADirError.class);
+    try {
+      runExecute(params(file, destinationDir.value()));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(PathIsNotADirError.class);
+    }
   }
 
   @Test
