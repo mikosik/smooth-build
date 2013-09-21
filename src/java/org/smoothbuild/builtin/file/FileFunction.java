@@ -37,19 +37,20 @@ public class FileFunction {
       return createFile(validatedPath("path", params.path()));
     }
 
-    private File createFile(Path filePath) {
+    private File createFile(Path path) {
       FileSystem fileSystem = sandbox.projectFileSystem();
-      if (!fileSystem.pathExists(filePath)) {
-        sandbox.report(new NoSuchPathError("path", filePath));
+
+      if (!fileSystem.pathExists(path)) {
+        sandbox.report(new NoSuchPathError("path", path));
         return null;
       }
 
-      if (fileSystem.pathExistsAndIsDirectory(filePath)) {
-        sandbox.report(new PathIsNotAFileError("path", filePath));
+      if (fileSystem.pathExistsAndIsDirectory(path)) {
+        sandbox.report(new PathIsNotAFileError("path", path));
         return null;
-      } else {
-        return new StoredFile(fileSystem, filePath);
       }
+
+      return new StoredFile(fileSystem, path);
     }
   }
 }
