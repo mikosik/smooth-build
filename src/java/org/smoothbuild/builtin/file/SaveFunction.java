@@ -9,6 +9,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
@@ -43,16 +44,12 @@ public class SaveFunction {
       File file = params.file();
       FileSet files = params.files();
       if (file == null && files == null) {
-        sandbox.report(new EitherFileOrFilesMustBeProvidedError());
-        return;
+        throw new PluginErrorException(new EitherFileOrFilesMustBeProvidedError());
       }
       if (file != null && files != null) {
-        sandbox.report(new FileAndFilesSpecifiedError());
-        return;
+        throw new PluginErrorException(new FileAndFilesSpecifiedError());
       }
-      if (!canPathBeUsedAsDir(dirPath)) {
-        return;
-      }
+      checkThatPathCanBeUsedAsDir(dirPath);
       if (file != null) {
         save(dirPath, file);
       } else {
@@ -68,23 +65,18 @@ public class SaveFunction {
 
     private void save(Path dirPath, File file) {
       Path destination = dirPath.append(file.path());
-
-      if (!canPathBeUsedAsDir(destination.parent())) {
-        return;
-      }
+      checkThatPathCanBeUsedAsDir(destination.parent());
 
       Path fileSystemRoot = ((StoredFile) file).fileSystem().root();
       Path source = fileSystemRoot.append(file.path());
       sandbox.projectFileSystem().copy(source, destination);
     }
 
-    private boolean canPathBeUsedAsDir(Path dirPath) {
+    private void checkThatPathCanBeUsedAsDir(Path dirPath) {
       FileSystem fileSystem = sandbox.projectFileSystem();
       if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndIsDirectory(dirPath)) {
-        sandbox.report(new PathIsNotADirError("dir", dirPath));
-        return false;
+        throw new PluginErrorException(new PathIsNotADirError("dir", dirPath));
       }
-      return true;
     }
   }
 }
