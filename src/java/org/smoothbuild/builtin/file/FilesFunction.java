@@ -48,13 +48,11 @@ public class FilesFunction {
       }
 
       if (!fileSystem.pathExists(path)) {
-        sandbox.report(new NoSuchPathError("dir", path));
-        return null;
+        throw new PluginErrorException(new NoSuchPathError("dir", path));
       }
 
       if (!fileSystem.pathExistsAndIsDirectory(path)) {
-        sandbox.report(new PathIsNotADirError("dir", path));
-        return null;
+        throw new PluginErrorException(new PathIsNotADirError("dir", path));
       }
 
       return new StoredFileSet(new SubFileSystem(fileSystem, path));
