@@ -59,18 +59,24 @@ public class SaveFunction {
       }
     }
 
+    private void save(Path dirPath, File file) {
+      checkThatPathCanBeUsedAsDir(dirPath.append(file.path()).parent());
+      saveImpl(dirPath, file);
+    }
+
     private void save(Path dirPath, FileSet files) {
-      for (File file : files) {
-        save(dirPath, file);
+      for (File file1 : files) {
+        checkThatPathCanBeUsedAsDir(dirPath.append(file1.path()).parent());
+      }
+      for (File file1 : files) {
+        saveImpl(dirPath, file1);
       }
     }
 
-    private void save(Path dirPath, File file) {
-      Path destination = dirPath.append(file.path());
-      checkThatPathCanBeUsedAsDir(destination.parent());
-
+    private void saveImpl(Path dirPath, File file) {
       Path fileSystemRoot = ((StoredFile) file).fileSystem().root();
       Path source = fileSystemRoot.append(file.path());
+      Path destination = dirPath.append(file.path());
       sandbox.projectFileSystem().copy(source, destination);
     }
 
