@@ -1,7 +1,9 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
+import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
+import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
 import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
 import org.smoothbuild.builtin.file.err.PathIsNotADirError;
@@ -73,6 +75,10 @@ public class SaveFunction {
     }
 
     private void checkThatPathCanBeUsedAsDir(Path dirPath) {
+      if (!dirPath.isRoot() && dirPath.firstElement().equals(BUILD_DIR)) {
+        throw new PluginErrorException(new AccessToSmoothDirError());
+      }
+
       FileSystem fileSystem = sandbox.projectFileSystem();
       if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndIsDirectory(dirPath)) {
         throw new PluginErrorException(new PathIsNotADirError("dir", dirPath));

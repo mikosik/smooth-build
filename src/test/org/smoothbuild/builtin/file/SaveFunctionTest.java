@@ -3,11 +3,13 @@ package org.smoothbuild.builtin.file;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.plugin.api.Path.rootPath;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.SaveFunction.Parameters;
+import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
 import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
@@ -27,6 +29,17 @@ import org.smoothbuild.testing.plugin.internal.TestSandbox;
 public class SaveFunctionTest {
   TestSandbox sandbox = new TestSandbox();
   TestFileSystem fileSystem = sandbox.projectFileSystem();
+
+  @Test
+  public void accessToSmoothDirIsReported() throws Exception {
+    try {
+      runExecute(params(mock(File.class), null, BUILD_DIR.value()));
+      fail("exception should be thrown");
+    } catch (PluginErrorException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(AccessToSmoothDirError.class);
+    }
+  }
 
   @Test
   public void missingFileAndFileSetAreReported() throws Exception {
