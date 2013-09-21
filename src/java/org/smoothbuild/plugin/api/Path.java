@@ -109,6 +109,18 @@ public class Path {
     }
   }
 
+  public Path firstElement() {
+    if (this == ROOT_PATH) {
+      throw new IllegalArgumentException("Cannot return first element of root path '.'");
+    }
+    int index = value.indexOf(SEPARATOR_CHARACTER);
+    if (index == -1) {
+      return this;
+    } else {
+      return new Path(value.substring(0, index));
+    }
+  }
+
   public Path lastElement() {
     if (this == ROOT_PATH) {
       throw new IllegalArgumentException("Cannot return last element of root path '.'");
