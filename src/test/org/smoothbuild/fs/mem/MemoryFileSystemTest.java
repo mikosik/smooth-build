@@ -2,6 +2,9 @@ package org.smoothbuild.fs.mem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.fs.base.PathKind.DIR;
+import static org.smoothbuild.fs.base.PathKind.FILE;
+import static org.smoothbuild.fs.base.PathKind.NOTHING;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
@@ -27,6 +30,35 @@ public class MemoryFileSystemTest {
   }
 
   @Test
+  public void rootPathIsADir() throws Exception {
+    assertThat(fileSystem.pathKind(Path.rootPath())).isEqualTo(DIR);
+  }
+
+  @Test
+  public void nonRootPathsAreInitiallyNothing() throws Exception {
+    assertThat(fileSystem.pathKind(path("abc"))).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathKind(path("abc/def"))).isEqualTo(NOTHING);
+  }
+
+  @Test
+  public void pathKindOfAFile() throws Exception {
+    createEmptyFile("abc/def/ghi/file.txt");
+    assertThat(fileSystem.pathKind(path("abc/def/ghi/file.txt"))).isEqualTo(FILE);
+  }
+
+  @Test
+  public void pathKindOfADir() throws Exception {
+    createEmptyFile("abc/file.txt");
+    assertThat(fileSystem.pathKind(path("abc"))).isEqualTo(DIR);
+  }
+
+  @Test
+  public void pathKindIsNothingWhenFirstPartOfItIsExistingFile() throws Exception {
+    createEmptyFile("abc/def");
+    assertThat(fileSystem.pathKind(path("abc/def/ghi"))).isEqualTo(NOTHING);
+  }
+
+  @Test
   public void rootPathExists() {
     assertThat(fileSystem.pathExists(Path.rootPath())).isTrue();
   }
@@ -40,7 +72,7 @@ public class MemoryFileSystemTest {
   }
 
   @Test
-  public void pathExistsAfterCreating() throws Exception {
+  public void pathExistsAfterCreating_legacy() throws Exception {
     createEmptyFile("abc/def/ghi/text.txt");
 
     assertThat(fileSystem.pathExists(path("abc"))).isTrue();

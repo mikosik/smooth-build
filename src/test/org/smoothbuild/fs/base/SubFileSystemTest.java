@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.fs.base.PathKind.FILE;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import java.io.InputStream;
@@ -27,6 +28,12 @@ public class SubFileSystemTest {
     Path parentRoot = path("parent/root");
     when(fileSystem.root()).thenReturn(parentRoot);
     assertThat(subFileSystem.root()).isEqualTo(parentRoot.append(root));
+  }
+
+  @Test
+  public void pathKind() throws Exception {
+    when(fileSystem.pathKind(absolutePath)).thenReturn(FILE);
+    assertThat(subFileSystem.pathKind(path)).isEqualTo(FILE);
   }
 
   @Test
