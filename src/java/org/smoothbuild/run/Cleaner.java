@@ -1,6 +1,7 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.fs.base.PathKind.DIR;
 
 import javax.inject.Inject;
 
@@ -15,7 +16,7 @@ public class Cleaner {
   }
 
   public void clearBuildDir() {
-    if (fileSystem.pathExists(BUILD_DIR)) {
+    if (fileSystem.pathKind(BUILD_DIR) == DIR) {
       fileSystem.deleteDirectoryRecursively(BUILD_DIR);
     }
   }

@@ -1,6 +1,7 @@
 package org.smoothbuild.integration.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.fs.base.PathKind.NOTHING;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import java.io.IOException;
@@ -74,7 +75,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    assertThat(fileSystem.pathExists(dir)).isFalse();
+    assertThat(fileSystem.pathKind(dir)).isEqualTo(NOTHING);
   }
 
   @Test
