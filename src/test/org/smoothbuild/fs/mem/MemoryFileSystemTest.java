@@ -49,6 +49,12 @@ public class MemoryFileSystemTest {
     assertThat(fileSystem.pathExists(path("abc/def/ghi/text.txt"))).isTrue();
   }
 
+  @Test
+  public void pathDoesNotExistWhenFirstPartOfItIsExistingFile() throws Exception {
+    createEmptyFile("abc/def");
+    assertThat(fileSystem.pathExists(path("abc/def/ghi"))).isFalse();
+  }
+
   // pathExistsAndIsDirectory()
 
   @Test

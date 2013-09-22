@@ -40,7 +40,7 @@ public class MemoryFile implements MemoryElement {
 
   @Override
   public boolean hasChild(String name) {
-    throw new UnsupportedOperationException();
+    return false;
   }
 
   @Override
