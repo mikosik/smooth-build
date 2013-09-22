@@ -37,13 +37,8 @@ public class MemoryFileTest {
   }
 
   @Test
-  public void hasChildThrowsException() {
-    try {
-      file.hasChild("name");
-      fail("exception should be thrown");
-    } catch (UnsupportedOperationException e) {
-      // expected
-    }
+  public void hasChildReturnsFalse() {
+    assertThat(file.hasChild("name")).isFalse();
   }
 
   @Test
