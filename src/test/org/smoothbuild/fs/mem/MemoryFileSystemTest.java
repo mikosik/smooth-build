@@ -256,7 +256,7 @@ public class MemoryFileSystemTest {
     createEmptyFile("xyz/prs/file.txt");
 
     try {
-      fileSystem.copy(path(sourceFileName), path("xyz/"));
+      fileSystem.copy(path(sourceFileName), path("xyz"));
     } catch (FileSystemException e) {
       // expected
     }

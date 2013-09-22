@@ -8,9 +8,9 @@ import static org.smoothbuild.plugin.api.Path.path;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FileFunction.Parameters;
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
+import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
-import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
@@ -71,7 +71,7 @@ public class FileFunctionTest {
 
   @Test
   public void nonFilePathIsReported() throws Exception {
-    Path dir = path("some/path/");
+    Path dir = path("some/path");
     Path file = dir.append(path("file.txt"));
     sandbox.projectFileSystem().createEmptyFile(file);
 
