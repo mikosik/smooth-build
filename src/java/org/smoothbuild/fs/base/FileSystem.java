@@ -15,6 +15,8 @@ import com.google.inject.ImplementedBy;
 public interface FileSystem {
   public Path root();
 
+  public PathKind pathKind(Path path);
+
   public boolean pathExists(Path path);
 
   public boolean pathExistsAndIsDirectory(Path path);

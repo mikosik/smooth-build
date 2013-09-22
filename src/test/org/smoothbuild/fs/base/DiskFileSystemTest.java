@@ -2,6 +2,9 @@ package org.smoothbuild.fs.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.fs.base.PathKind.DIR;
+import static org.smoothbuild.fs.base.PathKind.FILE;
+import static org.smoothbuild.fs.base.PathKind.NOTHING;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.JdkFileTester.assertContent;
 import static org.smoothbuild.testing.common.JdkFileTester.createDir;
@@ -30,6 +33,37 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   @Test
   public void root() throws Exception {
     assertThat(fileSystem.root()).isEqualTo(Path.rootPath());
+  }
+
+  @Test
+  public void rootPathIsADir() throws Exception {
+    assertThat(fileSystem.pathKind(Path.rootPath())).isEqualTo(DIR);
+  }
+
+  @Test
+  public void nonRootPathsAreInitiallyNothing() throws Exception {
+    assertThat(fileSystem.pathKind(path("abc"))).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathKind(path("abc/def"))).isEqualTo(NOTHING);
+  }
+
+  @Test
+  public void pathKindOfAFile() throws Exception {
+    createEmptyFile(root, "file.txt");
+    assertThat(fileSystem.pathKind(path("file.txt"))).isEqualTo(FILE);
+  }
+
+  @Test
+  public void pathKindOfADir() throws Exception {
+    File myDirectory = new File(root, "abc");
+    myDirectory.mkdirs();
+
+    assertThat(fileSystem.pathKind(path("abc"))).isEqualTo(DIR);
+  }
+
+  @Test
+  public void pathKindIsNothingWhenFirstPartOfItIsExistingFile() throws Exception {
+    createEmptyFile(root, "abc");
+    assertThat(fileSystem.pathKind(path("abc/def/ghi"))).isEqualTo(NOTHING);
   }
 
   // pathExists()

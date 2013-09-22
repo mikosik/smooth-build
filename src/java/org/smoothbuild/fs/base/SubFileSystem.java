@@ -20,6 +20,11 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
+  public PathKind pathKind(Path path) {
+    return fileSystem.pathKind(absolutePath(path));
+  }
+
+  @Override
   public boolean pathExists(Path path) {
     return fileSystem.pathExists(absolutePath(path));
   }

@@ -1,5 +1,8 @@
 package org.smoothbuild.fs.base;
 
+import static org.smoothbuild.fs.base.PathKind.DIR;
+import static org.smoothbuild.fs.base.PathKind.FILE;
+import static org.smoothbuild.fs.base.PathKind.NOTHING;
 import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
 import java.io.BufferedInputStream;
@@ -43,6 +46,18 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public Path root() {
     return Path.rootPath();
+  }
+
+  @Override
+  public PathKind pathKind(Path path) {
+    File file = jdkFile(path);
+    if (!file.exists()) {
+      return NOTHING;
+    }
+    if (file.isDirectory()) {
+      return DIR;
+    }
+    return FILE;
   }
 
   @Override
