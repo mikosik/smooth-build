@@ -47,6 +47,9 @@ public class Path {
     if (path.startsWith("/")) {
       return "Path cannot start with slash character '/'. Only paths relative to project root dir are allowed";
     }
+    if (path.endsWith("/")) {
+      return "Path cannot end with slash character '/'.";
+    }
     if (path.contains("//")) {
       return "Path cannot contain two slashes (//) in a row";
     }
@@ -61,8 +64,6 @@ public class Path {
   }
 
   private static String toCanonical(String path) {
-    // remove '/' suffix
-    path = path.endsWith(SEPARATOR) ? path.substring(0, path.length() - 1) : path;
     // remove './' prefix
     return path.startsWith("./") ? path.substring(2, path.length()) : path;
   }
