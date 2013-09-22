@@ -2,14 +2,10 @@ package org.smoothbuild.builtin.java;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.testing.common.JarTester.jaredFiles;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Iterator;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
@@ -65,27 +61,5 @@ public class UnjarerTest {
       // expected
       assertThat(e.error()).isInstanceOf(IllegalPathInJarError.class);
     }
-  }
-
-  private static TestFile jaredFiles(String... fileNames) throws IOException {
-    TestFile inputFile = new TestFileSet().createFile(path("input.jar"));
-
-    try (JarOutputStream jarOutputStream = new JarOutputStream(inputFile.openOutputStream());) {
-      for (String fileName : fileNames) {
-        addEntry(jarOutputStream, fileName);
-      }
-    }
-    return inputFile;
-  }
-
-  private static void addEntry(JarOutputStream jarOutputStream, String fileName) throws IOException {
-    JarEntry entry = new JarEntry(fileName);
-    jarOutputStream.putNextEntry(entry);
-
-    OutputStreamWriter writer = new OutputStreamWriter(jarOutputStream);
-    writer.write(fileName);
-    writer.flush();
-
-    jarOutputStream.closeEntry();
   }
 }

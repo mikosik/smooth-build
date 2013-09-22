@@ -3,12 +3,7 @@ package org.smoothbuild.builtin.java.javac;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.builtin.java.javac.LibraryClasses.libraryClasses;
-import static org.smoothbuild.plugin.api.Path.path;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
+import static org.smoothbuild.testing.common.JarTester.jaredFiles;
 
 import javax.tools.JavaFileObject;
 
@@ -17,8 +12,6 @@ import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.PluginErrorException;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.plugin.internal.TestFile;
-import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
 import com.google.common.collect.ImmutableList;
 
@@ -50,28 +43,5 @@ public class LibraryClassesTest {
       assertThat(e.error()).isInstanceOf(DuplicateClassFileError.class);
       // expected
     }
-  }
-
-  // TODO methods copy pasted from UnjarerTest
-  private static TestFile jaredFiles(String... fileNames) throws IOException {
-    TestFile inputFile = new TestFileSet().createFile(path("input.jar"));
-
-    try (JarOutputStream jarOutputStream = new JarOutputStream(inputFile.openOutputStream());) {
-      for (String fileName : fileNames) {
-        addEntry(jarOutputStream, fileName);
-      }
-    }
-    return inputFile;
-  }
-
-  private static void addEntry(JarOutputStream jarOutputStream, String fileName) throws IOException {
-    JarEntry entry = new JarEntry(fileName);
-    jarOutputStream.putNextEntry(entry);
-
-    OutputStreamWriter writer = new OutputStreamWriter(jarOutputStream);
-    writer.write(fileName);
-    writer.flush();
-
-    jarOutputStream.closeEntry();
   }
 }
