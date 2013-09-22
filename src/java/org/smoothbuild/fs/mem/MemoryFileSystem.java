@@ -64,8 +64,8 @@ public class MemoryFileSystem implements FileSystem {
         if (child.isDirectory()) {
           currentDir = (MemoryDirectory) child;
         } else {
-          throw new FileSystemException(
-              "Path (or subpath) of to be created directory is taken by some file.");
+          throw new FileSystemException("Path (or subpath) of to be created directory ("
+              + directory + ") is taken by some file.");
         }
       } else {
         MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
