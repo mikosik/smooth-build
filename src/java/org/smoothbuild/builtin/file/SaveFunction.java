@@ -6,7 +6,7 @@ import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
 import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
-import org.smoothbuild.builtin.file.err.PathIsNotADirError;
+import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
@@ -87,7 +87,7 @@ public class SaveFunction {
 
       FileSystem fileSystem = sandbox.projectFileSystem();
       if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndIsDirectory(dirPath)) {
-        throw new PluginErrorException(new PathIsNotADirError("dir", dirPath));
+        throw new PluginErrorException(new DirParamIsAFileError("dir", dirPath));
       }
       // TODO handle case when dir doesn't exist but one of its ancestors exists
       // and is a file

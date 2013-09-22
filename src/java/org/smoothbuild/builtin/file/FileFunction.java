@@ -5,7 +5,7 @@ import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
-import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
+import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
@@ -52,7 +52,7 @@ public class FileFunction {
       }
 
       if (fileSystem.pathExistsAndIsDirectory(path)) {
-        throw new PluginErrorException(new PathIsNotAFileError("path", path));
+        throw new PluginErrorException(new FileParamIsADirError("path", path));
       }
 
       return new StoredFile(fileSystem, path);

@@ -6,7 +6,7 @@ import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
-import org.smoothbuild.builtin.file.err.PathIsNotADirError;
+import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.FileSet;
@@ -57,7 +57,7 @@ public class FilesFunction {
       }
 
       if (!fileSystem.pathExistsAndIsDirectory(path)) {
-        throw new PluginErrorException(new PathIsNotADirError("dir", path));
+        throw new PluginErrorException(new DirParamIsAFileError("dir", path));
       }
 
       return new StoredFileSet(new SubFileSystem(fileSystem, path));

@@ -3,9 +3,9 @@ package org.smoothbuild.builtin.file.err;
 import org.smoothbuild.message.Error;
 import org.smoothbuild.plugin.api.Path;
 
-public class PathIsNotAFileError extends Error {
-  public PathIsNotAFileError(String paramName, Path path) {
+public class DirParamIsAFileError extends Error {
+  public DirParamIsAFileError(String paramName, Path path) {
     super("Param '" + paramName + "' has illegal value. Path " + path
-        + " exists but is not a file but a directory.");
+        + " exists but is not a directory but a file.");
   }
 }
