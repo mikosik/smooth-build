@@ -4,8 +4,8 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
-import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.FileParamIsADirError;
+import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
@@ -47,15 +47,16 @@ public class FileFunction {
         throw new PluginErrorException(new AccessToSmoothDirError());
       }
 
-      if (!fileSystem.pathExists(path)) {
-        throw new PluginErrorException(new NoSuchPathError("path", path));
+      switch (fileSystem.pathKind(path)) {
+        case FILE:
+          return new StoredFile(fileSystem, path);
+        case DIR:
+          throw new PluginErrorException(new FileParamIsADirError("path", path));
+        case NOTHING:
+          throw new PluginErrorException(new NoSuchPathError("path", path));
+        default:
+          throw new RuntimeException("unreachable case");
       }
-
-      if (fileSystem.pathExistsAndIsDirectory(path)) {
-        throw new PluginErrorException(new FileParamIsADirError("path", path));
-      }
-
-      return new StoredFile(fileSystem, path);
     }
   }
 }

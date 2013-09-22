@@ -10,12 +10,15 @@ public class RecursiveFilesIterable implements Iterable<Path> {
   private final FileSystem fileSystem;
 
   public static Iterable<Path> recursiveFilesIterable(FileSystem fileSystem, Path directory) {
-    if (fileSystem.pathExistsAndIsDirectory(directory)) {
-      return new RecursiveFilesIterable(new SubFileSystem(fileSystem, directory));
-    } else if (fileSystem.pathExists(directory)) {
-      throw new IllegalArgumentException("Path " + directory + " is not a dir but a file.");
-    } else {
-      return ImmutableList.of();
+    switch (fileSystem.pathKind(directory)) {
+      case FILE:
+        throw new IllegalArgumentException("Path " + directory + " is not a dir but a file.");
+      case DIR:
+        return new RecursiveFilesIterable(new SubFileSystem(fileSystem, directory));
+      case NOTHING:
+        return ImmutableList.of();
+      default:
+        throw new RuntimeException("unreachable case");
     }
   }
 

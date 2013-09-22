@@ -5,8 +5,8 @@ import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
-import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
+import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.FileSet;
@@ -52,15 +52,16 @@ public class FilesFunction {
         throw new PluginErrorException(new AccessToSmoothDirError());
       }
 
-      if (!fileSystem.pathExists(path)) {
-        throw new PluginErrorException(new NoSuchPathError("dir", path));
+      switch (fileSystem.pathKind(path)) {
+        case FILE:
+          throw new PluginErrorException(new DirParamIsAFileError("dir", path));
+        case DIR:
+          return new StoredFileSet(new SubFileSystem(fileSystem, path));
+        case NOTHING:
+          throw new PluginErrorException(new NoSuchPathError("dir", path));
+        default:
+          throw new RuntimeException("unreachable case");
       }
-
-      if (!fileSystem.pathExistsAndIsDirectory(path)) {
-        throw new PluginErrorException(new DirParamIsAFileError("dir", path));
-      }
-
-      return new StoredFileSet(new SubFileSystem(fileSystem, path));
     }
   }
 }

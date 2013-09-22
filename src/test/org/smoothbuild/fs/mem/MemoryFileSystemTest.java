@@ -314,13 +314,13 @@ public class MemoryFileSystemTest {
     fileSystem.deleteDirectoryRecursively(mainDir);
 
     // then
-    assertThat(fileSystem.pathExists(fileOutsideMain)).isTrue();
+    assertThat(fileSystem.pathKind(fileOutsideMain)).isEqualTo(FILE);
 
-    assertThat(fileSystem.pathExists(directFile)).isFalse();
-    assertThat(fileSystem.pathExists(directDir)).isFalse();
+    assertThat(fileSystem.pathKind(directFile)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathKind(directDir)).isEqualTo(NOTHING);
 
-    assertThat(fileSystem.pathExists(notDirectFile)).isFalse();
-    assertThat(fileSystem.pathExists(notDirectDir)).isFalse();
+    assertThat(fileSystem.pathKind(notDirectFile)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathKind(notDirectDir)).isEqualTo(NOTHING);
   }
 
   @Test

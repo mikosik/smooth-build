@@ -46,10 +46,16 @@ public class RecursiveFilesIterator implements Iterator<Path> {
         }
       } else {
         Path file = fileStack.remove();
-        if (fileSystem.pathExistsAndIsDirectory(file)) {
-          directoryStack.push(file);
-        } else {
-          return file;
+        switch (fileSystem.pathKind(file)) {
+          case FILE:
+            return file;
+          case DIR:
+            directoryStack.push(file);
+            break;
+          case NOTHING:
+            throw new RuntimeException("should not happend");
+          default:
+            throw new RuntimeException("unreachable case");
         }
       }
     }

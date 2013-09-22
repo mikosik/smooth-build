@@ -96,18 +96,21 @@ public class SaveFunction {
       Path path = dirPath;
       FileSystem fileSystem = sandbox.projectFileSystem();
       while (!path.isRoot()) {
-        if (fileSystem.pathExists(path)) {
-          if (fileSystem.pathExistsAndIsDirectory(path)) {
-            return;
-          } else {
+        switch (fileSystem.pathKind(path)) {
+          case FILE:
             if (path.equals(dirPath)) {
               throw new PluginErrorException(new DirParamIsAFileError("dir", path));
             } else {
               throw new PluginErrorException(new DirParamSubdirIsAFileError("dir", dirPath, path));
             }
-          }
+          case DIR:
+            return;
+          case NOTHING:
+            path = path.parent();
+            break;
+          default:
+            throw new RuntimeException("unreachable case");
         }
-        path = path.parent();
       }
     }
 
@@ -120,26 +123,33 @@ public class SaveFunction {
       if (dirPath.isRoot() && fullPath.firstElement().equals(BUILD_DIR)) {
         throw new PluginErrorException(new AccessToSmoothDirError());
       }
+
       FileSystem fileSystem = sandbox.projectFileSystem();
-      if (fileSystem.pathExists(fullPath)) {
-        if (fileSystem.pathExistsAndIsFile(fullPath)) {
+      switch (fileSystem.pathKind(fullPath)) {
+        case FILE:
           return;
-        } else {
+        case DIR:
           throw new PluginErrorException(new FileOutputIsADirError(dirPath, filePath));
-        }
+        case NOTHING:
+          break;
+        default:
+          throw new RuntimeException("unreachable case");
       }
 
       Path path = fullPath.parent();
       while (!path.equals(dirPath)) {
-        if (fileSystem.pathExists(path)) {
-          if (fileSystem.pathExistsAndIsDirectory(path)) {
-            return;
-          } else {
+        switch (fileSystem.pathKind(path)) {
+          case FILE:
             throw new PluginErrorException(
                 new FileOutputSubdirIsAFileError(dirPath, filePath, path));
-          }
+          case DIR:
+            return;
+          case NOTHING:
+            path = path.parent();
+            break;
+          default:
+            throw new RuntimeException("unreachable case");
         }
-        path = path.parent();
       }
     }
   }
