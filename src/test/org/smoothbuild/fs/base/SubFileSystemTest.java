@@ -37,24 +37,6 @@ public class SubFileSystemTest {
   }
 
   @Test
-  public void pathExists() {
-    when(fileSystem.pathExists(absolutePath)).thenReturn(true);
-    assertThat(subFileSystem.pathExists(path)).isTrue();
-  }
-
-  @Test
-  public void pathExistsAndIsDirectory() {
-    when(fileSystem.pathExistsAndIsDirectory(absolutePath)).thenReturn(true);
-    assertThat(subFileSystem.pathExistsAndIsDirectory(path)).isTrue();
-  }
-
-  @Test
-  public void pathExistsAndIsFile() {
-    when(fileSystem.pathExistsAndIsFile(absolutePath)).thenReturn(true);
-    assertThat(subFileSystem.pathExistsAndIsFile(path)).isTrue();
-  }
-
-  @Test
   public void childNames() {
     ImmutableList<String> strings = ImmutableList.of("abc");
     when(fileSystem.childNames(absolutePath)).thenReturn(strings);

@@ -16,7 +16,6 @@ import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.exc.CannotCreateFileException;
@@ -34,6 +33,8 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   public void root() throws Exception {
     assertThat(fileSystem.root()).isEqualTo(Path.rootPath());
   }
+
+  // pathKind()
 
   @Test
   public void rootPathIsADir() throws Exception {
@@ -64,78 +65,6 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   public void pathKindIsNothingWhenFirstPartOfItIsExistingFile() throws Exception {
     createEmptyFile(root, "abc");
     assertThat(fileSystem.pathKind(path("abc/def/ghi"))).isEqualTo(NOTHING);
-  }
-
-  // pathExists()
-
-  @Test
-  public void pathExistsReturnsTrueForExistingDir() {
-    String myDir = "myDirectory";
-    File myDirectory = new File(root, myDir);
-    myDirectory.mkdirs();
-
-    assertThat(fileSystem.pathExists(path(myDir))).isTrue();
-  }
-
-  @Test
-  public void pathExistsReturnsTrueForExistingFile() throws IOException {
-    String fileName = "myFile";
-    createEmptyFile(root, fileName);
-
-    assertThat(fileSystem.pathExists(path(fileName))).isTrue();
-  }
-
-  @Test
-  public void pathExistsReturnsFalseWhenPathDoesNotExist() throws IOException {
-    assertThat(fileSystem.pathExists(path("myFile"))).isFalse();
-  }
-
-  // pathExistsAndIsDirectory()
-
-  @Test
-  public void pathExistsAndIsDirectoryReturnsTrueForDirectoryPath() throws Exception {
-    String myDir = "myDirectory";
-    File myDirectory = new File(root, myDir);
-    myDirectory.mkdirs();
-
-    assertThat(fileSystem.pathExistsAndIsDirectory(path(myDir))).isTrue();
-  }
-
-  @Test
-  public void pathExistsAndIsDirectoryReturnsFalseForFilePath() throws Exception {
-    String fileName = "myFile";
-    createEmptyFile(root, fileName);
-
-    assertThat(fileSystem.pathExistsAndIsDirectory(path(fileName))).isFalse();
-  }
-
-  @Test
-  public void pathExistsAndIsDirectoryReturnsFalseForNonexistentPathPath() throws Exception {
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
-  }
-
-  // pathExistsAndIsFile()
-
-  @Test
-  public void pathExistsAndIsFileReturnsFalseForDirectoryPath() throws Exception {
-    String myDir = "myDirectory";
-    File myDirectory = new File(root, myDir);
-    myDirectory.mkdirs();
-
-    assertThat(fileSystem.pathExistsAndIsFile(path(myDir))).isFalse();
-  }
-
-  @Test
-  public void pathExistsAndIsFileReturnsTrueForFilePath() throws Exception {
-    String fileName = "myFile";
-    createEmptyFile(root, fileName);
-
-    assertThat(fileSystem.pathExistsAndIsFile(path(fileName))).isTrue();
-  }
-
-  @Test
-  public void pathExistsAndIsFileReturnsFalseForNonexistentPathPath() throws Exception {
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
   }
 
   // childNames()

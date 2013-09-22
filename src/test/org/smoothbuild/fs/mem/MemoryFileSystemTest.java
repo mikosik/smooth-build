@@ -59,103 +59,9 @@ public class MemoryFileSystemTest {
   }
 
   @Test
-  public void rootPathExists() {
-    assertThat(fileSystem.pathExists(Path.rootPath())).isTrue();
-  }
-
-  @Test
-  public void nonRootPatsDoNotExistInitially() throws Exception {
-    assertThat(fileSystem.pathExists(path(" "))).isFalse();
-    assertThat(fileSystem.pathExists(path("abc"))).isFalse();
-    assertThat(fileSystem.pathExists(path("abc/def"))).isFalse();
-    assertThat(fileSystem.pathExists(path("abc/def/ghi"))).isFalse();
-  }
-
-  @Test
-  public void pathExistsAfterCreating_legacy() throws Exception {
-    createEmptyFile("abc/def/ghi/text.txt");
-
-    assertThat(fileSystem.pathExists(path("abc"))).isTrue();
-    assertThat(fileSystem.pathExists(path("abc/def"))).isTrue();
-    assertThat(fileSystem.pathExists(path("abc/def/ghi"))).isTrue();
-    assertThat(fileSystem.pathExists(path("abc/def/ghi/text.txt"))).isTrue();
-  }
-
-  @Test
-  public void pathDoesNotExistWhenFirstPartOfItIsExistingFile() throws Exception {
-    createEmptyFile("abc/def");
-    assertThat(fileSystem.pathExists(path("abc/def/ghi"))).isFalse();
-  }
-
-  // pathExistsAndIsDirectory()
-
-  @Test
-  public void pathExistsAndIsDirectoryReturnsTrueForDirectoryPath() throws Exception {
-    Path dir = path("myDirectory");
-    createDir(dir);
-
-    assertThat(fileSystem.pathExistsAndIsDirectory(dir)).isTrue();
-  }
-
-  @Test
-  public void pathExistsAndIsDirectoryReturnsFalseForFilePath() throws Exception {
-    String fileName = "myFile";
-    createEmptyFile(fileName);
-
-    assertThat(fileSystem.pathExistsAndIsDirectory(path(fileName))).isFalse();
-  }
-
-  @Test
-  public void pathExistsAndIsDirectoryReturnsFalseForNonexistentPathPath() throws Exception {
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
-  }
-
-  // pathExistsAndIsFile()
-
-  @Test
-  public void pathExistsAndIsFileReturnsFalseForDirectoryPath() throws Exception {
-    Path dir = path("myDirectory");
-    createDir(dir);
-
-    assertThat(fileSystem.pathExistsAndIsFile(dir)).isFalse();
-  }
-
-  @Test
-  public void pathExistsAndIsFileReturnsTrueForFilePath() throws Exception {
-    String fileName = "myFile";
-    createEmptyFile(fileName);
-
-    assertThat(fileSystem.pathExistsAndIsFile(path(fileName))).isTrue();
-  }
-
-  @Test
-  public void pathExistsAndisFileReturnsFalseForNonexistentPathPath() throws Exception {
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("myFile"))).isFalse();
-  }
-
-  @Test
   public void creatingFileTwiceIsPossible() throws Exception {
     createEmptyFile("abc/def/ghi/text.txt");
     createEmptyFile("abc/def/ghi/text.txt");
-  }
-
-  @Test
-  public void rootPathIsADirectory() throws Exception {
-    assertThat(fileSystem.pathExistsAndIsDirectory(Path.rootPath())).isTrue();
-  }
-
-  @Test
-  public void isDirectory() throws Exception {
-    createEmptyFile("abc/def/ghi/text.txt");
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc"))).isTrue();
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc/def"))).isTrue();
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc/def/ghi"))).isTrue();
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc/def/ghi/text.txt"))).isFalse();
-  }
-
-  @Test
-  public void isDirectoryReturnsFalseWhenPathDoesNotExist() throws Exception {
-    assertThat(fileSystem.pathExistsAndIsDirectory(path("abc"))).isFalse();
   }
 
   @Test(expected = NoSuchDirException.class)
@@ -345,10 +251,6 @@ public class MemoryFileSystemTest {
     } catch (NoSuchDirException e) {
       // expected
     }
-  }
-
-  private void createDir(Path path) throws IOException {
-    createEmptyFile(path.append(path("dummy-file")));
   }
 
   private void createEmptyFile(String path) throws IOException {

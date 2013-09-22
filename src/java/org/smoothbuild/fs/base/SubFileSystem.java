@@ -25,21 +25,6 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
-  public boolean pathExists(Path path) {
-    return fileSystem.pathExists(absolutePath(path));
-  }
-
-  @Override
-  public boolean pathExistsAndIsDirectory(Path path) {
-    return fileSystem.pathExistsAndIsDirectory(absolutePath(path));
-  }
-
-  @Override
-  public boolean pathExistsAndIsFile(Path path) {
-    return fileSystem.pathExistsAndIsFile(absolutePath(path));
-  }
-
-  @Override
   public Iterable<String> childNames(Path directory) {
     return fileSystem.childNames(absolutePath(directory));
   }
