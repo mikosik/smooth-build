@@ -226,7 +226,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void concateatedDirAndFileContainingFileInsideItsPathIsReported() throws Exception {
+  public void concatenatedDirAndFileContainingFileInsideItsPathIsReported() throws Exception {
     // given
     Path file = path("def/filename.txt");
     fileSystem.createFileContainingItsPath(file);
