@@ -4,9 +4,11 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
+import org.smoothbuild.builtin.file.err.DirParamSubdirIsAFileError;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
 import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
-import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
+import org.smoothbuild.builtin.file.err.FileOutputIsADirError;
+import org.smoothbuild.builtin.file.err.FileOutputSubdirIsAFileError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
@@ -43,6 +45,8 @@ public class SaveFunction {
 
     public void execute() {
       Path dirPath = validatedPath("dir", params.dir());
+      checkDirParam(dirPath);
+
       File file = params.file();
       FileSet files = params.files();
       if (file == null && files == null) {
@@ -51,7 +55,7 @@ public class SaveFunction {
       if (file != null && files != null) {
         throw new PluginErrorException(new FileAndFilesSpecifiedError());
       }
-      checkThatPathCanBeUsedAsDir(dirPath);
+
       if (file != null) {
         save(dirPath, file);
       } else {
@@ -60,13 +64,13 @@ public class SaveFunction {
     }
 
     private void save(Path dirPath, File file) {
-      checkThatPathCanBeUsedAsDir(dirPath.append(file.path()).parent());
+      checkFilePath(dirPath, file.path());
       saveImpl(dirPath, file);
     }
 
     private void save(Path dirPath, FileSet files) {
       for (File file1 : files) {
-        checkThatPathCanBeUsedAsDir(dirPath.append(file1.path()).parent());
+        checkFilePath(dirPath, file1.path());
       }
       for (File file1 : files) {
         saveImpl(dirPath, file1);
@@ -80,17 +84,58 @@ public class SaveFunction {
       sandbox.projectFileSystem().copy(source, destination);
     }
 
-    private void checkThatPathCanBeUsedAsDir(Path dirPath) {
+    private void checkDirParam(Path dirPath) {
+      if (dirPath.isRoot()) {
+        return;
+      }
+      if (dirPath.firstElement().equals(BUILD_DIR)) {
+        throw new PluginErrorException(new AccessToSmoothDirError());
+      }
+
+      Path path = dirPath;
+      FileSystem fileSystem = sandbox.projectFileSystem();
+      while (!path.isRoot()) {
+        if (fileSystem.pathExists(path)) {
+          if (fileSystem.pathExistsAndIsDirectory(path)) {
+            return;
+          } else {
+            throw new PluginErrorException(new DirParamSubdirIsAFileError("dir", dirPath, path));
+          }
+        }
+        path = path.parent();
+      }
+    }
+
+    private void checkFilePath(Path dirPath, Path filePath) {
       if (!dirPath.isRoot() && dirPath.firstElement().equals(BUILD_DIR)) {
         throw new PluginErrorException(new AccessToSmoothDirError());
       }
 
-      FileSystem fileSystem = sandbox.projectFileSystem();
-      if (fileSystem.pathExists(dirPath) && !fileSystem.pathExistsAndIsDirectory(dirPath)) {
-        throw new PluginErrorException(new DirParamIsAFileError("dir", dirPath));
+      Path fullPath = dirPath.append(filePath);
+      if (dirPath.isRoot() && fullPath.firstElement().equals(BUILD_DIR)) {
+        throw new PluginErrorException(new AccessToSmoothDirError());
       }
-      // TODO handle case when dir doesn't exist but one of its ancestors exists
-      // and is a file
+      FileSystem fileSystem = sandbox.projectFileSystem();
+      if (fileSystem.pathExists(fullPath)) {
+        if (fileSystem.pathExistsAndIsFile(fullPath)) {
+          return;
+        } else {
+          throw new PluginErrorException(new FileOutputIsADirError(dirPath, filePath));
+        }
+      }
+
+      Path path = fullPath.parent();
+      while (!path.equals(dirPath)) {
+        if (fileSystem.pathExists(path)) {
+          if (fileSystem.pathExistsAndIsDirectory(path)) {
+            return;
+          } else {
+            throw new PluginErrorException(
+                new FileOutputSubdirIsAFileError(dirPath, filePath, path));
+          }
+        }
+        path = path.parent();
+      }
     }
   }
 }

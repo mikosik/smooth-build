@@ -1,0 +1,11 @@
+package org.smoothbuild.builtin.file.err;
+
+import org.smoothbuild.message.Error;
+import org.smoothbuild.plugin.api.Path;
+
+public class FileOutputIsADirError extends Error {
+  public FileOutputIsADirError(Path dirPath, Path filePath) {
+    super("Cannot save " + filePath + " to dir " + dirPath + " as " + dirPath.append(filePath)
+        + " is a directory.");
+  }
+}
