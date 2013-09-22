@@ -13,7 +13,7 @@ import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
 import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
-import org.smoothbuild.builtin.file.err.PathIsNotADirError;
+import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
@@ -87,7 +87,7 @@ public class SaveFunctionTest {
       fail("exception should be thrown");
     } catch (PluginErrorException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(PathIsNotADirError.class);
+      assertThat(e.error()).isInstanceOf(DirParamIsAFileError.class);
     }
   }
 
@@ -104,7 +104,7 @@ public class SaveFunctionTest {
       fail("exception should be thrown");
     } catch (PluginErrorException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(PathIsNotADirError.class);
+      assertThat(e.error()).isInstanceOf(DirParamIsAFileError.class);
     }
   }
 

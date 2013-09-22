@@ -10,7 +10,7 @@ import org.smoothbuild.builtin.file.FileFunction.Parameters;
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
-import org.smoothbuild.builtin.file.err.PathIsNotAFileError;
+import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
@@ -80,7 +80,7 @@ public class FileFunctionTest {
       fail("exception should be thrown");
     } catch (PluginErrorException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(PathIsNotAFileError.class);
+      assertThat(e.error()).isInstanceOf(FileParamIsADirError.class);
     }
   }
 
