@@ -22,8 +22,11 @@ public class IntegrationTestCase {
 
   @Before
   public void before() {
-    Injector injector = createInjector(new TestFileSystemModule(),
-        new TestMessageListenerModule());
+    reset();
+  }
+
+  protected void reset() {
+    Injector injector = createInjector(new TestFileSystemModule(), new TestMessageListenerModule());
     fileSystem = injector.getInstance(TestFileSystem.class);
     messages = injector.getInstance(TestMessageListener.class);
     smoothRunner = injector.getInstance(SmoothRunner.class);
@@ -32,5 +35,4 @@ public class IntegrationTestCase {
   public void script(String script) throws IOException {
     fileSystem.createFileWithContent(DEFAULT_SCRIPT, ScriptBuilder.script(script));
   }
-
 }

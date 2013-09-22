@@ -4,6 +4,7 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
+import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.builtin.file.err.DirParamSubdirIsAFileError;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
 import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
@@ -99,7 +100,11 @@ public class SaveFunction {
           if (fileSystem.pathExistsAndIsDirectory(path)) {
             return;
           } else {
-            throw new PluginErrorException(new DirParamSubdirIsAFileError("dir", dirPath, path));
+            if (path.equals(dirPath)) {
+              throw new PluginErrorException(new DirParamIsAFileError("dir", path));
+            } else {
+              throw new PluginErrorException(new DirParamSubdirIsAFileError("dir", dirPath, path));
+            }
           }
         }
         path = path.parent();
