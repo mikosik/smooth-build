@@ -61,20 +61,6 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public boolean pathExists(Path path) {
-    return jdkFile(path).exists();
-  }
-
-  @Override
-  public boolean pathExistsAndIsDirectory(Path path) {
-    return jdkFile(path).isDirectory();
-  }
-
-  public boolean pathExistsAndIsFile(Path path) {
-    return jdkFile(path).isFile();
-  }
-
-  @Override
   public Iterable<String> childNames(Path directory) {
     String[] list = jdkFile(directory).list();
     if (list == null) {
@@ -152,7 +138,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   public void deleteDirectoryRecursively(Path directory) {
-    if (pathExistsAndIsDirectory(directory)) {
+    if (pathKind(directory) == DIR) {
       try {
         RecursiveDirectoryDeleter.deleteRecursively(jdkFile(directory));
       } catch (IOException e) {
