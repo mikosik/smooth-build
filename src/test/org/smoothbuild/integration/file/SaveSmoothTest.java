@@ -6,7 +6,6 @@ import static org.smoothbuild.plugin.api.Path.path;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.builtin.file.err.DirParamSubdirIsAFileError;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
@@ -14,6 +13,7 @@ import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
 import org.smoothbuild.builtin.file.err.FileOutputIsADirError;
 import org.smoothbuild.builtin.file.err.FileOutputSubdirIsAFileError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
+import org.smoothbuild.builtin.file.err.WriteToSmoothDirError;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.parse.def.err.MissingRequiredArgsError;
 import org.smoothbuild.plugin.api.Path;
@@ -142,7 +142,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    messages.assertOnlyProblem(AccessToSmoothDirError.class);
+    messages.assertOnlyProblem(WriteToSmoothDirError.class);
   }
 
   @Test
@@ -157,7 +157,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    messages.assertOnlyProblem(AccessToSmoothDirError.class);
+    messages.assertOnlyProblem(WriteToSmoothDirError.class);
   }
 
   @Test

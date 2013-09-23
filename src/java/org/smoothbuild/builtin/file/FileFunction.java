@@ -3,9 +3,9 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
-import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
+import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
@@ -44,7 +44,7 @@ public class FileFunction {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
       if (!path.isRoot() && path.firstElement().equals(BUILD_DIR)) {
-        throw new PluginErrorException(new AccessToSmoothDirError());
+        throw new PluginErrorException(new ReadFromSmoothDirError(path));
       }
 
       switch (fileSystem.pathKind(path)) {
