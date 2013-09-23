@@ -18,6 +18,8 @@ import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.parse.def.err.MissingRequiredArgsError;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
+import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
 public class SaveSmoothTest extends IntegrationTestCase {
 
@@ -26,36 +28,38 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void executeWithFile() throws Exception {
     // given
-    Path dir = path("output");
-    Path file = path("def/filename.txt");
-    fileSystem.createFileContainingItsPath(file);
-    script("run : file(" + file + ") | save(" + dir + ");");
+    Path dirPath = path("output");
+    TestFile file = file(path("def/filename.txt"));
+    file.createContentWithFilePath();
+    script("run : file(" + file.path() + ") | save(" + dirPath + ");");
 
     // when
     smoothRunner.run("run");
 
     // then
     messages.assertNoProblems();
-    fileSystem.subFileSystem(dir).assertFileContainsItsPath(file);
+    fileSet(dirPath).file(file.path()).assertContentContainsFilePath();
   }
 
   @Test
   public void executeWithFileSet() throws Exception {
     // given
     Path dir = path("output");
-    Path file = path("def/filename.txt");
-    fileSystem.createFileContainingItsPath(file);
-    Path file2 = path("def/filename2.txt");
-    fileSystem.createFileContainingItsPath(file2);
-    script("run : [ file(" + file + "), file(" + file2 + ") ] | save(" + dir + ");");
+    TestFile file = file(path("def/filename.txt"));
+    TestFile file2 = file(path("def/filename2.txt"));
+    file.createContentWithFilePath();
+    file2.createContentWithFilePath();
+
+    script("run : [ file(" + file.path() + "), file(" + file2.path() + ") ] | save(" + dir + ");");
 
     // when
     smoothRunner.run("run");
 
     // then
     messages.assertNoProblems();
-    fileSystem.subFileSystem(dir).assertFileContainsItsPath(file);
-    fileSystem.subFileSystem(dir).assertFileContainsItsPath(file2);
+    TestFileSet outputFiles = fileSet(dir);
+    outputFiles.file(file.path()).assertContentContainsFilePath();
+    outputFiles.file(file2.path()).assertContentContainsFilePath();
   }
 
   // file/files param validation
@@ -75,12 +79,13 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void specifyingBotFileAndFileSetIsReported() throws Exception {
     // given
-    Path file = path("file/path/file.txt");
-    Path file2 = path("file/path/file2.txt");
-    fileSystem.createFileContainingItsPath(file);
-    fileSystem.createFileContainingItsPath(file2);
+    TestFile file = file(path("def/filename.txt"));
+    TestFile file2 = file(path("def/filename2.txt"));
+    file.createContentWithFilePath();
+    file2.createContentWithFilePath();
 
-    script("run : [ file(" + file + ") ] | save(file=file(" + file2 + "), " + path("output") + ");");
+    script("run : [ file(" + file.path() + ") ] | save(file=file(" + file2.path() + "), "
+        + path("output") + ");");
 
     // when
     smoothRunner.run("run");
@@ -94,10 +99,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void missingDirIsReported() throws IOException {
     // given
-    Path file = path("file/path/file.txt");
-    fileSystem.createFileContainingItsPath(file);
+    TestFile file = file(path("def/filename.txt"));
+    file.createContentWithFilePath();
 
-    script("run : file(" + file + ") | save();");
+    script("run : file(" + file.path() + ") | save();");
 
     // when
     smoothRunner.run("run");
@@ -112,10 +117,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
       reset();
 
       // given
-      Path file = path("file/path/file.txt");
-      fileSystem.createFileContainingItsPath(file);
+      TestFile file = file(path("def/filename.txt"));
+      file.createContentWithFilePath();
 
-      script("run : file(" + file + ") | save('" + path + "');");
+      script("run : file(" + file.path() + ") | save('" + path + "');");
 
       // when
       smoothRunner.run("run");
@@ -128,10 +133,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void dirEqualSmoothDirIsReported() throws IOException {
     // given
-    Path file = path("file/path/file.txt");
-    fileSystem.createFileContainingItsPath(file);
+    TestFile file = file(path("def/filename.txt"));
+    file.createContentWithFilePath();
 
-    script("run : file(" + file + ") | save(" + BUILD_DIR + ");");
+    script("run : file(" + file.path() + ") | save(" + BUILD_DIR + ");");
 
     // when
     smoothRunner.run("run");
@@ -143,10 +148,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void dirStartingWithSmoothDirIsReported() throws IOException {
     // given
-    Path file = path("file/path/file.txt");
-    fileSystem.createFileContainingItsPath(file);
+    TestFile file = file(path("def/filename.txt"));
+    file.createContentWithFilePath();
 
-    script("run : file(" + file + ") | save(" + BUILD_DIR.append(path("abc")) + ");");
+    script("run : file(" + file.path() + ") | save(" + BUILD_DIR.append(path("abc")) + ");");
 
     // when
     smoothRunner.run("run");
@@ -158,12 +163,12 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void filePassedAsDirParamIsReported() throws Exception {
     // given
-    Path file = path("file/path/file.txt");
-    Path file2 = path("file/path/file2.txt");
-    fileSystem.createFileContainingItsPath(file);
-    fileSystem.createFileContainingItsPath(file2);
+    TestFile file = file(path("def/filename.txt"));
+    TestFile file2 = file(path("def/filename2.txt"));
+    file.createContentWithFilePath();
+    file2.createContentWithFilePath();
 
-    script("run : file(" + file + ") | save(" + file2 + ");");
+    script("run : file(" + file.path() + ") | save(" + file2.path() + ");");
 
     // when
     smoothRunner.run("run");
@@ -175,12 +180,12 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void dirParamContainingFileInsideItsPathIsReported() throws Exception {
     // given
-    Path file = path("file/path/file.txt");
-    Path file2 = path("file/path/file2.txt");
-    fileSystem.createFileContainingItsPath(file);
-    fileSystem.createFileContainingItsPath(file2);
+    TestFile file = file(path("def/filename.txt"));
+    TestFile file2 = file(path("def/filename2.txt"));
+    file.createContentWithFilePath();
+    file2.createContentWithFilePath();
 
-    script("run : file(" + file + ") | save(" + file2.append(path("abc")) + ");");
+    script("run : file(" + file.path() + ") | save(" + file2.path().append(path("abc")) + ");");
 
     // when
     smoothRunner.run("run");
@@ -194,10 +199,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void rootDirAndFileHavingSmoothDirButNotAtBeginningIsOk() throws IOException {
     // given
-    Path file = path("abc").append(BUILD_DIR);
-    fileSystem.createFileContainingItsPath(file);
+    TestFile file = file(path("abc").append(BUILD_DIR));
+    file.createContentWithFilePath();
 
-    script("run : file(" + file + ") | save(" + Path.rootPath() + ");");
+    script("run : file(" + file.path() + ") | save(" + Path.rootPath() + ");");
 
     // when
     smoothRunner.run("run");
@@ -210,13 +215,12 @@ public class SaveSmoothTest extends IntegrationTestCase {
   public void concateatedDirAndFileEqualToExistingDirPathIsReported() throws Exception {
     // given
     Path dir = path("abc");
-    Path file = path("def/filename.txt");
-    Path file2 = dir.append(file).append(path("abc"));
+    TestFile file = file(path("def/filename.txt"));
+    TestFile file2 = file(dir.append(file.path()).append(path("abc")));
+    file.createContentWithFilePath();
+    file2.createContentWithFilePath();
 
-    fileSystem.createFileContainingItsPath(file);
-    fileSystem.createFileContainingItsPath(file2);
-
-    script("run : file(" + file + ") | save(" + dir + ");");
+    script("run : file(" + file.path() + ") | save(" + dir + ");");
 
     // when
     smoothRunner.run("run");
@@ -228,11 +232,11 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void concatenatedDirAndFileContainingFileInsideItsPathIsReported() throws Exception {
     // given
-    Path file = path("def/filename.txt");
-    fileSystem.createFileContainingItsPath(file);
-    fileSystem.createFileContainingItsPath(path("abc/def"));
+    TestFile file = file(path("def/filename.txt"));
+    file.createContentWithFilePath();
+    file(path("abc/def")).createContentWithFilePath();
 
-    script("run : file(" + file + ") | save('abc');");
+    script("run : file(" + file.path() + ") | save('abc');");
 
     // when
     smoothRunner.run("run");

@@ -13,16 +13,17 @@ import org.smoothbuild.builtin.java.javac.err.JavaCompilerError;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.parse.ScriptBuilder;
+import org.smoothbuild.testing.plugin.internal.TestFile;
 
 public class JavacSmoothTest extends IntegrationTestCase {
   MyClassLoader classLoader = new MyClassLoader();
 
   @Test
   public void errorIsReportedForCompilationErrors() throws Exception {
-    Path path = path("MyClass.java");
-    fileSystem.createFileWithContent(path, "public private class MyClass {}");
+    TestFile file = file(path("MyClass.java"));
+    file.createContent("public private class MyClass {}");
 
-    script("run : [ file(path='" + path.value() + "') ] | javac ;");
+    script("run : [ file(path=" + file.path() + ") ] | javac ;");
     smoothRunner.run("run");
 
     messages.assertOnlyProblem(JavaCompilerError.class);
@@ -39,10 +40,10 @@ public class JavacSmoothTest extends IntegrationTestCase {
     builder.append("  }");
     builder.append("}");
 
-    Path path = path("MyClass.java");
-    fileSystem.createFileWithContent(path, builder.toString());
+    TestFile file = file(path("MyClass.java"));
+    file.createContent(builder.toString());
 
-    script("run : [ file(path='" + path.value() + "') ] | javac | save(dir='.');");
+    script("run : [ file(path=" + file.path() + ") ] | javac | save(dir='.');");
     smoothRunner.run("run");
 
     messages.assertNoProblems();
@@ -64,8 +65,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
       builder.append("  }");
       builder.append("}");
 
-      Path path = path("library/LibraryClass.java");
-      fileSystem.createFileWithContent(path, builder.toString());
+      file(path("library/LibraryClass.java")).createContent(builder.toString());
     }
     {
       StringBuilder builder = new StringBuilder();
@@ -76,8 +76,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
       builder.append("  }");
       builder.append("}");
 
-      Path path = path("MyClass2.java");
-      fileSystem.createFileWithContent(path, builder.toString());
+      file(path("MyClass2.java")).createContent(builder.toString());
     }
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("libraryClasses : [ file(path='library/LibraryClass.java') ] | javac ;");
@@ -106,7 +105,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
   }
 
   private byte[] byteCode(Path classFilePath) throws IOException {
-    InputStream inputStream = fileSystem.openInputStream(classFilePath);
+    InputStream inputStream = file(classFilePath).openInputStream();
     byte[] result = toByteArray(inputStream);
     inputStream.close();
     return result;

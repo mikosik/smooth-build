@@ -17,6 +17,11 @@ public class TestFileSet extends MutableStoredFileSet {
   }
 
   @Override
+  public TestFile file(Path path) {
+    return new TestFile(fileSystem, path);
+  }
+
+  @Override
   public TestFileSystem fileSystem() {
     return fileSystem;
   }

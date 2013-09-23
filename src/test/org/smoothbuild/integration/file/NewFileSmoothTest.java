@@ -6,20 +6,20 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.testing.plugin.internal.TestFile;
 
 public class NewFileSmoothTest extends IntegrationTestCase {
 
   @Test
   public void saveFile_pipe() throws IOException {
-    Path file = path("file/path/file.txt");
+    TestFile file = file(path("file/path/file.txt"));
     String content = "file content";
 
-    script("run : newFile(path='" + file.value() + "', content='" + content + "') | save(dir='.');");
+    script("run : newFile(path=" + file.path() + ", content='" + content + "') | save(dir='.');");
 
     smoothRunner.run("run");
 
     messages.assertNoProblems();
-    fileSystem.assertFileContains(file, content);
+    file.assertContentContains(content);
   }
 }
