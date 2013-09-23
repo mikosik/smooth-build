@@ -11,7 +11,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.plugin.api.PluginErrorException;
+import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
@@ -45,20 +45,20 @@ public class FilesFunction {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
       if (path.isRoot()) {
-        throw new PluginErrorException(new CannotListRootDirError());
+        throw new PluginException(new CannotListRootDirError());
       }
 
       if (path.firstElement().equals(BUILD_DIR)) {
-        throw new PluginErrorException(new ReadFromSmoothDirError(path));
+        throw new PluginException(new ReadFromSmoothDirError(path));
       }
 
       switch (fileSystem.pathKind(path)) {
         case FILE:
-          throw new PluginErrorException(new DirParamIsAFileError("dir", path));
+          throw new PluginException(new DirParamIsAFileError("dir", path));
         case DIR:
           return new StoredFileSet(new SubFileSystem(fileSystem, path));
         case NOTHING:
-          throw new PluginErrorException(new NoSuchPathError("dir", path));
+          throw new PluginException(new NoSuchPathError("dir", path));
         default:
           throw new RuntimeException("unreachable case");
       }

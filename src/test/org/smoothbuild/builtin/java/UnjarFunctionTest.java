@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.PluginErrorException;
+import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class UnjarFunctionTest {
@@ -49,12 +49,12 @@ public class UnjarFunctionTest {
   @Test
   public void exceptionFromUnjarFile() throws Exception {
     when(parameters.file()).thenReturn(file);
-    doThrow(PluginErrorException.class).when(unjarer).unjarFile(file, sandbox.resultFileSet());
+    doThrow(PluginException.class).when(unjarer).unjarFile(file, sandbox.resultFileSet());
 
     try {
       new UnjarFunction.Worker(unjarer).execute(sandbox, parameters);
       fail("exception should be thrown");
-    } catch (PluginErrorException e) {
+    } catch (PluginException e) {
       // expected
     }
   }

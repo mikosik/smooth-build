@@ -14,7 +14,7 @@ import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
-import org.smoothbuild.plugin.api.PluginErrorException;
+import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.testing.plugin.internal.FileTester;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
@@ -26,7 +26,7 @@ public class FileFunctionTest {
     try {
       runExecute(params(BUILD_DIR.value()));
       fail("exception should be thrown");
-    } catch (PluginErrorException e) {
+    } catch (PluginException e) {
       // expected
       assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
     }
@@ -37,7 +37,7 @@ public class FileFunctionTest {
     try {
       runExecute(params(BUILD_DIR.append(path("abc")).value()));
       fail("exception should be thrown");
-    } catch (PluginErrorException e) {
+    } catch (PluginException e) {
       // expected
       assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
     }
@@ -50,7 +50,7 @@ public class FileFunctionTest {
       try {
         runExecute(params(path));
         fail("exception should be thrown");
-      } catch (PluginErrorException e) {
+      } catch (PluginException e) {
         // expected
         assertThat(e.error()).isInstanceOf(IllegalPathError.class);
       }
@@ -63,7 +63,7 @@ public class FileFunctionTest {
     try {
       runExecute(params("some/path/file.txt"));
       fail("exception should be thrown");
-    } catch (PluginErrorException e) {
+    } catch (PluginException e) {
       // expected
       assertThat(e.error()).isInstanceOf(NoSuchPathError.class);
     }
@@ -78,7 +78,7 @@ public class FileFunctionTest {
     try {
       runExecute(params(dir.value()));
       fail("exception should be thrown");
-    } catch (PluginErrorException e) {
+    } catch (PluginException e) {
       // expected
       assertThat(e.error()).isInstanceOf(FileParamIsADirError.class);
     }

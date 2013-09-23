@@ -10,7 +10,7 @@ import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.PluginErrorException;
+import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.testing.common.StreamTester;
 
 import com.google.common.collect.ImmutableList;
@@ -39,7 +39,7 @@ public class LibraryClassesTest {
     try {
       libraryClasses(ImmutableList.of(file1, file2));
       fail("exception should be thrown");
-    } catch (PluginErrorException e) {
+    } catch (PluginException e) {
       assertThat(e.error()).isInstanceOf(DuplicateClassFileError.class);
       // expected
     }
