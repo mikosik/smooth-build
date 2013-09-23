@@ -10,8 +10,6 @@ import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
@@ -20,9 +18,9 @@ public class ZipSmoothTest extends IntegrationTestCase {
   @Test
   public void testZipping() throws IOException {
     // given
-    TestFileSystem files = fileSystem.subFileSystem(path("dir"));
-    files.createFileContainingItsPath(path("dir/fileA.txt"));
-    files.createFileContainingItsPath(path("dir/fileB.txt"));
+    TestFileSet fileSet = fileSet(path("dir"));
+    fileSet.createFile(path("dir/fileA.txt")).createContentWithFilePath();
+    fileSet.createFile(path("dir/fileB.txt")).createContentWithFilePath();
     script("run : files('dir') | zip | save('out');");
 
     // when
@@ -34,8 +32,8 @@ public class ZipSmoothTest extends IntegrationTestCase {
     TestFileSet unpackedFiles = new TestFileSet();
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    Path outputPath = path("out/output.zip");
-    try (ZipInputStream zipInputStream = new ZipInputStream(fileSystem.openInputStream(outputPath));) {
+    TestFile outputFile = file(path("out/output.zip"));
+    try (ZipInputStream zipInputStream = new ZipInputStream(outputFile.openInputStream());) {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         fileCount++;

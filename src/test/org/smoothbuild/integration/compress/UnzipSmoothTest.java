@@ -17,7 +17,7 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     // given
     Path fileA = path("a/fileA.txt");
     Path fileB = path("b/fileB.txt");
-    TestFile zipFile = fileSystem.createEmptyFile(path("input.zip"));
+    TestFile zipFile = file(path("input.zip"));
     ZipTester.zipFiles(zipFile, fileA.value(), fileB.value());
 
     script("run : file(" + zipFile.path() + ") | unzip | save('out');");
@@ -28,7 +28,7 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     // then
     messages.assertNoProblems();
 
-    TestFileSet outFiles = new TestFileSet(fileSystem.subFileSystem(path("out")));
+    TestFileSet outFiles = fileSet(path("out"));
     outFiles.contains(fileA);
     outFiles.contains(fileB);
     FileTester.assertContentContainsFilePath(outFiles.file(fileA));
