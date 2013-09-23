@@ -3,10 +3,10 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
-import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
+import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.plugin.api.FileSet;
@@ -49,7 +49,7 @@ public class FilesFunction {
       }
 
       if (path.firstElement().equals(BUILD_DIR)) {
-        throw new PluginErrorException(new AccessToSmoothDirError());
+        throw new PluginErrorException(new ReadFromSmoothDirError(path));
       }
 
       switch (fileSystem.pathKind(path)) {

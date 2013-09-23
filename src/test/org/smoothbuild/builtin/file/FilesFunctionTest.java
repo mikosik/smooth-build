@@ -7,7 +7,7 @@ import static org.smoothbuild.plugin.api.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FilesFunction.Parameters;
-import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
+import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
@@ -40,7 +40,7 @@ public class FilesFunctionTest {
       fail("exception should be thrown");
     } catch (PluginErrorException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(AccessToSmoothDirError.class);
+      assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -51,7 +51,7 @@ public class FilesFunctionTest {
       fail("exception should be thrown");
     } catch (PluginErrorException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(AccessToSmoothDirError.class);
+      assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 

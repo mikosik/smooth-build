@@ -3,13 +3,13 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
-import org.smoothbuild.builtin.file.err.AccessToSmoothDirError;
 import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.builtin.file.err.DirParamSubdirIsAFileError;
 import org.smoothbuild.builtin.file.err.EitherFileOrFilesMustBeProvidedError;
 import org.smoothbuild.builtin.file.err.FileAndFilesSpecifiedError;
 import org.smoothbuild.builtin.file.err.FileOutputIsADirError;
 import org.smoothbuild.builtin.file.err.FileOutputSubdirIsAFileError;
+import org.smoothbuild.builtin.file.err.WriteToSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
@@ -90,7 +90,7 @@ public class SaveFunction {
         return;
       }
       if (dirPath.firstElement().equals(BUILD_DIR)) {
-        throw new PluginErrorException(new AccessToSmoothDirError());
+        throw new PluginErrorException(new WriteToSmoothDirError(dirPath));
       }
 
       Path path = dirPath;
@@ -115,11 +115,11 @@ public class SaveFunction {
     }
 
     private void checkFilePath(Path dirPath, Path filePath) {
-      Path fullPath = dirPath.append(filePath);
-      if (dirPath.isRoot() && fullPath.firstElement().equals(BUILD_DIR)) {
-        throw new PluginErrorException(new AccessToSmoothDirError());
+      if (dirPath.isRoot() && filePath.firstElement().equals(BUILD_DIR)) {
+        throw new PluginErrorException(new WriteToSmoothDirError(filePath));
       }
 
+      Path fullPath = dirPath.append(filePath);
       FileSystem fileSystem = sandbox.projectFileSystem();
       switch (fileSystem.pathKind(fullPath)) {
         case FILE:
