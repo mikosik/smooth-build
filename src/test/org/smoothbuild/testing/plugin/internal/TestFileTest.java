@@ -24,6 +24,14 @@ public class TestFileTest {
   }
 
   @Test
+  public void createContent() throws IOException {
+    String content = "some content";
+    testFile.createContent(content);
+
+    StreamTester.assertContent(fileSystem.openInputStream(path), content);
+  }
+
+  @Test
   public void assertContentContainsFilePathSucceeds() throws Exception {
     StreamTester.writeAndClose(fileSystem.openOutputStream(path), path.value());
     testFile.assertContentContainsFilePath();
