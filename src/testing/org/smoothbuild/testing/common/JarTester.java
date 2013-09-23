@@ -12,14 +12,17 @@ import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
 public class JarTester {
   public static TestFile jaredFiles(String... fileNames) throws IOException {
-    TestFile inputFile = new TestFileSet().createFile(path("input.jar"));
+    TestFile jarFile = new TestFileSet().createFile(path("input.jar"));
+    jarFiles(jarFile, fileNames);
+    return jarFile;
+  }
 
-    try (JarOutputStream jarOutputStream = new JarOutputStream(inputFile.openOutputStream());) {
+  public static void jarFiles(TestFile jarFile, String... fileNames) throws IOException {
+    try (JarOutputStream jarOutputStream = new JarOutputStream(jarFile.openOutputStream());) {
       for (String fileName : fileNames) {
         addEntry(jarOutputStream, fileName);
       }
     }
-    return inputFile;
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, String fileName) throws IOException {
