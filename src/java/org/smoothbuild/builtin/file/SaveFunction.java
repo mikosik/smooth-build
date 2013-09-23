@@ -115,10 +115,6 @@ public class SaveFunction {
     }
 
     private void checkFilePath(Path dirPath, Path filePath) {
-      if (!dirPath.isRoot() && dirPath.firstElement().equals(BUILD_DIR)) {
-        throw new PluginErrorException(new AccessToSmoothDirError());
-      }
-
       Path fullPath = dirPath.append(filePath);
       if (dirPath.isRoot() && fullPath.firstElement().equals(BUILD_DIR)) {
         throw new PluginErrorException(new AccessToSmoothDirError());
