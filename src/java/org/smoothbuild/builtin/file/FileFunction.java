@@ -9,7 +9,7 @@ import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.plugin.api.PluginErrorException;
+import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
@@ -44,16 +44,16 @@ public class FileFunction {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
       if (!path.isRoot() && path.firstElement().equals(BUILD_DIR)) {
-        throw new PluginErrorException(new ReadFromSmoothDirError(path));
+        throw new PluginException(new ReadFromSmoothDirError(path));
       }
 
       switch (fileSystem.pathKind(path)) {
         case FILE:
           return new StoredFile(fileSystem, path);
         case DIR:
-          throw new PluginErrorException(new FileParamIsADirError("path", path));
+          throw new PluginException(new FileParamIsADirError("path", path));
         case NOTHING:
-          throw new PluginErrorException(new NoSuchPathError("path", path));
+          throw new PluginException(new NoSuchPathError("path", path));
         default:
           throw new RuntimeException("unreachable case");
       }

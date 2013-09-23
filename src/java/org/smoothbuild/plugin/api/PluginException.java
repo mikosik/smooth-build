@@ -3,10 +3,10 @@ package org.smoothbuild.plugin.api;
 import org.smoothbuild.message.Message;
 
 @SuppressWarnings("serial")
-public class PluginErrorException extends RuntimeException {
+public class PluginException extends RuntimeException {
   private final Message error;
 
-  public PluginErrorException(Message error) {
+  public PluginException(Message error) {
     this.error = error;
   }
 

@@ -10,7 +10,7 @@ import java.util.Iterator;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.PluginErrorException;
+import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
@@ -57,7 +57,7 @@ public class UnjarerTest {
     try {
       unjarer.unjarFile(jarFile, resultFileSet);
       fail("exception should be thrown");
-    } catch (PluginErrorException e) {
+    } catch (PluginException e) {
       // expected
       assertThat(e.error()).isInstanceOf(IllegalPathInJarError.class);
     }
