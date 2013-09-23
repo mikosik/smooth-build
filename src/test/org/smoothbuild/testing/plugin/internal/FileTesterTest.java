@@ -32,6 +32,16 @@ public class FileTesterTest {
   }
 
   @Test
+  public void testCreateContent() throws Exception {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    when(file.openOutputStream()).thenReturn(outputStream);
+
+    FileTester.createContent(file, content);
+
+    assertThat(new String(outputStream.toByteArray())).isEqualTo(content);
+  }
+
+  @Test
   public void assertFileContainsSucceedsWhenContentIsEqualToExpected() throws IOException {
     InputStream inputStream = inputStreamWithContent(content);
     when(file.openInputStream()).thenReturn(inputStream);

@@ -20,6 +20,10 @@ public class TestFile extends MutableStoredFile {
     FileTester.createContentWithFilePath(this);
   }
 
+  public void createContent(String content) throws IOException {
+    FileTester.createContent(this, content);
+  }
+
   public void assertContentContainsFilePath() throws IOException {
     FileTester.assertContentContainsFilePath(this);
   }

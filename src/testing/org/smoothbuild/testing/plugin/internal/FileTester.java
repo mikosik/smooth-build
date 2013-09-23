@@ -11,7 +11,11 @@ import org.smoothbuild.plugin.api.MutableFile;
 public class FileTester {
 
   public static void createContentWithFilePath(MutableFile file) throws IOException {
-    writeAndClose(file.openOutputStream(), file.path().value());
+    createContent(file, file.path().value());
+  }
+
+  public static void createContent(MutableFile file, String content) throws IOException {
+    writeAndClose(file.openOutputStream(), content);
   }
 
   public static void assertContentContainsFilePath(File file) throws IOException {
