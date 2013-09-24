@@ -43,7 +43,7 @@ public class InputClassFileTest {
 
   @Test
   public void uri() throws Exception {
-    InputClassFile inputClassFile = new InputClassFile("my-jar.jar",
+    InputClassFile inputClassFile = new InputClassFile(path("my-jar.jar"),
         file("my/package/MyKlass.class"));
     assertThat(inputClassFile.toUri()).isEqualTo(
         URI.create("jar:///my-jar.jar:my/package/MyKlass.class"));
@@ -55,11 +55,11 @@ public class InputClassFileTest {
     File file = file("my/package/Klass.class");
     when(file.openInputStream()).thenReturn(inputStream);
 
-    assertThat(new InputClassFile("", file).openInputStream()).isSameAs(inputStream);
+    assertThat(new InputClassFile(path("my.jar"), file).openInputStream()).isSameAs(inputStream);
   }
 
   private InputClassFile inputClassFile(String path) {
-    return new InputClassFile("", file(path));
+    return new InputClassFile(path("my.jar"), file(path));
   }
 
   private File file(String path) {
