@@ -14,6 +14,7 @@
   <property name="dir.build.class.testing" location="${dir.build.class}/testing" />
   <property name="dir.build.class.test" location="${dir.build.class}/test" />
   <property name="dir.build.jar" location="${dir.build}/jar" />
+  <property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth-all.jar" />
   <property name="dir.build.jar.file" location="${dir.build.jar}/smooth-all.jar" />
   <property name="dir.build.release" location="${dir.build}/release" />
   <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip" />
@@ -159,7 +160,7 @@
 
   <!-- jar file -->
   <target name="jar-file" depends="compile-java">
-    <jarjar destfile="${dir.build.jar.file}">
+    <jarjar destfile="${dir.build.jar.polluted-file}">
       <!--
       'excludes' make sure that manifest files
       and other files from top directories
@@ -177,6 +178,23 @@
       <zipfileset file="${lib.antlr.license}"/>
       <zipfileset file="${lib.guava.license}"/>
       <zipfileset file="${lib.guice.license}"/>
+
+      <rule pattern="com.google.inject.**" result="org.smoothbuild.guice.@1"/>
+      <rule pattern="com.google.common.**" result="org.smoothbuild.guava.@1"/>
+      <rule pattern="org.aopalliance.**" result="org.smoothbuild.aop.@1"/>
+      <!-- antlr -->
+      <rule pattern="org.abego.**" result="org.smoothbuild.abego.@1"/>
+      <rule pattern="org.antlr.**" result="org.smoothbuild.antlr.@1"/>
+      <rule pattern="org.stringtemplate.**" result="org.smoothbuild.stringtemplate.@1"/>
+    </jarjar>
+
+    <!--
+    Due to a bug https://code.google.com/p/jarjar/issues/detail?id=60
+    we need to get rid of empty directories left by jarjar.
+    We just repackage everthing once again.
+    -->
+    <jarjar destfile="${dir.build.jar.file}">
+      <zipfileset includes="* **/*.class" src="${dir.build.jar.polluted-file}"/>
     </jarjar>
   </target>
 
