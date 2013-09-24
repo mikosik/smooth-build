@@ -9,20 +9,21 @@ import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.Path;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final File file;
-  private final String jarFileName;
+  private final Path jarFilePath;
   private final String binaryName;
   private final String aPackage;
 
-  public InputClassFile(String jarFileName, File file) {
-    super(URI.create("jar:///" + jarFileName + ":" + file.path().value()), Kind.CLASS);
+  public InputClassFile(Path jarFilePath, File file) {
+    super(URI.create("jar:///" + jarFilePath.value() + ":" + file.path().value()), Kind.CLASS);
 
     checkArgument(file.path().value().endsWith(Kind.CLASS.extension));
 
     this.file = file;
-    this.jarFileName = jarFileName;
+    this.jarFilePath = jarFilePath;
     this.binaryName = toBinaryName(file);
     this.aPackage = binaryNameToPackage(binaryName);
   }
@@ -35,8 +36,8 @@ public class InputClassFile extends SimpleJavaFileObject {
     return aPackage;
   }
 
-  public String jarFileName() {
-    return jarFileName;
+  public Path jarFileName() {
+    return jarFilePath;
   }
 
   @Override
