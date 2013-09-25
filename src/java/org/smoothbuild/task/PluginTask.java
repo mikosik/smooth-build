@@ -3,14 +3,12 @@ package org.smoothbuild.task;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.message.Message;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
 import org.smoothbuild.task.err.UnexpectedError;
@@ -44,9 +42,7 @@ public class PluginTask extends AbstractTask {
       sandbox.report(new ReflexiveInternalError(functionName(), e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
-      if (cause instanceof FileSystemException) {
-        sandbox.report(new FileSystemError(functionName(), cause));
-      } else if (cause instanceof Message) {
+      if (cause instanceof Message) {
         sandbox.report((Message) cause);
       } else {
         sandbox.report(new UnexpectedError(functionName(), cause));

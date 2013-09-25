@@ -1,15 +1,10 @@
 package org.smoothbuild.fs.base.exc;
 
-import java.io.FileNotFoundException;
-
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.task.err.FileSystemError;
 
 @SuppressWarnings("serial")
-public class NoSuchFileException extends FileSystemException {
-  public NoSuchFileException(Path path, FileNotFoundException e) {
-    super(message(path), e);
-  }
-
+public class NoSuchFileException extends FileSystemError {
   public NoSuchFileException(Path path) {
     super(message(path));
   }

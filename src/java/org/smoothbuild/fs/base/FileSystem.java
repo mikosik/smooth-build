@@ -3,13 +3,13 @@ package org.smoothbuild.fs.base;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.inject.ImplementedBy;
 
 /**
- * All errors are reported by throwing {@link FileSystemException}.
+ * All errors are reported by throwing {@link FileSystemError}.
  */
 @ImplementedBy(DiskFileSystem.class)
 public interface FileSystem {
