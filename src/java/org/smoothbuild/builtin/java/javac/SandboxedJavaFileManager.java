@@ -44,8 +44,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       if (message == null) {
         return new OutputClassFile(sandbox.createFile(path(classFilePath)));
       } else {
-        sandbox.report(new IncorrectClassNameGivenByJavaCompilerError(className));
-        return new DummyOutputClassFile(classFilePath);
+        throw new IncorrectClassNameGivenByJavaCompilerError(className);
       }
     } else {
       return super.getJavaFileForOutput(location, className, kind, sibling);
