@@ -94,6 +94,12 @@ public class PluginTaskTest {
   }
 
   @Test
+  public void messageThrownIsReported() throws Exception {
+    InvocationTargetException exception = new InvocationTargetException(new MyError());
+    assertExceptionIsReportedAsProblem(exception, MyError.class);
+  }
+
+  @Test
   public void unexpectedErrorIsReportedForUnexpectedRuntimeException() throws Exception {
     InvocationTargetException exception = new InvocationTargetException(new RuntimeException());
     assertExceptionIsReportedAsProblem(exception, UnexpectedError.class);
