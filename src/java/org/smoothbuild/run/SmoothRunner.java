@@ -13,6 +13,7 @@ import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.DetectingErrorsMessageListener;
 import org.smoothbuild.message.Info;
+import org.smoothbuild.message.Message;
 import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.plugin.api.Path;
@@ -44,8 +45,11 @@ public class SmoothRunner {
   public void run(String... commandLine) {
     cleaner.clearBuildDir();
 
-    CommandLineArguments args = commandLineParser.parse(messages, commandLine);
-    if (messages.errorDetected()) {
+    CommandLineArguments args;
+    try {
+      args = commandLineParser.parse(commandLine);
+    } catch (Message message) {
+      messages.report(message);
       return;
     }
 
