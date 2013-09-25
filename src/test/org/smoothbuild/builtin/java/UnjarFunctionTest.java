@@ -7,13 +7,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
 public class UnjarFunctionTest {
@@ -31,19 +28,6 @@ public class UnjarFunctionTest {
 
     assertThat(result).isSameAs(sandbox.resultFileSet());
     verify(unjarer).unjarFile(file, sandbox.resultFileSet());
-  }
-
-  @Test
-  public void ioExceptionIsReported() throws Exception {
-    when(parameters.file()).thenReturn(file);
-    doThrow(IOException.class).when(unjarer).unjarFile(file, sandbox.resultFileSet());
-
-    try {
-      new UnjarFunction.Worker(unjarer).execute(sandbox, parameters);
-      fail("exception should be thrown");
-    } catch (FileSystemError e) {
-      // expected
-    }
   }
 
   @Test
