@@ -8,16 +8,16 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 public class TypedParamsPool {
-  private final Set<Param> params;
+  private final Set<Param> optionalParams;
   private final Set<Param> requiredParams;
 
   public TypedParamsPool(TypedParamsPool pool1, TypedParamsPool pool2) {
-    this.params = Sets.union(pool1.params, pool2.params);
+    this.optionalParams = Sets.union(pool1.optionalParams, pool2.optionalParams);
     this.requiredParams = Sets.union(pool1.requiredParams, pool2.requiredParams);
   }
 
   public TypedParamsPool() {
-    this.params = Sets.<Param> newHashSet();
+    this.optionalParams = Sets.<Param> newHashSet();
     this.requiredParams = Sets.<Param> newHashSet();
   }
 
@@ -25,8 +25,12 @@ public class TypedParamsPool {
     if (param.isRequired()) {
       requiredParams.add(param);
     } else {
-      params.add(param);
+      optionalParams.add(param);
     }
+  }
+
+  public Iterable<Param> optionalParams() {
+    return optionalParams;
   }
 
   public Iterable<Param> requiredParams() {
@@ -34,31 +38,31 @@ public class TypedParamsPool {
   }
 
   public boolean hasCandidate() {
-    return requiredParams.size() == 1 || (requiredParams.size() == 0 && params.size() == 1);
+    return requiredParams.size() == 1 || (requiredParams.size() == 0 && optionalParams.size() == 1);
   }
 
   public boolean remove(Param param) {
     if (param.isRequired()) {
       return requiredParams.remove(param);
     } else {
-      return params.remove(param);
+      return optionalParams.remove(param);
     }
   }
 
   public Param candidate() {
     Preconditions.checkState(hasCandidate(), "No candidate available");
     if (requiredParams.isEmpty()) {
-      return params.iterator().next();
+      return optionalParams.iterator().next();
     } else {
       return requiredParams.iterator().next();
     }
   }
 
   public String toFormattedString() {
-    return Param.paramsToString(Sets.union(requiredParams, params));
+    return Param.paramsToString(Sets.union(requiredParams, optionalParams));
   }
 
   public int size() {
-    return params.size() + requiredParams.size();
+    return optionalParams.size() + requiredParams.size();
   }
 }

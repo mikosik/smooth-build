@@ -31,19 +31,34 @@ public class TypedParamsPoolTest {
   }
 
   @Test
+  public void optionalParams() throws Exception {
+    pool.add(string);
+    pool.add(string2);
+    pool.add(stringRequired);
+    pool.add(stringRequired2);
+
+    assertThat(pool.optionalParams()).containsOnly(string, string2);
+  }
+
+  @Test
   public void requiredParamsIsEmptyWhenNoParamWasAdded() throws Exception {
     assertThat(pool.requiredParams()).isEmpty();
   }
 
   @Test
-  public void removeReturnsTrueWhenParamWasPresent() throws Exception {
-    pool.add(string);
-    assertThat(pool.remove(string)).isTrue();
+  public void optionalParamsIsEmptyWhenNoParamWasAdded() throws Exception {
+    assertThat(pool.optionalParams()).isEmpty();
   }
 
   @Test
-  public void removeReturnsFalseWhenParamWasPresent() throws Exception {
-    assertThat(pool.remove(string)).isFalse();
+  public void removeReturnsTrueWhenRequiredParamWasPresent() throws Exception {
+    pool.add(stringRequired);
+    assertThat(pool.remove(stringRequired)).isTrue();
+  }
+
+  @Test
+  public void removeReturnsFalseWhenRequiredParamWasNotPresent() throws Exception {
+    assertThat(pool.remove(stringRequired)).isFalse();
   }
 
   @Test
@@ -57,15 +72,28 @@ public class TypedParamsPoolTest {
   }
 
   @Test
-  public void removedNonRequiredParam() throws Exception {
+  public void removeReturnsTrueWhenOptionalParamWasPresent() throws Exception {
     pool.add(string);
-    pool.add(string2);
-
     assertThat(pool.remove(string)).isTrue();
   }
 
   @Test
-  public void hasCandidateForOneRequiredParam() throws Exception {
+  public void removeReturnsFalseWhenOptionalParamWasNotPresent() throws Exception {
+    assertThat(pool.remove(string)).isFalse();
+  }
+
+  @Test
+  public void removedOptionalParam() throws Exception {
+    pool.add(string);
+    pool.add(string2);
+
+    pool.remove(string);
+
+    assertThat(pool.optionalParams()).containsOnly(string2);
+  }
+
+  @Test
+  public void hasCandidateForOptionalParam() throws Exception {
     pool.add(stringRequired);
 
     assertThat(pool.hasCandidate()).isTrue();
@@ -73,7 +101,7 @@ public class TypedParamsPoolTest {
   }
 
   @Test
-  public void hasCandidateForOneNonRequiredParam() throws Exception {
+  public void hasCandidateForOneOptionalParam() throws Exception {
     pool.add(string);
 
     assertThat(pool.hasCandidate()).isTrue();
@@ -81,7 +109,7 @@ public class TypedParamsPoolTest {
   }
 
   @Test
-  public void hasCandidateForOneRequiredAndOneNonRequiredParam() throws Exception {
+  public void hasCandidateForOptionalAndOneNonRequiredParam() throws Exception {
     pool.add(stringRequired);
     pool.add(string);
 
@@ -117,7 +145,7 @@ public class TypedParamsPoolTest {
   }
 
   @Test
-  public void haveCandidateWhenOneRequiredAndTwoNonRequiredParamsExist() throws Exception {
+  public void haveCandidateWhenOptionalAndTwoNonRequiredParamsExist() throws Exception {
     pool.add(stringRequired);
     pool.add(string);
     pool.add(string2);
@@ -163,7 +191,7 @@ public class TypedParamsPoolTest {
   }
 
   @Test
-  public void hasCandidateForOneRequiredParamInFirstSubPool() throws Exception {
+  public void hasCandidateForOptionalParamInFirstSubPool() throws Exception {
     pool1.add(stringRequired);
 
     assertThat(combined.hasCandidate()).isTrue();
@@ -179,7 +207,7 @@ public class TypedParamsPoolTest {
   }
 
   @Test
-  public void doesNotHaveCandidateForOneRequiredParamInEachSubPool() throws Exception {
+  public void doesNotHaveCandidateForOptionalParamInEachSubPool() throws Exception {
     pool1.add(stringRequired);
     pool2.add(stringRequired2);
     assertThat(combined.hasCandidate()).isFalse();
@@ -193,7 +221,7 @@ public class TypedParamsPoolTest {
   }
 
   @Test
-  public void hasCandidateForOneRequiredParamInFirstAndOneNonRequiredParamInSecondSubPool()
+  public void hasCandidateForOptionalParamInFirstAndOneNonRequiredParamInSecondSubPool()
       throws Exception {
     pool1.add(stringRequired);
     pool2.add(string);
@@ -203,7 +231,7 @@ public class TypedParamsPoolTest {
   }
 
   @Test
-  public void hasCandidateForOneRequiredParamInFirstAndTwoNonRequiredParamInSecondSubPool()
+  public void hasCandidateForOptionalParamInFirstAndTwoNonRequiredParamInSecondSubPool()
       throws Exception {
     pool1.add(stringRequired);
     pool2.add(string);
