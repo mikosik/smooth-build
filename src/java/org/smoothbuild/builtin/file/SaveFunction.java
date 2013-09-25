@@ -14,7 +14,6 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.plugin.internal.SandboxImpl;
@@ -51,10 +50,10 @@ public class SaveFunction {
       File file = params.file();
       FileSet files = params.files();
       if (file == null && files == null) {
-        throw new PluginException(new EitherFileOrFilesMustBeProvidedError());
+        throw new EitherFileOrFilesMustBeProvidedError();
       }
       if (file != null && files != null) {
-        throw new PluginException(new FileAndFilesSpecifiedError());
+        throw new FileAndFilesSpecifiedError();
       }
 
       if (file != null) {
@@ -90,7 +89,7 @@ public class SaveFunction {
         return;
       }
       if (dirPath.firstElement().equals(BUILD_DIR)) {
-        throw new PluginException(new WriteToSmoothDirError(dirPath));
+        throw new WriteToSmoothDirError(dirPath);
       }
 
       Path path = dirPath;
@@ -99,9 +98,9 @@ public class SaveFunction {
         switch (fileSystem.pathKind(path)) {
           case FILE:
             if (path.equals(dirPath)) {
-              throw new PluginException(new DirParamIsAFileError("dir", path));
+              throw new DirParamIsAFileError("dir", path);
             } else {
-              throw new PluginException(new DirParamSubdirIsAFileError("dir", dirPath, path));
+              throw new DirParamSubdirIsAFileError("dir", dirPath, path);
             }
           case DIR:
             return;
@@ -116,7 +115,7 @@ public class SaveFunction {
 
     private void checkFilePath(Path dirPath, Path filePath) {
       if (dirPath.isRoot() && filePath.firstElement().equals(BUILD_DIR)) {
-        throw new PluginException(new WriteToSmoothDirError(filePath));
+        throw new WriteToSmoothDirError(filePath);
       }
 
       Path fullPath = dirPath.append(filePath);
@@ -125,7 +124,7 @@ public class SaveFunction {
         case FILE:
           return;
         case DIR:
-          throw new PluginException(new FileOutputIsADirError(dirPath, filePath));
+          throw new FileOutputIsADirError(dirPath, filePath);
         case NOTHING:
           break;
         default:
@@ -136,8 +135,7 @@ public class SaveFunction {
       while (!path.equals(dirPath)) {
         switch (fileSystem.pathKind(path)) {
           case FILE:
-            throw new PluginException(
-                new FileOutputSubdirIsAFileError(dirPath, filePath, path));
+            throw new FileOutputSubdirIsAFileError(dirPath, filePath, path);
           case DIR:
             return;
           case NOTHING:

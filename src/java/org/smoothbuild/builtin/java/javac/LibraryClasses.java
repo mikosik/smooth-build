@@ -9,7 +9,6 @@ import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.plugin.internal.MutableStoredFileSet;
 import org.smoothbuild.util.EndsWithPredicate;
 
@@ -35,8 +34,7 @@ public class LibraryClasses {
         if (map.containsEntry(aPackage, inputClassFile)) {
           InputClassFile otherInputClassFile = (InputClassFile) map.get(aPackage).iterator().next();
           Path otherJarPath = otherInputClassFile.jarFileName();
-          throw new PluginException(new DuplicateClassFileError(classFile.path(), otherJarPath,
-              jarFile.path()));
+          throw new DuplicateClassFileError(classFile.path(), otherJarPath, jarFile.path());
         } else {
           map.put(aPackage, inputClassFile);
         }
