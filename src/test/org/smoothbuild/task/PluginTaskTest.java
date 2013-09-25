@@ -17,7 +17,6 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.message.Error;
 import org.smoothbuild.message.Message;
-import org.smoothbuild.plugin.api.PluginException;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
@@ -103,12 +102,6 @@ public class PluginTaskTest {
   public void unexpectedErrorIsReportedForUnexpectedRuntimeException() throws Exception {
     InvocationTargetException exception = new InvocationTargetException(new RuntimeException());
     assertExceptionIsReportedAsProblem(exception, UnexpectedError.class);
-  }
-
-  @Test
-  public void errorFromPluginErrorExceptionIsReported() throws Exception {
-    Exception exception = new InvocationTargetException(new PluginException(new MyError()));
-    assertExceptionIsReportedAsProblem(exception, MyError.class);
   }
 
   @SuppressWarnings("serial")

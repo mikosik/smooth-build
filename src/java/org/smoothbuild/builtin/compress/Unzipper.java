@@ -14,7 +14,6 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.plugin.api.PluginException;
 
 public class Unzipper {
   private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
@@ -33,11 +32,11 @@ public class Unzipper {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new PluginException(new IllegalPathInZipError(fileName));
+      throw new IllegalPathInZipError(fileName);
     }
     Path path = path(fileName);
     if (resultFiles.contains(path)) {
-      throw new PluginException(new DuplicatePathInZipError(path));
+      throw new DuplicatePathInZipError(path);
     }
     MutableFile file = resultFiles.createFile(path);
     try (OutputStream outputStream = file.openOutputStream()) {
