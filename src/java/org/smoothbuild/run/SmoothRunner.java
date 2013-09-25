@@ -45,34 +45,28 @@ public class SmoothRunner {
   public void run(String... commandLine) {
     cleaner.clearBuildDir();
 
-    CommandLineArguments args;
     try {
-      args = commandLineParser.parse(commandLine);
+      CommandLineArguments args = commandLineParser.parse(commandLine);
+      Path scriptFile = args.scriptFile();
+
+      InputStream inputStream = scriptInputStream(messages, scriptFile);
+
+      Module module = moduleParser.createModule(messages, inputStream, scriptFile);
+      if (messages.errorDetected()) {
+        return;
+      }
+
+      Name name = args.functionToRun();
+      Function function = module.getFunction(name);
+      if (function == null) {
+        messages.report(new UnknownFunctionError(name, module.availableNames()));
+        return;
+      }
+
+      taskExecutor.execute(messages, function.generateTask(Empty.stringTaskMap()));
     } catch (Message message) {
       messages.report(message);
-      return;
     }
-
-    Path scriptFile = args.scriptFile();
-
-    InputStream inputStream = scriptInputStream(messages, scriptFile);
-    if (messages.errorDetected()) {
-      return;
-    }
-
-    Module module = moduleParser.createModule(messages, inputStream, scriptFile);
-    if (messages.errorDetected()) {
-      return;
-    }
-
-    Name name = args.functionToRun();
-    Function function = module.getFunction(name);
-    if (function == null) {
-      messages.report(new UnknownFunctionError(name, module.availableNames()));
-      return;
-    }
-
-    taskExecutor.execute(messages, function.generateTask(Empty.stringTaskMap()));
 
     if (messages.errorDetected()) {
       messages.report(new Info("BUILD FAILED"));
@@ -85,8 +79,7 @@ public class SmoothRunner {
     try {
       return fileSystem.openInputStream(scriptFile);
     } catch (NoSuchFileException e) {
-      messages.report(new ScriptFileNotFoundError(scriptFile));
-      return null;
+      throw new ScriptFileNotFoundError(scriptFile);
     }
   }
 }
