@@ -52,8 +52,7 @@ public class JavacFunction {
 
     public FileSet execute() {
       if (compiler == null) {
-        sandbox.report(new NoCompilerAvailableError());
-        return null;
+        throw new NoCompilerAvailableError();
       }
       return compile(params.sources());
     }
