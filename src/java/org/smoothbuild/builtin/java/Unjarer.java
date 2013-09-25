@@ -15,6 +15,7 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -22,25 +23,27 @@ import com.google.common.base.Predicates;
 public class Unjarer {
   private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
-  public void unjarFile(File jarFile, MutableFileSet resultFiles) throws IOException {
+  public void unjarFile(File jarFile, MutableFileSet resultFiles) {
     unjarFile(jarFile, Predicates.<String> alwaysTrue(), resultFiles);
   }
 
-  public void unjarFile(File jarFile, Predicate<String> nameFilter, MutableFileSet resultFiles)
-      throws IOException {
-    try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
-      JarEntry entry = null;
-      while ((entry = jarInputStream.getNextJarEntry()) != null) {
-        String fileName = entry.getName();
-        if (nameFilter.apply(fileName)) {
-          unjarEntry(jarInputStream, fileName, resultFiles);
+  public void unjarFile(File jarFile, Predicate<String> nameFilter, MutableFileSet resultFiles) {
+    try {
+      try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
+        JarEntry entry = null;
+        while ((entry = jarInputStream.getNextJarEntry()) != null) {
+          String fileName = entry.getName();
+          if (nameFilter.apply(fileName)) {
+            unjarEntry(jarInputStream, fileName, resultFiles);
+          }
         }
       }
+    } catch (IOException e) {
+      throw new FileSystemError(e);
     }
   }
 
-  private File unjarEntry(JarInputStream jarInputStream, String fileName, MutableFileSet resultFiles)
-      throws IOException {
+  private File unjarEntry(JarInputStream jarInputStream, String fileName, MutableFileSet resultFiles) {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
       throw new IllegalPathInJarError(fileName);
@@ -50,11 +53,15 @@ public class Unjarer {
       throw new DuplicatePathInJarError(path);
     }
     MutableFile file = resultFiles.createFile(path);
-    try (OutputStream outputStream = file.openOutputStream()) {
-      int len = 0;
-      while ((len = jarInputStream.read(buffer)) > 0) {
-        outputStream.write(buffer, 0, len);
+    try {
+      try (OutputStream outputStream = file.openOutputStream()) {
+        int len = 0;
+        while ((len = jarInputStream.read(buffer)) > 0) {
+          outputStream.write(buffer, 0, len);
+        }
       }
+    } catch (IOException e) {
+      throw new FileSystemError(e);
     }
     return file;
   }
