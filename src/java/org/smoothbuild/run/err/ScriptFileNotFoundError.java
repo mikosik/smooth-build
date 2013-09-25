@@ -3,6 +3,7 @@ package org.smoothbuild.run.err;
 import org.smoothbuild.message.Error;
 import org.smoothbuild.plugin.api.Path;
 
+@SuppressWarnings("serial")
 public class ScriptFileNotFoundError extends Error {
   public ScriptFileNotFoundError(Path scriptFile) {
     super("Cannot find build script file " + scriptFile);

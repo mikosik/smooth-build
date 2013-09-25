@@ -2,6 +2,7 @@ package org.smoothbuild.message;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@SuppressWarnings("serial")
 public class CodeMessage extends Message {
   private final CodeLocation codeLocation;
 

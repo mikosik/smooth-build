@@ -97,12 +97,14 @@ public class TestMessageListenerTest {
     testingProblemListener.assertNoProblems();
   }
 
+  @SuppressWarnings("serial")
   private static class MyProblem extends Message {
     public MyProblem() {
       super(ERROR, "message");
     }
   }
 
+  @SuppressWarnings("serial")
   private static class MyInfo extends Message {
     public MyInfo() {
       super(INFO, "message");

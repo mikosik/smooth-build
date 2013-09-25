@@ -8,6 +8,7 @@ import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.parse.def.AssignmentList;
 import org.smoothbuild.parse.def.TypedParamsPool;
 
+@SuppressWarnings("serial")
 public class AmbiguousNamelessArgsError extends CodeError {
 
   public AmbiguousNamelessArgsError(AssignmentList assignmentList, Set<Argument> availableArgs,

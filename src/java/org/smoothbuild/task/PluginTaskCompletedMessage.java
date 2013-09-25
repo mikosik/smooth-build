@@ -5,6 +5,7 @@ import static com.google.common.base.Strings.padEnd;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.Info;
 
+@SuppressWarnings("serial")
 public class PluginTaskCompletedMessage extends Info {
   public PluginTaskCompletedMessage(Signature signature) {
     super(createMessage(signature));
