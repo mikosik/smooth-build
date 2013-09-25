@@ -21,7 +21,7 @@ public class JarFunction {
 
   public interface Parameters {
     @Required
-    public FileSet fileSet();
+    public FileSet files();
 
     public File manifest();
   }
@@ -45,7 +45,7 @@ public class JarFunction {
     public File execute() {
       MutableFile output = sandbox.createFile(path("output.jar"));
       try (JarOutputStream jarOutputStream = createOutputStream(output);) {
-        for (File file : params.fileSet()) {
+        for (File file : params.files()) {
           addEntry(jarOutputStream, file);
         }
       } catch (IOException e) {

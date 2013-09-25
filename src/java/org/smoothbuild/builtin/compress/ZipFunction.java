@@ -19,7 +19,7 @@ public class ZipFunction {
 
   public interface Parameters {
     @Required
-    public FileSet fileSet();
+    public FileSet files();
 
     // add missing parameters: level, comment, method
   }
@@ -43,7 +43,7 @@ public class ZipFunction {
     public File execute() {
       MutableFile output = sandbox.createFile(path("output.zip"));
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.openOutputStream());) {
-        for (File file : params.fileSet()) {
+        for (File file : params.files()) {
           addEntry(zipOutputStream, file);
         }
       } catch (IOException e) {
