@@ -4,6 +4,7 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.CodeError;
 import org.smoothbuild.message.CodeLocation;
 
+@SuppressWarnings("serial")
 public class IncompatibleSetElemsError extends CodeError {
   public IncompatibleSetElemsError(CodeLocation location, Type firstElemType, int index,
       Type indexElemType) {

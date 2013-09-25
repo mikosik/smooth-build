@@ -5,6 +5,7 @@ import org.smoothbuild.message.Error;
 
 import com.google.common.base.Throwables;
 
+@SuppressWarnings("serial")
 public class PluginInternalError extends Error {
   public PluginInternalError(Name name, Throwable e) {
     super("Invoking function " + name + " caused internal exception:\n"

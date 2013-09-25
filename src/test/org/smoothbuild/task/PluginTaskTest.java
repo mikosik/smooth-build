@@ -105,6 +105,7 @@ public class PluginTaskTest {
     assertExceptionIsReportedAsProblem(exception, MyError.class);
   }
 
+  @SuppressWarnings("serial")
   private static class MyError extends Error {
     public MyError() {
       super("message");

@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.file.err;
 import org.smoothbuild.message.Error;
 import org.smoothbuild.plugin.api.Path;
 
+@SuppressWarnings("serial")
 public class DirParamSubdirIsAFileError extends Error {
   public DirParamSubdirIsAFileError(String paramName, Path path, Path subPath) {
     super("Param '" + paramName + "' has illegal value. Path " + path
