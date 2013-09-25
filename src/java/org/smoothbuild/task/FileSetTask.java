@@ -5,11 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
 
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;
@@ -36,7 +36,7 @@ public class FileSetTask extends AbstractTask {
       try (InputStream is = from.openInputStream(); OutputStream os = to.openOutputStream();) {
         ByteStreams.copy(is, os);
       } catch (IOException e) {
-        throw new FileSystemException(e);
+        throw new FileSystemError(e);
       }
     }
 

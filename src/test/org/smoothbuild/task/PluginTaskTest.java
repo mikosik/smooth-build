@@ -12,7 +12,6 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.mockito.Matchers;
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.plugin.PluginInvoker;
 import org.smoothbuild.message.Error;
@@ -88,7 +87,7 @@ public class PluginTaskTest {
 
   @Test
   public void fileSystemErrorIsReportedForFileSystemException() throws Exception {
-    InvocationTargetException exception = new InvocationTargetException(new FileSystemException(""));
+    InvocationTargetException exception = new InvocationTargetException(new FileSystemError(""));
     assertExceptionIsReportedAsProblem(exception, FileSystemError.class);
   }
 

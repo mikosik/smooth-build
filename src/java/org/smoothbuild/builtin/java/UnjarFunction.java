@@ -2,13 +2,13 @@ package org.smoothbuild.builtin.java;
 
 import java.io.IOException;
 
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.task.err.FileSystemError;
 
 public class UnjarFunction {
   public interface Parameters {
@@ -37,7 +37,7 @@ public class UnjarFunction {
       try {
         unjarer.unjarFile(params.file(), result);
       } catch (IOException e) {
-        throw new FileSystemException(e);
+        throw new FileSystemError(e);
       }
       return result;
     }

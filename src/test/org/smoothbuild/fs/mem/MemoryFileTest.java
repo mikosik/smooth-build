@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.io.LineReader;
 
@@ -76,7 +76,7 @@ public class MemoryFileTest {
     try {
       file.createInputStream();
       fail("exception should be thrown");
-    } catch (FileSystemException e) {
+    } catch (FileSystemError e) {
       // expected
     }
   }
