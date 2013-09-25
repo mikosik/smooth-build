@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.smoothbuild.plugin.api.Path.path;
@@ -47,15 +47,14 @@ public class SandboxedJavaFileManagerTest {
 
   @Test
   public void getJavaFileOutputReportsProblemWhenClassNameIsIllegal() throws Exception {
-    String content = "content";
     String className = ".illegal.MyClass";
 
-    JavaFileObject javaFile = manager.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT,
-        className, Kind.CLASS, null);
-    StreamTester.writeAndClose(javaFile.openOutputStream(), content);
-
-    assertThat(javaFile).isInstanceOf(DummyOutputClassFile.class);
-    sandbox.messages().assertOnlyProblem(IncorrectClassNameGivenByJavaCompilerError.class);
+    try {
+      manager.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT, className, Kind.CLASS, null);
+      fail("exception should be thrown");
+    } catch (IncorrectClassNameGivenByJavaCompilerError e) {
+      // expected
+    }
     verifyZeroInteractions(sfm);
   }
 }
