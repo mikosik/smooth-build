@@ -29,14 +29,14 @@ public class CodeLocation {
   }
 
   /**
-   * Start position within line. (first character = 0)
+   * Start position within line. (first character in line = 0)
    */
   public int start() {
     return start;
   }
 
   /**
-   * End position within line. (first character = 0)
+   * End position within line. (first character in line = 0)
    */
   public int end() {
     return end;
