@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.builtin.java.util.JavaNaming.binaryNameToPackage;
+import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.plugin.api.Path.path;
 
@@ -30,5 +31,15 @@ public class JavaNamingTest {
 
   private void assertBinaryNameToPackageResult(String binaryName, String expected) {
     assertThat(binaryNameToPackage(binaryName)).isEqualTo(expected);
+  }
+
+  @Test
+  public void testIsClassFilePredicate() throws Exception {
+    assertThat(isClassFilePredicate().apply("abc")).isFalse();
+    assertThat(isClassFilePredicate().apply("Klass.java")).isFalse();
+    assertThat(isClassFilePredicate().apply("abc/Klass.java")).isFalse();
+
+    assertThat(isClassFilePredicate().apply("Klass.class")).isTrue();
+    assertThat(isClassFilePredicate().apply("abc/Klass.class")).isTrue();
   }
 }
