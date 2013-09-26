@@ -8,7 +8,6 @@ import java.io.StringWriter;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileManager;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
@@ -64,47 +63,39 @@ public class JavacFunction {
       ReportingDiagnosticListener diagnostic = new ReportingDiagnosticListener(sandbox);
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
-      // add handling of various compiler options 'source', 'target', etc
-      Iterable<String> options = null;
-      Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files);
+      try {
+        // add handling of various compiler options 'source', 'target', etc
+        Iterable<String> options = null;
+        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files);
 
-      // run compilation task
-      CompilationTask task = compiler.getTask(additionalCompilerOutput, fileManager, diagnostic,
-          options, null, inputSourceFiles);
-      boolean success = task.call();
+        // run compilation task
+        CompilationTask task = compiler.getTask(additionalCompilerOutput, fileManager, diagnostic,
+            options, null, inputSourceFiles);
+        boolean success = task.call();
 
-      // tidy up
-      closeFileManager(fileManager);
-      if (!success && !diagnostic.errorReported()) {
-        sandbox.report(new CompilerFailedWithoutDiagnosticsError());
+        // tidy up
+        if (!success && !diagnostic.errorReported()) {
+          sandbox.report(new CompilerFailedWithoutDiagnosticsError());
+        }
+        String additionalInfo = additionalCompilerOutput.toString();
+        if (!additionalInfo.isEmpty()) {
+          sandbox.report(new AdditionalCompilerInfo(additionalInfo));
+        }
+        return fileManager.resultClassfiles();
+      } finally {
+        try {
+          fileManager.close();
+        } catch (IOException e) {
+          sandbox.report(new FileSystemError(e));
+        }
       }
-      String additionalInfo = additionalCompilerOutput.toString();
-      if (!additionalInfo.isEmpty()) {
-        sandbox.report(new AdditionalCompilerInfo(additionalInfo));
-      }
-      return fileManager.resultClassfiles();
     }
 
     private SandboxedJavaFileManager fileManager(ReportingDiagnosticListener diagnostic) {
       StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostic, null,
           defaultCharset());
-      return new SandboxedJavaFileManager(fileManager, sandbox, libsClasses());
-    }
-
-    private LibraryClasses libsClasses() {
-      try {
-        return LibraryClasses.libraryClasses(nullToEmpty(params.libs()));
-      } catch (IOException e) {
-        throw new FileSystemError(e);
-      }
-    }
-
-    private static void closeFileManager(JavaFileManager fileManager) {
-      try {
-        fileManager.close();
-      } catch (IOException e) {
-        throw new FileSystemError(e);
-      }
+      LibraryClasses libsClasses = LibraryClasses.libraryClasses(nullToEmpty(params.libs()));
+      return new SandboxedJavaFileManager(fileManager, sandbox, libsClasses);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<File> sourceFiles) {

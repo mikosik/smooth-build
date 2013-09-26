@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.java.javac;
 
-import java.io.IOException;
-
 import javax.tools.JavaFileObject;
 
 import org.smoothbuild.builtin.java.Unjarer;
@@ -21,7 +19,7 @@ public class LibraryClasses {
 
   private final Multimap<String, JavaFileObject> packageToClassesMap;
 
-  public static LibraryClasses libraryClasses(Iterable<File> libraryJars) throws IOException {
+  public static LibraryClasses libraryClasses(Iterable<File> libraryJars) {
     Unjarer unjarer = new Unjarer();
     Multimap<String, JavaFileObject> map = HashMultimap.create();
 
