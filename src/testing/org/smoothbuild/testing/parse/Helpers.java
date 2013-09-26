@@ -9,9 +9,9 @@ public class Helpers {
 
   public static Token token() {
     CommonToken token = new CommonToken(0);
-    token.setStartIndex(13);
     token.setLine(11);
-    token.setStopIndex(17);
+    token.setCharPositionInLine(13);
+    token.setText("token-text");
     return token;
   }
 

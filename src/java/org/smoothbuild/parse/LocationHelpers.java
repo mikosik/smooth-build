@@ -26,20 +26,24 @@ public class LocationHelpers {
   }
 
   public static CodeLocation locationOf(Token token) {
-    return locationOf(token, token);
+    int line = token.getLine();
+    int start = token.getCharPositionInLine();
+    int end = start + token.getText().length();
+
+    return codeLocation(line, start, end);
   }
 
   private static CodeLocation locationOf(Token startToken, Token endToken) {
     int line = startToken.getLine();
-    int start = startToken.getStartIndex();
-    int end = endToken.getStopIndex();
+    int start = startToken.getCharPositionInLine();
+    int end = endToken.getCharPositionInLine() + endToken.getText().length();
 
     return codeLocation(line, start, end);
   }
 
   public static CodeLocation locationIn(Token token, int offset) {
     int line = token.getLine();
-    int column = token.getStartIndex() + offset;
+    int column = token.getCharPositionInLine() + offset;
     return codeLocation(line, column, column);
   }
 }
