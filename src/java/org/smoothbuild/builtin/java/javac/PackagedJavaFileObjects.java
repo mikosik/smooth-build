@@ -14,12 +14,10 @@ import org.smoothbuild.plugin.internal.MutableStoredFileSet;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-public class LibraryClasses {
-  private final Multimap<String, JavaFileObject> packageToClassesMap;
-
-  public static LibraryClasses libraryClasses(Iterable<File> libraryJars) {
+public class PackagedJavaFileObjects {
+  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(Iterable<File> libraryJars) {
     Unjarer unjarer = new Unjarer();
-    Multimap<String, JavaFileObject> map = HashMultimap.create();
+    Multimap<String, JavaFileObject> result = HashMultimap.create();
 
     for (File jarFile : libraryJars) {
       MutableStoredFileSet files = new MutableStoredFileSet(new MemoryFileSystem());
@@ -27,24 +25,17 @@ public class LibraryClasses {
       for (File classFile : files) {
         InputClassFile inputClassFile = new InputClassFile(jarFile.path(), classFile);
         String aPackage = inputClassFile.aPackage();
-        if (map.containsEntry(aPackage, inputClassFile)) {
-          InputClassFile otherInputClassFile = (InputClassFile) map.get(aPackage).iterator().next();
+        if (result.containsEntry(aPackage, inputClassFile)) {
+          InputClassFile otherInputClassFile = (InputClassFile) result.get(aPackage).iterator()
+              .next();
           Path otherJarPath = otherInputClassFile.jarFileName();
           throw new DuplicateClassFileError(classFile.path(), otherJarPath, jarFile.path());
         } else {
-          map.put(aPackage, inputClassFile);
+          result.put(aPackage, inputClassFile);
         }
       }
     }
 
-    return new LibraryClasses(map);
-  }
-
-  private LibraryClasses(Multimap<String, JavaFileObject> packageToClassesMap) {
-    this.packageToClassesMap = packageToClassesMap;
-  }
-
-  public Iterable<JavaFileObject> classesInPackage(String packageName) {
-    return packageToClassesMap.get(packageName);
+    return result;
   }
 }

@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.java.javac;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.builtin.java.javac.LibraryClasses.libraryClasses;
+import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.packagedJavaFileObjects;
 import static org.smoothbuild.testing.common.JarTester.jaredFiles;
 
 import javax.tools.JavaFileObject;
@@ -13,8 +13,9 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.testing.common.StreamTester;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multimap;
 
-public class LibraryClassesTest {
+public class PackagedJavaFileObjectsTest {
 
   @Test
   public void test() throws Exception {
@@ -22,9 +23,10 @@ public class LibraryClassesTest {
     String fileName2 = "my/package2/MyKlass2.class";
     File file = jaredFiles(fileName1, fileName2);
 
-    LibraryClasses libraryClasses = libraryClasses(ImmutableList.of(file));
+    Multimap<String, JavaFileObject> packageToJavaFileObjects = packagedJavaFileObjects(ImmutableList
+        .of(file));
 
-    JavaFileObject fileObject = libraryClasses.classesInPackage("my.package").iterator().next();
+    JavaFileObject fileObject = packageToJavaFileObjects.get("my.package").iterator().next();
     StreamTester.assertContent(fileObject.openInputStream(), fileName1);
     assertThat(fileObject.getName()).isEqualTo("/input.jar:my/package/MyKlass.class");
   }
@@ -36,7 +38,7 @@ public class LibraryClassesTest {
     File file2 = jaredFiles(fileName);
 
     try {
-      libraryClasses(ImmutableList.of(file1, file2));
+      packagedJavaFileObjects(ImmutableList.of(file1, file2));
       fail("exception should be thrown");
     } catch (DuplicateClassFileError e) {
       // expected
