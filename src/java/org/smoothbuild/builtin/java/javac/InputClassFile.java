@@ -1,6 +1,8 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.builtin.java.util.JavaNaming.binaryNameToPackage;
+import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,7 @@ public class InputClassFile extends SimpleJavaFileObject {
 
     this.file = file;
     this.jarFilePath = jarFilePath;
-    this.binaryName = toBinaryName(file);
+    this.binaryName = toBinaryName(file.path());
     this.aPackage = binaryNameToPackage(binaryName);
   }
 
@@ -57,20 +59,5 @@ public class InputClassFile extends SimpleJavaFileObject {
   @Override
   public int hashCode() {
     return file.path().hashCode();
-  }
-
-  private static String toBinaryName(File file) {
-    String path = file.path().value();
-    String extensionRemoved = path.substring(0, path.length() - Kind.CLASS.extension.length());
-    return extensionRemoved.replace('/', '.');
-  }
-
-  private static String binaryNameToPackage(String binaryName) {
-    int lastIndex = binaryName.lastIndexOf('.');
-    if (lastIndex == -1) {
-      return "";
-    } else {
-      return binaryName.substring(0, lastIndex);
-    }
   }
 }
