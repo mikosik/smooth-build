@@ -22,4 +22,12 @@ public class Empty {
   public static ImmutableList<Task> taskList() {
     return ImmutableList.of();
   }
+
+  public static <T> Iterable<T> nullToEmpty(Iterable<T> iterable) {
+    if (iterable == null) {
+      return ImmutableList.of();
+    } else {
+      return iterable;
+    }
+  }
 }

@@ -1,6 +1,7 @@
 package org.smoothbuild.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
@@ -73,5 +74,17 @@ public class EmptyTest {
   @Test
   public void emptyTaskListAlwaysReturnsTheSameObject() {
     assertThat(Empty.taskList()).isSameAs(Empty.taskList());
+  }
+
+  @Test
+  public void nullIsChangedIntoEmptyIterable() throws Exception {
+    assertThat(Empty.nullToEmpty(null)).isEmpty();
+  }
+
+  @Test
+  public void nonNullIterableIsNotChanged() throws Exception {
+    @SuppressWarnings("unchecked")
+    Iterable<String> iterable = mock(Iterable.class);
+    assertThat(Empty.nullToEmpty(iterable)).isSameAs(iterable);
   }
 }
