@@ -46,8 +46,7 @@ public class CodeLocation {
   public final boolean equals(Object object) {
     if (object instanceof CodeLocation) {
       CodeLocation that = (CodeLocation) object;
-      return this.line == that.line && this.start == that.start
-          && this.end == that.end;
+      return this.line == that.line && this.start == that.start && this.end == that.end;
     }
     return false;
   }
