@@ -19,12 +19,16 @@ import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.plugin.internal.FileTester;
 import org.smoothbuild.testing.plugin.internal.TestSandbox;
 
+import com.google.common.collect.Multimap;
+
 public class SandboxedJavaFileManagerTest {
   StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
   TestSandbox sandbox = new TestSandbox();
-  LibraryClasses libraryClasses = mock(LibraryClasses.class);
+  @SuppressWarnings("unchecked")
+  Multimap<String, JavaFileObject> packagedJavaFileObjects = mock(Multimap.class);
 
-  SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, sandbox, libraryClasses);
+  SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, sandbox,
+      packagedJavaFileObjects);
 
   @Test
   public void getJavaFileOutput() throws IOException {

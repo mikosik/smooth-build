@@ -8,6 +8,7 @@ import java.io.StringWriter;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
+import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
@@ -23,6 +24,7 @@ import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Multimap;
 
 public class JavacFunction {
 
@@ -94,7 +96,8 @@ public class JavacFunction {
     private SandboxedJavaFileManager fileManager(ReportingDiagnosticListener diagnostic) {
       StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostic, null,
           defaultCharset());
-      LibraryClasses libsClasses = LibraryClasses.libraryClasses(nullToEmpty(params.libs()));
+      Multimap<String, JavaFileObject> libsClasses = PackagedJavaFileObjects
+          .packagedJavaFileObjects(nullToEmpty(params.libs()));
       return new SandboxedJavaFileManager(fileManager, sandbox, libsClasses);
     }
 

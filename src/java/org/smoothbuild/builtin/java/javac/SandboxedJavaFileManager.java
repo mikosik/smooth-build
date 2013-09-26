@@ -18,16 +18,18 @@ import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Sandbox;
 
+import com.google.common.collect.Multimap;
+
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final Sandbox sandbox;
-  private final LibraryClasses libraryClasses;
+  private final Multimap<String, JavaFileObject> packageToJavaFileObjects;
   private final MutableFileSet resultClassFiles;
 
   SandboxedJavaFileManager(StandardJavaFileManager fileManager, Sandbox sandbox,
-      LibraryClasses libraryClasses) {
+      Multimap<String, JavaFileObject> packageToJavaFileObjects) {
     super(fileManager);
     this.sandbox = sandbox;
-    this.libraryClasses = libraryClasses;
+    this.packageToJavaFileObjects = packageToJavaFileObjects;
     this.resultClassFiles = sandbox.resultFileSet();
   }
 
@@ -68,7 +70,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
         throw new UnsupportedOperationException(
             "recurse is not supported by SandboxedJavaFileManager.list()");
       }
-      return libraryClasses.classesInPackage(packageName);
+      return packageToJavaFileObjects.get(packageName);
     } else {
       return super.list(location, packageName, kinds, recurse);
     }
