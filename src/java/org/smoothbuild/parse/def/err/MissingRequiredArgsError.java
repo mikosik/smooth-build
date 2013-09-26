@@ -23,7 +23,8 @@ public class MissingRequiredArgsError extends CodeError {
 
     builder.append("Not all parameters required by " + function.name()
         + " function has been specified.\n" + "Missing required parameters:\n");
-    builder.append(paramsToString(missingRequiredParams) + "All correct parameters assignments:\n");
+    builder.append(paramsToString(missingRequiredParams));
+    builder.append("All correct 'parameters <- arguments' assignments:\n");
     builder.append(assignmentList.toString());
 
     return builder.toString();
