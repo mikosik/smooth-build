@@ -11,6 +11,7 @@ import org.smoothbuild.builtin.file.SaveFunction;
 import org.smoothbuild.builtin.java.JarFunction;
 import org.smoothbuild.builtin.java.UnjarFunction;
 import org.smoothbuild.builtin.java.javac.JavacFunction;
+import org.smoothbuild.builtin.java.junit.JunitFunction;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.plugin.PluginFactory;
 import org.smoothbuild.function.plugin.exc.PluginImplementationException;
@@ -39,6 +40,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
     importedFunctions.add(createFunction(JavacFunction.class));
     importedFunctions.add(createFunction(JarFunction.class));
     importedFunctions.add(createFunction(UnjarFunction.class));
+    importedFunctions.add(createFunction(JunitFunction.class));
 
     // compression related
     importedFunctions.add(createFunction(ZipFunction.class));
