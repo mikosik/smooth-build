@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
+import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -23,7 +24,6 @@ import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 
 public class JavacFunction {
 
@@ -93,11 +93,7 @@ public class JavacFunction {
 
     private LibraryClasses libsClasses() {
       try {
-        if (params.libs() == null) {
-          return LibraryClasses.libraryClasses(ImmutableList.<File> of());
-        } else {
-          return LibraryClasses.libraryClasses(params.libs());
-        }
+        return LibraryClasses.libraryClasses(nullToEmpty(params.libs()));
       } catch (IOException e) {
         throw new FileSystemError(e);
       }
