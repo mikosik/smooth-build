@@ -1,4 +1,4 @@
-package org.smoothbuild.function.plugin;
+package org.smoothbuild.function.nativ;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -6,11 +6,11 @@ import java.util.Map;
 
 import org.smoothbuild.plugin.api.Sandbox;
 
-public class PluginInvoker {
+public class Invoker {
   private final Method method;
   private final ArgumentsCreator argumentsCreator;
 
-  public PluginInvoker(Method method, ArgumentsCreator argumentsCreator) {
+  public Invoker(Method method, ArgumentsCreator argumentsCreator) {
     this.method = method;
     this.argumentsCreator = argumentsCreator;
   }

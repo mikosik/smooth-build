@@ -12,7 +12,7 @@ import com.google.common.base.Preconditions;
 
 /**
  * Function that is defined completely in Smooth script using Smooth language
- * (as opposed to {@link org.smoothbuild.function.plugin.PluginFunction} which
+ * (as opposed to {@link org.smoothbuild.function.nativ.NativeFunction} which
  * is implemented completely in java language).
  */
 public class DefinedFunction extends AbstractFunction {

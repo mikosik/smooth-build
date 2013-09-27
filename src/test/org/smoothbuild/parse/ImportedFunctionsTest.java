@@ -6,8 +6,8 @@ import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.plugin.PluginFunction;
-import org.smoothbuild.function.plugin.exc.FunctionImplementationException;
+import org.smoothbuild.function.nativ.NativeFunction;
+import org.smoothbuild.function.nativ.exc.FunctionImplementationException;
 
 public class ImportedFunctionsTest {
   ImportedFunctions importedFunctions = new ImportedFunctions();
@@ -63,6 +63,6 @@ public class ImportedFunctionsTest {
   }
 
   private static Function function(String name) {
-    return new PluginFunction(testSignature(name), null);
+    return new NativeFunction(testSignature(name), null);
   }
 }

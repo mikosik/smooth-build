@@ -1,4 +1,4 @@
-package org.smoothbuild.function.plugin;
+package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -10,17 +10,17 @@ import org.smoothbuild.plugin.api.Sandbox;
 
 import com.google.common.collect.ImmutableMap;
 
-public class PluginInvokerTest {
+public class InvokerTest {
   Sandbox sandbox = mock(Sandbox.class);
 
   @Test
   public void test() throws Exception {
     String value = "stringParamValue";
-    Method method = PluginInvokerTest.class.getMethod("myMethod", Sandbox.class, Parameters.class);
+    Method method = InvokerTest.class.getMethod("myMethod", Sandbox.class, Parameters.class);
 
-    PluginInvoker pluginInvoker = new PluginInvoker(method, new ArgumentsCreator(Parameters.class));
+    Invoker invoker = new Invoker(method, new ArgumentsCreator(Parameters.class));
     ImmutableMap<String, Object> valuesMap = ImmutableMap.<String, Object> of("stringParam", value);
-    Object result = pluginInvoker.invoke(sandbox, valuesMap);
+    Object result = invoker.invoke(sandbox, valuesMap);
 
     assertThat(result).isSameAs(value);
   }

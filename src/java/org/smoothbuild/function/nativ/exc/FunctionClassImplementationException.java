@@ -1,7 +1,7 @@
-package org.smoothbuild.function.plugin.exc;
+package org.smoothbuild.function.nativ.exc;
 
 @SuppressWarnings("serial")
-public class FunctionClassImplementationException extends PluginImplementationException {
+public class FunctionClassImplementationException extends NativeImplementationException {
   public FunctionClassImplementationException(Class<?> klass, String message) {
     super(buildMessage(klass, message));
   }

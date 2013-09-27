@@ -1,4 +1,4 @@
-package org.smoothbuild.function.plugin;
+package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

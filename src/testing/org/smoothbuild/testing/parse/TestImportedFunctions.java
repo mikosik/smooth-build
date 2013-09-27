@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.plugin.PluginFunction;
+import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.parse.SymbolTable;
 
 import com.google.common.collect.ImmutableMap;
@@ -17,7 +17,7 @@ public class TestImportedFunctions implements SymbolTable {
   private final Map<String, Function> map;
 
   public TestImportedFunctions() {
-    Function function = new PluginFunction(testSignature(IMPORTED_NAME), null);
+    Function function = new NativeFunction(testSignature(IMPORTED_NAME), null);
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
 

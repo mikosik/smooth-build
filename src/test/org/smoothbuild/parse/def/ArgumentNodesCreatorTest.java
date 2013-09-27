@@ -29,8 +29,8 @@ import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.plugin.PluginFunction;
-import org.smoothbuild.function.plugin.PluginInvoker;
+import org.smoothbuild.function.nativ.Invoker;
+import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.parse.def.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.parse.def.err.DuplicateArgNameError;
 import org.smoothbuild.parse.def.err.TypeMismatchError;
@@ -554,7 +554,7 @@ public class ArgumentNodesCreatorTest {
 
   private static Function function(ImmutableMap<String, Param> params) {
     Signature signature = new Signature(STRING, simpleName("name"), params);
-    return new PluginFunction(signature, mock(PluginInvoker.class));
+    return new NativeFunction(signature, mock(Invoker.class));
   }
 
   private static ArrayList<Argument> list(Argument... args) {

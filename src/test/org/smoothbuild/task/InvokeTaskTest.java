@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.function.plugin.PluginInvoker;
+import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.message.message.Error;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.task.err.FileSystemError;
@@ -23,15 +23,15 @@ import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
-public class PluginTaskTest {
-  PluginInvoker pluginInvoker = mock(PluginInvoker.class);
+public class InvokeTaskTest {
+  Invoker invoker = mock(Invoker.class);
   TestSandbox sandbox = new TestSandbox();
 
-  PluginTask pluginTask = new PluginTask(testSignature(), pluginInvoker, Empty.stringTaskMap());
+  InvokeTask invokeTask = new InvokeTask(testSignature(), invoker, Empty.stringTaskMap());
 
   @Test
   public void name() throws Exception {
-    assertThat(pluginTask.name()).isEqualTo(testSignature().name());
+    assertThat(invokeTask.name()).isEqualTo(testSignature().name());
   }
 
   @Test
@@ -41,37 +41,37 @@ public class PluginTaskTest {
     when(subTask.result()).thenReturn(argValue);
 
     String name = "param";
-    PluginTask pluginTask = new PluginTask(testSignature(), pluginInvoker, ImmutableMap.of(name,
+    InvokeTask invokeTask = new InvokeTask(testSignature(), invoker, ImmutableMap.of(name,
         subTask));
 
     String result = "result";
-    when(pluginInvoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenReturn(result);
+    when(invoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenReturn(result);
 
-    pluginTask.execute(sandbox);
-    assertThat(pluginTask.result()).isSameAs(result);
+    invokeTask.execute(sandbox);
+    assertThat(invokeTask.result()).isSameAs(result);
   }
 
   @Test
   public void nullResultErrorIsReportedWhenNullIsReturnByFunctionReturningNonVoidType()
       throws Exception {
-    when(pluginInvoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
+    when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 
-    pluginTask.execute(sandbox);
+    invokeTask.execute(sandbox);
 
     sandbox.messages().assertOnlyProblem(NullResultError.class);
-    assertThat(pluginTask.isResultCalculated()).isFalse();
+    assertThat(invokeTask.isResultCalculated()).isFalse();
   }
 
   @Test
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
-    pluginTask = new PluginTask(new Signature(VOID, simpleName("name"), Empty.stringParamMap()),
-        pluginInvoker, Empty.stringTaskMap());
-    when(pluginInvoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
+    invokeTask = new InvokeTask(new Signature(VOID, simpleName("name"), Empty.stringParamMap()),
+        invoker, Empty.stringTaskMap());
+    when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 
-    pluginTask.execute(sandbox);
+    invokeTask.execute(sandbox);
 
     sandbox.messages().assertNoProblems();
-    assertThat(pluginTask.isResultCalculated()).isTrue();
+    assertThat(invokeTask.isResultCalculated()).isTrue();
   }
 
   @Test
@@ -106,12 +106,12 @@ public class PluginTaskTest {
 
   private void assertExceptionIsReportedAsProblem(Throwable thrown,
       Class<? extends Message> expected) throws Exception {
-    when(pluginInvoker.invoke(sandbox, Empty.stringObjectMap())).thenThrow(thrown);
+    when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenThrow(thrown);
 
-    pluginTask.execute(sandbox);
+    invokeTask.execute(sandbox);
 
     sandbox.messages().assertOnlyProblem(expected);
-    assertThat(pluginTask.isResultCalculated()).isFalse();
+    assertThat(invokeTask.isResultCalculated()).isFalse();
   }
 
 }
