@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.testing.plugin.internal.FileTester.createContentWithFilePath;
@@ -55,7 +56,7 @@ public class SandboxImplTest {
     MessageListener listener = Mockito.mock(MessageListener.class);
     // MessageListener listener = new PrintingMessageListener();
     sandbox.report(error);
-    sandbox.reportCollectedMessagesTo("taskName", listener);
+    sandbox.reportCollectedMessagesTo(simpleName("callName"), listener);
 
     InOrder inOrder = inOrder(listener);
     inOrder.verify(listener).report(isA(TaskFailedError.class));

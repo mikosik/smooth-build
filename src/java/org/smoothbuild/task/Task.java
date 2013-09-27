@@ -1,11 +1,12 @@
 package org.smoothbuild.task;
 
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.plugin.api.Sandbox;
 
 import com.google.common.collect.ImmutableCollection;
 
 public interface Task {
-  public String name();
+  public Name name();
 
   public boolean isResultCalculated();
 

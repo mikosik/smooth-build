@@ -2,6 +2,7 @@ package org.smoothbuild.task;
 
 import java.util.Set;
 
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
@@ -15,7 +16,7 @@ public class FileSetTask extends AbstractTask {
   private final ImmutableSet<Task> dependencies;
 
   public FileSetTask(Set<Task> dependencies) {
-    super("set[]");
+    super(Name.simpleName("collect"));
     this.dependencies = ImmutableSet.copyOf(dependencies);
   }
 
