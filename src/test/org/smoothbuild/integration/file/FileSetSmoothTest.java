@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.DuplicatePathError;
+import org.smoothbuild.task.err.DuplicatePathError;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 

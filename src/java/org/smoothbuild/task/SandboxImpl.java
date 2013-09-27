@@ -10,6 +10,8 @@ import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.internal.MutableStoredFileSet;
+import org.smoothbuild.task.err.TaskCompletedInfo;
+import org.smoothbuild.task.err.TaskFailedError;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;

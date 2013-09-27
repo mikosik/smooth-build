@@ -9,6 +9,7 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.task.err.DuplicatePathError;
 import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.collect.ImmutableCollection;

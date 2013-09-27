@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.task.err.DuplicatePathError;
 import org.smoothbuild.testing.plugin.internal.FileTester;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.task.TestSandbox;
