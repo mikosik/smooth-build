@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.testing.plugin.internal.TestSandbox;
+import org.smoothbuild.testing.task.TestSandbox;
 
 public class UnjarFunctionTest {
 

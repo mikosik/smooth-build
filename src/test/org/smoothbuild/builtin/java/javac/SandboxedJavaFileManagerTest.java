@@ -17,7 +17,7 @@ import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompi
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.plugin.internal.FileTester;
-import org.smoothbuild.testing.plugin.internal.TestSandbox;
+import org.smoothbuild.testing.task.TestSandbox;
 
 import com.google.common.collect.Multimap;
 

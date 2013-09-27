@@ -1,11 +1,12 @@
-package org.smoothbuild.testing.plugin.internal;
+package org.smoothbuild.testing.task;
 
 import static org.smoothbuild.plugin.api.Path.path;
 
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.plugin.internal.SandboxImpl;
+import org.smoothbuild.task.SandboxImpl;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.message.TestMessageListener;
+import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
 import com.google.common.annotations.VisibleForTesting;
 

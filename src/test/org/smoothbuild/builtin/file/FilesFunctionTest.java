@@ -15,7 +15,7 @@ import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.testing.plugin.internal.FileTester;
-import org.smoothbuild.testing.plugin.internal.TestSandbox;
+import org.smoothbuild.testing.task.TestSandbox;
 
 public class FilesFunctionTest {
   TestSandbox sandbox = new TestSandbox();
