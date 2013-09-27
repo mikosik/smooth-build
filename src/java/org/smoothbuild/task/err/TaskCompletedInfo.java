@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.err;
 
 import static com.google.common.base.Strings.padEnd;
 

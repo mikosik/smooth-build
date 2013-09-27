@@ -15,6 +15,7 @@ import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.Error;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.task.err.TaskFailedError;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 
