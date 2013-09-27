@@ -2,6 +2,7 @@ package org.smoothbuild.task;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.CollectingMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.Message;
@@ -52,7 +53,7 @@ public class SandboxImpl implements Sandbox {
     messages.report(message);
   }
 
-  public void reportCollectedMessagesTo(String taskName, MessageListener listener) {
+  public void reportCollectedMessagesTo(Name taskName, MessageListener listener) {
     if (taskName != null) {
       if (messages.isErrorReported()) {
         listener.report(new TaskFailedError(taskName));

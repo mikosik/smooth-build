@@ -2,6 +2,7 @@ package org.smoothbuild.task;
 
 import java.util.Set;
 
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.internal.ImmutableStringSet;
 
@@ -14,7 +15,7 @@ public class StringSetTask extends AbstractTask {
   private final ImmutableSet<Task> dependencies;
 
   public StringSetTask(Set<Task> dependencies) {
-    super("set[]");
+    super(Name.simpleName("collect"));
     this.dependencies = ImmutableSet.copyOf(dependencies);
   }
 

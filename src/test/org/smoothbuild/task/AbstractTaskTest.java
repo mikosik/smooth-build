@@ -3,6 +3,7 @@ package org.smoothbuild.task;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
 
@@ -40,7 +41,7 @@ public class AbstractTaskTest {
   }
 
   public static class MyAbstractTask extends AbstractTask {
-    public static final String NAME = "test-task";
+    public static final Name NAME = Name.simpleName("callName");
 
     public MyAbstractTask() {
       super(NAME);

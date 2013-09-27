@@ -2,6 +2,7 @@ package org.smoothbuild.task;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
 
@@ -15,7 +16,7 @@ public class PrecalculatedTask implements Task {
   }
 
   @Override
-  public String name() {
+  public Name name() {
     return null;
   }
 

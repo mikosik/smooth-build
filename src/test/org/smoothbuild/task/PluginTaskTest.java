@@ -31,7 +31,7 @@ public class PluginTaskTest {
 
   @Test
   public void name() throws Exception {
-    assertThat(pluginTask.name()).isEqualTo(testSignature().name().simple());
+    assertThat(pluginTask.name()).isEqualTo(testSignature().name());
   }
 
   @Test

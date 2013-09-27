@@ -23,7 +23,7 @@ public class PluginTask extends AbstractTask {
   private final ImmutableMap<String, Task> dependencies;
 
   public PluginTask(Signature signature, PluginInvoker pluginInvoker, Map<String, Task> dependencies) {
-    super(signature.name().simple());
+    super(signature.name());
     this.dependencies = ImmutableMap.copyOf(dependencies);
     this.signature = signature;
     this.pluginInvoker = pluginInvoker;
