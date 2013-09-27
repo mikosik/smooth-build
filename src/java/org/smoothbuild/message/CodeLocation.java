@@ -58,7 +58,16 @@ public class CodeLocation {
 
   @Override
   public String toString() {
-    return "[" + str(line + 1) + ":" + str(start + 1) + "-" + str(end + 1) + "]";
+    return "[" + str(line + 1) + ":" + startToEndString() + "]";
+  }
+
+  private String startToEndString() {
+    int startNumber = start + 1;
+    if (startNumber == end) {
+      return str(startNumber);
+    } else {
+      return str(startNumber) + "-" + str(end);
+    }
   }
 
   private static String str(int integer) {
