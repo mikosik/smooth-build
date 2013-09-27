@@ -12,7 +12,7 @@ public class CodeLocation {
   }
 
   private CodeLocation(int line, int start, int end) {
-    checkArgument(0 < line);
+    checkArgument(0 <= line);
     checkArgument(0 <= start);
     checkArgument(0 <= end);
 
@@ -22,7 +22,7 @@ public class CodeLocation {
   }
 
   /**
-   * Line in build script. (first line = 1)
+   * Line in build script. (first line = 0)
    */
   public int line() {
     return line;
@@ -58,7 +58,7 @@ public class CodeLocation {
 
   @Override
   public String toString() {
-    return "[" + str(line) + ":" + str(start) + "-" + str(end) + "]";
+    return "[" + str(line + 1) + ":" + str(start + 1) + "-" + str(end + 1) + "]";
   }
 
   private static String str(int integer) {
