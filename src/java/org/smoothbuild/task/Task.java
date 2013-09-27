@@ -5,6 +5,8 @@ import org.smoothbuild.plugin.api.Sandbox;
 import com.google.common.collect.ImmutableCollection;
 
 public interface Task {
+  public String name();
+
   public boolean isResultCalculated();
 
   public Object result();

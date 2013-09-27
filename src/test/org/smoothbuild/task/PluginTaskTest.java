@@ -33,6 +33,11 @@ public class PluginTaskTest {
   PluginTask pluginTask = new PluginTask(testSignature(), pluginInvoker, Empty.stringTaskMap());
 
   @Test
+  public void name() throws Exception {
+    assertThat(pluginTask.name()).isEqualTo(testSignature().name().simple());
+  }
+
+  @Test
   public void calculateResult() throws IllegalAccessException, InvocationTargetException {
     Object argValue = "subTaskResult";
     Task subTask = mock(Task.class);

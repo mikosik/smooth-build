@@ -15,6 +15,11 @@ public class PrecalculatedTask implements Task {
   }
 
   @Override
+  public String name() {
+    return null;
+  }
+
+  @Override
   public boolean isResultCalculated() {
     return true;
   }

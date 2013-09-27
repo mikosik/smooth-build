@@ -3,12 +3,19 @@ package org.smoothbuild.task;
 import static com.google.common.base.Preconditions.checkState;
 
 public abstract class AbstractTask implements Task {
+  private final String name;
   private Object result;
   private boolean resultCalculated;
 
-  public AbstractTask() {
+  public AbstractTask(String name) {
+    this.name = name;
     this.result = null;
     this.resultCalculated = false;
+  }
+
+  @Override
+  public String name() {
+    return name;
   }
 
   @Override

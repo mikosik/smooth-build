@@ -9,6 +9,10 @@ import org.smoothbuild.util.Empty;
 import com.google.common.collect.ImmutableCollection;
 
 public class AbstractTaskTest {
+  @Test
+  public void name() throws Exception {
+    assertThat(new MyAbstractTask().name()).isEqualTo(MyAbstractTask.NAME);
+  }
 
   @Test
   public void resultNotSetInitiallyWhenConstructorWithoutResultParamUsed() {
@@ -36,8 +40,10 @@ public class AbstractTaskTest {
   }
 
   public static class MyAbstractTask extends AbstractTask {
+    public static final String NAME = "test-task";
+
     public MyAbstractTask() {
-      super();
+      super(NAME);
     }
 
     public void setMyResult(Object result) {
