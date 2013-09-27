@@ -1,6 +1,8 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.message;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.smoothbuild.message.listen.MessageType;
 
 @SuppressWarnings("serial")
 public class Message extends RuntimeException {

@@ -2,9 +2,9 @@ package org.smoothbuild.task;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.message.CollectingMessageListener;
-import org.smoothbuild.message.Message;
-import org.smoothbuild.message.MessageListener;
+import org.smoothbuild.message.listen.CollectingMessageListener;
+import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;

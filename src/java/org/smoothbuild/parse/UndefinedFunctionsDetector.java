@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.message.MessageListener;
+import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
 
 /**

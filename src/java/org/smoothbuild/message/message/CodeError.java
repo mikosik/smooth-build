@@ -1,4 +1,6 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.message;
+
+import org.smoothbuild.message.listen.MessageType;
 
 @SuppressWarnings("serial")
 public class CodeError extends CodeMessage {

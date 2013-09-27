@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.java.err;
 
-import org.smoothbuild.message.Error;
+import org.smoothbuild.message.message.Error;
 
 @SuppressWarnings("serial")
 public class IllegalPathInJarError extends Error {

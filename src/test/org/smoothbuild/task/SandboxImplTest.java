@@ -11,8 +11,8 @@ import static org.smoothbuild.testing.plugin.internal.FileTester.createContentWi
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import org.smoothbuild.message.Error;
-import org.smoothbuild.message.MessageListener;
+import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.message.Error;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.common.StreamTester;

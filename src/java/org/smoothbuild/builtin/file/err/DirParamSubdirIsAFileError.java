@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.message.Error;
+import org.smoothbuild.message.message.Error;
 import org.smoothbuild.plugin.api.Path;
 
 @SuppressWarnings("serial")

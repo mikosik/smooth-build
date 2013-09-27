@@ -2,7 +2,7 @@ package org.smoothbuild.task;
 
 import static com.google.common.base.Strings.padEnd;
 
-import org.smoothbuild.message.Info;
+import org.smoothbuild.message.message.Info;
 
 @SuppressWarnings("serial")
 public class TaskCompletedInfo extends Info {

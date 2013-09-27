@@ -3,7 +3,7 @@ package org.smoothbuild.parse.def.err;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.message.CodeError;
+import org.smoothbuild.message.message.CodeError;
 import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.parse.def.AssignmentList;
 import org.smoothbuild.parse.def.TypedParamsPool;

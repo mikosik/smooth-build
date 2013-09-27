@@ -1,9 +1,9 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.message;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.message.MessageType.ERROR;
-import static org.smoothbuild.message.MessageType.WARNING;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.listen.MessageType.WARNING;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;

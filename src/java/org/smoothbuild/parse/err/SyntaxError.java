@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.message.CodeError;
-import org.smoothbuild.message.CodeLocation;
+import org.smoothbuild.message.message.CodeError;
+import org.smoothbuild.message.message.CodeLocation;
 
 @SuppressWarnings("serial")
 public class SyntaxError extends CodeError {

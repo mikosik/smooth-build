@@ -8,8 +8,8 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.message.DetectingErrorsMessageListener;
-import org.smoothbuild.message.MessageListener;
+import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
+import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.plugin.api.Path;
 
 public class TaskExecutor {

@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.mockito.Matchers;
-import org.smoothbuild.message.MessageListener;
+import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
 
 import com.google.common.collect.Maps;

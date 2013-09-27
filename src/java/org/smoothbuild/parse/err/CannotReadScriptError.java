@@ -2,7 +2,7 @@ package org.smoothbuild.parse.err;
 
 import java.io.IOException;
 
-import org.smoothbuild.message.Error;
+import org.smoothbuild.message.message.Error;
 import org.smoothbuild.plugin.api.Path;
 
 @SuppressWarnings("serial")

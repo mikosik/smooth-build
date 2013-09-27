@@ -1,6 +1,8 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.listen;
 
 import java.io.PrintStream;
+
+import org.smoothbuild.message.message.Message;
 
 public class PrintingMessageListener implements MessageListener {
   private final PrintStream printStream;
