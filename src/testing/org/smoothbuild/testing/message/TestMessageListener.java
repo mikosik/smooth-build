@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.smoothbuild.message.CollectingMessageListener;
 import org.smoothbuild.message.Message;
-import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.message.MessageType;
 
 import com.google.common.collect.Lists;
 
-public class TestMessageListener implements MessageListener {
+public class TestMessageListener extends CollectingMessageListener {
   private final List<Message> problems = Lists.newArrayList();
   private final List<Message> infos = Lists.newArrayList();
 
@@ -21,6 +21,7 @@ public class TestMessageListener implements MessageListener {
     } else {
       problems.add(message);
     }
+    super.report(message);
   }
 
   public void assertProblemsFound() {
