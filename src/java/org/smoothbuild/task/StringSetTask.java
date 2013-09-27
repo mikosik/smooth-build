@@ -14,6 +14,7 @@ public class StringSetTask extends AbstractTask {
   private final ImmutableSet<Task> dependencies;
 
   public StringSetTask(Set<Task> dependencies) {
+    super("set[]");
     this.dependencies = ImmutableSet.copyOf(dependencies);
   }
 

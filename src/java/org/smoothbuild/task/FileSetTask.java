@@ -19,6 +19,7 @@ public class FileSetTask extends AbstractTask {
   private final ImmutableSet<Task> dependencies;
 
   public FileSetTask(Set<Task> dependencies) {
+    super("set[]");
     this.dependencies = ImmutableSet.copyOf(dependencies);
   }
 
