@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.plugin.PluginInvoker;
+import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.NullResultError;
@@ -16,22 +16,22 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class PluginTask extends AbstractTask {
+public class InvokeTask extends AbstractTask {
   private final Signature signature;
-  private final PluginInvoker pluginInvoker;
+  private final Invoker invoker;
   private final ImmutableMap<String, Task> dependencies;
 
-  public PluginTask(Signature signature, PluginInvoker pluginInvoker, Map<String, Task> dependencies) {
+  public InvokeTask(Signature signature, Invoker invoker, Map<String, Task> dependencies) {
     super(signature.name());
     this.dependencies = ImmutableMap.copyOf(dependencies);
     this.signature = signature;
-    this.pluginInvoker = pluginInvoker;
+    this.invoker = invoker;
   }
 
   @Override
   public void execute(Sandbox sandbox) {
     try {
-      Object result = pluginInvoker.invoke(sandbox, calculateArguments());
+      Object result = invoker.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {
         sandbox.report(new NullResultError(name()));
       } else {

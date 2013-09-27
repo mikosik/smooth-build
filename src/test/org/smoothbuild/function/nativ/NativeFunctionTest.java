@@ -1,4 +1,4 @@
-package org.smoothbuild.function.plugin;
+package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -13,14 +13,14 @@ import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
-public class PluginFunctionTest {
+public class NativeFunctionTest {
   Sandbox sandbox = mock(Sandbox.class);
   String name = "functionName";
 
   Signature signature = testSignature("functionName");
-  PluginInvoker invoker = mock(PluginInvoker.class);
+  Invoker invoker = mock(Invoker.class);
 
-  PluginFunction function = new PluginFunction(signature, invoker);
+  NativeFunction function = new NativeFunction(signature, invoker);
 
   @Test
   public void generateTaskReturnsTaskWithNoResultCalculated() throws Exception {
@@ -36,7 +36,7 @@ public class PluginFunctionTest {
   }
 
   @Test
-  public void generatedTaskUsesPluginInvokerForCalculatingResult() throws Exception {
+  public void generatedTaskUsesInvokerForCalculatingResult() throws Exception {
     String result = "result";
 
     // given

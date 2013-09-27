@@ -14,17 +14,17 @@ import org.smoothbuild.builtin.java.UnjarFunction;
 import org.smoothbuild.builtin.java.javac.JavacFunction;
 import org.smoothbuild.builtin.java.junit.JunitFunction;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.plugin.PluginFactory;
-import org.smoothbuild.function.plugin.exc.PluginImplementationException;
+import org.smoothbuild.function.nativ.NativeFunctionFactory;
+import org.smoothbuild.function.nativ.exc.NativeImplementationException;
 
 import com.google.inject.Provider;
 
 public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
-  private final PluginFactory pluginFactory;
+  private final NativeFunctionFactory nativeFunctionFactory;
 
   @Inject
-  public ImportedFunctionsProvider(PluginFactory pluginFactory) {
-    this.pluginFactory = pluginFactory;
+  public ImportedFunctionsProvider(NativeFunctionFactory nativeFunctionFactory) {
+    this.nativeFunctionFactory = nativeFunctionFactory;
   }
 
   @Override
@@ -53,9 +53,9 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
 
   private Function createFunction(Class<?> klass) {
     try {
-      return pluginFactory.create(klass, true);
-    } catch (PluginImplementationException e) {
-      throw new RuntimeException("Builtin plugin " + klass.getCanonicalName()
+      return nativeFunctionFactory.create(klass, true);
+    } catch (NativeImplementationException e) {
+      throw new RuntimeException("Builtin function " + klass.getCanonicalName()
           + " has implementation problem.", e);
     }
   }

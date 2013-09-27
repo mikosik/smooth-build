@@ -1,9 +1,9 @@
-package org.smoothbuild.function.plugin.exc;
+package org.smoothbuild.function.nativ.exc;
 
 import java.lang.reflect.Method;
 
 @SuppressWarnings("serial")
-public class FunctionImplementationException extends PluginImplementationException {
+public class FunctionImplementationException extends NativeImplementationException {
 
   public FunctionImplementationException(Method method, String message) {
     super(buildMessage(method, message));

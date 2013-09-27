@@ -1,4 +1,4 @@
-package org.smoothbuild.function.plugin;
+package org.smoothbuild.function.nativ;
 
 import static org.smoothbuild.util.ReflexiveUtils.isPublic;
 import static org.smoothbuild.util.ReflexiveUtils.isStatic;
@@ -9,46 +9,46 @@ import javax.inject.Inject;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.function.plugin.exc.MoreThanOneSmoothFunctionException;
-import org.smoothbuild.function.plugin.exc.NoSmoothFunctionException;
-import org.smoothbuild.function.plugin.exc.NonPublicSmoothFunctionException;
-import org.smoothbuild.function.plugin.exc.NonStaticSmoothFunctionException;
-import org.smoothbuild.function.plugin.exc.PluginImplementationException;
-import org.smoothbuild.function.plugin.exc.WrongParamsInSmoothFunctionException;
+import org.smoothbuild.function.nativ.exc.MoreThanOneSmoothFunctionException;
+import org.smoothbuild.function.nativ.exc.NoSmoothFunctionException;
+import org.smoothbuild.function.nativ.exc.NonPublicSmoothFunctionException;
+import org.smoothbuild.function.nativ.exc.NonStaticSmoothFunctionException;
+import org.smoothbuild.function.nativ.exc.NativeImplementationException;
+import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.SandboxImpl;
 
-public class PluginFactory {
-  private final PluginSignatureFactory signatureFactory;
+public class NativeFunctionFactory {
+  private final SignatureFactory signatureFactory;
 
   @Inject
-  public PluginFactory(PluginSignatureFactory signatureFactory) {
+  public NativeFunctionFactory(SignatureFactory signatureFactory) {
     this.signatureFactory = signatureFactory;
   }
 
-  public Function create(Class<?> klass) throws PluginImplementationException {
+  public Function create(Class<?> klass) throws NativeImplementationException {
     return create(klass, false);
   }
 
-  public Function create(Class<?> klass, boolean builtin) throws PluginImplementationException {
+  public Function create(Class<?> klass, boolean builtin) throws NativeImplementationException {
     Method method = getExecuteMethod(klass, builtin);
     Class<?> paramsInterface = method.getParameterTypes()[1];
 
     Signature signature = signatureFactory.create(method, paramsInterface);
-    PluginInvoker invoker = createInvoker(method, paramsInterface);
+    Invoker invoker = createInvoker(method, paramsInterface);
 
-    return new PluginFunction(signature, invoker);
+    return new NativeFunction(signature, invoker);
   }
 
-  private static PluginInvoker createInvoker(Method method, Class<?> paramsInterface)
-      throws PluginImplementationException {
+  private static Invoker createInvoker(Method method, Class<?> paramsInterface)
+      throws NativeImplementationException {
     ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
-    return new PluginInvoker(method, argumentsCreator);
+    return new Invoker(method, argumentsCreator);
   }
 
   private static Method getExecuteMethod(Class<?> klass, boolean builtin)
-      throws PluginImplementationException {
+      throws NativeImplementationException {
     Class<SmoothFunction> executeAnnotation = SmoothFunction.class;
     Method result = null;
     for (Method method : klass.getDeclaredMethods()) {

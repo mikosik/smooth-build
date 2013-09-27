@@ -38,8 +38,8 @@ public class FileSystemError extends Error {
     b.append("It was probably caused by:\n");
     b.append(" - some other process (maybe other instance of Smooth) changing content of "
         + BUILD_DIR + " dir\n");
-    b.append(" - bug in function (plugin) implementation\n");
-    b.append(" - bug in Smooth tool\n");
+    b.append(" - bug in plugin implementation\n");
+    b.append(" - bug in Smooth tool or one of builtin functions\n");
     b.append("Full java stacktrace below:\n");
     b.append(Throwables.getStackTraceAsString(e));
 

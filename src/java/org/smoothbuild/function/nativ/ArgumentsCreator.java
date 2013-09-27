@@ -1,4 +1,4 @@
-package org.smoothbuild.function.plugin;
+package org.smoothbuild.function.nativ;
 
 import static java.lang.reflect.Proxy.newProxyInstance;
 

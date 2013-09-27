@@ -1,4 +1,4 @@
-package org.smoothbuild.function.plugin.exc;
+package org.smoothbuild.function.nativ.exc;
 
 import org.smoothbuild.plugin.api.SmoothFunction;
 
