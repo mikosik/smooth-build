@@ -9,7 +9,7 @@ import org.smoothbuild.task.Task;
 
 /**
  * Function that is implemented completely in java (as opposed to
- * {@link org.smoothbuild.function.plugin.PluginFunction} which is defined in
+ * {@link org.smoothbuild.function.def.DefinedFunction} which is defined in
  * Smooth script using Smooth language).
  */
 public class PluginFunction extends AbstractFunction {
