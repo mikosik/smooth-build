@@ -138,7 +138,7 @@ public class ArgumentTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 3));
+    Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 4));
     String actual = arg.toPaddedString(10, 13, 7);
 
     assertThat(actual).isEqualTo("String    : myName        #1       [2:3-4]");
@@ -149,7 +149,7 @@ public class ArgumentTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 3));
+    Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 4));
     String actual = arg.toPaddedString(1, 1, 1);
 
     assertThat(actual).isEqualTo("String: myName #1 [2:3-4]");

@@ -15,7 +15,7 @@ public class CodeMessageTest {
 
   @Test
   public void testToString() throws Exception {
-    Message message = new CodeMessage(WARNING, codeLocation(1, 2, 3), "problem description");
+    Message message = new CodeMessage(WARNING, codeLocation(1, 2, 4), "problem description");
     assertThat(message.toString()).isEqualTo("WARNING[2:3-4]: problem description");
   }
 }

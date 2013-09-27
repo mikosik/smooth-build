@@ -59,7 +59,12 @@ public class CodeLocationTest {
   }
 
   @Test
+  public void testToStringForSingleCharacter() throws Exception {
+    assertThat(codeLocation(1, 2, 3).toString()).isEqualTo("[2:3]");
+  }
+
+  @Test
   public void testToString() throws Exception {
-    assertThat(codeLocation(1, 2, 3).toString()).isEqualTo("[2:3-4]");
+    assertThat(codeLocation(1, 2, 4).toString()).isEqualTo("[2:3-4]");
   }
 }
