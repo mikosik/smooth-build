@@ -33,7 +33,7 @@ import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.task.err.UnexpectedError;
-import org.smoothbuild.testing.plugin.internal.TestSandbox;
+import org.smoothbuild.testing.task.TestSandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;

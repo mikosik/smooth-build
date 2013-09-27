@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.plugin.internal;
+package org.smoothbuild.testing.task;
 
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;

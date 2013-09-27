@@ -13,8 +13,8 @@ import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.plugin.internal.SandboxImpl;
 import org.smoothbuild.plugin.internal.StoredFileSet;
+import org.smoothbuild.task.SandboxImpl;
 
 public class FilesFunction {
   public interface Parameters {

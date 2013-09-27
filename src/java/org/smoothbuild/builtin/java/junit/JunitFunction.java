@@ -12,7 +12,7 @@ import org.smoothbuild.message.Error;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.plugin.internal.SandboxImpl;
+import org.smoothbuild.task.SandboxImpl;
 
 /*
  * TODO

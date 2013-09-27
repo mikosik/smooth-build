@@ -17,7 +17,7 @@ import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.plugin.internal.FileTester;
 import org.smoothbuild.testing.plugin.internal.TestFile;
-import org.smoothbuild.testing.plugin.internal.TestSandbox;
+import org.smoothbuild.testing.task.TestSandbox;
 
 import com.google.common.collect.ImmutableList;
 

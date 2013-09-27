@@ -38,7 +38,7 @@ import org.smoothbuild.parse.def.err.UnknownParamNameError;
 import org.smoothbuild.parse.def.err.VoidArgError;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.message.TestMessageListener;
-import org.smoothbuild.testing.plugin.internal.TestSandbox;
+import org.smoothbuild.testing.task.TestSandbox;
 
 import com.google.common.collect.ImmutableMap;
 

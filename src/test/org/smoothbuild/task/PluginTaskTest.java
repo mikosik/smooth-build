@@ -18,7 +18,7 @@ import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
 import org.smoothbuild.task.err.UnexpectedError;
-import org.smoothbuild.testing.plugin.internal.TestSandbox;
+import org.smoothbuild.testing.task.TestSandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
