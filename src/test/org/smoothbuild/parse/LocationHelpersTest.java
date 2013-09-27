@@ -30,7 +30,7 @@ public class LocationHelpersTest {
     when(argContext.paramName()).thenReturn(paramNameContext);
     when(paramNameContext.getStart()).thenReturn(startToken);
     when(paramNameContext.getStop()).thenReturn(stopToken);
-    when(startToken.getLine()).thenReturn(line);
+    when(startToken.getLine()).thenReturn(line + 1);
     when(startToken.getCharPositionInLine()).thenReturn(start);
     when(stopToken.getCharPositionInLine()).thenReturn(end);
     when(stopToken.getText()).thenReturn(text);
@@ -56,7 +56,7 @@ public class LocationHelpersTest {
     when(argContext.expression()).thenReturn(expressionContext);
     when(expressionContext.getStart()).thenReturn(startToken);
     when(expressionContext.getStop()).thenReturn(stopToken);
-    when(startToken.getLine()).thenReturn(line);
+    when(startToken.getLine()).thenReturn(line + 1);
     when(startToken.getCharPositionInLine()).thenReturn(start);
     when(stopToken.getCharPositionInLine()).thenReturn(end);
     when(stopToken.getText()).thenReturn(text);
@@ -80,7 +80,7 @@ public class LocationHelpersTest {
     String text = "123";
     when(parserRuleContext.getStart()).thenReturn(startToken);
     when(parserRuleContext.getStop()).thenReturn(stopToken);
-    when(startToken.getLine()).thenReturn(line);
+    when(startToken.getLine()).thenReturn(line + 1);
     when(startToken.getCharPositionInLine()).thenReturn(start);
     when(stopToken.getCharPositionInLine()).thenReturn(end);
     when(stopToken.getText()).thenReturn(text);
@@ -100,7 +100,7 @@ public class LocationHelpersTest {
     int start = 11;
     int line = 13;
     String text = "123";
-    when(startToken.getLine()).thenReturn(line);
+    when(startToken.getLine()).thenReturn(line + 1);
     when(startToken.getCharPositionInLine()).thenReturn(start);
     when(startToken.getText()).thenReturn(text);
 
@@ -116,7 +116,7 @@ public class LocationHelpersTest {
   @Test
   public void locationInToken() throws Exception {
     // given
-    when(startToken.getLine()).thenReturn(7);
+    when(startToken.getLine()).thenReturn(7 + 1);
     when(startToken.getCharPositionInLine()).thenReturn(11);
 
     // when

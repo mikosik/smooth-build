@@ -26,7 +26,7 @@ public class LocationHelpers {
   }
 
   public static CodeLocation locationOf(Token token) {
-    int line = token.getLine();
+    int line = token.getLine() - 1;
     int start = token.getCharPositionInLine();
     int end = start + token.getText().length();
 
@@ -34,7 +34,7 @@ public class LocationHelpers {
   }
 
   private static CodeLocation locationOf(Token startToken, Token endToken) {
-    int line = startToken.getLine();
+    int line = startToken.getLine() - 1;
     int start = startToken.getCharPositionInLine();
     int end = endToken.getCharPositionInLine() + endToken.getText().length();
 
@@ -42,7 +42,7 @@ public class LocationHelpers {
   }
 
   public static CodeLocation locationIn(Token token, int offset) {
-    int line = token.getLine();
+    int line = token.getLine() - 1;
     int column = token.getCharPositionInLine() + offset;
     return codeLocation(line, column, column);
   }

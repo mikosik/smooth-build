@@ -19,19 +19,14 @@ public class CodeLocationTest {
   }
 
   @Test
-  public void negativeLineIsForbidden() throws Exception {
-    try {
-      codeLocation(-1, 1, 1);
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+  public void zeroIndexesAreAllowed() {
+    codeLocation(0, 0, 0);
   }
 
   @Test
-  public void zeroLineIsForbidden() throws Exception {
+  public void negativeLineIsForbidden() throws Exception {
     try {
-      codeLocation(0, 1, 1);
+      codeLocation(-1, 1, 1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -65,6 +60,6 @@ public class CodeLocationTest {
 
   @Test
   public void testToString() throws Exception {
-    assertThat(codeLocation(1, 2, 3).toString()).isEqualTo("[1:2-3]");
+    assertThat(codeLocation(1, 2, 3).toString()).isEqualTo("[2:3-4]");
   }
 }

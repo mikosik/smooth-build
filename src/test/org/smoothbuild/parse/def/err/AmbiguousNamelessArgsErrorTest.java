@@ -57,14 +57,14 @@ public class AmbiguousNamelessArgsErrorTest {
 
     StringBuilder builder = new StringBuilder();
     builder
-        .append("ERROR[6:9-14]: Couldn't decide unambiguously to which parameters some nameless arguments should be assigned:\n");
+        .append("ERROR[7:10-15]: Couldn't decide unambiguously to which parameters some nameless arguments should be assigned:\n");
     builder.append("List of assignments that were successfully detected is following:\n");
-    builder.append("  String : param1 <- String : arg1       #12 [1:2-3]\n");
-    builder.append("  String*: param2 <- String*: <nameless> #7  [11:2-8]\n");
-    builder.append("  File   : param3 <- File   : <nameless> #|  [13:4-7]\n");
+    builder.append("  String : param1 <- String : arg1       #12 [2:3-4]\n");
+    builder.append("  String*: param2 <- String*: <nameless> #7  [12:3-9]\n");
+    builder.append("  File   : param3 <- File   : <nameless> #|  [14:5-8]\n");
     builder.append("List of nameless arguments that caused problems:\n");
-    builder.append("  Any*: arg4 #3 [6:9-14]\n");
-    builder.append("  Void: arg5 #7 [16:19-21]\n");
+    builder.append("  Any*: arg4 #3 [7:10-15]\n");
+    builder.append("  Void: arg5 #7 [17:20-22]\n");
     builder.append("List of unassigned parameters of desired type is following:\n");
     builder.append("  File*  : param4\n");
     builder.append("  String*: param6\n");

@@ -141,7 +141,7 @@ public class ArgumentTest {
     Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 3));
     String actual = arg.toPaddedString(10, 13, 7);
 
-    assertThat(actual).isEqualTo("String    : myName        #1       [1:2-3]");
+    assertThat(actual).isEqualTo("String    : myName        #1       [2:3-4]");
   }
 
   @Test
@@ -152,7 +152,7 @@ public class ArgumentTest {
     Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 3));
     String actual = arg.toPaddedString(1, 1, 1);
 
-    assertThat(actual).isEqualTo("String: myName #1 [1:2-3]");
+    assertThat(actual).isEqualTo("String: myName #1 [2:3-4]");
   }
 
   @Test
