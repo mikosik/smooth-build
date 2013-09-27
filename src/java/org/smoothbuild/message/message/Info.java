@@ -1,6 +1,7 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.message;
 
-import static org.smoothbuild.message.MessageType.INFO;
+import static org.smoothbuild.message.listen.MessageType.INFO;
+
 
 @SuppressWarnings("serial")
 public class Info extends Message {

@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import org.smoothbuild.message.CollectingMessageListener;
-import org.smoothbuild.message.Message;
-import org.smoothbuild.message.MessageType;
+import org.smoothbuild.message.listen.CollectingMessageListener;
+import org.smoothbuild.message.listen.MessageType;
+import org.smoothbuild.message.message.Message;
 
 import com.google.common.collect.Lists;
 

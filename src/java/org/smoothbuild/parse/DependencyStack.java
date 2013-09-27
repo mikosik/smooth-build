@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.smoothbuild.message.CodeLocation;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 
 public class DependencyStack {

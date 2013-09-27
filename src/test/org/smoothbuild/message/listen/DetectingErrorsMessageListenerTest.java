@@ -1,10 +1,13 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.listen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
+import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.Warning;
 
 public class DetectingErrorsMessageListenerTest {
   MessageListener wrapped = mock(MessageListener.class);

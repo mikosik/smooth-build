@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import org.smoothbuild.message.CodeLocation;
+import org.smoothbuild.message.message.CodeLocation;
 
 public class Dependency {
   private final CodeLocation location;

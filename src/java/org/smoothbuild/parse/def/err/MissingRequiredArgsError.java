@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
-import org.smoothbuild.message.CodeError;
-import org.smoothbuild.message.CodeLocation;
+import org.smoothbuild.message.message.CodeError;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.def.AssignmentList;
 
 @SuppressWarnings("serial")

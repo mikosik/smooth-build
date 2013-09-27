@@ -1,7 +1,7 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.message.CodeLocation.codeLocation;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;

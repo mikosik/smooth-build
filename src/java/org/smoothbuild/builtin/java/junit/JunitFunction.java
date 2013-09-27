@@ -8,7 +8,7 @@ import java.util.Map;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.smoothbuild.message.Error;
+import org.smoothbuild.message.message.Error;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.SmoothFunction;

@@ -1,4 +1,4 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.listen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.inOrder;
@@ -7,6 +7,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.Info;
+import org.smoothbuild.message.message.Warning;
 
 public class CollectingMessageListenerTest {
   Error error = new Error("error");

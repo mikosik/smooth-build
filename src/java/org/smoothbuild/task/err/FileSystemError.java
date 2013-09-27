@@ -4,7 +4,7 @@ import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import java.io.IOException;
 
-import org.smoothbuild.message.Error;
+import org.smoothbuild.message.message.Error;
 
 import com.google.common.base.Throwables;
 

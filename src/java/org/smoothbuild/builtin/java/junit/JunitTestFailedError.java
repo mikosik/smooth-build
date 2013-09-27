@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.junit;
 
 import org.junit.runner.notification.Failure;
-import org.smoothbuild.message.Error;
+import org.smoothbuild.message.message.Error;
 
 @SuppressWarnings("serial")
 public class JunitTestFailedError extends Error {

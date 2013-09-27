@@ -1,6 +1,6 @@
 package org.smoothbuild.task;
 
-import org.smoothbuild.message.Info;
+import org.smoothbuild.message.message.Info;
 
 @SuppressWarnings("serial")
 public class TaskFailedError extends Info {

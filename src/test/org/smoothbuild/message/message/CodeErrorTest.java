@@ -1,8 +1,8 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.message.CodeLocation.codeLocation;
-import static org.smoothbuild.message.MessageType.ERROR;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
 

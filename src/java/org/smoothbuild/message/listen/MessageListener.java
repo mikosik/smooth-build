@@ -1,4 +1,6 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.listen;
+
+import org.smoothbuild.message.message.Message;
 
 import com.google.inject.ImplementedBy;
 

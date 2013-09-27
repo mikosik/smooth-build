@@ -10,7 +10,7 @@ import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.message.CodeLocation;
+import org.smoothbuild.message.message.CodeLocation;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

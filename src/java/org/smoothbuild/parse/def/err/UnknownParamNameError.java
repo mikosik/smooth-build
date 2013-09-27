@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.def.err;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.CodeError;
+import org.smoothbuild.message.message.CodeError;
 import org.smoothbuild.parse.def.Argument;
 
 @SuppressWarnings("serial")

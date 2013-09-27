@@ -1,12 +1,13 @@
-package org.smoothbuild.message;
+package org.smoothbuild.message.listen;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.message.MessageType.ERROR;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
 import java.io.PrintStream;
 
 import org.junit.Test;
+import org.smoothbuild.message.message.Message;
 
 public class PrintingMessageListenerTest {
   PrintStream printStream = mock(PrintStream.class);

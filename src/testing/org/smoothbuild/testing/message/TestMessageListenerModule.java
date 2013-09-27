@@ -2,7 +2,7 @@ package org.smoothbuild.testing.message;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.message.MessageListener;
+import org.smoothbuild.message.listen.MessageListener;
 
 import com.google.inject.AbstractModule;
 

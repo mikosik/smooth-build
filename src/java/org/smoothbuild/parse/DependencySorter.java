@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.smoothbuild.message.MessageListener;
+import org.smoothbuild.message.listen.MessageListener;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
