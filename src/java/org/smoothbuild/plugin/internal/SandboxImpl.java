@@ -2,23 +2,27 @@ package org.smoothbuild.plugin.internal;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
+import org.smoothbuild.message.CollectingMessageListener;
 import org.smoothbuild.message.Message;
 import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.task.TaskCompletedInfo;
+import org.smoothbuild.task.TaskFailedError;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MutableStoredFileSet resultFileSet;
-  private final MessageListener messages;
+  private final CollectingMessageListener messages;
 
-  public SandboxImpl(FileSystem fileSystem, Path root, MessageListener messages) {
-    this(fileSystem, new SubFileSystem(fileSystem, root), messages);
+  public SandboxImpl(FileSystem fileSystem, Path root) {
+    this(fileSystem, new SubFileSystem(fileSystem, root), new CollectingMessageListener());
   }
 
-  public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem, MessageListener messages) {
+  public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem,
+      CollectingMessageListener messages) {
     this.projectFileSystem = fileSystem;
     this.resultFileSet = new MutableStoredFileSet(sandboxFileSystem);
     this.messages = messages;
@@ -45,5 +49,16 @@ public class SandboxImpl implements Sandbox {
     // direction to nearest root node (build run can have more than one
     // task-to-run [soon]).
     messages.report(message);
+  }
+
+  public void reportCollectedMessagesTo(String taskName, MessageListener listener) {
+    if (taskName != null) {
+      if (messages.isErrorReported()) {
+        listener.report(new TaskFailedError(taskName));
+      } else {
+        listener.report(new TaskCompletedInfo(taskName));
+      }
+    }
+    messages.reportCollectedMessagesTo(listener);
   }
 }

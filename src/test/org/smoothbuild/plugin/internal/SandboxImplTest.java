@@ -1,17 +1,21 @@
 package org.smoothbuild.plugin.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.testing.plugin.internal.FileTester.createContentWithFilePath;
 
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 import org.smoothbuild.message.Error;
 import org.smoothbuild.message.MessageListener;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.task.TaskFailedError;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 
@@ -21,9 +25,8 @@ public class SandboxImplTest {
   Path path2 = path("my/path/file2.txt");
 
   TestFileSystem fileSystem = new TestFileSystem();
-  MessageListener messages = mock(MessageListener.class);
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, root, messages);
+  SandboxImpl sandbox = new SandboxImpl(fileSystem, root);
 
   @Test
   public void createFileCreatesFileOnFileSystem() throws Exception {
@@ -47,9 +50,16 @@ public class SandboxImplTest {
   }
 
   @Test
-  public void reportError() throws Exception {
+  public void reportedErrors() throws Exception {
     Error error = new Error("message");
+    MessageListener listener = Mockito.mock(MessageListener.class);
+    // MessageListener listener = new PrintingMessageListener();
     sandbox.report(error);
-    verify(messages).report(error);
+    sandbox.reportCollectedMessagesTo("taskName", listener);
+
+    InOrder inOrder = inOrder(listener);
+    inOrder.verify(listener).report(isA(TaskFailedError.class));
+    inOrder.verify(listener).report(error);
+    verifyNoMoreInteractions(listener);
   }
 }
