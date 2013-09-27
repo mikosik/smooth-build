@@ -41,7 +41,6 @@ public class TaskExecutorTest {
     InOrder inOrder = inOrder(task, subTask);
     inOrder.verify(subTask).execute(any(Sandbox.class));
     inOrder.verify(task).execute(any(Sandbox.class));
-    inOrder.verifyNoMoreInteractions();
   }
 
   @Test
