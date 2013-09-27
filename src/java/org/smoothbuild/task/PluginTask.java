@@ -3,7 +3,6 @@ package org.smoothbuild.task;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.plugin.PluginInvoker;
@@ -34,24 +33,20 @@ public class PluginTask extends AbstractTask {
     try {
       Object result = pluginInvoker.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {
-        sandbox.report(new NullResultError(functionName()));
+        sandbox.report(new NullResultError(name()));
       } else {
         setResult(result);
       }
     } catch (IllegalAccessException e) {
-      sandbox.report(new ReflexiveInternalError(functionName(), e));
+      sandbox.report(new ReflexiveInternalError(name(), e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Message) {
         sandbox.report((Message) cause);
       } else {
-        sandbox.report(new UnexpectedError(functionName(), cause));
+        sandbox.report(new UnexpectedError(name(), cause));
       }
     }
-  }
-
-  private Name functionName() {
-    return signature.name();
   }
 
   private boolean isNullResultAllowed() {
