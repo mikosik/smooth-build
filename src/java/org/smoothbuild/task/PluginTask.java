@@ -36,7 +36,6 @@ public class PluginTask extends AbstractTask {
       if (result == null && !isNullResultAllowed()) {
         sandbox.report(new NullResultError(functionName()));
       } else {
-        sandbox.report(new PluginTaskCompletedMessage(signature));
         setResult(result);
       }
     } catch (IllegalAccessException e) {
