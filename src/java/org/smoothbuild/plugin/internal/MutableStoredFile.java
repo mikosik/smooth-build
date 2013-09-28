@@ -1,10 +1,16 @@
 package org.smoothbuild.plugin.internal;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.task.err.FileSystemError;
+
+import com.google.common.io.ByteStreams;
 
 public class MutableStoredFile extends StoredFile implements MutableFile {
   public MutableStoredFile(FileSystem fileSystem, Path path) {
@@ -14,5 +20,15 @@ public class MutableStoredFile extends StoredFile implements MutableFile {
   @Override
   public OutputStream openOutputStream() {
     return fileSystem().openOutputStream(path());
+  }
+
+  @Override
+  public void setContent(File file) {
+    // TODO when possible fileSystem.copy() should be used
+    try (InputStream is = file.openInputStream(); OutputStream os = openOutputStream();) {
+      ByteStreams.copy(is, os);
+    } catch (IOException e) {
+      throw new FileSystemError(e);
+    }
   }
 }
