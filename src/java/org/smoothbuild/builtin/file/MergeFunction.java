@@ -1,9 +1,5 @@
 package org.smoothbuild.builtin.file;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFile;
@@ -12,9 +8,6 @@ import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.err.DuplicatePathError;
-import org.smoothbuild.task.err.FileSystemError;
-
-import com.google.common.io.ByteStreams;
 
 public class MergeFunction {
 
@@ -45,25 +38,17 @@ public class MergeFunction {
 
       for (File file : params.a()) {
         MutableFile destination = result.createFile(file.path());
-        copy(file, destination);
+        destination.setContent(file);
       }
       for (File file : params.b()) {
         MutableFile destination = result.createFile(file.path());
         if (result.contains(file.path())) {
           sandbox.report(new DuplicatePathError(file.path()));
         }
-        copy(file, destination);
+        destination.setContent(file);
       }
 
       return result;
-    }
-
-    private static void copy(File file, MutableFile to) {
-      try (InputStream is = file.openInputStream(); OutputStream os = to.openOutputStream();) {
-        ByteStreams.copy(is, os);
-      } catch (IOException e) {
-        throw new FileSystemError(e);
-      }
     }
   }
 }
