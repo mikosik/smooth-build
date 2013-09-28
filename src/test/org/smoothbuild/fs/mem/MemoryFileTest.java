@@ -1,96 +1,98 @@
 package org.smoothbuild.fs.mem;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.testing.common.StreamTester.inputStreamToString;
+import static org.testory.Testory.given;
+import static org.testory.Testory.givenTest;
+import static org.testory.Testory.thenEqual;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.task.err.FileSystemError;
 
-import com.google.common.io.LineReader;
-
 public class MemoryFileTest {
   MemoryDirectory parent = mock(MemoryDirectory.class);
-  MemoryFile file = new MemoryFile(parent, "name");
+  String name;
+  String otherName;
+  MemoryFile file;
+  OutputStreamWriter writer;
+  String line;
+
+  @Before
+  public void before() {
+    givenTest(this);
+    given(file = new MemoryFile(parent, name));
+  }
 
   @Test
   public void name() {
-    assertThat(file.name()).isEqualTo("name");
+    given(file = new MemoryFile(parent, name));
+    when(file.name());
+    thenReturned(name);
   }
 
   @Test
   public void parent() throws Exception {
-    assertThat(file.parent()).isSameAs(parent);
+    given(file = new MemoryFile(parent, name));
+    when(file.parent());
+    thenReturned(sameInstance(parent));
   }
 
   @Test
   public void isFile() throws Exception {
-    assertThat(file.isFile()).isTrue();
+    when(file).isFile();
+    thenReturned(true);
   }
 
   @Test
   public void isDirectory() throws Exception {
-    assertThat(file.isDirectory()).isFalse();
+    when(file).isDirectory();
+    thenReturned(false);
   }
 
   @Test
   public void hasChildReturnsFalse() {
-    assertThat(file.hasChild("name")).isFalse();
+    given(file = new MemoryFile(parent, name));
+    when(file).hasChild(otherName);
+    thenReturned(false);
   }
 
   @Test
   public void childThrowsException() {
-    try {
-      file.child("name");
-      fail("exception should be thrown");
-    } catch (UnsupportedOperationException e) {
-      // expected
-    }
+    given(file = new MemoryFile(parent, name));
+    when(file).child(otherName);
+    thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
   public void childNamesThrowsException() {
-    try {
-      file.childNames();
-      fail("exception should be thrown");
-    } catch (UnsupportedOperationException e) {
-      // expected
-    }
+    when(file).childNames();
+    thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
   public void addChildThrowsException() {
-    try {
-      file.addChild(mock(MemoryElement.class));
-      fail("exception should be thrown");
-    } catch (UnsupportedOperationException e) {
-      // expected
-    }
+    when(file).addChild(mock(MemoryElement.class));
+    thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
   public void readingFromNonexistentFileFails() throws Exception {
-    try {
-      file.createInputStream();
-      fail("exception should be thrown");
-    } catch (FileSystemError e) {
-      // expected
-    }
+    when(file).createInputStream();
+    thenThrown(FileSystemError.class);
   }
 
   @Test
   public void writingAndReading() throws Exception {
-    String line = "abcdefgh";
-
-    OutputStreamWriter writer = new OutputStreamWriter(file.createOutputStream());
-    writer.write(line);
-    writer.close();
-    LineReader reader = new LineReader(new InputStreamReader(file.createInputStream()));
-
-    assertThat(reader.readLine()).isEqualTo(line);
-    assertThat(reader.readLine()).isNull();
+    given(writer = new OutputStreamWriter(file.createOutputStream()));
+    given(writer).write(line);
+    given(writer).close();
+    thenEqual(line, inputStreamToString(file.createInputStream()));
   }
 }
