@@ -24,7 +24,7 @@ public class MergeSmoothTest extends IntegrationTestCase {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("a : [ file(" + fileA.path() + ") ];");
     builder.addLine("b : [ file(" + fileB.path() + ") ];");
-    builder.addLine("run : merge(a=a, b=b) | save(" + outputPath + ");");
+    builder.addLine("run : merge(files=a, with=b) | save(" + outputPath + ");");
     script(builder.build());
 
     // when
@@ -53,7 +53,7 @@ public class MergeSmoothTest extends IntegrationTestCase {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("a : files(" + dirAPath + ") ;");
     builder.addLine("b : files(" + dirBPath + ") ;");
-    builder.addLine("run : merge(a=a, b=b) | save(" + outputPath + ");");
+    builder.addLine("run : merge(files=a, with=b) | save(" + outputPath + ");");
     script(builder.build());
 
     // when

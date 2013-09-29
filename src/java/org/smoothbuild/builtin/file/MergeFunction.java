@@ -13,10 +13,10 @@ public class MergeFunction {
 
   public interface Parameters {
     @Required
-    public FileSet a();
+    public FileSet files();
 
     @Required
-    public FileSet b();
+    public FileSet with();
   }
 
   @SmoothFunction("merge")
@@ -36,11 +36,11 @@ public class MergeFunction {
     public FileSet execute() {
       MutableFileSet result = sandbox.resultFileSet();
 
-      for (File file : params.a()) {
+      for (File file : params.files()) {
         MutableFile destination = result.createFile(file.path());
         destination.setContent(file);
       }
-      for (File file : params.b()) {
+      for (File file : params.with()) {
         MutableFile destination = result.createFile(file.path());
         if (result.contains(file.path())) {
           sandbox.report(new DuplicatePathError(file.path()));
