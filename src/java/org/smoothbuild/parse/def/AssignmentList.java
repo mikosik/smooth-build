@@ -41,8 +41,8 @@ public class AssignmentList {
 
     for (Assignment assignment : assignments) {
       Param param = assignment.param();
-      DefinitionNode node = assignment.argument().definitionNode();
-      builder.put(param.name(), convert(param.type(), node));
+      Argument argument = assignment.argument();
+      builder.put(param.name(), convert(param.type(), argument));
     }
 
     return builder.build();
@@ -106,17 +106,17 @@ public class AssignmentList {
     return Integer.toString(maxNumber).length();
   }
 
-  private static DefinitionNode convert(Type type, DefinitionNode argNode) {
-    if (argNode.type() == Type.EMPTY_SET) {
+  private static DefinitionNode convert(Type type, Argument argument) {
+    if (argument.type() == Type.EMPTY_SET) {
       if (type == Type.STRING_SET) {
-        return new StringSetNode(ImmutableList.<DefinitionNode> of());
+        return new StringSetNode(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
       } else if (type == Type.FILE_SET) {
-        return new FileSetNode(ImmutableList.<DefinitionNode> of());
+        return new FileSetNode(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
       } else {
-        throw new RuntimeException("Cannot convert from " + argNode.type() + " to " + type + ".");
+        throw new RuntimeException("Cannot convert from " + argument.type() + " to " + type + ".");
       }
     } else {
-      return argNode;
+      return argument.definitionNode();
     }
   }
 

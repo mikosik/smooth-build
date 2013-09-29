@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import org.junit.Before;
@@ -24,6 +25,7 @@ import org.smoothbuild.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
@@ -43,6 +45,7 @@ public class NativeFunctionFactoryTest {
   TestSandbox sandbox = new TestSandbox();
   Path tempDir = path("tem/dir");
   NativeFunctionFactory nativeFunctionFactory;
+  CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   @Before
   public void before() {
@@ -70,7 +73,7 @@ public class NativeFunctionFactoryTest {
     Function function = nativeFunctionFactory.create(MyFunction.class);
     ImmutableMap<String, Task> dependencies = ImmutableMap.of("stringA",
         stringReturningTask("abc"), "stringB", stringReturningTask("def"));
-    Task task = function.generateTask(dependencies);
+    Task task = function.generateTask(dependencies, codeLocation);
     task.execute(sandbox);
     sandbox.messages().assertNoProblems();
     assertThat(task.result()).isEqualTo("abcdef");
@@ -237,7 +240,8 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void illegalFunctionNameException() throws Exception {
-    assertExceptionThrown(MyFunctionWithIllegalFunctionName.class, IllegalFunctionNameException.class);
+    assertExceptionThrown(MyFunctionWithIllegalFunctionName.class,
+        IllegalFunctionNameException.class);
   }
 
   public static class MyFunctionWithIllegalFunctionName {
@@ -248,7 +252,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void runtimeExceptionThrownAreReported() throws Exception {
     Function function = nativeFunctionFactory.create(MyFunctionWithThrowingSmoothMethod.class);
-    function.generateTask(Empty.stringTaskMap()).execute(sandbox);
+    function.generateTask(Empty.stringTaskMap(), codeLocation).execute(sandbox);
     sandbox.messages().assertOnlyProblem(UnexpectedError.class);
   }
 

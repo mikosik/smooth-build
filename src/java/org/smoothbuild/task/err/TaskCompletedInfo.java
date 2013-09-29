@@ -3,12 +3,13 @@ package org.smoothbuild.task.err;
 import static com.google.common.base.Strings.padEnd;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.message.Info;
+import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.CodeInfo;
 
 @SuppressWarnings("serial")
-public class TaskCompletedInfo extends Info {
-  public TaskCompletedInfo(Name name) {
-    super(createMessage(name));
+public class TaskCompletedInfo extends CodeInfo {
+  public TaskCompletedInfo(CallLocation callLocation) {
+    super(callLocation.location(), createMessage(callLocation.name()));
   }
 
   private static String createMessage(Name name) {

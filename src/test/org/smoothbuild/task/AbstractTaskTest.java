@@ -1,9 +1,11 @@
 package org.smoothbuild.task;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
 
@@ -11,8 +13,8 @@ import com.google.common.collect.ImmutableCollection;
 
 public class AbstractTaskTest {
   @Test
-  public void name() throws Exception {
-    assertThat(new MyAbstractTask().name()).isEqualTo(MyAbstractTask.NAME);
+  public void location() throws Exception {
+    assertThat(new MyAbstractTask().location()).isEqualTo(MyAbstractTask.LOCATION);
   }
 
   @Test
@@ -41,10 +43,11 @@ public class AbstractTaskTest {
   }
 
   public static class MyAbstractTask extends AbstractTask {
-    public static final Name NAME = Name.simpleName("callName");
+    public static final CallLocation LOCATION = CallLocation.callLocation(simpleName("name"),
+        codeLocation(1, 2, 4));
 
     public MyAbstractTask() {
-      super(NAME);
+      super(LOCATION);
     }
 
     public void setMyResult(Object result) {

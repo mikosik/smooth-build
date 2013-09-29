@@ -135,10 +135,10 @@ public class DefinedFunctionsCreator {
 
       Type elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
-        return new StringSetNode(elemNodes);
+        return new StringSetNode(elemNodes, locationOf(list));
       }
       if (elemsType == Type.FILE) {
-        return new FileSetNode(elemNodes);
+        return new FileSetNode(elemNodes, locationOf(list));
       }
       throw new RuntimeException("Bug in Smooth implementation. No code to handle type = "
           + elemsType);
@@ -199,7 +199,7 @@ public class DefinedFunctionsCreator {
       if (namedArgs == null) {
         return new InvalidNode(function.type());
       } else {
-        return new FunctionNode(function, namedArgs);
+        return new FunctionNode(function, codeLocation, namedArgs);
       }
     }
 

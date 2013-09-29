@@ -1,6 +1,7 @@
 package org.smoothbuild.task;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.Test;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
@@ -24,11 +26,12 @@ public class FileSetTaskTest {
   Path path2 = path("my/file2");
   TestFile file1 = sandbox.resultFileSet().createFile(path1);
   TestFile file2 = sandbox.resultFileSet().createFile(path2);
+  CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   Task task1 = new PrecalculatedTask(file1);
   Task task2 = new PrecalculatedTask(file2);
 
-  FileSetTask fileSetTask = new FileSetTask(ImmutableSet.of(task1, task2));
+  FileSetTask fileSetTask = new FileSetTask(ImmutableSet.of(task1, task2), codeLocation);
 
   public FileSetTaskTest() throws IOException {}
 
@@ -58,7 +61,7 @@ public class FileSetTaskTest {
   @Test
   public void duplicatedFileCausesError() throws IOException {
     file1.createContentWithFilePath();
-    FileSetTask fileSetTask = new FileSetTask(ImmutableSet.of(task1, task1));
+    FileSetTask fileSetTask = new FileSetTask(ImmutableSet.of(task1, task1), codeLocation);
 
     fileSetTask.execute(sandbox);
 

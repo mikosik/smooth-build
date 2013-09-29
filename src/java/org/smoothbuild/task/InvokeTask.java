@@ -1,11 +1,14 @@
 package org.smoothbuild.task;
 
+import static org.smoothbuild.message.message.CallLocation.callLocation;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.Invoker;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.NullResultError;
@@ -21,8 +24,9 @@ public class InvokeTask extends AbstractTask {
   private final Invoker invoker;
   private final ImmutableMap<String, Task> dependencies;
 
-  public InvokeTask(Signature signature, Invoker invoker, Map<String, Task> dependencies) {
-    super(signature.name());
+  public InvokeTask(Signature signature, CodeLocation codeLocation, Invoker invoker,
+      Map<String, Task> dependencies) {
+    super(callLocation(signature.name(), codeLocation));
     this.dependencies = ImmutableMap.copyOf(dependencies);
     this.signature = signature;
     this.invoker = invoker;
@@ -33,18 +37,18 @@ public class InvokeTask extends AbstractTask {
     try {
       Object result = invoker.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {
-        sandbox.report(new NullResultError(name()));
+        sandbox.report(new NullResultError(location()));
       } else {
         setResult(result);
       }
     } catch (IllegalAccessException e) {
-      sandbox.report(new ReflexiveInternalError(name(), e));
+      sandbox.report(new ReflexiveInternalError(location(), e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Message) {
         sandbox.report((Message) cause);
       } else {
-        sandbox.report(new UnexpectedError(name(), cause));
+        sandbox.report(new UnexpectedError(location(), cause));
       }
     }
   }

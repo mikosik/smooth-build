@@ -1,12 +1,12 @@
 package org.smoothbuild.task.err;
 
-import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.CodeError;
 
 @SuppressWarnings("serial")
-public class NullResultError extends Error {
-  public NullResultError(Name name) {
-    super("Faulty implementation of " + name
+public class NullResultError extends CodeError {
+  public NullResultError(CallLocation callLocation) {
+    super(callLocation.location(), "Faulty implementation of " + callLocation.name()
         + " function : 'null' was returned but no error reported.");
   }
 }

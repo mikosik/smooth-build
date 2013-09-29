@@ -2,9 +2,9 @@ package org.smoothbuild.task;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.CollectingMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
@@ -18,16 +18,19 @@ public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MutableStoredFileSet resultFileSet;
   private final CollectingMessageListener messages;
+  private final CallLocation callLocation;
 
-  public SandboxImpl(FileSystem fileSystem, Path root) {
-    this(fileSystem, new SubFileSystem(fileSystem, root), new CollectingMessageListener());
+  public SandboxImpl(FileSystem fileSystem, Path root, CallLocation callLocation) {
+    this(fileSystem, new SubFileSystem(fileSystem, root), callLocation,
+        new CollectingMessageListener());
   }
 
   public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem,
-      CollectingMessageListener messages) {
+      CallLocation callLocation, CollectingMessageListener messages) {
     this.projectFileSystem = fileSystem;
     this.resultFileSet = new MutableStoredFileSet(sandboxFileSystem);
     this.messages = messages;
+    this.callLocation = callLocation;
   }
 
   @Override
@@ -53,13 +56,11 @@ public class SandboxImpl implements Sandbox {
     messages.report(message);
   }
 
-  public void reportCollectedMessagesTo(Name taskName, MessageListener listener) {
-    if (taskName != null) {
-      if (messages.isErrorReported()) {
-        listener.report(new TaskFailedError(taskName));
-      } else {
-        listener.report(new TaskCompletedInfo(taskName));
-      }
+  public void reportCollectedMessagesTo(MessageListener listener) {
+    if (messages.isErrorReported()) {
+      listener.report(new TaskFailedError(callLocation));
+    } else {
+      listener.report(new TaskCompletedInfo(callLocation));
     }
     messages.reportCollectedMessagesTo(listener);
   }
