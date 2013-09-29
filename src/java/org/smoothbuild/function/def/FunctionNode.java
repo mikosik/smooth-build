@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableMap;
@@ -12,9 +13,12 @@ import com.google.common.collect.ImmutableMap.Builder;
 public class FunctionNode implements DefinitionNode {
   private final Function function;
   private final ImmutableMap<String, DefinitionNode> argNodes;
+  private final CodeLocation codeLocation;
 
-  public FunctionNode(Function function, Map<String, DefinitionNode> argNodes) {
+  public FunctionNode(Function function, CodeLocation codeLocation,
+      Map<String, DefinitionNode> argNodes) {
     this.function = function;
+    this.codeLocation = codeLocation;
     this.argNodes = ImmutableMap.copyOf(argNodes);
   }
 
@@ -31,6 +35,6 @@ public class FunctionNode implements DefinitionNode {
       Task task = entry.getValue().generateTask();
       builder.put(argName, task);
     }
-    return function.generateTask(builder.build());
+    return function.generateTask(builder.build(), codeLocation);
   }
 }

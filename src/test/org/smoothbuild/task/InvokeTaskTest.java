@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Error;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.task.err.FileSystemError;
@@ -26,12 +28,15 @@ import com.google.common.collect.ImmutableMap;
 public class InvokeTaskTest {
   Invoker invoker = mock(Invoker.class);
   TestSandbox sandbox = new TestSandbox();
+  CodeLocation codeLocation = codeLocation(1, 2, 4);
 
-  InvokeTask invokeTask = new InvokeTask(testSignature(), invoker, Empty.stringTaskMap());
+  InvokeTask invokeTask = new InvokeTask(testSignature(), codeLocation, invoker,
+      Empty.stringTaskMap());
 
   @Test
-  public void name() throws Exception {
-    assertThat(invokeTask.name()).isEqualTo(testSignature().name());
+  public void location() throws Exception {
+    assertThat(invokeTask.location().name()).isEqualTo(testSignature().name());
+    assertThat(invokeTask.location().location()).isEqualTo(codeLocation);
   }
 
   @Test
@@ -41,8 +46,8 @@ public class InvokeTaskTest {
     when(subTask.result()).thenReturn(argValue);
 
     String name = "param";
-    InvokeTask invokeTask = new InvokeTask(testSignature(), invoker, ImmutableMap.of(name,
-        subTask));
+    InvokeTask invokeTask = new InvokeTask(testSignature(), codeLocation, invoker, ImmutableMap.of(
+        name, subTask));
 
     String result = "result";
     when(invoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenReturn(result);
@@ -64,8 +69,8 @@ public class InvokeTaskTest {
 
   @Test
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
-    invokeTask = new InvokeTask(new Signature(VOID, simpleName("name"), Empty.stringParamMap()),
-        invoker, Empty.stringTaskMap());
+    Signature signature = new Signature(VOID, simpleName("name"), Empty.stringParamMap());
+    invokeTask = new InvokeTask(signature, codeLocation, invoker, Empty.stringTaskMap());
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 
     invokeTask.execute(sandbox);

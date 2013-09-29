@@ -1,6 +1,7 @@
 package org.smoothbuild.function.def;
 
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.FileSetTask;
 import org.smoothbuild.task.Task;
 
@@ -10,9 +11,11 @@ import com.google.common.collect.ImmutableSet.Builder;
 
 public class FileSetNode implements DefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elemNodes;
+  private final CodeLocation codeLocation;
 
-  public FileSetNode(ImmutableList<? extends DefinitionNode> elemNodes) {
+  public FileSetNode(ImmutableList<? extends DefinitionNode> elemNodes, CodeLocation codeLocation) {
     this.elemNodes = elemNodes;
+    this.codeLocation = codeLocation;
   }
 
   @Override
@@ -26,7 +29,7 @@ public class FileSetNode implements DefinitionNode {
     for (DefinitionNode node : elemNodes) {
       builder.add(node.generateTask());
     }
-    return new FileSetTask(builder.build());
+    return new FileSetTask(builder.build(), codeLocation);
   }
 
 }

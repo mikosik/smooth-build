@@ -3,6 +3,7 @@ package org.smoothbuild.function.def;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.StringSetTask;
 import org.smoothbuild.task.Task;
 
@@ -12,9 +13,11 @@ import com.google.common.collect.ImmutableSet.Builder;
 
 public class StringSetNode implements DefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elemNodes;
+  private final CodeLocation codeLocation;
 
-  public StringSetNode(ImmutableList<? extends DefinitionNode> elemNodes) {
+  public StringSetNode(ImmutableList<? extends DefinitionNode> elemNodes, CodeLocation codeLocation) {
     this.elemNodes = elemNodes;
+    this.codeLocation = codeLocation;
   }
 
   @Override
@@ -28,7 +31,7 @@ public class StringSetNode implements DefinitionNode {
     for (DefinitionNode node : elemNodes) {
       builder.add(node.generateTask());
     }
-    return new StringSetTask(builder.build());
+    return new StringSetTask(builder.build(), codeLocation);
   }
 
 }

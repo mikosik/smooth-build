@@ -4,12 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Type.FILE_SET;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.Test;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
@@ -27,9 +29,10 @@ public class FileSetNodeTest {
   Path path2 = path("my/file2");
   TestFile file1 = sandbox.resultFileSet().createFile(path1);
   TestFile file2 = sandbox.resultFileSet().createFile(path2);
+  CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   ImmutableList<DefinitionNode> elemNodes = ImmutableList.of(fileNode(file1), fileNode(file2));
-  FileSetNode fileSetNode = new FileSetNode(elemNodes);
+  FileSetNode fileSetNode = new FileSetNode(elemNodes, codeLocation);
 
   @Test
   public void type() {

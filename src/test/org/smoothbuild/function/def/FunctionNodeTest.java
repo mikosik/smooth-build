@@ -3,17 +3,20 @@ package org.smoothbuild.function.def;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableMap;
 
 public class FunctionNodeTest {
+  CodeLocation codeLocation = codeLocation(1, 2, 4);
   Function function = mock(Function.class);
 
   @Test
@@ -21,7 +24,7 @@ public class FunctionNodeTest {
     when(function.type()).thenReturn(Type.STRING);
     ImmutableMap<String, DefinitionNode> empty = ImmutableMap.<String, DefinitionNode> of();
 
-    assertThat(new FunctionNode(function, empty).type()).isEqualTo(Type.STRING);
+    assertThat(new FunctionNode(function, codeLocation, empty).type()).isEqualTo(Type.STRING);
   }
 
   @Test
@@ -34,9 +37,9 @@ public class FunctionNodeTest {
     Map<String, DefinitionNode> argNodes = ImmutableMap.of(name, node);
 
     when(node.generateTask()).thenReturn(argTask);
-    when(function.generateTask(ImmutableMap.of(name, argTask))).thenReturn(task);
+    when(function.generateTask(ImmutableMap.of(name, argTask), codeLocation)).thenReturn(task);
 
-    Task actual = new FunctionNode(function, argNodes).generateTask();
+    Task actual = new FunctionNode(function, codeLocation, argNodes).generateTask();
 
     assertThat(actual).isSameAs(task);
   }

@@ -40,9 +40,9 @@ public class TaskExecutor {
       }
 
       Path tempPath = BUILD_DIR.append(path(Integer.toString(temptDirCount++)));
-      SandboxImpl sandbox = new SandboxImpl(fileSystem, tempPath);
+      SandboxImpl sandbox = new SandboxImpl(fileSystem, tempPath, task.location());
       task.execute(sandbox);
-      sandbox.reportCollectedMessagesTo(task.name(), messages);
+      sandbox.reportCollectedMessagesTo(messages);
     }
 
     private void calculateTasks(Collection<Task> tasks) {

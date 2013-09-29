@@ -1,15 +1,15 @@
 package org.smoothbuild.task.err;
 
-import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.message.Info;
+import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.CodeInfo;
 
 @SuppressWarnings("serial")
-public class TaskFailedError extends Info {
-  public TaskFailedError(Name name) {
-    super(createMessage(name));
+public class TaskFailedError extends CodeInfo {
+  public TaskFailedError(CallLocation callLocation) {
+    super(callLocation.location(), createMessage(callLocation));
   }
 
-  private static String createMessage(Name name) {
-    return TaskCompletedInfo.createMessage(name, "FAILED");
+  private static String createMessage(CallLocation callLocation) {
+    return TaskCompletedInfo.createMessage(callLocation.name(), "FAILED");
   }
 }

@@ -1,5 +1,7 @@
 package org.smoothbuild.run;
 
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+
 import java.io.InputStream;
 
 import javax.inject.Inject;
@@ -13,6 +15,7 @@ import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Info;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
@@ -63,7 +66,8 @@ public class SmoothRunner {
         return;
       }
 
-      taskExecutor.execute(messages, function.generateTask(Empty.stringTaskMap()));
+      CodeLocation ignored = codeLocation(0, 0, 0);
+      taskExecutor.execute(messages, function.generateTask(Empty.stringTaskMap(), ignored));
     } catch (Message message) {
       messages.report(message);
     }
