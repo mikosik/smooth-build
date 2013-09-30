@@ -1,10 +1,12 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.message.message.ErrorCodeMessage;
-import org.smoothbuild.message.message.CodeLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class IllegalFunctionNameError extends ErrorCodeMessage {
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
+
+public class IllegalFunctionNameError extends CodeMessage {
   public IllegalFunctionNameError(CodeLocation codeLocation, String name) {
-    super(codeLocation, "Illegal function name '" + name + "'");
+    super(ERROR, codeLocation, "Illegal function name '" + name + "'");
   }
 }

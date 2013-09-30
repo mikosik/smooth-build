@@ -1,12 +1,14 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.function.base.Type;
-import org.smoothbuild.message.message.ErrorCodeMessage;
-import org.smoothbuild.message.message.CodeLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class ForbiddenSetElemTypeError extends ErrorCodeMessage {
+import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
+
+public class ForbiddenSetElemTypeError extends CodeMessage {
   public ForbiddenSetElemTypeError(CodeLocation codeLocation, Type type) {
-    super(codeLocation, "Set cannot contain element of type " + type
+    super(ERROR, codeLocation, "Set cannot contain element of type " + type
         + ". Only following types are allowed: " + Type.allowedForSetElem());
   }
 }

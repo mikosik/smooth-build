@@ -1,10 +1,12 @@
 package org.smoothbuild.parse.def.err;
 
-import org.smoothbuild.message.message.ErrorCodeMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
+
+import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.def.Argument;
 
-public class DuplicateArgNameError extends ErrorCodeMessage {
+public class DuplicateArgNameError extends CodeMessage {
   public DuplicateArgNameError(Argument argument) {
-    super(argument.codeLocation(), "Duplicated argument name = " + argument.name());
+    super(ERROR, argument.codeLocation(), "Duplicated argument name = " + argument.name());
   }
 }

@@ -1,10 +1,12 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.message.message.ErrorCodeMessage;
-import org.smoothbuild.message.message.CodeLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class DuplicateFunctionError extends ErrorCodeMessage {
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
+
+public class DuplicateFunctionError extends CodeMessage {
   public DuplicateFunctionError(CodeLocation codeLocation, String name) {
-    super(codeLocation, "Duplicate function '" + name + "'");
+    super(ERROR, codeLocation, "Duplicate function '" + name + "'");
   }
 }

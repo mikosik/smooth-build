@@ -1,10 +1,12 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.message.message.ErrorCodeMessage;
-import org.smoothbuild.message.message.CodeLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class UndefinedFunctionError extends ErrorCodeMessage {
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
+
+public class UndefinedFunctionError extends CodeMessage {
   public UndefinedFunctionError(CodeLocation codeLocation, String name) {
-    super(codeLocation, "Undefined function  '" + name + "'");
+    super(ERROR, codeLocation, "Undefined function  '" + name + "'");
   }
 }

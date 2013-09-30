@@ -1,19 +1,20 @@
 package org.smoothbuild.parse.def.err;
 
 import static org.smoothbuild.function.base.Param.paramsToString;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
 import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
-import org.smoothbuild.message.message.ErrorCodeMessage;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.def.AssignmentList;
 
-public class MissingRequiredArgsError extends ErrorCodeMessage {
+public class MissingRequiredArgsError extends CodeMessage {
   public MissingRequiredArgsError(CodeLocation codeLocation, Function function,
       AssignmentList assignmentList, Set<Param> missingRequiredParams) {
-    super(codeLocation, createMesssage(function, assignmentList, missingRequiredParams));
+    super(ERROR, codeLocation, createMesssage(function, assignmentList, missingRequiredParams));
   }
 
   private static String createMesssage(Function function, AssignmentList assignmentList,
