@@ -11,11 +11,11 @@ import java.util.jar.JarInputStream;
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -39,7 +39,7 @@ public class Unjarer {
         }
       }
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -61,7 +61,7 @@ public class Unjarer {
         }
       }
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
     return file;
   }

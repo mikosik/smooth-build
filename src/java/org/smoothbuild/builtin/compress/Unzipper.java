@@ -10,11 +10,11 @@ import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.err.FileSystemError;
 
 public class Unzipper {
   private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
@@ -28,7 +28,7 @@ public class Unzipper {
         }
       }
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -51,7 +51,7 @@ public class Unzipper {
         }
       }
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
     return file;
   }

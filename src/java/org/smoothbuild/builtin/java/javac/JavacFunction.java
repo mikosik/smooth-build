@@ -15,12 +15,12 @@ import javax.tools.ToolProvider;
 import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
+import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.SandboxImpl;
-import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;

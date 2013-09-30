@@ -14,7 +14,7 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.task.err.FileSystemError;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 
 public class MemoryFileTest {
   MemoryDirectory parent = mock(MemoryDirectory.class);
@@ -85,7 +85,7 @@ public class MemoryFileTest {
   @Test
   public void readingFromNonexistentFileFails() throws Exception {
     when(file).createInputStream();
-    thenThrown(FileSystemError.class);
+    thenThrown(FileSystemException.class);
   }
 
   @Test

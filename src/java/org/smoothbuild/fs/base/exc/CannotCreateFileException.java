@@ -3,7 +3,6 @@ package org.smoothbuild.fs.base.exc;
 import java.io.FileNotFoundException;
 
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.err.FileSystemError;
 
 /**
  * Thrown to indicate that the file exists but is a directory rather than a
@@ -11,7 +10,7 @@ import org.smoothbuild.task.err.FileSystemError;
  * any other reason.
  */
 @SuppressWarnings("serial")
-public class CannotCreateFileException extends FileSystemError {
+public class CannotCreateFileException extends FileSystemException {
 
   public CannotCreateFileException(Path path, FileNotFoundException e) {
     super(buildMessage(path));
