@@ -11,6 +11,7 @@ import org.smoothbuild.builtin.file.err.FileOutputIsADirError;
 import org.smoothbuild.builtin.file.err.FileOutputSubdirIsAFileError;
 import org.smoothbuild.builtin.file.err.WriteToSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
@@ -50,10 +51,10 @@ public class SaveFunction {
       File file = params.file();
       FileSet files = params.files();
       if (file == null && files == null) {
-        throw new EitherFileOrFilesMustBeProvidedError();
+        throw new ErrorMessageException(new EitherFileOrFilesMustBeProvidedError());
       }
       if (file != null && files != null) {
-        throw new FileAndFilesSpecifiedError();
+        throw new ErrorMessageException(new FileAndFilesSpecifiedError());
       }
 
       if (file != null) {
@@ -89,7 +90,7 @@ public class SaveFunction {
         return;
       }
       if (dirPath.firstElement().equals(BUILD_DIR)) {
-        throw new WriteToSmoothDirError(dirPath);
+        throw new ErrorMessageException(new WriteToSmoothDirError(dirPath));
       }
 
       Path path = dirPath;
@@ -98,9 +99,9 @@ public class SaveFunction {
         switch (fileSystem.pathKind(path)) {
           case FILE:
             if (path.equals(dirPath)) {
-              throw new DirParamIsAFileError("dir", path);
+              throw new ErrorMessageException(new DirParamIsAFileError("dir", path));
             } else {
-              throw new DirParamSubdirIsAFileError("dir", dirPath, path);
+              throw new ErrorMessageException(new DirParamSubdirIsAFileError("dir", dirPath, path));
             }
           case DIR:
             return;
@@ -115,7 +116,7 @@ public class SaveFunction {
 
     private void checkFilePath(Path dirPath, Path filePath) {
       if (dirPath.isRoot() && filePath.firstElement().equals(BUILD_DIR)) {
-        throw new WriteToSmoothDirError(filePath);
+        throw new ErrorMessageException(new WriteToSmoothDirError(filePath));
       }
 
       Path fullPath = dirPath.append(filePath);
@@ -124,7 +125,7 @@ public class SaveFunction {
         case FILE:
           return;
         case DIR:
-          throw new FileOutputIsADirError(dirPath, filePath);
+          throw new ErrorMessageException(new FileOutputIsADirError(dirPath, filePath));
         case NOTHING:
           break;
         default:
@@ -135,7 +136,8 @@ public class SaveFunction {
       while (!path.equals(dirPath)) {
         switch (fileSystem.pathKind(path)) {
           case FILE:
-            throw new FileOutputSubdirIsAFileError(dirPath, filePath, path);
+            throw new ErrorMessageException(new FileOutputSubdirIsAFileError(dirPath, filePath,
+                path));
           case DIR:
             return;
           case NOTHING:

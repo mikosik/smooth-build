@@ -6,7 +6,6 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeInfo;
 
-@SuppressWarnings("serial")
 public class TaskCompletedInfo extends CodeInfo {
   public TaskCompletedInfo(CallLocation callLocation) {
     super(callLocation.location(), createMessage(callLocation.name()));

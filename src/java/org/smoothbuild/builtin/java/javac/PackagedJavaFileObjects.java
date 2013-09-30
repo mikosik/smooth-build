@@ -7,6 +7,7 @@ import javax.tools.JavaFileObject;
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.MutableStoredFileSet;
@@ -29,7 +30,8 @@ public class PackagedJavaFileObjects {
           InputClassFile otherInputClassFile = (InputClassFile) result.get(aPackage).iterator()
               .next();
           Path otherJarPath = otherInputClassFile.jarFileName();
-          throw new DuplicateClassFileError(classFile.path(), otherJarPath, jarFile.path());
+          throw new ErrorMessageException(new DuplicateClassFileError(classFile.path(),
+              otherJarPath, jarFile.path()));
         } else {
           result.put(aPackage, inputClassFile);
         }

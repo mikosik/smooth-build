@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -14,6 +15,7 @@ import javax.tools.StandardLocation;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.plugin.internal.FileTester;
@@ -56,8 +58,9 @@ public class SandboxedJavaFileManagerTest {
     try {
       manager.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT, className, Kind.CLASS, null);
       fail("exception should be thrown");
-    } catch (IncorrectClassNameGivenByJavaCompilerError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(IncorrectClassNameGivenByJavaCompilerError.class);
     }
     verifyZeroInteractions(sfm);
   }

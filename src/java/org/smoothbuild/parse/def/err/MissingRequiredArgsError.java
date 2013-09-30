@@ -10,7 +10,6 @@ import org.smoothbuild.message.message.CodeError;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.def.AssignmentList;
 
-@SuppressWarnings("serial")
 public class MissingRequiredArgsError extends CodeError {
   public MissingRequiredArgsError(CodeLocation codeLocation, Function function,
       AssignmentList assignmentList, Set<Param> missingRequiredParams) {

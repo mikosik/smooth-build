@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.file;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import static org.smoothbuild.plugin.api.Path.path;
@@ -11,6 +12,7 @@ import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
@@ -25,8 +27,9 @@ public class FilesFunctionTest {
     try {
       runExecute(params(Path.rootPath().value()));
       fail("exception should be thrown");
-    } catch (CannotListRootDirError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(CannotListRootDirError.class);
     }
   }
 
@@ -35,8 +38,9 @@ public class FilesFunctionTest {
     try {
       runExecute(params(BUILD_DIR.value()));
       fail("exception should be thrown");
-    } catch (ReadFromSmoothDirError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -45,8 +49,9 @@ public class FilesFunctionTest {
     try {
       runExecute(params(BUILD_DIR.append(path("abc")).value()));
       fail("exception should be thrown");
-    } catch (ReadFromSmoothDirError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -57,8 +62,9 @@ public class FilesFunctionTest {
       try {
         runExecute(params(path));
         fail("exception should be thrown");
-      } catch (IllegalPathError e) {
+      } catch (ErrorMessageException e) {
         // expected
+        assertThat(e.error()).isInstanceOf(IllegalPathError.class);
       }
     }
   }
@@ -68,8 +74,9 @@ public class FilesFunctionTest {
     try {
       runExecute(params("some/path"));
       fail("exception should be thrown");
-    } catch (NoSuchPathError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(NoSuchPathError.class);
     }
   }
 
@@ -81,8 +88,10 @@ public class FilesFunctionTest {
     try {
       runExecute(params(filePath.value()));
       fail("exception should be thrown");
-    } catch (DirParamIsAFileError e) {
+
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(DirParamIsAFileError.class);
     }
   }
 

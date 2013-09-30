@@ -7,6 +7,7 @@ import static org.smoothbuild.function.base.Name.simpleName;
 import org.junit.Test;
 import org.smoothbuild.command.err.CommandLineError;
 import org.smoothbuild.command.err.NothingToDoError;
+import org.smoothbuild.message.message.ErrorMessageException;
 
 public class CommandLineParserTest {
   String functionName = "function1";
@@ -18,14 +19,22 @@ public class CommandLineParserTest {
     assertThat(args.functionToRun()).isEqualTo(simpleName(functionName));
   }
 
-  @Test(expected = NothingToDoError.class)
   public void functionToRunMustBePresent() throws Exception {
-    parser.parse();
+    try {
+      parser.parse();
+    } catch (ErrorMessageException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(NothingToDoError.class);
+    }
   }
 
-  @Test(expected = CommandLineError.class)
   public void atMostOneFunctionToRunCanBePresent() throws Exception {
-    parser.parse(functionName, functionName);
+    try {
+      parser.parse(functionName, functionName);
+    } catch (ErrorMessageException e) {
+      // expected
+      assertThat(e.error()).isInstanceOf(CommandLineError.class);
+    }
   }
 
   @Test

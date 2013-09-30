@@ -3,7 +3,6 @@ package org.smoothbuild.task.err;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeInfo;
 
-@SuppressWarnings("serial")
 public class TaskFailedError extends CodeInfo {
   public TaskFailedError(CallLocation callLocation) {
     super(callLocation.location(), createMessage(callLocation));

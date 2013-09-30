@@ -7,6 +7,7 @@ import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Required;
@@ -43,16 +44,16 @@ public class FileFunction {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
       if (!path.isRoot() && path.firstElement().equals(BUILD_DIR)) {
-        throw new ReadFromSmoothDirError(path);
+        throw new ErrorMessageException(new ReadFromSmoothDirError(path));
       }
 
       switch (fileSystem.pathKind(path)) {
         case FILE:
           return new StoredFile(fileSystem, path);
         case DIR:
-          throw new FileParamIsADirError("path", path);
+          throw new ErrorMessageException(new FileParamIsADirError("path", path));
         case NOTHING:
-          throw new NoSuchPathError("path", path);
+          throw new ErrorMessageException(new NoSuchPathError("path", path));
         default:
           throw new RuntimeException("unreachable case");
       }

@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.file;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.PathTest;
 import org.smoothbuild.testing.message.TestMessageListener;
 
@@ -17,8 +19,9 @@ public class PathArgValidatorTest {
       try {
         PathArgValidator.validatedPath(name, path);
         fail("exception should be thrown");
-      } catch (IllegalPathError e) {
+      } catch (ErrorMessageException e) {
         // expected
+        assertThat(e.error()).isInstanceOf(IllegalPathError.class);
       }
     }
   }

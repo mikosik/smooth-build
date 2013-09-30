@@ -8,6 +8,7 @@ import java.util.Map;
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.internal.MutableStoredFileSet;
@@ -30,7 +31,8 @@ public class BinaryNameToClassFile {
         String binaryName = toBinaryName(path);
         if (binaryNameToJar.containsKey(binaryName)) {
           Path otherJarPath = binaryNameToJar.get(binaryName);
-          throw new DuplicateClassFileError(path, otherJarPath, jarFile.path());
+          throw new ErrorMessageException(new DuplicateClassFileError(path, otherJarPath,
+              jarFile.path()));
         } else {
           binaryNameToClassFile.put(binaryName, classFile);
           binaryNameToJar.put(path, jarFile.path());
