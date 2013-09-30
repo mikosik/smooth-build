@@ -4,11 +4,11 @@ import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import java.io.IOException;
 
-import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.ErrorMessage;
 
 import com.google.common.base.Throwables;
 
-public class FileSystemError extends Error {
+public class FileSystemError extends ErrorMessage {
   public FileSystemError(Throwable e) {
     this(createMessage(e));
   }

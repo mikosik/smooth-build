@@ -8,7 +8,7 @@ import java.util.Map;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
@@ -63,8 +63,8 @@ public class JunitFunction {
       try {
         return classLoader.loadClass(binaryName);
       } catch (ClassNotFoundException e) {
-        Error error = new Error("Couldn't find class for binaryName = " + binaryName);
-        throw new ErrorMessageException(error);
+        ErrorMessage errorMessage = new ErrorMessage("Couldn't find class for binaryName = " + binaryName);
+        throw new ErrorMessageException(errorMessage);
       }
     }
   }

@@ -60,7 +60,7 @@ public class SandboxedJavaFileManagerTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(IncorrectClassNameGivenByJavaCompilerError.class);
+      assertThat(e.errorMessage()).isInstanceOf(IncorrectClassNameGivenByJavaCompilerError.class);
     }
     verifyZeroInteractions(sfm);
   }

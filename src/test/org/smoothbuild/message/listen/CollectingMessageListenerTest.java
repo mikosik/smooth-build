@@ -7,14 +7,14 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Test;
 import org.mockito.InOrder;
-import org.smoothbuild.message.message.Error;
-import org.smoothbuild.message.message.Info;
-import org.smoothbuild.message.message.Warning;
+import org.smoothbuild.message.message.ErrorMessage;
+import org.smoothbuild.message.message.InfoMessage;
+import org.smoothbuild.message.message.WarningMessage;
 
 public class CollectingMessageListenerTest {
-  Error error = new Error("error");
-  Warning warning = new Warning("warning");
-  Info info = new Info("warning");
+  ErrorMessage errorMessage = new ErrorMessage("error");
+  WarningMessage warningMessage = new WarningMessage("warning");
+  InfoMessage infoMessage = new InfoMessage("warning");
 
   CollectingMessageListener collectingMessageListener = new CollectingMessageListener();
 
@@ -24,14 +24,14 @@ public class CollectingMessageListenerTest {
     MessageListener listener = mock(MessageListener.class);
 
     // when
-    collectingMessageListener.report(error);
-    collectingMessageListener.report(warning);
+    collectingMessageListener.report(errorMessage);
+    collectingMessageListener.report(warningMessage);
     collectingMessageListener.reportCollectedMessagesTo(listener);
 
     // then
     InOrder inOrder = inOrder(listener);
-    inOrder.verify(listener).report(error);
-    inOrder.verify(listener).report(warning);
+    inOrder.verify(listener).report(errorMessage);
+    inOrder.verify(listener).report(warningMessage);
     verifyNoMoreInteractions(listener);
   }
 
@@ -42,14 +42,14 @@ public class CollectingMessageListenerTest {
 
   @Test
   public void isErrorReportedReturnsTrueWhenOneIsReported() throws Exception {
-    collectingMessageListener.report(error);
+    collectingMessageListener.report(errorMessage);
     assertThat(collectingMessageListener.isErrorReported()).isTrue();
   }
 
   @Test
   public void isErrorReportedReturnsFalseWhenWarningAndInfoWasReported() throws Exception {
-    collectingMessageListener.report(info);
-    collectingMessageListener.report(warning);
+    collectingMessageListener.report(infoMessage);
+    collectingMessageListener.report(warningMessage);
     assertThat(collectingMessageListener.isErrorReported()).isFalse();
   }
 }

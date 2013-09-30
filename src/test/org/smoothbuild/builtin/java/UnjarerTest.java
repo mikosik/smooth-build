@@ -59,7 +59,7 @@ public class UnjarerTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(IllegalPathInJarError.class);
+      assertThat(e.errorMessage()).isInstanceOf(IllegalPathInJarError.class);
     }
   }
 }

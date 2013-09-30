@@ -28,7 +28,7 @@ public class FileFunctionTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
+      assertThat(e.errorMessage()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -39,7 +39,7 @@ public class FileFunctionTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
+      assertThat(e.errorMessage()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -52,7 +52,7 @@ public class FileFunctionTest {
         fail("exception should be thrown");
       } catch (ErrorMessageException e) {
         // expected
-        assertThat(e.error()).isInstanceOf(IllegalPathError.class);
+        assertThat(e.errorMessage()).isInstanceOf(IllegalPathError.class);
       }
     }
   }
@@ -65,7 +65,7 @@ public class FileFunctionTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(NoSuchPathError.class);
+      assertThat(e.errorMessage()).isInstanceOf(NoSuchPathError.class);
     }
   }
 
@@ -80,7 +80,7 @@ public class FileFunctionTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(FileParamIsADirError.class);
+      assertThat(e.errorMessage()).isInstanceOf(FileParamIsADirError.class);
     }
   }
 

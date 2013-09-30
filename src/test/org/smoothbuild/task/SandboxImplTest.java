@@ -16,7 +16,7 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.task.err.TaskFailedError;
@@ -56,15 +56,15 @@ public class SandboxImplTest {
 
   @Test
   public void reportedErrors() throws Exception {
-    Error error = new Error("message");
+    ErrorMessage errorMessage = new ErrorMessage("message");
     MessageListener listener = Mockito.mock(MessageListener.class);
     // MessageListener listener = new PrintingMessageListener();
-    sandbox.report(error);
+    sandbox.report(errorMessage);
     sandbox.reportCollectedMessagesTo(listener);
 
     InOrder inOrder = inOrder(listener);
     inOrder.verify(listener).report(isA(TaskFailedError.class));
-    inOrder.verify(listener).report(error);
+    inOrder.verify(listener).report(errorMessage);
     verifyNoMoreInteractions(listener);
   }
 }

@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.ErrorMessage;
 
-public class JavaCompilerError extends Error {
+public class JavaCompilerError extends ErrorMessage {
   public JavaCompilerError(String message) {
     super(message);
   }

@@ -18,7 +18,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.message.TestMessageListener;
@@ -60,14 +60,14 @@ public class TaskExecutorTest {
       @Override
       public Void answer(InvocationOnMock invocation) throws Throwable {
         MessageListener messages = (MessageListener) invocation.getArguments()[0];
-        messages.report(new Error(""));
+        messages.report(new ErrorMessage(""));
         return null;
       }
     }).when(subTask).execute(Matchers.<Sandbox> any());
 
     taskExecutor.execute(messages, task);
 
-    messages.assertOnlyProblem(Error.class);
+    messages.assertOnlyProblem(ErrorMessage.class);
     verify(task, times(0)).execute(Matchers.<Sandbox> any());
   }
 }

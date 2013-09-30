@@ -5,9 +5,9 @@ import static org.smoothbuild.message.listen.MessageType.INFO;
 import static org.smoothbuild.message.listen.MessageType.WARNING;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.Info;
+import org.smoothbuild.message.message.InfoMessage;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.Warning;
+import org.smoothbuild.message.message.WarningMessage;
 
 public class TestMessageListenerTest {
   TestMessageListener testingProblemListener = new TestMessageListener();
@@ -56,7 +56,7 @@ public class TestMessageListenerTest {
 
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneInfoExistsFailsWhenOneProblemOfWrongTypeExists() {
-    testingProblemListener.report(new Info("message"));
+    testingProblemListener.report(new InfoMessage("message"));
     testingProblemListener.assertOnlyInfo(MyInfo.class);
   }
 
@@ -81,7 +81,7 @@ public class TestMessageListenerTest {
 
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneProblemExistsFailsWhenOneProblemOfWrongTypeExists() {
-    testingProblemListener.report(new Warning("message"));
+    testingProblemListener.report(new WarningMessage("message"));
 
     testingProblemListener.assertOnlyProblem(MyProblem.class);
   }

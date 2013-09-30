@@ -24,7 +24,7 @@ public class CommandLineParserTest {
       parser.parse();
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(NothingToDoError.class);
+      assertThat(e.errorMessage()).isInstanceOf(NothingToDoError.class);
     }
   }
 
@@ -33,7 +33,7 @@ public class CommandLineParserTest {
       parser.parse(functionName, functionName);
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(CommandLineError.class);
+      assertThat(e.errorMessage()).isInstanceOf(CommandLineError.class);
     }
   }
 

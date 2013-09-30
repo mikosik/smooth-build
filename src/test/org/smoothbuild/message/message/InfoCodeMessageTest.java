@@ -8,14 +8,14 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 
-public class CodeInfoTest {
+public class InfoCodeMessageTest {
   CodeLocation codeLocation = codeLocation(1, 2, 4);
   String message = "message";
-  CodeInfo info;
+  InfoCodeMessage info;
 
   @Test
   public void type() {
-    given(info = new CodeInfo(codeLocation, message));
+    given(info = new InfoCodeMessage(codeLocation, message));
     when(info).type();
     thenReturned(INFO);
   }

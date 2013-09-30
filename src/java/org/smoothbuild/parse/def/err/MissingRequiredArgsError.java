@@ -6,11 +6,11 @@ import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
-import org.smoothbuild.message.message.CodeError;
+import org.smoothbuild.message.message.ErrorCodeMessage;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.def.AssignmentList;
 
-public class MissingRequiredArgsError extends CodeError {
+public class MissingRequiredArgsError extends ErrorCodeMessage {
   public MissingRequiredArgsError(CodeLocation codeLocation, Function function,
       AssignmentList assignmentList, Set<Param> missingRequiredParams) {
     super(codeLocation, createMesssage(function, assignmentList, missingRequiredParams));
