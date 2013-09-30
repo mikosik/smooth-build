@@ -19,12 +19,12 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class InvokeTask extends AbstractTask {
+public class NativeCallTask extends AbstractTask {
   private final Signature signature;
   private final Invoker invoker;
   private final ImmutableMap<String, Task> dependencies;
 
-  public InvokeTask(Signature signature, CodeLocation codeLocation, Invoker invoker,
+  public NativeCallTask(Signature signature, CodeLocation codeLocation, Invoker invoker,
       Map<String, Task> dependencies) {
     super(taskLocation(signature.name(), codeLocation));
     this.dependencies = ImmutableMap.copyOf(dependencies);

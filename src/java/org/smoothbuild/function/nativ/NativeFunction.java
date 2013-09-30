@@ -5,7 +5,7 @@ import java.util.Map;
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.InvokeTask;
+import org.smoothbuild.task.NativeCallTask;
 import org.smoothbuild.task.Task;
 
 /**
@@ -23,6 +23,6 @@ public class NativeFunction extends AbstractFunction {
 
   @Override
   public Task generateTask(Map<String, Task> dependencies, CodeLocation codeLocation) {
-    return new InvokeTask(signature(), codeLocation, invoker, dependencies);
+    return new NativeCallTask(signature(), codeLocation, invoker, dependencies);
   }
 }

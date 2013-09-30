@@ -27,18 +27,18 @@ import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
-public class InvokeTaskTest {
+public class NativeCallTaskTest {
   Invoker invoker = mock(Invoker.class);
   TestSandbox sandbox = new TestSandbox();
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
-  InvokeTask invokeTask = new InvokeTask(testSignature(), codeLocation, invoker,
+  NativeCallTask nativeCallTask = new NativeCallTask(testSignature(), codeLocation, invoker,
       Empty.stringTaskMap());
 
   @Test
   public void location() throws Exception {
-    assertThat(invokeTask.location().name()).isEqualTo(testSignature().name());
-    assertThat(invokeTask.location().location()).isEqualTo(codeLocation);
+    assertThat(nativeCallTask.location().name()).isEqualTo(testSignature().name());
+    assertThat(nativeCallTask.location().location()).isEqualTo(codeLocation);
   }
 
   @Test
@@ -48,14 +48,14 @@ public class InvokeTaskTest {
     when(subTask.result()).thenReturn(argValue);
 
     String name = "param";
-    InvokeTask invokeTask = new InvokeTask(testSignature(), codeLocation, invoker, ImmutableMap.of(
+    NativeCallTask nativeCallTask = new NativeCallTask(testSignature(), codeLocation, invoker, ImmutableMap.of(
         name, subTask));
 
     String result = "result";
     when(invoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenReturn(result);
 
-    invokeTask.execute(sandbox);
-    assertThat(invokeTask.result()).isSameAs(result);
+    nativeCallTask.execute(sandbox);
+    assertThat(nativeCallTask.result()).isSameAs(result);
   }
 
   @Test
@@ -63,22 +63,22 @@ public class InvokeTaskTest {
       throws Exception {
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 
-    invokeTask.execute(sandbox);
+    nativeCallTask.execute(sandbox);
 
     sandbox.messages().assertOnlyProblem(NullResultError.class);
-    assertThat(invokeTask.isResultCalculated()).isFalse();
+    assertThat(nativeCallTask.isResultCalculated()).isFalse();
   }
 
   @Test
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
     Signature signature = new Signature(VOID, simpleName("name"), Empty.stringParamMap());
-    invokeTask = new InvokeTask(signature, codeLocation, invoker, Empty.stringTaskMap());
+    nativeCallTask = new NativeCallTask(signature, codeLocation, invoker, Empty.stringTaskMap());
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 
-    invokeTask.execute(sandbox);
+    nativeCallTask.execute(sandbox);
 
     sandbox.messages().assertNoProblems();
-    assertThat(invokeTask.isResultCalculated()).isTrue();
+    assertThat(nativeCallTask.isResultCalculated()).isTrue();
   }
 
   @Test
@@ -115,10 +115,10 @@ public class InvokeTaskTest {
       Class<? extends Message> expected) throws Exception {
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenThrow(thrown);
 
-    invokeTask.execute(sandbox);
+    nativeCallTask.execute(sandbox);
 
     sandbox.messages().assertOnlyProblem(expected);
-    assertThat(invokeTask.isResultCalculated()).isFalse();
+    assertThat(nativeCallTask.isResultCalculated()).isFalse();
   }
 
 }
