@@ -20,7 +20,7 @@ public class JavaCompilerMessage extends Message {
       case WARNING:
         return MessageType.WARNING;
       case NOTE:
-        return MessageType.INFO;
+        return MessageType.SUGGESTION;
       case OTHER:
         return MessageType.INFO;
       default:
