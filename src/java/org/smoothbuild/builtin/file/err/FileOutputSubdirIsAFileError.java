@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.message.listen.MessageType;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.MessageType;
 import org.smoothbuild.plugin.api.Path;
 
 public class FileOutputSubdirIsAFileError extends Message {

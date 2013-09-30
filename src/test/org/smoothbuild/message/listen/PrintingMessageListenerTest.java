@@ -2,7 +2,7 @@ package org.smoothbuild.message.listen;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import java.io.PrintStream;
 

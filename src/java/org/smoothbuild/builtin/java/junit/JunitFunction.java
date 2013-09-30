@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.junit;
 
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.util.Map;

@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.message.listen.MessageType.INFO;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.message.message.MessageType.INFO;
 
 import java.io.InputStream;
 

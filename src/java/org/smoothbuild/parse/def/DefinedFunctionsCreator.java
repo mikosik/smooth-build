@@ -3,7 +3,7 @@ package org.smoothbuild.parse.def;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.def.Argument.namedArg;

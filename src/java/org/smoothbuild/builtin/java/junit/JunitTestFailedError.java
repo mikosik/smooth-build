@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.java.junit;
 
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.junit.runner.notification.Failure;
 import org.smoothbuild.message.message.Message;

@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.smoothbuild.message.listen.CollectingMessageListener;
-import org.smoothbuild.message.listen.MessageType;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.MessageType;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 
 import com.google.common.collect.Lists;

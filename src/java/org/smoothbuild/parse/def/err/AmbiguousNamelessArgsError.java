@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.def.err;
 
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import java.util.List;
 import java.util.Set;

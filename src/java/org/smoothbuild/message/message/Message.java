@@ -2,7 +2,6 @@ package org.smoothbuild.message.message;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.message.listen.MessageType;
 
 public class Message {
   private final MessageType type;
