@@ -7,8 +7,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.message.TaskLocation.taskLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.message.message.TaskLocation.taskLocation;
 
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -17,8 +18,8 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.TaskLocation;
-import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.message.TestMessageListener;
@@ -60,14 +61,14 @@ public class TaskExecutorTest {
       @Override
       public Void answer(InvocationOnMock invocation) throws Throwable {
         MessageListener messages = (MessageListener) invocation.getArguments()[0];
-        messages.report(new ErrorMessage(""));
+        messages.report(new Message(ERROR, ""));
         return null;
       }
     }).when(subTask).execute(Matchers.<Sandbox> any());
 
     taskExecutor.execute(messages, task);
 
-    messages.assertOnlyProblem(ErrorMessage.class);
+    messages.assertOnlyProblem(Message.class);
     verify(task, times(0)).execute(Matchers.<Sandbox> any());
   }
 }

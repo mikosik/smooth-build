@@ -1,9 +1,11 @@
 package org.smoothbuild.command.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class CommandLineError extends ErrorMessage {
+import org.smoothbuild.message.message.Message;
+
+public class CommandLineError extends Message {
   public CommandLineError(String message) {
-    super("Incorrect command line\n  " + message);
+    super(ERROR, "Incorrect command line\n  " + message);
   }
 }

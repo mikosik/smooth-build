@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class EitherFileOrFilesMustBeProvidedError extends ErrorMessage {
+import org.smoothbuild.message.message.Message;
+
+public class EitherFileOrFilesMustBeProvidedError extends Message {
   public EitherFileOrFilesMustBeProvidedError() {
-    super("Either 'file' or 'files' parameter must be provided.");
+    super(ERROR, "Either 'file' or 'files' parameter must be provided.");
   }
 }

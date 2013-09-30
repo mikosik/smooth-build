@@ -1,10 +1,12 @@
 package org.smoothbuild.builtin.java.junit;
 
-import org.junit.runner.notification.Failure;
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class JunitTestFailedError extends ErrorMessage {
+import org.junit.runner.notification.Failure;
+import org.smoothbuild.message.message.Message;
+
+public class JunitTestFailedError extends Message {
   public JunitTestFailedError(Failure failure) {
-    super("test failed: " + failure.toString() + "\n" + failure.getTrace());
+    super(ERROR, "test failed: " + failure.toString() + "\n" + failure.getTrace());
   }
 }

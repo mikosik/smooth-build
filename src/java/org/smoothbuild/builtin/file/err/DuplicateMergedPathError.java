@@ -1,10 +1,12 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
+
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.Path;
 
-public class DuplicateMergedPathError extends ErrorMessage {
+public class DuplicateMergedPathError extends Message {
   public DuplicateMergedPathError(Path path) {
-    super("Both parameters ('files' and 'with') contain file with path = " + path + ".");
+    super(ERROR, "Both parameters ('files' and 'with') contain file with path = " + path + ".");
   }
 }

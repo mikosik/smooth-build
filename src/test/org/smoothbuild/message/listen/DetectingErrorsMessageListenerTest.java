@@ -3,9 +3,9 @@ package org.smoothbuild.message.listen;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WarningMessage;
 
@@ -15,7 +15,7 @@ public class DetectingErrorsMessageListenerTest {
 
   @Test
   public void messagesAreForwarded() {
-    Message message = new Message(MessageType.ERROR, "message");
+    Message message = new Message(ERROR, "message");
 
     listener.report(message);
 
@@ -29,7 +29,7 @@ public class DetectingErrorsMessageListenerTest {
 
   @Test
   public void errorIsDetectedAfterAddingError() throws Exception {
-    listener.report(new ErrorMessage("message"));
+    listener.report(new Message(ERROR, "message"));
     assertThat(listener.errorDetected()).isTrue();
   }
 

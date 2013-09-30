@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.java.junit;
 
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.util.Map;
@@ -8,8 +9,8 @@ import java.util.Map;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.SmoothFunction;
@@ -63,7 +64,8 @@ public class JunitFunction {
       try {
         return classLoader.loadClass(binaryName);
       } catch (ClassNotFoundException e) {
-        ErrorMessage errorMessage = new ErrorMessage("Couldn't find class for binaryName = " + binaryName);
+        Message errorMessage = new Message(ERROR, "Couldn't find class for binaryName = "
+            + binaryName);
         throw new ErrorMessageException(errorMessage);
       }
     }

@@ -5,8 +5,9 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.message.TaskLocation.taskLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.message.message.TaskLocation.taskLocation;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.testing.plugin.internal.FileTester.createContentWithFilePath;
@@ -15,8 +16,8 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.TaskLocation;
-import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.task.err.TaskFailedError;
@@ -56,7 +57,7 @@ public class SandboxImplTest {
 
   @Test
   public void reportedErrors() throws Exception {
-    ErrorMessage errorMessage = new ErrorMessage("message");
+    Message errorMessage = new Message(ERROR, "message");
     MessageListener listener = Mockito.mock(MessageListener.class);
     // MessageListener listener = new PrintingMessageListener();
     sandbox.report(errorMessage);

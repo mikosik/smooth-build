@@ -1,24 +1,25 @@
 package org.smoothbuild.fs.base.exc;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
 import java.io.IOException;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import org.smoothbuild.message.message.Message;
 
 import com.google.common.base.Throwables;
 
-public class FileSystemError extends ErrorMessage {
+public class FileSystemError extends Message {
   public FileSystemError(Throwable e) {
     this(createMessage(e));
   }
 
   public FileSystemError(String message) {
-    super(message);
+    super(ERROR, message);
   }
 
   public FileSystemError(String message, IOException e) {
-    super(message + "\nFull java stacktrace below:\n" + Throwables.getStackTraceAsString(e));
+    super(ERROR, message + "\nFull java stacktrace below:\n" + Throwables.getStackTraceAsString(e));
   }
 
   private static String createMessage(Throwable e) {

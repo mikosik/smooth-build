@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class IllegalPathError extends ErrorMessage {
+import org.smoothbuild.message.message.Message;
+
+public class IllegalPathError extends Message {
   public IllegalPathError(String paramName, String message) {
-    super("Param '" + paramName + "' has illegal value. " + message);
+    super(ERROR, "Param '" + paramName + "' has illegal value. " + message);
   }
 }

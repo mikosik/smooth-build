@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class FileAndFilesSpecifiedError extends ErrorMessage {
+import org.smoothbuild.message.message.Message;
+
+public class FileAndFilesSpecifiedError extends Message {
   public FileAndFilesSpecifiedError() {
-    super("Parameters 'file' and 'files' cannot be provided at the same time.");
+    super(ERROR, "Parameters 'file' and 'files' cannot be provided at the same time.");
   }
 }

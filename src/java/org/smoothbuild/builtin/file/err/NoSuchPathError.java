@@ -1,10 +1,12 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
+
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.Path;
 
-public class NoSuchPathError extends ErrorMessage {
+public class NoSuchPathError extends Message {
   public NoSuchPathError(String paramName, Path dirPath) {
-    super("Param '" + paramName + "' has illegal value. Path " + dirPath + " does not exist");
+    super(ERROR, "Param '" + paramName + "' has illegal value. Path " + dirPath + " does not exist");
   }
 }
