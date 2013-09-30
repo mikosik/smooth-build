@@ -7,6 +7,7 @@ import java.util.List;
 import org.smoothbuild.message.listen.CollectingMessageListener;
 import org.smoothbuild.message.listen.MessageType;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.WrappedCodeMessage;
 
 import com.google.common.collect.Lists;
 
@@ -39,7 +40,13 @@ public class TestMessageListener extends CollectingMessageListener {
     if (problems.size() != 1) {
       throw new AssertionError("Expected one problem,\nbut got:\n" + problems.toString());
     }
-    assertThat(problems.get(0)).isInstanceOf(klass);
+    Message onlyProblem = problems.get(0);
+    if (onlyProblem instanceof WrappedCodeMessage) {
+      Message wrapped = ((WrappedCodeMessage) onlyProblem).wrappedMessage();
+      assertThat(wrapped).isInstanceOf(klass);
+    } else {
+      assertThat(onlyProblem).isInstanceOf(klass);
+    }
   }
 
   public void assertNoProblems() {
