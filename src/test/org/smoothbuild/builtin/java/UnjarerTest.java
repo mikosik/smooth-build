@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.JarTester.jaredFiles;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
@@ -15,16 +16,18 @@ import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 public class UnjarerTest {
   String fileName1 = "file/path/file1.txt";
   String fileName2 = "file/path/file2.txt";
+  String directoryName = "my/directory/";
 
   TestFileSet resultFileSet = new TestFileSet();
   Unjarer unjarer = new Unjarer();
 
   @Test
-  public void unjaring() throws Exception {
+  public void unjaringTwoFiles() throws Exception {
     TestFile jarFile = jaredFiles(fileName1, fileName2);
 
     unjarer.unjarFile(jarFile, resultFileSet);
@@ -35,6 +38,16 @@ public class UnjarerTest {
       assertContent(file.openInputStream(), file.path().value());
     }
     assertThat(fileCount).isEqualTo(2);
+  }
+
+  @Test
+  public void unjaringIgnoresDirectories() throws Exception {
+    TestFile jarFile = jaredFiles(fileName1, directoryName);
+
+    unjarer.unjarFile(jarFile, resultFileSet);
+
+    assertThat(Iterables.size(resultFileSet)).isEqualTo(1);
+    assertThat(resultFileSet.iterator().next().path()).isEqualTo(path(fileName1));
   }
 
   @Test
