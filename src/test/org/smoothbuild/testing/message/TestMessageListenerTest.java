@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.InfoMessage;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.WarningMessage;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 
 public class TestMessageListenerTest {
@@ -85,7 +84,7 @@ public class TestMessageListenerTest {
 
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneProblemExistsFailsWhenOneProblemOfWrongTypeExists() {
-    testingProblemListener.report(new WarningMessage("message"));
+    testingProblemListener.report(new Message(WARNING, "message"));
 
     testingProblemListener.assertOnlyProblem(MyProblem.class);
   }
@@ -106,7 +105,7 @@ public class TestMessageListenerTest {
 
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneProblemExistsFailsWhenOneWrappedProblemOfWrongTypeExists() {
-    testingProblemListener.report(new WrappedCodeMessage(new WarningMessage(""), location));
+    testingProblemListener.report(new WrappedCodeMessage(new Message(WARNING, ""), location));
 
     testingProblemListener.assertOnlyProblem(MyProblem.class);
   }

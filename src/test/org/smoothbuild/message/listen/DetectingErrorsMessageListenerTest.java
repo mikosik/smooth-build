@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.listen.MessageType.WARNING;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.WarningMessage;
 
 public class DetectingErrorsMessageListenerTest {
   MessageListener wrapped = mock(MessageListener.class);
@@ -35,7 +35,7 @@ public class DetectingErrorsMessageListenerTest {
 
   @Test
   public void errorIsNotDetectedAfterAddingWarning() throws Exception {
-    listener.report(new WarningMessage("message"));
+    listener.report(new Message(WARNING, "message"));
     assertThat(listener.errorDetected()).isFalse();
   }
 }

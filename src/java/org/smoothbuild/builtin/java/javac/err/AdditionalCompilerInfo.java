@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import org.smoothbuild.message.message.WarningMessage;
+import static org.smoothbuild.message.listen.MessageType.WARNING;
 
-public class AdditionalCompilerInfo extends WarningMessage {
+import org.smoothbuild.message.message.Message;
+
+public class AdditionalCompilerInfo extends Message {
   public AdditionalCompilerInfo(String message) {
-    super(message);
+    super(WARNING, message);
   }
 }
