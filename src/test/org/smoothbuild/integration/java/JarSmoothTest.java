@@ -9,6 +9,7 @@ import java.util.jar.JarInputStream;
 
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
@@ -19,7 +20,9 @@ public class JarSmoothTest extends IntegrationTestCase {
     TestFileSet fileSet = fileSet(path("dir"));
     fileSet.createFile(path("dir/fileA.txt")).createContentWithFilePath();
     fileSet.createFile(path("dir/fileB.txt")).createContentWithFilePath();
-    script("run : files('dir') | jar | save('out');");
+    Path outDir = path("out");
+    Path outputPath = path("myOutput.jar");
+    script("run : files('dir') | jar(" + outputPath + ") | save(" + outDir + ");");
 
     // when
     smoothRunner.run("run");
@@ -30,7 +33,7 @@ public class JarSmoothTest extends IntegrationTestCase {
     TestFileSet unpackedFiles = new TestFileSet();
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    TestFile outputFile = file(path("out/output.jar"));
+    TestFile outputFile = fileSet(outDir).file(outputPath);
     try (JarInputStream jarInputStream = new JarInputStream(outputFile.openInputStream());) {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {
