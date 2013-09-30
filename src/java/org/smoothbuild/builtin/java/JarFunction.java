@@ -9,13 +9,13 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.smoothbuild.builtin.compress.Constants;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.task.err.FileSystemError;
 
 public class JarFunction {
 
@@ -49,7 +49,7 @@ public class JarFunction {
           addEntry(jarOutputStream, file);
         }
       } catch (IOException e) {
-        throw new FileSystemError(e);
+        throw new FileSystemException(e);
       }
 
       return output;

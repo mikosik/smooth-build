@@ -14,10 +14,10 @@ import java.io.OutputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.io.LineReader;
 
@@ -92,7 +92,7 @@ public class MemoryFileSystemTest {
     try {
       fileSystem.childNames(path("abc"));
       Assert.fail("exception expected");
-    } catch (FileSystemError e) {
+    } catch (FileSystemException e) {
       // expected
     }
   }
@@ -133,7 +133,7 @@ public class MemoryFileSystemTest {
     createEmptyFile("abc/def/file.txt");
     try {
       fileSystem.openOutputStream(path("abc/def"));
-    } catch (FileSystemError e) {
+    } catch (FileSystemException e) {
       // expected
     }
   }
@@ -148,7 +148,7 @@ public class MemoryFileSystemTest {
     createEmptyFile("abc/def/file.txt");
     try {
       fileSystem.openInputStream(path("abc/def"));
-    } catch (FileSystemError e) {
+    } catch (FileSystemException e) {
       // expected
     }
   }
@@ -182,7 +182,7 @@ public class MemoryFileSystemTest {
     createEmptyFile("abc/def/file.txt");
     try {
       fileSystem.copy(path("abc/def"), path("xyz/output.txt"));
-    } catch (FileSystemError e) {
+    } catch (FileSystemException e) {
       // expected
     }
   }
@@ -195,7 +195,7 @@ public class MemoryFileSystemTest {
 
     try {
       fileSystem.copy(path(sourceFileName), path("xyz"));
-    } catch (FileSystemError e) {
+    } catch (FileSystemException e) {
       // expected
     }
   }

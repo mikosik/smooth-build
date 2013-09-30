@@ -13,10 +13,10 @@ import java.util.List;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.PathKind;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.io.ByteStreams;
 
@@ -63,8 +63,8 @@ public class MemoryFileSystem implements FileSystem {
         if (child.isDirectory()) {
           currentDir = (MemoryDirectory) child;
         } else {
-          throw new FileSystemError("Path (or subpath) of to be created directory (" + directory
-              + ") is taken by some file.");
+          throw new FileSystemException("Path (or subpath) of to be created directory ("
+              + directory + ") is taken by some file.");
         }
       } else {
         MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
@@ -81,7 +81,8 @@ public class MemoryFileSystem implements FileSystem {
         OutputStream output = openOutputStream(destination);) {
       ByteStreams.copy(input, output);
     } catch (IOException e) {
-      throw new FileSystemError("Error copying from '" + source + "' to '" + destination + "'.", e);
+      throw new FileSystemException(
+          "Error copying from '" + source + "' to '" + destination + "'.", e);
     }
 
   }
@@ -107,14 +108,14 @@ public class MemoryFileSystem implements FileSystem {
     if (element.isFile()) {
       return element.createInputStream();
     } else {
-      throw new FileSystemError("Cannot read from file '" + path + "' as it is directory.");
+      throw new FileSystemException("Cannot read from file '" + path + "' as it is directory.");
     }
   }
 
   @Override
   public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
-      throw new FileSystemError("Cannot open file '" + path + "' as it is directory.");
+      throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
     }
     MemoryDirectory dir = createDirectory(path.parent());
 
@@ -124,7 +125,7 @@ public class MemoryFileSystem implements FileSystem {
       if (child.isFile()) {
         return child.createOutputStream();
       } else {
-        throw new FileSystemError("Cannot open file '" + path + "' as it is directory.");
+        throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
       }
     }
 

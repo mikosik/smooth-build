@@ -11,12 +11,13 @@ import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.exc.FileSystemError;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Error;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.task.err.FileSystemError;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
 import org.smoothbuild.task.err.UnexpectedError;
@@ -86,7 +87,7 @@ public class InvokeTaskTest {
 
   @Test
   public void fileSystemErrorIsReportedForFileSystemException() throws Exception {
-    InvocationTargetException exception = new InvocationTargetException(new FileSystemError(""));
+    InvocationTargetException exception = new InvocationTargetException(new FileSystemException(""));
     assertExceptionIsReportedAsProblem(exception, FileSystemError.class);
   }
 

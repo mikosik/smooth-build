@@ -9,6 +9,7 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.NullResultError;
@@ -45,7 +46,10 @@ public class InvokeTask extends AbstractTask {
       sandbox.report(new ReflexiveInternalError(location(), e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
-      if (cause instanceof Message) {
+      if (cause instanceof ErrorMessageException) {
+        ErrorMessageException errorMessageException = (ErrorMessageException) cause;
+        sandbox.report(errorMessageException.error());
+      } else if (cause instanceof Message) {
         sandbox.report((Message) cause);
       } else {
         sandbox.report(new UnexpectedError(location(), cause));

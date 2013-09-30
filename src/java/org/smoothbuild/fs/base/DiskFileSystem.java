@@ -22,10 +22,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.fs.base.exc.CannotCreateFileException;
+import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.err.FileSystemError;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -80,7 +80,7 @@ public class DiskFileSystem implements FileSystem {
     if (!directory.exists()) {
       createDirectory(path.parent());
       if (!directory.mkdir()) {
-        throw new FileSystemError("Could not create directory '" + path + "'.");
+        throw new FileSystemException("Could not create directory '" + path + "'.");
       }
     }
   }
@@ -97,7 +97,7 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
-      throw new FileSystemError("Cannot open file '" + path + "' as it is directory.");
+      throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
     }
     createDirectory(path.parent());
 
@@ -118,7 +118,7 @@ public class DiskFileSystem implements FileSystem {
     try {
       copy(jdkFile(from), jdkFile(to));
     } catch (IOException e) {
-      throw new FileSystemError("Could not copy from '" + from + "' to '" + to + "'");
+      throw new FileSystemException("Could not copy from '" + from + "' to '" + to + "'");
     }
   }
 
@@ -142,7 +142,7 @@ public class DiskFileSystem implements FileSystem {
       try {
         RecursiveDirectoryDeleter.deleteRecursively(jdkFile(directory));
       } catch (IOException e) {
-        throw new FileSystemError(e);
+        throw new FileSystemException(e);
       }
     } else {
       throw new NoSuchDirException(directory);
