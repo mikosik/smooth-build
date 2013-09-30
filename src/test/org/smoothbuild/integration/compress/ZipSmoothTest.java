@@ -10,6 +10,7 @@ import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
@@ -21,7 +22,9 @@ public class ZipSmoothTest extends IntegrationTestCase {
     TestFileSet fileSet = fileSet(path("dir"));
     fileSet.createFile(path("dir/fileA.txt")).createContentWithFilePath();
     fileSet.createFile(path("dir/fileB.txt")).createContentWithFilePath();
-    script("run : files('dir') | zip | save('out');");
+    Path outDir = path("out");
+    Path outputPath = path("myOutput.zip");
+    script("run : files('dir') | zip(" + outputPath + ") | save(" + outDir + ");");
 
     // when
     smoothRunner.run("run");
@@ -32,7 +35,7 @@ public class ZipSmoothTest extends IntegrationTestCase {
     TestFileSet unpackedFiles = new TestFileSet();
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    TestFile outputFile = file(path("out/output.zip"));
+    TestFile outputFile = fileSet(outDir).file(outputPath);
     try (ZipInputStream zipInputStream = new ZipInputStream(outputFile.openInputStream());) {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
