@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.java.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class IllegalPathInJarError extends ErrorMessage {
+import org.smoothbuild.message.message.Message;
+
+public class IllegalPathInJarError extends Message {
   public IllegalPathInJarError(String fileName) {
-    super("File in a jar file has illegal name = '" + fileName + "'");
+    super(ERROR, "File in a jar file has illegal name = '" + fileName + "'");
   }
 }

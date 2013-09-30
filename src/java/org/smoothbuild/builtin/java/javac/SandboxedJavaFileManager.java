@@ -14,8 +14,8 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Sandbox;
@@ -48,7 +48,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       if (message == null) {
         return new OutputClassFile(sandbox.createFile(path(classFilePath)));
       } else {
-        ErrorMessage errorMessage = new IncorrectClassNameGivenByJavaCompilerError(className);
+        Message errorMessage = new IncorrectClassNameGivenByJavaCompilerError(className);
         throw new ErrorMessageException(errorMessage);
       }
     } else {

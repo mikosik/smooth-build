@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class CompilerFailedWithoutDiagnosticsError extends ErrorMessage {
+import org.smoothbuild.message.message.Message;
+
+public class CompilerFailedWithoutDiagnosticsError extends Message {
   public CompilerFailedWithoutDiagnosticsError() {
-    super("Internal error: Compilation failed but JavaCompiler reported no error message.");
+    super(ERROR, "Internal error: Compilation failed but JavaCompiler reported no error message.");
   }
 }

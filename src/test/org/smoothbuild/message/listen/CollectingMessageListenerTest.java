@@ -4,15 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
 import org.junit.Test;
 import org.mockito.InOrder;
-import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.message.message.InfoMessage;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WarningMessage;
 
 public class CollectingMessageListenerTest {
-  ErrorMessage errorMessage = new ErrorMessage("error");
+  Message errorMessage = new Message(ERROR, "error");
   WarningMessage warningMessage = new WarningMessage("warning");
   InfoMessage infoMessage = new InfoMessage("warning");
 

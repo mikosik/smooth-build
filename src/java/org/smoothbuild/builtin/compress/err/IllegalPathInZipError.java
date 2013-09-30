@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.compress.err;
 
-import org.smoothbuild.message.message.ErrorMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class IllegalPathInZipError extends ErrorMessage {
+import org.smoothbuild.message.message.Message;
+
+public class IllegalPathInZipError extends Message {
   public IllegalPathInZipError(String fileName) {
-    super("File in a zip file has illegal name = '" + fileName + "'");
+    super(ERROR, "File in a zip file has illegal name = '" + fileName + "'");
   }
 }

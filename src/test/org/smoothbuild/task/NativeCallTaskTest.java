@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 
@@ -16,7 +17,6 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.task.err.NullResultError;
@@ -48,8 +48,8 @@ public class NativeCallTaskTest {
     when(subTask.result()).thenReturn(argValue);
 
     String name = "param";
-    NativeCallTask nativeCallTask = new NativeCallTask(testSignature(), codeLocation, invoker, ImmutableMap.of(
-        name, subTask));
+    NativeCallTask nativeCallTask = new NativeCallTask(testSignature(), codeLocation, invoker,
+        ImmutableMap.of(name, subTask));
 
     String result = "result";
     when(invoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenReturn(result);
@@ -105,9 +105,9 @@ public class NativeCallTaskTest {
     assertExceptionIsReportedAsProblem(exception, UnexpectedError.class);
   }
 
-  private static class MyError extends ErrorMessage {
+  private static class MyError extends Message {
     public MyError() {
-      super("message");
+      super(ERROR, "message");
     }
   }
 
