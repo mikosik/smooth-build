@@ -2,22 +2,22 @@ package org.smoothbuild.task;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.TaskLocation;
 
 public abstract class AbstractTask implements Task {
-  private final CallLocation callLocation;
+  private final TaskLocation taskLocation;
   private Object result;
   private boolean resultCalculated;
 
-  public AbstractTask(CallLocation callLocation) {
-    this.callLocation = callLocation;
+  public AbstractTask(TaskLocation taskLocation) {
+    this.taskLocation = taskLocation;
     this.result = null;
     this.resultCalculated = false;
   }
 
   @Override
-  public CallLocation location() {
-    return callLocation;
+  public TaskLocation location() {
+    return taskLocation;
   }
 
   @Override

@@ -5,7 +5,7 @@ import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.TaskLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
 
@@ -43,7 +43,7 @@ public class AbstractTaskTest {
   }
 
   public static class MyAbstractTask extends AbstractTask {
-    public static final CallLocation LOCATION = CallLocation.callLocation(simpleName("name"),
+    public static final TaskLocation LOCATION = TaskLocation.taskLocation(simpleName("name"),
         codeLocation(1, 2, 4));
 
     public MyAbstractTask() {

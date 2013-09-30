@@ -2,7 +2,7 @@ package org.smoothbuild.task;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.TaskLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
 
@@ -16,7 +16,7 @@ public class PrecalculatedTask implements Task {
   }
 
   @Override
-  public CallLocation location() {
+  public TaskLocation location() {
     throw new UnsupportedOperationException(PrecalculatedTask.class.getSimpleName()
         + " does not have location.");
   }
