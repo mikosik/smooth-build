@@ -1,9 +1,9 @@
 package org.smoothbuild.task.err;
 
-import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.TaskLocation;
 
 public class ReflexiveInternalError extends InvocationError {
-  public ReflexiveInternalError(CallLocation callLocation, Throwable e) {
-    super(callLocation, e);
+  public ReflexiveInternalError(TaskLocation taskLocation, Throwable e) {
+    super(taskLocation, e);
   }
 }

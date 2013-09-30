@@ -5,7 +5,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.message.CallLocation.callLocation;
+import static org.smoothbuild.message.message.TaskLocation.taskLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.smoothbuild.message.listen.MessageListener;
-import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.TaskLocation;
 import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.Path;
@@ -27,11 +27,11 @@ public class SandboxImplTest {
   Path root = path("my/root");
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
-  CallLocation callLocation = callLocation(simpleName("name"), codeLocation(1, 2, 4));
+  TaskLocation taskLocation = taskLocation(simpleName("name"), codeLocation(1, 2, 4));
 
   TestFileSystem fileSystem = new TestFileSystem();
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, root, callLocation);
+  SandboxImpl sandbox = new SandboxImpl(fileSystem, root, taskLocation);
 
   @Test
   public void createFileCreatesFileOnFileSystem() throws Exception {

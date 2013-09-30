@@ -1,6 +1,6 @@
 package org.smoothbuild.task;
 
-import static org.smoothbuild.message.message.CallLocation.callLocation;
+import static org.smoothbuild.message.message.TaskLocation.taskLocation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class InvokeTask extends AbstractTask {
 
   public InvokeTask(Signature signature, CodeLocation codeLocation, Invoker invoker,
       Map<String, Task> dependencies) {
-    super(callLocation(signature.name(), codeLocation));
+    super(taskLocation(signature.name(), codeLocation));
     this.dependencies = ImmutableMap.copyOf(dependencies);
     this.signature = signature;
     this.invoker = invoker;

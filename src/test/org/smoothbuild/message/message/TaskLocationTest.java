@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Name;
 import org.testory.common.Closure;
 
-public class CallLocationTest {
+public class TaskLocationTest {
   Name name;
   CodeLocation codeLocation;
 
@@ -32,8 +32,8 @@ public class CallLocationTest {
 
   private static Closure callLocation(final Name name, final CodeLocation codeLocation) {
     return new Closure() {
-      public CallLocation invoke() {
-        return CallLocation.callLocation(name, codeLocation);
+      public TaskLocation invoke() {
+        return TaskLocation.taskLocation(name, codeLocation);
       }
     };
   }
