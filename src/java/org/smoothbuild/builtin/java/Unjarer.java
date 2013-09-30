@@ -1,5 +1,8 @@
 package org.smoothbuild.builtin.java;
 
+import static com.google.common.base.Predicates.and;
+import static com.google.common.base.Predicates.not;
+import static org.smoothbuild.plugin.api.Path.SEPARATOR;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.plugin.api.Path.validationError;
 
@@ -17,11 +20,13 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 public class Unjarer {
+  private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
   public void unjarFile(File jarFile, MutableFileSet resultFiles) {
@@ -29,12 +34,13 @@ public class Unjarer {
   }
 
   public void unjarFile(File jarFile, Predicate<String> nameFilter, MutableFileSet resultFiles) {
+    Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
         JarEntry entry = null;
         while ((entry = jarInputStream.getNextJarEntry()) != null) {
           String fileName = entry.getName();
-          if (nameFilter.apply(fileName)) {
+          if (filter.apply(fileName)) {
             unjarEntry(jarInputStream, fileName, resultFiles);
           }
         }
