@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.task.err.DuplicatePathError;
 import org.smoothbuild.testing.plugin.internal.TestFile;
@@ -15,6 +16,40 @@ import org.smoothbuild.testing.plugin.internal.TestFileSet;
 import com.google.common.collect.Iterables;
 
 public class FileSetSmoothTest extends IntegrationTestCase {
+
+  @Test
+  public void setWithTrailingCommaIsAllowed() throws Exception {
+    Path dir = path("destination/dir");
+    TestFile file1 = file(path("file/path/file1.txt"));
+    TestFile file2 = file(path("file/path/file2.txt"));
+    file1.createContentWithFilePath();
+    file2.createContentWithFilePath();
+
+    StringBuilder builder = new StringBuilder();
+    builder.append("myfiles : [ file(" + file1.path() + "), file(" + file2.path() + "), ];\n");
+    builder.append("run : myfiles | save(" + dir + ");\n");
+    script(builder.toString());
+
+    // when
+    smoothRunner.run("run");
+
+    // then
+    messages.assertNoProblems();
+    TestFileSet resultFiles = fileSet(dir);
+    assertThat(Iterables.size(resultFiles)).isEqualTo(2);
+  }
+
+  @Test
+  public void setWithOnlyCommaIsForbidden() throws Exception {
+    // given
+    script("run : [ , ];");
+
+    // when
+    smoothRunner.run("run");
+
+    // then
+    messages.assertOnlyProblem(SyntaxError.class);
+  }
 
   @Test
   public void saveFileSetWithTwoFiles() throws IOException {

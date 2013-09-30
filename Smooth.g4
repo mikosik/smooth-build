@@ -7,7 +7,7 @@ expression : call | STRING | set;
 call: functionName ( '(' argList? ')' )? ;
 argList: arg ( ',' arg )* ;
 arg: ( paramName '=' )? expression ; 
-set: '[' ( setElem (',' setElem)* )?  ']' ;
+set: '[' ( setElem (',' setElem)* (',')? )?  ']' ;
 setElem: call | STRING ;
 
 
