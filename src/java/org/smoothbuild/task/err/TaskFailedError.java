@@ -1,11 +1,13 @@
 package org.smoothbuild.task.err;
 
-import org.smoothbuild.message.message.TaskLocation;
-import org.smoothbuild.message.message.InfoCodeMessage;
+import static org.smoothbuild.message.listen.MessageType.INFO;
 
-public class TaskFailedError extends InfoCodeMessage {
+import org.smoothbuild.message.message.CodeMessage;
+import org.smoothbuild.message.message.TaskLocation;
+
+public class TaskFailedError extends CodeMessage {
   public TaskFailedError(TaskLocation taskLocation) {
-    super(taskLocation.location(), createMessage(taskLocation));
+    super(INFO, taskLocation.location(), createMessage(taskLocation));
   }
 
   private static String createMessage(TaskLocation taskLocation) {
