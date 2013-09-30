@@ -12,6 +12,10 @@ public class CodeMessage extends Message {
     this.codeLocation = checkNotNull(codeLocation);
   }
 
+  public CodeLocation codeLocation() {
+    return codeLocation;
+  }
+
   @Override
   public String toString() {
     return type().toString() + codeLocation.toString() + ": " + message();
