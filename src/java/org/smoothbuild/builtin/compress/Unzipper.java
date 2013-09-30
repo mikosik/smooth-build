@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.compress;
 
+import static org.smoothbuild.plugin.api.Path.SEPARATOR;
 import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.plugin.api.Path.validationError;
 
@@ -16,8 +17,12 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.util.EndsWithPredicate;
+
+import com.google.common.base.Predicate;
 
 public class Unzipper {
+  private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
   public void unzipFile(File zipFile, MutableFileSet resultFiles) {
@@ -25,7 +30,9 @@ public class Unzipper {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
-          unzipEntry(zipInputStream, entry, resultFiles);
+          if (!IS_DIRECTORY.apply(entry.getName())) {
+            unzipEntry(zipInputStream, entry, resultFiles);
+          }
         }
       }
     } catch (IOException e) {

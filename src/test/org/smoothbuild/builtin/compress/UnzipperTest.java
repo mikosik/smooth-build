@@ -17,9 +17,12 @@ import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.plugin.internal.TestFileSet;
 
+import com.google.common.collect.Iterables;
+
 public class UnzipperTest {
   String fileName1 = "file/path/file1.txt";
   String fileName2 = "file/path/file2.txt";
+  String directoryName = "my/directory/";
 
   TestFileSet resultFileSet = new TestFileSet();
   Unzipper unzipper = new Unzipper();
@@ -36,6 +39,16 @@ public class UnzipperTest {
       assertContent(file.openInputStream(), file.path().value());
     }
     assertThat(fileCount).isEqualTo(2);
+  }
+
+  @Test
+  public void unzipperIgnoresDirectories() throws Exception {
+    TestFile jarFile = zippedFiles(fileName1, directoryName);
+
+    unzipper.unzipFile(jarFile, resultFileSet);
+
+    assertThat(Iterables.size(resultFileSet)).isEqualTo(1);
+    assertThat(resultFileSet.iterator().next().path()).isEqualTo(path(fileName1));
   }
 
   @Test
