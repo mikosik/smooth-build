@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.file;
 
+import org.smoothbuild.builtin.file.err.DuplicateMergedPathError;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.MutableFile;
@@ -7,7 +8,6 @@ import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.task.err.DuplicatePathError;
 
 public class MergeFunction {
 
@@ -43,7 +43,7 @@ public class MergeFunction {
       for (File file : params.with()) {
         MutableFile destination = result.createFile(file.path());
         if (result.contains(file.path())) {
-          sandbox.report(new DuplicatePathError(file.path()));
+          sandbox.report(new DuplicateMergedPathError(file.path()));
         }
         destination.setContent(file);
       }
