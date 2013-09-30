@@ -4,7 +4,7 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
-import org.smoothbuild.builtin.java.javac.err.JavaCompilerError;
+import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.message.listen.MessageListener;
 
 public class ReportingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
@@ -18,7 +18,7 @@ public class ReportingDiagnosticListener implements DiagnosticListener<JavaFileO
 
   @Override
   public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-    messages.report(new JavaCompilerError(diagnostic.toString()));
+    messages.report(new JavaCompilerMessage(diagnostic));
     errorReported = true;
   }
 

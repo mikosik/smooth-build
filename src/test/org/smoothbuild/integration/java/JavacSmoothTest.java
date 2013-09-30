@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.javac.err.JavaCompilerError;
+import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.parse.ScriptBuilder;
@@ -26,7 +26,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + file.path() + ") ] | javac ;");
     smoothRunner.run("run");
 
-    messages.assertOnlyProblem(JavaCompilerError.class);
+    messages.assertOnlyProblem(JavaCompilerMessage.class);
   }
 
   @Test
