@@ -7,7 +7,6 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.message.message.InfoMessage;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 
@@ -59,7 +58,7 @@ public class TestMessageListenerTest {
 
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneInfoExistsFailsWhenOneProblemOfWrongTypeExists() {
-    testingProblemListener.report(new InfoMessage("message"));
+    testingProblemListener.report(new Message(INFO, "message"));
     testingProblemListener.assertOnlyInfo(MyInfo.class);
   }
 
