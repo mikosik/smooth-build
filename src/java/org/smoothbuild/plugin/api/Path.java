@@ -8,8 +8,8 @@ import com.google.common.collect.ImmutableList.Builder;
  * Path within a project.
  */
 public class Path {
-  private static final char SEPARATOR_CHARACTER = '/';
-  private static final String SEPARATOR = new String(new char[] { SEPARATOR_CHARACTER });
+  public static final char SEPARATOR_CHARACTER = '/';
+  public static final String SEPARATOR = new String(new char[] { SEPARATOR_CHARACTER });
   private static final String ROOT_STRING = ".";
   private static final Path ROOT_PATH = new Path(ROOT_STRING);
 
