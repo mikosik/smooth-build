@@ -6,6 +6,7 @@ import org.smoothbuild.message.listen.CollectingMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Path;
@@ -53,7 +54,7 @@ public class SandboxImpl implements Sandbox {
     // will be possible when each Task will have parent field pointing in
     // direction to nearest root node (build run can have more than one
     // task-to-run [soon]).
-    messages.report(message);
+    messages.report(new WrappedCodeMessage(message, callLocation.location()));
   }
 
   public void reportCollectedMessagesTo(MessageListener listener) {
