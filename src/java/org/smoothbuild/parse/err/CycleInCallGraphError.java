@@ -1,10 +1,12 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.message.message.ErrorCodeMessage;
-import org.smoothbuild.message.message.CodeLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class CycleInCallGraphError extends ErrorCodeMessage {
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
+
+public class CycleInCallGraphError extends CodeMessage {
   public CycleInCallGraphError(CodeLocation codeLocation, String cycle) {
-    super(codeLocation, "Function call graph contains cycle:\n" + cycle);
+    super(ERROR, codeLocation, "Function call graph contains cycle:\n" + cycle);
   }
 }

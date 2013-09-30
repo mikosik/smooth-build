@@ -1,13 +1,15 @@
 package org.smoothbuild.task.err;
 
+import static org.smoothbuild.message.listen.MessageType.ERROR;
+
+import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.message.message.TaskLocation;
-import org.smoothbuild.message.message.ErrorCodeMessage;
 
 import com.google.common.base.Throwables;
 
-public class InvocationError extends ErrorCodeMessage {
+public class InvocationError extends CodeMessage {
   public InvocationError(TaskLocation taskLocation, Throwable e) {
-    super(taskLocation.location(), "Invoking function " + taskLocation.name()
+    super(ERROR, taskLocation.location(), "Invoking function " + taskLocation.name()
         + " caused internal exception:\n" + Throwables.getStackTraceAsString(e));
   }
 }

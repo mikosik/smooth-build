@@ -1,10 +1,12 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.message.message.ErrorCodeMessage;
-import org.smoothbuild.message.message.CodeLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class SyntaxError extends ErrorCodeMessage {
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
+
+public class SyntaxError extends CodeMessage {
   public SyntaxError(CodeLocation codeLocation, String message) {
-    super(codeLocation, message);
+    super(ERROR, codeLocation, message);
   }
 }

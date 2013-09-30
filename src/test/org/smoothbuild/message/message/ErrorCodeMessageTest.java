@@ -9,6 +9,6 @@ import org.junit.Test;
 public class ErrorCodeMessageTest {
   @Test
   public void type() {
-    assertThat(new ErrorCodeMessage(codeLocation(1, 2, 3), "message").type()).isEqualTo(ERROR);
+    assertThat(new CodeMessage(ERROR, codeLocation(1, 2, 3), "message").type()).isEqualTo(ERROR);
   }
 }

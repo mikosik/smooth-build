@@ -3,6 +3,7 @@ package org.smoothbuild.parse.def;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.def.Argument.namedArg;
@@ -37,8 +38,8 @@ import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.message.listen.MessageListener;
-import org.smoothbuild.message.message.ErrorCodeMessage;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.SymbolTable;
 import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
@@ -246,7 +247,7 @@ public class DefinedFunctionsCreator {
         return new StringNode(unescaped(string));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
-        messages.report(new ErrorCodeMessage(location, e.getMessage()));
+        messages.report(new CodeMessage(ERROR, location, e.getMessage()));
         return new InvalidNode(STRING);
       }
     }

@@ -1,14 +1,16 @@
 package org.smoothbuild.parse.def.err;
 
+import static org.smoothbuild.message.listen.MessageType.ERROR;
+
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.message.message.ErrorCodeMessage;
+import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.parse.def.AssignmentList;
 import org.smoothbuild.parse.def.TypedParamsPool;
 
-public class AmbiguousNamelessArgsError extends ErrorCodeMessage {
+public class AmbiguousNamelessArgsError extends CodeMessage {
 
   public AmbiguousNamelessArgsError(AssignmentList assignmentList, Set<Argument> availableArgs,
       TypedParamsPool availableTypedParams) {
@@ -17,8 +19,8 @@ public class AmbiguousNamelessArgsError extends ErrorCodeMessage {
 
   public AmbiguousNamelessArgsError(AssignmentList assignmentList, List<Argument> availableArgs,
       TypedParamsPool availableTypedParams) {
-    super(availableArgs.iterator().next().codeLocation(), message(assignmentList, availableArgs,
-        availableTypedParams));
+    super(ERROR, availableArgs.iterator().next().codeLocation(), message(assignmentList,
+        availableArgs, availableTypedParams));
   }
 
   private static String message(AssignmentList assignmentList, List<Argument> availableArgs,

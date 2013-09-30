@@ -1,11 +1,13 @@
 package org.smoothbuild.parse.err;
 
-import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.message.ErrorCodeMessage;
-import org.smoothbuild.message.message.CodeLocation;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class OverridenImportError extends ErrorCodeMessage {
+import org.smoothbuild.function.base.Name;
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
+
+public class OverridenImportError extends CodeMessage {
   public OverridenImportError(CodeLocation codeLocation, String name, Name imported) {
-    super(codeLocation, "Function '" + name + "' overrides imported " + imported + ".");
+    super(ERROR, codeLocation, "Function '" + name + "' overrides imported " + imported + ".");
   }
 }

@@ -1,11 +1,13 @@
 package org.smoothbuild.task.err;
 
-import org.smoothbuild.message.message.TaskLocation;
-import org.smoothbuild.message.message.ErrorCodeMessage;
+import static org.smoothbuild.message.listen.MessageType.ERROR;
 
-public class NullResultError extends ErrorCodeMessage {
+import org.smoothbuild.message.message.CodeMessage;
+import org.smoothbuild.message.message.TaskLocation;
+
+public class NullResultError extends CodeMessage {
   public NullResultError(TaskLocation taskLocation) {
-    super(taskLocation.location(), "Faulty implementation of " + taskLocation.name()
+    super(ERROR, taskLocation.location(), "Faulty implementation of " + taskLocation.name()
         + " function : 'null' was returned but no error reported.");
   }
 }
