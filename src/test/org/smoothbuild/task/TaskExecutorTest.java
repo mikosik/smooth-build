@@ -7,8 +7,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.message.message.TaskLocation.taskLocation;
 
 import org.junit.Test;

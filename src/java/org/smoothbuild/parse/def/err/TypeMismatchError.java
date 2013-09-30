@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.def.err;
 
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeMessage;

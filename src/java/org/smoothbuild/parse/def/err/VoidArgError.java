@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.def.err;
 
 import static org.smoothbuild.function.base.Type.VOID;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.def.Argument;

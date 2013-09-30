@@ -1,6 +1,7 @@
 package org.smoothbuild.message.listen;
 
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.MessageType;
 
 public class DetectingErrorsMessageListener extends ForwardingMessageListener {
   private boolean detected = false;

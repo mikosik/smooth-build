@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.def.err;
 
 import static org.smoothbuild.function.base.Param.paramsToString;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import java.util.Set;
 

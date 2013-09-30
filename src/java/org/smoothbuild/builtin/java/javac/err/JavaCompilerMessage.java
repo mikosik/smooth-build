@@ -3,8 +3,8 @@ package org.smoothbuild.builtin.java.javac.err;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-import org.smoothbuild.message.listen.MessageType;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.MessageType;
 
 public class JavaCompilerMessage extends Message {
   public JavaCompilerMessage(Diagnostic<? extends JavaFileObject> diagnostic) {

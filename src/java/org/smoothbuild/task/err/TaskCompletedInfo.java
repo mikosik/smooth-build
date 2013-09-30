@@ -1,7 +1,7 @@
 package org.smoothbuild.task.err;
 
 import static com.google.common.base.Strings.padEnd;
-import static org.smoothbuild.message.listen.MessageType.INFO;
+import static org.smoothbuild.message.message.MessageType.INFO;
 
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.message.CodeMessage;

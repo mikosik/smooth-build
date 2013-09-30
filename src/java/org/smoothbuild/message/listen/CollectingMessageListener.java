@@ -3,6 +3,7 @@ package org.smoothbuild.message.listen;
 import java.util.List;
 
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.MessageType;
 
 import com.google.common.collect.Lists;
 

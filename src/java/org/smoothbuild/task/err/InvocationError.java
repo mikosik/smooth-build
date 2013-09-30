@@ -1,6 +1,6 @@
 package org.smoothbuild.task.err;
 
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.message.message.TaskLocation;

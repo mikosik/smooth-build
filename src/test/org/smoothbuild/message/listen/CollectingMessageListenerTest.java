@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
-import static org.smoothbuild.message.listen.MessageType.INFO;
-import static org.smoothbuild.message.listen.MessageType.WARNING;
+import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.INFO;
+import static org.smoothbuild.message.message.MessageType.WARNING;
 
 import org.junit.Test;
 import org.mockito.InOrder;

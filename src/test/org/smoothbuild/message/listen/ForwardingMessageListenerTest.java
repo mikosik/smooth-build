@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.MessageType;
 
 public class ForwardingMessageListenerTest {
 

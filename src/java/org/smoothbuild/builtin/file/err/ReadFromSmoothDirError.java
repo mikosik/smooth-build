@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file.err;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.Path;

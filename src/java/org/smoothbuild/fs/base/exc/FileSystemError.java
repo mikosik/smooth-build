@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.base.exc;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import java.io.IOException;
 
