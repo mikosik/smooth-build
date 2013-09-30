@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.api.Path.path;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.file.err.DuplicateMergedPathError;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.task.err.DuplicatePathError;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 import org.smoothbuild.testing.plugin.internal.TestFile;
 
@@ -60,6 +60,6 @@ public class MergeSmoothTest extends IntegrationTestCase {
     smoothRunner.run("run");
 
     // then
-    messages.assertOnlyProblem(DuplicatePathError.class);
+    messages.assertOnlyProblem(DuplicateMergedPathError.class);
   }
 }
