@@ -5,17 +5,17 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.message.listen.MessageType.ERROR;
+import static org.smoothbuild.message.listen.MessageType.INFO;
 import static org.smoothbuild.message.listen.MessageType.WARNING;
 
 import org.junit.Test;
 import org.mockito.InOrder;
-import org.smoothbuild.message.message.InfoMessage;
 import org.smoothbuild.message.message.Message;
 
 public class CollectingMessageListenerTest {
   Message errorMessage = new Message(ERROR, "error");
   Message warningMessage = new Message(WARNING, "warning");
-  InfoMessage infoMessage = new InfoMessage("warning");
+  Message infoMessage = new Message(INFO, "warning");
 
   CollectingMessageListener collectingMessageListener = new CollectingMessageListener();
 

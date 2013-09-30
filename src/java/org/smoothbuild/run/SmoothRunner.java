@@ -1,5 +1,6 @@
 package org.smoothbuild.run;
 
+import static org.smoothbuild.message.listen.MessageType.INFO;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import java.io.InputStream;
@@ -17,7 +18,7 @@ import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.ErrorMessageException;
-import org.smoothbuild.message.message.InfoMessage;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
@@ -73,9 +74,9 @@ public class SmoothRunner {
     }
 
     if (messages.errorDetected()) {
-      messages.report(new InfoMessage("BUILD FAILED"));
+      messages.report(new Message(INFO, "BUILD FAILED"));
     } else {
-      messages.report(new InfoMessage("SUCCESS"));
+      messages.report(new Message(INFO, "SUCCESS"));
     }
   }
 
