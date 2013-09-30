@@ -43,7 +43,7 @@ public class PackagedJavaFileObjectsTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(DuplicateClassFileError.class);
+      assertThat(e.errorMessage()).isInstanceOf(DuplicateClassFileError.class);
     }
   }
 }

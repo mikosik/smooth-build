@@ -3,12 +3,12 @@ package org.smoothbuild.parse.def.err;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.message.message.CodeError;
+import org.smoothbuild.message.message.ErrorCodeMessage;
 import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.parse.def.AssignmentList;
 import org.smoothbuild.parse.def.TypedParamsPool;
 
-public class AmbiguousNamelessArgsError extends CodeError {
+public class AmbiguousNamelessArgsError extends ErrorCodeMessage {
 
   public AmbiguousNamelessArgsError(AssignmentList assignmentList, Set<Argument> availableArgs,
       TypedParamsPool availableTypedParams) {

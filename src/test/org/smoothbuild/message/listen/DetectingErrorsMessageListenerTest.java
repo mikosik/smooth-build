@@ -5,9 +5,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.Warning;
+import org.smoothbuild.message.message.WarningMessage;
 
 public class DetectingErrorsMessageListenerTest {
   MessageListener wrapped = mock(MessageListener.class);
@@ -29,13 +29,13 @@ public class DetectingErrorsMessageListenerTest {
 
   @Test
   public void errorIsDetectedAfterAddingError() throws Exception {
-    listener.report(new Error("message"));
+    listener.report(new ErrorMessage("message"));
     assertThat(listener.errorDetected()).isTrue();
   }
 
   @Test
   public void errorIsNotDetectedAfterAddingWarning() throws Exception {
-    listener.report(new Warning("message"));
+    listener.report(new WarningMessage("message"));
     assertThat(listener.errorDetected()).isFalse();
   }
 }

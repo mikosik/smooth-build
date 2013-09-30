@@ -48,7 +48,7 @@ public class UnzipperTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.error()).isInstanceOf(IllegalPathInZipError.class);
+      assertThat(e.errorMessage()).isInstanceOf(IllegalPathInZipError.class);
     }
   }
 

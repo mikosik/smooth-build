@@ -47,7 +47,7 @@ public class InvokeTask extends AbstractTask {
       Throwable cause = e.getCause();
       if (cause instanceof ErrorMessageException) {
         ErrorMessageException errorMessageException = (ErrorMessageException) cause;
-        sandbox.report(errorMessageException.error());
+        sandbox.report(errorMessageException.errorMessage());
       } else {
         sandbox.report(new UnexpectedError(location(), cause));
       }

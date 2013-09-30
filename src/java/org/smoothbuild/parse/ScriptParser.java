@@ -22,7 +22,7 @@ import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.message.listen.MessageListener;
-import org.smoothbuild.message.message.CodeError;
+import org.smoothbuild.message.message.ErrorCodeMessage;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
@@ -97,7 +97,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      messages.report(new CodeError(locationOf(token), message));
+      messages.report(new ErrorCodeMessage(locationOf(token), message));
     }
   }
 }

@@ -17,7 +17,7 @@ import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.ErrorMessageException;
-import org.smoothbuild.message.message.Info;
+import org.smoothbuild.message.message.InfoMessage;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
@@ -69,13 +69,13 @@ public class SmoothRunner {
       CodeLocation ignored = codeLocation(0, 0, 0);
       taskExecutor.execute(messages, function.generateTask(Empty.stringTaskMap(), ignored));
     } catch (ErrorMessageException e) {
-      messages.report(e.error());
+      messages.report(e.errorMessage());
     }
 
     if (messages.errorDetected()) {
-      messages.report(new Info("BUILD FAILED"));
+      messages.report(new InfoMessage("BUILD FAILED"));
     } else {
-      messages.report(new Info("SUCCESS"));
+      messages.report(new InfoMessage("SUCCESS"));
     }
   }
 

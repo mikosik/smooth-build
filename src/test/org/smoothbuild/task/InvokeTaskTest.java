@@ -16,7 +16,7 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.ErrorMessage;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.task.err.NullResultError;
@@ -105,7 +105,7 @@ public class InvokeTaskTest {
     assertExceptionIsReportedAsProblem(exception, UnexpectedError.class);
   }
 
-  private static class MyError extends Error {
+  private static class MyError extends ErrorMessage {
     public MyError() {
       super("message");
     }

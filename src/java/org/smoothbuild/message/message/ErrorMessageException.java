@@ -2,14 +2,14 @@ package org.smoothbuild.message.message;
 
 @SuppressWarnings("serial")
 public class ErrorMessageException extends RuntimeException {
-  private final Error error;
+  private final ErrorMessage errorMessage;
 
-  public ErrorMessageException(Error error) {
-    super(error.message());
-    this.error = error;
+  public ErrorMessageException(ErrorMessage errorMessage) {
+    super(errorMessage.message());
+    this.errorMessage = errorMessage;
   }
 
-  public Error error() {
-    return error;
+  public ErrorMessage errorMessage() {
+    return errorMessage;
   }
 }

@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ErrorMessageExceptionTest {
-  Error errorMessage;
+  ErrorMessage errorMessage;
   ErrorMessageException exception;
 
   @Before
@@ -21,7 +21,7 @@ public class ErrorMessageExceptionTest {
   @Test
   public void test() {
     given(exception = new ErrorMessageException(errorMessage));
-    when(exception).error();
+    when(exception).errorMessage();
     thenReturned(sameInstance(errorMessage));
   }
 }
