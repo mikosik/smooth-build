@@ -3,14 +3,18 @@ package org.smoothbuild.testing.message;
 import static org.smoothbuild.message.listen.MessageType.ERROR;
 import static org.smoothbuild.message.listen.MessageType.INFO;
 import static org.smoothbuild.message.listen.MessageType.WARNING;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.InfoMessage;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WarningMessage;
+import org.smoothbuild.message.message.WrappedCodeMessage;
 
 public class TestMessageListenerTest {
   TestMessageListener testingProblemListener = new TestMessageListener();
+  CodeLocation location = codeLocation(1, 2, 4);
 
   @Test(expected = AssertionError.class)
   public void problemsFoundFailsWhenNothingFound() throws Exception {
@@ -82,6 +86,27 @@ public class TestMessageListenerTest {
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneProblemExistsFailsWhenOneProblemOfWrongTypeExists() {
     testingProblemListener.report(new WarningMessage("message"));
+
+    testingProblemListener.assertOnlyProblem(MyProblem.class);
+  }
+
+  @Test
+  public void assertingThatOnlyOneProblemExistsSucceedsWhenWrappedOneExists() {
+    testingProblemListener.report(new WrappedCodeMessage(new MyProblem(), location));
+    testingProblemListener.assertOnlyProblem(MyProblem.class);
+  }
+
+  @Test(expected = AssertionError.class)
+  public void assertingThatOnlyOneProblemExistsFailsWhenTwoWrappedProblemsExist() {
+    testingProblemListener.report(new WrappedCodeMessage(new MyProblem(), location));
+    testingProblemListener.report(new WrappedCodeMessage(new MyProblem(), location));
+
+    testingProblemListener.assertOnlyProblem(MyProblem.class);
+  }
+
+  @Test(expected = AssertionError.class)
+  public void assertingThatOnlyOneProblemExistsFailsWhenOneWrappedProblemOfWrongTypeExists() {
+    testingProblemListener.report(new WrappedCodeMessage(new WarningMessage(""), location));
 
     testingProblemListener.assertOnlyProblem(MyProblem.class);
   }
