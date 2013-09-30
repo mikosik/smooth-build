@@ -8,7 +8,6 @@ import org.smoothbuild.message.message.Error;
 
 import com.google.common.base.Throwables;
 
-@SuppressWarnings("serial")
 public class FileSystemError extends Error {
   public FileSystemError(Throwable e) {
     this(createMessage(e));

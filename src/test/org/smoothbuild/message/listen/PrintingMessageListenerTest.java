@@ -20,7 +20,6 @@ public class PrintingMessageListenerTest {
     verify(printStream).println(message);
   }
 
-  @SuppressWarnings("serial")
   public static class MyMessage extends Message {
     private final String toStrigValue;
 

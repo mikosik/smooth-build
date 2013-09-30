@@ -11,6 +11,7 @@ import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.PathTest;
@@ -25,8 +26,9 @@ public class FileFunctionTest {
     try {
       runExecute(params(BUILD_DIR.value()));
       fail("exception should be thrown");
-    } catch (ReadFromSmoothDirError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -35,8 +37,9 @@ public class FileFunctionTest {
     try {
       runExecute(params(BUILD_DIR.append(path("abc")).value()));
       fail("exception should be thrown");
-    } catch (ReadFromSmoothDirError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -47,8 +50,9 @@ public class FileFunctionTest {
       try {
         runExecute(params(path));
         fail("exception should be thrown");
-      } catch (IllegalPathError e) {
+      } catch (ErrorMessageException e) {
         // expected
+        assertThat(e.error()).isInstanceOf(IllegalPathError.class);
       }
     }
   }
@@ -59,8 +63,9 @@ public class FileFunctionTest {
     try {
       runExecute(params("some/path/file.txt"));
       fail("exception should be thrown");
-    } catch (NoSuchPathError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(NoSuchPathError.class);
     }
   }
 
@@ -73,8 +78,9 @@ public class FileFunctionTest {
     try {
       runExecute(params(dir.value()));
       fail("exception should be thrown");
-    } catch (FileParamIsADirError e) {
+    } catch (ErrorMessageException e) {
       // expected
+      assertThat(e.error()).isInstanceOf(FileParamIsADirError.class);
     }
   }
 

@@ -16,6 +16,7 @@ import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.fs.base.exc.FileSystemError;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Required;
@@ -53,7 +54,7 @@ public class JavacFunction {
 
     public FileSet execute() {
       if (compiler == null) {
-        throw new NoCompilerAvailableError();
+        throw new ErrorMessageException(new NoCompilerAvailableError());
       }
       return compile(params.sources());
     }

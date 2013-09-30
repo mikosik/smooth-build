@@ -17,6 +17,7 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Error;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
@@ -93,7 +94,8 @@ public class InvokeTaskTest {
 
   @Test
   public void messageThrownIsReported() throws Exception {
-    InvocationTargetException exception = new InvocationTargetException(new MyError());
+    InvocationTargetException exception = new InvocationTargetException(new ErrorMessageException(
+        new MyError()));
     assertExceptionIsReportedAsProblem(exception, MyError.class);
   }
 
@@ -103,7 +105,6 @@ public class InvokeTaskTest {
     assertExceptionIsReportedAsProblem(exception, UnexpectedError.class);
   }
 
-  @SuppressWarnings("serial")
   private static class MyError extends Error {
     public MyError() {
       super("message");

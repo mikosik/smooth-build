@@ -4,8 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.message.listen.MessageType;
 
-@SuppressWarnings("serial")
-public class Message extends RuntimeException {
+public class Message {
   private final MessageType type;
   private final String message;
 

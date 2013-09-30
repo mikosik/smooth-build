@@ -12,6 +12,7 @@ import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.MutableFile;
 import org.smoothbuild.plugin.api.MutableFileSet;
@@ -46,11 +47,11 @@ public class Unjarer {
   private File unjarEntry(JarInputStream jarInputStream, String fileName, MutableFileSet resultFiles) {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new IllegalPathInJarError(fileName);
+      throw new ErrorMessageException(new IllegalPathInJarError(fileName));
     }
     Path path = path(fileName);
     if (resultFiles.contains(path)) {
-      throw new DuplicatePathInJarError(path);
+      throw new ErrorMessageException(new DuplicatePathInJarError(path));
     }
     MutableFile file = resultFiles.createFile(path);
     try {
