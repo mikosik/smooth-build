@@ -14,6 +14,13 @@ public class CodeMessageTest {
   }
 
   @Test
+  public void testCodeLocation() throws Exception {
+    CodeLocation codeLocation = codeLocation(1, 2, 4);
+    CodeMessage message = new CodeMessage(WARNING, codeLocation, "problem description");
+    assertThat(message.codeLocation()).isEqualTo(codeLocation);
+  }
+
+  @Test
   public void testToString() throws Exception {
     Message message = new CodeMessage(WARNING, codeLocation(1, 2, 4), "problem description");
     assertThat(message.toString()).isEqualTo("WARNING[2:3-4]: problem description");
