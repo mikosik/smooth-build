@@ -5,6 +5,7 @@ import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -14,9 +15,12 @@ import javax.tools.ToolProvider;
 
 import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
+import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
+import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Required;
@@ -25,6 +29,8 @@ import org.smoothbuild.task.SandboxImpl;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 public class JavacFunction {
@@ -34,6 +40,10 @@ public class JavacFunction {
     FileSet sources();
 
     FileSet libs();
+
+    String source();
+
+    String target();
   }
 
   @SmoothFunction("javac")
@@ -42,6 +52,11 @@ public class JavacFunction {
   }
 
   private static class Worker {
+    private static final ImmutableSet<String> SOURCE_VALUES = ImmutableSet.of("1.3", "1.4", "1.5",
+        "5", "1.6", "6", "1.7", "7");
+    private static final ImmutableSet<String> TARGET_VALUES = ImmutableSet.of("1.1", "1.2", "1.3",
+        "1.4", "1.5", "5", "1.6", "6", "1.7", "7");
+
     private final JavaCompiler compiler;
     private final SandboxImpl sandbox;
     private final Parameters params;
@@ -64,11 +79,10 @@ public class JavacFunction {
 
       StringWriter additionalCompilerOutput = new StringWriter();
       ReportingDiagnosticListener diagnostic = new ReportingDiagnosticListener(sandbox);
+      Iterable<String> options = options();
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
       try {
-        // add handling of various compiler options 'source', 'target', etc
-        Iterable<String> options = null;
         Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files);
 
         // run compilation task
@@ -92,6 +106,32 @@ public class JavacFunction {
           sandbox.report(new FileSystemError(e));
         }
       }
+    }
+
+    private Iterable<String> options() {
+      List<String> result = Lists.newArrayList();
+
+      String sourceArg = params.source();
+      if (sourceArg != null) {
+        if (!SOURCE_VALUES.contains(sourceArg)) {
+          Message error = new IllegalSourceParamError(sourceArg, SOURCE_VALUES);
+          throw new ErrorMessageException(error);
+        }
+        result.add("-source");
+        result.add(sourceArg);
+      }
+
+      String targetArg = params.target();
+      if (targetArg != null) {
+        if (!TARGET_VALUES.contains(targetArg)) {
+          Message error = new IllegalTargetParamError(targetArg, TARGET_VALUES);
+          throw new ErrorMessageException(error);
+        }
+        result.add("-target");
+        result.add(targetArg);
+      }
+
+      return result;
     }
 
     private SandboxedJavaFileManager fileManager(ReportingDiagnosticListener diagnostic) {
