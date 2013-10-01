@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
+import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.plugin.api.Path;
@@ -96,6 +98,39 @@ public class JavacSmoothTest extends IntegrationTestCase {
     String method = "myMethod";
     Object result = invoke(classFile, method);
     assertThat(result).isEqualTo("5");
+  }
+
+  @Test
+  public void illegalSourceParamCausesError() throws Exception {
+    TestFile file = file(path("MyClass.java"));
+    file.createContent("public class MyClass {}");
+
+    script("run : [ file(path=" + file.path() + ") ] | javac(source='0.9') ;");
+    smoothRunner.run("run");
+
+    messages.assertOnlyProblem(IllegalSourceParamError.class);
+  }
+
+  @Test
+  public void illegalTargetParamCausesError() throws Exception {
+    TestFile file = file(path("MyClass.java"));
+    file.createContent("public class MyClass {}");
+
+    script("run : [ file(path=" + file.path() + ") ] | javac(target='0.9') ;");
+    smoothRunner.run("run");
+
+    messages.assertOnlyProblem(IllegalTargetParamError.class);
+  }
+
+  @Test
+  public void compilingEnumWithSourceParamSetToTooOldJavaVersionCausesError() throws Exception {
+    TestFile file = file(path("MyClass.java"));
+    file.createContent("public enum MyClass { VALUE }");
+
+    script("run : [ file(path=" + file.path() + ") ] | javac(source='1.4', target='1.4') ;");
+    smoothRunner.run("run");
+
+    messages.assertOnlyProblem(JavaCompilerMessage.class);
   }
 
   private Object invoke(String classFile, String method) throws IOException,
