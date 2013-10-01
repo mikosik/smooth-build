@@ -1,23 +1,31 @@
 package org.smoothbuild.message.message;
 
 import static org.hamcrest.Matchers.sameInstance;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.WARNING;
 import static org.testory.Testory.given;
+import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class WrappedCodeMessageTest {
-  String messageString = "message string";
+  String messageString;
   MessageType type = WARNING;
-  Message message = new Message(type, messageString);
-  CodeLocation codeLocation = codeLocation(1, 2, 4);
+  Message message;
+  CodeLocation codeLocation;
   WrappedCodeMessage wrappedCodeMessage;
+
+  @Before
+  public void before() {
+    givenTest(this);
+    message = new Message(type, messageString);
+  }
 
   @Test
   public void messageReturnsMessageOfWrappedMessage() throws Exception {
+    given(message = new Message(type, messageString));
     given(wrappedCodeMessage = new WrappedCodeMessage(message, codeLocation));
     when(wrappedCodeMessage).message();
     thenReturned(messageString);
@@ -32,6 +40,7 @@ public class WrappedCodeMessageTest {
 
   @Test
   public void typeReturnsTypeOfWrappedMessage() throws Exception {
+    given(message = new Message(type, messageString));
     given(wrappedCodeMessage = new WrappedCodeMessage(message, codeLocation));
     when(wrappedCodeMessage).type();
     thenReturned(type);
