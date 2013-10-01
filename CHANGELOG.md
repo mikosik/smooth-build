@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 0.3.0 (??????????)
+--------------------------
+
+ * added 'source' and 'target' parameters to 'javac' function
+
 Version 0.2.0 (2013.10.01)
 --------------------------
 
