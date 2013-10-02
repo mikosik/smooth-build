@@ -5,7 +5,7 @@ function: functionName ':' pipe ';' ;
 pipe: expression ( p+='|' call )* ;
 expression : call | STRING | set;
 call: functionName ( '(' argList? ')' )? ;
-argList: arg ( ',' arg )* ;
+argList: arg ( ',' arg )* ','? ;
 arg: ( paramName '=' )? expression ; 
 set: '[' ( setElem (',' setElem)* (',')? )?  ']' ;
 setElem: call | STRING ;
