@@ -1,4 +1,4 @@
-package org.smoothbuild.integration.java;
+package org.smoothbuild.builtin.java;
 
 import static com.google.common.io.ByteStreams.toByteArray;
 import static org.assertj.core.api.Assertions.assertThat;

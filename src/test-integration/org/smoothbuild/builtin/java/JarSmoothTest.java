@@ -1,4 +1,4 @@
-package org.smoothbuild.integration.java;
+package org.smoothbuild.builtin.java;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.api.Path.path;

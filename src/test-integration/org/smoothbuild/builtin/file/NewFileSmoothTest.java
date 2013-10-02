@@ -1,4 +1,4 @@
-package org.smoothbuild.integration.file;
+package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.plugin.api.Path.path;
 

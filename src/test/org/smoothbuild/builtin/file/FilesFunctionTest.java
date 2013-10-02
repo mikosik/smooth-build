@@ -15,7 +15,7 @@ import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.plugin.api.PathTest;
+import org.smoothbuild.testing.plugin.api.TestPath;
 import org.smoothbuild.testing.plugin.internal.FileTester;
 import org.smoothbuild.testing.task.TestSandbox;
 
@@ -57,7 +57,7 @@ public class FilesFunctionTest {
 
   @Test
   public void illegalPathsAreReported() {
-    for (String path : PathTest.listOfInvalidPaths()) {
+    for (String path : TestPath.listOfInvalidPaths()) {
       sandbox = new TestSandbox();
       try {
         runExecute(params(path));
