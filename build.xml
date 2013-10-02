@@ -4,7 +4,8 @@
   <property name="dir.src" location="src" />
   <property name="dir.src.java" location="${dir.src}/java" />
   <property name="dir.src.testing" location="${dir.src}/testing" />
-  <property name="dir.src.test" location="${dir.src}/test" />
+  <property name="dir.src.test-unit" location="${dir.src}/test" />
+  <property name="dir.src.test-integration" location="${dir.src}/test-integration" />
   <property name="dir.src.script" location="${dir.src}/script" />
   <property name="dir.build" location="build" />
   <property name="dir.build.java" location="${dir.build}/java" />
@@ -12,7 +13,8 @@
   <property name="dir.build.class" location="${dir.build}/class" />
   <property name="dir.build.class.java" location="${dir.build.class}/java" />
   <property name="dir.build.class.testing" location="${dir.build.class}/testing" />
-  <property name="dir.build.class.test" location="${dir.build.class}/test" />
+  <property name="dir.build.class.test-unit" location="${dir.build.class}/test-unit" />
+  <property name="dir.build.class.test-integration" location="${dir.build.class}/test-integration" />
   <property name="dir.build.jar" location="${dir.build}/jar" />
   <property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth-all.jar" />
   <property name="dir.build.jar.file" location="${dir.build.jar}/smooth-all.jar" />
@@ -44,7 +46,8 @@
     <mkdir dir="${dir.build.java.parser}" />
     <mkdir dir="${dir.build.class.java}" />
     <mkdir dir="${dir.build.class.testing}" />
-    <mkdir dir="${dir.build.class.test}" />
+    <mkdir dir="${dir.build.class.test-unit}" />
+    <mkdir dir="${dir.build.class.test-integration}" />
     <mkdir dir="${dir.build.jar}" />
     <mkdir dir="${dir.build.release}" />
   </target>
@@ -122,7 +125,7 @@
     <pathelement location="${dir.build.class.testing}" />
   </path>
 
-  <!-- compile-test -->
+  <!-- classpath-for-all-tests -->
 
   <path id="classpath.for.test">
     <path refid="classpath.with.testing" />
@@ -136,39 +139,81 @@
     <pathelement location="${lib.testory}" />
   </path>
 
-  <target name="compile-test" depends="compile-testing">
-    <javac destdir="${dir.build.class.test}"
+  <!-- compile-test-unit -->
+
+  <target name="compile-test-unit" depends="compile-testing">
+    <javac destdir="${dir.build.class.test-unit}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
       <compilerarg value="-Xlint:all" />
       <compilerarg value="-Werror" />
-      <src path="${dir.src.test}" />
+      <src path="${dir.src.test-unit}" />
       <classpath>
         <path refid="classpath.for.test" />
       </classpath>
     </javac>
   </target>
 
-  <path id="classpath.with.test">
+  <path id="classpath.with.test-unit">
     <path refid="classpath.for.test" />
-    <pathelement location="${dir.build.class.test}" />
+    <pathelement location="${dir.build.class.test-unit}" />
   </path>
 
-  <!-- test -->
-  <target name="test" depends="compile-test" description="runs all tests">
+  <!-- test-unit -->
+
+  <target name="test-unit" depends="compile-test-unit" description="runs unit tests">
     <junit haltonfailure="yes" reloading="false">
       <classpath>
-        <path refid="classpath.with.test" />
+        <path refid="classpath.with.test-unit" />
       </classpath>
       <formatter type="brief" usefile="false" />
       <batchtest fork="no" todir="${dir.build}" >
-        <fileset dir="${dir.build.class.test}" includes="**/*Test.class"/>
+        <fileset dir="${dir.build.class.test-unit}" includes="**/*Test.class"/>
       </batchtest>
     </junit>
   </target>
 
+  <!-- compile-test-integration -->
+
+  <target name="compile-test-integration" depends="compile-testing">
+    <javac destdir="${dir.build.class.test-integration}"
+           debug="true"
+           includeantruntime="false"
+           debuglevel="lines,vars,source">
+      <compilerarg value="-Xlint:all" />
+      <compilerarg value="-Werror" />
+      <src path="${dir.src.test-integration}" />
+      <classpath>
+        <path refid="classpath.for.test" />
+      </classpath>
+    </javac>
+  </target>
+
+  <path id="classpath.with.test-integration">
+    <path refid="classpath.for.test" />
+    <pathelement location="${dir.build.class.test-integration}" />
+  </path>
+
+  <!-- test-integration -->
+
+  <target name="test-integration" depends="compile-test-integration" description="runs integration tests">
+    <junit haltonfailure="yes" reloading="false">
+      <classpath>
+        <path refid="classpath.with.test-integration" />
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <batchtest fork="no" todir="${dir.build}" >
+        <fileset dir="${dir.build.class.test-integration}" includes="**/*Test.class"/>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="test" depends="test-unit, test-integration">
+  </target>
+
   <!-- jar file -->
+
   <target name="jar-file" depends="compile-java">
     <jarjar destfile="${dir.build.jar.polluted-file}">
       <!--

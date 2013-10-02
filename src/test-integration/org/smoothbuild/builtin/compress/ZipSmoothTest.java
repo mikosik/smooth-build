@@ -1,4 +1,4 @@
-package org.smoothbuild.integration.compress;
+package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.plugin.api.Path.path;
