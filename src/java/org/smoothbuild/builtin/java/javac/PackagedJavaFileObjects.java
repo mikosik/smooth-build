@@ -6,10 +6,10 @@ import javax.tools.JavaFileObject;
 
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.type.impl.MutableStoredFileSet;
 
 import com.google.common.collect.HashMultimap;

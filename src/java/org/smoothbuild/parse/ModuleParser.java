@@ -16,12 +16,12 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
-import org.smoothbuild.type.api.Path;
 
 public class ModuleParser {
   private final ImportedFunctions importedFunctions;

@@ -3,8 +3,8 @@ package org.smoothbuild.testing.type.impl;
 import java.io.IOException;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.type.impl.MutableStoredFile;
 
 public class TestFile extends MutableStoredFile {

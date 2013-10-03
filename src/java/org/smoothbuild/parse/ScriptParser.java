@@ -22,12 +22,12 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.type.api.Path;
 
 public class ScriptParser {
   public static ModuleContext parseScript(MessageListener messages, InputStream inputStream,

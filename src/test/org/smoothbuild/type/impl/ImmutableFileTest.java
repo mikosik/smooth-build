@@ -1,18 +1,18 @@
 package org.smoothbuild.type.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
-import static org.smoothbuild.type.api.Path.path;
 import static org.smoothbuild.type.impl.ImmutableFile.immutableFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.type.impl.StoredFile;
 
 public class ImmutableFileTest {

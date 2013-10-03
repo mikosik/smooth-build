@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 

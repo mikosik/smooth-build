@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,10 +9,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
-import org.smoothbuild.type.api.Path;
 
 public class ZipSmoothTest extends IntegrationTestCase {
 

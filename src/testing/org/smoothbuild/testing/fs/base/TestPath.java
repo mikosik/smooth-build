@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.type.api;
+package org.smoothbuild.testing.fs.base;
 
 import java.util.List;
 

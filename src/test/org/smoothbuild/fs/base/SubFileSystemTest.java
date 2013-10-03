@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.fs.base.PathKind.FILE;
-import static org.smoothbuild.type.api.Path.path;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.junit.Test;
-import org.smoothbuild.type.api.Path;
 
 import com.google.common.collect.ImmutableList;
 

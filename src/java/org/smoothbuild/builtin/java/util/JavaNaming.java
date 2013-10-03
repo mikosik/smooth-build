@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.java.util;
 
 import javax.tools.JavaFileObject.Kind;
 
-import org.smoothbuild.type.api.Path;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;

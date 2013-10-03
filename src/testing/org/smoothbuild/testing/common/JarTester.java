@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

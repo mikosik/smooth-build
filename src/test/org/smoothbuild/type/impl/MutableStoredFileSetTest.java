@@ -1,13 +1,13 @@
 package org.smoothbuild.type.impl;
 
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.type.impl.FileTester.createContentWithFilePath;
-import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.type.impl.MutableStoredFileSet;
 
 public class MutableStoredFileSetTest {

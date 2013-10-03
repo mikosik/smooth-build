@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.PathKind;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.type.api.Path;
 
 import com.google.common.io.ByteStreams;
 

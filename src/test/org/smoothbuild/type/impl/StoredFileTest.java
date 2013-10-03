@@ -1,12 +1,12 @@
 package org.smoothbuild.type.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.type.impl.StoredFile;
 
 public class StoredFileTest {

@@ -1,11 +1,11 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.type.api.Path.path;
-import static org.smoothbuild.type.api.Path.validationError;
+import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.fs.base.Path.validationError;
 
 import org.smoothbuild.builtin.file.err.IllegalPathError;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.ErrorMessageException;
-import org.smoothbuild.type.api.Path;
 
 public class PathArgValidator {
   public static Path validatedPath(String name, String value) {

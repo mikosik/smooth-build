@@ -1,16 +1,16 @@
 package org.smoothbuild.builtin.java;
 
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 
 import org.junit.Ignore;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.junit.JunitTestFailedError;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 import org.smoothbuild.testing.type.impl.TestFile;
-import org.smoothbuild.type.api.Path;
 
 // TODO
 @Ignore("For strange reasons this test fails when run by ant")

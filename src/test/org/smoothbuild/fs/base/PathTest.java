@@ -1,10 +1,10 @@
-package org.smoothbuild.type.api;
+package org.smoothbuild.fs.base;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.smoothbuild.type.api.Path.path;
-import static org.smoothbuild.type.api.Path.rootPath;
+import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.fs.base.Path.rootPath;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.testing.type.api.TestPath;
-import org.smoothbuild.type.api.Path;
+import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.testing.fs.base.TestPath;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

@@ -2,15 +2,14 @@ package org.smoothbuild.fs.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
-import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.type.api.Path;
 
 import com.google.common.collect.Lists;
 

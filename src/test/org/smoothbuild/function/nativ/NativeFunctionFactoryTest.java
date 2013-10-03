@@ -2,14 +2,15 @@ package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.type.api.Path.path;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.mem.MemoryFileSystemModule;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
@@ -35,7 +36,6 @@ import org.smoothbuild.task.err.UnexpectedError;
 import org.smoothbuild.testing.task.TestSandbox;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;

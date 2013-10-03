@@ -1,14 +1,14 @@
 package org.smoothbuild.builtin.java;
 
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
-import org.smoothbuild.type.api.Path;
 
 public class UnjarSmoothTest extends IntegrationTestCase {
 
