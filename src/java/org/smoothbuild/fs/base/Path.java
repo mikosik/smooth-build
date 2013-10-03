@@ -42,10 +42,10 @@ public class Path {
 
   public static String validationError(String path) {
     if (path.isEmpty()) {
-      return "Empty paths are not allowed";
+      return "Empty path is not allowed";
     }
     if (path.startsWith("/")) {
-      return "Path cannot start with slash character '/'. Only paths relative to project root dir are allowed";
+      return "Path cannot start with slash character '/'.";
     }
     if (path.endsWith("/")) {
       return "Path cannot end with slash character '/'.";
@@ -58,7 +58,7 @@ public class Path {
     }
     if (path.equals("..") || path.startsWith("../") || path.contains("/../")
         || path.endsWith("/..")) {
-      return "Path cannot contain '..' element. Referencing files outside your project is a bad idea.";
+      return "Path cannot contain '..' element.";
     }
     return null;
   }
