@@ -3,14 +3,15 @@ package org.smoothbuild.function.def;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.type.api.Path.path;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
@@ -19,7 +20,6 @@ import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.Path;
 
 import com.google.common.collect.ImmutableList;
 

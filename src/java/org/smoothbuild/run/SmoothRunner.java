@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.command.CommandLineParser;
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Module;
@@ -23,7 +24,6 @@ import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
 import org.smoothbuild.run.err.UnknownFunctionError;
 import org.smoothbuild.task.TaskExecutor;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.util.Empty;
 
 public class SmoothRunner {

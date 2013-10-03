@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +10,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.smoothbuild.builtin.compress.Constants;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
@@ -17,7 +18,6 @@ import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.api.Path;
 
 public class JarFunction {
 

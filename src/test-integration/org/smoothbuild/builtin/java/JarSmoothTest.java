@@ -1,17 +1,17 @@
 package org.smoothbuild.builtin.java;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.OutputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
-import org.smoothbuild.type.api.Path;
 
 public class JarSmoothTest extends IntegrationTestCase {
   @Test

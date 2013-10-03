@@ -1,17 +1,17 @@
 package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.task.err.DuplicatePathError;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
-import org.smoothbuild.type.api.Path;
 
 import com.google.common.collect.Iterables;
 

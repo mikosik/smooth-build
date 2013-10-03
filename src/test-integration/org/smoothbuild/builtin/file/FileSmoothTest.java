@@ -1,13 +1,13 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.type.impl.TestFile;
-import org.smoothbuild.type.api.Path;
 
 public class FileSmoothTest extends IntegrationTestCase {
 

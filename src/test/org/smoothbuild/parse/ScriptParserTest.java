@@ -1,8 +1,8 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.base.Charsets.UTF_8;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.parse.ScriptBuilder.script;
-import static org.smoothbuild.type.api.Path.path;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

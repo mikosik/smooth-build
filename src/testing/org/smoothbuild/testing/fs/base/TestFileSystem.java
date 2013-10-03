@@ -7,11 +7,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.type.impl.TestFile;
-import org.smoothbuild.type.api.Path;
 
 public class TestFileSystem extends SubFileSystem {
 

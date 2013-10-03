@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.file;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FileFunction.Parameters;
@@ -11,12 +11,12 @@ import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.testing.fs.base.TestPath;
 import org.smoothbuild.testing.task.TestSandbox;
-import org.smoothbuild.testing.type.api.TestPath;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.Path;
 
 public class FileFunctionTest {
   TestSandbox sandbox = new TestSandbox();

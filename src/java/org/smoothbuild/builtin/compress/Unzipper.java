@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.compress;
 
-import static org.smoothbuild.type.api.Path.SEPARATOR;
-import static org.smoothbuild.type.api.Path.path;
-import static org.smoothbuild.type.api.Path.validationError;
+import static org.smoothbuild.fs.base.Path.SEPARATOR;
+import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.fs.base.Path.validationError;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,12 +11,12 @@ import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.MutableFile;
 import org.smoothbuild.type.api.MutableFileSet;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;

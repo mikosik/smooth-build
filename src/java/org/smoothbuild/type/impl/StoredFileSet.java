@@ -5,9 +5,9 @@ import static org.smoothbuild.fs.base.PathKind.FILE;
 import java.util.Iterator;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.Path;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;

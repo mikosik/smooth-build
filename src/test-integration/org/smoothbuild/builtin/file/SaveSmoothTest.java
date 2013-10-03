@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 
@@ -14,12 +14,12 @@ import org.smoothbuild.builtin.file.err.FileOutputIsADirError;
 import org.smoothbuild.builtin.file.err.FileOutputSubdirIsAFileError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.WriteToSmoothDirError;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.parse.def.err.MissingRequiredArgsError;
-import org.smoothbuild.testing.type.api.TestPath;
+import org.smoothbuild.testing.fs.base.TestPath;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
-import org.smoothbuild.type.api.Path;
 
 public class SaveSmoothTest extends IntegrationTestCase {
 

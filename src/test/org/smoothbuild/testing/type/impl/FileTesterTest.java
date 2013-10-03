@@ -4,17 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamWithContent;
-import static org.smoothbuild.type.api.Path.path;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.api.Path;
 
 public class FileTesterTest {
   String content = "some content";

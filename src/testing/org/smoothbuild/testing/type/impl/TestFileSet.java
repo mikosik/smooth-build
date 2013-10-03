@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.type.impl;
 
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.type.impl.MutableStoredFileSet;
 
 public class TestFileSet extends MutableStoredFileSet {

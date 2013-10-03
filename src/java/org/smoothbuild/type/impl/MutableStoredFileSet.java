@@ -1,9 +1,9 @@
 package org.smoothbuild.type.impl;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.type.api.MutableFile;
 import org.smoothbuild.type.api.MutableFileSet;
-import org.smoothbuild.type.api.Path;
 
 public class MutableStoredFileSet extends StoredFileSet implements MutableFileSet {
 

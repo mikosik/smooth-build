@@ -7,12 +7,12 @@ import org.smoothbuild.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.SandboxImpl;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.Path;
 import org.smoothbuild.type.impl.StoredFile;
 
 public class FileFunction {

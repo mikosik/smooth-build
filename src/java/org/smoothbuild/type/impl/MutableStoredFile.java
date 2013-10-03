@@ -5,10 +5,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.api.Path;
 
 import com.google.common.io.ByteStreams;
 

@@ -25,7 +25,6 @@ import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.type.api.Path;
 
 import com.google.common.annotations.VisibleForTesting;
 

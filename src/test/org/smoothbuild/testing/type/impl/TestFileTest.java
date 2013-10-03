@@ -1,15 +1,15 @@
 package org.smoothbuild.testing.type.impl;
 
 import static org.junit.Assert.fail;
-import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.type.impl.TestFile;
-import org.smoothbuild.type.api.Path;
 
 public class TestFileTest {
   Path path = path("my/file");

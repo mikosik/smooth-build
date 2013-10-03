@@ -2,8 +2,8 @@ package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
-import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
