@@ -7,11 +7,11 @@ import static org.smoothbuild.task.Constants.SET_TASK_NAME;
 import java.util.Set;
 
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.MutableFile;
-import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.DuplicatePathError;
+import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.MutableFile;
+import org.smoothbuild.type.api.MutableFileSet;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableSet;

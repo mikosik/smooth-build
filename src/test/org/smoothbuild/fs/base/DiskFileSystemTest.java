@@ -5,13 +5,13 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.fs.base.PathKind.DIR;
 import static org.smoothbuild.fs.base.PathKind.FILE;
 import static org.smoothbuild.fs.base.PathKind.NOTHING;
-import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.JdkFileTester.assertContent;
 import static org.smoothbuild.testing.common.JdkFileTester.createDir;
 import static org.smoothbuild.testing.common.JdkFileTester.createEmptyFile;
 import static org.smoothbuild.testing.common.JdkFileTester.createFileContent;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -22,8 +22,8 @@ import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.common.TestCaseWithTempDir;
+import org.smoothbuild.type.api.Path;
 
 public class DiskFileSystemTest extends TestCaseWithTempDir {
   File root = getTempDirectory();

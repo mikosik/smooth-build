@@ -2,8 +2,8 @@ package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -13,9 +13,9 @@ import java.util.zip.ZipOutputStream;
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.message.message.ErrorMessageException;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.testing.plugin.internal.TestFile;
-import org.smoothbuild.testing.plugin.internal.TestFileSet;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.Iterables;
 

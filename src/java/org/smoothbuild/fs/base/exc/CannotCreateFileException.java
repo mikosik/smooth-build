@@ -2,7 +2,7 @@ package org.smoothbuild.fs.base.exc;
 
 import java.io.FileNotFoundException;
 
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 /**
  * Thrown to indicate that the file exists but is a directory rather than a

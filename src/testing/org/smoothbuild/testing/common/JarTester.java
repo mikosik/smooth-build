@@ -1,14 +1,14 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.testing.plugin.internal.TestFile;
-import org.smoothbuild.testing.plugin.internal.TestFileSet;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.TestFileSet;
 
 public class JarTester {
   public static TestFile jaredFiles(String... fileNames) throws IOException {

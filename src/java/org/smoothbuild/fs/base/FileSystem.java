@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 import com.google.inject.ImplementedBy;
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.task;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.util.Collection;
 
@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 public class TaskExecutor {
   private final FileSystem fileSystem;

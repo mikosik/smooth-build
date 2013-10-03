@@ -6,15 +6,15 @@ import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import java.io.IOException;
 
 import org.junit.Before;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.run.SmoothRunner;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.fs.base.TestFileSystemModule;
 import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.message.TestMessageListenerModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.plugin.internal.TestFile;
-import org.smoothbuild.testing.plugin.internal.TestFileSet;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.type.api.Path;
 
 import com.google.inject.Injector;
 

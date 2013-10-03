@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.plugin.internal.ImmutableStringSet;
+import org.smoothbuild.type.impl.ImmutableStringSet;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;

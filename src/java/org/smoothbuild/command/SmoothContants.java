@@ -1,8 +1,8 @@
 package org.smoothbuild.command;
 
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 public class SmoothContants {
   public static final Path DEFAULT_SCRIPT = path("build.smooth");

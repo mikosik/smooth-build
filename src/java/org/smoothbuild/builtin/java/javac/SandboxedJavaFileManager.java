@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.smoothbuild.plugin.api.Path.path;
-import static org.smoothbuild.plugin.api.Path.validationError;
+import static org.smoothbuild.type.api.Path.path;
+import static org.smoothbuild.type.api.Path.validationError;
 
 import java.io.IOException;
 import java.util.Set;
@@ -16,9 +16,9 @@ import javax.tools.StandardLocation;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.type.api.FileSet;
+import org.smoothbuild.type.api.MutableFileSet;
 
 import com.google.common.collect.Multimap;
 

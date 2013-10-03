@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.java.javac.err;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 public class DuplicateClassFileError extends Message {
   public DuplicateClassFileError(Path path, Path jar1, Path jar2) {

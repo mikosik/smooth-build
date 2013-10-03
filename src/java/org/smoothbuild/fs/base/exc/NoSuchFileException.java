@@ -1,6 +1,6 @@
 package org.smoothbuild.fs.base.exc;
 
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 @SuppressWarnings("serial")
 public class NoSuchFileException extends FileSystemException {

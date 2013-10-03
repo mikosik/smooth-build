@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.testing.plugin.internal.FileTester;
-import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.type.impl.FileTester;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.ImmutableList;
 

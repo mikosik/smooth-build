@@ -2,7 +2,7 @@ package org.smoothbuild.task;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,13 +10,13 @@ import java.util.Iterator;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.task.err.DuplicatePathError;
-import org.smoothbuild.testing.plugin.internal.FileTester;
-import org.smoothbuild.testing.plugin.internal.TestFile;
 import org.smoothbuild.testing.task.TestSandbox;
+import org.smoothbuild.testing.type.impl.FileTester;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.FileSet;
+import org.smoothbuild.type.api.Path;
 
 import com.google.common.collect.ImmutableSet;
 

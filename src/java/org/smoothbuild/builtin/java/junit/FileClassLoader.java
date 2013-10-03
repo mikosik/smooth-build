@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.java.junit;
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.type.api.File;
 
 import com.google.common.io.ByteStreams;
 

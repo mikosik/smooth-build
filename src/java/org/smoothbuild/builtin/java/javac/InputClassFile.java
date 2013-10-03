@@ -10,8 +10,8 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.Path;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final File file;

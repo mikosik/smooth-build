@@ -8,9 +8,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.Path;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteStreams;

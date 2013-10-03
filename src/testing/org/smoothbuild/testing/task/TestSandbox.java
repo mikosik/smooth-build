@@ -3,13 +3,13 @@ package org.smoothbuild.testing.task;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.TaskLocation.taskLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.task.SandboxImpl;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.message.TestMessageListener;
-import org.smoothbuild.testing.plugin.internal.TestFileSet;
+import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.type.api.Path;
 
 import com.google.common.annotations.VisibleForTesting;
 

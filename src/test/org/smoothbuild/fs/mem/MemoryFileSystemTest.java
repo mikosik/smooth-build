@@ -5,8 +5,8 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.fs.base.PathKind.DIR;
 import static org.smoothbuild.fs.base.PathKind.FILE;
 import static org.smoothbuild.fs.base.PathKind.NOTHING;
-import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 import com.google.common.io.LineReader;
 

@@ -7,13 +7,13 @@ import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.TaskLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
-import org.smoothbuild.plugin.api.MutableFile;
-import org.smoothbuild.plugin.api.MutableFileSet;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.plugin.internal.MutableStoredFileSet;
 import org.smoothbuild.task.err.TaskCompletedInfo;
 import org.smoothbuild.task.err.TaskFailedError;
+import org.smoothbuild.type.api.MutableFile;
+import org.smoothbuild.type.api.MutableFileSet;
+import org.smoothbuild.type.api.Path;
+import org.smoothbuild.type.impl.MutableStoredFileSet;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
