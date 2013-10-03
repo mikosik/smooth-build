@@ -3,7 +3,7 @@ package org.smoothbuild.fs.base;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 public class SubFileSystem implements FileSystem {
   private final FileSystem fileSystem;

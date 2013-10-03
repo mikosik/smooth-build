@@ -3,13 +3,13 @@ package org.smoothbuild.builtin.java.javac;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.InputStream;
 import java.net.URI;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.type.api.File;
 
 public class InputClassFileTest {
 

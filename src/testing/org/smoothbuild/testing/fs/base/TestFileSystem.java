@@ -9,9 +9,9 @@ import java.io.OutputStream;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.type.api.Path;
 
 public class TestFileSystem extends SubFileSystem {
 

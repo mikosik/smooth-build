@@ -6,7 +6,7 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.plugin.api.MutableFile;
+import org.smoothbuild.type.api.MutableFile;
 
 public class OutputClassFile extends SimpleJavaFileObject {
   private final MutableFile file;

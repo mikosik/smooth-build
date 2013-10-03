@@ -1,12 +1,12 @@
 package org.smoothbuild.testing.task;
 
-import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
+import static org.smoothbuild.type.api.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.api.MutableFile;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.type.api.MutableFile;
+import org.smoothbuild.type.api.Path;
 
 public class TestSandboxTest {
   Path path1 = path("my/path1");

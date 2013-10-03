@@ -1,16 +1,16 @@
 package org.smoothbuild.testing.fs.base;
 
 import static org.junit.Assert.fail;
-import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.api.Path;
-import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.type.api.Path;
 
 public class TestFileSystemTest {
   Path root = path("my/root");

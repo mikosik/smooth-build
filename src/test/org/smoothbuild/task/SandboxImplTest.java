@@ -8,9 +8,9 @@ import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.message.message.TaskLocation.taskLocation;
-import static org.smoothbuild.plugin.api.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
-import static org.smoothbuild.testing.plugin.internal.FileTester.createContentWithFilePath;
+import static org.smoothbuild.testing.type.impl.FileTester.createContentWithFilePath;
+import static org.smoothbuild.type.api.Path.path;
 
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -18,11 +18,11 @@ import org.mockito.Mockito;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.TaskLocation;
-import org.smoothbuild.plugin.api.MutableFile;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.task.err.TaskFailedError;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.type.api.MutableFile;
+import org.smoothbuild.type.api.Path;
 
 public class SandboxImplTest {
   Path root = path("my/root");

@@ -20,10 +20,10 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
 import org.smoothbuild.run.err.UnknownFunctionError;
 import org.smoothbuild.task.TaskExecutor;
+import org.smoothbuild.type.api.Path;
 import org.smoothbuild.util.Empty;
 
 public class SmoothRunner {

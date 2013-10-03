@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 public class RecursiveFilesIterator implements Iterator<Path> {
   private final FileSystem fileSystem;

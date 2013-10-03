@@ -5,7 +5,7 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.api.StringSet;
+import org.smoothbuild.type.api.StringSet;
 
 import com.google.common.collect.ImmutableSet;
 

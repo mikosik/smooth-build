@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,13 +9,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.MutableFile;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.FileSet;
+import org.smoothbuild.type.api.MutableFile;
+import org.smoothbuild.type.api.Path;
 
 public class ZipFunction {
 

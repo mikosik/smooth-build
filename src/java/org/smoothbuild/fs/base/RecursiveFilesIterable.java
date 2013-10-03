@@ -2,7 +2,7 @@ package org.smoothbuild.fs.base;
 
 import java.util.Iterator;
 
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 import com.google.common.collect.ImmutableList;
 

@@ -1,13 +1,13 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.type.impl.TestFile;
 
 public class OutputClassFileTest {
   TestFile file = new TestFile(path("my/file"));

@@ -1,11 +1,11 @@
 package org.smoothbuild.builtin.compress;
 
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.MutableFileSet;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.FileSet;
+import org.smoothbuild.type.api.MutableFileSet;
 
 public class UnzipFunction {
   public interface Parameters {

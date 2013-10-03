@@ -4,7 +4,7 @@ import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 public class ReadFromSmoothDirError extends Message {
   public ReadFromSmoothDirError(Path path) {

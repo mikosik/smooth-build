@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.java;
 
 import static com.google.common.io.ByteStreams.toByteArray;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +13,9 @@ import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.plugin.internal.TestFile;
+import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.type.api.Path;
 
 public class JavacSmoothTest extends IntegrationTestCase {
   MyClassLoader classLoader = new MyClassLoader();

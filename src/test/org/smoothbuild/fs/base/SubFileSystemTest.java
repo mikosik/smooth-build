@@ -5,13 +5,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.fs.base.PathKind.FILE;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.api.Path;
+import org.smoothbuild.type.api.Path;
 
 import com.google.common.collect.ImmutableList;
 

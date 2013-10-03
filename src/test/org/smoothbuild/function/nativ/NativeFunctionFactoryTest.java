@@ -6,7 +6,7 @@ import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.plugin.api.Path.path;
+import static org.smoothbuild.type.api.Path.path;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +26,6 @@ import org.smoothbuild.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.Path;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
@@ -36,6 +33,9 @@ import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.task.err.UnexpectedError;
 import org.smoothbuild.testing.task.TestSandbox;
+import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.FileSet;
+import org.smoothbuild.type.api.Path;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
