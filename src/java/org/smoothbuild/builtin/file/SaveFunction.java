@@ -89,7 +89,7 @@ public class SaveFunction {
       if (dirPath.isRoot()) {
         return;
       }
-      if (dirPath.firstElement().equals(BUILD_DIR)) {
+      if (dirPath.firstPart().equals(BUILD_DIR)) {
         throw new ErrorMessageException(new WriteToSmoothDirError(dirPath));
       }
 
@@ -115,7 +115,7 @@ public class SaveFunction {
     }
 
     private void checkFilePath(Path dirPath, Path filePath) {
-      if (dirPath.isRoot() && filePath.firstElement().equals(BUILD_DIR)) {
+      if (dirPath.isRoot() && filePath.firstPart().equals(BUILD_DIR)) {
         throw new ErrorMessageException(new WriteToSmoothDirError(filePath));
       }
 

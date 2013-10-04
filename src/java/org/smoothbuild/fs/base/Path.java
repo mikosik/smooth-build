@@ -98,7 +98,7 @@ public class Path {
     }
   }
 
-  public ImmutableList<Path> toElements() {
+  public ImmutableList<Path> parts() {
     if (this == ROOT_PATH) {
       return ImmutableList.<Path> of();
     } else {
@@ -110,9 +110,9 @@ public class Path {
     }
   }
 
-  public Path firstElement() {
+  public Path firstPart() {
     if (this == ROOT_PATH) {
-      throw new IllegalArgumentException("Cannot return first element of root path '.'");
+      throw new IllegalArgumentException("Cannot return first part of root path '.'");
     }
     int index = value.indexOf(SEPARATOR_CHARACTER);
     if (index == -1) {
@@ -122,9 +122,9 @@ public class Path {
     }
   }
 
-  public Path lastElement() {
+  public Path lastPart() {
     if (this == ROOT_PATH) {
-      throw new IllegalArgumentException("Cannot return last element of root path '.'");
+      throw new IllegalArgumentException("Cannot return last part of root path '.'");
     }
     int index = value.lastIndexOf(SEPARATOR_CHARACTER);
     if (index == -1) {

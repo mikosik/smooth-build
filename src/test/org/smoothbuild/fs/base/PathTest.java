@@ -139,30 +139,30 @@ public class PathTest {
   }
 
   @Test
-  public void testToElements() throws Exception {
-    assertToElements(".", ImmutableList.<String> of());
+  public void testParts() throws Exception {
+    assertParts(".", ImmutableList.<String> of());
 
-    assertToElements("abc", ImmutableList.of("abc"));
-    assertToElements("abc/def", ImmutableList.of("abc", "def"));
-    assertToElements("abc/def/ghi", ImmutableList.of("abc", "def", "ghi"));
+    assertParts("abc", ImmutableList.of("abc"));
+    assertParts("abc/def", ImmutableList.of("abc", "def"));
+    assertParts("abc/def/ghi", ImmutableList.of("abc", "def", "ghi"));
 
-    assertToElements(" ", ImmutableList.of(" "));
-    assertToElements(" / ", ImmutableList.of(" ", " "));
-    assertToElements(" / / ", ImmutableList.of(" ", " ", " "));
+    assertParts(" ", ImmutableList.of(" "));
+    assertParts(" / ", ImmutableList.of(" ", " "));
+    assertParts(" / / ", ImmutableList.of(" ", " ", " "));
   }
 
-  private static void assertToElements(String input, List<String> expected) {
+  private static void assertParts(String input, List<String> expected) {
     List<String> list = Lists.newArrayList();
-    for (Path path : path(input).toElements()) {
+    for (Path path : path(input).parts()) {
       list.add(path.value());
     }
     assertThat(list).isEqualTo(expected);
   }
 
   @Test
-  public void lastElementOfRootDirThrowsException() throws Exception {
+  public void lastPartOfRootDirThrowsException() throws Exception {
     try {
-      rootPath().lastElement();
+      rootPath().lastPart();
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -170,23 +170,23 @@ public class PathTest {
   }
 
   @Test
-  public void testLastElement() throws Exception {
-    assertLastElement(" ", " ");
-    assertLastElement(" / ", " ");
+  public void testLastPart() throws Exception {
+    assertLastPart(" ", " ");
+    assertLastPart(" / ", " ");
 
-    assertLastElement("abc", "abc");
-    assertLastElement("abc/def", "def");
-    assertLastElement("abc/def/ghi", "ghi");
+    assertLastPart("abc", "abc");
+    assertLastPart("abc/def", "def");
+    assertLastPart("abc/def/ghi", "ghi");
   }
 
-  private static void assertLastElement(String input, String expected) {
-    assertThat(path(input).lastElement()).isEqualTo(path(expected));
+  private static void assertLastPart(String input, String expected) {
+    assertThat(path(input).lastPart()).isEqualTo(path(expected));
   }
 
   @Test
-  public void firstElementOfRootDirThrowsException() throws Exception {
+  public void firstPartOfRootDirThrowsException() throws Exception {
     try {
-      rootPath().firstElement();
+      rootPath().firstPart();
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -194,17 +194,17 @@ public class PathTest {
   }
 
   @Test
-  public void testFirstElement() throws Exception {
-    assertFirstElement(" ", " ");
-    assertFirstElement(" / ", " ");
+  public void testFirstPart() throws Exception {
+    assertFirstPart(" ", " ");
+    assertFirstPart(" / ", " ");
 
-    assertFirstElement("abc", "abc");
-    assertFirstElement("abc/def", "abc");
-    assertFirstElement("abc/def/ghi", "abc");
+    assertFirstPart("abc", "abc");
+    assertFirstPart("abc/def", "abc");
+    assertFirstPart("abc/def/ghi", "abc");
   }
 
-  private static void assertFirstElement(String input, String expected) {
-    assertThat(path(input).firstElement()).isEqualTo(path(expected));
+  private static void assertFirstPart(String input, String expected) {
+    assertThat(path(input).firstPart()).isEqualTo(path(expected));
   }
 
   @Test
