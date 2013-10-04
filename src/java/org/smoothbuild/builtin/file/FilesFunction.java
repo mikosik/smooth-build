@@ -48,7 +48,7 @@ public class FilesFunction {
         throw new ErrorMessageException(new CannotListRootDirError());
       }
 
-      if (path.firstElement().equals(BUILD_DIR)) {
+      if (path.firstPart().equals(BUILD_DIR)) {
         throw new ErrorMessageException(new ReadFromSmoothDirError(path));
       }
 

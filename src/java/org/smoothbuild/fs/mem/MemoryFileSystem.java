@@ -54,7 +54,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   private MemoryDirectory createDirectory(Path directory) {
-    Iterator<Path> it = directory.toElements().iterator();
+    Iterator<Path> it = directory.parts().iterator();
     MemoryDirectory currentDir = root;
     while (it.hasNext()) {
       String name = it.next().value();
@@ -119,7 +119,7 @@ public class MemoryFileSystem implements FileSystem {
     }
     MemoryDirectory dir = createDirectory(path.parent());
 
-    String name = path.lastElement().value();
+    String name = path.lastPart().value();
     if (dir.hasChild(name)) {
       MemoryElement child = dir.child(name);
       if (child.isFile()) {
@@ -153,7 +153,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   private MemoryElement findElement(Path path) {
-    Iterator<Path> it = path.toElements().iterator();
+    Iterator<Path> it = path.parts().iterator();
     MemoryElement current = root;
     while (it.hasNext()) {
       String name = it.next().value();

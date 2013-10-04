@@ -43,7 +43,7 @@ public class FileFunction {
     private File createFile(Path path) {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
-      if (!path.isRoot() && path.firstElement().equals(BUILD_DIR)) {
+      if (!path.isRoot() && path.firstPart().equals(BUILD_DIR)) {
         throw new ErrorMessageException(new ReadFromSmoothDirError(path));
       }
 
