@@ -5,7 +5,7 @@ import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
 
 import com.google.common.base.Function;
 
-public class PathPatternTester {
+public class PathPatternGenerator {
 
   /**
    * Generates all patterns containing 'size' or less elements and pass it to
