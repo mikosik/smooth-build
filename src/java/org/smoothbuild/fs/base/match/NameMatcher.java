@@ -71,7 +71,7 @@ public class NameMatcher implements Predicate<String> {
      * these cases are checked inside 'while' clause below.
      */
 
-    int stillToMatch = minimalCharactersNeeded(pLeft + 1, pRight - 1);
+    int stillToMatch = minimumCharactersNeeded(pLeft + 1, pRight - 1);
     int stillAvailable = sRight - sLeft;
 
     while (true) {
@@ -102,7 +102,7 @@ public class NameMatcher implements Predicate<String> {
     }
   }
 
-  private int minimalCharactersNeeded(int pLeft, int pRight) {
+  private int minimumCharactersNeeded(int pLeft, int pRight) {
     int result = 0;
     for (int i = pLeft; i <= pRight; i++) {
       String part = patternParts.get(i);
