@@ -3,6 +3,7 @@ package org.smoothbuild.testing.fs.base.match;
 import static java.lang.Character.isLetter;
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 
 public class NamePatternGenerator {
@@ -13,10 +14,15 @@ public class NamePatternGenerator {
    * 
    * Element is either "*" wildcard or one of the letters {a, b, b}.
    */
-  public static void generatePatterns(int size, Function<String, Void> consumer) {
-    for (int i = 1; i <= size; i++) {
-      generatePatterns("", i, consumer);
+  public static void generatePatterns(int maxSize, Function<String, Void> consumer) {
+    for (int i = 1; i <= maxSize; i++) {
+      generatePatternsImpl(i, consumer);
     }
+  }
+
+  @VisibleForTesting
+  static void generatePatternsImpl(int size, Function<String, Void> consumer) {
+    generatePatterns("", size, consumer);
   }
 
   private static void generatePatterns(String pattern, int size, Function<String, Void> consumer) {
