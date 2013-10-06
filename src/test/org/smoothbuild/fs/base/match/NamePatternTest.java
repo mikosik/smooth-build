@@ -34,8 +34,20 @@ public class NamePatternTest {
   }
 
   @Test
-  public void double_star_is_not_allowed_in_conjunction_with_other_chars() throws Exception {
+  public void double_star_with_suffix_is_not_allowed() throws Exception {
     when(namePatternClosure(DOUBLE_STAR + "a"));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void double_star_with_prefix_is_not_allowed() throws Exception {
+    when(namePatternClosure("a" + DOUBLE_STAR));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void three_star_pattern_is_not_allowed() throws Exception {
+    when(namePatternClosure("***"));
     thenThrown(IllegalArgumentException.class);
   }
 
