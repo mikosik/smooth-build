@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.base.match;
 
-import static org.smoothbuild.fs.base.match.MatchingNamesGenerator.generateNames;
 import static org.smoothbuild.fs.base.match.NamePattern.namePattern;
+import static org.smoothbuild.testing.fs.base.match.MatchingNamesGenerator.generateNames;
 
 import org.junit.Test;
 import org.smoothbuild.testing.fs.base.match.NamePatternGenerator;

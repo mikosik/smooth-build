@@ -1,9 +1,10 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.testing.fs.base.match;
 
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.fs.base.match.NamePattern.namePattern;
 
 import java.util.List;
+
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
