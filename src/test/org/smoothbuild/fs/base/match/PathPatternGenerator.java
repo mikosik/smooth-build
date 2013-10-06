@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.base.match;
 
-import static java.lang.Character.isLetter;
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
+import static org.smoothbuild.testing.fs.base.match.HelpTester.endsWithThreeCharacters;
 
 import com.google.common.base.Function;
 
@@ -58,18 +58,5 @@ public class PathPatternGenerator {
         generatePatterns(pattern + start + "**" + end, size - 1, consumer);
       }
     }
-  }
-
-  private static boolean endsWithThreeCharacters(String pattern) {
-    int length = pattern.length();
-    if (length < 3) {
-      return false;
-    }
-    return (3 <= length) && isLetterAt(pattern, length - 1) && isLetterAt(pattern, length - 2)
-        && isLetterAt(pattern, length - 3);
-  }
-
-  private static boolean isLetterAt(String pattern, int index) {
-    return isLetter(pattern.charAt(index));
   }
 }
