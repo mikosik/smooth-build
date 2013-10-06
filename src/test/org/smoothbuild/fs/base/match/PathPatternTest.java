@@ -21,9 +21,7 @@ public class PathPatternTest {
       }
     };
 
-    for (int i = 1; i <= 6; i++) {
-      generatePatterns(i, consumer);
-    }
+    generatePatterns(6, consumer);
   }
 
   @Test
