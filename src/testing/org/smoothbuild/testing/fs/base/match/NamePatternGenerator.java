@@ -1,6 +1,7 @@
 package org.smoothbuild.testing.fs.base.match;
 
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
+import static org.smoothbuild.testing.fs.base.match.HelpTester.endsWithThreeLetters;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -28,7 +29,7 @@ public class NamePatternGenerator {
     if (size == 0) {
       consumer.apply(pattern);
     } else {
-      if (!HelpTester.endsWithThreeCharacters(pattern)) {
+      if (!endsWithThreeLetters(pattern)) {
         generatePatterns(pattern + "a", size - 1, consumer);
 
         /*
