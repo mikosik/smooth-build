@@ -2,7 +2,7 @@ package org.smoothbuild.fs.base.match;
 
 import static org.junit.Assert.fail;
 import static org.smoothbuild.fs.base.match.PathPattern.pathPattern;
-import static org.smoothbuild.fs.base.match.PathPatternTester.generatePatterns;
+import static org.smoothbuild.fs.base.match.PathPatternGenerator.generatePatterns;
 
 import org.junit.Test;
 
