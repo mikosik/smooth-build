@@ -25,6 +25,7 @@ public class NamePattern {
   }
 
   private NamePattern(String value) {
+    checkArgument(value.indexOf('/') == -1, "NamePattern cannot contain slash.");
     checkArgument(0 < value.length(), "Pattern length can't be zero.");
     checkArgument(!value.contains(DOUBLE_STAR) || value.length() == DOUBLE_STAR.length());
     this.value = value;
