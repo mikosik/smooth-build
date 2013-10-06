@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.fs.base.match;
 
-import static java.lang.Character.isLetter;
+import static com.google.common.base.CharMatcher.JAVA_LETTER;
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -55,15 +55,7 @@ public class NamePatternGenerator {
   }
 
   private static boolean endsWithThreeCharacters(String pattern) {
-    int length = pattern.length();
-    if (length < 3) {
-      return false;
-    }
-    return (3 <= length) && isLetterAt(pattern, length - 1) && isLetterAt(pattern, length - 2)
-        && isLetterAt(pattern, length - 3);
-  }
-
-  private static boolean isLetterAt(String pattern, int index) {
-    return isLetter(pattern.charAt(index));
+    boolean isLongEnough = 3 <= pattern.length();
+    return isLongEnough && JAVA_LETTER.matchesAllOf(pattern.substring(pattern.length() - 3));
   }
 }
