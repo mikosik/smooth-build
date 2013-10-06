@@ -15,8 +15,10 @@ public class PathPatternTester {
    * or separator "/" (which is not taken into account when calculating pattern
    * size).
    */
-  public static void generatePatterns(int i, Function<String, Void> consumer) {
-    generatePatterns("", i, consumer);
+  public static void generatePatterns(int size, Function<String, Void> consumer) {
+    for (int i = 1; i <= size; i++) {
+      generatePatterns("", i, consumer);
+    }
   }
 
   private static void generatePatterns(String pattern, int size, Function<String, Void> consumer) {
