@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.testing.fs.base.match;
 
 import com.google.common.collect.ImmutableList;
 
