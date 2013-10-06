@@ -4,6 +4,7 @@ import static org.smoothbuild.fs.base.match.MatchingNamesGenerator.generateNames
 import static org.smoothbuild.fs.base.match.NamePattern.namePattern;
 
 import org.junit.Test;
+import org.smoothbuild.testing.fs.base.match.NamePatternGenerator;
 
 import com.google.common.base.Function;
 
