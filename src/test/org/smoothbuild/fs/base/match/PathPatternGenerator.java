@@ -1,7 +1,7 @@
 package org.smoothbuild.fs.base.match;
 
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
-import static org.smoothbuild.testing.fs.base.match.HelpTester.endsWithThreeCharacters;
+import static org.smoothbuild.testing.fs.base.match.HelpTester.endsWithThreeLetters;
 
 import com.google.common.base.Function;
 
@@ -25,7 +25,7 @@ public class PathPatternGenerator {
     if (size == 0) {
       consumer.apply(pattern);
     } else {
-      if (!endsWithThreeCharacters(pattern)) {
+      if (!endsWithThreeLetters(pattern)) {
         generatePatterns(pattern + "a", size - 1, consumer);
 
         /*
