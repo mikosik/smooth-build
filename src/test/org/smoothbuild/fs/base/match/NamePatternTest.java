@@ -22,6 +22,12 @@ public class NamePatternTest {
   }
 
   @Test
+  public void slash_in_pattern_is_forbidden() {
+    when(namePatternClosure("abc/def"));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Test
   public void empty_pattern_is_forbidden() throws Exception {
     when(namePatternClosure(""));
     thenThrown(IllegalArgumentException.class);
