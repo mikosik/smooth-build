@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.testing.fs.base.match;
 
 import static java.lang.Character.isLetter;
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;

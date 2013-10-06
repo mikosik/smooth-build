@@ -1,6 +1,6 @@
 package org.smoothbuild.fs.base.match;
 
-import static org.smoothbuild.fs.base.match.NamePatternGenerator.generatePatterns;
+import static org.smoothbuild.testing.fs.base.match.NamePatternGenerator.generatePatterns;
 
 import org.junit.Test;
 
