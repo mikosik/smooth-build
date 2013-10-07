@@ -3,6 +3,7 @@ package org.smoothbuild.testing.fs.base.match;
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.testing.fs.base.match.HelpTester.endsWithThreeLetters;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 
 public class PathPatternGenerator {
@@ -15,10 +16,15 @@ public class PathPatternGenerator {
    * or separator "/" (which is not taken into account when calculating pattern
    * size).
    */
-  public static void generatePatterns(int size, Function<String, Void> consumer) {
-    for (int i = 1; i <= size; i++) {
-      generatePatterns("", i, consumer);
+  public static void generatePatterns(int maxSize, Function<String, Void> consumer) {
+    for (int i = 1; i <= maxSize; i++) {
+      generatePatternsImpl(i, consumer);
     }
+  }
+
+  @VisibleForTesting
+  static void generatePatternsImpl(int size, Function<String, Void> consumer) {
+    generatePatterns("", size, consumer);
   }
 
   private static void generatePatterns(String pattern, int size, Function<String, Void> consumer) {
