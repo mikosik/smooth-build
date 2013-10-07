@@ -19,9 +19,11 @@ public class HelpTester {
 
   private static ImmutableList<String> allDoubleStars() {
     ImmutableList.Builder<String> builder = ImmutableList.builder();
+
     builder.add("");
-    for (String a : HelpTester.ALL) {
-      for (String b : HelpTester.ALL) {
+    builder.addAll(ALL);
+    for (String a : ALL) {
+      for (String b : ALL) {
         builder.add(a + "/" + b);
       }
     }
