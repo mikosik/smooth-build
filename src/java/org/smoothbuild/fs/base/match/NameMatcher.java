@@ -3,6 +3,8 @@ package org.smoothbuild.fs.base.match;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
 
+import org.smoothbuild.fs.base.Path;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
@@ -14,7 +16,7 @@ import com.google.common.collect.ImmutableList;
  * Double stars "**" are forbidden.
  * </pre>
  */
-public class NameMatcher implements Predicate<String> {
+public class NameMatcher implements Predicate<Path> {
   private final ImmutableList<String> patternParts;
 
   public NameMatcher(NamePattern pattern) {
@@ -23,7 +25,8 @@ public class NameMatcher implements Predicate<String> {
   }
 
   @Override
-  public boolean apply(String string) {
+  public boolean apply(Path path) {
+    String string = path.value();
     // TODO use 'array = string.toCharArray();' to improve speed
 
     // matching leftmost characters to first '*'
