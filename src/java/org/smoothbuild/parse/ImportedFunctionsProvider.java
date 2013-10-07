@@ -6,6 +6,7 @@ import org.smoothbuild.builtin.compress.UnzipFunction;
 import org.smoothbuild.builtin.compress.ZipFunction;
 import org.smoothbuild.builtin.file.FileFunction;
 import org.smoothbuild.builtin.file.FilesFunction;
+import org.smoothbuild.builtin.file.FilterFunction;
 import org.smoothbuild.builtin.file.MergeFunction;
 import org.smoothbuild.builtin.file.NewFileFunction;
 import org.smoothbuild.builtin.file.SaveFunction;
@@ -35,6 +36,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
     importedFunctions.add(createFunction(FileFunction.class));
     importedFunctions.add(createFunction(NewFileFunction.class));
     importedFunctions.add(createFunction(FilesFunction.class));
+    importedFunctions.add(createFunction(FilterFunction.class));
     importedFunctions.add(createFunction(MergeFunction.class));
     importedFunctions.add(createFunction(SaveFunction.class));
 
