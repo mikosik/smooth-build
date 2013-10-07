@@ -1,6 +1,7 @@
 package org.smoothbuild.fs.base.match;
 
 import static org.junit.Assert.assertTrue;
+import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.fs.base.match.NamePattern.namePattern;
 import static org.smoothbuild.testing.fs.base.match.MatchingNamesGenerator.generateNames;
 
@@ -29,7 +30,7 @@ public class NameMatcherMediumTest {
     final NameMatcher matcher = new NameMatcher(namePattern(pattern));
     return new Function<String, Void>() {
       public Void apply(String name) {
-        assertTrue(matcher.apply(name));
+        assertTrue(matcher.apply(path(name)));
         return null;
       }
     };
