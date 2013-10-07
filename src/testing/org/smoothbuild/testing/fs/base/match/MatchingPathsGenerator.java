@@ -28,7 +28,10 @@ public class MatchingPathsGenerator {
     } else {
       List<String> t = template.get(index);
       for (int i = 0; i < t.size(); i++) {
-        generatePaths(path + t.get(i), template, index + 1, consumer);
+        String suffix = t.get(i);
+        if (!(suffix.equals("/") && (path.endsWith("/") || path.isEmpty()))) {
+          generatePaths(path + suffix, template, index + 1, consumer);
+        }
       }
     }
   }
