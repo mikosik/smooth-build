@@ -30,7 +30,7 @@ public class PathPattern {
   private static void checkIsValid(String value) {
     String message = validationError(value);
     if (message != null) {
-      throw new IllegalArgumentException(message);
+      throw new IllegalPathPatternException(message);
     }
   }
 
