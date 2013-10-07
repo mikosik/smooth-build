@@ -15,7 +15,7 @@ public class PathPatternTest {
       try {
         PathPattern.pathPattern(pattern);
         fail("exception should be thrown");
-      } catch (IllegalArgumentException e) {
+      } catch (IllegalPathPatternException e) {
         // expected
       }
     }
