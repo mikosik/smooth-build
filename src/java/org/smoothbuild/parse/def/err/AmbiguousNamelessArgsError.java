@@ -5,6 +5,7 @@ import static org.smoothbuild.message.message.MessageType.ERROR;
 import java.util.List;
 import java.util.Set;
 
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.def.Argument;
 import org.smoothbuild.parse.def.AssignmentList;
@@ -12,30 +13,32 @@ import org.smoothbuild.parse.def.TypedParamsPool;
 
 public class AmbiguousNamelessArgsError extends CodeMessage {
 
-  public AmbiguousNamelessArgsError(AssignmentList assignmentList, Set<Argument> availableArgs,
-      TypedParamsPool availableTypedParams) {
-    this(assignmentList, Argument.NUMBER_ORDERING.sortedCopy(availableArgs), availableTypedParams);
+  public AmbiguousNamelessArgsError(Name functionName, AssignmentList assignmentList,
+      Set<Argument> availableArgs, TypedParamsPool availableTypedParams) {
+    this(functionName, assignmentList, Argument.NUMBER_ORDERING.sortedCopy(availableArgs),
+        availableTypedParams);
   }
 
-  public AmbiguousNamelessArgsError(AssignmentList assignmentList, List<Argument> availableArgs,
-      TypedParamsPool availableTypedParams) {
-    super(ERROR, availableArgs.iterator().next().codeLocation(), message(assignmentList,
-        availableArgs, availableTypedParams));
+  public AmbiguousNamelessArgsError(Name functionName, AssignmentList assignmentList,
+      List<Argument> availableArgs, TypedParamsPool availableTypedParams) {
+    super(ERROR, availableArgs.iterator().next().codeLocation(), message(functionName,
+        assignmentList, availableArgs, availableTypedParams));
   }
 
-  private static String message(AssignmentList assignmentList, List<Argument> availableArgs,
-      TypedParamsPool availableTypedParams) {
+  private static String message(Name functionName, AssignmentList assignmentList,
+      List<Argument> availableArgs, TypedParamsPool availableTypedParams) {
     if (availableTypedParams.size() == 0) {
-      return "Couldn't find parameter(s) of proper type for some nameless argument(s):\n"
+      return "Can't find parameter(s) of proper type in '" + functionName.simple()
+          + "' function for some nameless argument(s):\n"
           + "List of assignments that were successfully detected so far is following:\n"
           + assignmentList.toString()
           + "List of arguments for which no parameter could be found is following:\n"
           + argsToList(availableArgs);
     } else {
-      return "Couldn't decide unambiguously to which parameters some nameless arguments should be assigned:\n"
+      return "Can't decide unambiguously to which parameters in '" + functionName.simple()
+          + "' function some nameless arguments should be assigned:\n"
           + "List of assignments that were successfully detected is following:\n"
-          + assignmentList.toString()
-          + "List of nameless arguments that caused problems:\n"
+          + assignmentList.toString() + "List of nameless arguments that caused problems:\n"
           + argsToList(availableArgs)
           + "List of unassigned parameters of desired type is following:\n"
           + availableTypedParams.toFormattedString();

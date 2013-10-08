@@ -4,6 +4,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.function.base.Type.FILE;
@@ -52,12 +53,12 @@ public class AmbiguousNamelessArgsErrorTest {
     availableParams.add(param(FILE_SET, "param4"));
     availableParams.add(param(STRING_SET, "param6"));
 
-    AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(assignmentList,
-        availableArgs, availableParams);
+    AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(simpleName("func"),
+        assignmentList, availableArgs, availableParams);
 
     StringBuilder builder = new StringBuilder();
     builder
-        .append("ERROR[7:10-15]: Couldn't decide unambiguously to which parameters some nameless arguments should be assigned:\n");
+        .append("ERROR[7:10-15]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:\n");
     builder.append("List of assignments that were successfully detected is following:\n");
     builder.append("  String : param1 <- String : arg1       #12 [2:3-4]\n");
     builder.append("  String*: param2 <- String*: <nameless> #7  [12:3-9]\n");
