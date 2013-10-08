@@ -160,8 +160,8 @@ public class ArgumentNodesCreator {
             assignmentList.add(candidateParam, onlyArg);
             paramsPool.take(candidateParam);
           } else {
-            AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(assignmentList,
-                availableArgs, availableTypedParams);
+            AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
+                assignmentList, availableArgs, availableTypedParams);
             messages.report(error);
             return;
           }
