@@ -33,6 +33,10 @@ public class TaskExecutor {
     }
 
     private void execute(Task task) {
+      if (task.isResultCalculated()) {
+        return;
+      }
+
       calculateTasks(task.dependencies());
 
       if (messages.errorDetected()) {
@@ -47,9 +51,7 @@ public class TaskExecutor {
 
     private void calculateTasks(Collection<Task> tasks) {
       for (Task task : tasks) {
-        if (!task.isResultCalculated()) {
-          execute(task);
-        }
+        execute(task);
         if (messages.errorDetected()) {
           return;
         }
