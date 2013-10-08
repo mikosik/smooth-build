@@ -1,12 +1,12 @@
 package org.smoothbuild.task;
 
-import org.smoothbuild.message.message.TaskLocation;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 
 import com.google.common.collect.ImmutableCollection;
 
 public interface Task {
-  public TaskLocation location();
+  public CallLocation location();
 
   public boolean isResultCalculated();
 

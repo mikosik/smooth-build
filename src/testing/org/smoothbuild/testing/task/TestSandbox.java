@@ -2,7 +2,7 @@ package org.smoothbuild.testing.task;
 
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.message.TaskLocation.taskLocation;
+import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.smoothbuild.fs.base.Path;
@@ -31,7 +31,7 @@ public class TestSandbox extends SandboxImpl {
 
   public TestSandbox(TestFileSystem fileSystem, TestFileSystem sandboxFileSystem,
       TestMessageListener messages) {
-    super(fileSystem, sandboxFileSystem, taskLocation(simpleName("name"), codeLocation(1, 2, 4)),
+    super(fileSystem, sandboxFileSystem, callLocation(simpleName("name"), codeLocation(1, 2, 4)),
         messages);
     this.fileSystem = fileSystem;
     this.messages = messages;

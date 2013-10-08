@@ -1,7 +1,7 @@
 package org.smoothbuild.task;
 
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.message.TaskLocation.taskLocation;
+import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.task.Constants.SET_TASK_NAME;
 
 import java.util.Set;
@@ -20,7 +20,7 @@ public class FileSetTask extends AbstractTask {
   private final ImmutableSet<Task> dependencies;
 
   public FileSetTask(Set<Task> dependencies, CodeLocation codeLocation) {
-    super(taskLocation(simpleName(SET_TASK_NAME), codeLocation));
+    super(callLocation(simpleName(SET_TASK_NAME), codeLocation));
     this.dependencies = ImmutableSet.copyOf(dependencies);
   }
 

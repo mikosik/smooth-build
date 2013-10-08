@@ -5,11 +5,11 @@ import static org.smoothbuild.message.message.MessageType.INFO;
 
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.message.CodeMessage;
-import org.smoothbuild.message.message.TaskLocation;
+import org.smoothbuild.message.message.CallLocation;
 
 public class TaskCompletedInfo extends CodeMessage {
-  public TaskCompletedInfo(TaskLocation taskLocation) {
-    super(INFO, taskLocation.location(), createMessage(taskLocation.name()));
+  public TaskCompletedInfo(CallLocation callLocation) {
+    super(INFO, callLocation.location(), createMessage(callLocation.name()));
   }
 
   private static String createMessage(Name name) {
