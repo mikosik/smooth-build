@@ -1,12 +1,13 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.fs.match;
 
 import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.fs.base.match.NamePattern.namePattern;
-import static org.smoothbuild.testing.fs.base.match.MatchingNamesGenerator.generateNames;
+import static org.smoothbuild.fs.match.NamePattern.namePattern;
+import static org.smoothbuild.testing.fs.match.MatchingNamesGenerator.generateNames;
 
 import org.junit.Test;
-import org.smoothbuild.testing.fs.base.match.NamePatternGenerator;
+import org.smoothbuild.fs.match.NameMatcher;
+import org.smoothbuild.testing.fs.match.NamePatternGenerator;
 
 import com.google.common.base.Function;
 

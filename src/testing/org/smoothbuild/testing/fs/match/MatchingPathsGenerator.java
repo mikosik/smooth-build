@@ -1,11 +1,11 @@
-package org.smoothbuild.testing.fs.base.match;
+package org.smoothbuild.testing.fs.match;
 
-import static org.smoothbuild.fs.base.match.Constants.DOUBLE_STAR;
-import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
-import static org.smoothbuild.fs.base.match.NamePattern.namePattern;
-import static org.smoothbuild.testing.fs.base.match.HelpTester.ALL;
-import static org.smoothbuild.testing.fs.base.match.HelpTester.ALL_DOUBLE_STARS;
-import static org.smoothbuild.testing.fs.base.match.HelpTester.ALL_WITH_EMPTY;
+import static org.smoothbuild.fs.match.Constants.DOUBLE_STAR;
+import static org.smoothbuild.fs.match.Constants.SINGLE_STAR;
+import static org.smoothbuild.fs.match.NamePattern.namePattern;
+import static org.smoothbuild.testing.fs.match.HelpTester.ALL;
+import static org.smoothbuild.testing.fs.match.HelpTester.ALL_DOUBLE_STARS;
+import static org.smoothbuild.testing.fs.match.HelpTester.ALL_WITH_EMPTY;
 
 import java.util.List;
 

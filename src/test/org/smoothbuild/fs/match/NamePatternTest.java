@@ -1,13 +1,14 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.fs.match;
 
-import static org.smoothbuild.fs.base.match.Constants.DOUBLE_STAR;
-import static org.smoothbuild.fs.base.match.NamePattern.namePattern;
+import static org.smoothbuild.fs.match.Constants.DOUBLE_STAR;
+import static org.smoothbuild.fs.match.NamePattern.namePattern;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.fs.match.NamePattern;
 import org.testory.common.Closure;
 
 import com.google.common.collect.ImmutableList;

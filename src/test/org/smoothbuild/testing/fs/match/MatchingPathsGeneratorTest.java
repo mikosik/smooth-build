@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.fs.base.match;
+package org.smoothbuild.testing.fs.match;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.testing.fs.match.MatchingPathsGenerator;
 
 import com.google.common.base.Function;
 

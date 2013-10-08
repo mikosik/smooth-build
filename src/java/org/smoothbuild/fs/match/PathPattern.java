@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.fs.match;
 
 import org.smoothbuild.fs.base.Path;
 

@@ -1,8 +1,8 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.fs.match;
 
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.fs.base.match.PathMatcher.pathMatcher;
+import static org.smoothbuild.fs.match.PathMatcher.pathMatcher;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;

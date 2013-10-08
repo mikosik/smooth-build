@@ -1,16 +1,16 @@
-package org.smoothbuild.testing.fs.base.match;
+package org.smoothbuild.testing.fs.match;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.fs.base.match.NamePatternGenerator.generatePatternsImpl;
 
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.testing.fs.match.PathPatternGenerator;
 
 import com.google.common.base.Function;
 
-public class NamePatternGeneratorTest {
+public class PathPatternGeneratorTest {
 
   @Test
   public void all_possible_patterns_are_generated() {
@@ -24,25 +24,25 @@ public class NamePatternGeneratorTest {
     };
 
     // when
-    generatePatternsImpl(3, collectingConsumer);
+    PathPatternGenerator.generatePatternsImpl(2, collectingConsumer);
 
     // then
     List<String> expected = newArrayList();
-    expected.add("aaa");
-    expected.add("aab");
-    expected.add("aa*");
+    expected.add("aa");
+    expected.add("ab");
+    expected.add("a*");
+    expected.add("a/a");
+    expected.add("a/b");
+    expected.add("a/*");
+    expected.add("a/**");
 
-    expected.add("aba");
-    expected.add("abb");
-    expected.add("abc");
-    expected.add("ab*");
+    expected.add("*a");
+    expected.add("*/a");
+    expected.add("*/*");
+    expected.add("*/**");
 
-    expected.add("a*a");
-    expected.add("a*b");
-
-    expected.add("*aa");
-    expected.add("*ab");
-    expected.add("*a*");
+    expected.add("**/a");
+    expected.add("**/*");
 
     assertThat(generatedPatterns).containsOnly(expected.toArray(new String[] {}));
   }

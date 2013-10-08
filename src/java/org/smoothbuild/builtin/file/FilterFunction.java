@@ -1,10 +1,10 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.fs.base.match.PathMatcher.pathMatcher;
+import static org.smoothbuild.fs.match.PathMatcher.pathMatcher;
 
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.base.match.IllegalPathPatternException;
+import org.smoothbuild.fs.match.IllegalPathPatternException;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;

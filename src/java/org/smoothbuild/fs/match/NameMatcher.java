@@ -1,7 +1,7 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.fs.match;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR;
+import static org.smoothbuild.fs.match.Constants.SINGLE_STAR;
 
 import org.smoothbuild.fs.base.Path;
 

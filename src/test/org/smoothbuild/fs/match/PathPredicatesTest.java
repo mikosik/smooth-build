@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.fs.match;
 
 import static org.hamcrest.Matchers.sameInstance;
 import static org.smoothbuild.fs.base.Path.path;
@@ -10,6 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.fs.match.PathPredicates;
 import org.testory.common.Closure;
 
 import com.google.common.base.Predicate;

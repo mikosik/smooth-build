@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.fs.match;
 
 @SuppressWarnings("serial")
 public class IllegalPathPatternException extends RuntimeException {
