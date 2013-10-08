@@ -5,6 +5,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
@@ -37,7 +38,17 @@ public class TaskExecutorTest {
   TaskExecutor taskExecutor = new TaskExecutor(fileSystem);
 
   @Test
-  public void tasksAreExecutedStartingFromDependencies() {
+  public void task_with_result_calculated_is_not_executed() {
+    when(task.isResultCalculated()).thenReturn(true);
+
+    taskExecutor.execute(messages, task);
+
+    verify(task).isResultCalculated();
+    verifyNoMoreInteractions(task);
+  }
+
+  @Test
+  public void tasks_are_executed_starting_from_dependencies() {
     when(subTask.dependencies()).thenReturn(Empty.taskList());
     when(subTask.location()).thenReturn(taskLocation);
     when(task.dependencies()).thenReturn(ImmutableList.of(subTask));
@@ -51,7 +62,7 @@ public class TaskExecutorTest {
   }
 
   @Test
-  public void taskWithProblemsStopsExecution() {
+  public void task_with_problem_stops_execution() {
     when(subTask.dependencies()).thenReturn(Empty.taskList());
     when(subTask.location()).thenReturn(taskLocation);
     when(task.dependencies()).thenReturn(ImmutableList.of(subTask));
