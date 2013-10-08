@@ -8,7 +8,7 @@ import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.TaskLocation.taskLocation;
+import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.testing.type.impl.FileTester.createContentWithFilePath;
 
@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.TaskLocation;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.task.err.TaskFailedError;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
@@ -28,11 +28,11 @@ public class SandboxImplTest {
   Path root = path("my/root");
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
-  TaskLocation taskLocation = taskLocation(simpleName("name"), codeLocation(1, 2, 4));
+  CallLocation callLocation = callLocation(simpleName("name"), codeLocation(1, 2, 4));
 
   TestFileSystem fileSystem = new TestFileSystem();
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, root, taskLocation);
+  SandboxImpl sandbox = new SandboxImpl(fileSystem, root, callLocation);
 
   @Test
   public void createFileCreatesFileOnFileSystem() throws Exception {

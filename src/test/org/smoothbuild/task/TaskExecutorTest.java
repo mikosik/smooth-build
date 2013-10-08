@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.TaskLocation.taskLocation;
+import static org.smoothbuild.message.message.CallLocation.callLocation;
 
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -20,7 +20,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.TaskLocation;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.message.TestMessageListener;
@@ -33,7 +33,7 @@ public class TaskExecutorTest {
   TestMessageListener messages = new TestMessageListener();
   Task subTask = mock(Task.class);
   Task task = mock(Task.class);
-  TaskLocation taskLocation = taskLocation(simpleName("name"), codeLocation(1, 2, 4));
+  CallLocation callLocation = callLocation(simpleName("name"), codeLocation(1, 2, 4));
 
   TaskExecutor taskExecutor = new TaskExecutor(fileSystem);
 
@@ -50,9 +50,9 @@ public class TaskExecutorTest {
   @Test
   public void tasks_are_executed_starting_from_dependencies() {
     when(subTask.dependencies()).thenReturn(Empty.taskList());
-    when(subTask.location()).thenReturn(taskLocation);
+    when(subTask.location()).thenReturn(callLocation);
     when(task.dependencies()).thenReturn(ImmutableList.of(subTask));
-    when(task.location()).thenReturn(taskLocation);
+    when(task.location()).thenReturn(callLocation);
 
     taskExecutor.execute(messages, task);
 
@@ -64,9 +64,9 @@ public class TaskExecutorTest {
   @Test
   public void task_with_problem_stops_execution() {
     when(subTask.dependencies()).thenReturn(Empty.taskList());
-    when(subTask.location()).thenReturn(taskLocation);
+    when(subTask.location()).thenReturn(callLocation);
     when(task.dependencies()).thenReturn(ImmutableList.of(subTask));
-    when(task.location()).thenReturn(taskLocation);
+    when(task.location()).thenReturn(callLocation);
 
     Mockito.doAnswer(new Answer<Void>() {
       @Override

@@ -5,7 +5,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.message.listen.CollectingMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
-import org.smoothbuild.message.message.TaskLocation;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.plugin.api.Sandbox;
@@ -19,19 +19,19 @@ public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MutableStoredFileSet resultFileSet;
   private final CollectingMessageListener messages;
-  private final TaskLocation taskLocation;
+  private final CallLocation callLocation;
 
-  public SandboxImpl(FileSystem fileSystem, Path root, TaskLocation taskLocation) {
-    this(fileSystem, new SubFileSystem(fileSystem, root), taskLocation,
+  public SandboxImpl(FileSystem fileSystem, Path root, CallLocation callLocation) {
+    this(fileSystem, new SubFileSystem(fileSystem, root), callLocation,
         new CollectingMessageListener());
   }
 
   public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem,
-      TaskLocation taskLocation, CollectingMessageListener messages) {
+      CallLocation callLocation, CollectingMessageListener messages) {
     this.projectFileSystem = fileSystem;
     this.resultFileSet = new MutableStoredFileSet(sandboxFileSystem);
     this.messages = messages;
-    this.taskLocation = taskLocation;
+    this.callLocation = callLocation;
   }
 
   @Override
@@ -54,14 +54,14 @@ public class SandboxImpl implements Sandbox {
     // will be possible when each Task will have parent field pointing in
     // direction to nearest root node (build run can have more than one
     // task-to-run [soon]).
-    messages.report(new WrappedCodeMessage(message, taskLocation.location()));
+    messages.report(new WrappedCodeMessage(message, callLocation.location()));
   }
 
   public void reportCollectedMessagesTo(MessageListener listener) {
     if (messages.isErrorReported()) {
-      listener.report(new TaskFailedError(taskLocation));
+      listener.report(new TaskFailedError(callLocation));
     } else {
-      listener.report(new TaskCompletedInfo(taskLocation));
+      listener.report(new TaskCompletedInfo(callLocation));
     }
     messages.reportCollectedMessagesTo(listener);
   }

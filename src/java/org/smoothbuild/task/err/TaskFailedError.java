@@ -3,14 +3,14 @@ package org.smoothbuild.task.err;
 import static org.smoothbuild.message.message.MessageType.INFO;
 
 import org.smoothbuild.message.message.CodeMessage;
-import org.smoothbuild.message.message.TaskLocation;
+import org.smoothbuild.message.message.CallLocation;
 
 public class TaskFailedError extends CodeMessage {
-  public TaskFailedError(TaskLocation taskLocation) {
-    super(INFO, taskLocation.location(), createMessage(taskLocation));
+  public TaskFailedError(CallLocation callLocation) {
+    super(INFO, callLocation.location(), createMessage(callLocation));
   }
 
-  private static String createMessage(TaskLocation taskLocation) {
-    return TaskCompletedInfo.createMessage(taskLocation.name(), "FAILED");
+  private static String createMessage(CallLocation callLocation) {
+    return TaskCompletedInfo.createMessage(callLocation.name(), "FAILED");
   }
 }
