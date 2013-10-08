@@ -1,9 +1,9 @@
-package org.smoothbuild.fs.base.match;
+package org.smoothbuild.fs.match;
 
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.fs.base.match.Constants.SINGLE_STAR_CHAR;
-import static org.smoothbuild.fs.base.match.NamePattern.namePattern;
-import static org.smoothbuild.fs.base.match.PathPredicates.doubleStarPredicate;
+import static org.smoothbuild.fs.match.Constants.SINGLE_STAR_CHAR;
+import static org.smoothbuild.fs.match.NamePattern.namePattern;
+import static org.smoothbuild.fs.match.PathPredicates.doubleStarPredicate;
 
 import org.smoothbuild.fs.base.Path;
 

@@ -1,9 +1,10 @@
-package org.smoothbuild.testing.fs.base.match;
+package org.smoothbuild.testing.fs.match;
 
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.testing.fs.match.HelpTester;
 import org.testory.common.Closure;
 
 public class HelpTesterTest {
