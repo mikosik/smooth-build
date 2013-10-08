@@ -22,4 +22,6 @@ fragment ESC : '\\"' | '\\\\' ;
 fragment LETTER: 'a'..'z' | 'A'..'Z' | '_' ;
 fragment DIGIT: '0'..'9' ;
 
+COMMENT: '#' .*? '\n' -> skip ;
 WS : [ \t\n\r]+ -> skip ;
+
