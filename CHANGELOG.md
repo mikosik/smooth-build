@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 0.4.0 (??????????)
+--------------------------
+
+ * added single line comments (comment starts with '#' character)
+
 Version 0.3.0 (2013.10.08)
 --------------------------
 
