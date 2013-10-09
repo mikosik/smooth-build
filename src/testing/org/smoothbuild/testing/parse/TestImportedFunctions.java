@@ -10,6 +10,7 @@ import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.parse.SymbolTable;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 
 public class TestImportedFunctions implements SymbolTable {
   public static final String IMPORTED_NAME = "imported";
@@ -17,7 +18,7 @@ public class TestImportedFunctions implements SymbolTable {
   private final Map<String, Function> map;
 
   public TestImportedFunctions() {
-    Function function = new NativeFunction(testSignature(IMPORTED_NAME), null);
+    Function function = new NativeFunction(testSignature(IMPORTED_NAME), HashCode.fromInt(33), null);
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
 

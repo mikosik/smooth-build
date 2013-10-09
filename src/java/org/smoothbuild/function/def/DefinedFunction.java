@@ -10,6 +10,7 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.Task;
 
 import com.google.common.base.Preconditions;
+import com.google.common.hash.HashCode;
 
 /**
  * Function that is defined completely in Smooth script using Smooth language
@@ -20,7 +21,8 @@ public class DefinedFunction extends AbstractFunction {
   private final DefinitionNode root;
 
   public DefinedFunction(Signature signature, DefinitionNode root) {
-    super(signature);
+    // TODO
+    super(signature, HashCode.fromInt(77));
     this.root = checkNotNull(root);
   }
 
