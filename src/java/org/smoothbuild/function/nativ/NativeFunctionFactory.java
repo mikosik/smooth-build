@@ -19,12 +19,18 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.SandboxImpl;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+
 public class NativeFunctionFactory {
   private final SignatureFactory signatureFactory;
+  private final HashFunction hashFunction;
 
   @Inject
-  public NativeFunctionFactory(SignatureFactory signatureFactory) {
+  public NativeFunctionFactory(SignatureFactory signatureFactory, HashFunction hashFunction) {
     this.signatureFactory = signatureFactory;
+    this.hashFunction = hashFunction;
   }
 
   public Function create(Class<?> klass, boolean builtin) throws NativeImplementationException {
@@ -32,9 +38,15 @@ public class NativeFunctionFactory {
     Class<?> paramsInterface = method.getParameterTypes()[1];
 
     Signature signature = signatureFactory.create(method, paramsInterface);
+    HashCode hash = calculateFunctionHash(signature);
     Invoker invoker = createInvoker(method, paramsInterface);
 
-    return new NativeFunction(signature, invoker);
+    return new NativeFunction(signature, hash, invoker);
+  }
+
+  private HashCode calculateFunctionHash(Signature signature) {
+    String name = signature.name().full();
+    return hashFunction.hashString(name, Charsets.UTF_8);
   }
 
   private static Invoker createInvoker(Method method, Class<?> paramsInterface)

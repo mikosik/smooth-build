@@ -41,6 +41,7 @@ import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.task.TestSandbox;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 
 public class ArgumentNodesCreatorTest {
 
@@ -554,7 +555,7 @@ public class ArgumentNodesCreatorTest {
 
   private static Function function(ImmutableMap<String, Param> params) {
     Signature signature = new Signature(STRING, simpleName("name"), params);
-    return new NativeFunction(signature, mock(Invoker.class));
+    return new NativeFunction(signature, mock(HashCode.class), mock(Invoker.class));
   }
 
   private static ArrayList<Argument> list(Argument... args) {

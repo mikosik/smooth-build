@@ -8,6 +8,8 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.NativeCallTask;
 import org.smoothbuild.task.Task;
 
+import com.google.common.hash.HashCode;
+
 /**
  * Function that is implemented completely in java (as opposed to
  * {@link org.smoothbuild.function.def.DefinedFunction} which is defined in
@@ -16,8 +18,8 @@ import org.smoothbuild.task.Task;
 public class NativeFunction extends AbstractFunction {
   private final Invoker invoker;
 
-  public NativeFunction(Signature signature, Invoker invoker) {
-    super(signature);
+  public NativeFunction(Signature signature, HashCode hash, Invoker invoker) {
+    super(signature, hash);
     this.invoker = invoker;
   }
 

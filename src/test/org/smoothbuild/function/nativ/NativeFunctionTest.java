@@ -14,6 +14,7 @@ import org.smoothbuild.task.Task;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 
 public class NativeFunctionTest {
   Sandbox sandbox = mock(Sandbox.class);
@@ -21,9 +22,10 @@ public class NativeFunctionTest {
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   Signature signature = testSignature("functionName");
+  HashCode hash = HashCode.fromInt(33);
   Invoker invoker = mock(Invoker.class);
 
-  NativeFunction function = new NativeFunction(signature, invoker);
+  NativeFunction function = new NativeFunction(signature, hash, invoker);
 
   @Test
   public void generateTaskReturnsTaskWithNoResultCalculated() throws Exception {
