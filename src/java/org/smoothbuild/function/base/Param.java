@@ -10,14 +10,16 @@ import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Sets;
+import com.google.common.hash.HashCode;
 
 public class Param {
   private final Type type;
   private final String name;
   private final boolean isRequired;
+  private final HashCode hash;
 
-  public static Param param(Type type, String name, boolean isRequired) {
-    return new Param(type, name, isRequired);
+  public static Param param(Type type, String name, boolean isRequired, HashCode hash) {
+    return new Param(type, name, isRequired, hash);
   }
 
   public static ImmutableMap<String, Param> params(Param... params) {
@@ -35,10 +37,11 @@ public class Param {
     return builder.build();
   }
 
-  protected Param(Type type, String name, boolean isRequired) {
+  protected Param(Type type, String name, boolean isRequired, HashCode hash) {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
+    this.hash = checkNotNull(hash);
   }
 
   private Type checkAllowedType(Type type) {
@@ -57,6 +60,10 @@ public class Param {
 
   public boolean isRequired() {
     return isRequired;
+  }
+
+  public HashCode hash() {
+    return hash;
   }
 
   @Override
