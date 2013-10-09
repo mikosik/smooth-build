@@ -3,7 +3,7 @@ package org.smoothbuild.function.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.function.base.Param.param;
+import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import java.util.Map;
 

@@ -16,10 +16,6 @@ public class Param {
   private final String name;
   private final boolean isRequired;
 
-  public static Param param(Type type, String name) {
-    return new Param(type, name, false);
-  }
-
   public static Param param(Type type, String name, boolean isRequired) {
     return new Param(type, name, isRequired);
   }

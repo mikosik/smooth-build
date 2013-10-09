@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.FILE_SET;
@@ -16,6 +15,7 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.def.Argument.namedArg;
 import static org.smoothbuild.parse.def.Argument.namelessArg;
 import static org.smoothbuild.parse.def.Argument.pipedArg;
+import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import java.util.Set;
 

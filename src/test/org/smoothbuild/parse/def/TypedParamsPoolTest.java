@@ -2,8 +2,8 @@ package org.smoothbuild.parse.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
@@ -11,8 +11,8 @@ import org.smoothbuild.function.base.Param;
 public class TypedParamsPoolTest {
   Param string = param(STRING, "string1");
   Param string2 = param(STRING, "string2");
-  Param stringRequired = param(STRING, "stringRequired", true);
-  Param stringRequired2 = param(STRING, "stringRequired2", true);
+  Param stringRequired = Param.param(STRING, "stringRequired", true);
+  Param stringRequired2 = Param.param(STRING, "stringRequired2", true);
 
   TypedParamsPool pool = new TypedParamsPool();
 

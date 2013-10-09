@@ -25,8 +25,8 @@ public class ParamTest {
   public void creatingParamsMap() throws Exception {
     String name1 = "name1";
     String name2 = "name2";
-    Param param1 = param(STRING, name1);
-    Param param2 = param(STRING, name2);
+    Param param1 = param(STRING, name1, false);
+    Param param2 = param(STRING, name2, false);
 
     Map<String, Param> params = Param.params(param1, param2);
     assertThat(params.get(name1)).isSameAs(param1);
@@ -35,7 +35,7 @@ public class ParamTest {
 
   @Test
   public void creatingParamsMapWithDuplicateParamNamesThrowsExcpetion() throws Exception {
-    Param param1 = param(STRING, "name");
+    Param param1 = param(STRING, "name", false);
 
     try {
       Param.params(param1, param1);
@@ -90,7 +90,7 @@ public class ParamTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Param param = param(STRING, "myName");
+    Param param = param(STRING, "myName", false);
     String actual = param.toPaddedString(10, 13);
 
     assertThat(actual).isEqualTo("String    : myName       ");
@@ -101,7 +101,7 @@ public class ParamTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Param param = param(STRING, "myName");
+    Param param = param(STRING, "myName", false);
     String actual = param.toPaddedString(1, 1);
 
     assertThat(actual).isEqualTo("String: myName");
@@ -109,7 +109,7 @@ public class ParamTest {
 
   @Test
   public void testToString() throws Exception {
-    assertThat(param(Type.STRING, "name").toString()).isEqualTo("Param(String: name)");
+    assertThat(param(Type.STRING, "name", false).toString()).isEqualTo("Param(String: name)");
   }
 
   @Test

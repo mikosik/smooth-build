@@ -6,6 +6,7 @@ import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Param.params;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
