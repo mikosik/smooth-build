@@ -27,6 +27,11 @@ public class NativeFunctionTest {
 
   NativeFunction function = new NativeFunction(signature, hash, invoker);
 
+  @Test(expected = NullPointerException.class)
+  public void nullInvokerIsForbidden() throws Exception {
+    new NativeFunction(signature, hash, null);
+  }
+
   @Test
   public void generateTaskReturnsTaskWithNoResultCalculated() throws Exception {
     Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);

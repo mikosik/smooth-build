@@ -1,11 +1,13 @@
 package org.smoothbuild.testing.parse;
 
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 
 import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.parse.SymbolTable;
 
@@ -18,7 +20,8 @@ public class TestImportedFunctions implements SymbolTable {
   private final Map<String, Function> map;
 
   public TestImportedFunctions() {
-    Function function = new NativeFunction(testSignature(IMPORTED_NAME), HashCode.fromInt(33), null);
+    Function function = new NativeFunction(testSignature(IMPORTED_NAME), HashCode.fromInt(33),
+        mock(Invoker.class));
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
 
