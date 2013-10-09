@@ -11,8 +11,8 @@ import org.smoothbuild.function.base.Param;
 public class TypedParamsPoolTest {
   Param string = param(STRING, "string1");
   Param string2 = param(STRING, "string2");
-  Param stringRequired = Param.param(STRING, "stringRequired", true);
-  Param stringRequired2 = Param.param(STRING, "stringRequired2", true);
+  Param stringRequired = param(STRING, "stringRequired", true);
+  Param stringRequired2 = param(STRING, "stringRequired2", true);
 
   TypedParamsPool pool = new TypedParamsPool();
 
