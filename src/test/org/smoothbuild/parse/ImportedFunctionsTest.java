@@ -7,6 +7,7 @@ import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.function.nativ.exc.FunctionImplementationException;
 
@@ -66,6 +67,6 @@ public class ImportedFunctionsTest {
   }
 
   private static Function function(String name) {
-    return new NativeFunction(testSignature(name), mock(HashCode.class), null);
+    return new NativeFunction(testSignature(name), mock(HashCode.class), mock(Invoker.class));
   }
 }

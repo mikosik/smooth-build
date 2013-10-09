@@ -104,6 +104,7 @@
     <path refid="classpath.with.java" />
     <pathelement location="${lib.assertj-core}" />
     <pathelement location="${lib.junit}" />
+    <pathelement location="${lib.mockito}" />
   </path>
 
   <target name="compile-testing" depends="compile-java">

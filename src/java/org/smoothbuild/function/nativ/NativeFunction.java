@@ -1,5 +1,7 @@
 package org.smoothbuild.function.nativ;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
@@ -20,7 +22,7 @@ public class NativeFunction extends AbstractFunction {
 
   public NativeFunction(Signature signature, HashCode hash, Invoker invoker) {
     super(signature, hash);
-    this.invoker = invoker;
+    this.invoker = checkNotNull(invoker);
   }
 
   @Override
