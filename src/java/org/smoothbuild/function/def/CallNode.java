@@ -10,12 +10,12 @@ import org.smoothbuild.task.Task;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class FunctionNode implements DefinitionNode {
+public class CallNode implements DefinitionNode {
   private final Function function;
   private final ImmutableMap<String, DefinitionNode> argNodes;
   private final CodeLocation codeLocation;
 
-  public FunctionNode(Function function, CodeLocation codeLocation,
+  public CallNode(Function function, CodeLocation codeLocation,
       Map<String, DefinitionNode> argNodes) {
     this.function = function;
     this.codeLocation = codeLocation;

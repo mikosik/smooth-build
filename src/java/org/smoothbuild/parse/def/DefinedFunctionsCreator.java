@@ -33,7 +33,7 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.FileSetNode;
-import org.smoothbuild.function.def.FunctionNode;
+import org.smoothbuild.function.def.CallNode;
 import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
@@ -200,7 +200,7 @@ public class DefinedFunctionsCreator {
       if (namedArgs == null) {
         return new InvalidNode(function.type());
       } else {
-        return new FunctionNode(function, codeLocation, namedArgs);
+        return new CallNode(function, codeLocation, namedArgs);
       }
     }
 
