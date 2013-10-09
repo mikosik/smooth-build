@@ -15,7 +15,7 @@ import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableMap;
 
-public class FunctionNodeTest {
+public class CallNodeTest {
   CodeLocation codeLocation = codeLocation(1, 2, 4);
   Function function = mock(Function.class);
 
@@ -24,7 +24,7 @@ public class FunctionNodeTest {
     when(function.type()).thenReturn(Type.STRING);
     ImmutableMap<String, DefinitionNode> empty = ImmutableMap.<String, DefinitionNode> of();
 
-    assertThat(new FunctionNode(function, codeLocation, empty).type()).isEqualTo(Type.STRING);
+    assertThat(new CallNode(function, codeLocation, empty).type()).isEqualTo(Type.STRING);
   }
 
   @Test
@@ -39,7 +39,7 @@ public class FunctionNodeTest {
     when(node.generateTask()).thenReturn(argTask);
     when(function.generateTask(ImmutableMap.of(name, argTask), codeLocation)).thenReturn(task);
 
-    Task actual = new FunctionNode(function, codeLocation, argNodes).generateTask();
+    Task actual = new CallNode(function, codeLocation, argNodes).generateTask();
 
     assertThat(actual).isSameAs(task);
   }
