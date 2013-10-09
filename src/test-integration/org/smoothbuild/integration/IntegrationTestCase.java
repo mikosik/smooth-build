@@ -6,6 +6,7 @@ import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import java.io.IOException;
 
 import org.junit.Before;
+import org.smoothbuild.HashModule;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.run.SmoothRunner;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
@@ -29,7 +30,8 @@ public class IntegrationTestCase {
   }
 
   protected void reset() {
-    Injector injector = createInjector(new TestFileSystemModule(), new TestMessageListenerModule());
+    Injector injector = createInjector(new HashModule(), new TestFileSystemModule(),
+        new TestMessageListenerModule());
     fileSystem = injector.getInstance(TestFileSystem.class);
     messages = injector.getInstance(TestMessageListener.class);
     smoothRunner = injector.getInstance(SmoothRunner.class);
