@@ -14,22 +14,27 @@ public abstract class AbstractFunction implements Function {
     this.hash = checkNotNull(hash);
   }
 
+  @Override
   public Signature signature() {
     return signature;
   }
 
+  @Override
   public Type type() {
     return signature.type();
   }
 
+  @Override
   public Name name() {
     return signature.name();
   }
 
+  @Override
   public HashCode hash() {
     return hash;
   }
 
+  @Override
   public ImmutableMap<String, Param> params() {
     return signature.params();
   }
