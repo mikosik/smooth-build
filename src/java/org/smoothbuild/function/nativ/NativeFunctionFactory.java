@@ -10,10 +10,10 @@ import javax.inject.Inject;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.exc.MoreThanOneSmoothFunctionException;
+import org.smoothbuild.function.nativ.exc.NativeImplementationException;
 import org.smoothbuild.function.nativ.exc.NoSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonPublicSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonStaticSmoothFunctionException;
-import org.smoothbuild.function.nativ.exc.NativeImplementationException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
@@ -25,10 +25,6 @@ public class NativeFunctionFactory {
   @Inject
   public NativeFunctionFactory(SignatureFactory signatureFactory) {
     this.signatureFactory = signatureFactory;
-  }
-
-  public Function create(Class<?> klass) throws NativeImplementationException {
-    return create(klass, false);
   }
 
   public Function create(Class<?> klass, boolean builtin) throws NativeImplementationException {
