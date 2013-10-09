@@ -13,6 +13,16 @@ import com.google.common.collect.ImmutableMap;
 public class InvokerTest {
   Sandbox sandbox = mock(Sandbox.class);
 
+  @Test(expected = NullPointerException.class)
+  public void null_method_is_forbidden() throws Exception {
+    new Invoker(null, mock(ArgumentsCreator.class));
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void null_ArgumentsCreator_is_forbidden() throws Exception {
+    new Invoker(InvokerTest.class.getMethod("null_ArgumentsCreator_is_forbidden"), null);
+  }
+
   @Test
   public void test() throws Exception {
     String value = "stringParamValue";
