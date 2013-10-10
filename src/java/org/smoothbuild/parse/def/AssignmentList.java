@@ -13,7 +13,6 @@ import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.StringSetNode;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -130,7 +129,6 @@ public class AssignmentList {
         throw new IllegalArgumentException("Param " + param + " cannot be assigned from "
             + argument + " argument.");
       }
-      Preconditions.checkArgument(isAssignable);
       this.param = checkNotNull(param);
       this.argument = checkNotNull(argument);
     }
