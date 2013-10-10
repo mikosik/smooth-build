@@ -7,6 +7,7 @@ import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.ParamTester.param;
+import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -66,7 +67,7 @@ public class NativeFunctionFactoryTest {
     Param paramA = param(STRING, "stringA");
     Param paramB = param(STRING, "stringB");
 
-    assertThat(signature.params()).isEqualTo(Param.params(paramA, paramB));
+    assertThat(signature.params()).isEqualTo(params(paramA, paramB));
   }
 
   @Test

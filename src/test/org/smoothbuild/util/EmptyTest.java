@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.task.Task;
 
@@ -43,22 +42,6 @@ public class EmptyTest {
   @Test
   public void emptyStringObjectAlwaysReturnsTheSameObject() {
     assertThat(Empty.stringObjectMap()).isSameAs(Empty.stringObjectMap());
-  }
-
-  @Test
-  public void emptyStringParamIsEmpty() {
-    assertThat(Empty.stringParamMap()).isEmpty();
-  }
-
-  @Test
-  public void emptyStringParamMapIsImmutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<String, Param> map = Empty.stringParamMap();
-  }
-
-  @Test
-  public void emptyStringParamAlwaysReturnsTheSameObject() {
-    assertThat(Empty.stringParamMap()).isSameAs(Empty.stringParamMap());
   }
 
   @Test

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.testing.function.base.ParamTester.param;
+import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import java.util.Map;
 
@@ -49,8 +50,8 @@ public class AbstractFunctionTest {
   }
 
   @Test
-  public void params() {
-    ImmutableMap<String, Param> params = Param.params(param(Type.STRING, "name"));
+  public void testParams() {
+    ImmutableMap<String, Param> params = params(param(Type.STRING, "name"));
     when(signature.params()).thenReturn(params);
 
     assertThat(function.params()).isEqualTo(params);
