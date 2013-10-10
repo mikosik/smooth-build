@@ -14,6 +14,8 @@ import static org.smoothbuild.util.StringUnescaper.unescaped;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
@@ -29,14 +31,9 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.CallNode;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.EmptySetNode;
-import org.smoothbuild.function.def.FileSetNode;
-import org.smoothbuild.function.def.InvalidNode;
-import org.smoothbuild.function.def.StringNode;
-import org.smoothbuild.function.def.StringSetNode;
+import org.smoothbuild.function.def.NodeCreator;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
@@ -53,10 +50,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
+  private final NodeCreator nodeCreator;
+
+  @Inject
+  public DefinedFunctionsCreator(NodeCreator nodeCreator) {
+    this.nodeCreator = nodeCreator;
+  }
 
   public Map<Name, DefinedFunction> createDefinedFunctions(MessageListener messages,
       SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
-    return new Worker(messages, symbolTable, functionContexts, sorted).run();
+    return new Worker(messages, symbolTable, functionContexts, sorted, nodeCreator).run();
   }
 
   private static class Worker {
@@ -64,15 +67,17 @@ public class DefinedFunctionsCreator {
     private final SymbolTable symbolTable;
     private final Map<String, FunctionContext> functionContexts;
     private final List<String> sorted;
+    private final NodeCreator nodeCreator;
 
     private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
 
     public Worker(MessageListener messages, SymbolTable symbolTable,
-        Map<String, FunctionContext> functionContexts, List<String> sorted) {
+        Map<String, FunctionContext> functionContexts, List<String> sorted, NodeCreator nodeCreator) {
       this.messages = messages;
       this.symbolTable = symbolTable;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
+      this.nodeCreator = nodeCreator;
     }
 
     public Map<Name, DefinedFunction> run() {
@@ -127,19 +132,19 @@ public class DefinedFunctionsCreator {
       ImmutableList<DefinitionNode> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return new EmptySetNode();
+        return nodeCreator.emptySet();
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return new EmptySetNode();
+        return nodeCreator.emptySet();
       }
 
       Type elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
-        return new StringSetNode(elemNodes, locationOf(list));
+        return nodeCreator.stringSet(elemNodes, locationOf(list));
       }
       if (elemsType == Type.FILE) {
-        return new FileSetNode(elemNodes, locationOf(list));
+        return nodeCreator.fileSet(elemNodes, locationOf(list));
       }
       throw new RuntimeException("Bug in Smooth implementation. No code to handle type = "
           + elemsType);
@@ -198,9 +203,9 @@ public class DefinedFunctionsCreator {
           args);
 
       if (namedArgs == null) {
-        return new InvalidNode(function.type());
+        return nodeCreator.invalid(function.type());
       } else {
-        return new CallNode(function, codeLocation, namedArgs);
+        return nodeCreator.call(function, codeLocation, namedArgs);
       }
     }
 
@@ -244,11 +249,11 @@ public class DefinedFunctionsCreator {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
-        return new StringNode(unescaped(string));
+        return nodeCreator.string(unescaped(string));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));
-        return new InvalidNode(STRING);
+        return nodeCreator.invalid(STRING);
       }
     }
   }
