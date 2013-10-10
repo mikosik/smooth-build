@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Param.paramsToString;
 import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +29,7 @@ public class ParamTest {
     Param param1 = param(STRING, name1, false);
     Param param2 = param(STRING, name2, false);
 
-    Map<String, Param> params = Param.params(param1, param2);
+    Map<String, Param> params = params(param1, param2);
     assertThat(params.get(name1)).isSameAs(param1);
     assertThat(params.get(name2)).isSameAs(param2);
   }
@@ -38,7 +39,7 @@ public class ParamTest {
     Param param1 = param(STRING, "name");
 
     try {
-      Param.params(param1, param1);
+      params(param1, param1);
       fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected

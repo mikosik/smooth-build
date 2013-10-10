@@ -7,9 +7,6 @@ import static org.smoothbuild.function.base.Type.allowedForParam;
 
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.Sets;
 import com.google.common.hash.HashCode;
 
 public class Param {
@@ -20,21 +17,6 @@ public class Param {
 
   public static Param param(Type type, String name, boolean isRequired, HashCode hash) {
     return new Param(type, name, isRequired, hash);
-  }
-
-  public static ImmutableMap<String, Param> params(Param... params) {
-    Set<String> names = Sets.newHashSet();
-
-    Builder<String, Param> builder = ImmutableMap.builder();
-    for (Param param : params) {
-      String name = param.name();
-      if (names.contains(name)) {
-        throw new IllegalArgumentException("Duplicate param name = '" + name + "'");
-      }
-      builder.put(name, param);
-      names.add(name);
-    }
-    return builder.build();
   }
 
   protected Param(Type type, String name, boolean isRequired, HashCode hash) {

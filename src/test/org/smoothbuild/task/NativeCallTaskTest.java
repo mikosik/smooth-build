@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.message.message.CodeLocation;
@@ -25,6 +26,7 @@ import org.smoothbuild.task.err.UnexpectedError;
 import org.smoothbuild.testing.task.TestSandbox;
 import org.smoothbuild.util.Empty;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class NativeCallTaskTest {
@@ -71,7 +73,8 @@ public class NativeCallTaskTest {
 
   @Test
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
-    Signature signature = new Signature(VOID, simpleName("name"), Empty.stringParamMap());
+    ImmutableList<Param> params = ImmutableList.of();
+    Signature signature = new Signature(VOID, simpleName("name"), params);
     nativeCallTask = new NativeCallTask(signature, codeLocation, invoker, Empty.stringTaskMap());
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 

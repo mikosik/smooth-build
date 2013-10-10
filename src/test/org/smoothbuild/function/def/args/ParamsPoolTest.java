@@ -2,14 +2,13 @@ package org.smoothbuild.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.function.base.Param.params;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.testing.function.base.ParamTester.param;
+import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
-import org.smoothbuild.function.def.args.ParamsPool;
 
 import com.google.common.collect.ImmutableMap;
 

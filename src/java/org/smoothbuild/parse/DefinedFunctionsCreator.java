@@ -40,12 +40,10 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
-import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -99,7 +97,7 @@ public class DefinedFunctionsCreator {
 
       Type type = node.type();
       String name = function.functionName().getText();
-      ImmutableMap<String, Param> params = Empty.stringParamMap();
+      ImmutableList<Param> params = ImmutableList.of();
       Signature signature = new Signature(type, simpleName(name), params);
 
       return new DefinedFunction(signature, node);

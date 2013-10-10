@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.function.base.Param.params;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.FILE_SET;
@@ -18,6 +17,7 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +39,6 @@ import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.task.TestSandbox;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class ArgumentNodesCreatorTest {
@@ -548,12 +547,12 @@ public class ArgumentNodesCreatorTest {
     return node;
   }
 
-  private Map<String, DefinitionNode> create(ImmutableMap<String, Param> params, List<Argument> args) {
+  private Map<String, DefinitionNode> create(Iterable<Param> params, List<Argument> args) {
     ArgumentNodesCreator creator = new ArgumentNodesCreator(new NodeCreator());
     return creator.createArgumentNodes(codeLocation(1, 2, 3), messages, function(params), args);
   }
 
-  private static Function function(ImmutableMap<String, Param> params) {
+  private static Function function(Iterable<Param> params) {
     Signature signature = new Signature(STRING, simpleName("name"), params);
     return new NativeFunction(signature, mock(HashCode.class), mock(Invoker.class));
   }
@@ -572,5 +571,9 @@ public class ArgumentNodesCreatorTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(EMPTY_SET);
     return node;
+  }
+
+  public static Iterable<Param> params(Param... params) {
+    return Arrays.asList(params);
   }
 }

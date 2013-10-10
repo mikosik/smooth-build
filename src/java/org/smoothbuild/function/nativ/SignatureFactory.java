@@ -3,6 +3,7 @@ package org.smoothbuild.function.nativ;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
@@ -19,8 +20,7 @@ import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.inject.Inject;
@@ -38,7 +38,7 @@ public class SignatureFactory {
       throws NativeImplementationException {
     Type type = getReturnType(method);
     Name name = getFunctionName(method);
-    ImmutableMap<String, Param> params = getParams(method, paramsInterface);
+    Iterable<Param> params = getParams(method, paramsInterface);
 
     return new Signature(type, name, params);
   }
@@ -65,18 +65,17 @@ public class SignatureFactory {
     return type;
   }
 
-  private ImmutableMap<String, Param> getParams(Method method, Class<?> paramsInterface)
+  private Iterable<Param> getParams(Method method, Class<?> paramsInterface)
       throws NativeImplementationException {
     if (!paramsInterface.isInterface()) {
       throw new ParamsIsNotInterfaceException(method);
     }
     Method[] methods = paramsInterface.getMethods();
-    Builder<String, Param> builder = ImmutableMap.builder();
+    List<Param> params = Lists.newArrayList();
     for (Method paramMethod : methods) {
-      Param param = methodToParam(method, paramMethod);
-      builder.put(param.name(), param);
+      params.add(methodToParam(method, paramMethod));
     }
-    return builder.build();
+    return params;
   }
 
   private Param methodToParam(Method method, Method paramMethod)

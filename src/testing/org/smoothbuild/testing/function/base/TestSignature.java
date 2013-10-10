@@ -6,9 +6,8 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 public class TestSignature {
   public static Signature testSignature() {
@@ -18,7 +17,7 @@ public class TestSignature {
   public static Signature testSignature(String name) {
     Type type = Type.STRING;
     Name simpleName = simpleName(name);
-    ImmutableMap<String, Param> params = Empty.stringParamMap();
+    ImmutableList<Param> params = ImmutableList.of();
 
     return new Signature(type, simpleName, params);
   }

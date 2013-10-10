@@ -1,6 +1,5 @@
 package org.smoothbuild.util;
 
-import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.task.Task;
 
@@ -13,10 +12,6 @@ public class Empty {
   }
 
   public static ImmutableMap<String, Object> stringObjectMap() {
-    return ImmutableMap.of();
-  }
-
-  public static ImmutableMap<String, Param> stringParamMap() {
     return ImmutableMap.of();
   }
 
