@@ -15,7 +15,7 @@ public class StringSetNode implements DefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elemNodes;
   private final CodeLocation codeLocation;
 
-  public StringSetNode(ImmutableList<? extends DefinitionNode> elemNodes, CodeLocation codeLocation) {
+  StringSetNode(ImmutableList<? extends DefinitionNode> elemNodes, CodeLocation codeLocation) {
     this.elemNodes = elemNodes;
     this.codeLocation = codeLocation;
   }

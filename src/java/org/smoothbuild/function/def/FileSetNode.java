@@ -13,7 +13,7 @@ public class FileSetNode implements DefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elemNodes;
   private final CodeLocation codeLocation;
 
-  public FileSetNode(ImmutableList<? extends DefinitionNode> elemNodes, CodeLocation codeLocation) {
+  FileSetNode(ImmutableList<? extends DefinitionNode> elemNodes, CodeLocation codeLocation) {
     this.elemNodes = elemNodes;
     this.codeLocation = codeLocation;
   }
