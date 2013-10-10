@@ -185,16 +185,16 @@ public class ArgumentNodesCreator {
       Builder<String, DefinitionNode> builder = ImmutableMap.builder();
 
       for (Assignment assignment : assignments) {
-        Param param = assignment.param();
-        Argument argument = assignment.argument();
-        DefinitionNode node = convert(param.type(), argument);
-        builder.put(param.name(), node);
+        DefinitionNode node = argumentNode(assignment);
+        builder.put(assignment.assignedName(), node);
       }
 
       return builder.build();
     }
 
-    private DefinitionNode convert(Type type, Argument argument) {
+    private DefinitionNode argumentNode(Assignment assignment) {
+      Type type = assignment.param().type();
+      Argument argument = assignment.argument();
       if (argument.type() == Type.EMPTY_SET) {
         if (type == Type.STRING_SET) {
           return nodeCreator.stringSet(Empty.definitionNodeList(), argument.codeLocation());
