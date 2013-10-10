@@ -12,7 +12,6 @@ import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
-import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.def.Argument.namedArg;
 import static org.smoothbuild.parse.def.Argument.namelessArg;
@@ -29,6 +28,7 @@ import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.EmptySetNode;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.parse.def.err.AmbiguousNamelessArgsError;
@@ -84,7 +84,7 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
-    Argument a1 = argument(p1.name(), emptySetNode());
+    Argument a1 = argument(p1.name(), new EmptySetNode());
 
     // when
     Map<String, DefinitionNode> result = create(params(p1, p2), list(a1));

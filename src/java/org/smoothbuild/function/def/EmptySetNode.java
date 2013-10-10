@@ -6,13 +6,8 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.task.Task;
 
 public class EmptySetNode implements DefinitionNode {
-  public static EmptySetNode INSTANCE = new EmptySetNode();
 
-  public static EmptySetNode emptySetNode() {
-    return INSTANCE;
-  }
-
-  private EmptySetNode() {}
+  public EmptySetNode() {}
 
   @Override
   public Type type() {

@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 
 public class EmptySetNodeTest {
-  EmptySetNode emptySetNode = EmptySetNode.emptySetNode();
+  EmptySetNode emptySetNode = new EmptySetNode();
 
   @Test
   public void type() {
@@ -16,10 +16,5 @@ public class EmptySetNodeTest {
   @Test(expected = UnsupportedOperationException.class)
   public void generateTaskThrowsException() throws Exception {
     emptySetNode.generateTask();
-  }
-
-  @Test
-  public void onlyOneInstanceExists() throws Exception {
-    assertThat(EmptySetNode.emptySetNode()).isSameAs(EmptySetNode.emptySetNode());
   }
 }
