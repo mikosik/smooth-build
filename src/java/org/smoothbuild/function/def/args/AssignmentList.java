@@ -12,18 +12,18 @@ import com.google.common.collect.Sets;
 
 public class AssignmentList implements Iterable<Assignment> {
   private final List<Assignment> assignments;
-  private final Set<String> namesAlreadyAdded;
+  private final Set<String> namesAlreadyAssigned;
 
   public AssignmentList() {
     this.assignments = Lists.newArrayList();
-    this.namesAlreadyAdded = Sets.newHashSet();
+    this.namesAlreadyAssigned = Sets.newHashSet();
   }
 
   public void add(Assignment assignment) {
-    String paramName = assignment.param().name();
-    checkState(!namesAlreadyAdded.contains(paramName));
+    String asignedName = assignment.assignedName();
+    checkState(!namesAlreadyAssigned.contains(asignedName));
     assignments.add(assignment);
-    namesAlreadyAdded.add(paramName);
+    namesAlreadyAssigned.add(asignedName);
   }
 
   public Iterator<Assignment> iterator() {
