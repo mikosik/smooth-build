@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.def;
+package org.smoothbuild.function.def.args;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,10 +12,10 @@ import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.function.def.args.Argument.namedArg;
+import static org.smoothbuild.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.function.def.args.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.parse.def.Argument.namedArg;
-import static org.smoothbuild.parse.def.Argument.namelessArg;
-import static org.smoothbuild.parse.def.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.EmptySetNode;
+import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
+import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
+import org.smoothbuild.function.def.args.err.TypeMismatchError;
+import org.smoothbuild.function.def.args.err.UnknownParamNameError;
+import org.smoothbuild.function.def.args.err.VoidArgError;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
-import org.smoothbuild.parse.def.err.AmbiguousNamelessArgsError;
-import org.smoothbuild.parse.def.err.DuplicateArgNameError;
-import org.smoothbuild.parse.def.err.TypeMismatchError;
-import org.smoothbuild.parse.def.err.UnknownParamNameError;
-import org.smoothbuild.parse.def.err.VoidArgError;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.task.TestSandbox;

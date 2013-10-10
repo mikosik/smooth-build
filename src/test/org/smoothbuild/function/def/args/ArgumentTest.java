@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.def;
+package org.smoothbuild.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -9,16 +9,17 @@ import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.function.def.args.Argument.namedArg;
+import static org.smoothbuild.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.parse.def.Argument.namedArg;
-import static org.smoothbuild.parse.def.Argument.namelessArg;
-import static org.smoothbuild.parse.def.Argument.pipedArg;
 
 import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.message.message.CodeLocation;
 
 import com.google.common.collect.ImmutableList;

@@ -1,8 +1,8 @@
-package org.smoothbuild.parse.def;
+package org.smoothbuild.function.def.args;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
-import static org.smoothbuild.parse.def.Assignment.assignment;
+import static org.smoothbuild.function.def.args.Assignment.assignment;
 
 import java.util.Iterator;
 import java.util.List;

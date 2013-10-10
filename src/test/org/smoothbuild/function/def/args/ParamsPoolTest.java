@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.def;
+package org.smoothbuild.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -9,6 +9,7 @@ import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.def.args.ParamsPool;
 
 import com.google.common.collect.ImmutableMap;
 
