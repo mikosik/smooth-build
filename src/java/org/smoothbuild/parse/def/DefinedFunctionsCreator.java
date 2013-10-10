@@ -2,7 +2,6 @@ package org.smoothbuild.parse.def;
 
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
-import static org.smoothbuild.function.def.EmptySetNode.emptySetNode;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -30,10 +29,11 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.def.CallNode;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.EmptySetNode;
 import org.smoothbuild.function.def.FileSetNode;
-import org.smoothbuild.function.def.CallNode;
 import org.smoothbuild.function.def.InvalidNode;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
@@ -127,11 +127,11 @@ public class DefinedFunctionsCreator {
       ImmutableList<DefinitionNode> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return emptySetNode();
+        return new EmptySetNode();
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return emptySetNode();
+        return new EmptySetNode();
       }
 
       Type elemsType = elemNodes.get(0).type();
