@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.def;
+package org.smoothbuild.parse;
 
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
@@ -38,7 +38,6 @@ import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
-import org.smoothbuild.parse.SymbolTable;
 import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
 import org.smoothbuild.util.Empty;
