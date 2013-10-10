@@ -5,6 +5,7 @@ import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
+import static org.smoothbuild.function.def.args.Assignment.assignment;
 
 import java.util.Collection;
 import java.util.Map;
@@ -14,6 +15,8 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.FileSetNode;
+import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
@@ -26,6 +29,7 @@ import org.smoothbuild.message.message.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Sets;
 
 public class ArgumentNodesCreator {
@@ -81,7 +85,7 @@ public class ArgumentNodesCreator {
             missingRequiredParams));
         return null;
       }
-      return assignmentList.createNodesMap();
+      return createArgumentNodes(assignmentList);
     }
 
     private void detectDuplicatedAndUnknownArgNames(Collection<Argument> namedArgs) {
@@ -117,7 +121,7 @@ public class ArgumentNodesCreator {
           if (!paramType.isAssignableFrom(argument.type())) {
             messages.report(new TypeMismatchError(argument, paramType));
           } else {
-            assignmentList.add(param, argument);
+            assignmentList.add(assignment(param, argument));
           }
         }
       }
@@ -155,9 +159,7 @@ public class ArgumentNodesCreator {
           if (argsSize == 1 && availableTypedParams.hasCandidate()) {
             Argument onlyArg = availableArgs.iterator().next();
             Param candidateParam = availableTypedParams.candidate();
-            // DefinitionNode node = convert(onlyParam.type(),
-            // onlyArg.definitionNode());
-            assignmentList.add(candidateParam, onlyArg);
+            assignmentList.add(assignment(candidateParam, onlyArg));
             paramsPool.take(candidateParam);
           } else {
             AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
@@ -166,6 +168,33 @@ public class ArgumentNodesCreator {
             return;
           }
         }
+      }
+    }
+
+    private Map<String, DefinitionNode> createArgumentNodes(AssignmentList assignments) {
+      Builder<String, DefinitionNode> builder = ImmutableMap.builder();
+
+      for (Assignment assignment : assignments) {
+        Param param = assignment.param();
+        Argument argument = assignment.argument();
+        DefinitionNode node = convert(param.type(), argument);
+        builder.put(param.name(), node);
+      }
+
+      return builder.build();
+    }
+
+    private static DefinitionNode convert(Type type, Argument argument) {
+      if (argument.type() == Type.EMPTY_SET) {
+        if (type == Type.STRING_SET) {
+          return new StringSetNode(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
+        } else if (type == Type.FILE_SET) {
+          return new FileSetNode(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
+        } else {
+          throw new RuntimeException("Cannot convert from " + argument.type() + " to " + type + ".");
+        }
+      } else {
+        return argument.definitionNode();
       }
     }
   }
