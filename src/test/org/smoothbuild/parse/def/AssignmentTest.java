@@ -58,12 +58,14 @@ public class AssignmentTest {
   public void param_and_argument_are_returned() throws Exception {
     DefinitionNode argNode = mock(DefinitionNode.class);
     Mockito.when(argNode.type()).thenReturn(STRING);
-    param = param(STRING, "name");
+    String name = "name";
+    param = param(STRING, name);
     argument = pipedArg(argNode, codeLocation(1, 2, 4));
 
     Assignment assignment = assignment(param, argument);
     assertThat(assignment.argument()).isSameAs(argument);
     assertThat(assignment.param()).isSameAs(param);
+    assertThat(assignment.assignedName()).isEqualTo(name);
   }
 
   private static Closure $assignment(final Param param, final Argument argument) {

@@ -29,4 +29,8 @@ public class Assignment {
   public Argument argument() {
     return argument;
   }
+
+  public String assignedName() {
+    return param.name();
+  }
 }
