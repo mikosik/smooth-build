@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.def;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.parse.def.Assignment.assignment;
 
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class AssignmentList {
   }
 
   public void add(Param param, Argument argument) {
-    Assignment assignment = new Assignment(param, argument);
+    Assignment assignment = assignment(param, argument);
     checkState(!namesAlreadyAdded.contains(param.name()));
     assignments.add(assignment);
     namesAlreadyAdded.add(param.name());
@@ -116,29 +116,6 @@ public class AssignmentList {
       }
     } else {
       return argument.definitionNode();
-    }
-  }
-
-  private static class Assignment {
-    private final Param param;
-    private final Argument argument;
-
-    public Assignment(Param param, Argument argument) {
-      boolean isAssignable = param.type().isAssignableFrom(argument.type());
-      if (!isAssignable) {
-        throw new IllegalArgumentException("Param " + param + " cannot be assigned from "
-            + argument + " argument.");
-      }
-      this.param = checkNotNull(param);
-      this.argument = checkNotNull(argument);
-    }
-
-    public Param param() {
-      return param;
-    }
-
-    public Argument argument() {
-      return argument;
     }
   }
 }
