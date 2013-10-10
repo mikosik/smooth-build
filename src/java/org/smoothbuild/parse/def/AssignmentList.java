@@ -1,8 +1,10 @@
 package org.smoothbuild.parse.def;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterators.unmodifiableIterator;
 import static org.smoothbuild.parse.def.Assignment.assignment;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +21,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public class AssignmentList {
+public class AssignmentList implements Iterable<Assignment> {
   private final List<Assignment> assignments;
   private final Set<String> namesAlreadyAdded;
 
@@ -29,10 +31,18 @@ public class AssignmentList {
   }
 
   public void add(Param param, Argument argument) {
-    Assignment assignment = assignment(param, argument);
-    checkState(!namesAlreadyAdded.contains(param.name()));
+    add(assignment(param, argument));
+  }
+
+  public void add(Assignment assignment) {
+    String paramName = assignment.param().name();
+    checkState(!namesAlreadyAdded.contains(paramName));
     assignments.add(assignment);
-    namesAlreadyAdded.add(param.name());
+    namesAlreadyAdded.add(paramName);
+  }
+
+  public Iterator<Assignment> iterator() {
+    return unmodifiableIterator(assignments.iterator());
   }
 
   public Map<String, DefinitionNode> createNodesMap() {

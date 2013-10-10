@@ -8,6 +8,7 @@ import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.def.Argument.namedArg;
+import static org.smoothbuild.parse.def.Assignment.assignment;
 import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import java.util.Map;
@@ -45,6 +46,16 @@ public class AssignmentListTest {
   }
 
   @Test
+  public void addingNullAssignmentThrowsException() throws Exception {
+    try {
+      assignmentList.add(null);
+      fail("exception should be thrown");
+    } catch (NullPointerException e) {
+      // expected
+    }
+  }
+
+  @Test
   public void addingAssignmentForTheSameParamTwiceThrowsException() throws Exception {
     String name = "name";
     Param param1 = param(STRING, name);
@@ -53,28 +64,11 @@ public class AssignmentListTest {
     Argument arg1 = arg(STRING);
     Argument arg2 = arg(FILE);
 
-    assignmentList.add(param1, arg1);
+    assignmentList.add(assignment(param1, arg1));
     try {
-      assignmentList.add(param2, arg2);
+      assignmentList.add(assignment(param2, arg2));
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void assigningIncorrectTypeThrowsException() throws Exception {
-    doTestAssigningIncorrectTypeThrowsException(STRING, FILE);
-  }
-
-  private void doTestAssigningIncorrectTypeThrowsException(Type paramType, Type argType) {
-    Param param = param(paramType, "name");
-    Argument arg = arg(argType);
-
-    try {
-      assignmentList.add(param, arg);
-      fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
       // expected
     }
   }
@@ -105,6 +99,32 @@ public class AssignmentListTest {
     Object expected = ImmutableMap.of(name1, arg1.definitionNode(), name2, arg2.definitionNode(),
         name3, arg3.definitionNode());
     assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  public void iteratorReturnsAllAddedAssignments() {
+    // given
+    String name1 = "name1";
+    String name2 = "name2";
+    String name3 = "name3";
+
+    Param param1 = param(STRING, name1);
+    Param param2 = param(STRING, name2);
+    Param param3 = param(STRING, name3);
+
+    Argument arg1 = arg(STRING);
+    Argument arg2 = arg(STRING);
+    Argument arg3 = arg(STRING);
+
+    Assignment assignment1 = assignment(param1, arg1);
+    Assignment assignment2 = assignment(param2, arg2);
+    Assignment assignment3 = assignment(param3, arg3);
+
+    assignmentList.add(assignment1);
+    assignmentList.add(assignment2);
+    assignmentList.add(assignment3);
+
+    assertThat(assignmentList).containsOnly(assignment1, assignment2, assignment3);
   }
 
   @Test
