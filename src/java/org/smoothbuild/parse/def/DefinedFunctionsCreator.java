@@ -54,7 +54,7 @@ import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
 
-  public static Map<Name, DefinedFunction> createDefinedFunctions(MessageListener messages,
+  public Map<Name, DefinedFunction> createDefinedFunctions(MessageListener messages,
       SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
     return new Worker(messages, symbolTable, functionContexts, sorted).run();
   }

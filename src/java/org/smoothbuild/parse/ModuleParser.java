@@ -5,7 +5,6 @@ import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.parse.UndefinedFunctionsDetector.detectUndefinedFunctions;
-import static org.smoothbuild.parse.def.DefinedFunctionsCreator.createDefinedFunctions;
 
 import java.io.InputStream;
 import java.util.List;
@@ -22,13 +21,17 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.parse.def.DefinedFunctionsCreator;
 
 public class ModuleParser {
   private final ImportedFunctions importedFunctions;
+  private final DefinedFunctionsCreator definedFunctionsCreator;
 
   @Inject
-  public ModuleParser(ImportedFunctions importedFunctions) {
+  public ModuleParser(ImportedFunctions importedFunctions,
+      DefinedFunctionsCreator definedFunctionsCreator) {
     this.importedFunctions = importedFunctions;
+    this.definedFunctionsCreator = definedFunctionsCreator;
   }
 
   public Module createModule(MessageListener messageListener, InputStream inputStream,
@@ -61,8 +64,8 @@ public class ModuleParser {
       return null;
     }
 
-    Map<Name, DefinedFunction> definedFunctions = createDefinedFunctions(messages,
-        importedFunctions, functions, sorted);
+    Map<Name, DefinedFunction> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
+        messages, importedFunctions, functions, sorted);
     if (messages.errorDetected()) {
       return null;
     }
