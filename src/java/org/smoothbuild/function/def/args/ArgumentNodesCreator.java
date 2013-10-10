@@ -27,6 +27,7 @@ import org.smoothbuild.function.def.args.err.VoidArgError;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -196,10 +197,9 @@ public class ArgumentNodesCreator {
     private DefinitionNode convert(Type type, Argument argument) {
       if (argument.type() == Type.EMPTY_SET) {
         if (type == Type.STRING_SET) {
-          return nodeCreator
-              .stringSet(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
+          return nodeCreator.stringSet(Empty.definitionNodeList(), argument.codeLocation());
         } else if (type == Type.FILE_SET) {
-          return nodeCreator.fileSet(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
+          return nodeCreator.fileSet(Empty.definitionNodeList(), argument.codeLocation());
         } else {
           throw new RuntimeException("Cannot convert from " + argument.type() + " to " + type + ".");
         }
