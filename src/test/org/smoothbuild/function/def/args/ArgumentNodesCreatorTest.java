@@ -14,7 +14,6 @@ import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
-import static org.smoothbuild.function.def.args.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.ParamTester.param;
 
@@ -28,7 +27,7 @@ import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.EmptySetNode;
+import org.smoothbuild.function.def.NodeCreator;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.function.def.args.err.TypeMismatchError;
@@ -84,7 +83,7 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
-    Argument a1 = argument(p1.name(), new EmptySetNode());
+    Argument a1 = argument(p1.name(), emptySetNode());
 
     // when
     Map<String, DefinitionNode> result = create(params(p1, p2), list(a1));
@@ -550,7 +549,8 @@ public class ArgumentNodesCreatorTest {
   }
 
   private Map<String, DefinitionNode> create(ImmutableMap<String, Param> params, List<Argument> args) {
-    return createArgumentNodes(codeLocation(1, 2, 3), messages, function(params), args);
+    ArgumentNodesCreator creator = new ArgumentNodesCreator(new NodeCreator());
+    return creator.createArgumentNodes(codeLocation(1, 2, 3), messages, function(params), args);
   }
 
   private static Function function(ImmutableMap<String, Param> params) {
@@ -566,5 +566,11 @@ public class ArgumentNodesCreatorTest {
     Task task = node.generateTask();
     task.execute(new TestSandbox());
     assertThat((Iterable<?>) task.result()).isEmpty();
+  }
+
+  private static DefinitionNode emptySetNode() {
+    DefinitionNode node = mock(DefinitionNode.class);
+    when(node.type()).thenReturn(EMPTY_SET);
+    return node;
   }
 }

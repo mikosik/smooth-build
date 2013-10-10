@@ -5,7 +5,6 @@ import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.function.def.args.Argument.pipedArg;
-import static org.smoothbuild.function.def.args.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -35,6 +34,7 @@ import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.NodeCreator;
 import org.smoothbuild.function.def.args.Argument;
+import org.smoothbuild.function.def.args.ArgumentNodesCreator;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
@@ -51,15 +51,18 @@ import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
   private final NodeCreator nodeCreator;
+  private final ArgumentNodesCreator argumentNodesCreator;
 
   @Inject
-  public DefinedFunctionsCreator(NodeCreator nodeCreator) {
+  public DefinedFunctionsCreator(NodeCreator nodeCreator, ArgumentNodesCreator argumentNodesCreator) {
     this.nodeCreator = nodeCreator;
+    this.argumentNodesCreator = argumentNodesCreator;
   }
 
   public Map<Name, DefinedFunction> createDefinedFunctions(MessageListener messages,
       SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
-    return new Worker(messages, symbolTable, functionContexts, sorted, nodeCreator).run();
+    return new Worker(messages, symbolTable, functionContexts, sorted, nodeCreator,
+        argumentNodesCreator).run();
   }
 
   private static class Worker {
@@ -68,16 +71,19 @@ public class DefinedFunctionsCreator {
     private final Map<String, FunctionContext> functionContexts;
     private final List<String> sorted;
     private final NodeCreator nodeCreator;
+    private final ArgumentNodesCreator argumentNodesCreator;
 
     private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
 
     public Worker(MessageListener messages, SymbolTable symbolTable,
-        Map<String, FunctionContext> functionContexts, List<String> sorted, NodeCreator nodeCreator) {
+        Map<String, FunctionContext> functionContexts, List<String> sorted,
+        NodeCreator nodeCreator, ArgumentNodesCreator argumentNodesCreator) {
       this.messages = messages;
       this.symbolTable = symbolTable;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
       this.nodeCreator = nodeCreator;
+      this.argumentNodesCreator = argumentNodesCreator;
     }
 
     public Map<Name, DefinedFunction> run() {
@@ -199,8 +205,8 @@ public class DefinedFunctionsCreator {
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, DefinitionNode> namedArgs = createArgumentNodes(codeLocation, messages, function,
-          args);
+      Map<String, DefinitionNode> namedArgs = argumentNodesCreator.createArgumentNodes(
+          codeLocation, messages, function, args);
 
       if (namedArgs == null) {
         return nodeCreator.invalid(function.type());

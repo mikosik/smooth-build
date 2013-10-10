@@ -11,12 +11,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.FileSetNode;
-import org.smoothbuild.function.def.StringSetNode;
+import org.smoothbuild.function.def.NodeCreator;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
@@ -33,10 +34,16 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Sets;
 
 public class ArgumentNodesCreator {
+  private final NodeCreator nodeCreator;
 
-  public static Map<String, DefinitionNode> createArgumentNodes(CodeLocation codeLocation,
+  @Inject
+  public ArgumentNodesCreator(NodeCreator nodeCreator) {
+    this.nodeCreator = nodeCreator;
+  }
+
+  public Map<String, DefinitionNode> createArgumentNodes(CodeLocation codeLocation,
       MessageListener messages, Function function, Collection<Argument> arguments) {
-    return new Worker(codeLocation, messages, function, arguments).convert();
+    return new Worker(codeLocation, messages, function, arguments, nodeCreator).convert();
   }
 
   private static class Worker {
@@ -45,14 +52,16 @@ public class ArgumentNodesCreator {
     private final Function function;
     private final ParamsPool paramsPool;
     private final Collection<Argument> allArguments;
+    private final NodeCreator nodeCreator;
 
     public Worker(CodeLocation codeLocation, MessageListener messageListener, Function function,
-        Collection<Argument> arguments) {
+        Collection<Argument> arguments, NodeCreator nodeCreator) {
       this.codeLocation = codeLocation;
       this.messages = new DetectingErrorsMessageListener(messageListener);
       this.function = function;
       this.paramsPool = new ParamsPool(function.params());
       this.allArguments = arguments;
+      this.nodeCreator = nodeCreator;
     }
 
     public Map<String, DefinitionNode> convert() {
@@ -184,12 +193,13 @@ public class ArgumentNodesCreator {
       return builder.build();
     }
 
-    private static DefinitionNode convert(Type type, Argument argument) {
+    private DefinitionNode convert(Type type, Argument argument) {
       if (argument.type() == Type.EMPTY_SET) {
         if (type == Type.STRING_SET) {
-          return new StringSetNode(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
+          return nodeCreator
+              .stringSet(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
         } else if (type == Type.FILE_SET) {
-          return new FileSetNode(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
+          return nodeCreator.fileSet(ImmutableList.<DefinitionNode> of(), argument.codeLocation());
         } else {
           throw new RuntimeException("Cannot convert from " + argument.type() + " to " + type + ".");
         }
