@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.def;
+package org.smoothbuild.function.def.args;
 
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.function.base.Type.FILE;
@@ -14,15 +14,15 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
+import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
+import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
+import org.smoothbuild.function.def.args.err.TypeMismatchError;
+import org.smoothbuild.function.def.args.err.UnknownParamNameError;
+import org.smoothbuild.function.def.args.err.VoidArgError;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.parse.def.err.AmbiguousNamelessArgsError;
-import org.smoothbuild.parse.def.err.DuplicateArgNameError;
-import org.smoothbuild.parse.def.err.MissingRequiredArgsError;
-import org.smoothbuild.parse.def.err.TypeMismatchError;
-import org.smoothbuild.parse.def.err.UnknownParamNameError;
-import org.smoothbuild.parse.def.err.VoidArgError;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

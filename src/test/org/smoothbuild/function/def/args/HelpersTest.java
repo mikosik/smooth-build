@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.def;
+package org.smoothbuild.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.def.args.Helpers;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

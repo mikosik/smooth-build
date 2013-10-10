@@ -2,13 +2,13 @@ package org.smoothbuild.parse.def;
 
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.function.def.args.Argument.namedArg;
+import static org.smoothbuild.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.function.def.args.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.def.Argument.namedArg;
-import static org.smoothbuild.parse.def.Argument.namelessArg;
-import static org.smoothbuild.parse.def.Argument.pipedArg;
-import static org.smoothbuild.parse.def.ArgumentNodesCreator.createArgumentNodes;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.List;
@@ -34,6 +34,7 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.function.def.NodeCreator;
+import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;

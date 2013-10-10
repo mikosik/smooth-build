@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.def.err;
+package org.smoothbuild.function.def.args.err;
 
 import static org.smoothbuild.function.base.Param.paramsToString;
 import static org.smoothbuild.message.message.MessageType.ERROR;
@@ -7,9 +7,9 @@ import java.util.Set;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.def.args.AssignmentList;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
-import org.smoothbuild.parse.def.AssignmentList;
 
 public class MissingRequiredArgsError extends CodeMessage {
   public MissingRequiredArgsError(CodeLocation codeLocation, Function function,

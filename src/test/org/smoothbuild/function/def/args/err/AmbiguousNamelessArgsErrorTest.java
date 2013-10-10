@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.def.err;
+package org.smoothbuild.function.def.args.err;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,10 +11,10 @@ import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
+import static org.smoothbuild.function.def.args.Argument.namedArg;
+import static org.smoothbuild.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.parse.def.Argument.namedArg;
-import static org.smoothbuild.parse.def.Argument.namelessArg;
-import static org.smoothbuild.parse.def.Argument.pipedArg;
 import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import java.util.Set;
@@ -23,9 +23,10 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.parse.def.Argument;
-import org.smoothbuild.parse.def.AssignmentList;
-import org.smoothbuild.parse.def.TypedParamsPool;
+import org.smoothbuild.function.def.args.Argument;
+import org.smoothbuild.function.def.args.AssignmentList;
+import org.smoothbuild.function.def.args.TypedParamsPool;
+import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 
 public class AmbiguousNamelessArgsErrorTest {
 
