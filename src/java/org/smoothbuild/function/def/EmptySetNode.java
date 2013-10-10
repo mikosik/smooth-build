@@ -7,7 +7,7 @@ import org.smoothbuild.task.Task;
 
 public class EmptySetNode implements DefinitionNode {
 
-  public EmptySetNode() {}
+  EmptySetNode() {}
 
   @Override
   public Type type() {
