@@ -32,7 +32,7 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.task.PrecalculatedTask;
+import org.smoothbuild.task.StringTask;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.task.err.UnexpectedError;
 import org.smoothbuild.testing.task.TestSandbox;
@@ -82,7 +82,7 @@ public class NativeFunctionFactoryTest {
   }
 
   private Task stringReturningTask(String string) {
-    return new PrecalculatedTask(string);
+    return new StringTask(string);
   }
 
   public interface Parameters {
