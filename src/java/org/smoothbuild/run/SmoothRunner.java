@@ -1,6 +1,5 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.INFO;
 
 import java.io.InputStream;
@@ -12,19 +11,17 @@ import org.smoothbuild.command.CommandLineParser;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
+import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
 import org.smoothbuild.run.err.UnknownFunctionError;
 import org.smoothbuild.task.TaskExecutor;
-import org.smoothbuild.util.Empty;
 
 public class SmoothRunner {
   private final DetectingErrorsMessageListener messages;
@@ -61,14 +58,13 @@ public class SmoothRunner {
       }
 
       Name name = args.functionToRun();
-      Function function = module.getFunction(name);
+      DefinedFunction function = module.getFunction(name);
       if (function == null) {
         messages.report(new UnknownFunctionError(name, module.availableNames()));
         return;
       }
 
-      CodeLocation ignored = codeLocation(0, 0, 0);
-      taskExecutor.execute(messages, function.generateTask(Empty.stringTaskMap(), ignored));
+      taskExecutor.execute(messages, function.generateTask());
     } catch (ErrorMessageException e) {
       messages.report(e.errorMessage());
     }

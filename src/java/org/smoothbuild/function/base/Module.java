@@ -14,7 +14,7 @@ public class Module {
     this.functions = ImmutableMap.copyOf(definedFunctions);
   }
 
-  public Function getFunction(Name name) {
+  public DefinedFunction getFunction(Name name) {
     return functions.get(name);
   }
 
