@@ -5,9 +5,6 @@ import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
 import java.lang.reflect.Method;
 
-import javax.inject.Inject;
-
-import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.exc.MoreThanOneSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
@@ -18,20 +15,15 @@ import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.SandboxImpl;
+import org.smoothbuild.util.Hash;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
-import com.google.common.hash.HashFunction;
 
 public class NativeFunctionFactory {
-  private final HashFunction hashFunction;
 
-  @Inject
-  public NativeFunctionFactory(HashFunction hashFunction) {
-    this.hashFunction = hashFunction;
-  }
-
-  public Function create(Class<?> klass, boolean builtin) throws NativeImplementationException {
+  public static NativeFunction create(Class<?> klass, boolean builtin)
+      throws NativeImplementationException {
     Method method = getExecuteMethod(klass, builtin);
     Class<?> paramsInterface = method.getParameterTypes()[1];
 
@@ -42,9 +34,9 @@ public class NativeFunctionFactory {
     return new NativeFunction(signature, hash, invoker);
   }
 
-  private HashCode calculateFunctionHash(Signature signature) {
+  private static HashCode calculateFunctionHash(Signature signature) {
     String name = signature.name().full();
-    return hashFunction.hashString(name, Charsets.UTF_8);
+    return Hash.hashFunction().hashString(name, Charsets.UTF_8);
   }
 
   private static Invoker createInvoker(Method method, Class<?> paramsInterface)
