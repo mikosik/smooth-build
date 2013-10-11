@@ -3,7 +3,7 @@ package org.smoothbuild.function.def;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.task.PrecalculatedTask;
+import org.smoothbuild.task.StringTask;
 import org.smoothbuild.task.Task;
 
 public class StringNode implements DefinitionNode {
@@ -20,6 +20,6 @@ public class StringNode implements DefinitionNode {
 
   @Override
   public Task generateTask() {
-    return new PrecalculatedTask(string);
+    return new StringTask(string);
   }
 }

@@ -8,16 +8,16 @@ import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;
 
-public class PrecalculatedTask implements Task {
-  private final Object result;
+public class StringTask implements Task {
+  private final String result;
 
-  public PrecalculatedTask(Object object) {
+  public StringTask(String object) {
     this.result = checkNotNull(object);
   }
 
   @Override
   public CallLocation location() {
-    throw new UnsupportedOperationException(PrecalculatedTask.class.getSimpleName()
+    throw new UnsupportedOperationException(StringTask.class.getSimpleName()
         + " does not have location.");
   }
 

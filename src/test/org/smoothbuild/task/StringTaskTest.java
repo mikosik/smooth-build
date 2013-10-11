@@ -6,8 +6,8 @@ import static org.mockito.Mockito.mock;
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Sandbox;
 
-public class PrecalculatedTaskTest {
-  PrecalculatedTask task = new PrecalculatedTask("result");
+public class StringTaskTest {
+  StringTask task = new StringTask("result");
 
   @Test
   public void initiallyResultIsCalculated() {
@@ -16,13 +16,13 @@ public class PrecalculatedTaskTest {
 
   @Test(expected = NullPointerException.class)
   public void nullResultIsForbidden() throws Exception {
-    new PrecalculatedTask(null);
+    new StringTask(null);
   }
 
   @Test
   public void resultPassedToConstructorIsReturned() {
     String result = "result";
-    PrecalculatedTask task = new PrecalculatedTask(result);
+    StringTask task = new StringTask(result);
     assertThat(task.result()).isSameAs(result);
   }
 
