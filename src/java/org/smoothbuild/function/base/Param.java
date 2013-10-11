@@ -4,9 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 import static org.smoothbuild.function.base.Type.allowedForParam;
+import static org.smoothbuild.util.Hash.hashFunction;
 
 import java.util.Set;
 
+import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 
 public class Param {
@@ -15,15 +17,19 @@ public class Param {
   private final boolean isRequired;
   private final HashCode hash;
 
-  public static Param param(Type type, String name, boolean isRequired, HashCode hash) {
-    return new Param(type, name, isRequired, hash);
+  public static Param param(Type type, String name) {
+    return param(type, name, false);
   }
 
-  protected Param(Type type, String name, boolean isRequired, HashCode hash) {
+  public static Param param(Type type, String name, boolean isRequired) {
+    return new Param(type, name, isRequired);
+  }
+
+  protected Param(Type type, String name, boolean isRequired) {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
-    this.hash = checkNotNull(hash);
+    this.hash = hashFunction().hashString(name, Charsets.UTF_8);
   }
 
   private Type checkAllowedType(Type type) {

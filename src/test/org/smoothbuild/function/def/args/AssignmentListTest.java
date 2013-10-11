@@ -4,20 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Assignment.assignment;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.function.base.ParamTester.param;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.args.Argument;
-import org.smoothbuild.function.def.args.Assignment;
-import org.smoothbuild.function.def.args.AssignmentList;
 
 public class AssignmentListTest {
   AssignmentList assignmentList = new AssignmentList();
