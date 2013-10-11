@@ -27,7 +27,7 @@ public class DefinedFunctionTest {
   }
 
   @Test
-  public void generateTask() throws Exception {
+  public void generateTaskWithEmptyDependency() throws Exception {
     Task task = mock(Task.class);
     when(root.generateTask()).thenReturn(task);
 
@@ -39,5 +39,15 @@ public class DefinedFunctionTest {
   @Test(expected = IllegalArgumentException.class)
   public void generateTaskThrowsExceptionWhenDependenciesAreNotEmpty() throws Exception {
     definedFunction.generateTask(ImmutableMap.of("name", mock(Task.class)), codeLocation);
+  }
+
+  @Test
+  public void generateTaskForwardsCallToRootDefinitionNode() throws Exception {
+    Task task = mock(Task.class);
+    when(root.generateTask()).thenReturn(task);
+
+    Task actual = definedFunction.generateTask(Empty.stringTaskMap(), codeLocation);
+
+    assertThat(actual).isSameAs(task);
   }
 }
