@@ -13,6 +13,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.err.DuplicatePathError;
 import org.smoothbuild.testing.task.TestSandbox;
+import org.smoothbuild.testing.task.TestTask;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.type.api.File;
@@ -28,8 +29,8 @@ public class FileSetTaskTest {
   TestFile file2 = sandbox.resultFileSet().createFile(path2);
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
-  Task task1 = new PrecalculatedTask(file1);
-  Task task2 = new PrecalculatedTask(file2);
+  Task task1 = new TestTask(file1);
+  Task task2 = new TestTask(file2);
 
   FileSetTask fileSetTask = new FileSetTask(ImmutableSet.of(task1, task2), codeLocation);
 

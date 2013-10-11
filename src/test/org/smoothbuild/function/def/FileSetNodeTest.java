@@ -13,9 +13,9 @@ import java.util.Iterator;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.PrecalculatedTask;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.testing.task.TestSandbox;
+import org.smoothbuild.testing.task.TestTask;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.type.api.File;
@@ -60,7 +60,7 @@ public class FileSetNodeTest {
 
   private static DefinitionNode fileNode(File file) {
     DefinitionNode fileNode = mock(DefinitionNode.class);
-    when(fileNode.generateTask()).thenReturn(new PrecalculatedTask(file));
+    when(fileNode.generateTask()).thenReturn(new TestTask(file));
     return fileNode;
   }
 }
