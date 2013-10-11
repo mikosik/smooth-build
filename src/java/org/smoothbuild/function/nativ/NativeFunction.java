@@ -19,10 +19,16 @@ import com.google.common.hash.HashCode;
  */
 public class NativeFunction extends AbstractFunction {
   private final Invoker invoker;
+  private final HashCode hash;
 
   public NativeFunction(Signature signature, HashCode hash, Invoker invoker) {
-    super(signature, hash);
+    super(signature);
+    this.hash = checkNotNull(hash);
     this.invoker = checkNotNull(invoker);
+  }
+
+  public HashCode hash() {
+    return hash;
   }
 
   @Override
