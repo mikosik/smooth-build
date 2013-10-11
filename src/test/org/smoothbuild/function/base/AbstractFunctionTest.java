@@ -13,21 +13,14 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.hash.HashCode;
 
 public class AbstractFunctionTest {
   Signature signature = mock(Signature.class);
-  HashCode hash = HashCode.fromInt(33);
-  AbstractFunction function = new MyAbstractFunction(signature, hash);
+  AbstractFunction function = new MyAbstractFunction(signature);
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
-    new MyAbstractFunction(null, hash);
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void nullHashIsForbidden() throws Exception {
-    new MyAbstractFunction(signature, null);
+    new MyAbstractFunction(null);
   }
 
   @Test
@@ -45,11 +38,6 @@ public class AbstractFunctionTest {
   }
 
   @Test
-  public void hash() {
-    assertThat(function.hash()).isSameAs(hash);
-  }
-
-  @Test
   public void testParams() {
     ImmutableMap<String, Param> params = params(param(Type.STRING, "name"));
     when(signature.params()).thenReturn(params);
@@ -58,8 +46,8 @@ public class AbstractFunctionTest {
   }
 
   public static class MyAbstractFunction extends AbstractFunction {
-    public MyAbstractFunction(Signature signature, HashCode hash) {
-      super(signature, hash);
+    public MyAbstractFunction(Signature signature) {
+      super(signature);
     }
 
     @Override

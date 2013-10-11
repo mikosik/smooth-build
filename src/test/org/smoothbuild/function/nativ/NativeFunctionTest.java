@@ -32,6 +32,16 @@ public class NativeFunctionTest {
     new NativeFunction(signature, hash, null);
   }
 
+  @Test(expected = NullPointerException.class)
+  public void nullHashIsForbidden() throws Exception {
+    new NativeFunction(signature, null, invoker);
+  }
+
+  @Test
+  public void hash() {
+    assertThat(function.hash()).isSameAs(hash);
+  }
+
   @Test
   public void generateTaskReturnsTaskWithNoResultCalculated() throws Exception {
     Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);
