@@ -11,7 +11,6 @@ import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.HashModule;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.mem.MemoryFileSystemModule;
 import org.smoothbuild.function.base.Function;
@@ -51,8 +50,8 @@ public class NativeFunctionFactoryTest {
 
   @Before
   public void before() {
-    nativeFunctionFactory = Guice.createInjector(new HashModule(), new MemoryFileSystemModule())
-        .getInstance(NativeFunctionFactory.class);
+    nativeFunctionFactory = Guice.createInjector(new MemoryFileSystemModule()).getInstance(
+        NativeFunctionFactory.class);
   }
 
   @Test

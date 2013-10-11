@@ -6,6 +6,6 @@ import org.smoothbuild.run.SmoothRunner;
 
 public class Main {
   public static void main(String[] args) {
-    createInjector(new HashModule()).getInstance(SmoothRunner.class).run(args);
+    createInjector().getInstance(SmoothRunner.class).run(args);
   }
 }
