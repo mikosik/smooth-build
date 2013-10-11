@@ -52,12 +52,21 @@ public class JavacSmoothTest extends IntegrationTestCase {
 
     String classFile = "MyClass.class";
     String method = "myMethod";
-    Object result = invoke(classFile, method);
+    Object result = invoke(path(classFile), method);
     assertThat(result).isEqualTo(returnedString);
   }
 
   @Test
   public void compileOneFileWithLibraryDependency() throws Exception {
+    Path libSourceDir = path("src/lib");
+    Path appSourceDir = path("src/app");
+    Path classDir = path("class");
+
+    Path libraryJavaFile = libSourceDir.append(path("library/LibraryClass.java"));
+    Path appJavaFile = appSourceDir.append(path("MyClass2.java"));
+    Path libClassFile = classDir.append(path("library/LibraryClass.class"));
+    Path appClassFile = classDir.append(path("MyClass2.class"));
+
     {
       StringBuilder builder = new StringBuilder();
       builder.append("package library;");
@@ -67,7 +76,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
       builder.append("  }");
       builder.append("}");
 
-      file(path("library/LibraryClass.java")).createContent(builder.toString());
+      file(libraryJavaFile).createContent(builder.toString());
     }
     {
       StringBuilder builder = new StringBuilder();
@@ -78,25 +87,22 @@ public class JavacSmoothTest extends IntegrationTestCase {
       builder.append("  }");
       builder.append("}");
 
-      file(path("MyClass2.java")).createContent(builder.toString());
+      file(appJavaFile).createContent(builder.toString());
     }
+
     ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("libraryClasses : [ file(path='library/LibraryClass.java') ] | javac ;");
+    builder.addLine("libraryClasses : [ file(path=" + libraryJavaFile + ") ] | javac ;");
     builder.addLine("libraryJar: libraryClasses | jar ;");
-    builder.addLine("saveLibraryClass : libraryClasses | save('.');");
-    builder
-        .addLine("run : [ file(path='MyClass2.java') ] | javac(libs=[libraryJar]) | save(dir='.');");
+    builder.addLine("appClasses: [ file(path=" + appJavaFile + ") ] | javac(libs=[libraryJar]) ;");
+    builder.addLine("run: libraryClasses | merge(with=appClasses) | save(" + classDir + ");");
     this.script(builder.build());
 
-    smoothRunner.run("saveLibraryClass");
     smoothRunner.run("run");
 
     messages.assertNoProblems();
-
-    loadClass(byteCode(path("library/LibraryClass.class")));
-    String classFile = "MyClass2.class";
+    loadClass(byteCode(libClassFile));
     String method = "myMethod";
-    Object result = invoke(classFile, method);
+    Object result = invoke(appClassFile, method);
     assertThat(result).isEqualTo("5");
   }
 
@@ -133,9 +139,9 @@ public class JavacSmoothTest extends IntegrationTestCase {
     messages.assertOnlyProblem(JavaCompilerMessage.class);
   }
 
-  private Object invoke(String classFile, String method) throws IOException,
+  private Object invoke(Path appClassFile, String method) throws IOException,
       IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-    Class<?> klass = loadClass(byteCode(path(classFile)));
+    Class<?> klass = loadClass(byteCode(appClassFile));
     return klass.getMethod(method).invoke(null);
   }
 
