@@ -1,8 +1,10 @@
 package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Param.param;
+import static org.smoothbuild.function.base.Type.FILE;
+import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import java.lang.reflect.Method;
 
@@ -12,24 +14,17 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.type.api.File;
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.HashCode;
-import com.google.common.hash.HashFunction;
-
 public class SignatureFactoryTest {
-  HashFunction hashFunction = mock(HashFunction.class);
-  SignatureFactory signatureFactory = new SignatureFactory(hashFunction);
 
   @Test
   public void test() throws Exception {
-    String name = "param1";
-    HashCode hashCode = HashCode.fromInt(33);
     Method method = SignatureFactoryTest.class.getMethod("smoothMethod", Sandbox.class,
         Params.class);
 
-    when(hashFunction.hashString(name, Charsets.UTF_8)).thenReturn(hashCode);
-    Signature signature = signatureFactory.create(method, Params.class);
-    assertThat(signature.params().get(name).hash()).isSameAs(hashCode);
+    Signature signature = SignatureFactory.create(method, Params.class);
+    assertThat(signature.type()).isEqualTo(FILE);
+    assertThat(signature.name()).isEqualTo(simpleName("function"));
+    assertThat(signature.params()).isEqualTo(params(param(FILE, "param1", false)));
   }
 
   public interface Params {

@@ -24,12 +24,10 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 
 public class NativeFunctionFactory {
-  private final SignatureFactory signatureFactory;
   private final HashFunction hashFunction;
 
   @Inject
-  public NativeFunctionFactory(SignatureFactory signatureFactory, HashFunction hashFunction) {
-    this.signatureFactory = signatureFactory;
+  public NativeFunctionFactory(HashFunction hashFunction) {
     this.hashFunction = hashFunction;
   }
 
@@ -37,7 +35,7 @@ public class NativeFunctionFactory {
     Method method = getExecuteMethod(klass, builtin);
     Class<?> paramsInterface = method.getParameterTypes()[1];
 
-    Signature signature = signatureFactory.create(method, paramsInterface);
+    Signature signature = SignatureFactory.create(method, paramsInterface);
     HashCode hash = calculateFunctionHash(signature);
     Invoker invoker = createInvoker(method, paramsInterface);
 
