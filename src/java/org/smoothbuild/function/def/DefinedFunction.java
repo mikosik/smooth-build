@@ -17,7 +17,7 @@ import com.google.common.hash.HashCode;
  * (as opposed to {@link org.smoothbuild.function.nativ.NativeFunction} which is
  * implemented completely in java language).
  */
-public class DefinedFunction extends AbstractFunction {
+public class DefinedFunction extends AbstractFunction implements DefinitionNode {
   private final DefinitionNode root;
 
   public DefinedFunction(Signature signature, DefinitionNode root) {
@@ -30,6 +30,11 @@ public class DefinedFunction extends AbstractFunction {
   public Task generateTask(Map<String, Task> dependencies, CodeLocation codeLocation) {
     Preconditions.checkArgument(dependencies.isEmpty(),
         "DefinedFunction.generateTask() cannot accept non-empty dependencies");
+    return generateTask();
+  }
+
+  @Override
+  public Task generateTask() {
     return root.generateTask();
   }
 }
