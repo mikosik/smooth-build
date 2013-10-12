@@ -13,7 +13,11 @@ public class Hash {
   public static final Charset STRING_CHARSET = Charsets.UTF_8;
 
   public static HashCode nativeFunction(Name name) {
-    return Hash.hashFunction().hashString(name.full(), STRING_CHARSET);
+    return string(name.full());
+  }
+
+  public static HashCode string(String string) {
+    return Hash.hashFunction().hashString(string, STRING_CHARSET);
   }
 
   public static HashFunction hashFunction() {
