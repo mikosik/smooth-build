@@ -72,4 +72,30 @@ public class FileSetTaskTest {
 
     sandbox.messages().assertOnlyProblem(DuplicatePathError.class);
   }
+
+  @Test
+  public void hashOfEmptyFileSetIsDifferentFromHashOfFileSetWithOneElement() throws Exception {
+    FileSetTask fileSetTask1 = new FileSetTask(hashes(task1), codeLocation);
+    FileSetTask fileSetTask2 = new FileSetTask(hashes(), codeLocation);
+
+    assertThat(fileSetTask1.hash()).isNotEqualTo(fileSetTask2.hash());
+  }
+
+  @Test
+  public void hashOfFileSetWithOneFileIsDifferentFromHashOfFileSetWithDifferentElement()
+      throws Exception {
+    FileSetTask fileSetTask1 = new FileSetTask(hashes(task1), codeLocation);
+    FileSetTask fileSetTask2 = new FileSetTask(hashes(task2), codeLocation);
+
+    assertThat(fileSetTask1.hash()).isNotEqualTo(fileSetTask2.hash());
+  }
+
+  @Test
+  public void hashOfFileSetWithOneFileIsDifferentFromHashOfFileSetWithAdditionalFile()
+      throws Exception {
+    FileSetTask fileSetTask1 = new FileSetTask(hashes(task1), codeLocation);
+    FileSetTask fileSetTask2 = new FileSetTask(hashes(task1, task2), codeLocation);
+
+    assertThat(fileSetTask1.hash()).isNotEqualTo(fileSetTask2.hash());
+  }
 }
