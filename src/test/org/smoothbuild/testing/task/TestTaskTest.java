@@ -40,4 +40,19 @@ public class TestTaskTest {
   public void locationThrowsException() throws Exception {
     task.location();
   }
+
+  @Test
+  public void hashOfDifferentObjectsAreDifferent() throws Exception {
+    TestTask task1 = new TestTask("abc");
+    TestTask task2 = new TestTask("def");
+    assertThat(task1.hash()).isNotEqualTo(task2.hash());
+  }
+
+  @Test
+  public void hashOfTasksWithTheSameWrappedObjectAreTheSame() throws Exception {
+    String string = "abc";
+    TestTask task1 = new TestTask(string);
+    TestTask task2 = new TestTask(string);
+    assertThat(task1.hash()).isEqualTo(task2.hash());
+  }
 }
