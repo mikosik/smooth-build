@@ -6,7 +6,7 @@ import static org.smoothbuild.task.Constants.SET_TASK_NAME;
 
 import java.util.List;
 
-import org.smoothbuild.hash.Hash;
+import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.impl.ImmutableStringSet;
@@ -20,7 +20,7 @@ public class StringSetTask extends AbstractTask {
   private final ImmutableList<HashCode> elements;
 
   public StringSetTask(List<HashCode> elements, CodeLocation codeLocation) {
-    super(callLocation(simpleName(SET_TASK_NAME), codeLocation), Hash.stringSet(elements));
+    super(callLocation(simpleName(SET_TASK_NAME), codeLocation), HashTask.stringSet(elements));
     this.elements = ImmutableList.copyOf(elements);
   }
 
