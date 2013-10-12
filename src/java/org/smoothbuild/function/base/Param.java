@@ -4,11 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 import static org.smoothbuild.function.base.Type.allowedForParam;
-import static org.smoothbuild.hash.Hash.hashFunction;
 
 import java.util.Set;
 
-import com.google.common.base.Charsets;
+import org.smoothbuild.hash.Hash;
+
 import com.google.common.hash.HashCode;
 
 public class Param {
@@ -29,7 +29,7 @@ public class Param {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
-    this.hash = hashFunction().hashString(name, Charsets.UTF_8);
+    this.hash = Hash.string(name);
   }
 
   private Type checkAllowedType(Type type) {
