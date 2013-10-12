@@ -10,7 +10,7 @@ import org.smoothbuild.task.TaskGenerator;
 public class StringNode implements DefinitionNode {
   private final String string;
 
-  StringNode(String string) {
+  public StringNode(String string) {
     this.string = checkNotNull(string);
   }
 

@@ -9,7 +9,7 @@ import org.smoothbuild.task.TaskGenerator;
 public class InvalidNode implements DefinitionNode {
   private final Type type;
 
-  InvalidNode(Type type) {
+  public InvalidNode(Type type) {
     this.type = checkNotNull(type);
   }
 
