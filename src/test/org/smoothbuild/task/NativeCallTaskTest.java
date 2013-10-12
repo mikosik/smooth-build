@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Param.param;
+import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
@@ -38,9 +40,17 @@ public class NativeCallTaskTest {
   TestSandbox sandbox = new TestSandbox();
   CodeLocation codeLocation = codeLocation(1, 2, 4);
   HashCode hash = HashCode.fromInt(33);
-  NativeFunction function = new NativeFunction(testSignature(), invoker);
+  NativeFunction function1 = new NativeFunction(testSignature(), invoker);
+  NativeFunction function2 = new NativeFunction(testSignature(), invoker);
 
-  NativeCallTask nativeCallTask = new NativeCallTask(function, codeLocation, Empty.stringHashMap());
+  String name1 = "name1";
+  String name2 = "name2";
+  HashCode hash1 = HashCode.fromInt(1);
+  HashCode hash2 = HashCode.fromInt(2);
+
+  ImmutableList<Param> params = ImmutableList.of(param(STRING, name1), param(STRING, name2));
+
+  NativeCallTask nativeCallTask = new NativeCallTask(function1, codeLocation, Empty.stringHashMap());
 
   @Test
   public void location() throws Exception {
@@ -54,7 +64,7 @@ public class NativeCallTaskTest {
     Task subTask = new TestTask(argValue);
 
     String name = "param";
-    NativeCallTask nativeCallTask = new NativeCallTask(function, codeLocation, ImmutableMap.of(
+    NativeCallTask nativeCallTask = new NativeCallTask(function1, codeLocation, ImmutableMap.of(
         name, subTask.hash()));
 
     String result = "result";
@@ -79,8 +89,8 @@ public class NativeCallTaskTest {
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
     Signature signature = new Signature(VOID, simpleName("name"), params);
-    function = new NativeFunction(signature, invoker);
-    nativeCallTask = new NativeCallTask(function, codeLocation, Empty.stringHashMap());
+    function1 = new NativeFunction(signature, invoker);
+    nativeCallTask = new NativeCallTask(function1, codeLocation, Empty.stringHashMap());
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
 
     nativeCallTask.execute(sandbox, hashedTasks());
@@ -129,4 +139,28 @@ public class NativeCallTaskTest {
     assertThat(nativeCallTask.isResultCalculated()).isFalse();
   }
 
+  @Test
+  public void functionWithTheSameNameButDifferentArgsHaveDifferentHashes() throws Exception {
+    function1 = new NativeFunction(new Signature(STRING, simpleName("func"), params), invoker);
+
+    ImmutableMap<String, HashCode> args1 = ImmutableMap.of(name1, hash1);
+    NativeCallTask task1 = new NativeCallTask(function1, codeLocation, args1);
+
+    ImmutableMap<String, HashCode> args2 = ImmutableMap.of(name2, hash2);
+    NativeCallTask task2 = new NativeCallTask(function1, codeLocation, args2);
+
+    assertThat(task1.hash()).isNotEqualTo(task2.hash());
+  }
+
+  @Test
+  public void functionWithDifferentNamesButSameArgsHaveDifferentHashes() throws Exception {
+    function1 = new NativeFunction(new Signature(STRING, simpleName("func1"), params), invoker);
+    function2 = new NativeFunction(new Signature(STRING, simpleName("func2"), params), invoker);
+
+    ImmutableMap<String, HashCode> args1 = ImmutableMap.of(name1, hash1);
+    NativeCallTask task1 = new NativeCallTask(function1, codeLocation, args1);
+    NativeCallTask task2 = new NativeCallTask(function2, codeLocation, args1);
+
+    assertThat(task1.hash()).isNotEqualTo(task2.hash());
+  }
 }
