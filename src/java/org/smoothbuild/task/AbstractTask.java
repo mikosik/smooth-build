@@ -8,17 +8,13 @@ import com.google.common.hash.HashCode;
 
 public abstract class AbstractTask implements Task {
   private final CallLocation callLocation;
+  private final HashCode hash;
   private Object result;
   private boolean resultCalculated;
-  private HashCode hash;
-
-  public AbstractTask(CallLocation callLocation) {
-    // TODO fix that
-    this(callLocation, HashCode.fromInt(33));
-  }
 
   public AbstractTask(CallLocation callLocation, HashCode hash) {
     this.callLocation = callLocation;
+    this.hash = hash;
     this.result = null;
     this.resultCalculated = false;
   }
@@ -44,6 +40,7 @@ public abstract class AbstractTask implements Task {
     this.resultCalculated = true;
   }
 
+  @Override
   public HashCode hash() {
     return hash;
   }

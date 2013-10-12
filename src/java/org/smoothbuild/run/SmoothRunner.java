@@ -21,7 +21,11 @@ import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
 import org.smoothbuild.run.err.UnknownFunctionError;
+import org.smoothbuild.task.HashedTasks;
 import org.smoothbuild.task.TaskExecutor;
+import org.smoothbuild.task.TaskGenerator;
+
+import com.google.common.hash.HashCode;
 
 public class SmoothRunner {
   private final DetectingErrorsMessageListener messages;
@@ -29,18 +33,20 @@ public class SmoothRunner {
   private final CommandLineParser commandLineParser;
   private final FileSystem fileSystem;
   private final ModuleParser moduleParser;
+  private final TaskGenerator taskGenerator;
   private final TaskExecutor taskExecutor;
 
   @Inject
   public SmoothRunner(MessageListener messageListener, Cleaner cleaner,
       CommandLineParser commandLineParser, FileSystem fileSystem, ModuleParser moduleParser,
-      TaskExecutor taskExecutor) {
-    this.taskExecutor = taskExecutor;
+      TaskGenerator taskGenerator, TaskExecutor taskExecutor) {
     this.messages = new DetectingErrorsMessageListener(messageListener);
     this.cleaner = cleaner;
     this.commandLineParser = commandLineParser;
     this.fileSystem = fileSystem;
     this.moduleParser = moduleParser;
+    this.taskGenerator = taskGenerator;
+    this.taskExecutor = taskExecutor;
   }
 
   public void run(String... commandLine) {
@@ -64,7 +70,9 @@ public class SmoothRunner {
         return;
       }
 
-      taskExecutor.execute(messages, function.generateTask());
+      HashCode hash = taskGenerator.generateTask(function);
+      HashedTasks hashedTasks = new HashedTasks(taskGenerator.allTasks());
+      taskExecutor.execute(messages, hashedTasks, hash);
     } catch (ErrorMessageException e) {
       messages.report(e.errorMessage());
     }

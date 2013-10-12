@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.task.StringTask;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 
 public class StringNode implements DefinitionNode {
   private final String string;
@@ -19,7 +20,7 @@ public class StringNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask() {
+  public Task generateTask(TaskGenerator taskGenerator) {
     return new StringTask(string);
   }
 }

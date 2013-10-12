@@ -5,28 +5,32 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 
 public class EmptyTest {
 
+  // stringHashMap()
+
   @Test
-  public void emptyStringMapIsEmpty() {
-    assertThat(Empty.stringTaskMap()).isEmpty();
+  public void emptyStringHashMapIsEmpty() {
+    assertThat(Empty.stringHashMap()).isEmpty();
   }
 
   @Test
-  public void emptyStringTaskMapIsImmutable() {
+  public void emptyStringHashMapIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<String, Task> map = Empty.stringTaskMap();
+    ImmutableMap<String, HashCode> map = Empty.stringHashMap();
   }
 
   @Test
-  public void emptyStringMapAlwaysReturnsTheSameObject() {
-    assertThat(Empty.stringTaskMap()).isSameAs(Empty.stringTaskMap());
+  public void emptyStringHashMapAlwaysReturnsTheSameObject() {
+    assertThat(Empty.stringHashMap()).isSameAs(Empty.stringHashMap());
   }
+
+  // stringObjectMap()
 
   @Test
   public void emptyStringObjectIsEmpty() {
@@ -44,20 +48,29 @@ public class EmptyTest {
     assertThat(Empty.stringObjectMap()).isSameAs(Empty.stringObjectMap());
   }
 
+  // hashCodeList()
+
   @Test
-  public void emptyTaskListIsEmpty() {
-    assertThat(Empty.taskList()).isEmpty();
+  public void emptyHashCodeListIsEmpty() {
+    assertThat(Empty.hashCodeList()).isEmpty();
   }
 
   @Test
-  public void emptyTaskListIsImmutable() {
+  public void emptyHashCodeListIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableList<Task> list = Empty.taskList();
+    ImmutableList<HashCode> list = Empty.hashCodeList();
   }
 
   @Test
-  public void emptyTaskListAlwaysReturnsTheSameObject() {
-    assertThat(Empty.taskList()).isSameAs(Empty.taskList());
+  public void emptyHashCodeListAlwaysReturnsTheSameObject() {
+    assertThat(Empty.hashCodeList()).isSameAs(Empty.hashCodeList());
+  }
+
+  // definitionNodeList()
+
+  @Test
+  public void definitionNodeListIsEmpty() {
+    assertThat(Empty.definitionNodeList()).isEmpty();
   }
 
   @Test
@@ -67,9 +80,11 @@ public class EmptyTest {
   }
 
   @Test
-  public void emptyDefinitionNOdeAlwaysReturnsTheSameObject() {
+  public void emptyDefinitionNodeAlwaysReturnsTheSameObject() {
     assertThat(Empty.definitionNodeList()).isSameAs(Empty.definitionNodeList());
   }
+
+  // nullToEmpty
 
   @Test
   public void nullIsChangedIntoEmptyIterable() throws Exception {
@@ -77,7 +92,7 @@ public class EmptyTest {
   }
 
   @Test
-  public void nonNullIterableIsNotChanged() throws Exception {
+  public void nullToEmptyDoesNotChangeNonNullIterable() throws Exception {
     @SuppressWarnings("unchecked")
     Iterable<String> iterable = mock(Iterable.class);
     assertThat(Empty.nullToEmpty(iterable)).isSameAs(iterable);

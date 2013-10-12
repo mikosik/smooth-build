@@ -6,19 +6,21 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.hash.HashCode;
 
 public class CallNode implements DefinitionNode {
   private final Function function;
-  private final ImmutableMap<String, DefinitionNode> argNodes;
+  private final ImmutableMap<String, DefinitionNode> args;
   private final CodeLocation codeLocation;
 
-  CallNode(Function function, CodeLocation codeLocation, Map<String, DefinitionNode> argNodes) {
+  CallNode(Function function, CodeLocation codeLocation, Map<String, DefinitionNode> args) {
     this.function = function;
     this.codeLocation = codeLocation;
-    this.argNodes = ImmutableMap.copyOf(argNodes);
+    this.args = ImmutableMap.copyOf(args);
   }
 
   @Override
@@ -27,13 +29,14 @@ public class CallNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask() {
-    Builder<String, Task> builder = ImmutableMap.builder();
-    for (Map.Entry<String, DefinitionNode> entry : argNodes.entrySet()) {
+  public Task generateTask(TaskGenerator taskGenerator) {
+    Builder<String, HashCode> builder = ImmutableMap.builder();
+    for (Map.Entry<String, DefinitionNode> entry : args.entrySet()) {
       String argName = entry.getKey();
-      Task task = entry.getValue().generateTask();
-      builder.put(argName, task);
+      HashCode hash = taskGenerator.generateTask(entry.getValue());
+      builder.put(argName, hash);
     }
-    return function.generateTask(builder.build(), codeLocation);
+    ImmutableMap<String, HashCode> argumentHashes = builder.build();
+    return function.generateTask(taskGenerator, argumentHashes, codeLocation);
   }
 }

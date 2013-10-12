@@ -6,17 +6,18 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.StringSetTask;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.hash.HashCode;
 
 public class StringSetNode implements DefinitionNode {
-  private final ImmutableList<? extends DefinitionNode> elemNodes;
+  private final ImmutableList<? extends DefinitionNode> elements;
   private final CodeLocation codeLocation;
 
-  StringSetNode(ImmutableList<? extends DefinitionNode> elemNodes, CodeLocation codeLocation) {
-    this.elemNodes = elemNodes;
+  StringSetNode(ImmutableList<? extends DefinitionNode> elements, CodeLocation codeLocation) {
+    this.elements = elements;
     this.codeLocation = codeLocation;
   }
 
@@ -26,12 +27,13 @@ public class StringSetNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask() {
-    Builder<Task> builder = ImmutableSet.builder();
-    for (DefinitionNode node : elemNodes) {
-      builder.add(node.generateTask());
+  public Task generateTask(TaskGenerator taskGenerator) {
+    Builder<HashCode> builder = ImmutableList.builder();
+    for (DefinitionNode node : elements) {
+      HashCode hash = taskGenerator.generateTask(node);
+      builder.add(hash);
     }
-    return new StringSetTask(builder.build(), codeLocation);
+    ImmutableList<HashCode> elementHashes = builder.build();
+    return new StringSetTask(elementHashes, codeLocation);
   }
-
 }

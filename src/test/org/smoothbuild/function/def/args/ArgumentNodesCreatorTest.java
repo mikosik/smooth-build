@@ -15,6 +15,7 @@ import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.testing.task.HashedTasksTester.hashedTasks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,10 +37,9 @@ import org.smoothbuild.function.def.args.err.VoidArgError;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.task.TestSandbox;
-
-import com.google.common.hash.HashCode;
 
 public class ArgumentNodesCreatorTest {
 
@@ -554,7 +554,7 @@ public class ArgumentNodesCreatorTest {
 
   private static Function function(Iterable<Param> params) {
     Signature signature = new Signature(STRING, simpleName("name"), params);
-    return new NativeFunction(signature, mock(HashCode.class), mock(Invoker.class));
+    return new NativeFunction(signature, mock(Invoker.class));
   }
 
   private static ArrayList<Argument> list(Argument... args) {
@@ -562,8 +562,9 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static void assertThatNodeHasEmptySet(DefinitionNode node) {
-    Task task = node.generateTask();
-    task.execute(new TestSandbox());
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+    Task task = node.generateTask(taskGenerator);
+    task.execute(new TestSandbox(), hashedTasks());
     assertThat((Iterable<?>) task.result()).isEmpty();
   }
 

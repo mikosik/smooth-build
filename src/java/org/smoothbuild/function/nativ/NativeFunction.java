@@ -2,14 +2,19 @@ package org.smoothbuild.function.nativ;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.NativeCallTask;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.util.Hash;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 /**
@@ -21,9 +26,9 @@ public class NativeFunction extends AbstractFunction {
   private final Invoker invoker;
   private final HashCode hash;
 
-  public NativeFunction(Signature signature, HashCode hash, Invoker invoker) {
+  public NativeFunction(Signature signature, Invoker invoker) {
     super(signature);
-    this.hash = checkNotNull(hash);
+    this.hash = Hash.nativeFunction(signature);
     this.invoker = checkNotNull(invoker);
   }
 
@@ -32,7 +37,13 @@ public class NativeFunction extends AbstractFunction {
   }
 
   @Override
-  public Task generateTask(Map<String, Task> dependencies, CodeLocation codeLocation) {
-    return new NativeCallTask(signature(), codeLocation, invoker, dependencies);
+  public Task generateTask(TaskGenerator taskGenerator, Map<String, HashCode> args,
+      CodeLocation codeLocation) {
+    return new NativeCallTask(this, codeLocation, args);
+  }
+
+  public Object invoke(Sandbox sandbox, ImmutableMap<String, Object> args)
+      throws IllegalAccessException, InvocationTargetException {
+    return invoker.invoke(sandbox, args);
   }
 }

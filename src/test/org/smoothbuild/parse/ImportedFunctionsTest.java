@@ -11,8 +11,6 @@ import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.function.nativ.exc.FunctionImplementationException;
 
-import com.google.common.hash.HashCode;
-
 public class ImportedFunctionsTest {
   ImportedFunctions importedFunctions = new ImportedFunctions();
 
@@ -67,6 +65,6 @@ public class ImportedFunctionsTest {
   }
 
   private static Function function(String name) {
-    return new NativeFunction(testSignature(name), mock(HashCode.class), mock(Invoker.class));
+    return new NativeFunction(testSignature(name), mock(Invoker.class));
   }
 }

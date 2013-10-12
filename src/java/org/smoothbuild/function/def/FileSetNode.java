@@ -4,17 +4,18 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.FileSetTask;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.hash.HashCode;
 
 public class FileSetNode implements DefinitionNode {
-  private final ImmutableList<? extends DefinitionNode> elemNodes;
+  private final ImmutableList<? extends DefinitionNode> elements;
   private final CodeLocation codeLocation;
 
-  FileSetNode(ImmutableList<? extends DefinitionNode> elemNodes, CodeLocation codeLocation) {
-    this.elemNodes = elemNodes;
+  FileSetNode(ImmutableList<? extends DefinitionNode> elements, CodeLocation codeLocation) {
+    this.elements = elements;
     this.codeLocation = codeLocation;
   }
 
@@ -24,12 +25,14 @@ public class FileSetNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask() {
-    Builder<Task> builder = ImmutableSet.builder();
-    for (DefinitionNode node : elemNodes) {
-      builder.add(node.generateTask());
+  public Task generateTask(TaskGenerator taskGenerator) {
+    Builder<HashCode> builder = ImmutableList.builder();
+    for (DefinitionNode node : elements) {
+      HashCode hash = taskGenerator.generateTask(node);
+      builder.add(hash);
     }
-    return new FileSetTask(builder.build(), codeLocation);
+    ImmutableList<HashCode> elementHashes = builder.build();
+    return new FileSetTask(elementHashes, codeLocation);
   }
 
 }

@@ -1,9 +1,11 @@
 package org.smoothbuild.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.task.TaskGenerator;
 
 public class InvalidNodeTest {
   InvalidNode invalidNode = new InvalidNode(Type.STRING);
@@ -20,6 +22,7 @@ public class InvalidNodeTest {
 
   @Test(expected = RuntimeException.class)
   public void generateTaskThrowsException() throws Exception {
-    invalidNode.generateTask();
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+    invalidNode.generateTask(taskGenerator);
   }
 }

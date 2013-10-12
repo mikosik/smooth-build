@@ -33,7 +33,7 @@ public class TestTaskTest {
 
   @Test(expected = UnsupportedOperationException.class)
   public void calculateResultThrowsException() throws Exception {
-    task.execute(mock(Sandbox.class));
+    task.execute(mock(Sandbox.class), HashedTasksTester.hashedTasks());
   }
 
   @Test(expected = UnsupportedOperationException.class)

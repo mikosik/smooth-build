@@ -7,7 +7,8 @@ import org.junit.Test;
 import org.smoothbuild.plugin.api.Sandbox;
 
 public class StringTaskTest {
-  StringTask task = new StringTask("result");
+  String string = "result";
+  StringTask task = new StringTask(string);
 
   @Test
   public void initiallyResultIsCalculated() {
@@ -20,10 +21,9 @@ public class StringTaskTest {
   }
 
   @Test
-  public void resultPassedToConstructorIsReturned() {
-    String result = "result";
-    StringTask task = new StringTask(result);
-    assertThat(task.result()).isSameAs(result);
+  public void stringPassedToConstructorIsReturnedByResult() {
+    StringTask task = new StringTask(string);
+    assertThat(task.result()).isSameAs(string);
   }
 
   @Test
@@ -33,7 +33,7 @@ public class StringTaskTest {
 
   @Test(expected = UnsupportedOperationException.class)
   public void calculateResultThrowsException() throws Exception {
-    task.execute(mock(Sandbox.class));
+    task.execute(mock(Sandbox.class), mock(HashedTasks.class));
   }
 
   @Test(expected = UnsupportedOperationException.class)

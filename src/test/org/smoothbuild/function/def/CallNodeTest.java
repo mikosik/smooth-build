@@ -12,6 +12,8 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.testing.task.TestTask;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -31,15 +33,19 @@ public class CallNodeTest {
   public void generateTask() throws Exception {
     Function function = mock(Function.class);
     DefinitionNode node = mock(DefinitionNode.class);
-    Task argTask = mock(Task.class);
     Task task = mock(Task.class);
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+
+    Task argTask = new TestTask("arg");
+
     String name = "name";
     Map<String, DefinitionNode> argNodes = ImmutableMap.of(name, node);
 
-    when(node.generateTask()).thenReturn(argTask);
-    when(function.generateTask(ImmutableMap.of(name, argTask), codeLocation)).thenReturn(task);
+    when(taskGenerator.generateTask(node)).thenReturn(argTask.hash());
+    when(function.generateTask(taskGenerator, ImmutableMap.of(name, argTask.hash()), codeLocation))
+        .thenReturn(task);
 
-    Task actual = new CallNode(function, codeLocation, argNodes).generateTask();
+    Task actual = new CallNode(function, codeLocation, argNodes).generateTask(taskGenerator);
 
     assertThat(actual).isSameAs(task);
   }
