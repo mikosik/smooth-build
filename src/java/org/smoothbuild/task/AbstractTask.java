@@ -10,13 +10,13 @@ public abstract class AbstractTask implements Task {
   private final CallLocation callLocation;
   private final HashCode hash;
   private Object result;
-  private boolean resultCalculated;
+  private boolean isResultCalculated;
 
   public AbstractTask(CallLocation callLocation, HashCode hash) {
     this.callLocation = callLocation;
     this.hash = hash;
     this.result = null;
-    this.resultCalculated = false;
+    this.isResultCalculated = false;
   }
 
   @Override
@@ -26,18 +26,18 @@ public abstract class AbstractTask implements Task {
 
   @Override
   public boolean isResultCalculated() {
-    return resultCalculated;
+    return isResultCalculated;
   }
 
   @Override
   public Object result() {
-    checkState(resultCalculated, "Result not calculated yet.");
+    checkState(isResultCalculated, "Result not calculated yet.");
     return result;
   }
 
   protected void setResult(Object result) {
     this.result = result;
-    this.resultCalculated = true;
+    this.isResultCalculated = true;
   }
 
   @Override
