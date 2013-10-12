@@ -11,12 +11,12 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.hash.HashCode;
 
 public class StringTask implements Task {
-  private final String result;
+  private final String string;
   private final HashCode hash;
 
-  public StringTask(String object) {
-    this.result = checkNotNull(object);
-    this.hash = HashTask.string(object);
+  public StringTask(String string) {
+    this.string = checkNotNull(string);
+    this.hash = HashTask.string(string);
   }
 
   @Override
@@ -32,7 +32,7 @@ public class StringTask implements Task {
 
   @Override
   public Object result() {
-    return result;
+    return string;
   }
 
   @Override
