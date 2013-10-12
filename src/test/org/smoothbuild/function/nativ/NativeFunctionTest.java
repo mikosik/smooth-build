@@ -2,15 +2,18 @@ package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
+import static org.smoothbuild.testing.task.HashedTasksTester.hashedTasks;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
@@ -22,37 +25,38 @@ public class NativeFunctionTest {
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   Signature signature = testSignature("functionName");
-  HashCode hash = HashCode.fromInt(33);
   Invoker invoker = mock(Invoker.class);
 
-  NativeFunction function = new NativeFunction(signature, hash, invoker);
+  NativeFunction function = new NativeFunction(signature, invoker);
 
   @Test(expected = NullPointerException.class)
   public void nullInvokerIsForbidden() throws Exception {
-    new NativeFunction(signature, hash, null);
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void nullHashIsForbidden() throws Exception {
-    new NativeFunction(signature, null, invoker);
+    new NativeFunction(signature, null);
   }
 
   @Test
-  public void hash() {
-    assertThat(function.hash()).isSameAs(hash);
+  public void invokeIsForwardedToInvoker() throws Exception {
+    @SuppressWarnings("unchecked")
+    ImmutableMap<String, Object> args = mock(ImmutableMap.class);
+    function.invoke(sandbox, args);
+    verify(invoker).invoke(sandbox, args);
   }
 
   @Test
   public void generateTaskReturnsTaskWithNoResultCalculated() throws Exception {
-    Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+
+    Task task = function.generateTask(taskGenerator, Empty.stringHashMap(), codeLocation);
     assertThat(task.isResultCalculated()).isFalse();
   }
 
   @Test
-  public void generateTaskReturnsTaskWithPassedDependencies() throws Exception {
-    ImmutableMap<String, Task> dependencies = Empty.stringTaskMap();
-    Task task = function.generateTask(dependencies, codeLocation);
-    assertThat(task.dependencies()).isSameAs(dependencies.values());
+  public void generatedTaskHasPassedArgsAsDependencies() throws Exception {
+    ImmutableMap<String, HashCode> args = Empty.stringHashMap();
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+
+    Task task = function.generateTask(taskGenerator, args, codeLocation);
+    assertThat(task.dependencies()).isSameAs(args.values());
   }
 
   @Test
@@ -61,10 +65,11 @@ public class NativeFunctionTest {
 
     // given
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(result);
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
 
     // when
-    Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);
-    task.execute(sandbox);
+    Task task = function.generateTask(taskGenerator, Empty.stringHashMap(), codeLocation);
+    task.execute(sandbox, hashedTasks());
 
     // then
     assertThat(task.isResultCalculated()).isTrue();

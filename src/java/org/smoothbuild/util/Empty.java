@@ -1,13 +1,14 @@
 package org.smoothbuild.util;
 
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.task.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 
 public class Empty {
-  public static ImmutableMap<String, Task> stringTaskMap() {
+
+  public static ImmutableMap<String, HashCode> stringHashMap() {
     return ImmutableMap.of();
   }
 
@@ -15,7 +16,7 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableList<Task> taskList() {
+  public static ImmutableList<HashCode> hashCodeList() {
     return ImmutableList.of();
   }
 

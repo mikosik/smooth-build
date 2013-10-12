@@ -5,15 +5,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
+import org.smoothbuild.util.Hash;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.hash.HashCode;
 
 public class StringTask implements Task {
   private final String result;
+  private final HashCode hash;
 
   public StringTask(String object) {
     this.result = checkNotNull(object);
+    this.hash = Hash.string(object);
   }
 
   @Override
@@ -33,19 +36,18 @@ public class StringTask implements Task {
   }
 
   @Override
-  public void execute(Sandbox sandbox) {
+  public void execute(Sandbox sandbox, HashedTasks hashedTasks) {
     throw new UnsupportedOperationException(
         "No need to call calculatedResult on PrecalculatedTask.");
   }
 
   @Override
-  public ImmutableCollection<Task> dependencies() {
-    return Empty.taskList();
+  public ImmutableCollection<HashCode> dependencies() {
+    return Empty.hashCodeList();
   }
 
   @Override
   public HashCode hash() {
-    // TODO FIX
-    throw new UnsupportedOperationException();
+    return hash;
   }
 }

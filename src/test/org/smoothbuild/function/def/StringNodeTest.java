@@ -1,10 +1,12 @@
 package org.smoothbuild.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 
 public class StringNodeTest {
   String string = "string value";
@@ -22,7 +24,9 @@ public class StringNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    Task task = stringNode.generateTask();
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+
+    Task task = stringNode.generateTask(taskGenerator);
 
     assertThat(task.isResultCalculated()).isTrue();
     assertThat(task.result()).isSameAs(string);

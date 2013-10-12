@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 
 public class InvalidNode implements DefinitionNode {
   private final Type type;
@@ -18,7 +19,7 @@ public class InvalidNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask() {
+  public Task generateTask(TaskGenerator taskGenerator) {
     throw new RuntimeException("InvalidNode.generateTask() should not be called.");
   }
 }

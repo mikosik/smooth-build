@@ -8,8 +8,10 @@ import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 
 import com.google.common.base.Preconditions;
+import com.google.common.hash.HashCode;
 
 /**
  * Function that is defined completely in Smooth script using Smooth language
@@ -25,14 +27,15 @@ public class DefinedFunction extends AbstractFunction implements DefinitionNode 
   }
 
   @Override
-  public Task generateTask(Map<String, Task> dependencies, CodeLocation codeLocation) {
-    Preconditions.checkArgument(dependencies.isEmpty(),
-        "DefinedFunction.generateTask() cannot accept non-empty dependencies");
-    return generateTask();
+  public Task generateTask(TaskGenerator taskGenerator, Map<String, HashCode> arguments,
+      CodeLocation codeLocation) {
+    Preconditions.checkArgument(arguments.isEmpty(),
+        "DefinedFunction.generateTask() cannot accept non-empty arguments");
+    return generateTask(taskGenerator);
   }
 
   @Override
-  public Task generateTask() {
-    return root.generateTask();
+  public Task generateTask(TaskGenerator taskGenerator) {
+    return root.generateTask(taskGenerator);
   }
 }

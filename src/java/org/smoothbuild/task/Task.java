@@ -13,9 +13,9 @@ public interface Task {
 
   public Object result();
 
-  public void execute(Sandbox sandbox);
+  public void execute(Sandbox sandbox, HashedTasks hashedTasks);
 
-  public ImmutableCollection<Task> dependencies();
+  public ImmutableCollection<HashCode> dependencies();
 
   public HashCode hash();
 }

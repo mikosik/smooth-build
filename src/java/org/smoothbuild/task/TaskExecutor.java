@@ -12,6 +12,8 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 
+import com.google.common.hash.HashCode;
+
 public class TaskExecutor {
   private final FileSystem fileSystem;
 
@@ -20,19 +22,22 @@ public class TaskExecutor {
     this.fileSystem = fileSystem;
   }
 
-  public void execute(MessageListener messageListener, Task task) {
-    new Worker(messageListener).execute(task);
+  public void execute(MessageListener messageListener, HashedTasks tasks, HashCode hash) {
+    new Worker(messageListener, tasks).execute(hash);
   }
 
   private class Worker {
     private final DetectingErrorsMessageListener messages;
+    private final HashedTasks hashedTasks;
     private int temptDirCount = 0;
 
-    public Worker(MessageListener messageListener) {
+    public Worker(MessageListener messageListener, HashedTasks tasks) {
       this.messages = new DetectingErrorsMessageListener(messageListener);
+      this.hashedTasks = tasks;
     }
 
-    private void execute(Task task) {
+    private void execute(HashCode hash) {
+      Task task = hashedTasks.get(hash);
       if (task.isResultCalculated()) {
         return;
       }
@@ -45,13 +50,13 @@ public class TaskExecutor {
 
       Path tempPath = BUILD_DIR.append(path(Integer.toString(temptDirCount++)));
       SandboxImpl sandbox = new SandboxImpl(fileSystem, tempPath, task.location());
-      task.execute(sandbox);
+      task.execute(sandbox, hashedTasks);
       sandbox.reportCollectedMessagesTo(messages);
     }
 
-    private void calculateTasks(Collection<Task> tasks) {
-      for (Task task : tasks) {
-        execute(task);
+    private void calculateTasks(Collection<HashCode> tasks) {
+      for (HashCode taskHash : tasks) {
+        execute(taskHash);
         if (messages.errorDetected()) {
           return;
         }

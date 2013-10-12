@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.task.HashedTasks;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.util.Empty;
 
@@ -36,14 +37,14 @@ public class TestTask implements Task {
   }
 
   @Override
-  public void execute(Sandbox sandbox) {
-    throw new UnsupportedOperationException(
-        "No need to call calculatedResult on PrecalculatedTask.");
+  public void execute(Sandbox sandbox, HashedTasks hashedTasks) {
+    throw new UnsupportedOperationException("No need to call calculatedResult on "
+        + TestTask.class.getSimpleName() + ".");
   }
 
   @Override
-  public ImmutableCollection<Task> dependencies() {
-    return Empty.taskList();
+  public ImmutableCollection<HashCode> dependencies() {
+    return Empty.hashCodeList();
   }
 
   @Override

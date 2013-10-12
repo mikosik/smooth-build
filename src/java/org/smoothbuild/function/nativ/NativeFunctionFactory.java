@@ -15,10 +15,6 @@ import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.SandboxImpl;
-import org.smoothbuild.util.Hash;
-
-import com.google.common.base.Charsets;
-import com.google.common.hash.HashCode;
 
 public class NativeFunctionFactory {
 
@@ -28,15 +24,9 @@ public class NativeFunctionFactory {
     Class<?> paramsInterface = method.getParameterTypes()[1];
 
     Signature signature = SignatureFactory.create(method, paramsInterface);
-    HashCode hash = calculateFunctionHash(signature);
     Invoker invoker = createInvoker(method, paramsInterface);
 
-    return new NativeFunction(signature, hash, invoker);
-  }
-
-  private static HashCode calculateFunctionHash(Signature signature) {
-    String name = signature.name().full();
-    return Hash.hashFunction().hashString(name, Charsets.UTF_8);
+    return new NativeFunction(signature, invoker);
   }
 
   private static Invoker createInvoker(Method method, Class<?> paramsInterface)

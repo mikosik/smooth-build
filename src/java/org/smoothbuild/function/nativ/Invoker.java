@@ -17,9 +17,9 @@ public class Invoker {
     this.argumentsCreator = checkNotNull(argumentsCreator);
   }
 
-  public Object invoke(Sandbox sandbox, Map<String, Object> argumentsMap)
+  public Object invoke(Sandbox sandbox, Map<String, Object> args)
       throws IllegalAccessException, InvocationTargetException {
-    Object arguments = argumentsCreator.create(argumentsMap);
+    Object arguments = argumentsCreator.create(args);
     return method.invoke(null, new Object[] { sandbox, arguments });
   }
 }

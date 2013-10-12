@@ -2,12 +2,14 @@ package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.ParamTester.params;
+import static org.smoothbuild.testing.task.HashedTasksTester.hashedTasks;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,15 +33,17 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.task.StringTask;
 import org.smoothbuild.task.Task;
+import org.smoothbuild.task.TaskGenerator;
 import org.smoothbuild.task.err.UnexpectedError;
 import org.smoothbuild.testing.task.TestSandbox;
+import org.smoothbuild.testing.task.TestTask;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 import com.google.inject.Guice;
 
 public class NativeFunctionFactoryTest {
@@ -72,16 +76,16 @@ public class NativeFunctionFactoryTest {
   @Test
   public void testInvokation() throws Exception {
     Function function = NativeFunctionFactory.create(MyFunction.class, false);
-    ImmutableMap<String, Task> dependencies = ImmutableMap.of("stringA",
-        stringReturningTask("abc"), "stringB", stringReturningTask("def"));
-    Task task = function.generateTask(dependencies, codeLocation);
-    task.execute(sandbox);
+    TestTask task1 = new TestTask("abc");
+    TestTask task2 = new TestTask("def");
+    ImmutableMap<String, HashCode> dependencies = ImmutableMap.of("stringA", task1.hash(),
+        "stringB", task2.hash());
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+
+    Task task = function.generateTask(taskGenerator, dependencies, codeLocation);
+    task.execute(sandbox, hashedTasks(task1, task2));
     sandbox.messages().assertNoProblems();
     assertThat(task.result()).isEqualTo("abcdef");
-  }
-
-  private Task stringReturningTask(String string) {
-    return new StringTask(string);
   }
 
   public interface Parameters {
@@ -254,7 +258,9 @@ public class NativeFunctionFactoryTest {
   public void runtimeExceptionThrownAreReported() throws Exception {
     Function function = NativeFunctionFactory.create(MyFunctionWithThrowingSmoothMethod.class,
         false);
-    function.generateTask(Empty.stringTaskMap(), codeLocation).execute(sandbox);
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+    function.generateTask(taskGenerator, Empty.stringHashMap(), codeLocation).execute(sandbox,
+        hashedTasks());
     sandbox.messages().assertOnlyProblem(UnexpectedError.class);
   }
 
