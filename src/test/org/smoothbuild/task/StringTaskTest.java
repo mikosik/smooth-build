@@ -40,4 +40,12 @@ public class StringTaskTest {
   public void locationThrowsException() throws Exception {
     task.location();
   }
+
+  @Test
+  public void hashesOfStringTasksWithDifferentStringsDiffer() throws Exception {
+    StringTask stringTask1 = new StringTask("abc");
+    StringTask stringTask2 = new StringTask("def");
+
+    assertThat(stringTask1.hash()).isNotEqualTo(stringTask2.hash());
+  }
 }
