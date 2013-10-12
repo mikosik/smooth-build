@@ -7,12 +7,12 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.NativeCallTask;
 import org.smoothbuild.task.Task;
 import org.smoothbuild.task.TaskGenerator;
-import org.smoothbuild.util.Hash;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;

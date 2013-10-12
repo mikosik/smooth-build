@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.hash;
 
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.NativeFunction;
-import org.smoothbuild.util.Hash;
+import org.smoothbuild.hash.Hash;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

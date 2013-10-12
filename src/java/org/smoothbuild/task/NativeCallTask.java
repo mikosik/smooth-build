@@ -7,13 +7,13 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
+import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.NullResultError;
 import org.smoothbuild.task.err.ReflexiveInternalError;
 import org.smoothbuild.task.err.UnexpectedError;
-import org.smoothbuild.util.Hash;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
