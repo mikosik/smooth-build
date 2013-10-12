@@ -7,6 +7,7 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.hash.HashCode;
 
 public class StringTask implements Task {
   private final String result;
@@ -40,5 +41,11 @@ public class StringTask implements Task {
   @Override
   public ImmutableCollection<Task> dependencies() {
     return Empty.taskList();
+  }
+
+  @Override
+  public HashCode hash() {
+    // TODO FIX
+    throw new UnsupportedOperationException();
   }
 }
