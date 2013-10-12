@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.hash;
 
 import static com.google.common.base.Charsets.UTF_8;
 

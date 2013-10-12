@@ -6,13 +6,13 @@ import static org.smoothbuild.task.Constants.SET_TASK_NAME;
 
 import java.util.List;
 
+import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.err.DuplicatePathError;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.MutableFile;
 import org.smoothbuild.type.api.MutableFileSet;
-import org.smoothbuild.util.Hash;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;

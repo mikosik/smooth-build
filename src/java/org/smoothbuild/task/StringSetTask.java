@@ -6,10 +6,10 @@ import static org.smoothbuild.task.Constants.SET_TASK_NAME;
 
 import java.util.List;
 
+import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.impl.ImmutableStringSet;
-import org.smoothbuild.util.Hash;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
