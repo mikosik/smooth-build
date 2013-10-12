@@ -28,7 +28,7 @@ public class NativeFunction extends AbstractFunction {
 
   public NativeFunction(Signature signature, Invoker invoker) {
     super(signature);
-    this.hash = Hash.nativeFunction(signature);
+    this.hash = Hash.nativeFunction(signature.name());
     this.invoker = checkNotNull(invoker);
   }
 

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
-import org.smoothbuild.hash.Hash;
+import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.Sandbox;
@@ -26,8 +26,8 @@ public class NativeCallTask extends AbstractTask {
 
   public NativeCallTask(NativeFunction function, CodeLocation codeLocation,
       Map<String, HashCode> dependencies) {
-    super(callLocation(function.signature().name(), codeLocation), Hash
-        .call(function, dependencies));
+    super(callLocation(function.signature().name(), codeLocation), HashTask.call(function,
+        dependencies));
     this.function = function;
     this.dependencies = ImmutableMap.copyOf(dependencies);
   }

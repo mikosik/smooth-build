@@ -2,7 +2,7 @@ package org.smoothbuild.task;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.hash.Hash;
+import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.util.Empty;
@@ -16,7 +16,7 @@ public class StringTask implements Task {
 
   public StringTask(String object) {
     this.result = checkNotNull(object);
-    this.hash = Hash.string(object);
+    this.hash = HashTask.string(object);
   }
 
   @Override
