@@ -11,13 +11,12 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.NodeCreator;
+import org.smoothbuild.function.def.FileSetNode;
+import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
@@ -35,16 +34,10 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Sets;
 
 public class ArgumentNodesCreator {
-  private final NodeCreator nodeCreator;
-
-  @Inject
-  public ArgumentNodesCreator(NodeCreator nodeCreator) {
-    this.nodeCreator = nodeCreator;
-  }
 
   public Map<String, DefinitionNode> createArgumentNodes(CodeLocation codeLocation,
       MessageListener messages, Function function, Collection<Argument> arguments) {
-    return new Worker(codeLocation, messages, function, arguments, nodeCreator).convert();
+    return new Worker(codeLocation, messages, function, arguments).convert();
   }
 
   private static class Worker {
@@ -53,16 +46,14 @@ public class ArgumentNodesCreator {
     private final Function function;
     private final ParamsPool paramsPool;
     private final Collection<Argument> allArguments;
-    private final NodeCreator nodeCreator;
 
     public Worker(CodeLocation codeLocation, MessageListener messageListener, Function function,
-        Collection<Argument> arguments, NodeCreator nodeCreator) {
+        Collection<Argument> arguments) {
       this.codeLocation = codeLocation;
       this.messages = new DetectingErrorsMessageListener(messageListener);
       this.function = function;
       this.paramsPool = new ParamsPool(function.params());
       this.allArguments = arguments;
-      this.nodeCreator = nodeCreator;
     }
 
     public Map<String, DefinitionNode> convert() {
@@ -197,9 +188,9 @@ public class ArgumentNodesCreator {
       Argument argument = assignment.argument();
       if (argument.type() == Type.EMPTY_SET) {
         if (type == Type.STRING_SET) {
-          return nodeCreator.stringSet(Empty.definitionNodeList(), argument.codeLocation());
+          return new StringSetNode(Empty.definitionNodeList(), argument.codeLocation());
         } else if (type == Type.FILE_SET) {
-          return nodeCreator.fileSet(Empty.definitionNodeList(), argument.codeLocation());
+          return new FileSetNode(Empty.definitionNodeList(), argument.codeLocation());
         } else {
           throw new RuntimeException("Cannot convert from " + argument.type() + " to " + type + ".");
         }

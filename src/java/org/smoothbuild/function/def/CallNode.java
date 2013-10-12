@@ -17,7 +17,7 @@ public class CallNode implements DefinitionNode {
   private final ImmutableMap<String, DefinitionNode> args;
   private final CodeLocation codeLocation;
 
-  CallNode(Function function, CodeLocation codeLocation, Map<String, DefinitionNode> args) {
+  public CallNode(Function function, CodeLocation codeLocation, Map<String, DefinitionNode> args) {
     this.function = function;
     this.codeLocation = codeLocation;
     this.args = ImmutableMap.copyOf(args);

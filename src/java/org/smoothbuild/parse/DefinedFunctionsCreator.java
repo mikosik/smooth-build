@@ -30,9 +30,14 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.def.CallNode;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.NodeCreator;
+import org.smoothbuild.function.def.EmptySetNode;
+import org.smoothbuild.function.def.FileSetNode;
+import org.smoothbuild.function.def.InvalidNode;
+import org.smoothbuild.function.def.StringNode;
+import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.function.def.args.ArgumentNodesCreator;
 import org.smoothbuild.message.listen.MessageListener;
@@ -48,19 +53,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
-  private final NodeCreator nodeCreator;
   private final ArgumentNodesCreator argumentNodesCreator;
 
   @Inject
-  public DefinedFunctionsCreator(NodeCreator nodeCreator, ArgumentNodesCreator argumentNodesCreator) {
-    this.nodeCreator = nodeCreator;
+  public DefinedFunctionsCreator(ArgumentNodesCreator argumentNodesCreator) {
     this.argumentNodesCreator = argumentNodesCreator;
   }
 
   public Map<Name, DefinedFunction> createDefinedFunctions(MessageListener messages,
       SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
-    return new Worker(messages, symbolTable, functionContexts, sorted, nodeCreator,
-        argumentNodesCreator).run();
+    return new Worker(messages, symbolTable, functionContexts, sorted, argumentNodesCreator).run();
   }
 
   private static class Worker {
@@ -68,19 +70,17 @@ public class DefinedFunctionsCreator {
     private final SymbolTable symbolTable;
     private final Map<String, FunctionContext> functionContexts;
     private final List<String> sorted;
-    private final NodeCreator nodeCreator;
     private final ArgumentNodesCreator argumentNodesCreator;
 
     private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
 
     public Worker(MessageListener messages, SymbolTable symbolTable,
         Map<String, FunctionContext> functionContexts, List<String> sorted,
-        NodeCreator nodeCreator, ArgumentNodesCreator argumentNodesCreator) {
+        ArgumentNodesCreator argumentNodesCreator) {
       this.messages = messages;
       this.symbolTable = symbolTable;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
-      this.nodeCreator = nodeCreator;
       this.argumentNodesCreator = argumentNodesCreator;
     }
 
@@ -136,19 +136,19 @@ public class DefinedFunctionsCreator {
       ImmutableList<DefinitionNode> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return nodeCreator.emptySet();
+        return new EmptySetNode();
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return nodeCreator.emptySet();
+        return new EmptySetNode();
       }
 
       Type elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
-        return nodeCreator.stringSet(elemNodes, locationOf(list));
+        return new StringSetNode(elemNodes, locationOf(list));
       }
       if (elemsType == Type.FILE) {
-        return nodeCreator.fileSet(elemNodes, locationOf(list));
+        return new FileSetNode(elemNodes, locationOf(list));
       }
       throw new RuntimeException("Bug in Smooth implementation. No code to handle type = "
           + elemsType);
@@ -207,9 +207,9 @@ public class DefinedFunctionsCreator {
           codeLocation, messages, function, args);
 
       if (namedArgs == null) {
-        return nodeCreator.invalid(function.type());
+        return new InvalidNode(function.type());
       } else {
-        return nodeCreator.call(function, codeLocation, namedArgs);
+        return new CallNode(function, codeLocation, namedArgs);
       }
     }
 
@@ -253,11 +253,11 @@ public class DefinedFunctionsCreator {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
-        return nodeCreator.string(unescaped(string));
+        return new StringNode(unescaped(string));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));
-        return nodeCreator.invalid(STRING);
+        return new InvalidNode(STRING);
       }
     }
   }

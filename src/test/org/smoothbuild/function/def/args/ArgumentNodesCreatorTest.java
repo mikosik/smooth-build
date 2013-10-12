@@ -28,7 +28,6 @@ import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.NodeCreator;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.function.def.args.err.TypeMismatchError;
@@ -548,7 +547,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   private Map<String, DefinitionNode> create(Iterable<Param> params, List<Argument> args) {
-    ArgumentNodesCreator creator = new ArgumentNodesCreator(new NodeCreator());
+    ArgumentNodesCreator creator = new ArgumentNodesCreator();
     return creator.createArgumentNodes(codeLocation(1, 2, 3), messages, function(params), args);
   }
 
