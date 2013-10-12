@@ -1,12 +1,14 @@
 package org.smoothbuild.task;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.testing.task.HashedTasksTester.hashedTasks;
+import static org.smoothbuild.testing.task.TaskTester.hashes;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
@@ -21,7 +23,6 @@ import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class FileSetTaskTest {
@@ -35,11 +36,9 @@ public class FileSetTaskTest {
 
   Task task1 = new TestTask(file1);
   Task task2 = new TestTask(file2);
-  HashedTasks hashedTasks = new HashedTasks(ImmutableMap.of(task1.hash(), task1, task2.hash(),
-      task2));
+  HashedTasks hashedTasks = hashedTasks(task1, task2);
 
-  FileSetTask fileSetTask = new FileSetTask(ImmutableList.of(task1.hash(), task2.hash()),
-      codeLocation);
+  FileSetTask fileSetTask = new FileSetTask(hashes(task1, task2), codeLocation);
 
   public FileSetTaskTest() throws IOException {}
 
@@ -50,25 +49,22 @@ public class FileSetTaskTest {
 
   @Test
   public void execute() throws IOException {
-    file1.createContentWithFilePath();
-    file2.createContentWithFilePath();
-
     fileSetTask.execute(sandbox, hashedTasks);
 
-    FileSet result = (FileSet) fileSetTask.result();
-    Iterator<File> it = result.iterator();
-    File res1 = it.next();
-    File res2 = it.next();
-    assertThat(it.hasNext()).isFalse();
+    List<File> result = newArrayList((FileSet) fileSetTask.result());
 
-    assertThat(Arrays.asList(res1.path(), res2.path())).containsOnly(path1, path2);
-    FileTester.assertContentContainsFilePath(res1);
-    FileTester.assertContentContainsFilePath(res2);
+    assertThat(result.size()).isEqualTo(2);
+    File f1 = result.get(0);
+    File f2 = result.get(1);
+    assertThat(f1.path()).isEqualTo(path1);
+    assertThat(f2.path()).isEqualTo(path2);
+
+    FileTester.assertContentContainsFilePath(f1);
+    FileTester.assertContentContainsFilePath(f2);
   }
 
   @Test
   public void duplicatedFileCausesError() throws IOException {
-    file1.createContentWithFilePath();
     ImmutableList<HashCode> hashes = ImmutableList.of(task1.hash(), task1.hash());
     FileSetTask fileSetTask = new FileSetTask(hashes, codeLocation);
 
