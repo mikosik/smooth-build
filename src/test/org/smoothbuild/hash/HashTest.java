@@ -9,8 +9,11 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Name;
 
 public class HashTest {
-  private Name name;
-  private Name name2;
+  String string = "some string";
+  String string2 = "some other string";
+
+  Name name;
+  Name name2;
 
   @Test
   public void hash_of_given_native_function_is_always_the_same() {
@@ -20,10 +23,22 @@ public class HashTest {
   }
 
   @Test
-  public void hashes_of_different_strings_are_different() {
+  public void hashes_of_different_native_functions_are_different() {
     given(name = Name.qualifiedName("abc.def.Function"));
     given(name2 = Name.qualifiedName("abc.def.Function2"));
     when(Hash.nativeFunction(name));
     thenReturned(not(Hash.nativeFunction(name2)));
+  }
+
+  @Test
+  public void hash_of_given_string_is_always_the_same() {
+    when(Hash.string(string));
+    thenReturned(Hash.string(string));
+  }
+
+  @Test
+  public void hashes_of_different_strings_are_different() {
+    when(Hash.string(string));
+    thenReturned(not(Hash.string(string2)));
   }
 }
