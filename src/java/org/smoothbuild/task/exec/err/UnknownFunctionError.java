@@ -1,4 +1,4 @@
-package org.smoothbuild.app.err;
+package org.smoothbuild.task.exec.err;
 
 import static org.smoothbuild.message.message.MessageType.ERROR;
 

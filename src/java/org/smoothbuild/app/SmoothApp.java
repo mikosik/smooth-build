@@ -7,25 +7,18 @@ import java.io.InputStream;
 import javax.inject.Inject;
 
 import org.smoothbuild.app.err.ScriptFileNotFoundError;
-import org.smoothbuild.app.err.UnknownFunctionError;
 import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.command.CommandLineParser;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.function.base.Module;
-import org.smoothbuild.function.base.Name;
-import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
-import org.smoothbuild.task.exec.HashedTasks;
-import org.smoothbuild.task.exec.TaskExecutor;
-import org.smoothbuild.task.exec.TaskGenerator;
-
-import com.google.common.hash.HashCode;
+import org.smoothbuild.task.exec.SmoothExecutor;
 
 public class SmoothApp {
   private final DetectingErrorsMessageListener messages;
@@ -33,20 +26,18 @@ public class SmoothApp {
   private final CommandLineParser commandLineParser;
   private final FileSystem fileSystem;
   private final ModuleParser moduleParser;
-  private final TaskGenerator taskGenerator;
-  private final TaskExecutor taskExecutor;
+  private final SmoothExecutor smoothExecutor;
 
   @Inject
   public SmoothApp(MessageListener messageListener, Cleaner cleaner,
       CommandLineParser commandLineParser, FileSystem fileSystem, ModuleParser moduleParser,
-      TaskGenerator taskGenerator, TaskExecutor taskExecutor) {
+      SmoothExecutor smoothExecutor) {
     this.messages = new DetectingErrorsMessageListener(messageListener);
     this.cleaner = cleaner;
     this.commandLineParser = commandLineParser;
     this.fileSystem = fileSystem;
     this.moduleParser = moduleParser;
-    this.taskGenerator = taskGenerator;
-    this.taskExecutor = taskExecutor;
+    this.smoothExecutor = smoothExecutor;
   }
 
   public void run(String... commandLine) {
@@ -63,16 +54,7 @@ public class SmoothApp {
         return;
       }
 
-      Name name = args.functionToRun();
-      DefinedFunction function = module.getFunction(name);
-      if (function == null) {
-        messages.report(new UnknownFunctionError(name, module.availableNames()));
-        return;
-      }
-
-      HashCode hash = taskGenerator.generateTask(function);
-      HashedTasks hashedTasks = new HashedTasks(taskGenerator.allTasks());
-      taskExecutor.execute(messages, hashedTasks, hash);
+      smoothExecutor.execute(args, module, messages);
     } catch (ErrorMessageException e) {
       messages.report(e.errorMessage());
     }
