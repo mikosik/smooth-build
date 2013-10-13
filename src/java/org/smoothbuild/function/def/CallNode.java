@@ -5,8 +5,8 @@ import java.util.Map;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.TaskGenerator;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;

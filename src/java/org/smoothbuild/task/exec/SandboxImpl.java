@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.exec;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
@@ -9,8 +9,8 @@ import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.task.err.TaskCompletedInfo;
-import org.smoothbuild.task.err.TaskFailedError;
+import org.smoothbuild.task.exec.err.TaskCompletedInfo;
+import org.smoothbuild.task.exec.err.TaskFailedError;
 import org.smoothbuild.type.api.MutableFile;
 import org.smoothbuild.type.api.MutableFileSet;
 import org.smoothbuild.type.impl.MutableStoredFileSet;

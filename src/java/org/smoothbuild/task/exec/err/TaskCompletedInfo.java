@@ -1,4 +1,4 @@
-package org.smoothbuild.task.err;
+package org.smoothbuild.task.exec.err;
 
 import static com.google.common.base.Strings.padEnd;
 import static org.smoothbuild.message.message.MessageType.INFO;

@@ -6,7 +6,7 @@ import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.task.SandboxImpl;
+import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.type.impl.TestFileSet;

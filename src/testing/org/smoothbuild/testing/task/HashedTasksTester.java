@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.task;
 
-import org.smoothbuild.task.HashedTasks;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.HashedTasks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;

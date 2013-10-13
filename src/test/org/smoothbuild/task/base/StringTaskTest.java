@@ -5,8 +5,8 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.task.HashedTasks;
 import org.smoothbuild.task.base.StringTask;
+import org.smoothbuild.task.exec.HashedTasks;
 
 public class StringTaskTest {
   String string = "result";

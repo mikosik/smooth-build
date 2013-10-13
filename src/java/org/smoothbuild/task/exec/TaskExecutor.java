@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.exec;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import static org.smoothbuild.fs.base.Path.path;

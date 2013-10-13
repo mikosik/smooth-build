@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.exec;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -7,6 +7,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.HashedTasks;
+import org.smoothbuild.task.exec.NoTaskWithGivenHashException;
 import org.smoothbuild.testing.task.TestTask;
 
 import com.google.common.collect.ImmutableMap;
