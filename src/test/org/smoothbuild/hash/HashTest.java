@@ -15,6 +15,8 @@ public class HashTest {
   Name name;
   Name name2;
 
+  // Hash.nativeFunction()
+
   @Test
   public void hash_of_given_native_function_is_always_the_same() {
     given(name = Name.qualifiedName("abc.def.Function"));
@@ -29,6 +31,8 @@ public class HashTest {
     when(Hash.nativeFunction(name));
     thenReturned(not(Hash.nativeFunction(name2)));
   }
+
+  // Hash.string()
 
   @Test
   public void hash_of_given_string_is_always_the_same() {
