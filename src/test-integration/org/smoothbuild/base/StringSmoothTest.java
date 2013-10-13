@@ -19,7 +19,7 @@ public class StringSmoothTest extends IntegrationTestCase {
     script("run : newFile(" + path + ", content='" + content + "') | save(" + outDir + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -36,7 +36,7 @@ public class StringSmoothTest extends IntegrationTestCase {
     script("run : newFile(" + path + ", content='" + content + "') | save(" + outDir + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();

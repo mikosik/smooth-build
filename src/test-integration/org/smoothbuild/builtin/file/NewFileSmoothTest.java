@@ -17,7 +17,7 @@ public class NewFileSmoothTest extends IntegrationTestCase {
 
     script("run : newFile(path=" + file.path() + ", content='" + content + "') | save(dir='.');");
 
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     messages.assertNoProblems();
     file.assertContentContains(content);

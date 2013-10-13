@@ -34,7 +34,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save(" + dirPath + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -53,7 +53,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : [ file(" + file.path() + "), file(" + file2.path() + ") ] | save(" + dir + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -70,7 +70,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : save(" + path("output") + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(EitherFileOrFilesMustBeProvidedError.class);
@@ -88,7 +88,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
         + path("output") + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(FileAndFilesSpecifiedError.class);
@@ -105,7 +105,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save();");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(MissingRequiredArgsError.class);
@@ -123,7 +123,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
       script("run : file(" + file.path() + ") | save('" + path + "');");
 
       // when
-      smoothRunner.run("run");
+      smoothApp.run("run");
 
       // then
       messages.assertOnlyProblem(IllegalPathError.class);
@@ -139,7 +139,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save(" + BUILD_DIR + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(WriteToSmoothDirError.class);
@@ -154,7 +154,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save(" + BUILD_DIR.append(path("abc")) + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(WriteToSmoothDirError.class);
@@ -171,7 +171,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save(" + file2.path() + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(DirParamIsAFileError.class);
@@ -188,7 +188,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save(" + file2.path().append(path("abc")) + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(DirParamSubdirIsAFileError.class);
@@ -205,7 +205,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save(" + Path.rootPath() + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -223,7 +223,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save(" + dir + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(FileOutputIsADirError.class);
@@ -239,7 +239,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     script("run : file(" + file.path() + ") | save('abc');");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(FileOutputSubdirIsAFileError.class);

@@ -17,7 +17,7 @@ public class OverridingImportedNameIsForbiddenSmoothTest extends IntegrationTest
     script(builder.build());
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(OverridenImportError.class);
