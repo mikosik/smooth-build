@@ -4,22 +4,22 @@ import java.util.Iterator;
 
 import org.smoothbuild.type.api.StringSet;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 public class ImmutableStringSet implements StringSet {
-  private final ImmutableSet<String> set;
+  private final ImmutableList<String> elements;
 
-  public ImmutableStringSet(Iterable<String> set) {
-    this.set = ImmutableSet.copyOf(set);
+  public ImmutableStringSet(Iterable<String> elements) {
+    this.elements = ImmutableList.copyOf(elements);
   }
 
   @Override
   public Iterator<String> iterator() {
-    return set.iterator();
+    return elements.iterator();
   }
 
   @Override
   public boolean contains(String string) {
-    return set.contains(string);
+    return elements.contains(string);
   }
 }
