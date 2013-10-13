@@ -3,8 +3,8 @@ package org.smoothbuild.function.base;
 import java.util.Map;
 
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.TaskGenerator;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;

@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.exec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.isA;
@@ -19,7 +19,8 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.task.err.TaskFailedError;
+import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.err.TaskFailedError;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.api.MutableFile;

@@ -3,9 +3,9 @@ package org.smoothbuild.function.def;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.task.TaskGenerator;
 import org.smoothbuild.task.base.StringTask;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 public class StringNode implements DefinitionNode {
   private final String string;

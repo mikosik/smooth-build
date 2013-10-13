@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.exec;
 
 import java.util.Map;
 

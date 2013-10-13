@@ -7,8 +7,8 @@ import java.util.Map;
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.TaskGenerator;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.base.Preconditions;
 import com.google.common.hash.HashCode;

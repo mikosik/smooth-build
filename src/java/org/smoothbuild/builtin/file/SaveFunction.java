@@ -15,7 +15,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.task.SandboxImpl;
+import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 import org.smoothbuild.type.impl.StoredFile;

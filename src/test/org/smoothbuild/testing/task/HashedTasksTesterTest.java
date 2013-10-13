@@ -6,8 +6,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.task.HashedTasks;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.HashedTasks;
 import org.testory.common.Closure;
 
 public class HashedTasksTesterTest {

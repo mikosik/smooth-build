@@ -21,9 +21,9 @@ import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.run.err.ScriptFileNotFoundError;
 import org.smoothbuild.run.err.UnknownFunctionError;
-import org.smoothbuild.task.HashedTasks;
-import org.smoothbuild.task.TaskExecutor;
-import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.task.exec.HashedTasks;
+import org.smoothbuild.task.exec.TaskExecutor;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.hash.HashCode;
 
