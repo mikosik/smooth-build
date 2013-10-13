@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -24,9 +24,11 @@ import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.task.err.NullResultError;
-import org.smoothbuild.task.err.ReflexiveInternalError;
-import org.smoothbuild.task.err.UnexpectedError;
+import org.smoothbuild.task.base.NativeCallTask;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.err.NullResultError;
+import org.smoothbuild.task.base.err.ReflexiveInternalError;
+import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.task.TestSandbox;
 import org.smoothbuild.testing.task.TestTask;
 import org.smoothbuild.util.Empty;

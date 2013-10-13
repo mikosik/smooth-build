@@ -8,6 +8,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.task.TestTask;
 
 import com.google.common.collect.ImmutableMap;

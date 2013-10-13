@@ -9,8 +9,8 @@ import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.Task;
 import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.task.base.Task;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;

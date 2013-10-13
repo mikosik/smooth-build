@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +13,10 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.err.DuplicatePathError;
+import org.smoothbuild.task.HashedTasks;
+import org.smoothbuild.task.base.FileSetTask;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.task.TestSandbox;
 import org.smoothbuild.testing.task.TestTask;

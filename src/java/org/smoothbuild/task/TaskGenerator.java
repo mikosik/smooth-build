@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;

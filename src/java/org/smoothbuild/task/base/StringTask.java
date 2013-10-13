@@ -1,10 +1,11 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.task.HashedTasks;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;

@@ -35,8 +35,8 @@ import org.smoothbuild.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.function.def.args.err.VoidArgError;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
-import org.smoothbuild.task.Task;
 import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.message.TestMessageListener;
 import org.smoothbuild.testing.task.TestSandbox;
 

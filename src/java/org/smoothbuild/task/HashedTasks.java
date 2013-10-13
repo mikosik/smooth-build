@@ -2,6 +2,8 @@ package org.smoothbuild.task;
 
 import java.util.Map;
 
+import org.smoothbuild.task.base.Task;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 

@@ -3,8 +3,8 @@ package org.smoothbuild.function.def;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.task.Task;
 import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.task.base.Task;
 
 public class EmptySetNode implements DefinitionNode {
 

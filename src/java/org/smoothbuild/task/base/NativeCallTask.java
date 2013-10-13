@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import static org.smoothbuild.message.message.CallLocation.callLocation;
 
@@ -11,9 +11,10 @@ import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.task.err.NullResultError;
-import org.smoothbuild.task.err.ReflexiveInternalError;
-import org.smoothbuild.task.err.UnexpectedError;
+import org.smoothbuild.task.HashedTasks;
+import org.smoothbuild.task.base.err.NullResultError;
+import org.smoothbuild.task.base.err.ReflexiveInternalError;
+import org.smoothbuild.task.base.err.UnexpectedError;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;

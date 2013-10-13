@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.task.err.DuplicatePathError;
+import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 
