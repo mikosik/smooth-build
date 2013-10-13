@@ -1,6 +1,6 @@
 package org.smoothbuild.type.impl;
 
-import static org.smoothbuild.fs.base.PathKind.FILE;
+import static org.smoothbuild.fs.base.PathState.FILE;
 
 import java.util.Iterator;
 
@@ -24,7 +24,7 @@ public class StoredFileSet implements FileSet {
   }
 
   public boolean contains(Path path) {
-    return fileSystem.pathKind(path) == FILE;
+    return fileSystem.pathState(path) == FILE;
   }
 
   public FileSystem fileSystem() {

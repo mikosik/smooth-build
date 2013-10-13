@@ -1,8 +1,8 @@
 package org.smoothbuild.fs.base;
 
-import static org.smoothbuild.fs.base.PathKind.DIR;
-import static org.smoothbuild.fs.base.PathKind.FILE;
-import static org.smoothbuild.fs.base.PathKind.NOTHING;
+import static org.smoothbuild.fs.base.PathState.DIR;
+import static org.smoothbuild.fs.base.PathState.FILE;
+import static org.smoothbuild.fs.base.PathState.NOTHING;
 import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
 import java.io.BufferedInputStream;
@@ -48,7 +48,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public PathKind pathKind(Path path) {
+  public PathState pathState(Path path) {
     File file = jdkFile(path);
     if (!file.exists()) {
       return NOTHING;
@@ -137,7 +137,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   public void deleteDirectoryRecursively(Path directory) {
-    if (pathKind(directory) == DIR) {
+    if (pathState(directory) == DIR) {
       try {
         RecursiveDirectoryDeleter.deleteRecursively(jdkFile(directory));
       } catch (IOException e) {

@@ -14,7 +14,7 @@ import com.google.inject.ImplementedBy;
 public interface FileSystem {
   public Path root();
 
-  public PathKind pathKind(Path path);
+  public PathState pathState(Path path);
 
   public Iterable<String> childNames(Path directory);
 

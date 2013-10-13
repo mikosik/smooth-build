@@ -47,7 +47,7 @@ public class FileFunction {
         throw new ErrorMessageException(new ReadFromSmoothDirError(path));
       }
 
-      switch (fileSystem.pathKind(path)) {
+      switch (fileSystem.pathState(path)) {
         case FILE:
           return new StoredFile(fileSystem, path);
         case DIR:

@@ -45,7 +45,7 @@ public class RecursiveFilesIterator implements Iterator<Path> {
         }
       } else {
         Path file = fileStack.remove();
-        switch (fileSystem.pathKind(file)) {
+        switch (fileSystem.pathState(file)) {
           case FILE:
             return file;
           case DIR:
