@@ -15,28 +15,45 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.command.CommandLineArguments;
+import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
 public class ModuleParser {
+  private final FileSystem fileSystem;
   private final ImportedFunctions importedFunctions;
   private final DefinedFunctionsCreator definedFunctionsCreator;
 
   @Inject
-  public ModuleParser(ImportedFunctions importedFunctions,
+  public ModuleParser(FileSystem fileSystem, ImportedFunctions importedFunctions,
       DefinedFunctionsCreator definedFunctionsCreator) {
+    this.fileSystem = fileSystem;
     this.importedFunctions = importedFunctions;
     this.definedFunctionsCreator = definedFunctionsCreator;
   }
 
-  public Module createModule(MessageListener messageListener, InputStream inputStream,
-      Path scriptFile) {
+  public Module createModule(DetectingErrorsMessageListener messageListener,
+      CommandLineArguments args) {
+    Path scriptFile = args.scriptFile();
+    InputStream inputStream = scriptInputStream(scriptFile);
+
     DetectingErrorsMessageListener messages = new DetectingErrorsMessageListener(messageListener);
     return createModule(messages, inputStream, scriptFile);
+  }
+
+  private InputStream scriptInputStream(Path scriptFile) {
+    try {
+      return fileSystem.openInputStream(scriptFile);
+    } catch (NoSuchFileException e) {
+      throw new ErrorMessageException(new ScriptFileNotFoundError(scriptFile));
+    }
   }
 
   private Module createModule(DetectingErrorsMessageListener messages, InputStream inputStream,
