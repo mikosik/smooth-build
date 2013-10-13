@@ -15,7 +15,7 @@ import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.task.HashedTasksTester.hashedTasks;
+import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +38,7 @@ import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.TestMessageListener;
-import org.smoothbuild.testing.task.TestSandbox;
+import org.smoothbuild.testing.task.exec.TestSandbox;
 
 public class ArgumentNodesCreatorTest {
 

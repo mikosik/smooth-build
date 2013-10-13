@@ -15,7 +15,7 @@ import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.testing.fs.base.TestPath;
-import org.smoothbuild.testing.task.TestSandbox;
+import org.smoothbuild.testing.task.exec.TestSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.FileSet;
 

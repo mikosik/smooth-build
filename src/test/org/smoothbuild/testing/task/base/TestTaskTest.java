@@ -1,10 +1,12 @@
-package org.smoothbuild.testing.task;
+package org.smoothbuild.testing.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.exec.HashedTasksTester;
 
 public class TestTaskTest {
   TestTask task = new TestTask("result");

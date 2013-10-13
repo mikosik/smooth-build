@@ -18,7 +18,7 @@ import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompi
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.task.TestSandbox;
+import org.smoothbuild.testing.task.exec.TestSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
 
 import com.google.common.collect.Multimap;

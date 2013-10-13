@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
-import static org.smoothbuild.testing.task.HashedTasksTester.hashedTasks;
+import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
