@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.HashedTasks;
-import org.smoothbuild.task.Task;
+import org.smoothbuild.task.base.Task;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;

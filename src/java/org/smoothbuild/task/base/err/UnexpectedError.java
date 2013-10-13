@@ -1,4 +1,4 @@
-package org.smoothbuild.task.err;
+package org.smoothbuild.task.base.err;
 
 import org.smoothbuild.message.message.CallLocation;
 

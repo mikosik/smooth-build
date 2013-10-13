@@ -10,8 +10,8 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.Task;
 import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;

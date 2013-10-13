@@ -4,9 +4,9 @@ import static org.smoothbuild.function.base.Type.STRING_SET;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.StringSetTask;
-import org.smoothbuild.task.Task;
 import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.task.base.StringSetTask;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

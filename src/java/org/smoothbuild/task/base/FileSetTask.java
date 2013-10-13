@@ -1,15 +1,16 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CallLocation.callLocation;
-import static org.smoothbuild.task.Constants.SET_TASK_NAME;
+import static org.smoothbuild.task.base.Constants.SET_TASK_NAME;
 
 import java.util.List;
 
 import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.task.err.DuplicatePathError;
+import org.smoothbuild.task.HashedTasks;
+import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.MutableFile;
 import org.smoothbuild.type.api.MutableFileSet;

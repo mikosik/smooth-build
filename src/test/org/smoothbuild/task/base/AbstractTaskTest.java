@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.base.Name.simpleName;
@@ -7,6 +7,8 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import org.junit.Test;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.task.HashedTasks;
+import org.smoothbuild.task.base.AbstractTask;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;

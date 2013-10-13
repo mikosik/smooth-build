@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.StringSetTask;
+import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.task.TestTask;
 import org.smoothbuild.type.api.StringSet;
 

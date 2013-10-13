@@ -1,4 +1,4 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkState;
 

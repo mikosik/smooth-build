@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.task;
 
-import org.smoothbuild.task.Task;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

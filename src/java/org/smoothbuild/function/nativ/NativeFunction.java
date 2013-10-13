@@ -10,9 +10,9 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.task.NativeCallTask;
-import org.smoothbuild.task.Task;
 import org.smoothbuild.task.TaskGenerator;
+import org.smoothbuild.task.base.NativeCallTask;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;

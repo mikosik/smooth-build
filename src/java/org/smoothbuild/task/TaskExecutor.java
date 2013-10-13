@@ -11,6 +11,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.hash.HashCode;
 

@@ -1,7 +1,8 @@
-package org.smoothbuild.task;
+package org.smoothbuild.task.base;
 
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.task.HashedTasks;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.hash.HashCode;
