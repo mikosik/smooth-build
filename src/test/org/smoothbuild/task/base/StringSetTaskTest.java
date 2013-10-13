@@ -2,8 +2,8 @@ package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.task.HashedTasksTester.hashedTasks;
-import static org.smoothbuild.testing.task.TaskTester.hashes;
+import static org.smoothbuild.testing.task.base.TaskTester.hashes;
+import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.StringSetTask;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.testing.task.TestTask;
+import org.smoothbuild.testing.task.base.TestTask;
 import org.smoothbuild.type.api.StringSet;
 
 import com.google.common.hash.HashCode;

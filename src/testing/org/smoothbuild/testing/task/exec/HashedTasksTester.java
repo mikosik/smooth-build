@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.task;
+package org.smoothbuild.testing.task.exec;
 
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.HashedTasks;

@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.task.TestTask;
+import org.smoothbuild.testing.task.base.TestTask;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;

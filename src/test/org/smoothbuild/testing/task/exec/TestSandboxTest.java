@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.task;
+package org.smoothbuild.testing.task.exec;
 
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
@@ -6,6 +6,7 @@ import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.testing.task.exec.TestSandbox;
 import org.smoothbuild.type.api.MutableFile;
 
 public class TestSandboxTest {

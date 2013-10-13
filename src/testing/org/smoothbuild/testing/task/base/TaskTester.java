@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.task;
+package org.smoothbuild.testing.task.base;
 
 import org.smoothbuild.task.base.Task;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.task;
+package org.smoothbuild.testing.task.exec;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -8,6 +8,8 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.HashedTasks;
+import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.exec.HashedTasksTester;
 import org.testory.common.Closure;
 
 public class HashedTasksTesterTest {

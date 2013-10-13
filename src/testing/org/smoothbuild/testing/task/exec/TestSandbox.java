@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.task;
+package org.smoothbuild.testing.task.exec;
 
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.simpleName;

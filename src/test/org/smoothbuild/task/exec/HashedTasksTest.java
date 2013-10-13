@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.task.exec.NoTaskWithGivenHashException;
-import org.smoothbuild.testing.task.TestTask;
+import org.smoothbuild.testing.task.base.TestTask;
 
 import com.google.common.collect.ImmutableMap;
 

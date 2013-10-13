@@ -4,14 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.task.HashedTasksTester.hashedTasks;
+import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.task.TestTask;
+import org.smoothbuild.testing.task.base.TestTask;
 import org.smoothbuild.type.api.StringSet;
 
 import com.google.common.collect.ImmutableList;
