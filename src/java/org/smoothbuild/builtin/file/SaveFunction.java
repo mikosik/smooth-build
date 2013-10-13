@@ -96,7 +96,7 @@ public class SaveFunction {
       Path path = dirPath;
       FileSystem fileSystem = sandbox.projectFileSystem();
       while (!path.isRoot()) {
-        switch (fileSystem.pathKind(path)) {
+        switch (fileSystem.pathState(path)) {
           case FILE:
             if (path.equals(dirPath)) {
               throw new ErrorMessageException(new DirParamIsAFileError("dir", path));
@@ -121,7 +121,7 @@ public class SaveFunction {
 
       Path fullPath = dirPath.append(filePath);
       FileSystem fileSystem = sandbox.projectFileSystem();
-      switch (fileSystem.pathKind(fullPath)) {
+      switch (fileSystem.pathState(fullPath)) {
         case FILE:
           return;
         case DIR:
@@ -134,7 +134,7 @@ public class SaveFunction {
 
       Path path = fullPath.parent();
       while (!path.equals(dirPath)) {
-        switch (fileSystem.pathKind(path)) {
+        switch (fileSystem.pathState(path)) {
           case FILE:
             throw new ErrorMessageException(new FileOutputSubdirIsAFileError(dirPath, filePath,
                 path));

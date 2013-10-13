@@ -1,8 +1,8 @@
 package org.smoothbuild.fs.mem;
 
-import static org.smoothbuild.fs.base.PathKind.DIR;
-import static org.smoothbuild.fs.base.PathKind.FILE;
-import static org.smoothbuild.fs.base.PathKind.NOTHING;
+import static org.smoothbuild.fs.base.PathState.DIR;
+import static org.smoothbuild.fs.base.PathState.FILE;
+import static org.smoothbuild.fs.base.PathState.NOTHING;
 import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.base.PathKind;
+import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
@@ -32,7 +32,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public PathKind pathKind(Path path) {
+  public PathState pathState(Path path) {
     MemoryElement element = findElement(path);
     if (element == null) {
       return NOTHING;

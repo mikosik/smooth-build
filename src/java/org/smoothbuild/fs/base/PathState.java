@@ -1,5 +1,5 @@
 package org.smoothbuild.fs.base;
 
-public enum PathKind {
+public enum PathState {
   FILE, DIR, NOTHING
 }

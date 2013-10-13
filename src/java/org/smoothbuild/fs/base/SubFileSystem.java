@@ -19,8 +19,8 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
-  public PathKind pathKind(Path path) {
-    return fileSystem.pathKind(absolutePath(path));
+  public PathState pathState(Path path) {
+    return fileSystem.pathState(absolutePath(path));
   }
 
   @Override

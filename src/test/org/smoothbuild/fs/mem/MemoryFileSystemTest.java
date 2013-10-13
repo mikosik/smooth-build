@@ -3,9 +3,9 @@ package org.smoothbuild.fs.mem;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.fs.base.PathKind.DIR;
-import static org.smoothbuild.fs.base.PathKind.FILE;
-import static org.smoothbuild.fs.base.PathKind.NOTHING;
+import static org.smoothbuild.fs.base.PathState.DIR;
+import static org.smoothbuild.fs.base.PathState.FILE;
+import static org.smoothbuild.fs.base.PathState.NOTHING;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import java.io.IOException;
@@ -31,31 +31,31 @@ public class MemoryFileSystemTest {
 
   @Test
   public void rootPathIsADir() throws Exception {
-    assertThat(fileSystem.pathKind(Path.rootPath())).isEqualTo(DIR);
+    assertThat(fileSystem.pathState(Path.rootPath())).isEqualTo(DIR);
   }
 
   @Test
   public void nonRootPathsAreInitiallyNothing() throws Exception {
-    assertThat(fileSystem.pathKind(path("abc"))).isEqualTo(NOTHING);
-    assertThat(fileSystem.pathKind(path("abc/def"))).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(path("abc"))).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(path("abc/def"))).isEqualTo(NOTHING);
   }
 
   @Test
   public void pathKindOfAFile() throws Exception {
     createEmptyFile("abc/def/ghi/file.txt");
-    assertThat(fileSystem.pathKind(path("abc/def/ghi/file.txt"))).isEqualTo(FILE);
+    assertThat(fileSystem.pathState(path("abc/def/ghi/file.txt"))).isEqualTo(FILE);
   }
 
   @Test
   public void pathKindOfADir() throws Exception {
     createEmptyFile("abc/file.txt");
-    assertThat(fileSystem.pathKind(path("abc"))).isEqualTo(DIR);
+    assertThat(fileSystem.pathState(path("abc"))).isEqualTo(DIR);
   }
 
   @Test
   public void pathKindIsNothingWhenFirstPartOfItIsExistingFile() throws Exception {
     createEmptyFile("abc/def");
-    assertThat(fileSystem.pathKind(path("abc/def/ghi"))).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(path("abc/def/ghi"))).isEqualTo(NOTHING);
   }
 
   @Test
@@ -220,13 +220,13 @@ public class MemoryFileSystemTest {
     fileSystem.deleteDirectoryRecursively(mainDir);
 
     // then
-    assertThat(fileSystem.pathKind(fileOutsideMain)).isEqualTo(FILE);
+    assertThat(fileSystem.pathState(fileOutsideMain)).isEqualTo(FILE);
 
-    assertThat(fileSystem.pathKind(directFile)).isEqualTo(NOTHING);
-    assertThat(fileSystem.pathKind(directDir)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(directFile)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(directDir)).isEqualTo(NOTHING);
 
-    assertThat(fileSystem.pathKind(notDirectFile)).isEqualTo(NOTHING);
-    assertThat(fileSystem.pathKind(notDirectDir)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(notDirectFile)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(notDirectDir)).isEqualTo(NOTHING);
   }
 
   @Test

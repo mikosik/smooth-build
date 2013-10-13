@@ -9,7 +9,7 @@ public class RecursiveFilesIterable implements Iterable<Path> {
   private final FileSystem fileSystem;
 
   public static Iterable<Path> recursiveFilesIterable(FileSystem fileSystem, Path directory) {
-    switch (fileSystem.pathKind(directory)) {
+    switch (fileSystem.pathState(directory)) {
       case FILE:
         throw new IllegalArgumentException("Path " + directory + " is not a dir but a file.");
       case DIR:

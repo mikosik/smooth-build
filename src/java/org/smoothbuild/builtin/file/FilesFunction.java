@@ -52,7 +52,7 @@ public class FilesFunction {
         throw new ErrorMessageException(new ReadFromSmoothDirError(path));
       }
 
-      switch (fileSystem.pathKind(path)) {
+      switch (fileSystem.pathState(path)) {
         case FILE:
           throw new ErrorMessageException(new DirParamIsAFileError("dir", path));
         case DIR:

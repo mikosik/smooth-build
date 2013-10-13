@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.fs.base.PathKind.FILE;
+import static org.smoothbuild.fs.base.PathState.FILE;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,8 +31,8 @@ public class SubFileSystemTest {
 
   @Test
   public void pathKind() throws Exception {
-    when(fileSystem.pathKind(absolutePath)).thenReturn(FILE);
-    assertThat(subFileSystem.pathKind(path)).isEqualTo(FILE);
+    when(fileSystem.pathState(absolutePath)).thenReturn(FILE);
+    assertThat(subFileSystem.pathState(path)).isEqualTo(FILE);
   }
 
   @Test
