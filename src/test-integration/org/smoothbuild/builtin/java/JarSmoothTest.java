@@ -25,7 +25,7 @@ public class JarSmoothTest extends IntegrationTestCase {
     script("run : files('dir') | jar(" + outputPath + ") | save(" + outDir + ");");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();

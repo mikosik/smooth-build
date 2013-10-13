@@ -1,4 +1,4 @@
-package org.smoothbuild.run;
+package org.smoothbuild.app;
 
 import static org.smoothbuild.message.message.MessageType.INFO;
 
@@ -6,6 +6,8 @@ import java.io.InputStream;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.app.err.ScriptFileNotFoundError;
+import org.smoothbuild.app.err.UnknownFunctionError;
 import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.command.CommandLineParser;
 import org.smoothbuild.fs.base.FileSystem;
@@ -19,15 +21,13 @@ import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
-import org.smoothbuild.run.err.ScriptFileNotFoundError;
-import org.smoothbuild.run.err.UnknownFunctionError;
 import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.task.exec.TaskExecutor;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.hash.HashCode;
 
-public class SmoothRunner {
+public class SmoothApp {
   private final DetectingErrorsMessageListener messages;
   private final Cleaner cleaner;
   private final CommandLineParser commandLineParser;
@@ -37,7 +37,7 @@ public class SmoothRunner {
   private final TaskExecutor taskExecutor;
 
   @Inject
-  public SmoothRunner(MessageListener messageListener, Cleaner cleaner,
+  public SmoothApp(MessageListener messageListener, Cleaner cleaner,
       CommandLineParser commandLineParser, FileSystem fileSystem, ModuleParser moduleParser,
       TaskGenerator taskGenerator, TaskExecutor taskExecutor) {
     this.messages = new DetectingErrorsMessageListener(messageListener);

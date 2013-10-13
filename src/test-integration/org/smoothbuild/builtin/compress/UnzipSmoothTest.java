@@ -23,7 +23,7 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     script("run : file(" + zipFile.path() + ") | unzip | save('out');");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();

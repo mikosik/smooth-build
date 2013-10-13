@@ -31,7 +31,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     script(builder.toString());
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -45,7 +45,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     script("run : [ , ];");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(SyntaxError.class);
@@ -66,7 +66,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     script(builder.toString());
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -89,7 +89,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     script(builder.toString());
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -109,7 +109,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     script(builder.toString());
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -126,7 +126,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     script("run : [ file(" + file1.path() + "), file(" + file1.path() + ") ];\n");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertOnlyProblem(DuplicatePathError.class);

@@ -6,8 +6,8 @@ import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import java.io.IOException;
 
 import org.junit.Before;
+import org.smoothbuild.app.SmoothApp;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.run.SmoothRunner;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.fs.base.TestFileSystemModule;
 import org.smoothbuild.testing.message.TestMessageListener;
@@ -20,7 +20,7 @@ import com.google.inject.Injector;
 
 public class IntegrationTestCase {
   protected TestFileSystem fileSystem;
-  protected SmoothRunner smoothRunner;
+  protected SmoothApp smoothApp;
   protected TestMessageListener messages;
 
   @Before
@@ -32,7 +32,7 @@ public class IntegrationTestCase {
     Injector injector = createInjector(new TestFileSystemModule(), new TestMessageListenerModule());
     fileSystem = injector.getInstance(TestFileSystem.class);
     messages = injector.getInstance(TestMessageListener.class);
-    smoothRunner = injector.getInstance(SmoothRunner.class);
+    smoothApp = injector.getInstance(SmoothApp.class);
   }
 
   public void script(String script) throws IOException {

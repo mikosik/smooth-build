@@ -12,7 +12,7 @@ public class ConstantFunctionSmoothTest extends IntegrationTestCase {
     script("run: 'abc';");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();

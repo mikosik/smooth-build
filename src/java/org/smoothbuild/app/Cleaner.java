@@ -1,4 +1,4 @@
-package org.smoothbuild.run;
+package org.smoothbuild.app;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import static org.smoothbuild.fs.base.PathState.DIR;

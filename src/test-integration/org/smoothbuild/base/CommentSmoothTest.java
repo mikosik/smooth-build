@@ -16,7 +16,7 @@ public class CommentSmoothTest extends IntegrationTestCase {
     script(builder.build());
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
@@ -28,7 +28,7 @@ public class CommentSmoothTest extends IntegrationTestCase {
     script("run: newFile(path='file.txt', '###');");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();

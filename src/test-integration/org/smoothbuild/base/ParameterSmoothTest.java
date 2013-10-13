@@ -12,7 +12,7 @@ public class ParameterSmoothTest extends IntegrationTestCase {
     script("run : newFile(path='file.txt', content='abc',) | save('outptuDir',);");
 
     // when
-    smoothRunner.run("run");
+    smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
