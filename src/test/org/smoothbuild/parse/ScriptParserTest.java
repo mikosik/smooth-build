@@ -8,8 +8,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.message.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageGroup;
 
 public class ScriptParserTest {
 
@@ -69,19 +70,23 @@ public class ScriptParserTest {
   }
 
   private static void assertParsingSucceeds(String scriptText) throws IOException {
-    TestMessageListener messages = parse(scriptText);
+    TestMessageGroup messages = parse(scriptText);
     messages.assertNoProblems();
   }
 
   private static void assertParsingFails(String script) throws IOException {
-    TestMessageListener messages = parse(script);
+    TestMessageGroup messages = parse(script);
     messages.assertOnlyProblem(SyntaxError.class);
   }
 
-  private static TestMessageListener parse(String string) throws IOException {
-    TestMessageListener messages = new TestMessageListener();
+  private static TestMessageGroup parse(String string) throws IOException {
+    TestMessageGroup messages = new TestMessageGroup();
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
-    ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));
+    try {
+      ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));
+    } catch (PhaseFailedException e) {
+      // ignore
+    }
     return messages;
   }
 }

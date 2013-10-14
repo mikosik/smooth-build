@@ -23,14 +23,15 @@ import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(MessageListener messages, InputStream inputStream,
+  public static ModuleContext parseScript(MessageGroup messages, InputStream inputStream,
       Path scriptFile) {
     ErrorListener errorListener = new ErrorListener(messages);
 
@@ -38,8 +39,7 @@ public class ScriptParser {
     try {
       antlrInputStream = new ANTLRInputStream(inputStream);
     } catch (IOException e) {
-      messages.report(new CannotReadScriptError(scriptFile, e));
-      return null;
+      throw new ErrorMessageException(new CannotReadScriptError(scriptFile, e));
     }
 
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);
@@ -50,13 +50,15 @@ public class ScriptParser {
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
 
-    return parser.module();
+    ModuleContext result = parser.module();
+    messages.failIfContainsErrors();
+    return result;
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final MessageListener messages;
+    private final MessageGroup messages;
 
-    public ErrorListener(MessageListener messages) {
+    public ErrorListener(MessageGroup messages) {
       this.messages = messages;
     }
 

@@ -23,8 +23,7 @@ import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.function.def.args.err.VoidArgError;
-import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.util.Empty;
 
@@ -36,21 +35,24 @@ import com.google.common.collect.Sets;
 public class ArgumentNodesCreator {
 
   public Map<String, DefinitionNode> createArgumentNodes(CodeLocation codeLocation,
-      MessageListener messages, Function function, Collection<Argument> arguments) {
-    return new Worker(codeLocation, messages, function, arguments).convert();
+      MessageGroup messages, Function function, Collection<Argument> arguments) {
+    Map<String, DefinitionNode> result = new Worker(codeLocation, messages, function, arguments)
+        .convert();
+    messages.failIfContainsErrors();
+    return result;
   }
 
   private static class Worker {
     private final CodeLocation codeLocation;
-    private final DetectingErrorsMessageListener messages;
+    private final MessageGroup messages;
     private final Function function;
     private final ParamsPool paramsPool;
     private final Collection<Argument> allArguments;
 
-    public Worker(CodeLocation codeLocation, MessageListener messageListener, Function function,
+    public Worker(CodeLocation codeLocation, MessageGroup messages, Function function,
         Collection<Argument> arguments) {
       this.codeLocation = codeLocation;
-      this.messages = new DetectingErrorsMessageListener(messageListener);
+      this.messages = messages;
       this.function = function;
       this.paramsPool = new ParamsPool(function.params());
       this.allArguments = arguments;
@@ -60,23 +62,23 @@ public class ArgumentNodesCreator {
       ImmutableList<Argument> namedArgs = Argument.filterNamed(allArguments);
 
       detectDuplicatedAndUnknownArgNames(namedArgs);
-      if (messages.errorDetected()) {
+      if (messages.containsErrors()) {
         return null;
       }
 
       detectVoidArguments();
-      if (messages.errorDetected()) {
+      if (messages.containsErrors()) {
         return null;
       }
 
       AssignmentList assignmentList = new AssignmentList();
       processNamedArguments(assignmentList, namedArgs);
-      if (messages.errorDetected()) {
+      if (messages.containsErrors()) {
         return null;
       }
 
       processNamelessArguments(assignmentList);
-      if (messages.errorDetected()) {
+      if (messages.containsErrors()) {
         return null;
       }
 

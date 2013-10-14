@@ -12,7 +12,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
@@ -27,20 +27,21 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<String, FunctionContext> collectFunctions(MessageListener messages,
+  public static Map<String, FunctionContext> collectFunctions(MessageGroup messages,
       SymbolTable importedFunctions, ModuleContext module) {
     Worker worker = new Worker(messages, importedFunctions);
     worker.visit(module);
+    messages.failIfContainsErrors();
     return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final SymbolTable importedFunctions;
-    private final MessageListener messages;
+    private final MessageGroup messages;
     private final Map<String, FunctionContext> functions;
 
     @Inject
-    public Worker(MessageListener messages, SymbolTable importedFunctions) {
+    public Worker(MessageGroup messages, SymbolTable importedFunctions) {
       this.importedFunctions = importedFunctions;
       this.messages = messages;
       this.functions = Maps.newHashMap();
