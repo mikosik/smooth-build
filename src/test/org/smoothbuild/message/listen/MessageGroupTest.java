@@ -31,21 +31,21 @@ public class MessageGroupTest {
 
   @Test
   public void initially_no_error_is_reported() throws Exception {
-    when(messageGroup.isErrorReported());
+    when(messageGroup.containsErrors());
     thenReturned(false);
   }
 
   @Test
-  public void isErrorReported_returns_false_after_after_adding_warning() throws Exception {
+  public void containsErrors_returns_false_after_after_adding_warning() throws Exception {
     given(messageGroup).report(new Message(WARNING, "message"));
-    when(messageGroup.isErrorReported());
+    when(messageGroup.containsErrors());
     thenReturned(false);
   }
 
   @Test
-  public void isErrorReported_returns_true_after_after_adding_error() throws Exception {
+  public void containsErrors_returns_true_after_after_adding_error() throws Exception {
     given(messageGroup).report(new Message(ERROR, "message"));
-    when(messageGroup.isErrorReported());
+    when(messageGroup.containsErrors());
     thenReturned(true);
   }
 }

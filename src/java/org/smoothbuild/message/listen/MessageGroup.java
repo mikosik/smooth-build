@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 public class MessageGroup implements MessageListener, Iterable<Message> {
   private final String name;
   private final List<Message> messages;
-  private boolean isErrorReported;
+  private boolean containsErrors;
 
   public MessageGroup(String name) {
     this.name = name;
@@ -35,11 +35,11 @@ public class MessageGroup implements MessageListener, Iterable<Message> {
     checkNotNull(message);
     messages.add(message);
     if (message.type() == MessageType.ERROR) {
-      isErrorReported = true;
+      containsErrors = true;
     }
   }
 
-  public boolean isErrorReported() {
-    return isErrorReported;
+  public boolean containsErrors() {
+    return containsErrors;
   }
 }
