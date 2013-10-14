@@ -22,12 +22,21 @@ public class UserConsole {
 
   public void report(MessageGroup messageGroup) {
     String status = messageGroup.containsErrors() ? " FAILED" : "";
-    print("[" + messageGroup.name() + "]" + status);
+    println("[" + messageGroup.name() + "]" + status);
 
     isErrorReported = isErrorReported || messageGroup.containsErrors();
 
+    printGroup(messageGroup);
+  }
+
+  private void printGroup(MessageGroup messageGroup) {
+    boolean printedAnything = false;
     for (Message message : messageGroup) {
       report(message);
+      printedAnything = true;
+    }
+    if (printedAnything) {
+      println("");
     }
   }
 
@@ -37,17 +46,17 @@ public class UserConsole {
 
   public void printFinalSummary() {
     if (isErrorReported) {
-      print("*** FAILED ***");
+      println("*** FAILED ***");
     } else {
-      print("*** SUCCESS ***");
+      println("*** SUCCESS ***");
     }
   }
 
-  private void print(String line) {
-    printStream.println(line);
+  protected void report(Message message) {
+    println(message.toString());
   }
 
-  protected void report(Message message) {
-    printStream.println(message.toString());
+  private void println(String line) {
+    printStream.println(line);
   }
 }
