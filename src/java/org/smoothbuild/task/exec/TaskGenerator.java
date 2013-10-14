@@ -1,35 +1,23 @@
 package org.smoothbuild.task.exec;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.task.base.Task;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
 
 public class TaskGenerator {
-  private final Map<HashCode, Task> generatedTasks;
+  private final HashedTasks hashedTasks;
 
   @Inject
-  public TaskGenerator() {
-    this.generatedTasks = Maps.newHashMap();
+  public TaskGenerator(HashedTasks hashedTasks) {
+    this.hashedTasks = hashedTasks;
   }
 
   public HashCode generateTask(DefinitionNode node) {
-    Task justGenerated = node.generateTask(this);
-    HashCode hash = justGenerated.hash();
-    Task prevGenerated = generatedTasks.get(hash);
-    if (prevGenerated == null) {
-      generatedTasks.put(hash, justGenerated);
-    }
-    return hash;
-  }
-
-  public Map<HashCode, Task> allTasks() {
-    return ImmutableMap.copyOf(generatedTasks);
+    Task task = node.generateTask(this);
+    hashedTasks.add(task);
+    return task.hash();
   }
 }

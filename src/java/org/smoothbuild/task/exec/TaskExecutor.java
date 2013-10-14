@@ -17,14 +17,16 @@ import com.google.common.hash.HashCode;
 
 public class TaskExecutor {
   private final FileSystem fileSystem;
+  private final HashedTasks hashedTasks;
 
   @Inject
-  public TaskExecutor(FileSystem fileSystem) {
+  public TaskExecutor(FileSystem fileSystem, HashedTasks hashedTasks) {
     this.fileSystem = fileSystem;
+    this.hashedTasks = hashedTasks;
   }
 
-  public void execute(MessageListener messageListener, HashedTasks tasks, HashCode hash) {
-    new Worker(messageListener, tasks).execute(hash);
+  public void execute(MessageListener messageListener, HashCode hash) {
+    new Worker(messageListener, hashedTasks).execute(hash);
   }
 
   private class Worker {
