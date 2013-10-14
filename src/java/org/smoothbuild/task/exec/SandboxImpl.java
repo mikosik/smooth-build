@@ -19,8 +19,8 @@ public class SandboxImpl implements Sandbox {
   private final CallLocation callLocation;
 
   public SandboxImpl(FileSystem fileSystem, Path root, CallLocation callLocation) {
-    this(fileSystem, new SubFileSystem(fileSystem, root), callLocation, new MessageGroup(
-        callLocation.name().simple()));
+    this(fileSystem, new SubFileSystem(fileSystem, root), callLocation,
+        createMessages(callLocation));
   }
 
   public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem,
@@ -56,5 +56,9 @@ public class SandboxImpl implements Sandbox {
 
   public MessageGroup messageGroup() {
     return messageGroup;
+  }
+
+  private static MessageGroup createMessages(CallLocation callLocation) {
+    return new MessageGroup(callLocation.name().simple());
   }
 }
