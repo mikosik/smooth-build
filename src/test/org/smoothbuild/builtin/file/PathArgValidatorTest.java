@@ -7,11 +7,8 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.fs.base.TestPath;
-import org.smoothbuild.testing.message.TestMessageListener;
 
 public class PathArgValidatorTest {
-  TestMessageListener messages = new TestMessageListener();
-
   @Test
   public void illegalPathsAreReported() {
     String name = "name";
