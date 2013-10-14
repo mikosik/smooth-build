@@ -35,4 +35,28 @@ public class UserConsoleTest {
     verify(printStream).println("[GROUP NAME]");
     verify(printStream).println("WARNING: message string");
   }
+
+  @Test
+  public void final_summary_is_success_when_only_warning_was_reported() throws Exception {
+    String name = "GROUP NAME";
+    MessageGroup messageGroup = new MessageGroup(name);
+    messageGroup.report(new Message(WARNING, "message string"));
+
+    userConsole.report(messageGroup);
+    userConsole.printFinalSummary();
+
+    verify(printStream).println("*** SUCCESS ***");
+  }
+
+  @Test
+  public void final_summary_is_failed_when_error_was_reported() throws Exception {
+    String name = "GROUP NAME";
+    MessageGroup messageGroup = new MessageGroup(name);
+    messageGroup.report(new Message(ERROR, "message string"));
+
+    userConsole.report(messageGroup);
+    userConsole.printFinalSummary();
+
+    verify(printStream).println("*** FAILED ***");
+  }
 }

@@ -9,6 +9,7 @@ import org.smoothbuild.message.message.Message;
 @Singleton
 public class UserConsole {
   private final PrintStream printStream;
+  private boolean isErrorReported;
 
   public UserConsole() {
     this(System.out);
@@ -16,14 +17,29 @@ public class UserConsole {
 
   public UserConsole(PrintStream printStream) {
     this.printStream = printStream;
+    this.isErrorReported = false;
   }
 
   public void report(MessageGroup messageGroup) {
     String status = messageGroup.containsErrors() ? " FAILED" : "";
-    printStream.println("[" + messageGroup.name() + "]" + status);
+    print("[" + messageGroup.name() + "]" + status);
+
+    isErrorReported = isErrorReported || messageGroup.containsErrors();
 
     for (Message message : messageGroup) {
       printStream.println(message.toString());
     }
+  }
+
+  public void printFinalSummary() {
+    if (isErrorReported) {
+      print("*** FAILED ***");
+    } else {
+      print("*** SUCCESS ***");
+    }
+  }
+
+  private void print(String line) {
+    printStream.println(line);
   }
 }
