@@ -42,4 +42,14 @@ public class MessageGroup implements MessageListener, Iterable<Message> {
   public boolean containsErrors() {
     return containsErrors;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    for (Message message : messages) {
+      builder.append(message.toString());
+      builder.append("\n");
+    }
+    return builder.toString();
+  }
 }
