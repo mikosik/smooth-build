@@ -43,6 +43,12 @@ public class MessageGroup implements MessageListener, Iterable<Message> {
     return containsErrors;
   }
 
+  public void failIfContainsErrors() {
+    if (containsErrors) {
+      throw new PhaseFailedException();
+    }
+  }
+
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
