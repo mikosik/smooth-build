@@ -28,12 +28,12 @@ import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
 public class ModuleParser {
   private final FileSystem fileSystem;
-  private final ScriptParserMessageGroup messages;
+  private final ModuleParserMessages messages;
   private final ImportedFunctions importedFunctions;
   private final DefinedFunctionsCreator definedFunctionsCreator;
 
   @Inject
-  public ModuleParser(FileSystem fileSystem, ScriptParserMessageGroup messages,
+  public ModuleParser(FileSystem fileSystem, ModuleParserMessages messages,
       ImportedFunctions importedFunctions, DefinedFunctionsCreator definedFunctionsCreator) {
     this.fileSystem = fileSystem;
     this.messages = messages;
