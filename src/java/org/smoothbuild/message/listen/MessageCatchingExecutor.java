@@ -1,6 +1,5 @@
 package org.smoothbuild.message.listen;
 
-
 public abstract class MessageCatchingExecutor<A, R> {
   private final UserConsole userConsole;
   private MessageGroup messageGroup;
@@ -19,6 +18,10 @@ public abstract class MessageCatchingExecutor<A, R> {
       return executeImpl(argument);
     } catch (ErrorMessageException e) {
       messageGroup.report(e.errorMessage());
+    } catch (PhaseFailedException e) {
+      if (!messageGroup.containsErrors()) {
+        messageGroup.report(new PhaseFailedWithoutErrorError());
+      }
     } finally {
       userConsole.report(messageGroup);
     }
