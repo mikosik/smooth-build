@@ -27,7 +27,7 @@ public class UserConsole {
     isErrorReported = isErrorReported || messageGroup.containsErrors();
 
     for (Message message : messageGroup) {
-      printStream.println(message.toString());
+      report(message);
     }
   }
 
@@ -45,5 +45,11 @@ public class UserConsole {
 
   private void print(String line) {
     printStream.println(line);
+  }
+
+  // TODO make private once migrating away from PrintingMessageListener is
+  // finished
+  protected void report(Message message) {
+    printStream.println(message.toString());
   }
 }

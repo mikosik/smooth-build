@@ -8,7 +8,7 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.message.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageGroup;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -18,7 +18,7 @@ public class TestSandbox extends SandboxImpl {
   static final Path SANDBOX_ROOT = path("sandbox");
 
   private final TestFileSystem fileSystem;
-  private final TestMessageListener messages;
+  private final TestMessageGroup messageGroup;
   private final TestFileSet resultFileSet;
 
   public TestSandbox() {
@@ -26,15 +26,15 @@ public class TestSandbox extends SandboxImpl {
   }
 
   public TestSandbox(TestFileSystem fileSystem) {
-    this(fileSystem, new TestFileSystem(fileSystem, SANDBOX_ROOT), new TestMessageListener());
+    this(fileSystem, new TestFileSystem(fileSystem, SANDBOX_ROOT), new TestMessageGroup());
   }
 
   public TestSandbox(TestFileSystem fileSystem, TestFileSystem sandboxFileSystem,
-      TestMessageListener messages) {
+      TestMessageGroup messageGroup) {
     super(fileSystem, sandboxFileSystem, callLocation(simpleName("name"), codeLocation(1, 2, 4)),
-        messages);
+        messageGroup);
     this.fileSystem = fileSystem;
-    this.messages = messages;
+    this.messageGroup = messageGroup;
     this.resultFileSet = new TestFileSet(sandboxFileSystem);
   }
 
@@ -48,7 +48,7 @@ public class TestSandbox extends SandboxImpl {
     return fileSystem;
   }
 
-  public TestMessageListener messages() {
-    return messages;
+  public TestMessageGroup messages() {
+    return messageGroup;
   }
 }

@@ -1,26 +1,18 @@
 package org.smoothbuild.task.exec;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.testing.type.impl.FileTester.createContentWithFilePath;
 
 import org.junit.Test;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.listen.MessageListener;
-import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.task.exec.SandboxImpl;
-import org.smoothbuild.task.exec.err.TaskFailedError;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.api.MutableFile;
@@ -59,14 +51,7 @@ public class SandboxImplTest {
   @Test
   public void reportedErrors() throws Exception {
     Message errorMessage = new Message(ERROR, "message");
-    MessageListener listener = Mockito.mock(MessageListener.class);
-    // MessageListener listener = new PrintingMessageListener();
     sandbox.report(errorMessage);
-    sandbox.reportCollectedMessagesTo(listener);
-
-    InOrder inOrder = inOrder(listener);
-    inOrder.verify(listener).report(isA(TaskFailedError.class));
-    inOrder.verify(listener).report(errorMessage);
-    verifyNoMoreInteractions(listener);
+    assertThat(sandbox.messageGroup()).containsOnly(errorMessage);
   }
 }
