@@ -4,15 +4,18 @@ import org.smoothbuild.message.message.ErrorMessageException;
 
 public abstract class MessageCatchingExecutor<A, R> {
   private final UserConsole userConsole;
-  private final String name;
+  private MessageGroup messageGroup;
 
   public MessageCatchingExecutor(UserConsole userConsole, String name) {
+    this(userConsole, new MessageGroup(name));
+  }
+
+  public MessageCatchingExecutor(UserConsole userConsole, MessageGroup messageGroup) {
     this.userConsole = userConsole;
-    this.name = name;
+    this.messageGroup = messageGroup;
   }
 
   public R execute(A argument) {
-    MessageGroup messageGroup = new MessageGroup(name);
     try {
       return executeImpl(argument);
     } catch (ErrorMessageException e) {

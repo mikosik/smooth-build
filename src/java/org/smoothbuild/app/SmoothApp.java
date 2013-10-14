@@ -11,7 +11,7 @@ import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.ErrorMessageException;
-import org.smoothbuild.parse.ModuleParser;
+import org.smoothbuild.parse.ModuleParserExecutor;
 import org.smoothbuild.task.exec.SmoothExecutor;
 
 import com.google.common.collect.ImmutableList;
@@ -21,18 +21,18 @@ public class SmoothApp {
   private final DetectingErrorsMessageListener messages;
   private final Cleaner cleaner;
   private final CommandLineParserExecutor commandLineParserExecutor;
-  private final ModuleParser moduleParser;
+  private final ModuleParserExecutor moduleParserExecutor;
   private final SmoothExecutor smoothExecutor;
 
   @Inject
   public SmoothApp(UserConsole userConsole, MessageListener messageListener, Cleaner cleaner,
-      CommandLineParserExecutor commandLineParserExecutor, ModuleParser moduleParser,
-      SmoothExecutor smoothExecutor) {
+      CommandLineParserExecutor commandLineParserExecutor,
+      ModuleParserExecutor moduleParserExecutor, SmoothExecutor smoothExecutor) {
     this.userConsole = userConsole;
     this.messages = new DetectingErrorsMessageListener(messageListener);
     this.cleaner = cleaner;
     this.commandLineParserExecutor = commandLineParserExecutor;
-    this.moduleParser = moduleParser;
+    this.moduleParserExecutor = moduleParserExecutor;
     this.smoothExecutor = smoothExecutor;
   }
 
@@ -54,8 +54,8 @@ public class SmoothApp {
       return;
     }
 
-    Module module = moduleParser.createModule(messages, args);
-    if (messages.errorDetected()) {
+    Module module = moduleParserExecutor.execute(args);
+    if (userConsole.isErrorReported()) {
       return;
     }
 
