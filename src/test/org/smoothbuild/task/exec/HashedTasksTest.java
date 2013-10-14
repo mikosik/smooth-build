@@ -6,29 +6,39 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.HashedTasks;
-import org.smoothbuild.task.exec.NoTaskWithGivenHashException;
 import org.smoothbuild.testing.task.base.TestTask;
-
-import com.google.common.collect.ImmutableMap;
 
 public class HashedTasksTest {
   Task task1 = new TestTask("abc");
   Task task2 = new TestTask("cde");
 
-  HashedTasks hashedTasks;
+  HashedTasks hashedTasks = new HashedTasks();
 
   @Test
   public void retrieving_task_with_given_hash() {
-    given(hashedTasks = new HashedTasks(ImmutableMap.of(task1.hash(), task1)));
+    given(hashedTasks).add(task1);
     when(hashedTasks.get(task1.hash()));
     thenReturned(task1);
   }
 
   @Test
-  public void passing_hash_of_task_that_is_not_in_map_throws_exception() {
-    given(hashedTasks = new HashedTasks(ImmutableMap.of(task1.hash(), task1)));
+  public void adding_two_tasks_with_the_same_hash_ends_with_the_first_being_added()
+      throws Exception {
+    task2 = Mockito.mock(Task.class);
+    Mockito.when(task2.hash()).thenReturn(task1.hash());
+
+    given(hashedTasks).add(task1);
+    given(hashedTasks).add(task2);
+
+    when(hashedTasks).get(task1.hash());
+    thenReturned(task1);
+  }
+
+  @Test
+  public void retrieving_not_added_task_causes_exception() {
+    given(hashedTasks).add(task1);
     when(hashedTasks).get(task2.hash());
     thenThrown(NoTaskWithGivenHashException.class);
   }
