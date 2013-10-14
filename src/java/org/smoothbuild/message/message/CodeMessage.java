@@ -2,7 +2,6 @@ package org.smoothbuild.message.message;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-
 public class CodeMessage extends Message {
   private final CodeLocation codeLocation;
 
@@ -17,6 +16,6 @@ public class CodeMessage extends Message {
 
   @Override
   public String toString() {
-    return type().toString() + codeLocation.toString() + ": " + message();
+    return type().toString() + " " + codeLocation.toString() + ": " + message();
   }
 }
