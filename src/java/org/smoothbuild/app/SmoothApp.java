@@ -1,7 +1,5 @@
 package org.smoothbuild.app;
 
-import static org.smoothbuild.message.message.MessageType.INFO;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.command.CommandLineArguments;
@@ -9,12 +7,13 @@ import org.smoothbuild.command.CommandLineParser;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.ErrorMessageException;
-import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.task.exec.SmoothExecutor;
 
 public class SmoothApp {
+  private final UserConsole userConsole;
   private final DetectingErrorsMessageListener messages;
   private final Cleaner cleaner;
   private final CommandLineParser commandLineParser;
@@ -22,8 +21,9 @@ public class SmoothApp {
   private final SmoothExecutor smoothExecutor;
 
   @Inject
-  public SmoothApp(MessageListener messageListener, Cleaner cleaner,
+  public SmoothApp(UserConsole userConsole, MessageListener messageListener, Cleaner cleaner,
       CommandLineParser commandLineParser, ModuleParser moduleParser, SmoothExecutor smoothExecutor) {
+    this.userConsole = userConsole;
     this.messages = new DetectingErrorsMessageListener(messageListener);
     this.cleaner = cleaner;
     this.commandLineParser = commandLineParser;
@@ -47,10 +47,6 @@ public class SmoothApp {
       messages.report(e.errorMessage());
     }
 
-    if (messages.errorDetected()) {
-      messages.report(new Message(INFO, "BUILD FAILED"));
-    } else {
-      messages.report(new Message(INFO, "SUCCESS"));
-    }
+    userConsole.printFinalSummary();
   }
 }
