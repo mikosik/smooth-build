@@ -12,7 +12,8 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.parse.ModuleParserPhase;
-import org.smoothbuild.task.exec.SmoothExecutor;
+import org.smoothbuild.task.exec.ExecutionData;
+import org.smoothbuild.task.exec.SmoothExecutorPhase;
 
 import com.google.common.collect.ImmutableList;
 
@@ -22,18 +23,18 @@ public class SmoothApp {
   private final Cleaner cleaner;
   private final CommandLineParserPhase commandLineParserPhase;
   private final ModuleParserPhase moduleParserPhase;
-  private final SmoothExecutor smoothExecutor;
+  private final SmoothExecutorPhase smoothExecutorPhase;
 
   @Inject
   public SmoothApp(UserConsole userConsole, MessageListener messageListener, Cleaner cleaner,
-      CommandLineParserPhase commandLineParserPhase,
-      ModuleParserPhase moduleParserPhase, SmoothExecutor smoothExecutor) {
+      CommandLineParserPhase commandLineParserPhase, ModuleParserPhase moduleParserPhase,
+      SmoothExecutorPhase smoothExecutorPhase) {
     this.userConsole = userConsole;
     this.messages = new DetectingErrorsMessageListener(messageListener);
     this.cleaner = cleaner;
     this.commandLineParserPhase = commandLineParserPhase;
     this.moduleParserPhase = moduleParserPhase;
-    this.smoothExecutor = smoothExecutor;
+    this.smoothExecutorPhase = smoothExecutorPhase;
   }
 
   public void run(String... commandLine) {
@@ -59,6 +60,6 @@ public class SmoothApp {
       return;
     }
 
-    smoothExecutor.execute(args, module, messages);
+    smoothExecutorPhase.execute(new ExecutionData(args, module));
   }
 }

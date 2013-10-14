@@ -6,7 +6,7 @@ import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.err.UnknownFunctionError;
 
 import com.google.common.hash.HashCode;
@@ -21,12 +21,14 @@ public class SmoothExecutor {
     this.taskExecutor = taskExecutor;
   }
 
-  public void execute(CommandLineArguments args, Module module, MessageListener messages) {
+  public void execute(ExecutionData executionData) {
+    CommandLineArguments args = executionData.args();
+    Module module = executionData.module();
+
     Name name = args.functionToRun();
     DefinedFunction function = module.getFunction(name);
     if (function == null) {
-      messages.report(new UnknownFunctionError(name, module.availableNames()));
-      return;
+      throw new ErrorMessageException(new UnknownFunctionError(name, module.availableNames()));
     }
     HashCode hash = taskGenerator.generateTask(function);
     taskExecutor.execute(hash);
