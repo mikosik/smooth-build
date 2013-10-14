@@ -53,7 +53,6 @@ public class MessageCatchingExecutorTest {
     verify(userConsole).report(captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
-
   }
 
   private static class MyThrowingExecutor extends MessageCatchingExecutor<String, String> {
@@ -64,6 +63,65 @@ public class MessageCatchingExecutorTest {
     @Override
     public String executeImpl(String arguments) {
       throw new ErrorMessageException(new Message(ERROR, arguments));
+    }
+  }
+
+  @Test
+  public void phase_failed_exception_is_caught() throws Exception {
+    MyReportingAndThrowingFailedExceptionExecutor executor = new MyReportingAndThrowingFailedExceptionExecutor(
+        userConsole);
+    executor.execute(value);
+
+    ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
+    verify(userConsole).report(captured.capture());
+    assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
+    assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
+  }
+
+  private static class MyReportingAndThrowingFailedExceptionExecutor extends
+      MessageCatchingExecutor<String, String> {
+    private final MessageGroup messageGroup;
+
+    public MyReportingAndThrowingFailedExceptionExecutor(UserConsole userConsole) {
+      this(userConsole, new MessageGroup("name"));
+    }
+
+    public MyReportingAndThrowingFailedExceptionExecutor(UserConsole userConsole,
+        MessageGroup messageGroup) {
+      super(userConsole, messageGroup);
+      this.messageGroup = messageGroup;
+    }
+
+    @Override
+    public String executeImpl(String arguments) {
+      messageGroup.report(new Message(ERROR, arguments));
+      throw new PhaseFailedException();
+    }
+  }
+
+  @Test
+  public void additional_error_is_added_when_PhaseFailedException_is_thrown_without_reporting_any_error()
+      throws Exception {
+    MyThrowingFailedExceptionExecutor executor = new MyThrowingFailedExceptionExecutor(userConsole);
+    executor.execute(value);
+
+    ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
+    verify(userConsole).report(captured.capture());
+    assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
+    assertThat(Iterables.get(captured.getValue(), 0)).isInstanceOf(
+        PhaseFailedWithoutErrorError.class);
+  }
+
+  private static class MyThrowingFailedExceptionExecutor extends
+      MessageCatchingExecutor<String, String> {
+
+    public MyThrowingFailedExceptionExecutor(UserConsole userConsole) {
+      super(userConsole, "name");
+    }
+
+    @Override
+    public String executeImpl(String arguments) {
+      throw new PhaseFailedException();
     }
   }
 }
