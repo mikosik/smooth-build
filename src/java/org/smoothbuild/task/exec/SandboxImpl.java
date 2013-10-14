@@ -3,14 +3,11 @@ package org.smoothbuild.task.exec;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.message.listen.CollectingMessageListener;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.task.exec.err.TaskCompletedInfo;
-import org.smoothbuild.task.exec.err.TaskFailedError;
 import org.smoothbuild.type.api.MutableFile;
 import org.smoothbuild.type.api.MutableFileSet;
 import org.smoothbuild.type.impl.MutableStoredFileSet;
@@ -18,19 +15,19 @@ import org.smoothbuild.type.impl.MutableStoredFileSet;
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MutableStoredFileSet resultFileSet;
-  private final CollectingMessageListener messages;
+  private final MessageGroup messageGroup;
   private final CallLocation callLocation;
 
   public SandboxImpl(FileSystem fileSystem, Path root, CallLocation callLocation) {
-    this(fileSystem, new SubFileSystem(fileSystem, root), callLocation,
-        new CollectingMessageListener());
+    this(fileSystem, new SubFileSystem(fileSystem, root), callLocation, new MessageGroup(
+        callLocation.name().simple()));
   }
 
   public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem,
-      CallLocation callLocation, CollectingMessageListener messages) {
+      CallLocation callLocation, MessageGroup messageGroup) {
     this.projectFileSystem = fileSystem;
     this.resultFileSet = new MutableStoredFileSet(sandboxFileSystem);
-    this.messages = messages;
+    this.messageGroup = messageGroup;
     this.callLocation = callLocation;
   }
 
@@ -54,15 +51,10 @@ public class SandboxImpl implements Sandbox {
     // will be possible when each Task will have parent field pointing in
     // direction to nearest root node (build run can have more than one
     // task-to-run [soon]).
-    messages.report(new WrappedCodeMessage(message, callLocation.location()));
+    messageGroup.report(new WrappedCodeMessage(message, callLocation.location()));
   }
 
-  public void reportCollectedMessagesTo(MessageListener listener) {
-    if (messages.isErrorReported()) {
-      listener.report(new TaskFailedError(callLocation));
-    } else {
-      listener.report(new TaskCompletedInfo(callLocation));
-    }
-    messages.reportCollectedMessagesTo(listener);
+  public MessageGroup messageGroup() {
+    return messageGroup;
   }
 }

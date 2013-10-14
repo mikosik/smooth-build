@@ -29,6 +29,6 @@ public class SmoothExecutor {
       return;
     }
     HashCode hash = taskGenerator.generateTask(function);
-    taskExecutor.execute(messages, hash);
+    taskExecutor.execute(hash);
   }
 }

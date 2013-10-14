@@ -1,19 +1,26 @@
 package org.smoothbuild.testing.message;
 
+import static com.google.common.io.ByteStreams.nullOutputStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.PrintStream;
 import java.util.List;
 
-import org.smoothbuild.message.listen.CollectingMessageListener;
+import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 
 import com.google.common.collect.Lists;
 
-public class TestMessageListener extends CollectingMessageListener {
+public class TestMessageListener extends UserConsole implements MessageListener {
   private final List<Message> problems = Lists.newArrayList();
   private final List<Message> infos = Lists.newArrayList();
+
+  public TestMessageListener() {
+    super(new PrintStream(nullOutputStream()));
+  }
 
   @Override
   public void report(Message message) {
@@ -22,7 +29,6 @@ public class TestMessageListener extends CollectingMessageListener {
     } else {
       problems.add(message);
     }
-    super.report(message);
   }
 
   public void assertProblemsFound() {
