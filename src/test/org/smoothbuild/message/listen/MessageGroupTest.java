@@ -48,4 +48,11 @@ public class MessageGroupTest {
     when(messageGroup.containsErrors());
     thenReturned(true);
   }
+
+  @Test
+  public void test_toString() throws Exception {
+    given(messageGroup).report(message);
+    when(messageGroup.toString());
+    thenReturned(message.toString() + "\n");
+  }
 }
