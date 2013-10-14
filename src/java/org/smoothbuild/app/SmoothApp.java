@@ -3,7 +3,7 @@ package org.smoothbuild.app;
 import javax.inject.Inject;
 
 import org.smoothbuild.command.CommandLineArguments;
-import org.smoothbuild.command.CommandLineParser;
+import org.smoothbuild.command.CommandLineParserExecutor;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
 import org.smoothbuild.message.listen.MessageListener;
@@ -16,17 +16,18 @@ public class SmoothApp {
   private final UserConsole userConsole;
   private final DetectingErrorsMessageListener messages;
   private final Cleaner cleaner;
-  private final CommandLineParser commandLineParser;
+  private final CommandLineParserExecutor commandLineParserExecutor;
   private final ModuleParser moduleParser;
   private final SmoothExecutor smoothExecutor;
 
   @Inject
   public SmoothApp(UserConsole userConsole, MessageListener messageListener, Cleaner cleaner,
-      CommandLineParser commandLineParser, ModuleParser moduleParser, SmoothExecutor smoothExecutor) {
+      CommandLineParserExecutor commandLineParserExecutor, ModuleParser moduleParser,
+      SmoothExecutor smoothExecutor) {
     this.userConsole = userConsole;
     this.messages = new DetectingErrorsMessageListener(messageListener);
     this.cleaner = cleaner;
-    this.commandLineParser = commandLineParser;
+    this.commandLineParserExecutor = commandLineParserExecutor;
     this.moduleParser = moduleParser;
     this.smoothExecutor = smoothExecutor;
   }
@@ -35,18 +36,25 @@ public class SmoothApp {
     cleaner.clearBuildDir();
 
     try {
-      CommandLineArguments args = commandLineParser.parse(commandLine);
-
-      Module module = moduleParser.createModule(messages, args);
-      if (messages.errorDetected()) {
-        return;
-      }
-
-      smoothExecutor.execute(args, module, messages);
+      runImpl(commandLine);
     } catch (ErrorMessageException e) {
       messages.report(e.errorMessage());
     }
 
     userConsole.printFinalSummary();
+  }
+
+  private void runImpl(String... commandLine) {
+    CommandLineArguments args = commandLineParserExecutor.parse(commandLine);
+    if (args == null) {
+      return;
+    }
+
+    Module module = moduleParser.createModule(messages, args);
+    if (messages.errorDetected()) {
+      return;
+    }
+
+    smoothExecutor.execute(args, module, messages);
   }
 }
