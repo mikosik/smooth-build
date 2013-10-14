@@ -47,8 +47,6 @@ public class UserConsole {
     printStream.println(line);
   }
 
-  // TODO make private once migrating away from PrintingMessageListener is
-  // finished
   protected void report(Message message) {
     printStream.println(message.toString());
   }
