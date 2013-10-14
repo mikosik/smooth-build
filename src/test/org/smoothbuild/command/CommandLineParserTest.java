@@ -9,19 +9,21 @@ import org.smoothbuild.command.err.CommandLineError;
 import org.smoothbuild.command.err.NothingToDoError;
 import org.smoothbuild.message.message.ErrorMessageException;
 
+import com.google.common.collect.ImmutableList;
+
 public class CommandLineParserTest {
   String functionName = "function1";
   CommandLineParser parser = new CommandLineParser();
 
   @Test
   public void functionToRun() {
-    CommandLineArguments args = parser.parse(functionName);
+    CommandLineArguments args = parser.parse(ImmutableList.of(functionName));
     assertThat(args.functionToRun()).isEqualTo(simpleName(functionName));
   }
 
   public void functionToRunMustBePresent() throws Exception {
     try {
-      parser.parse();
+      parser.parse(ImmutableList.<String> of());
     } catch (ErrorMessageException e) {
       // expected
       assertThat(e.errorMessage()).isInstanceOf(NothingToDoError.class);
@@ -30,7 +32,7 @@ public class CommandLineParserTest {
 
   public void atMostOneFunctionToRunCanBePresent() throws Exception {
     try {
-      parser.parse(functionName, functionName);
+      parser.parse(ImmutableList.of(functionName, functionName));
     } catch (ErrorMessageException e) {
       // expected
       assertThat(e.errorMessage()).isInstanceOf(CommandLineError.class);
@@ -39,7 +41,7 @@ public class CommandLineParserTest {
 
   @Test
   public void scriptFile() throws Exception {
-    CommandLineArguments args = parser.parse(functionName);
+    CommandLineArguments args = parser.parse(ImmutableList.of(functionName));
     assertThat(args.scriptFile()).isEqualTo(DEFAULT_SCRIPT);
   }
 

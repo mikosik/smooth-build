@@ -1,5 +1,7 @@
 package org.smoothbuild.app;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.smoothbuild.command.CommandLineArguments;
@@ -11,6 +13,8 @@ import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.task.exec.SmoothExecutor;
+
+import com.google.common.collect.ImmutableList;
 
 public class SmoothApp {
   private final UserConsole userConsole;
@@ -36,7 +40,7 @@ public class SmoothApp {
     cleaner.clearBuildDir();
 
     try {
-      runImpl(commandLine);
+      runImpl(ImmutableList.copyOf(commandLine));
     } catch (ErrorMessageException e) {
       messages.report(e.errorMessage());
     }
@@ -44,7 +48,7 @@ public class SmoothApp {
     userConsole.printFinalSummary();
   }
 
-  private void runImpl(String... commandLine) {
+  private void runImpl(List<String> commandLine) {
     CommandLineArguments args = commandLineParserExecutor.parse(commandLine);
     if (args == null) {
       return;
