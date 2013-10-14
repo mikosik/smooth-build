@@ -1,5 +1,7 @@
 package org.smoothbuild.command;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.smoothbuild.message.listen.MessageGroup;
@@ -16,7 +18,7 @@ public class CommandLineParserExecutor {
     this.commandLineParser = commandLineParser;
   }
 
-  public CommandLineArguments parse(String... args) {
+  public CommandLineArguments parse(List<String> args) {
     MessageGroup messageGroup = new MessageGroup("parsing arguments");
     try {
       return commandLineParser.parse(args);
