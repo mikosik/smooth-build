@@ -7,14 +7,14 @@ import javax.inject.Inject;
 import org.smoothbuild.message.listen.MessageCatchingExecutor;
 import org.smoothbuild.message.listen.UserConsole;
 
-public class CommandLineParserExecutor extends
+public class CommandLineParserPhase extends
     MessageCatchingExecutor<List<String>, CommandLineArguments> {
 
   private static final String COMMAND_LINE_PARSING_PHASE_NAME = "parsing arguments";
   private final CommandLineParser commandLineParser;
 
   @Inject
-  public CommandLineParserExecutor(UserConsole userConsole, CommandLineParser commandLineParser) {
+  public CommandLineParserPhase(UserConsole userConsole, CommandLineParser commandLineParser) {
     super(userConsole, COMMAND_LINE_PARSING_PHASE_NAME);
     this.commandLineParser = commandLineParser;
   }
