@@ -14,7 +14,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.FileSet;

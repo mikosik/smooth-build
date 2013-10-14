@@ -5,7 +5,7 @@ import static org.smoothbuild.fs.base.Path.validationError;
 
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.listen.ErrorMessageException;
 
 public class PathArgValidator {
   public static Path validatedPath(String name, String value) {

@@ -9,7 +9,7 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.type.api.File;
 

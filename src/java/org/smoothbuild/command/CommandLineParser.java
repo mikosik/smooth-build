@@ -9,7 +9,7 @@ import java.util.List;
 import org.smoothbuild.command.err.CommandLineError;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.command.err.NothingToDoError;
-import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.listen.ErrorMessageException;
 
 public class CommandLineParser {
   public CommandLineArguments parse(List<String> args) {

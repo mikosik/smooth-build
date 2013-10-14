@@ -2,7 +2,7 @@ package org.smoothbuild.fs.base.exc;
 
 import java.io.IOException;
 
-import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.listen.ErrorMessageException;
 
 /**
  * Indicates problem accessing a file. It is caused either by a bug in

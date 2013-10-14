@@ -10,7 +10,7 @@ import java.util.Iterator;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 import org.smoothbuild.type.api.File;

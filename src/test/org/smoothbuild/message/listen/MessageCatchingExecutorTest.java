@@ -7,7 +7,6 @@ import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 
 import com.google.common.collect.Iterables;

@@ -1,6 +1,5 @@
 package org.smoothbuild.message.listen;
 
-import org.smoothbuild.message.message.ErrorMessageException;
 
 public abstract class MessageCatchingExecutor<A, R> {
   private final UserConsole userConsole;
