@@ -1,5 +1,6 @@
 package org.smoothbuild.message.listen;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.message.message.MessageType.ERROR;
@@ -34,6 +35,27 @@ public class UserConsoleTest {
     userConsole.report(messageGroup);
     verify(printStream).println("[GROUP NAME]");
     verify(printStream).println("WARNING: message string");
+  }
+
+  @Test
+  public void isErrorReported_returns_false_when_only_warning_was_reported() throws Exception {
+    String name = "GROUP NAME";
+    MessageGroup messageGroup = new MessageGroup(name);
+    messageGroup.report(new Message(WARNING, "message string"));
+
+    userConsole.report(messageGroup);
+    assertThat(userConsole.isErrorReported()).isFalse();
+  }
+
+  @Test
+  public void isErrorReported_returns_true_when_error_was_reported() throws Exception {
+    String name = "GROUP NAME";
+    MessageGroup messageGroup = new MessageGroup(name);
+    messageGroup.report(new Message(ERROR, "message string"));
+
+    userConsole.report(messageGroup);
+
+    assertThat(userConsole.isErrorReported()).isTrue();
   }
 
   @Test
