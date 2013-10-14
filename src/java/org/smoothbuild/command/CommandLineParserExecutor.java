@@ -4,29 +4,23 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.MessageCatchingExecutor;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.message.message.ErrorMessageException;
 
-public class CommandLineParserExecutor {
-  private final UserConsole userConsole;
+public class CommandLineParserExecutor extends
+    MessageCatchingExecutor<List<String>, CommandLineArguments> {
+
+  private static final String COMMAND_LINE_PARSING_PHASE_NAME = "parsing arguments";
   private final CommandLineParser commandLineParser;
 
   @Inject
   public CommandLineParserExecutor(UserConsole userConsole, CommandLineParser commandLineParser) {
-    this.userConsole = userConsole;
+    super(userConsole, COMMAND_LINE_PARSING_PHASE_NAME);
     this.commandLineParser = commandLineParser;
   }
 
-  public CommandLineArguments parse(List<String> args) {
-    MessageGroup messageGroup = new MessageGroup("parsing arguments");
-    try {
-      return commandLineParser.parse(args);
-    } catch (ErrorMessageException e) {
-      messageGroup.report(e.errorMessage());
-    } finally {
-      userConsole.report(messageGroup);
-    }
-    return null;
+  @Override
+  public CommandLineArguments executeImpl(List<String> arguments) {
+    return commandLineParser.parse(arguments);
   }
 }

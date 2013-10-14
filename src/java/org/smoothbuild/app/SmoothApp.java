@@ -49,7 +49,7 @@ public class SmoothApp {
   }
 
   private void runImpl(List<String> commandLine) {
-    CommandLineArguments args = commandLineParserExecutor.parse(commandLine);
+    CommandLineArguments args = commandLineParserExecutor.execute(commandLine);
     if (args == null) {
       return;
     }
