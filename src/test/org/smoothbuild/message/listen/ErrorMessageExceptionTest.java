@@ -1,4 +1,4 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.listen;
 
 import static org.hamcrest.Matchers.sameInstance;
 import static org.smoothbuild.message.message.MessageType.ERROR;
@@ -7,6 +7,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 
 public class ErrorMessageExceptionTest {
   Message errorMessage = new Message(ERROR, "");

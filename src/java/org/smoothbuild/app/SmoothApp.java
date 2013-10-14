@@ -8,9 +8,9 @@ import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.command.CommandLineParserExecutor;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageListener;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.parse.ModuleParserExecutor;
 import org.smoothbuild.task.exec.SmoothExecutor;
 

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.ErrorMessageException;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.task.exec.TestSandbox;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;

@@ -1,7 +1,9 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.listen;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.message.message.MessageType.ERROR;
+
+import org.smoothbuild.message.message.Message;
 
 @SuppressWarnings("serial")
 public class ErrorMessageException extends RuntimeException {

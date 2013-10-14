@@ -22,8 +22,8 @@ import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
 public class ModuleParser {
