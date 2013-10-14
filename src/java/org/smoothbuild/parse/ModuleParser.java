@@ -22,29 +22,29 @@ import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
-import org.smoothbuild.message.listen.DetectingErrorsMessageListener;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.ErrorMessageException;
 import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
 public class ModuleParser {
   private final FileSystem fileSystem;
+  private final ScriptParserMessageGroup messages;
   private final ImportedFunctions importedFunctions;
   private final DefinedFunctionsCreator definedFunctionsCreator;
 
   @Inject
-  public ModuleParser(FileSystem fileSystem, ImportedFunctions importedFunctions,
-      DefinedFunctionsCreator definedFunctionsCreator) {
+  public ModuleParser(FileSystem fileSystem, ScriptParserMessageGroup messages,
+      ImportedFunctions importedFunctions, DefinedFunctionsCreator definedFunctionsCreator) {
     this.fileSystem = fileSystem;
+    this.messages = messages;
     this.importedFunctions = importedFunctions;
     this.definedFunctionsCreator = definedFunctionsCreator;
   }
 
-  public Module createModule(DetectingErrorsMessageListener messageListener,
-      CommandLineArguments args) {
+  public Module createModule(CommandLineArguments args) {
     Path scriptFile = args.scriptFile();
     InputStream inputStream = scriptInputStream(scriptFile);
 
-    DetectingErrorsMessageListener messages = new DetectingErrorsMessageListener(messageListener);
     return createModule(messages, inputStream, scriptFile);
   }
 
@@ -56,33 +56,33 @@ public class ModuleParser {
     }
   }
 
-  private Module createModule(DetectingErrorsMessageListener messages, InputStream inputStream,
-      Path scriptFile) {
-    ModuleContext module = parseScript(messages, inputStream, scriptFile);
-    if (messages.errorDetected()) {
+  private Module createModule(MessageGroup messageGroup, InputStream inputStream, Path scriptFile) {
+    ModuleContext module = parseScript(messageGroup, inputStream, scriptFile);
+    if (messageGroup.containsErrors()) {
       return null;
     }
 
-    Map<String, FunctionContext> functions = collectFunctions(messages, importedFunctions, module);
-    if (messages.errorDetected()) {
+    Map<String, FunctionContext> functions = collectFunctions(messageGroup, importedFunctions,
+        module);
+    if (messageGroup.containsErrors()) {
       return null;
     }
 
     Map<String, Set<Dependency>> dependencies = collectDependencies(module);
 
-    detectUndefinedFunctions(messages, importedFunctions, dependencies);
-    if (messages.errorDetected()) {
+    detectUndefinedFunctions(messageGroup, importedFunctions, dependencies);
+    if (messageGroup.containsErrors()) {
       return null;
     }
 
-    List<String> sorted = sortDependencies(messages, importedFunctions, dependencies);
-    if (messages.errorDetected()) {
+    List<String> sorted = sortDependencies(messageGroup, importedFunctions, dependencies);
+    if (messageGroup.containsErrors()) {
       return null;
     }
 
     Map<Name, DefinedFunction> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        messages, importedFunctions, functions, sorted);
-    if (messages.errorDetected()) {
+        messageGroup, importedFunctions, functions, sorted);
+    if (messageGroup.containsErrors()) {
       return null;
     }
 
