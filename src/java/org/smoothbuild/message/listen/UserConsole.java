@@ -31,6 +31,10 @@ public class UserConsole {
     }
   }
 
+  public boolean isErrorReported() {
+    return isErrorReported;
+  }
+
   public void printFinalSummary() {
     if (isErrorReported) {
       print("*** FAILED ***");
