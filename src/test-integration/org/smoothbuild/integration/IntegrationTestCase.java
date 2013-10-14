@@ -10,8 +10,8 @@ import org.smoothbuild.app.SmoothApp;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.fs.base.TestFileSystemModule;
-import org.smoothbuild.testing.message.TestMessageListener;
-import org.smoothbuild.testing.message.TestMessageListenerModule;
+import org.smoothbuild.testing.message.TestUserConsole;
+import org.smoothbuild.testing.message.TestUserConsoleModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
@@ -21,7 +21,7 @@ import com.google.inject.Injector;
 public class IntegrationTestCase {
   protected TestFileSystem fileSystem;
   protected SmoothApp smoothApp;
-  protected TestMessageListener messages;
+  protected TestUserConsole messages;
 
   @Before
   public void before() {
@@ -29,9 +29,9 @@ public class IntegrationTestCase {
   }
 
   protected void reset() {
-    Injector injector = createInjector(new TestFileSystemModule(), new TestMessageListenerModule());
+    Injector injector = createInjector(new TestFileSystemModule(), new TestUserConsoleModule());
     fileSystem = injector.getInstance(TestFileSystem.class);
-    messages = injector.getInstance(TestMessageListener.class);
+    messages = injector.getInstance(TestUserConsole.class);
     smoothApp = injector.getInstance(SmoothApp.class);
   }
 

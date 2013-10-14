@@ -14,11 +14,11 @@ import org.smoothbuild.message.message.WrappedCodeMessage;
 
 import com.google.common.collect.Lists;
 
-public class TestMessageListener extends UserConsole implements MessageListener {
+public class TestUserConsole extends UserConsole implements MessageListener {
   private final List<Message> problems = Lists.newArrayList();
   private final List<Message> infos = Lists.newArrayList();
 
-  public TestMessageListener() {
+  public TestUserConsole() {
     super(new PrintStream(nullOutputStream()));
   }
 
