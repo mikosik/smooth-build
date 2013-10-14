@@ -11,7 +11,7 @@ import org.smoothbuild.message.message.MessageType;
 
 import com.google.common.collect.Lists;
 
-public class MessageGroup implements MessageListener, Iterable<Message> {
+public class MessageGroup implements Iterable<Message> {
   private final String name;
   private final List<Message> messages;
   private boolean containsErrors;
@@ -30,7 +30,6 @@ public class MessageGroup implements MessageListener, Iterable<Message> {
     return unmodifiableIterator(messages.iterator());
   }
 
-  @Override
   public void report(Message message) {
     checkNotNull(message);
     messages.add(message);

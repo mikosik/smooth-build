@@ -5,20 +5,20 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.plugin.api.Sandbox;
 
 public class ReportingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
-  private final MessageListener messages;
+  private final Sandbox sandbox;
   private boolean errorReported;
 
-  public ReportingDiagnosticListener(MessageListener messages) {
-    this.messages = messages;
+  public ReportingDiagnosticListener(Sandbox sandbox) {
+    this.sandbox = sandbox;
     this.errorReported = false;
   }
 
   @Override
   public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-    messages.report(new JavaCompilerMessage(diagnostic));
+    sandbox.report(new JavaCompilerMessage(diagnostic));
     errorReported = true;
   }
 
