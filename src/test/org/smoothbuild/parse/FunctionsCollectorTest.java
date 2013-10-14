@@ -9,10 +9,11 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
+import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
-import org.smoothbuild.testing.message.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageGroup;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 import org.smoothbuild.testing.parse.TestModule;
 
@@ -20,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class FunctionsCollectorTest {
 
-  TestMessageListener messages = new TestMessageListener();
+  TestMessageGroup messages = new TestMessageGroup();
   SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test
@@ -56,6 +57,10 @@ public class FunctionsCollectorTest {
   }
 
   private Map<String, FunctionContext> collectFunctions(TestModule module) {
-    return FunctionsCollector.collectFunctions(messages, importedFunctions, module);
+    try {
+      return FunctionsCollector.collectFunctions(messages, importedFunctions, module);
+    } catch (PhaseFailedException e) {
+      return null;
+    }
   }
 }

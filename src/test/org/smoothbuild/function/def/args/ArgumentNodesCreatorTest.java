@@ -35,14 +35,15 @@ import org.smoothbuild.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.function.def.args.err.VoidArgError;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
+import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.message.TestMessageListener;
+import org.smoothbuild.testing.message.TestMessageGroup;
 import org.smoothbuild.testing.task.exec.TestSandbox;
 
 public class ArgumentNodesCreatorTest {
 
-  TestMessageListener messages;
+  TestMessageGroup messages;
 
   @Test
   public void convertingNamedArgument() {
@@ -54,7 +55,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingNamedArgument(Type type) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
@@ -77,7 +78,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingNamedEmptySetArgument(Type type) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
@@ -102,7 +103,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestDuplicatedNames(Type type) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(type, "name1");
 
     Argument a1 = argument(p1.name(), node(type));
@@ -123,7 +124,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestDuplicatedNamedEmptySetNames(Type type) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(type, "name1");
 
     Argument a1 = argument(p1.name(), node(EMPTY_SET));
@@ -139,7 +140,7 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void unknownParamName() {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(STRING, "name1");
     Argument a1 = argument("otherName", node(STRING));
 
@@ -182,7 +183,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestTypeMismatchForParamProblem(Type paramType, Type argType) throws Exception {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(paramType, "name1");
     Argument a1 = argument(p1.name(), node(argType));
 
@@ -203,7 +204,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestVoidTypeOfNamedArgument(Type paramType) throws Exception {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(paramType, "name1");
     Argument a1 = argument(p1.name(), node(VOID));
 
@@ -224,7 +225,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestVoidTypeOfNamelessArgument(Type paramType) throws Exception {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(paramType, "name1");
     Argument a1 = argument(node(VOID));
 
@@ -238,7 +239,7 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void convertingEmptyList() throws Exception {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(STRING, "name1");
 
     // when
@@ -279,7 +280,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleNamelessArgument(Type type, Type otherType) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(otherType, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(otherType, "name3");
@@ -306,7 +307,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleNamelessEmptySetArgument(Type type, Type otherType) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(otherType, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(otherType, "name3");
@@ -332,7 +333,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleNamelessArgumentWhitOthersNamed(Type type) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
@@ -373,7 +374,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingTwoNamelessArgumentsWithDifferentType(Type type1, Type type2) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(type1, "name1");
     Param p2 = param(type2, "name2");
 
@@ -398,7 +399,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(Type type) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
@@ -426,7 +427,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestConvertingNamelessEmptySetArgWithOtherNamedSet(Type setType, Type otherSetType) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(setType, "name1");
     Param p2 = param(otherSetType, "name2");
 
@@ -456,7 +457,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestAmbiguousNamelessArgument(Type paramType, Type argType) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType, "name2");
 
@@ -472,7 +473,7 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void ambiguousNamelessEmptySetArgument() {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(STRING_SET, "name1");
     Param p2 = param(FILE_SET, "name2");
 
@@ -521,7 +522,7 @@ public class ArgumentNodesCreatorTest {
 
   private void doTestNoParamWithProperTypeForNamelessArgument(Type type, Type otherType) {
     // given
-    messages = new TestMessageListener();
+    messages = new TestMessageGroup();
     Param p1 = param(otherType, "name1");
     Argument a1 = argument(node(type));
 
@@ -548,7 +549,11 @@ public class ArgumentNodesCreatorTest {
 
   private Map<String, DefinitionNode> create(Iterable<Param> params, List<Argument> args) {
     ArgumentNodesCreator creator = new ArgumentNodesCreator();
-    return creator.createArgumentNodes(codeLocation(1, 2, 3), messages, function(params), args);
+    try {
+      return creator.createArgumentNodes(codeLocation(1, 2, 3), messages, function(params), args);
+    } catch (PhaseFailedException e) {
+      return null;
+    }
   }
 
   private static Function function(Iterable<Param> params) {

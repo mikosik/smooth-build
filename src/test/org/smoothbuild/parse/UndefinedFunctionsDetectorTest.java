@@ -1,8 +1,7 @@
 package org.smoothbuild.parse;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.parse.UndefinedFunctionsDetector.detectUndefinedFunctions;
 import static org.smoothbuild.testing.parse.TestDependency.dependencies;
@@ -11,21 +10,21 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
+import org.smoothbuild.testing.message.TestMessageGroup;
 
 import com.google.common.collect.Maps;
 
 public class UndefinedFunctionsDetectorTest {
-  MessageListener messageListener = mock(MessageListener.class);
+  TestMessageGroup messageGroup = new TestMessageGroup();
   SymbolTable importedFunctions = mock(SymbolTable.class);
 
   @Test
   public void emptyFunctionSetHasNoProblems() {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
-    detectUndefinedFunctions(messageListener, importedFunctions, map);
-    verifyZeroInteractions(messageListener);
+    detectUndefinedFunctions(messageGroup, importedFunctions, map);
+    messageGroup.assertNoProblems();
   }
 
   @Test
@@ -35,8 +34,9 @@ public class UndefinedFunctionsDetectorTest {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
     map.put("function1", dependencies(imported));
 
-    detectUndefinedFunctions(messageListener, importedFunctions, map);
-    verifyZeroInteractions(messageListener);
+    detectUndefinedFunctions(messageGroup, importedFunctions, map);
+
+    messageGroup.assertNoProblems();
   }
 
   @Test
@@ -47,8 +47,9 @@ public class UndefinedFunctionsDetectorTest {
     map.put(fun1, dependencies(fun2));
     map.put(fun2, dependencies(fun1));
 
-    detectUndefinedFunctions(messageListener, importedFunctions, map);
-    verifyZeroInteractions(messageListener);
+    detectUndefinedFunctions(messageGroup, importedFunctions, map);
+
+    messageGroup.assertNoProblems();
   }
 
   @Test
@@ -56,7 +57,13 @@ public class UndefinedFunctionsDetectorTest {
     Map<String, Set<Dependency>> map = Maps.newHashMap();
     map.put("function1", dependencies("function2"));
 
-    detectUndefinedFunctions(messageListener, importedFunctions, map);
-    verify(messageListener).report(Matchers.isA(UndefinedFunctionError.class));
+    try {
+      detectUndefinedFunctions(messageGroup, importedFunctions, map);
+      fail("exception should be thrown");
+    } catch (PhaseFailedException e) {
+      // expected
+    }
+
+    messageGroup.assertOnlyProblem(UndefinedFunctionError.class);
   }
 }

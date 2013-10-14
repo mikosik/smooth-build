@@ -1,9 +1,6 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.smoothbuild.testing.parse.TestDependency.dependencies;
 
 import java.util.List;
@@ -11,9 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
+import org.smoothbuild.testing.message.TestMessageGroup;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 
 import com.google.common.collect.ImmutableList;
@@ -27,7 +24,7 @@ public class DependencySorterTest {
   private static final String NAME5 = "funcation5";
   private static final String NAME6 = "funcation6";
 
-  MessageListener messageListener = mock(MessageListener.class);
+  TestMessageGroup messageGroup = new TestMessageGroup();
   SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test
@@ -39,7 +36,7 @@ public class DependencySorterTest {
     map.put(NAME2, dependencies(NAME3));
 
     assertThat(sort(map)).isEqualTo(ImmutableList.of(NAME4, NAME3, NAME2, NAME1));
-    verifyZeroInteractions(messageListener);
+    messageGroup.assertNoProblems();
   }
 
   @Test
@@ -57,7 +54,7 @@ public class DependencySorterTest {
     assertThat(actual).containsSubsequence(NAME4, NAME2, NAME1);
     assertThat(actual).containsSubsequence(NAME6, NAME5, NAME3, NAME1);
 
-    verifyZeroInteractions(messageListener);
+    messageGroup.assertNoProblems();
   }
 
   @Test
@@ -67,7 +64,7 @@ public class DependencySorterTest {
 
     sort(map);
 
-    verify(messageListener).report(Matchers.isA(CycleInCallGraphError.class));
+    messageGroup.assertOnlyProblem(CycleInCallGraphError.class);
   }
 
   @Test
@@ -79,10 +76,15 @@ public class DependencySorterTest {
 
     sort(map);
 
-    verify(messageListener).report(Matchers.isA(CycleInCallGraphError.class));
+    messageGroup.assertOnlyProblem(CycleInCallGraphError.class);
   }
 
   private List<String> sort(Map<String, Set<Dependency>> map) {
-    return DependencySorter.sortDependencies(messageListener, importedFunctions, map);
+    try {
+      return DependencySorter.sortDependencies(importedFunctions, map);
+    } catch (ErrorMessageException e) {
+      messageGroup.report(e.errorMessage());
+      return null;
+    }
   }
 }

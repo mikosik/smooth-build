@@ -58,33 +58,16 @@ public class ModuleParser {
 
   private Module createModule(MessageGroup messageGroup, InputStream inputStream, Path scriptFile) {
     ModuleContext module = parseScript(messageGroup, inputStream, scriptFile);
-    if (messageGroup.containsErrors()) {
-      return null;
-    }
 
     Map<String, FunctionContext> functions = collectFunctions(messageGroup, importedFunctions,
         module);
-    if (messageGroup.containsErrors()) {
-      return null;
-    }
 
     Map<String, Set<Dependency>> dependencies = collectDependencies(module);
-
     detectUndefinedFunctions(messageGroup, importedFunctions, dependencies);
-    if (messageGroup.containsErrors()) {
-      return null;
-    }
-
-    List<String> sorted = sortDependencies(messageGroup, importedFunctions, dependencies);
-    if (messageGroup.containsErrors()) {
-      return null;
-    }
+    List<String> sorted = sortDependencies(importedFunctions, dependencies);
 
     Map<Name, DefinedFunction> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
         messageGroup, importedFunctions, functions, sorted);
-    if (messageGroup.containsErrors()) {
-      return null;
-    }
 
     return new Module(definedFunctions);
   }

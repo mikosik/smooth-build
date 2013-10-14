@@ -3,15 +3,15 @@ package org.smoothbuild.parse;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
 
 /**
  * Detects calls to functions that are neither declared nor imported.
  */
 public class UndefinedFunctionsDetector {
-  public static void detectUndefinedFunctions(MessageListener messages,
-      SymbolTable importedFunctions, Map<String, Set<Dependency>> dependencies) {
+  public static void detectUndefinedFunctions(MessageGroup messages, SymbolTable importedFunctions,
+      Map<String, Set<Dependency>> dependencies) {
 
     Set<String> declaredFunctions = dependencies.keySet();
 
@@ -23,5 +23,6 @@ public class UndefinedFunctionsDetector {
         }
       }
     }
+    messages.failIfContainsErrors();
   }
 }

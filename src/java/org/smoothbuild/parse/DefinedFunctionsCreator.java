@@ -40,7 +40,7 @@ import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.function.def.args.ArgumentNodesCreator;
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
@@ -60,13 +60,17 @@ public class DefinedFunctionsCreator {
     this.argumentNodesCreator = argumentNodesCreator;
   }
 
-  public Map<Name, DefinedFunction> createDefinedFunctions(MessageListener messages,
+  public Map<Name, DefinedFunction> createDefinedFunctions(MessageGroup messages,
       SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
-    return new Worker(messages, symbolTable, functionContexts, sorted, argumentNodesCreator).run();
+    Worker worker = new Worker(messages, symbolTable, functionContexts, sorted,
+        argumentNodesCreator);
+    Map<Name, DefinedFunction> result = worker.run();
+    messages.failIfContainsErrors();
+    return result;
   }
 
   private static class Worker {
-    private final MessageListener messages;
+    private final MessageGroup messages;
     private final SymbolTable symbolTable;
     private final Map<String, FunctionContext> functionContexts;
     private final List<String> sorted;
@@ -74,7 +78,7 @@ public class DefinedFunctionsCreator {
 
     private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
 
-    public Worker(MessageListener messages, SymbolTable symbolTable,
+    public Worker(MessageGroup messages, SymbolTable symbolTable,
         Map<String, FunctionContext> functionContexts, List<String> sorted,
         ArgumentNodesCreator argumentNodesCreator) {
       this.messages = messages;

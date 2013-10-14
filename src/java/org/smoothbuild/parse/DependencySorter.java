@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.smoothbuild.message.listen.MessageListener;
+import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -20,24 +20,21 @@ import com.google.common.collect.Sets;
  * function in returned list. Detects cycles in dependency graph.
  */
 public class DependencySorter {
-  public static List<String> sortDependencies(MessageListener messages,
-      SymbolTable importedFunctions, Map<String, Set<Dependency>> dependenciesOrig) {
+  public static List<String> sortDependencies(SymbolTable importedFunctions,
+      Map<String, Set<Dependency>> dependenciesOrig) {
 
-    Worker worker = new Worker(messages, importedFunctions, dependenciesOrig);
+    Worker worker = new Worker(importedFunctions, dependenciesOrig);
     worker.work();
     return worker.result();
   }
 
   private static class Worker {
-    private final MessageListener messages;
     private final HashMap<String, Set<Dependency>> notSorted;
     private final HashSet<String> reachableNames;
     private final List<String> sorted;
     private final DependencyStack stack;
 
-    public Worker(MessageListener messages, SymbolTable importedFunctions,
-        Map<String, Set<Dependency>> dependenciesOrig) {
-      this.messages = messages;
+    public Worker(SymbolTable importedFunctions, Map<String, Set<Dependency>> dependenciesOrig) {
       this.notSorted = Maps.newHashMap(dependenciesOrig);
       this.reachableNames = Sets.newHashSet(importedFunctions.names());
       this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
@@ -62,19 +59,14 @@ public class DependencySorter {
         stackTop.setMissing(missing);
         Set<Dependency> next = notSorted.remove(missing.functionName());
         if (next == null) {
-          reportCycle();
+          // DependencyCollector made sure that all dependency exists so the
+          // only possibility at this point is that missing dependency is on
+          // stack and we have cycle in call graph.
+          throw new ErrorMessageException(stack.createCycleError());
         } else {
           stack.push(new DependencyStackElem(missing.functionName(), next));
         }
       }
-    }
-
-    private void reportCycle() {
-      // DependencyCollector made sure that all dependency exists so the
-      // only possibility at this point is that missing dependency is on
-      // stack and we have cycle in call graph.
-      messages.report(stack.createCycleError());
-      addStackTopToSorted();
     }
 
     private void addStackTopToSorted() {
