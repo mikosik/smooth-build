@@ -2,18 +2,16 @@ package org.smoothbuild.task.exec;
 
 import java.util.Map;
 
+import javax.inject.Singleton;
+
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
 
+@Singleton
 public class HashedTasks {
   private final Map<HashCode, Task> tasks;
-
-  public HashedTasks(Map<HashCode, Task> tasks) {
-    this();
-    this.tasks.putAll(tasks);
-  }
 
   public HashedTasks() {
     this.tasks = Maps.newHashMap();
