@@ -18,6 +18,7 @@ public class TaskExecutor {
   private final FileSystem fileSystem;
   private final HashedTasks hashedTasks;
   private final UserConsole userConsole;
+  private int temptDirCount = 0;
 
   @Inject
   public TaskExecutor(FileSystem fileSystem, HashedTasks hashedTasks, UserConsole userConsole) {
@@ -27,43 +28,28 @@ public class TaskExecutor {
   }
 
   public void execute(HashCode hash) {
-    new Worker(userConsole, hashedTasks).execute(hash);
+    Task task = hashedTasks.get(hash);
+    if (task.isResultCalculated()) {
+      return;
+    }
+
+    calculateTasks(task.dependencies());
+
+    if (userConsole.isErrorReported()) {
+      return;
+    }
+
+    Path tempPath = BUILD_DIR.append(path(Integer.toString(temptDirCount++)));
+    SandboxImpl sandbox = new SandboxImpl(fileSystem, tempPath, task.location());
+    task.execute(sandbox, hashedTasks);
+    userConsole.report(sandbox.messageGroup());
   }
 
-  private class Worker {
-    private final UserConsole userConsole;
-    private final HashedTasks hashedTasks;
-    private int temptDirCount = 0;
-
-    public Worker(UserConsole userConsole, HashedTasks tasks) {
-      this.userConsole = userConsole;
-      this.hashedTasks = tasks;
-    }
-
-    private void execute(HashCode hash) {
-      Task task = hashedTasks.get(hash);
-      if (task.isResultCalculated()) {
-        return;
-      }
-
-      calculateTasks(task.dependencies());
-
+  private void calculateTasks(Collection<HashCode> tasks) {
+    for (HashCode taskHash : tasks) {
+      execute(taskHash);
       if (userConsole.isErrorReported()) {
         return;
-      }
-
-      Path tempPath = BUILD_DIR.append(path(Integer.toString(temptDirCount++)));
-      SandboxImpl sandbox = new SandboxImpl(fileSystem, tempPath, task.location());
-      task.execute(sandbox, hashedTasks);
-      userConsole.report(sandbox.messageGroup());
-    }
-
-    private void calculateTasks(Collection<HashCode> tasks) {
-      for (HashCode taskHash : tasks) {
-        execute(taskHash);
-        if (userConsole.isErrorReported()) {
-          return;
-        }
       }
     }
   }
