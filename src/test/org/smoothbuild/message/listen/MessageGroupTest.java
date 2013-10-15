@@ -39,6 +39,26 @@ public class MessageGroupTest {
   }
 
   @Test
+  public void containsMessages_returns_false_when_nothing_has_been_added() throws Exception {
+    when(messageGroup.containsMessages());
+    thenReturned(false);
+  }
+
+  @Test
+  public void containsMessages_returns_true_when_warning_has_been_added() throws Exception {
+    given(messageGroup).report(warning);
+    when(messageGroup.containsMessages());
+    thenReturned(true);
+  }
+
+  @Test
+  public void containsMessages_returns_true_when_error_has_been_added() throws Exception {
+    given(messageGroup).report(error);
+    when(messageGroup.containsMessages());
+    thenReturned(true);
+  }
+
+  @Test
   public void containsErrors_returns_false_after_after_adding_warning() throws Exception {
     given(messageGroup).report(warning);
     when(messageGroup.containsErrors());
