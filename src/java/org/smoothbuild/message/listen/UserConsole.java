@@ -6,6 +6,8 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.message.message.Message;
 
+import com.google.common.base.Splitter;
+
 @Singleton
 public class UserConsole {
   private final PrintStream printStream;
@@ -53,7 +55,10 @@ public class UserConsole {
   }
 
   protected void report(Message message) {
-    println(message.toString());
+    for (String line : Splitter.on("\n").split(message.toString())) {
+      println("  ");
+      println(line);
+    }
   }
 
   private void println(String line) {
