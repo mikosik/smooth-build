@@ -3,6 +3,7 @@ package org.smoothbuild.message.listen;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import org.junit.Test;
@@ -24,13 +25,11 @@ public class MessageCatchingExecutorTest {
   }
 
   @Test
-  public void message_group_with_no_messages_is_reported_on_successful_execution() throws Exception {
+  public void nothing_is_reported_on_successful_execution() throws Exception {
     MyNormalExecutor executor = new MyNormalExecutor(userConsole, name);
     executor.execute(value);
 
-    ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
-    verify(userConsole).report(captured.capture());
-    assertThat(captured.getValue()).isEmpty();
+    verifyZeroInteractions(userConsole);
   }
 
   private static class MyNormalExecutor extends MessageCatchingExecutor<String, String> {

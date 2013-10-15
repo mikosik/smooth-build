@@ -23,7 +23,9 @@ public abstract class MessageCatchingExecutor<A, R> {
         messageGroup.report(new PhaseFailedWithoutErrorError());
       }
     } finally {
-      userConsole.report(messageGroup);
+      if (messageGroup.containsErrors()) {
+        userConsole.report(messageGroup);
+      }
     }
     return null;
   }
