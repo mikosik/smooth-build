@@ -38,6 +38,10 @@ public class MessageGroup implements Iterable<Message> {
     }
   }
 
+  public boolean containsMessages() {
+    return !messages.isEmpty();
+  }
+
   public boolean containsErrors() {
     return containsErrors;
   }
