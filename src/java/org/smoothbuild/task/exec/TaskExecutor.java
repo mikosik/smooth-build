@@ -18,7 +18,6 @@ public class TaskExecutor {
   private final FileSystem fileSystem;
   private final HashedTasks hashedTasks;
   private final UserConsole userConsole;
-  private int temptDirCount = 0;
 
   @Inject
   public TaskExecutor(FileSystem fileSystem, HashedTasks hashedTasks, UserConsole userConsole) {
@@ -39,7 +38,7 @@ public class TaskExecutor {
       return;
     }
 
-    Path tempPath = BUILD_DIR.append(path(Integer.toString(temptDirCount++)));
+    Path tempPath = BUILD_DIR.append(path(hash.toString()));
     SandboxImpl sandbox = new SandboxImpl(fileSystem, tempPath, task.location());
     task.execute(sandbox, hashedTasks);
     userConsole.report(sandbox.messageGroup());
