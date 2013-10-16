@@ -3,8 +3,6 @@ package org.smoothbuild.task.exec;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 import static org.smoothbuild.fs.base.Path.path;
 
-import java.util.Collection;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
@@ -32,24 +30,17 @@ public class TaskExecutor {
       return;
     }
 
-    calculateTasks(task.dependencies());
-
-    if (userConsole.isErrorReported()) {
-      return;
-    }
-
-    Path tempPath = BUILD_DIR.append(path(hash.toString()));
-    SandboxImpl sandbox = new SandboxImpl(fileSystem, tempPath, task.location());
+    SandboxImpl sandbox = createSandbox(task);
     task.execute(sandbox, hashedTasks);
     userConsole.report(sandbox.messageGroup());
   }
 
-  private void calculateTasks(Collection<HashCode> tasks) {
-    for (HashCode taskHash : tasks) {
-      execute(taskHash);
-      if (userConsole.isErrorReported()) {
-        return;
-      }
-    }
+  private SandboxImpl createSandbox(Task task) {
+    Path resultDirectory = resultDirectory(task.hash());
+    return new SandboxImpl(fileSystem, resultDirectory, task.location());
+  }
+
+  private static Path resultDirectory(HashCode hash) {
+    return BUILD_DIR.append(path(hash.toString()));
   }
 }

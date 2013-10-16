@@ -13,12 +13,12 @@ import com.google.common.hash.HashCode;
 
 public class SmoothExecutor {
   private final TaskGenerator taskGenerator;
-  private final TaskExecutor taskExecutor;
+  private final TaskGraphExecutor taskGraphExecutor;
 
   @Inject
-  public SmoothExecutor(TaskGenerator taskGenerator, TaskExecutor taskExecutor) {
+  public SmoothExecutor(TaskGenerator taskGenerator, TaskGraphExecutor taskGraphExecutor) {
     this.taskGenerator = taskGenerator;
-    this.taskExecutor = taskExecutor;
+    this.taskGraphExecutor = taskGraphExecutor;
   }
 
   public void execute(ExecutionData executionData) {
@@ -31,6 +31,6 @@ public class SmoothExecutor {
       throw new ErrorMessageException(new UnknownFunctionError(name, module.availableNames()));
     }
     HashCode hash = taskGenerator.generateTask(function);
-    taskExecutor.execute(hash);
+    taskGraphExecutor.execute(hash);
   }
 }
