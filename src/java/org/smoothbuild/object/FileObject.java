@@ -1,5 +1,7 @@
 package org.smoothbuild.object;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.InputStream;
 
 import org.smoothbuild.fs.base.Path;
@@ -13,9 +15,9 @@ public class FileObject implements File {
   private final HashCode hash;
 
   public FileObject(Path path, BlobObject content, HashCode hash) {
-    this.path = path;
-    this.content = content;
-    this.hash = hash;
+    this.path = checkNotNull(path);
+    this.content = checkNotNull(content);
+    this.hash = checkNotNull(hash);
   }
 
   @Override

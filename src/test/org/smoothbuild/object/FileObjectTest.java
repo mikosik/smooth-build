@@ -3,6 +3,7 @@ package org.smoothbuild.object;
 import static org.mockito.Mockito.mock;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.io.InputStream;
@@ -10,6 +11,7 @@ import java.io.InputStream;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
+import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
 
@@ -19,6 +21,24 @@ public class FileObjectTest {
   HashCode hash = HashCode.fromInt(33);
 
   FileObject fileObject;
+
+  @Test
+  public void null_hash_is_forbidden() throws Exception {
+    when(fileObject(path, content, null));
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void null_content_is_forbidden() throws Exception {
+    when(fileObject(path, null, hash));
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void null_path_is_forbidden() throws Exception {
+    when(fileObject(null, content, hash));
+    thenThrown(NullPointerException.class);
+  }
 
   @Test
   public void path() {
@@ -42,5 +62,14 @@ public class FileObjectTest {
     given(fileObject = new FileObject(path, content, hash));
     when(fileObject.openInputStream());
     thenReturned(inputStream);
+  }
+
+  private static Closure fileObject(final Path path, final BlobObject content, final HashCode hash) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return new FileObject(path, content, hash);
+      }
+    };
   }
 }
