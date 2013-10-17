@@ -45,4 +45,18 @@ public class HashTest {
     when(Hash.string(string));
     thenReturned(not(Hash.string(string2)));
   }
+
+  // Hash.bytes()
+
+  @Test
+  public void hash_of_given_bytes_is_always_the_same() {
+    when(Hash.bytes(string.getBytes()));
+    thenReturned(Hash.bytes(string.getBytes()));
+  }
+
+  @Test
+  public void hashes_of_different_bytes_are_different() {
+    when(Hash.bytes(string.getBytes()));
+    thenReturned(not(Hash.bytes(string2.getBytes())));
+  }
 }
