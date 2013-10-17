@@ -7,7 +7,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
-public class FileSetBuilder {
+public class FileSetBuilder implements FileSetBuilderInterface {
   private final MutableStoredFileSet fileSet;
 
   public FileSetBuilder(FileSystem fileSystem) {
