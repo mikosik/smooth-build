@@ -5,7 +5,7 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.MutableFileSet;
+import org.smoothbuild.type.impl.FileSetBuilder;
 
 public class UnjarFunction {
   public interface Parameters {
@@ -30,9 +30,9 @@ public class UnjarFunction {
     }
 
     public FileSet execute(Sandbox sandbox, Parameters params) {
-      MutableFileSet result = sandbox.resultFileSet();
+      FileSetBuilder result = sandbox.fileSetBuilder();
       unjarer.unjarFile(params.file(), result);
-      return result;
+      return result.build();
     }
   }
 }

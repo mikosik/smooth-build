@@ -14,6 +14,7 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.impl.FileSetBuilder;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -30,7 +31,7 @@ public class UnjarerTest {
   public void unjaringTwoFiles() throws Exception {
     TestFile jarFile = jaredFiles(fileName1, fileName2);
 
-    unjarer.unjarFile(jarFile, resultFileSet);
+    unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));
 
     int fileCount = 0;
     for (File file : resultFileSet) {
@@ -44,7 +45,7 @@ public class UnjarerTest {
   public void unjaringIgnoresDirectories() throws Exception {
     TestFile jarFile = jaredFiles(fileName1, directoryName);
 
-    unjarer.unjarFile(jarFile, resultFileSet);
+    unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));
 
     assertThat(Iterables.size(resultFileSet)).isEqualTo(1);
     assertThat(resultFileSet.iterator().next().path()).isEqualTo(path(fileName1));
@@ -68,7 +69,7 @@ public class UnjarerTest {
     TestFile jarFile = jaredFiles(illegalFileName);
 
     try {
-      unjarer.unjarFile(jarFile, resultFileSet);
+      unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
