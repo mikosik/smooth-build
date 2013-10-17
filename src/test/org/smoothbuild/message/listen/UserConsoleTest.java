@@ -1,14 +1,17 @@
 package org.smoothbuild.message.listen;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.message.message.MessageType.WARNING;
 
 import java.io.PrintStream;
 
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.smoothbuild.message.message.Message;
 
 public class UserConsoleTest {
@@ -22,8 +25,12 @@ public class UserConsoleTest {
     messageGroup.report(new Message(ERROR, "message string"));
 
     userConsole.report(messageGroup);
-    verify(printStream).println("[GROUP NAME] FAILED");
-    verify(printStream).println("ERROR: message string");
+    InOrder inOrder = inOrder(printStream);
+    inOrder.verify(printStream).println("[GROUP NAME] FAILED");
+    inOrder.verify(printStream).print("  ");
+    inOrder.verify(printStream).println("ERROR: message string");
+    inOrder.verify(printStream).println("");
+    verifyNoMoreInteractions(printStream);
   }
 
   @Test
