@@ -7,6 +7,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.match.IllegalPathPatternException;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.api.Required;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.type.api.File;
@@ -31,10 +32,10 @@ public class FilterFunction {
   }
 
   private static class Worker {
-    private final SandboxImpl sandbox;
+    private final Sandbox sandbox;
     private final Parameters params;
 
-    public Worker(SandboxImpl sandbox, Parameters params) {
+    public Worker(Sandbox sandbox, Parameters params) {
       this.sandbox = sandbox;
       this.params = params;
     }
