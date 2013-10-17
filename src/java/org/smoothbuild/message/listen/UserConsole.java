@@ -56,12 +56,16 @@ public class UserConsole {
 
   protected void report(Message message) {
     for (String line : Splitter.on("\n").split(message.toString())) {
-      println("  ");
+      print("  ");
       println(line);
     }
   }
 
   private void println(String line) {
     printStream.println(line);
+  }
+
+  private void print(String line) {
+    printStream.print(line);
   }
 }
