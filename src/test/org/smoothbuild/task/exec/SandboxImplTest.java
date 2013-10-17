@@ -16,8 +16,10 @@ import org.smoothbuild.message.message.Message;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.api.MutableFile;
+import org.smoothbuild.type.impl.FileSetBuilder;
 
 public class SandboxImplTest {
+  String content = "content";
   Path root = path("my/root");
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
@@ -26,6 +28,13 @@ public class SandboxImplTest {
   TestFileSystem fileSystem = new TestFileSystem();
 
   SandboxImpl sandbox = new SandboxImpl(fileSystem, root, callLocation);
+
+  @Test
+  public void fileSetBuilderStoresFilesInSandboxFileSystem() throws Exception {
+    FileSetBuilder builder = sandbox.fileSetBuilder();
+    StreamTester.writeAndClose(builder.openFileOutputStream(path1), content);
+    fileSystem.assertFileContains(root.append(path1), content);
+  }
 
   @Test
   public void createFileCreatesFileOnFileSystem() throws Exception {
