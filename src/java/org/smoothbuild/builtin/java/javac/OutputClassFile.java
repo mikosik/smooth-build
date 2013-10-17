@@ -6,18 +6,18 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.type.api.MutableFile;
+import org.smoothbuild.fs.base.Path;
 
 public class OutputClassFile extends SimpleJavaFileObject {
-  private final MutableFile file;
+  private final OutputStream outputStream;
 
-  public OutputClassFile(MutableFile file) {
-    super(URI.create("class:///" + file.path().value()), Kind.CLASS);
-    this.file = file;
+  public OutputClassFile(Path path, OutputStream outputStream) {
+    super(URI.create("class:///" + path.value()), Kind.CLASS);
+    this.outputStream = outputStream;
   }
 
   @Override
   public OutputStream openOutputStream() throws IOException {
-    return file.openOutputStream();
+    return outputStream;
   }
 }
