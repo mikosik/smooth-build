@@ -12,8 +12,7 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.api.MutableFileSet;
+import org.smoothbuild.type.impl.FileSetBuilder;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
@@ -29,19 +28,18 @@ public class FileSetTask extends AbstractTask {
 
   @Override
   public void execute(Sandbox sandbox, HashedTasks hashedTasks) {
-    MutableFileSet result = sandbox.resultFileSet();
+    FileSetBuilder builder = sandbox.fileSetBuilder();
 
     for (HashCode hash : elements) {
       File from = (File) hashedTasks.get(hash).result();
-      if (result.contains(from.path())) {
+      if (builder.contains(from.path())) {
         sandbox.report(new DuplicatePathError(from.path()));
       } else {
-        MutableFile to = result.createFile(from.path());
-        to.setContent(from);
+        builder.add(from);
       }
     }
 
-    setResult(result);
+    setResult(builder.build());
   }
 
   @Override
