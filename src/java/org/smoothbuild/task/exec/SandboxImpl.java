@@ -9,7 +9,6 @@ import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.api.MutableFileSet;
 import org.smoothbuild.type.impl.FileSetBuilder;
 import org.smoothbuild.type.impl.MutableStoredFileSet;
 
@@ -37,11 +36,6 @@ public class SandboxImpl implements Sandbox {
   @Override
   public FileSetBuilder fileSetBuilder() {
     return new FileSetBuilder(sandboxFileSystem);
-  }
-
-  @Override
-  public MutableFileSet resultFileSet() {
-    return resultFileSet;
   }
 
   @Override

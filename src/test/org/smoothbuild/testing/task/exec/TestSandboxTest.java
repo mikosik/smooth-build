@@ -5,8 +5,6 @@ import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.task.exec.TestSandbox;
 import org.smoothbuild.type.api.MutableFile;
 
 public class TestSandboxTest {
@@ -22,14 +20,5 @@ public class TestSandboxTest {
 
     Path fullPath = TestSandbox.SANDBOX_ROOT.append(path1);
     testSandbox.projectFileSystem().assertFileContains(fullPath, path1.value());
-  }
-
-  @Test
-  public void resultFilesSetCreatesFilesInSandboxFileSystem() throws Exception {
-    testSandbox.resultFileSet().createFile(path1).createContentWithFilePath();
-
-    Path fullPath = TestSandbox.SANDBOX_ROOT.append(path1);
-    StreamTester.assertContent(testSandbox.projectFileSystem().openInputStream(fullPath),
-        path1.value());
   }
 }
