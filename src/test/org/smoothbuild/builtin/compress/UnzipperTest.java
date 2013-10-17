@@ -16,6 +16,7 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.impl.FileSetBuilder;
 
 import com.google.common.collect.Iterables;
 
@@ -31,7 +32,7 @@ public class UnzipperTest {
   public void unzipping() throws Exception {
     TestFile zipFile = zippedFiles(fileName1, fileName2);
 
-    unzipper.unzipFile(zipFile, resultFileSet);
+    unzipper.unzipFile(zipFile, new FileSetBuilder(resultFileSet));
 
     int fileCount = 0;
     for (File file : resultFileSet) {
@@ -45,7 +46,7 @@ public class UnzipperTest {
   public void unzipperIgnoresDirectories() throws Exception {
     TestFile jarFile = zippedFiles(fileName1, directoryName);
 
-    unzipper.unzipFile(jarFile, resultFileSet);
+    unzipper.unzipFile(jarFile, new FileSetBuilder(resultFileSet));
 
     assertThat(Iterables.size(resultFileSet)).isEqualTo(1);
     assertThat(resultFileSet.iterator().next().path()).isEqualTo(path(fileName1));
@@ -57,7 +58,7 @@ public class UnzipperTest {
     TestFile zipFile = zippedFiles(illegalFileName);
 
     try {
-      unzipper.unzipFile(zipFile, resultFileSet);
+      unzipper.unzipFile(zipFile, new FileSetBuilder(resultFileSet));
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
