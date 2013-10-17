@@ -17,7 +17,11 @@ public class Hash {
   }
 
   public static HashCode string(String string) {
-    return Hash.hashFunction().hashString(string, STRING_CHARSET);
+    return hashFunction().hashString(string, STRING_CHARSET);
+  }
+
+  public static HashCode bytes(byte[] bytes) {
+    return hashFunction().hashBytes(bytes);
   }
 
   public static HashFunction hashFunction() {
