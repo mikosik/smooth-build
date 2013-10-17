@@ -1,6 +1,6 @@
 package org.smoothbuild.object;
 
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.object.HashCodes.toPath;
 
 import java.io.InputStream;
 
@@ -22,6 +22,6 @@ public class BlobObject {
   }
 
   public InputStream openInputStream() {
-    return objectsFileSystem.openInputStream(path(hash.toString()));
+    return objectsFileSystem.openInputStream(toPath(hash));
   }
 }
