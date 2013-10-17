@@ -19,7 +19,6 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.task.exec.TestSandbox;
-import org.smoothbuild.testing.type.impl.FileTester;
 
 import com.google.common.collect.Multimap;
 
@@ -42,7 +41,7 @@ public class SandboxedJavaFileManagerTest {
     StreamTester.writeAndClose(javaFile.openOutputStream(), content);
 
     Path classFilePath = path("my/package/MyClass.class");
-    FileTester.assertContentContains(sandbox.resultFileSet().file(classFilePath), content);
+    sandbox.sandboxFileSystem().assertFileContains(classFilePath, content);
   }
 
   @Test

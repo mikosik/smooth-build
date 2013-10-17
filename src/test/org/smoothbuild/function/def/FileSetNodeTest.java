@@ -29,10 +29,6 @@ public class FileSetNodeTest {
   TestSandbox sandbox = new TestSandbox();
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
-  TestFile file1 = sandbox.resultFileSet().createFile(path1);
-  TestFile file2 = sandbox.resultFileSet().createFile(path2);
-  TestTask task1 = new TestTask(file1);
-  TestTask task2 = new TestTask(file2);
 
   CodeLocation codeLocation = codeLocation(1, 2, 4);
   DefinitionNode node1 = mock(DefinitionNode.class);
@@ -48,8 +44,10 @@ public class FileSetNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    file1.createContentWithFilePath();
-    file2.createContentWithFilePath();
+    TestFile file1 = sandbox.sandboxFileSystem().createFileContainingItsPath(path1);
+    TestFile file2 = sandbox.sandboxFileSystem().createFileContainingItsPath(path2);
+    TestTask task1 = new TestTask(file1);
+    TestTask task2 = new TestTask(file2);
 
     TaskGenerator taskGenerator = mock(TaskGenerator.class);
     Mockito.when(taskGenerator.generateTask(node1)).thenReturn(task1.hash());
