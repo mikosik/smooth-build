@@ -6,12 +6,18 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
+import org.smoothbuild.type.api.MutableFileSet;
 
 public class FileSetBuilder implements FileSetBuilderInterface {
-  private final MutableStoredFileSet fileSet;
+  private final MutableFileSet fileSet;
 
   public FileSetBuilder(FileSystem fileSystem) {
-    this.fileSet = new MutableStoredFileSet(fileSystem);
+    this(new MutableStoredFileSet(fileSystem));
+  }
+
+  // TODO remove once migration away from MutableStoredFile is complete
+  public FileSetBuilder(MutableFileSet fileSet) {
+    this.fileSet = fileSet;
   }
 
   public void add(File file) {
