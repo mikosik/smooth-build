@@ -5,7 +5,7 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.MutableFileSet;
+import org.smoothbuild.type.impl.FileSetBuilder;
 
 public class UnzipFunction {
   public interface Parameters {
@@ -30,9 +30,9 @@ public class UnzipFunction {
     }
 
     public FileSet execute(Sandbox sandbox, Parameters params) {
-      MutableFileSet result = sandbox.resultFileSet();
-      unzipper.unzipFile(params.file(), result);
-      return result;
+      FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
+      unzipper.unzipFile(params.file(), fileSetBuilder);
+      return fileSetBuilder.build();
     }
   }
 }

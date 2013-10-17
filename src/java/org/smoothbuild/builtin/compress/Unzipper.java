@@ -15,8 +15,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.api.MutableFileSet;
+import org.smoothbuild.type.impl.FileSetBuilder;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
@@ -25,7 +24,7 @@ public class Unzipper {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
-  public void unzipFile(File zipFile, MutableFileSet resultFiles) {
+  public void unzipFile(File zipFile, FileSetBuilder resultFiles) {
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
         ZipEntry entry = null;
@@ -40,7 +39,7 @@ public class Unzipper {
     }
   }
 
-  private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, MutableFileSet resultFiles) {
+  private void unzipEntry(ZipInputStream zipInputStream, ZipEntry entry, FileSetBuilder resultFiles) {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
@@ -50,9 +49,8 @@ public class Unzipper {
     if (resultFiles.contains(path)) {
       throw new ErrorMessageException(new DuplicatePathInZipError(path));
     }
-    MutableFile file = resultFiles.createFile(path);
     try {
-      try (OutputStream outputStream = file.openOutputStream()) {
+      try (OutputStream outputStream = resultFiles.openFileOutputStream(path)) {
         int len = 0;
         while ((len = zipInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);
@@ -61,6 +59,5 @@ public class Unzipper {
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
-    return file;
   }
 }
