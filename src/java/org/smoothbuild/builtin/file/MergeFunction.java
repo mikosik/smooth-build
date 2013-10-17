@@ -6,8 +6,7 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.api.MutableFileSet;
+import org.smoothbuild.type.impl.FileSetBuilder;
 
 public class MergeFunction {
 
@@ -34,21 +33,20 @@ public class MergeFunction {
     }
 
     public FileSet execute() {
-      MutableFileSet result = sandbox.resultFileSet();
+      FileSetBuilder builder = sandbox.fileSetBuilder();
 
       for (File file : params.files()) {
-        MutableFile destination = result.createFile(file.path());
-        destination.setContent(file);
+        builder.add(file);
       }
       for (File file : params.with()) {
-        MutableFile destination = result.createFile(file.path());
-        if (result.contains(file.path())) {
+        if (builder.contains(file.path())) {
           sandbox.report(new DuplicateMergedPathError(file.path()));
+        } else {
+          builder.add(file);
         }
-        destination.setContent(file);
       }
 
-      return result;
+      return builder.build();
     }
   }
 }
