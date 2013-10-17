@@ -6,13 +6,15 @@ import static org.smoothbuild.fs.base.Path.path;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.type.impl.TestFile;
 
 public class OutputClassFileTest {
-  TestFile file = new TestFile(path("my/file"));
+  Path path = path("my/path/file");
+  TestFile file = new TestFile(path);
 
-  OutputClassFile outputClassFile = new OutputClassFile(file);
+  OutputClassFile outputClassFile = new OutputClassFile(path, file.openOutputStream());
 
   @Test
   public void openOutputStream() throws IOException {
@@ -23,8 +25,8 @@ public class OutputClassFileTest {
 
   @Test
   public void uri() throws Exception {
-    String pathString = "my/path/file";
-    OutputClassFile inputSourceFile = new OutputClassFile(new TestFile(path(pathString)));
-    assertThat(inputSourceFile.getName()).isEqualTo("/" + pathString);
+    OutputClassFile inputSourceFile = new OutputClassFile(path,
+        new TestFile(path).openOutputStream());
+    assertThat(inputSourceFile.getName()).isEqualTo("/" + path.value());
   }
 }

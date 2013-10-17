@@ -14,29 +14,28 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.MutableFileSet;
+import org.smoothbuild.type.impl.FileSetBuilder;
 
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-  private final Sandbox sandbox;
   private final Multimap<String, JavaFileObject> packageToJavaFileObjects;
-  private final MutableFileSet resultClassFiles;
+  private final FileSetBuilder resultClassFiles;
 
   SandboxedJavaFileManager(StandardJavaFileManager fileManager, Sandbox sandbox,
       Multimap<String, JavaFileObject> packageToJavaFileObjects) {
     super(fileManager);
-    this.sandbox = sandbox;
     this.packageToJavaFileObjects = packageToJavaFileObjects;
-    this.resultClassFiles = sandbox.resultFileSet();
+    this.resultClassFiles = sandbox.fileSetBuilder();
   }
 
   public FileSet resultClassfiles() {
-    return resultClassFiles;
+    return resultClassFiles.build();
   }
 
   @Override
@@ -46,7 +45,8 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       String classFilePath = className.replace('.', '/') + ".class";
       String message = validationError(classFilePath);
       if (message == null) {
-        return new OutputClassFile(sandbox.createFile(path(classFilePath)));
+        Path path = path(classFilePath);
+        return new OutputClassFile(path, resultClassFiles.openFileOutputStream(path));
       } else {
         Message errorMessage = new IncorrectClassNameGivenByJavaCompilerError(className);
         throw new ErrorMessageException(errorMessage);
