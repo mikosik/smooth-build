@@ -39,7 +39,7 @@ public class UnmarshallerTest {
 
   @Test
   public void marshalled_hash_can_be_unmarshalled() {
-    HashCode myHash = Hash.hashFunction().hashInt(33);
+    HashCode myHash = Hash.function().hashInt(33);
 
     Marshaller marshaller = new Marshaller(hashedDb);
     marshaller.addHash(myHash);
@@ -54,7 +54,7 @@ public class UnmarshallerTest {
 
   @Test
   public void marshalled_hash_and_path_can_be_unmarshalled() {
-    HashCode myHash = Hash.hashFunction().hashInt(33);
+    HashCode myHash = Hash.function().hashInt(33);
     Path path = path("my/path");
 
     Marshaller marshaller = new Marshaller(hashedDb);

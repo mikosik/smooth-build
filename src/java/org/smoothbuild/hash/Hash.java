@@ -17,18 +17,18 @@ public class Hash {
   }
 
   public static HashCode string(String string) {
-    return hashFunction().hashString(string, STRING_CHARSET);
+    return Hash.function().hashString(string, STRING_CHARSET);
   }
 
   public static HashCode bytes(byte[] bytes) {
-    return hashFunction().hashBytes(bytes);
+    return Hash.function().hashBytes(bytes);
   }
 
   public static int size() {
-    return hashFunction().bits() / 8;
+    return Hash.function().bits() / 8;
   }
 
-  public static HashFunction hashFunction() {
+  public static HashFunction function() {
     return Hashing.sha1();
   }
 }

@@ -1,7 +1,5 @@
 package org.smoothbuild.hash;
 
-import static org.smoothbuild.hash.Hash.hashFunction;
-
 import java.util.Map;
 
 import org.smoothbuild.function.base.Param;
@@ -25,7 +23,7 @@ public class HashTask {
   }
 
   public static HashCode emptySet() {
-    return hashFunction().hashInt(EMPTY_SET_CODE);
+    return Hash.function().hashInt(EMPTY_SET_CODE);
   }
 
   public static HashCode fileSet(Iterable<HashCode> elements) {
@@ -59,7 +57,7 @@ public class HashTask {
   }
 
   private static Hasher newHasherFor(int code) {
-    Hasher hasher = hashFunction().newHasher();
+    Hasher hasher = Hash.function().newHasher();
     hasher.putInt(code);
     return hasher;
   }
