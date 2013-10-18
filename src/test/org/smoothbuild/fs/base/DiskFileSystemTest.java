@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.exc.CannotCreateFileException;
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.testing.common.TestCaseWithTempDir;
@@ -239,49 +238,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     }
   }
 
-  // copy()
-
-  @Test
-  public void copy() throws Exception {
-    String content = "old content";
-    String sourceFileName = "sourceFile";
-    String destinationFileName = "destinationFile";
-    createFileContent(root, sourceFileName, content);
-
-    fileSystem.copy(path(sourceFileName), path(destinationFileName));
-
-    assertContent(root, destinationFileName, content);
-  }
-
-  @Test
-  public void copyThrowsExceptionWhenSourceDoesNotExist() throws Exception {
-    Path source = path("source");
-    Path destination = path("destination");
-    try {
-      fileSystem.copy(source, destination);
-      fail("exception should be thrown");
-    } catch (FileSystemException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void copyThrowsExceptionWhenDestinationIsDir() throws Exception {
-    String sourceFileName = "source";
-    createEmptyFile(root, sourceFileName);
-    Path source = path(sourceFileName);
-
-    String dirName = "destination";
-    createDir(root, dirName);
-    Path destination = path(dirName);
-
-    try {
-      fileSystem.copy(source, destination);
-      fail("exception should be thrown");
-    } catch (FileSystemException e) {
-      // expected
-    }
-  }
+  // delete()
 
   @Test
   public void deleteDirectoryRecursively() throws Exception {

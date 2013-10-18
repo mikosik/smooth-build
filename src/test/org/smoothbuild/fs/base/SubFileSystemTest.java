@@ -50,13 +50,6 @@ public class SubFileSystemTest {
   }
 
   @Test
-  public void copy() {
-    Path destination = path("destination/file");
-    subFileSystem.copy(path, destination);
-    verify(fileSystem).copy(absolutePath, root.append(destination));
-  }
-
-  @Test
   public void deleteDirectoryRecursively() {
     subFileSystem.deleteDirectoryRecursively(path);
     verify(fileSystem).deleteDirectoryRecursively(absolutePath);

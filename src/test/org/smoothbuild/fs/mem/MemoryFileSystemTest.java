@@ -153,53 +153,6 @@ public class MemoryFileSystemTest {
     }
   }
 
-  @Test(expected = NoSuchFileException.class)
-  public void copyThrowsExceptionWhenSourceDoesNotExist() throws Exception {
-    fileSystem.copy(path("abc"), path("def"));
-  }
-
-  @Test
-  public void copying() throws Exception {
-    String line = "abcdefgh";
-    String source = "a/b/file1.txt";
-    String destination = "d/e/file2.txt";
-    Path sourcePath = path(source);
-    Path destinationPath = path(destination);
-
-    createFile(sourcePath, line);
-
-    fileSystem.copy(sourcePath, destinationPath);
-
-    LineReader reader = new LineReader(new InputStreamReader(
-        fileSystem.openInputStream(destinationPath)));
-
-    assertThat(reader.readLine()).isEqualTo(line);
-    assertThat(reader.readLine()).isNull();
-  }
-
-  @Test
-  public void cannotCopyFromADirectory() throws Exception {
-    createEmptyFile("abc/def/file.txt");
-    try {
-      fileSystem.copy(path("abc/def"), path("xyz/output.txt"));
-    } catch (FileSystemException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void cannotCopyToADirectory() throws Exception {
-    String sourceFileName = "abc/def/file.txt";
-    createEmptyFile(sourceFileName);
-    createEmptyFile("xyz/prs/file.txt");
-
-    try {
-      fileSystem.copy(path(sourceFileName), path("xyz"));
-    } catch (FileSystemException e) {
-      // expected
-    }
-  }
-
   @Test
   public void deleteDirectoryRecursively() throws Exception {
     // given
