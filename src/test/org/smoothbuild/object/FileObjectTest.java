@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.mockito.BDDMockito;
 import org.smoothbuild.fs.base.Path;
 import org.testory.common.Closure;
 
@@ -19,6 +19,7 @@ public class FileObjectTest {
   Path path = Path.path("my/file");
   BlobObject content = mock(BlobObject.class);
   HashCode hash = HashCode.fromInt(33);
+  InputStream inputStream;
 
   FileObject fileObject;
 
@@ -55,10 +56,9 @@ public class FileObjectTest {
   }
 
   @Test
-  public void opeInputStream() throws Exception {
-    InputStream inputStream = mock(InputStream.class);
-    Mockito.when(content.openInputStream()).thenReturn(inputStream);
-
+  public void openInputStream() throws Exception {
+    given(inputStream = mock(InputStream.class));
+    BDDMockito.given(content.openInputStream()).willReturn(inputStream);
     given(fileObject = new FileObject(path, content, hash));
     when(fileObject.openInputStream());
     thenReturned(inputStream);
