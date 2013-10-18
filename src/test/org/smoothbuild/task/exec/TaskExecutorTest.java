@@ -19,6 +19,8 @@ import org.mockito.stubbing.Answer;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
+import org.smoothbuild.object.HashedDb;
+import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
@@ -33,8 +35,9 @@ public class TaskExecutorTest {
   TestFileSystem fileSystem = new TestFileSystem();
   HashedTasks hashedTasks = hashedTasks(task1);
   TestUserConsole userConsole = new TestUserConsole();
+  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(fileSystem));
 
-  TaskExecutor taskExecutor = new TaskExecutor(fileSystem, hashedTasks, userConsole);
+  TaskExecutor taskExecutor = new TaskExecutor(fileSystem, objectsDb, hashedTasks, userConsole);
 
   @Test
   public void task_with_result_already_calculate_is_not_executed() {

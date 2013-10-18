@@ -7,6 +7,7 @@ import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
+import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.MutableFile;
 import org.smoothbuild.type.impl.FileSetBuilder;
@@ -18,16 +19,19 @@ public class SandboxImpl implements Sandbox {
   private final MutableStoredFileSet resultFileSet;
   private final MessageGroup messageGroup;
   private final CallLocation callLocation;
+  private final ObjectsDb objectsDb;
 
-  public SandboxImpl(FileSystem fileSystem, Path root, CallLocation callLocation) {
-    this(fileSystem, new SubFileSystem(fileSystem, root), callLocation,
+  public SandboxImpl(FileSystem fileSystem, ObjectsDb objectsDb, Path root,
+      CallLocation callLocation) {
+    this(fileSystem, new SubFileSystem(fileSystem, root), objectsDb, callLocation,
         createMessages(callLocation));
   }
 
-  public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem,
+  public SandboxImpl(FileSystem fileSystem, FileSystem sandboxFileSystem, ObjectsDb objectsDb,
       CallLocation callLocation, MessageGroup messageGroup) {
     this.projectFileSystem = fileSystem;
     this.sandboxFileSystem = sandboxFileSystem;
+    this.objectsDb = objectsDb;
     this.resultFileSet = new MutableStoredFileSet(sandboxFileSystem);
     this.messageGroup = messageGroup;
     this.callLocation = callLocation;
@@ -45,6 +49,10 @@ public class SandboxImpl implements Sandbox {
 
   public FileSystem projectFileSystem() {
     return projectFileSystem;
+  }
+
+  public ObjectsDb objectsDb() {
+    return objectsDb;
   }
 
   @Override

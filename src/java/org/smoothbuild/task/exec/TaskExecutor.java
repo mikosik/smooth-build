@@ -8,18 +8,22 @@ import javax.inject.Inject;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.UserConsole;
+import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.hash.HashCode;
 
 public class TaskExecutor {
   private final FileSystem fileSystem;
+  private final ObjectsDb objectsDb;
   private final HashedTasks hashedTasks;
   private final UserConsole userConsole;
 
   @Inject
-  public TaskExecutor(FileSystem fileSystem, HashedTasks hashedTasks, UserConsole userConsole) {
+  public TaskExecutor(FileSystem fileSystem, ObjectsDb objectsDb, HashedTasks hashedTasks,
+      UserConsole userConsole) {
     this.fileSystem = fileSystem;
+    this.objectsDb = objectsDb;
     this.hashedTasks = hashedTasks;
     this.userConsole = userConsole;
   }
@@ -37,7 +41,7 @@ public class TaskExecutor {
 
   private SandboxImpl createSandbox(Task task) {
     Path resultDirectory = resultDirectory(task.hash());
-    return new SandboxImpl(fileSystem, resultDirectory, task.location());
+    return new SandboxImpl(fileSystem, objectsDb, resultDirectory, task.location());
   }
 
   private static Path resultDirectory(HashCode hash) {
