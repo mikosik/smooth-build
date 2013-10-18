@@ -3,7 +3,6 @@ package org.smoothbuild.fs.base;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
 public class SubFileSystem implements FileSystem {
   private final FileSystem fileSystem;
   private final Path root;
@@ -31,12 +30,6 @@ public class SubFileSystem implements FileSystem {
   @Override
   public Iterable<Path> filesFrom(Path directory) {
     return fileSystem.filesFrom(absolutePath(directory));
-  }
-
-  @Override
-  public void copy(Path sourceFile, Path destinationFile) {
-    fileSystem.copy(absolutePath(sourceFile), absolutePath(destinationFile));
-
   }
 
   @Override

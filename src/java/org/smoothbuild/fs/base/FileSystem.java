@@ -20,8 +20,6 @@ public interface FileSystem {
 
   public Iterable<Path> filesFrom(Path directory);
 
-  public void copy(Path sourceFile, Path destinationFile);
-
   public void deleteDirectoryRecursively(Path directory);
 
   public InputStream openInputStream(Path path);

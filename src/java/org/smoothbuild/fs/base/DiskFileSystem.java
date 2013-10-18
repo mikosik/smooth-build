@@ -14,8 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
 import java.util.Arrays;
 
 import javax.inject.Inject;
@@ -108,34 +106,6 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public void copy(Path from, Path to) {
-    createDirectory(to.parent());
-    copyImpl(from, to);
-  }
-
-  private void copyImpl(Path from, Path to) {
-    try {
-      copy(jdkFile(from), jdkFile(to));
-    } catch (IOException e) {
-      throw new FileSystemException("Could not copy from '" + from + "' to '" + to + "'");
-    }
-  }
-
-  private static void copy(File from, File to) throws IOException {
-    try (RandomAccessFile fromFile = new RandomAccessFile(from, "r");
-        RandomAccessFile toFile = new RandomAccessFile(to, "rw");) {
-      final FileChannel fromChannel = fromFile.getChannel();
-      final FileChannel toChannel = toFile.getChannel();
-      long toCopy = fromFile.length();
-      long position = 0;
-      while (toCopy > 0) {
-        long copiedCount = fromChannel.transferTo(position, toCopy, toChannel);
-        position += copiedCount;
-        toCopy -= copiedCount;
-      }
-    }
-  }
-
   public void deleteDirectoryRecursively(Path directory) {
     if (pathState(directory) == DIR) {
       try {

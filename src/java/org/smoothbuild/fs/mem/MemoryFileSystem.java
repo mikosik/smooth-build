@@ -5,7 +5,6 @@ import static org.smoothbuild.fs.base.PathState.FILE;
 import static org.smoothbuild.fs.base.PathState.NOTHING;
 import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
@@ -17,8 +16,6 @@ import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-
-import com.google.common.io.ByteStreams;
 
 /**
  * In memory implementation of FileSystem.
@@ -73,18 +70,6 @@ public class MemoryFileSystem implements FileSystem {
       }
     }
     return currentDir;
-  }
-
-  @Override
-  public void copy(Path source, Path destination) {
-    try (InputStream input = openInputStream(source);
-        OutputStream output = openOutputStream(destination);) {
-      ByteStreams.copy(input, output);
-    } catch (IOException e) {
-      throw new FileSystemException(
-          "Error copying from '" + source + "' to '" + destination + "'.", e);
-    }
-
   }
 
   @Override
