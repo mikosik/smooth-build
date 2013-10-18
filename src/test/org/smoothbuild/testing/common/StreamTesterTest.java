@@ -2,7 +2,10 @@ package org.smoothbuild.testing.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
+import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToString;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamWithContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
@@ -13,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
 
 public class StreamTesterTest {
 
@@ -70,6 +75,8 @@ public class StreamTesterTest {
     fail("exception should be thrown");
   }
 
+  // inputStreamToString
+
   @Test
   public void testInputStreamToString() throws Exception {
     String content = "content";
@@ -88,6 +95,37 @@ public class StreamTesterTest {
     String actual = inputStreamToString(inputStream);
 
     assertThat(actual).isEqualTo(content);
+  }
+
+  // inputStreamToBytes
+
+  @Test
+  public void testInputStreamToBytes() throws Exception {
+    String content = "content";
+    InputStream inputStream = inputStreamWithContent(content);
+
+    byte[] actual = inputStreamToBytes(inputStream);
+
+    assertThat(actual).isEqualTo(content.getBytes());
+  }
+
+  @Test
+  public void testEmptyInputStreamToBytes() throws Exception {
+    String content = "";
+    InputStream inputStream = inputStreamWithContent(content);
+
+    byte[] actual = inputStreamToBytes(inputStream);
+
+    assertThat(actual).isEmpty();
+  }
+
+  @Test
+  public void inputStreamToBytesClosesStream() throws Exception {
+    InputStream inputStream = mock(InputStream.class);
+    Mockito.when(inputStream.read((byte[]) Matchers.any())).thenReturn(-1);
+
+    inputStreamToBytes(inputStream);
+    verify(inputStream).close();
   }
 
   private static ByteArrayInputStream inputStream(ByteArrayOutputStream outputStream) {

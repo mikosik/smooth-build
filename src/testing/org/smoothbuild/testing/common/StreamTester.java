@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 
 public class StreamTester {
@@ -38,6 +39,14 @@ public class StreamTester {
   public static String inputStreamToString(InputStream inputStream) throws IOException {
     try (InputStreamReader is = new InputStreamReader(inputStream, UTF_8)) {
       return CharStreams.toString(is);
+    }
+  }
+
+  public static byte[] inputStreamToBytes(InputStream inputStream) throws IOException {
+    try {
+      return ByteStreams.toByteArray(inputStream);
+    } finally {
+      inputStream.close();
     }
   }
 }
