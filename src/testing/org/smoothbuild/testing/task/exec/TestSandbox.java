@@ -6,6 +6,8 @@ import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.object.HashedDb;
+import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.message.TestMessageGroup;
@@ -30,8 +32,8 @@ public class TestSandbox extends SandboxImpl {
 
   public TestSandbox(TestFileSystem fileSystem, TestFileSystem sandboxFileSystem,
       TestMessageGroup messageGroup) {
-    super(fileSystem, sandboxFileSystem, callLocation(simpleName("name"), codeLocation(1, 2, 4)),
-        messageGroup);
+    super(fileSystem, sandboxFileSystem, new ObjectsDb(new HashedDb(fileSystem)), callLocation(
+        simpleName("name"), codeLocation(1, 2, 4)), messageGroup);
     this.fileSystem = fileSystem;
     this.sandboxFileSystem = sandboxFileSystem;
     this.messageGroup = messageGroup;

@@ -1,6 +1,7 @@
 package org.smoothbuild.task.exec;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CallLocation.callLocation;
@@ -12,6 +13,7 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.api.MutableFile;
@@ -25,8 +27,9 @@ public class SandboxImplTest {
   CallLocation callLocation = callLocation(simpleName("name"), codeLocation(1, 2, 4));
 
   TestFileSystem fileSystem = new TestFileSystem();
+  ObjectsDb objectsDb = mock(ObjectsDb.class);
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, root, callLocation);
+  SandboxImpl sandbox = new SandboxImpl(fileSystem, objectsDb, root, callLocation);
 
   @Test
   public void fileSetBuilderStoresFilesInSandboxFileSystem() throws Exception {
