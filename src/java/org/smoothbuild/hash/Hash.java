@@ -24,6 +24,10 @@ public class Hash {
     return hashFunction().hashBytes(bytes);
   }
 
+  public static int size() {
+    return hashFunction().bits() / 8;
+  }
+
   public static HashFunction hashFunction() {
     return Hashing.sha1();
   }
