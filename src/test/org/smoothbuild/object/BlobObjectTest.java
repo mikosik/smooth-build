@@ -20,7 +20,8 @@ public class BlobObjectTest {
   String content = "content";
   TestFileSystem objectsFileSystem = new TestFileSystem();
   HashCode hash = HashCode.fromInt(1);
-  BlobObject blobObject = new BlobObject(objectsFileSystem, hash);
+
+  BlobObject blobObject;
 
   @Test
   public void null_hash_is_forbidden() throws Exception {
@@ -44,6 +45,7 @@ public class BlobObjectTest {
   @Test
   public void open_input_stream_reads_from_file_on_file_system_with_name_equal_to_blob_hash()
       throws IOException {
+    given(blobObject = new BlobObject(objectsFileSystem, hash));
     given(objectsFileSystem).createFileWithContent(path(hash.toString()), content);
     when(StreamTester.inputStreamToString(blobObject.openInputStream()));
     thenReturned(content);
