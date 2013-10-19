@@ -11,10 +11,10 @@ import java.util.Iterator;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.impl.FileSetBuilder;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;

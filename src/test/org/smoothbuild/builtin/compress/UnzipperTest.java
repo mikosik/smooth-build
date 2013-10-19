@@ -13,10 +13,10 @@ import java.util.zip.ZipOutputStream;
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.testing.type.impl.TestFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.impl.FileSetBuilder;
 
 import com.google.common.collect.Iterables;
 

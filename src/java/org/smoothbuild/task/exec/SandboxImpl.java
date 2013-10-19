@@ -8,10 +8,10 @@ import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.object.FileBuilder;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.impl.FileSetBuilder;
 import org.smoothbuild.type.impl.MutableStoredFileSet;
 
 public class SandboxImpl implements Sandbox {

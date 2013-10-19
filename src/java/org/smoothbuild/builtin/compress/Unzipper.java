@@ -14,8 +14,8 @@ import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.impl.FileSetBuilder;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
