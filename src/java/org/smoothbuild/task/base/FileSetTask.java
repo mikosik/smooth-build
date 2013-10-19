@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.object.err.DuplicatePathError;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.impl.FileSetBuilder;
