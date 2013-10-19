@@ -53,22 +53,40 @@ public class UnmarshallerTest {
   }
 
   @Test
-  public void marshalled_hash_and_path_can_be_unmarshalled() {
+  public void marshalled_int_can_be_unmarshalled() {
+    int myInt = 0x12345678;
+    Marshaller marshaller = new Marshaller(hashedDb);
+    marshaller.addInt(myInt);
+    HashCode hash = marshaller.store();
+
+    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
+    int actual = unmarshaller.readInt();
+    unmarshaller.close();
+
+    assertThat(actual).isEqualTo(myInt);
+  }
+
+  @Test
+  public void marshalled_all_type_of_objects_can_be_unmarshalled() {
     HashCode myHash = Hash.function().hashInt(33);
     Path path = path("my/path");
+    int myInt = 0x12345667;
 
     Marshaller marshaller = new Marshaller(hashedDb);
     marshaller.addHash(myHash);
     marshaller.addPath(path);
+    marshaller.addInt(myInt);
     HashCode hash = marshaller.store();
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
     HashCode actualHash = unmarshaller.readHash();
     Path actualPath = unmarshaller.readPath();
+    int actualInt = unmarshaller.readInt();
     unmarshaller.close();
 
     assertThat(actualHash).isEqualTo(myHash);
     assertThat(actualPath).isEqualTo(path);
+    assertThat(actualInt).isEqualTo(myInt);
   }
 
   @Test
@@ -127,6 +145,24 @@ public class UnmarshallerTest {
         unmarshaller.readPath();
       } catch (ErrorMessageException e) {
         assertThat(containsInstanceOf(IllegalPathInObjectError.class).matches(e)).isTrue();
+      }
+    }
+  }
+
+  @Test
+  public void too_short_int_in_db_causes_exception() throws Exception {
+    HashCode objectHash = HashCode.fromInt(33);
+    Path objectPath = OBJECTS_DIR.append(toPath(objectHash));
+    try (DataOutputStream outputStream = new DataOutputStream(
+        fileSystem.openOutputStream(objectPath))) {
+      outputStream.write(new byte[3]);
+    }
+
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
+      try {
+        unmarshaller.readInt();
+      } catch (ErrorMessageException e) {
+        assertThat(containsInstanceOf(TooFewBytesToUnmarshallValue.class).matches(e)).isTrue();
       }
     }
   }

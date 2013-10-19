@@ -27,6 +27,10 @@ public class Marshaller {
     dataOutput.write(hash.asBytes());
   }
 
+  public void addInt(int intValue) {
+    dataOutput.writeInt(intValue);
+  }
+
   public HashCode store() {
     return hashedDb.store(dataOutput.toByteArray());
   }

@@ -15,6 +15,7 @@ import org.smoothbuild.object.err.IllegalPathInObjectError;
 import org.smoothbuild.object.err.TooFewBytesToUnmarshallValue;
 
 import com.google.common.hash.HashCode;
+import com.google.common.primitives.Ints;
 
 public class Unmarshaller implements Closeable {
   private final HashCode hash;
@@ -67,6 +68,19 @@ public class Unmarshaller implements Closeable {
   private HashCode readHashImpl() throws IOException {
     byte[] bytes = readBytes(Hash.size(), "hash");
     return HashCode.fromBytes(bytes);
+  }
+
+  public int readInt() {
+    try {
+      return readIntImpl();
+    } catch (IOException e) {
+      throw new FileSystemException(e);
+    }
+  }
+
+  private int readIntImpl() throws IOException {
+    byte[] bytes = readBytes(4, "int");
+    return Ints.fromByteArray(bytes);
   }
 
   private byte[] readBytes(int size, String valueName) throws IOException {
