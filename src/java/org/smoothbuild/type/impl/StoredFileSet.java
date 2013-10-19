@@ -32,20 +32,13 @@ public class StoredFileSet implements FileSet {
   }
 
   @Override
-  public File file(Path path) {
-    if (!contains(path)) {
-      throw new IllegalArgumentException("File " + path + " does not exist.");
-    }
-    return pathToFileConverter.apply(path);
-  }
-
-  @Override
   public Iterator<File> iterator() {
     Iterable<Path> filesIterable = fileSystem.filesFrom(Path.rootPath());
     return Iterators.transform(filesIterable.iterator(), pathToFileConverter);
   }
 
   private class PathToFileConverter implements Function<Path, File> {
+    @Override
     public File apply(Path path) {
       return new StoredFile(fileSystem, path);
     }

@@ -10,7 +10,6 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.impl.StoredFileSet;
 
 import com.google.common.collect.ImmutableList;
 
@@ -33,13 +32,6 @@ public class StoredFileSetTest {
   }
 
   @Test
-  public void file() throws Exception {
-    fileSystem.createFileContainingItsPath(path("abc.txt"));
-    File file = storedFileSet.file(path("abc.txt"));
-    FileTester.assertContentContainsFilePath(file);
-  }
-
-  @Test
   public void asIterable() throws IOException {
     testAsIterableFor(ImmutableList.of("abc"));
     testAsIterableFor(ImmutableList.of("abc", "def", "aaa/bbb"));
@@ -57,10 +49,5 @@ public class StoredFileSetTest {
     for (File file : storedFileSet) {
       FileTester.assertContentContainsFilePath(file);
     }
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void fetchingNonexistentFileThrowsException() throws Exception {
-    storedFileSet.file(path("nonexistent"));
   }
 }
