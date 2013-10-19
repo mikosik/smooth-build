@@ -35,7 +35,7 @@ public class Unmarshaller implements Closeable {
   }
 
   private Path readPathImpl() throws IOException {
-    int size = inputStream.readInt();
+    int size = readInt();
     byte[] bytes = readBytes(size, "path");
 
     /*

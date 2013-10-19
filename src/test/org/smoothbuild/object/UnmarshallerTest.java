@@ -128,6 +128,24 @@ public class UnmarshallerTest {
   }
 
   @Test
+  public void halfed_size_of_path_in_db_causes_exception() throws Exception {
+    HashCode objectHash = HashCode.fromInt(33);
+    Path objectPath = OBJECTS_DIR.append(toPath(objectHash));
+    try (DataOutputStream outputStream = new DataOutputStream(
+        fileSystem.openOutputStream(objectPath))) {
+      outputStream.write(new byte[3]);
+    }
+
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
+      try {
+        unmarshaller.readPath();
+      } catch (ErrorMessageException e) {
+        assertThat(containsInstanceOf(TooFewBytesToUnmarshallValue.class).matches(e)).isTrue();
+      }
+    }
+  }
+
+  @Test
   public void illegal_path_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
     Path objectPath = OBJECTS_DIR.append(toPath(objectHash));
