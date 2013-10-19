@@ -1,0 +1,112 @@
+package org.smoothbuild.testing.type.impl;
+
+import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.testing.type.impl.FileSetMatchers.containsFile;
+import static org.smoothbuild.testing.type.impl.FileSetMatchers.containsFileContaining;
+import static org.smoothbuild.testing.type.impl.FileSetMatchers.containsFileContainingItsPath;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
+
+import java.io.IOException;
+
+import org.junit.Test;
+import org.smoothbuild.fs.base.Path;
+
+public class FileSetMatchersTest {
+  TestFile file;
+  TestFileSet fileSet = new TestFileSet();
+  Path path = Path.path("my/path1");
+  Path path2 = Path.path("my/path2");
+  String content = "content";
+
+  // assertContentContainsFilePath
+
+  @Test
+  public void asserting_file_path_content_succeeds_when_content_and_path_match() throws IOException {
+    given(file = new TestFile(path));
+    given(file).createContentWithFilePath();
+    given(fileSet).add(file);
+    when(fileSet);
+    thenReturned(containsFileContainingItsPath(path));
+  }
+
+  @Test
+  public void asserting_file_path_content_fails_when_file_matches_but_content_does_not_match()
+      throws IOException {
+    given(file = new TestFile(path));
+    given(file).createContent(content);
+    given(fileSet).add(file);
+    when(fileSet);
+    thenReturned(not(containsFileContainingItsPath(path)));
+  }
+
+  @Test
+  public void asserting_file_path_content_on_empty_file_set_fails() throws IOException {
+    when(fileSet);
+    thenReturned(not(containsFileContainingItsPath(path)));
+  }
+
+  // assertCotentContains
+
+  @Test
+  public void asserting_content_succeeds_when_content_and_path_match() throws IOException {
+    given(file = new TestFile(path));
+    given(file).createContent(content);
+    given(fileSet).add(file);
+    when(fileSet);
+    thenReturned(containsFileContaining(path, content));
+  }
+
+  @Test
+  public void asserting_content_fails_when_file_matches_but_content_does_not_match()
+      throws IOException {
+    given(file = new TestFile(path));
+    given(file).createContent(content);
+    given(fileSet).add(file);
+    when(fileSet);
+    thenReturned(not(containsFileContaining(path, content + "something")));
+  }
+
+  @Test
+  public void asserting_content_fails_when_content_matches_but_file_path_does_not_match()
+      throws IOException {
+    given(file = new TestFile(path));
+    given(file).createContent(content);
+    given(fileSet).add(file);
+    when(fileSet);
+    thenReturned(not(containsFileContaining(path2, content)));
+  }
+
+  @Test
+  public void asserting_content_on_empty_file_set_fails() throws IOException {
+    when(fileSet);
+    thenReturned(not(containsFileContaining(path, content)));
+  }
+
+  // assertContentContainsFilePath
+
+  @Test
+  public void file_set_contains_added_file() throws IOException {
+    given(file = new TestFile(path));
+    given(file).createContent(content);
+    given(fileSet).add(file);
+    when(fileSet);
+    thenReturned(containsFile(path));
+  }
+
+  @Test
+  public void file_set_with_one_file_does_not_contain_other_file() throws IOException {
+    given(file = new TestFile(path2));
+    given(file).createContent(content);
+    given(fileSet).add(file);
+    when(fileSet);
+    thenReturned(not(containsFile(path)));
+  }
+
+  @Test
+  public void empty_file_set_does_not_contain_file() throws IOException {
+    when(fileSet);
+    thenReturned(not(containsFile(path)));
+  }
+}
