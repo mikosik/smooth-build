@@ -7,6 +7,7 @@ import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
+import org.smoothbuild.object.FileBuilder;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.MutableFile;
@@ -35,6 +36,11 @@ public class SandboxImpl implements Sandbox {
     this.resultFileSet = new MutableStoredFileSet(sandboxFileSystem);
     this.messageGroup = messageGroup;
     this.callLocation = callLocation;
+  }
+
+  @Override
+  public FileBuilder fileBuilder() {
+    return new FileBuilder(objectsDb);
   }
 
   @Override
