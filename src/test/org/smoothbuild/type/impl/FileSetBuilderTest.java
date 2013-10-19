@@ -1,8 +1,8 @@
 package org.smoothbuild.type.impl;
 
 import static org.hamcrest.Matchers.emptyIterable;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamToString;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
+import static org.smoothbuild.testing.type.impl.FileSetMatchers.containsFileContaining;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -32,34 +32,16 @@ public class FileSetBuilderTest {
 
   @Test
   public void returned_file_set_contains_streamed_file() throws Exception {
-    given(fileSetBuilder.openFileOutputStream(path)).close();
-    given(fileSet = fileSetBuilder.build());
-    when(fileSet.contains(path));
-    thenReturned(true);
-  }
-
-  @Test
-  public void returned_file_set_contains_added_file() throws Exception {
-    given(fileSetBuilder).add(fileSystem.createEmptyFile(path));
-    given(fileSet = fileSetBuilder.build());
-    when(fileSet.contains(path));
-    thenReturned(true);
-  }
-
-  @Test
-  public void built_file_set_contains_streamed_file_with_created_content() throws Exception {
     given(this).writeFile(fileSetBuilder, path, content);
-    given(fileSet = fileSetBuilder.build());
-    when(inputStreamToString(fileSet.file(path).openInputStream()));
-    thenReturned(content);
+    when(fileSetBuilder).build();
+    thenReturned(containsFileContaining(path, content));
   }
 
   @Test
-  public void built_file_set_contains_added_file_with_created_content() throws Exception {
-    given(fileSetBuilder).add(fileSystem.createFileContainingItsPath(path));
-    given(fileSet = fileSetBuilder.build());
-    when(inputStreamToString(fileSet.file(path).openInputStream()));
-    thenReturned(path.value());
+  public void returned_file_set_contains_added_file_with_its_content() throws Exception {
+    given(fileSetBuilder).add(fileSystem.createFileWithContent(path, content));
+    when(fileSetBuilder).build();
+    thenReturned(containsFileContaining(path, content));
   }
 
   @Test
