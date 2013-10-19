@@ -22,8 +22,7 @@ public class FileTester {
     assertContentContains(file, file.path().value());
   }
 
-  public static void assertContentContains(File file, String content) throws IOException,
-      AssertionError {
+  public static void assertContentContains(File file, String content) throws IOException {
     assertContent(file.openInputStream(), content);
   }
 }
