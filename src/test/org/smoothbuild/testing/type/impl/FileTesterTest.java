@@ -13,7 +13,6 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.MutableFile;
 
 public class FileTesterTest {
