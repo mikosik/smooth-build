@@ -16,7 +16,6 @@ public class TestFileSet extends MutableStoredFileSet {
     this.fileSystem = fileSystem;
   }
 
-  @Override
   public TestFile file(Path path) {
     return new TestFile(fileSystem, path);
   }
