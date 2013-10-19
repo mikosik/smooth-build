@@ -17,9 +17,9 @@ import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompi
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.impl.FileSetBuilder;
 
 import com.google.common.collect.Multimap;
 

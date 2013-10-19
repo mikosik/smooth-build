@@ -12,6 +12,7 @@ import java.io.OutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.api.FileSet;
 

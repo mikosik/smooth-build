@@ -17,8 +17,8 @@ import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.impl.FileSetBuilder;
 import org.smoothbuild.type.impl.FileSetBuilderInterface;
 import org.smoothbuild.util.EndsWithPredicate;
 

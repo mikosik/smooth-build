@@ -13,13 +13,13 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.object.FileBuilder;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.object.HashedDb;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.impl.FileSetBuilder;
 
 public class SandboxImplTest {
   String content = "content";

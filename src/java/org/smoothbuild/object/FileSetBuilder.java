@@ -1,4 +1,4 @@
-package org.smoothbuild.type.impl;
+package org.smoothbuild.object;
 
 import java.io.OutputStream;
 
@@ -7,6 +7,8 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 import org.smoothbuild.type.api.MutableFileSet;
+import org.smoothbuild.type.impl.FileSetBuilderInterface;
+import org.smoothbuild.type.impl.MutableStoredFileSet;
 
 public class FileSetBuilder implements FileSetBuilderInterface {
   private final MutableFileSet fileSet;
