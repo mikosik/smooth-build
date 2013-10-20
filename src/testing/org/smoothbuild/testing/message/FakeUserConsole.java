@@ -7,14 +7,14 @@ import java.io.PrintStream;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.Message;
 
-public class TestUserConsole extends UserConsole {
+public class FakeUserConsole extends UserConsole {
   private final FakeMessageGroup messageGroup;
 
-  public TestUserConsole() {
+  public FakeUserConsole() {
     this(new FakeMessageGroup());
   }
 
-  public TestUserConsole(FakeMessageGroup messageGroup) {
+  public FakeUserConsole(FakeMessageGroup messageGroup) {
     super(new PrintStream(nullOutputStream()));
     this.messageGroup = messageGroup;
   }
