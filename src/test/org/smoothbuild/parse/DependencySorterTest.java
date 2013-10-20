@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.testing.message.TestMessageGroup;
+import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 
 import com.google.common.collect.ImmutableList;
@@ -24,7 +24,7 @@ public class DependencySorterTest {
   private static final String NAME5 = "funcation5";
   private static final String NAME6 = "funcation6";
 
-  TestMessageGroup messageGroup = new TestMessageGroup();
+  FakeMessageGroup messageGroup = new FakeMessageGroup();
   SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test

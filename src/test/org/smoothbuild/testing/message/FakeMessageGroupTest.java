@@ -10,8 +10,8 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 
-public class TestMessageGroupTest {
-  TestMessageGroup testingProblemListener = new TestMessageGroup();
+public class FakeMessageGroupTest {
+  FakeMessageGroup testingProblemListener = new FakeMessageGroup();
   CodeLocation location = codeLocation(1, 2, 4);
 
   @Test(expected = AssertionError.class)

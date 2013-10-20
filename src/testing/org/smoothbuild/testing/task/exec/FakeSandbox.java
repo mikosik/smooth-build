@@ -10,7 +10,7 @@ import org.smoothbuild.object.HashedDb;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.message.TestMessageGroup;
+import org.smoothbuild.testing.message.FakeMessageGroup;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -20,18 +20,18 @@ public class FakeSandbox extends SandboxImpl {
 
   private final FakeFileSystem fileSystem;
   private final FakeFileSystem sandboxFileSystem;
-  private final TestMessageGroup messageGroup;
+  private final FakeMessageGroup messageGroup;
 
   public FakeSandbox() {
     this(new FakeFileSystem());
   }
 
   public FakeSandbox(FakeFileSystem fileSystem) {
-    this(fileSystem, new FakeFileSystem(fileSystem, SANDBOX_ROOT), new TestMessageGroup());
+    this(fileSystem, new FakeFileSystem(fileSystem, SANDBOX_ROOT), new FakeMessageGroup());
   }
 
   public FakeSandbox(FakeFileSystem fileSystem, FakeFileSystem sandboxFileSystem,
-      TestMessageGroup messageGroup) {
+      FakeMessageGroup messageGroup) {
     super(fileSystem, sandboxFileSystem, new ObjectsDb(new HashedDb(fileSystem)), callLocation(
         simpleName("name"), codeLocation(1, 2, 4)), messageGroup);
     this.fileSystem = fileSystem;
@@ -48,7 +48,7 @@ public class FakeSandbox extends SandboxImpl {
     return sandboxFileSystem;
   }
 
-  public TestMessageGroup messages() {
+  public FakeMessageGroup messages() {
     return messageGroup;
   }
 }

@@ -12,12 +12,12 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
-import org.smoothbuild.testing.message.TestMessageGroup;
+import org.smoothbuild.testing.message.FakeMessageGroup;
 
 import com.google.common.collect.Maps;
 
 public class UndefinedFunctionsDetectorTest {
-  TestMessageGroup messageGroup = new TestMessageGroup();
+  FakeMessageGroup messageGroup = new FakeMessageGroup();
   SymbolTable importedFunctions = mock(SymbolTable.class);
 
   @Test
