@@ -13,7 +13,7 @@ import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 import org.smoothbuild.type.api.File;
 
 import com.google.common.base.Predicates;
@@ -24,7 +24,7 @@ public class UnjarerTest {
   String fileName2 = "file/path/file2.txt";
   String directoryName = "my/directory/";
 
-  TestFileSet resultFileSet = new TestFileSet();
+  FakeFileSet resultFileSet = new FakeFileSet();
   Unjarer unjarer = new Unjarer();
 
   @Test

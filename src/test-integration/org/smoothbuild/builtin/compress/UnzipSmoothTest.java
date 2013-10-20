@@ -8,7 +8,7 @@ import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class UnzipSmoothTest extends IntegrationTestCase {
 
@@ -28,7 +28,7 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     // then
     messages.assertNoProblems();
 
-    TestFileSet outFiles = fileSet(path("out"));
+    FakeFileSet outFiles = fileSet(path("out"));
     outFiles.contains(fileA);
     outFiles.contains(fileB);
     FileTester.assertContentContainsFilePath(outFiles.file(fileA));

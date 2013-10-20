@@ -14,7 +14,7 @@ import org.smoothbuild.testing.message.TestUserConsole;
 import org.smoothbuild.testing.message.TestUserConsoleModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 import com.google.inject.Injector;
 
@@ -39,8 +39,8 @@ public class IntegrationTestCase {
     fileSystem.createFileWithContent(DEFAULT_SCRIPT, ScriptBuilder.script(script));
   }
 
-  protected TestFileSet fileSet(Path path) {
-    return new TestFileSet(fileSystem.subFileSystem(path));
+  protected FakeFileSet fileSet(Path path) {
+    return new FakeFileSet(fileSystem.subFileSystem(path));
   }
 
   protected FakeFile file(Path path) {

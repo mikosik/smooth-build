@@ -19,7 +19,7 @@ import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.fs.base.TestPath;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class SaveSmoothTest extends IntegrationTestCase {
 
@@ -57,7 +57,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    TestFileSet outputFiles = fileSet(dir);
+    FakeFileSet outputFiles = fileSet(dir);
     outputFiles.file(file.path()).assertContentContainsFilePath();
     outputFiles.file(file2.path()).assertContentContainsFilePath();
   }

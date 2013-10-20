@@ -11,13 +11,13 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class JarSmoothTest extends IntegrationTestCase {
   @Test
   public void testJaring() throws Exception {
     // given
-    TestFileSet fileSet = fileSet(path("dir"));
+    FakeFileSet fileSet = fileSet(path("dir"));
     fileSet.createFile(path("dir/fileA.txt")).createContentWithFilePath();
     fileSet.createFile(path("dir/fileB.txt")).createContentWithFilePath();
     Path outDir = path("out");
@@ -30,7 +30,7 @@ public class JarSmoothTest extends IntegrationTestCase {
     // then
     messages.assertNoProblems();
 
-    TestFileSet unpackedFiles = new TestFileSet();
+    FakeFileSet unpackedFiles = new FakeFileSet();
     byte[] buffer = new byte[2048];
     int fileCount = 0;
     FakeFile outputFile = fileSet(outDir).file(outputPath);
