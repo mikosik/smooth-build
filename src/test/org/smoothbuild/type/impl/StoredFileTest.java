@@ -5,12 +5,12 @@ import static org.smoothbuild.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.impl.StoredFile;
 
 public class StoredFileTest {
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   Path filePath = path("xyz/test.txt");
 
   StoredFile storedFile = new StoredFile(fileSystem, filePath);

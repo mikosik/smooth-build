@@ -12,12 +12,12 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.type.impl.FakeFile;
 
-public class TestFileSystemTest {
+public class FakeFileSystemTest {
   Path root = path("my/root");
   Path path = path("my/path/file.txt");
   String content = "my content";
 
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
 
   @Test
   public void createFileContiningItsPath() throws Exception {

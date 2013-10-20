@@ -1,17 +1,17 @@
 package org.smoothbuild.testing.type.impl;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.type.impl.MutableStoredFileSet;
 
 public class FakeFileSet extends MutableStoredFileSet {
-  private final TestFileSystem fileSystem;
+  private final FakeFileSystem fileSystem;
 
   public FakeFileSet() {
-    this(new TestFileSystem());
+    this(new FakeFileSystem());
   }
 
-  public FakeFileSet(TestFileSystem fileSystem) {
+  public FakeFileSet(FakeFileSystem fileSystem) {
     super(fileSystem);
     this.fileSystem = fileSystem;
   }
@@ -21,7 +21,7 @@ public class FakeFileSet extends MutableStoredFileSet {
   }
 
   @Override
-  public TestFileSystem fileSystem() {
+  public FakeFileSystem fileSystem() {
     return fileSystem;
   }
 

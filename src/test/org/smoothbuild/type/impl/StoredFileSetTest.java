@@ -7,14 +7,14 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.ImmutableList;
 
 public class StoredFileSetTest {
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
 
   StoredFileSet storedFileSet = new StoredFileSet(fileSystem);
 

@@ -14,12 +14,12 @@ import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.err.IllegalPathInObjectError;
 import org.smoothbuild.object.err.TooFewBytesToUnmarshallValue;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   HashedDb hashedDb = new HashedDb(fileSystem);
 
   @Test

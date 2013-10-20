@@ -23,7 +23,7 @@ import org.smoothbuild.object.HashedDb;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.TestUserConsole;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.MutableFile;
@@ -32,7 +32,7 @@ import com.google.common.hash.HashCode;
 
 public class TaskExecutorTest {
   Task task1 = task(1);
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   HashedTasks hashedTasks = hashedTasks(task1);
   TestUserConsole userConsole = new TestUserConsole();
   ObjectsDb objectsDb = new ObjectsDb(new HashedDb(fileSystem));

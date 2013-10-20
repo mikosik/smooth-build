@@ -8,12 +8,12 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class FakeFileTest {
   Path path = path("my/file");
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
 
   FakeFile fakeFile = new FakeFile(fileSystem, path);
 

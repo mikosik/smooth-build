@@ -17,7 +17,7 @@ import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.object.HashedDb;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.MutableFile;
 
@@ -28,7 +28,7 @@ public class SandboxImplTest {
   Path path2 = path("my/path/file2.txt");
   CallLocation callLocation = callLocation(simpleName("name"), codeLocation(1, 2, 4));
 
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   ObjectsDb objectsDb = new ObjectsDb(new HashedDb(fileSystem));
 
   SandboxImpl sandbox = new SandboxImpl(fileSystem, objectsDb, root, callLocation);

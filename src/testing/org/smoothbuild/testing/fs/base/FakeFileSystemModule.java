@@ -6,10 +6,10 @@ import org.smoothbuild.fs.base.FileSystem;
 
 import com.google.inject.AbstractModule;
 
-public class TestFileSystemModule extends AbstractModule {
+public class FakeFileSystemModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(TestFileSystem.class).in(Singleton.class);
-    bind(FileSystem.class).to(TestFileSystem.class);
+    bind(FakeFileSystem.class).in(Singleton.class);
+    bind(FileSystem.class).to(FakeFileSystem.class);
   }
 }

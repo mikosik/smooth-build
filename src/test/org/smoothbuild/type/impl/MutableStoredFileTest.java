@@ -5,12 +5,12 @@ import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.impl.MutableStoredFile;
 
 public class MutableStoredFileTest {
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   Path filePath = path("xyz/test.txt");
 
   MutableStoredFile file = new MutableStoredFile(fileSystem, filePath);

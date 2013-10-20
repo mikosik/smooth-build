@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 
 import com.google.common.collect.Lists;
 
@@ -47,7 +47,7 @@ public class RecursiveFilesIterableTest {
 
   @Test
   public void isEmptyWhenDirectoryDoesNotExist() throws Exception {
-    TestFileSystem fileSystem = new TestFileSystem();
+    FakeFileSystem fileSystem = new FakeFileSystem();
     Path path = path("my/file");
 
     assertThat(recursiveFilesIterable(fileSystem, path)).isEmpty();
@@ -55,7 +55,7 @@ public class RecursiveFilesIterableTest {
 
   @Test
   public void throwsExceptionWhenDirectoryIsAFile() throws Exception {
-    TestFileSystem fileSystem = new TestFileSystem();
+    FakeFileSystem fileSystem = new FakeFileSystem();
     Path path = path("my/file");
     fileSystem.createEmptyFile(path);
 
@@ -69,7 +69,7 @@ public class RecursiveFilesIterableTest {
 
   private void doTestIterable(String rootDir, String[] names, String expectedRootDir,
       String[] expectedNames) throws IOException {
-    TestFileSystem fileSystem = new TestFileSystem();
+    FakeFileSystem fileSystem = new FakeFileSystem();
     for (String name : names) {
       fileSystem.createEmptyFile(path(rootDir).append(path(name)));
     }
