@@ -1,9 +1,9 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.parse.TestFunction.function;
-import static org.smoothbuild.testing.parse.TestImportedFunctions.IMPORTED_NAME;
-import static org.smoothbuild.testing.parse.TestModule.module;
+import static org.smoothbuild.testing.parse.FakeFunction.function;
+import static org.smoothbuild.testing.parse.FakeImportedFunctions.IMPORTED_NAME;
+import static org.smoothbuild.testing.parse.FakeModule.module;
 
 import java.util.Map;
 
@@ -14,15 +14,15 @@ import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.parse.TestImportedFunctions;
-import org.smoothbuild.testing.parse.TestModule;
+import org.smoothbuild.testing.parse.FakeImportedFunctions;
+import org.smoothbuild.testing.parse.FakeModule;
 
 import com.google.common.collect.ImmutableMap;
 
 public class FunctionsCollectorTest {
 
   FakeMessageGroup messages = new FakeMessageGroup();
-  SymbolTable importedFunctions = new TestImportedFunctions();
+  SymbolTable importedFunctions = new FakeImportedFunctions();
 
   @Test
   public void visitedFunctionNamesAreReturned() throws Exception {
@@ -31,7 +31,7 @@ public class FunctionsCollectorTest {
 
     FunctionContext function1 = function(name1);
     FunctionContext function2 = function(name2);
-    TestModule module = module(function1, function2);
+    FakeModule module = module(function1, function2);
 
     ImmutableMap<String, FunctionContext> expected = ImmutableMap.of(name1, function1, name2,
         function2);
@@ -56,7 +56,7 @@ public class FunctionsCollectorTest {
     messages.assertOnlyProblem(OverridenImportError.class);
   }
 
-  private Map<String, FunctionContext> collectFunctions(TestModule module) {
+  private Map<String, FunctionContext> collectFunctions(FakeModule module) {
     try {
       return FunctionsCollector.collectFunctions(messages, importedFunctions, module);
     } catch (PhaseFailedException e) {
