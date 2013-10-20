@@ -15,7 +15,7 @@ import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.testing.message.TestUserConsole;
+import org.smoothbuild.testing.message.FakeUserConsole;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -24,7 +24,7 @@ public class TaskGraphExecutorTest {
   Task task1 = task(1);
   Task task2 = task(2);
   HashedTasks hashedTasks = hashedTasks(task1, task2);
-  UserConsole userConsole = new TestUserConsole();
+  UserConsole userConsole = new FakeUserConsole();
   TaskExecutor taskExecutor = mock(TaskExecutor.class);
 
   TaskGraphExecutor taskGraphExecutor = new TaskGraphExecutor(hashedTasks, userConsole,

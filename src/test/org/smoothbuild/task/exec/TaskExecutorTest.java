@@ -24,7 +24,7 @@ import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.message.TestUserConsole;
+import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.MutableFile;
 
@@ -34,7 +34,7 @@ public class TaskExecutorTest {
   Task task1 = task(1);
   FakeFileSystem fileSystem = new FakeFileSystem();
   HashedTasks hashedTasks = hashedTasks(task1);
-  TestUserConsole userConsole = new TestUserConsole();
+  FakeUserConsole userConsole = new FakeUserConsole();
   ObjectsDb objectsDb = new ObjectsDb(new HashedDb(fileSystem));
 
   TaskExecutor taskExecutor = new TaskExecutor(fileSystem, objectsDb, hashedTasks, userConsole);
