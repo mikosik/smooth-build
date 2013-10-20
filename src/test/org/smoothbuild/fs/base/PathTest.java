@@ -13,7 +13,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.TestPath;
+import org.smoothbuild.testing.fs.base.PathTesting;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -23,28 +23,28 @@ public class PathTest {
 
   @Test
   public void validationErrorReturnsNullForCorrectPath() throws Exception {
-    for (String path : TestPath.listOfCorrectPaths()) {
+    for (String path : PathTesting.listOfCorrectPaths()) {
       assertThat(Path.validationError(path)).isNull();
     }
   }
 
   @Test
   public void pathCanBeCreatedForValidValue() throws Exception {
-    for (String path : TestPath.listOfCorrectPaths()) {
+    for (String path : PathTesting.listOfCorrectPaths()) {
       path(path);
     }
   }
 
   @Test
   public void validationErrorReturnsMessageForInvalidPath() {
-    for (String path : TestPath.listOfInvalidPaths()) {
+    for (String path : PathTesting.listOfInvalidPaths()) {
       assertThat(Path.validationError(path)).isNotNull();
     }
   }
 
   @Test
   public void cannotCreatePathWithInvalidValue() {
-    for (String path : TestPath.listOfInvalidPaths()) {
+    for (String path : PathTesting.listOfInvalidPaths()) {
       try {
         path(path);
         fail("exception should be thrown");

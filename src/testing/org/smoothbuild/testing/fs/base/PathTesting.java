@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class TestPath {
+public class PathTesting {
 
   public static List<String> listOfCorrectPaths() {
     Builder<String> builder = ImmutableList.builder();

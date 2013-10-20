@@ -17,7 +17,7 @@ import org.smoothbuild.builtin.file.err.WriteToSmoothDirError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.testing.fs.base.TestPath;
+import org.smoothbuild.testing.fs.base.PathTesting;
 import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.FakeFileSet;
 
@@ -113,7 +113,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
 
   @Test
   public void illegalPathsAreReported() throws Exception {
-    for (String path : TestPath.listOfInvalidPaths()) {
+    for (String path : PathTesting.listOfInvalidPaths()) {
       reset();
 
       // given
