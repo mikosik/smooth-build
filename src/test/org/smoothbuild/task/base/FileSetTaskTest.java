@@ -19,7 +19,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.task.base.TestTask;
-import org.smoothbuild.testing.task.exec.TestSandbox;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
@@ -30,7 +30,7 @@ import com.google.common.hash.HashCode;
 
 public class FileSetTaskTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
-  TestSandbox sandbox = new TestSandbox(fileSystem);
+  FakeSandbox sandbox = new FakeSandbox(fileSystem);
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
   FakeFile file1 = fileSystem.createFileContainingItsPath(path1);

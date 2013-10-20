@@ -37,7 +37,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.TestTask;
-import org.smoothbuild.testing.task.exec.TestSandbox;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 import org.smoothbuild.util.Empty;
@@ -47,7 +47,7 @@ import com.google.common.hash.HashCode;
 import com.google.inject.Guice;
 
 public class NativeFunctionFactoryTest {
-  TestSandbox sandbox = new TestSandbox();
+  FakeSandbox sandbox = new FakeSandbox();
   Path tempDir = path("tem/dir");
   NativeFunctionFactory nativeFunctionFactory;
   CodeLocation codeLocation = codeLocation(1, 2, 4);

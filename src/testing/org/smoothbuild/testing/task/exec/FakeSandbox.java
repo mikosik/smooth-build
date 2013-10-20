@@ -14,7 +14,7 @@ import org.smoothbuild.testing.message.TestMessageGroup;
 
 import com.google.common.annotations.VisibleForTesting;
 
-public class TestSandbox extends SandboxImpl {
+public class FakeSandbox extends SandboxImpl {
   @VisibleForTesting
   static final Path SANDBOX_ROOT = path("sandbox");
 
@@ -22,15 +22,15 @@ public class TestSandbox extends SandboxImpl {
   private final FakeFileSystem sandboxFileSystem;
   private final TestMessageGroup messageGroup;
 
-  public TestSandbox() {
+  public FakeSandbox() {
     this(new FakeFileSystem());
   }
 
-  public TestSandbox(FakeFileSystem fileSystem) {
+  public FakeSandbox(FakeFileSystem fileSystem) {
     this(fileSystem, new FakeFileSystem(fileSystem, SANDBOX_ROOT), new TestMessageGroup());
   }
 
-  public TestSandbox(FakeFileSystem fileSystem, FakeFileSystem sandboxFileSystem,
+  public FakeSandbox(FakeFileSystem fileSystem, FakeFileSystem sandboxFileSystem,
       TestMessageGroup messageGroup) {
     super(fileSystem, sandboxFileSystem, new ObjectsDb(new HashedDb(fileSystem)), callLocation(
         simpleName("name"), codeLocation(1, 2, 4)), messageGroup);

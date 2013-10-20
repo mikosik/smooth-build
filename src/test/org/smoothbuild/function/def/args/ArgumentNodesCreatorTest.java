@@ -39,7 +39,7 @@ import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.TestMessageGroup;
-import org.smoothbuild.testing.task.exec.TestSandbox;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class ArgumentNodesCreatorTest {
 
@@ -568,7 +568,7 @@ public class ArgumentNodesCreatorTest {
   private static void assertThatNodeHasEmptySet(DefinitionNode node) {
     TaskGenerator taskGenerator = mock(TaskGenerator.class);
     Task task = node.generateTask(taskGenerator);
-    task.execute(new TestSandbox(), hashedTasks());
+    task.execute(new FakeSandbox(), hashedTasks());
     assertThat((Iterable<?>) task.result()).isEmpty();
   }
 
