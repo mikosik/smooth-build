@@ -10,7 +10,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.message.TestMessageGroup;
+import org.smoothbuild.testing.message.FakeMessageGroup;
 
 public class ScriptParserTest {
 
@@ -70,17 +70,17 @@ public class ScriptParserTest {
   }
 
   private static void assertParsingSucceeds(String scriptText) throws IOException {
-    TestMessageGroup messages = parse(scriptText);
+    FakeMessageGroup messages = parse(scriptText);
     messages.assertNoProblems();
   }
 
   private static void assertParsingFails(String script) throws IOException {
-    TestMessageGroup messages = parse(script);
+    FakeMessageGroup messages = parse(script);
     messages.assertOnlyProblem(SyntaxError.class);
   }
 
-  private static TestMessageGroup parse(String string) throws IOException {
-    TestMessageGroup messages = new TestMessageGroup();
+  private static FakeMessageGroup parse(String string) throws IOException {
+    FakeMessageGroup messages = new FakeMessageGroup();
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
     try {
       ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));

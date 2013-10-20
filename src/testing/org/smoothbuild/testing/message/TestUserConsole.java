@@ -8,13 +8,13 @@ import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.Message;
 
 public class TestUserConsole extends UserConsole {
-  private final TestMessageGroup messageGroup;
+  private final FakeMessageGroup messageGroup;
 
   public TestUserConsole() {
-    this(new TestMessageGroup());
+    this(new FakeMessageGroup());
   }
 
-  public TestUserConsole(TestMessageGroup messageGroup) {
+  public TestUserConsole(FakeMessageGroup messageGroup) {
     super(new PrintStream(nullOutputStream()));
     this.messageGroup = messageGroup;
   }

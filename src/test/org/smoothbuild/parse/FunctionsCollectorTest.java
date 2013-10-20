@@ -13,7 +13,7 @@ import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenImportError;
-import org.smoothbuild.testing.message.TestMessageGroup;
+import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.parse.TestImportedFunctions;
 import org.smoothbuild.testing.parse.TestModule;
 
@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class FunctionsCollectorTest {
 
-  TestMessageGroup messages = new TestMessageGroup();
+  FakeMessageGroup messages = new FakeMessageGroup();
   SymbolTable importedFunctions = new TestImportedFunctions();
 
   @Test

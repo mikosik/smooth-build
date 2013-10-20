@@ -11,11 +11,11 @@ import org.smoothbuild.message.message.WrappedCodeMessage;
 
 import com.google.common.collect.Lists;
 
-public class TestMessageGroup extends MessageGroup {
+public class FakeMessageGroup extends MessageGroup {
   private final List<Message> problems = Lists.newArrayList();
   private final List<Message> infos = Lists.newArrayList();
 
-  public TestMessageGroup() {
+  public FakeMessageGroup() {
     super("TestMessageGroup");
   }
 
