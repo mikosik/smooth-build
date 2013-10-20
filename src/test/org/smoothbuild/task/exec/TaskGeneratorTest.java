@@ -8,13 +8,13 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.base.FakeTask;
 
 import com.google.common.hash.HashCode;
 
 public class TaskGeneratorTest {
   DefinitionNode node = mock(DefinitionNode.class);
-  Task task = new TestTask("one");
+  Task task = new FakeTask("one");
   HashedTasks hashedTasks = mock(HashedTasks.class);
 
   TaskGenerator taskGenerator = new TaskGenerator(hashedTasks);

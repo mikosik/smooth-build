@@ -18,7 +18,7 @@ import org.smoothbuild.task.base.FileSetTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.FakeFile;
@@ -37,8 +37,8 @@ public class FileSetTaskTest {
   FakeFile file2 = fileSystem.createFileContainingItsPath(path2);
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
-  Task task1 = new TestTask(file1);
-  Task task2 = new TestTask(file2);
+  Task task1 = new FakeTask(file1);
+  Task task2 = new FakeTask(file2);
   HashedTasks hashedTasks = hashedTasks(task1, task2);
 
   FileSetTask fileSetTask = new FileSetTask(hashes(task1, task2), codeLocation);

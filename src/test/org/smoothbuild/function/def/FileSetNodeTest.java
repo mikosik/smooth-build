@@ -16,7 +16,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.FakeFile;
@@ -46,8 +46,8 @@ public class FileSetNodeTest {
   public void generateTask() throws Exception {
     FakeFile file1 = sandbox.sandboxFileSystem().createFileContainingItsPath(path1);
     FakeFile file2 = sandbox.sandboxFileSystem().createFileContainingItsPath(path2);
-    TestTask task1 = new TestTask(file1);
-    TestTask task2 = new TestTask(file2);
+    FakeTask task1 = new FakeTask(file1);
+    FakeTask task2 = new FakeTask(file2);
 
     TaskGenerator taskGenerator = mock(TaskGenerator.class);
     Mockito.when(taskGenerator.generateTask(node1)).thenReturn(task1.hash());

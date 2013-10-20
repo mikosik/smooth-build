@@ -11,18 +11,18 @@ import org.smoothbuild.util.Empty;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.hash.HashCode;
 
-public class TestTask implements Task {
+public class FakeTask implements Task {
   private final Object result;
   private final HashCode hash;
 
-  public TestTask(Object object) {
+  public FakeTask(Object object) {
     this.result = checkNotNull(object);
     this.hash = HashCode.fromInt(object.hashCode());
   }
 
   @Override
   public CallLocation location() {
-    throw new UnsupportedOperationException(TestTask.class.getSimpleName()
+    throw new UnsupportedOperationException(FakeTask.class.getSimpleName()
         + " does not have location.");
   }
 
@@ -39,7 +39,7 @@ public class TestTask implements Task {
   @Override
   public void execute(Sandbox sandbox, HashedTasks hashedTasks) {
     throw new UnsupportedOperationException("No need to call calculatedResult on "
-        + TestTask.class.getSimpleName() + ".");
+        + FakeTask.class.getSimpleName() + ".");
   }
 
   @Override

@@ -29,7 +29,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
-import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
 
@@ -63,7 +63,7 @@ public class NativeCallTaskTest {
   @Test
   public void calculateResult() throws IllegalAccessException, InvocationTargetException {
     Object argValue = "subTaskResult";
-    Task subTask = new TestTask(argValue);
+    Task subTask = new FakeTask(argValue);
 
     String name = "param";
     NativeCallTask nativeCallTask = new NativeCallTask(function1, codeLocation, ImmutableMap.of(
