@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.parse.TestDependency.dependencies;
+import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.parse.TestImportedFunctions;
+import org.smoothbuild.testing.parse.FakeImportedFunctions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -25,7 +25,7 @@ public class DependencySorterTest {
   private static final String NAME6 = "funcation6";
 
   FakeMessageGroup messageGroup = new FakeMessageGroup();
-  SymbolTable importedFunctions = new TestImportedFunctions();
+  SymbolTable importedFunctions = new FakeImportedFunctions();
 
   @Test
   public void linearDependency() {

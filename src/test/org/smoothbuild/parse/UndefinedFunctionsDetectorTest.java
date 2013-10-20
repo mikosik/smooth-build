@@ -4,7 +4,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.parse.UndefinedFunctionsDetector.detectUndefinedFunctions;
-import static org.smoothbuild.testing.parse.TestDependency.dependencies;
+import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
 
 import java.util.Map;
 import java.util.Set;

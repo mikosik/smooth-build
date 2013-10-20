@@ -13,12 +13,12 @@ import org.smoothbuild.parse.SymbolTable;
 
 import com.google.common.collect.ImmutableMap;
 
-public class TestImportedFunctions implements SymbolTable {
+public class FakeImportedFunctions implements SymbolTable {
   public static final String IMPORTED_NAME = "imported";
 
   private final Map<String, Function> map;
 
-  public TestImportedFunctions() {
+  public FakeImportedFunctions() {
     Function function = new NativeFunction(testSignature(IMPORTED_NAME), mock(Invoker.class));
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
