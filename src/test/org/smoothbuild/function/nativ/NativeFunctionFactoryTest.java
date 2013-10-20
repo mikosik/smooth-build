@@ -36,7 +36,7 @@ import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
@@ -76,8 +76,8 @@ public class NativeFunctionFactoryTest {
   @Test
   public void testInvokation() throws Exception {
     Function function = NativeFunctionFactory.create(MyFunction.class, false);
-    TestTask task1 = new TestTask("abc");
-    TestTask task2 = new TestTask("def");
+    FakeTask task1 = new FakeTask("abc");
+    FakeTask task2 = new FakeTask("def");
     ImmutableMap<String, HashCode> dependencies = ImmutableMap.of("stringA", task1.hash(),
         "stringB", task2.hash());
     TaskGenerator taskGenerator = mock(TaskGenerator.class);

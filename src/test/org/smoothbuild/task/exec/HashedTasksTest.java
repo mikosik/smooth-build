@@ -8,11 +8,11 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.base.FakeTask;
 
 public class HashedTasksTest {
-  Task task1 = new TestTask("abc");
-  Task task2 = new TestTask("cde");
+  Task task1 = new FakeTask("abc");
+  Task task2 = new FakeTask("cde");
 
   HashedTasks hashedTasks = new HashedTasks();
 

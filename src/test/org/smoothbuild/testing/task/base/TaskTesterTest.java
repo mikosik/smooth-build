@@ -10,8 +10,8 @@ import org.smoothbuild.task.base.Task;
 import com.google.common.collect.ImmutableList;
 
 public class TaskTesterTest {
-  Task task1 = new TestTask("task1");
-  Task task2 = new TestTask("task2");
+  Task task1 = new FakeTask("task1");
+  Task task2 = new FakeTask("task2");
 
   @Test
   public void test() {

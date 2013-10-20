@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.StringSetTask;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.type.api.StringSet;
 
 import com.google.common.hash.HashCode;
@@ -20,8 +20,8 @@ public class StringSetTaskTest {
   String string1 = "string1";
   String string2 = "string2";
 
-  Task task1 = new TestTask(string1);
-  Task task2 = new TestTask(string2);
+  Task task1 = new FakeTask(string1);
+  Task task2 = new FakeTask(string2);
 
   CodeLocation codeLocation = codeLocation(1, 2, 4);
   List<HashCode> hashes = hashes(task1, task2);

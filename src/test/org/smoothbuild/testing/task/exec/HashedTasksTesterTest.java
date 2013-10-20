@@ -8,13 +8,13 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.HashedTasks;
-import org.smoothbuild.testing.task.base.TestTask;
+import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.HashedTasksTester;
 import org.testory.common.Closure;
 
 public class HashedTasksTesterTest {
-  TestTask task1 = new TestTask("abc");
-  TestTask task2 = new TestTask("cde");
+  FakeTask task1 = new FakeTask("abc");
+  FakeTask task2 = new FakeTask("cde");
 
   private HashedTasks tasks;
 
@@ -27,8 +27,8 @@ public class HashedTasksTesterTest {
 
   @Test
   public void creating_HashedTasks_with_two_tasks_with_the_same_hash_fails() throws Exception {
-    given(task1 = new TestTask("abc"));
-    given(task2 = new TestTask("abc"));
+    given(task1 = new FakeTask("abc"));
+    given(task2 = new FakeTask("abc"));
     when($hashedTasks(task1, task2));
     thenThrown(IllegalArgumentException.class);
   }
