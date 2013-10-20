@@ -7,14 +7,14 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class InputSourceFileTest {
 
   @Test
   public void getCharContent() throws IOException {
     Path path = path("my/path");
-    TestFile file = new TestFile(path);
+    FakeFile file = new FakeFile(path);
     file.createContentWithFilePath();
 
     CharSequence actual = new InputSourceFile(file).getCharContent(true);
@@ -25,7 +25,7 @@ public class InputSourceFileTest {
   @Test
   public void uri() throws Exception {
     String pathString = "my/path/file";
-    InputSourceFile inputSourceFile = new InputSourceFile(new TestFile(path(pathString)));
+    InputSourceFile inputSourceFile = new InputSourceFile(new FakeFile(path(pathString)));
     assertThat(inputSourceFile.getName()).isEqualTo("/" + pathString);
   }
 }

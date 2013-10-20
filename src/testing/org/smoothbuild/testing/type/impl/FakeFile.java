@@ -7,12 +7,12 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.impl.MutableStoredFile;
 
-public class TestFile extends MutableStoredFile {
-  public TestFile(Path path) {
+public class FakeFile extends MutableStoredFile {
+  public FakeFile(Path path) {
     this(new TestFileSystem(), path);
   }
 
-  public TestFile(FileSystem fileSystem, Path path) {
+  public FakeFile(FileSystem fileSystem, Path path) {
     super(fileSystem, path);
   }
 

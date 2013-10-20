@@ -11,7 +11,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class TestFileSystem extends SubFileSystem {
 
@@ -23,18 +23,18 @@ public class TestFileSystem extends SubFileSystem {
     super(fileSystem, root);
   }
 
-  public TestFile createFileContainingItsPath(Path path) throws IOException {
+  public FakeFile createFileContainingItsPath(Path path) throws IOException {
     return createFileWithContent(path, path.value());
   }
 
-  public TestFile createEmptyFile(Path path) throws IOException {
+  public FakeFile createEmptyFile(Path path) throws IOException {
     return createFileWithContent(path, "");
   }
 
-  public TestFile createFileWithContent(Path path, String content) throws IOException {
+  public FakeFile createFileWithContent(Path path, String content) throws IOException {
     OutputStream outputStream = openOutputStream(path);
     StreamTester.writeAndClose(outputStream, content);
-    return new TestFile(this, path);
+    return new FakeFile(this, path);
   }
 
   public void assertFileContainsItsPath(Path path) throws IOException {

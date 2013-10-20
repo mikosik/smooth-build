@@ -7,17 +7,17 @@ import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 
 public class ZipTester {
-  public static TestFile zippedFiles(String... fileNames) throws IOException {
-    TestFile zipFile = new TestFileSet().createFile(path("file.zip"));
+  public static FakeFile zippedFiles(String... fileNames) throws IOException {
+    FakeFile zipFile = new TestFileSet().createFile(path("file.zip"));
     zipFiles(zipFile, fileNames);
     return zipFile;
   }
 
-  public static void zipFiles(TestFile zipFile, String... fileNames) throws IOException {
+  public static void zipFiles(FakeFile zipFile, String... fileNames) throws IOException {
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(zipFile.openOutputStream());) {
       for (String fileName : fileNames) {
         addEntry(zipOutputStream, fileName);

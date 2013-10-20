@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 
 public class FileSetMatchersTest {
-  TestFile file;
+  FakeFile file;
   TestFileSet fileSet = new TestFileSet();
   Path path = Path.path("my/path1");
   Path path2 = Path.path("my/path2");
@@ -25,7 +25,7 @@ public class FileSetMatchersTest {
 
   @Test
   public void asserting_file_path_content_succeeds_when_content_and_path_match() throws IOException {
-    given(file = new TestFile(path));
+    given(file = new FakeFile(path));
     given(file).createContentWithFilePath();
     when(fileSet).add(file);
     then(fileSet, containsFileContainingItsPath(path));
@@ -34,7 +34,7 @@ public class FileSetMatchersTest {
   @Test
   public void asserting_file_path_content_fails_when_file_matches_but_content_does_not_match()
       throws IOException {
-    given(file = new TestFile(path));
+    given(file = new FakeFile(path));
     given(file).createContent(content);
     when(fileSet).add(file);
     then(fileSet, not(containsFileContainingItsPath(path)));
@@ -50,7 +50,7 @@ public class FileSetMatchersTest {
 
   @Test
   public void asserting_content_succeeds_when_content_and_path_match() throws IOException {
-    given(file = new TestFile(path));
+    given(file = new FakeFile(path));
     given(file).createContent(content);
     when(fileSet).add(file);
     then(fileSet, containsFileContaining(path, content));
@@ -59,7 +59,7 @@ public class FileSetMatchersTest {
   @Test
   public void asserting_content_fails_when_file_matches_but_content_does_not_match()
       throws IOException {
-    given(file = new TestFile(path));
+    given(file = new FakeFile(path));
     given(file).createContent(content);
     when(fileSet).add(file);
     then(fileSet, not(containsFileContaining(path, content + "something")));
@@ -68,7 +68,7 @@ public class FileSetMatchersTest {
   @Test
   public void asserting_content_fails_when_content_matches_but_file_path_does_not_match()
       throws IOException {
-    given(file = new TestFile(path));
+    given(file = new FakeFile(path));
     given(file).createContent(content);
     when(fileSet).add(file);
     then(fileSet, not(containsFileContaining(path2, content)));
@@ -84,7 +84,7 @@ public class FileSetMatchersTest {
 
   @Test
   public void file_set_contains_added_file() throws IOException {
-    given(file = new TestFile(path));
+    given(file = new FakeFile(path));
     given(file).createContent(content);
     when(fileSet).add(file);
     then(fileSet, containsFile(path));
@@ -92,7 +92,7 @@ public class FileSetMatchersTest {
 
   @Test
   public void file_set_with_one_file_does_not_contain_other_file() throws IOException {
-    given(file = new TestFile(path2));
+    given(file = new FakeFile(path2));
     given(file).createContent(content);
     when(fileSet).add(file);
     then(fileSet, not(containsFile(path)));

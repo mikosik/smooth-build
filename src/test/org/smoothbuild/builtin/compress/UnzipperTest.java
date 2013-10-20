@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.FileSetBuilder;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 import org.smoothbuild.type.api.File;
 
@@ -30,7 +30,7 @@ public class UnzipperTest {
 
   @Test
   public void unzipping() throws Exception {
-    TestFile zipFile = zippedFiles(fileName1, fileName2);
+    FakeFile zipFile = zippedFiles(fileName1, fileName2);
 
     unzipper.unzipFile(zipFile, new FileSetBuilder(resultFileSet));
 
@@ -44,7 +44,7 @@ public class UnzipperTest {
 
   @Test
   public void unzipperIgnoresDirectories() throws Exception {
-    TestFile jarFile = zippedFiles(fileName1, directoryName);
+    FakeFile jarFile = zippedFiles(fileName1, directoryName);
 
     unzipper.unzipFile(jarFile, new FileSetBuilder(resultFileSet));
 
@@ -55,7 +55,7 @@ public class UnzipperTest {
   @Test
   public void entryWithIllegalName() throws Exception {
     String illegalFileName = "/leading/slash/is/forbidden";
-    TestFile zipFile = zippedFiles(illegalFileName);
+    FakeFile zipFile = zippedFiles(illegalFileName);
 
     try {
       unzipper.unzipFile(zipFile, new FileSetBuilder(resultFileSet));
@@ -66,8 +66,8 @@ public class UnzipperTest {
     }
   }
 
-  private static TestFile zippedFiles(String... fileNames) throws IOException {
-    TestFile inputFile = new TestFileSet().createFile(path("input.zip"));
+  private static FakeFile zippedFiles(String... fileNames) throws IOException {
+    FakeFile inputFile = new TestFileSet().createFile(path("input.zip"));
 
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.openOutputStream());) {
       for (String fileName : fileNames) {

@@ -21,7 +21,7 @@ import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.testing.task.base.TestTask;
 import org.smoothbuild.testing.task.exec.TestSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
@@ -33,8 +33,8 @@ public class FileSetTaskTest {
   TestSandbox sandbox = new TestSandbox(fileSystem);
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
-  TestFile file1 = fileSystem.createFileContainingItsPath(path1);
-  TestFile file2 = fileSystem.createFileContainingItsPath(path2);
+  FakeFile file1 = fileSystem.createFileContainingItsPath(path1);
+  FakeFile file2 = fileSystem.createFileContainingItsPath(path2);
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   Task task1 = new TestTask(file1);

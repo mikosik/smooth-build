@@ -8,11 +8,11 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class OutputClassFileTest {
   Path path = path("my/path/file");
-  TestFile file = new TestFile(path);
+  FakeFile file = new FakeFile(path);
 
   OutputClassFile outputClassFile = new OutputClassFile(path, file.openOutputStream());
 
@@ -26,7 +26,7 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     OutputClassFile inputSourceFile = new OutputClassFile(path,
-        new TestFile(path).openOutputStream());
+        new FakeFile(path).openOutputStream());
     assertThat(inputSourceFile.getName()).isEqualTo("/" + path.value());
   }
 }

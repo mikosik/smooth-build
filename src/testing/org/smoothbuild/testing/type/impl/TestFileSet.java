@@ -16,8 +16,8 @@ public class TestFileSet extends MutableStoredFileSet {
     this.fileSystem = fileSystem;
   }
 
-  public TestFile file(Path path) {
-    return new TestFile(fileSystem, path);
+  public FakeFile file(Path path) {
+    return new FakeFile(fileSystem, path);
   }
 
   @Override
@@ -26,7 +26,7 @@ public class TestFileSet extends MutableStoredFileSet {
   }
 
   @Override
-  public TestFile createFile(Path path) {
-    return new TestFile(fileSystem, path);
+  public FakeFile createFile(Path path) {
+    return new FakeFile(fileSystem, path);
   }
 }

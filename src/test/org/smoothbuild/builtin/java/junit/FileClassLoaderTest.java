@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.ImmutableMap;
@@ -24,7 +24,7 @@ public class FileClassLoaderTest {
     String klassBinaryName = FileClassLoaderTest.class.getName() + "$MyClass";
     String filePath = klassBinaryName.replace('.', '/') + ".class";
 
-    TestFile file = new TestFile(Path.path("this/path/is/ignored/anyway"));
+    FakeFile file = new FakeFile(Path.path("this/path/is/ignored/anyway"));
     InputStream classByteCode = this.getClass().getClassLoader().getResourceAsStream(filePath);
 
     OutputStream outputStream = file.openOutputStream();

@@ -8,7 +8,7 @@ import org.smoothbuild.builtin.file.err.DuplicateMergedPathError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class MergeSmoothTest extends IntegrationTestCase {
 
@@ -16,8 +16,8 @@ public class MergeSmoothTest extends IntegrationTestCase {
   public void mergingTwoSets() throws Exception {
     // given
     Path outputPath = path("output");
-    TestFile fileA = file(path("def/fileA.txt"));
-    TestFile fileB = file(path("def/fileB.txt"));
+    FakeFile fileA = file(path("def/fileA.txt"));
+    FakeFile fileB = file(path("def/fileB.txt"));
     fileA.createContentWithFilePath();
     fileB.createContentWithFilePath();
 
@@ -45,8 +45,8 @@ public class MergeSmoothTest extends IntegrationTestCase {
     Path dirBPath = path("dirB");
     Path filePath = path("def/fileA.txt");
 
-    TestFile fileA = fileSet(dirAPath).file(filePath);
-    TestFile fileB = fileSet(dirBPath).file(filePath);
+    FakeFile fileA = fileSet(dirAPath).file(filePath);
+    FakeFile fileB = fileSet(dirBPath).file(filePath);
     fileA.createContentWithFilePath();
     fileB.createContentWithFilePath();
 

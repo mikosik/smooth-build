@@ -6,13 +6,13 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class NewFileSmoothTest extends IntegrationTestCase {
 
   @Test
   public void saveFile_pipe() throws IOException {
-    TestFile file = file(path("file/path/file.txt"));
+    FakeFile file = file(path("file/path/file.txt"));
     String content = "file content";
 
     script("run : newFile(path=" + file.path() + ", content='" + content + "') | save(dir='.');");
