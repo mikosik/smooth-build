@@ -9,7 +9,7 @@ import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
+import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import java.lang.reflect.InvocationTargetException;

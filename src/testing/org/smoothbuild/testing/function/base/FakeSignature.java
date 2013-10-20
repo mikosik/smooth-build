@@ -9,7 +9,7 @@ import org.smoothbuild.function.base.Type;
 
 import com.google.common.collect.ImmutableList;
 
-public class TestSignature {
+public class FakeSignature {
   public static Signature testSignature() {
     return testSignature("name");
   }

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.function.base.TestSignature.testSignature;
+import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
