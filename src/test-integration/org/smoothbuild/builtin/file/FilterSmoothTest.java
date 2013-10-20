@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 import com.google.common.collect.ImmutableList;
 
@@ -113,7 +113,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
       ImmutableList<String> excluded) throws IOException {
     // given
     Path outputPath = path("output");
-    TestFileSet files = fileSet(path("setA"));
+    FakeFileSet files = fileSet(path("setA"));
     for (String path : included) {
       createFileInFiles(files, path);
     }
@@ -133,7 +133,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
     }
   }
 
-  private void createFileInFiles(TestFileSet files, String path) throws IOException {
+  private void createFileInFiles(FakeFileSet files, String path) throws IOException {
     files.file(path(path)).createContentWithFilePath();
   }
 }

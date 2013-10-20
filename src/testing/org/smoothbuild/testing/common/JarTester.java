@@ -8,11 +8,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class JarTester {
   public static FakeFile jaredFiles(String... fileNames) throws IOException {
-    FakeFile jarFile = new TestFileSet().createFile(path("input.jar"));
+    FakeFile jarFile = new FakeFileSet().createFile(path("input.jar"));
     jarFiles(jarFile, fileNames);
     return jarFile;
   }

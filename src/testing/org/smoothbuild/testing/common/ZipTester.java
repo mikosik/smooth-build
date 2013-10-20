@@ -8,11 +8,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class ZipTester {
   public static FakeFile zippedFiles(String... fileNames) throws IOException {
-    FakeFile zipFile = new TestFileSet().createFile(path("file.zip"));
+    FakeFile zipFile = new FakeFileSet().createFile(path("file.zip"));
     zipFiles(zipFile, fileNames);
     return zipFile;
   }

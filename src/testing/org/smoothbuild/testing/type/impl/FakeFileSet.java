@@ -4,14 +4,14 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
 import org.smoothbuild.type.impl.MutableStoredFileSet;
 
-public class TestFileSet extends MutableStoredFileSet {
+public class FakeFileSet extends MutableStoredFileSet {
   private final TestFileSystem fileSystem;
 
-  public TestFileSet() {
+  public FakeFileSet() {
     this(new TestFileSystem());
   }
 
-  public TestFileSet(TestFileSystem fileSystem) {
+  public FakeFileSet(TestFileSystem fileSystem) {
     super(fileSystem);
     this.fileSystem = fileSystem;
   }

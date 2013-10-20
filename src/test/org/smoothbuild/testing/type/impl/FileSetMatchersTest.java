@@ -16,7 +16,7 @@ import org.smoothbuild.fs.base.Path;
 
 public class FileSetMatchersTest {
   FakeFile file;
-  TestFileSet fileSet = new TestFileSet();
+  FakeFileSet fileSet = new FakeFileSet();
   Path path = Path.path("my/path1");
   Path path2 = Path.path("my/path2");
   String content = "content";

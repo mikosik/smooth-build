@@ -15,7 +15,7 @@ import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.Iterables;
@@ -25,7 +25,7 @@ public class UnzipperTest {
   String fileName2 = "file/path/file2.txt";
   String directoryName = "my/directory/";
 
-  TestFileSet resultFileSet = new TestFileSet();
+  FakeFileSet resultFileSet = new FakeFileSet();
   Unzipper unzipper = new Unzipper();
 
   @Test
@@ -67,7 +67,7 @@ public class UnzipperTest {
   }
 
   private static FakeFile zippedFiles(String... fileNames) throws IOException {
-    FakeFile inputFile = new TestFileSet().createFile(path("input.zip"));
+    FakeFile inputFile = new FakeFileSet().createFile(path("input.zip"));
 
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.openOutputStream());) {
       for (String fileName : fileNames) {

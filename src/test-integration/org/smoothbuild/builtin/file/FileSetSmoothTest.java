@@ -11,7 +11,7 @@ import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.object.err.DuplicatePathError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.TestFileSet;
+import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 import com.google.common.collect.Iterables;
 
@@ -35,7 +35,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    TestFileSet resultFiles = fileSet(dir);
+    FakeFileSet resultFiles = fileSet(dir);
     assertThat(Iterables.size(resultFiles)).isEqualTo(2);
   }
 
@@ -70,7 +70,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    TestFileSet resultFiles = fileSet(dir);
+    FakeFileSet resultFiles = fileSet(dir);
     resultFiles.file(file1.path()).assertContentContainsFilePath();
     resultFiles.file(file2.path()).assertContentContainsFilePath();
     assertThat(Iterables.size(resultFiles)).isEqualTo(2);
@@ -93,7 +93,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    TestFileSet resultFiles = fileSet(dir);
+    FakeFileSet resultFiles = fileSet(dir);
     resultFiles.file(file1.path()).assertContentContainsFilePath();
     assertThat(Iterables.size(resultFiles)).isEqualTo(1);
   }
@@ -113,7 +113,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    TestFileSet resultFiles = fileSet(dir);
+    FakeFileSet resultFiles = fileSet(dir);
     assertThat(Iterables.size(resultFiles)).isEqualTo(0);
   }
 
