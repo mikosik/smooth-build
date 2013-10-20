@@ -6,13 +6,13 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.testing.fs.base.TestPath;
+import org.smoothbuild.testing.fs.base.PathTesting;
 
 public class PathArgValidatorTest {
   @Test
   public void illegalPathsAreReported() {
     String name = "name";
-    for (String path : TestPath.listOfInvalidPaths()) {
+    for (String path : PathTesting.listOfInvalidPaths()) {
       try {
         PathArgValidator.validatedPath(name, path);
         fail("exception should be thrown");
@@ -25,7 +25,7 @@ public class PathArgValidatorTest {
 
   @Test
   public void validPathsAreAccepted() {
-    for (String path : TestPath.listOfCorrectPaths()) {
+    for (String path : PathTesting.listOfCorrectPaths()) {
       PathArgValidator.validatedPath("name", path);
     }
   }
