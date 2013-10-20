@@ -14,12 +14,12 @@ import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.fs.base.TestPath;
-import org.smoothbuild.testing.task.exec.TestSandbox;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.File;
 
 public class FileFunctionTest {
-  TestSandbox sandbox = new TestSandbox();
+  FakeSandbox sandbox = new FakeSandbox();
 
   @Test
   public void accessToSmoothDirIsReported() throws Exception {
@@ -46,7 +46,7 @@ public class FileFunctionTest {
   @Test
   public void illegalPathIsReported() {
     for (String path : TestPath.listOfInvalidPaths()) {
-      sandbox = new TestSandbox();
+      sandbox = new FakeSandbox();
       try {
         runExecute(params(path));
         fail("exception should be thrown");

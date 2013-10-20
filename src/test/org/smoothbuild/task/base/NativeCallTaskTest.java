@@ -30,7 +30,7 @@ import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.task.base.TestTask;
-import org.smoothbuild.testing.task.exec.TestSandbox;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
@@ -39,7 +39,7 @@ import com.google.common.hash.HashCode;
 
 public class NativeCallTaskTest {
   Invoker invoker = mock(Invoker.class);
-  TestSandbox sandbox = new TestSandbox();
+  FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = codeLocation(1, 2, 4);
   HashCode hash = HashCode.fromInt(33);
   NativeFunction function1 = new NativeFunction(testSignature(), invoker);

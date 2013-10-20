@@ -18,13 +18,13 @@ import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompi
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.task.exec.TestSandbox;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManagerTest {
   StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  TestSandbox sandbox = new TestSandbox();
+  FakeSandbox sandbox = new FakeSandbox();
   @SuppressWarnings("unchecked")
   Multimap<String, JavaFileObject> packagedJavaFileObjects = mock(Multimap.class);
 

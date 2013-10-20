@@ -16,11 +16,11 @@ import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.fs.base.TestPath;
-import org.smoothbuild.testing.task.exec.TestSandbox;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.type.api.FileSet;
 
 public class FilesFunctionTest {
-  TestSandbox sandbox = new TestSandbox();
+  FakeSandbox sandbox = new FakeSandbox();
 
   @Test
   public void listingFilesFromRootDirIsForbidden() throws Exception {
@@ -58,7 +58,7 @@ public class FilesFunctionTest {
   @Test
   public void illegalPathsAreReported() {
     for (String path : TestPath.listOfInvalidPaths()) {
-      sandbox = new TestSandbox();
+      sandbox = new FakeSandbox();
       try {
         runExecute(params(path));
         fail("exception should be thrown");

@@ -17,7 +17,7 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.TestTask;
-import org.smoothbuild.testing.task.exec.TestSandbox;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
@@ -26,7 +26,7 @@ import org.smoothbuild.type.api.FileSet;
 import com.google.common.collect.ImmutableList;
 
 public class FileSetNodeTest {
-  TestSandbox sandbox = new TestSandbox();
+  FakeSandbox sandbox = new FakeSandbox();
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
 
