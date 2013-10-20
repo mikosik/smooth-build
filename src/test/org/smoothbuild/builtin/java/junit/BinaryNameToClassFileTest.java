@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.ImmutableList;
@@ -20,7 +20,7 @@ public class BinaryNameToClassFileTest {
   public void binaryNamesAreMappedToProperClassFiles() throws IOException {
     String file1 = "a/Klass.class";
     String file2 = "b/Klass.class";
-    TestFile jarFile = jaredFiles(file1, file2);
+    FakeFile jarFile = jaredFiles(file1, file2);
     Map<String, File> x = binaryNameToClassFile(ImmutableList.<File> of(jarFile));
 
     FileTester.assertContentContains(x.get("a.Klass"), file1);
@@ -32,7 +32,7 @@ public class BinaryNameToClassFileTest {
   public void nonClassFilesAreNotMapped() throws IOException {
     String file1 = "a/Klass.txt";
     String file2 = "b/Klass.java";
-    TestFile jarFile = jaredFiles(file1, file2);
+    FakeFile jarFile = jaredFiles(file1, file2);
     Map<String, File> x = binaryNameToClassFile(ImmutableList.<File> of(jarFile));
 
     assertThat(x.size()).isEqualTo(0);

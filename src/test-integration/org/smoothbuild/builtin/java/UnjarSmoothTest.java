@@ -7,7 +7,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 
 public class UnjarSmoothTest extends IntegrationTestCase {
@@ -17,7 +17,7 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     // given
     Path fileA = path("a/fileA.txt");
     Path fileB = path("b/fileB.txt");
-    TestFile jarFile = file(path("input.jar"));
+    FakeFile jarFile = file(path("input.jar"));
     JarTester.jarFiles(jarFile, fileA.value(), fileB.value());
 
     script("run : file(" + jarFile.path() + ") | unjar | save('out');");

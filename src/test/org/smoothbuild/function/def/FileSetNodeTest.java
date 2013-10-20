@@ -19,7 +19,7 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.TestTask;
 import org.smoothbuild.testing.task.exec.TestSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
@@ -44,8 +44,8 @@ public class FileSetNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    TestFile file1 = sandbox.sandboxFileSystem().createFileContainingItsPath(path1);
-    TestFile file2 = sandbox.sandboxFileSystem().createFileContainingItsPath(path2);
+    FakeFile file1 = sandbox.sandboxFileSystem().createFileContainingItsPath(path1);
+    FakeFile file2 = sandbox.sandboxFileSystem().createFileContainingItsPath(path2);
     TestTask task1 = new TestTask(file1);
     TestTask task2 = new TestTask(file2);
 

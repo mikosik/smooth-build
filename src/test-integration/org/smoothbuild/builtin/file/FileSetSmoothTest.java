@@ -10,7 +10,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.object.err.DuplicatePathError;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 
 import com.google.common.collect.Iterables;
@@ -20,8 +20,8 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   @Test
   public void setWithTrailingCommaIsAllowed() throws Exception {
     Path dir = path("destination/dir");
-    TestFile file1 = file(path("file/path/file1.txt"));
-    TestFile file2 = file(path("file/path/file2.txt"));
+    FakeFile file1 = file(path("file/path/file1.txt"));
+    FakeFile file2 = file(path("file/path/file2.txt"));
     file1.createContentWithFilePath();
     file2.createContentWithFilePath();
 
@@ -55,8 +55,8 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   public void saveFileSetWithTwoFiles() throws IOException {
     // given
     Path dir = path("destination/dir");
-    TestFile file1 = file(path("file/path/file1.txt"));
-    TestFile file2 = file(path("file/path/file2.txt"));
+    FakeFile file1 = file(path("file/path/file1.txt"));
+    FakeFile file2 = file(path("file/path/file2.txt"));
     file1.createContentWithFilePath();
     file2.createContentWithFilePath();
 
@@ -80,7 +80,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   public void saveFileSetWithOneFile() throws IOException {
     // given
     Path dir = path("destination/dir");
-    TestFile file1 = file(path("file/path/file1.txt"));
+    FakeFile file1 = file(path("file/path/file1.txt"));
     file1.createContentWithFilePath();
 
     StringBuilder builder = new StringBuilder();
@@ -120,7 +120,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   @Test
   public void fileSetWithDuplicatedFiles() throws Exception {
     // given
-    TestFile file1 = file(path("file/path/file1.txt"));
+    FakeFile file1 = file(path("file/path/file1.txt"));
     file1.createContentWithFilePath();
 
     script("run : [ file(" + file1.path() + "), file(" + file1.path() + ") ];\n");

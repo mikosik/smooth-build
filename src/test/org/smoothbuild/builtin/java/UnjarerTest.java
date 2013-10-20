@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.FileSetBuilder;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 import org.smoothbuild.type.api.File;
 
@@ -29,7 +29,7 @@ public class UnjarerTest {
 
   @Test
   public void unjaringTwoFiles() throws Exception {
-    TestFile jarFile = jaredFiles(fileName1, fileName2);
+    FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
     unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));
 
@@ -43,7 +43,7 @@ public class UnjarerTest {
 
   @Test
   public void unjaringIgnoresDirectories() throws Exception {
-    TestFile jarFile = jaredFiles(fileName1, directoryName);
+    FakeFile jarFile = jaredFiles(fileName1, directoryName);
 
     unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));
 
@@ -53,7 +53,7 @@ public class UnjarerTest {
 
   @Test
   public void unjaringWithFilter() throws Exception {
-    TestFile jarFile = jaredFiles(fileName1, fileName2);
+    FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
     unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2), resultFileSet);
 
@@ -66,7 +66,7 @@ public class UnjarerTest {
   @Test
   public void entryWithIllegalName() throws Exception {
     String illegalFileName = "/leading/slash/is/forbidden";
-    TestFile jarFile = jaredFiles(illegalFileName);
+    FakeFile jarFile = jaredFiles(illegalFileName);
 
     try {
       unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));

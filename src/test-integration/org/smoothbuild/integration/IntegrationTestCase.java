@@ -13,7 +13,7 @@ import org.smoothbuild.testing.fs.base.TestFileSystemModule;
 import org.smoothbuild.testing.message.TestUserConsole;
 import org.smoothbuild.testing.message.TestUserConsoleModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.TestFileSet;
 
 import com.google.inject.Injector;
@@ -43,7 +43,7 @@ public class IntegrationTestCase {
     return new TestFileSet(fileSystem.subFileSystem(path));
   }
 
-  protected TestFile file(Path path) {
-    return new TestFile(fileSystem, path);
+  protected FakeFile file(Path path) {
+    return new FakeFile(fileSystem, path);
   }
 }

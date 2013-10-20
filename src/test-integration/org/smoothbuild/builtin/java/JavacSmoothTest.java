@@ -15,14 +15,14 @@ import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class JavacSmoothTest extends IntegrationTestCase {
   MyClassLoader classLoader = new MyClassLoader();
 
   @Test
   public void errorIsReportedForCompilationErrors() throws Exception {
-    TestFile file = file(path("MyClass.java"));
+    FakeFile file = file(path("MyClass.java"));
     file.createContent("public private class MyClass {}");
 
     script("run : [ file(path=" + file.path() + ") ] | javac ;");
@@ -42,7 +42,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     builder.append("  }");
     builder.append("}");
 
-    TestFile file = file(path("MyClass.java"));
+    FakeFile file = file(path("MyClass.java"));
     file.createContent(builder.toString());
 
     script("run : [ file(path=" + file.path() + ") ] | javac | save(dir='.');");
@@ -108,7 +108,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
 
   @Test
   public void illegalSourceParamCausesError() throws Exception {
-    TestFile file = file(path("MyClass.java"));
+    FakeFile file = file(path("MyClass.java"));
     file.createContent("public class MyClass {}");
 
     script("run : [ file(path=" + file.path() + ") ] | javac(source='0.9') ;");
@@ -119,7 +119,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
 
   @Test
   public void illegalTargetParamCausesError() throws Exception {
-    TestFile file = file(path("MyClass.java"));
+    FakeFile file = file(path("MyClass.java"));
     file.createContent("public class MyClass {}");
 
     script("run : [ file(path=" + file.path() + ") ] | javac(target='0.9') ;");
@@ -130,7 +130,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
 
   @Test
   public void compilingEnumWithSourceParamSetToTooOldJavaVersionCausesError() throws Exception {
-    TestFile file = file(path("MyClass.java"));
+    FakeFile file = file(path("MyClass.java"));
     file.createContent("public enum MyClass { VALUE }");
 
     script("run : [ file(path=" + file.path() + ") ] | javac(source='1.4', target='1.4') ;");

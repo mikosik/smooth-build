@@ -9,17 +9,17 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
-public class TestFileTest {
+public class FakeFileTest {
   Path path = path("my/file");
   TestFileSystem fileSystem = new TestFileSystem();
 
-  TestFile testFile = new TestFile(fileSystem, path);
+  FakeFile fakeFile = new FakeFile(fileSystem, path);
 
   @Test
   public void createContentWithFilePath() throws IOException {
-    testFile.createContentWithFilePath();
+    fakeFile.createContentWithFilePath();
 
     StreamTester.assertContent(fileSystem.openInputStream(path), path.value());
   }
@@ -27,7 +27,7 @@ public class TestFileTest {
   @Test
   public void createContent() throws IOException {
     String content = "some content";
-    testFile.createContent(content);
+    fakeFile.createContent(content);
 
     StreamTester.assertContent(fileSystem.openInputStream(path), content);
   }
@@ -35,14 +35,14 @@ public class TestFileTest {
   @Test
   public void assertContentContainsFilePathSucceeds() throws Exception {
     StreamTester.writeAndClose(fileSystem.openOutputStream(path), path.value());
-    testFile.assertContentContainsFilePath();
+    fakeFile.assertContentContainsFilePath();
   }
 
   @Test
   public void assertContentContainsFilePathFails() throws Exception {
     StreamTester.writeAndClose(fileSystem.openOutputStream(path), "other content");
     try {
-      testFile.assertContentContainsFilePath();
+      fakeFile.assertContentContainsFilePath();
     } catch (AssertionError e) {
       // expected
       return;
@@ -54,7 +54,7 @@ public class TestFileTest {
   public void assertContentContainsSucceeds() throws Exception {
     String content = "content";
     StreamTester.writeAndClose(fileSystem.openOutputStream(path), content);
-    testFile.assertContentContains(content);
+    fakeFile.assertContentContains(content);
   }
 
   @Test
@@ -62,7 +62,7 @@ public class TestFileTest {
     String content = "content";
     StreamTester.writeAndClose(fileSystem.openOutputStream(path), content);
     try {
-      testFile.assertContentContains(content + "suffix");
+      fakeFile.assertContentContains(content + "suffix");
     } catch (AssertionError e) {
       // expected
       return;

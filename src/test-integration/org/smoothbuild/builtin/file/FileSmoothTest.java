@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class FileSmoothTest extends IntegrationTestCase {
 
@@ -15,7 +15,7 @@ public class FileSmoothTest extends IntegrationTestCase {
   public void saveFile() throws IOException {
     // given
     Path dir = path("destination/dir");
-    TestFile file = file(path("file/path/file.txt"));
+    FakeFile file = file(path("file/path/file.txt"));
     file.createContentWithFilePath();
     script("run : file(" + file.path() + ") | save(" + dir + ");");
 

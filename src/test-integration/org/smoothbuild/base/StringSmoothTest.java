@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class StringSmoothTest extends IntegrationTestCase {
   @Test
@@ -23,7 +23,7 @@ public class StringSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    TestFile file = fileSet(outDir).file(path);
+    FakeFile file = fileSet(outDir).file(path);
     file.assertContentContains("\"");
   }
 
@@ -40,7 +40,7 @@ public class StringSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    TestFile file = fileSet(outDir).file(path);
+    FakeFile file = fileSet(outDir).file(path);
     file.assertContentContains("\\");
   }
 }

@@ -10,7 +10,7 @@ import org.smoothbuild.builtin.java.junit.JunitTestFailedError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.type.impl.TestFile;
+import org.smoothbuild.testing.type.impl.FakeFile;
 
 // TODO
 @Ignore("For strange reasons this test fails when run by ant")
@@ -74,7 +74,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
 
     String sourceCode = builder.build();
 
-    TestFile classFile = file(fakeJunitPath.append(path("org/junit/Test.java")));
+    FakeFile classFile = file(fakeJunitPath.append(path("org/junit/Test.java")));
     classFile.createContent(sourceCode);
   }
 
@@ -87,7 +87,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     builder.addLine("}");
     String sourceCode = builder.build();
 
-    TestFile classFile = file(srcPath.append(path("MyClassTest.java")));
+    FakeFile classFile = file(srcPath.append(path("MyClassTest.java")));
     classFile.createContent(sourceCode);
   }
 
@@ -101,7 +101,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     builder.addLine("}");
     String sourceCode = builder.build();
 
-    TestFile classFile = file(srcPath.append(path("MyClassFailingTest.java")));
+    FakeFile classFile = file(srcPath.append(path("MyClassFailingTest.java")));
     classFile.createContent(sourceCode);
   }
 }
