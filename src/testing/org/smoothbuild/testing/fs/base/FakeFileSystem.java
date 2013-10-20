@@ -13,13 +13,13 @@ import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.type.impl.FakeFile;
 
-public class TestFileSystem extends SubFileSystem {
+public class FakeFileSystem extends SubFileSystem {
 
-  public TestFileSystem() {
+  public FakeFileSystem() {
     this(new MemoryFileSystem(), Path.rootPath());
   }
 
-  public TestFileSystem(FileSystem fileSystem, Path root) {
+  public FakeFileSystem(FileSystem fileSystem, Path root) {
     super(fileSystem, root);
   }
 
@@ -46,7 +46,7 @@ public class TestFileSystem extends SubFileSystem {
     assertContent(inputStream, content);
   }
 
-  public TestFileSystem subFileSystem(Path root) {
-    return new TestFileSystem(this, root);
+  public FakeFileSystem subFileSystem(Path root) {
+    return new FakeFileSystem(this, root);
   }
 }

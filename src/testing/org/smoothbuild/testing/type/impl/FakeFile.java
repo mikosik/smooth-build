@@ -4,12 +4,12 @@ import java.io.IOException;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.type.impl.MutableStoredFile;
 
 public class FakeFile extends MutableStoredFile {
   public FakeFile(Path path) {
-    this(new TestFileSystem(), path);
+    this(new FakeFileSystem(), path);
   }
 
   public FakeFile(FileSystem fileSystem, Path path) {

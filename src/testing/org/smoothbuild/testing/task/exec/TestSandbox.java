@@ -9,7 +9,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.HashedDb;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.task.exec.SandboxImpl;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.TestMessageGroup;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -18,19 +18,19 @@ public class TestSandbox extends SandboxImpl {
   @VisibleForTesting
   static final Path SANDBOX_ROOT = path("sandbox");
 
-  private final TestFileSystem fileSystem;
-  private final TestFileSystem sandboxFileSystem;
+  private final FakeFileSystem fileSystem;
+  private final FakeFileSystem sandboxFileSystem;
   private final TestMessageGroup messageGroup;
 
   public TestSandbox() {
-    this(new TestFileSystem());
+    this(new FakeFileSystem());
   }
 
-  public TestSandbox(TestFileSystem fileSystem) {
-    this(fileSystem, new TestFileSystem(fileSystem, SANDBOX_ROOT), new TestMessageGroup());
+  public TestSandbox(FakeFileSystem fileSystem) {
+    this(fileSystem, new FakeFileSystem(fileSystem, SANDBOX_ROOT), new TestMessageGroup());
   }
 
-  public TestSandbox(TestFileSystem fileSystem, TestFileSystem sandboxFileSystem,
+  public TestSandbox(FakeFileSystem fileSystem, FakeFileSystem sandboxFileSystem,
       TestMessageGroup messageGroup) {
     super(fileSystem, sandboxFileSystem, new ObjectsDb(new HashedDb(fileSystem)), callLocation(
         simpleName("name"), codeLocation(1, 2, 4)), messageGroup);
@@ -40,11 +40,11 @@ public class TestSandbox extends SandboxImpl {
   }
 
   @Override
-  public TestFileSystem projectFileSystem() {
+  public FakeFileSystem projectFileSystem() {
     return fileSystem;
   }
 
-  public TestFileSystem sandboxFileSystem() {
+  public FakeFileSystem sandboxFileSystem() {
     return sandboxFileSystem;
   }
 

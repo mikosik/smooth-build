@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 
 import com.google.common.hash.HashCode;
 
@@ -21,7 +21,7 @@ public class HashedDbTest {
   byte[] bytes2 = new byte[] { 1, 2 };
   HashCode hash;
 
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   HashedDb hashedDb = new HashedDb(fileSystem);
 
   @Test

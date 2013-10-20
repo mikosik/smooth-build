@@ -17,7 +17,7 @@ import org.smoothbuild.object.err.DuplicatePathError;
 import org.smoothbuild.task.base.FileSetTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.HashedTasks;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.task.base.TestTask;
 import org.smoothbuild.testing.task.exec.TestSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class FileSetTaskTest {
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   TestSandbox sandbox = new TestSandbox(fileSystem);
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");

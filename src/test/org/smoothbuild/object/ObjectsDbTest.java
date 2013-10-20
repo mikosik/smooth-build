@@ -15,12 +15,12 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 
 import com.google.common.hash.HashCode;
 
 public class ObjectsDbTest {
-  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(new TestFileSystem()));
+  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(new FakeFileSystem()));
 
   byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };

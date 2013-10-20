@@ -8,8 +8,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.smoothbuild.app.SmoothApp;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
-import org.smoothbuild.testing.fs.base.TestFileSystemModule;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystemModule;
 import org.smoothbuild.testing.message.TestUserConsole;
 import org.smoothbuild.testing.message.TestUserConsoleModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
@@ -19,7 +19,7 @@ import org.smoothbuild.testing.type.impl.FakeFileSet;
 import com.google.inject.Injector;
 
 public class IntegrationTestCase {
-  protected TestFileSystem fileSystem;
+  protected FakeFileSystem fileSystem;
   protected SmoothApp smoothApp;
   protected TestUserConsole messages;
 
@@ -29,8 +29,8 @@ public class IntegrationTestCase {
   }
 
   protected void reset() {
-    Injector injector = createInjector(new TestFileSystemModule(), new TestUserConsoleModule());
-    fileSystem = injector.getInstance(TestFileSystem.class);
+    Injector injector = createInjector(new FakeFileSystemModule(), new TestUserConsoleModule());
+    fileSystem = injector.getInstance(FakeFileSystem.class);
     messages = injector.getInstance(TestUserConsole.class);
     smoothApp = injector.getInstance(SmoothApp.class);
   }

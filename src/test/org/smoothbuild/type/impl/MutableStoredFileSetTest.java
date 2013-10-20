@@ -11,13 +11,13 @@ import java.io.OutputStream;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 
 public class MutableStoredFileSetTest {
   Path path = path("my/file");
   String content = "content";
 
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   MutableStoredFileSet fileSet = new MutableStoredFileSet(fileSystem);
 
   @Test

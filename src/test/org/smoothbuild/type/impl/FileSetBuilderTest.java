@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.FileSetBuilder;
-import org.smoothbuild.testing.fs.base.TestFileSystem;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.type.api.FileSet;
 
 public class FileSetBuilderTest {
@@ -21,7 +21,7 @@ public class FileSetBuilderTest {
   Path path = Path.path("my/file.txt");
   FileSet fileSet;
   OutputStream outputStream;
-  TestFileSystem fileSystem = new TestFileSystem();
+  FakeFileSystem fileSystem = new FakeFileSystem();
   FileSetBuilder fileSetBuilder = new FileSetBuilder(fileSystem);
 
   @Test
