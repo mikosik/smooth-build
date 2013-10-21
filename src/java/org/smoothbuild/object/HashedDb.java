@@ -44,7 +44,10 @@ public class HashedDb {
   }
 
   public HashCode store(byte[] bytes) {
-    HashCode hash = Hash.bytes(bytes);
+    return store(Hash.bytes(bytes), bytes);
+  }
+
+  public HashCode store(HashCode hash, byte[] bytes) {
     Path path = toPath(hash);
     if (objectsFileSystem.pathState(path) != PathState.FILE) {
       store(path, bytes);
