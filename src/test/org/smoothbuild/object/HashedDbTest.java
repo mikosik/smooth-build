@@ -11,6 +11,7 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.hash.Hash;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 
@@ -25,8 +26,16 @@ public class HashedDbTest {
   HashedDb hashedDb = new HashedDb(fileSystem);
 
   @Test
-  public void stored_bytes_can_be_read_back() throws IOException {
+  public void bytes_stored_can_be_read_back() throws IOException {
     given(hash = hashedDb.store(bytes1));
+    when(inputStreamToBytes(hashedDb.openInputStream(hash)));
+    thenReturned(bytes1);
+  }
+
+  @Test
+  public void bytes_stored_at_given_hash_can_be_read_back() throws IOException {
+    given(hash = Hash.function().hashInt(33));
+    given(hashedDb.store(hash, bytes1));
     when(inputStreamToBytes(hashedDb.openInputStream(hash)));
     thenReturned(bytes1);
   }
@@ -35,6 +44,14 @@ public class HashedDbTest {
   public void bytes_stored_twice_can_be_read_back() throws IOException {
     given(hash = hashedDb.store(bytes1));
     given(hash = hashedDb.store(bytes1));
+    when(inputStreamToBytes(hashedDb.openInputStream(hash)));
+    thenReturned(bytes1);
+  }
+
+  @Test
+  public void storing_bytes_at_already_used_hash_is_ignored() throws IOException {
+    given(hash = hashedDb.store(bytes1));
+    given(hashedDb.store(Hash.function().hashInt(33), bytes2));
     when(inputStreamToBytes(hashedDb.openInputStream(hash)));
     thenReturned(bytes1);
   }
