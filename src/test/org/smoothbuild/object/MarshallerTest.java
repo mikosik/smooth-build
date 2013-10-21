@@ -49,6 +49,18 @@ public class MarshallerTest {
     verify(hashedDb).store(bytes);
   }
 
+  @Test
+  public void storing_int_at_given_hash() throws Exception {
+    byte[] bytes = new byte[] { 0x12, 0x34, 0x56, 0x78 };
+    HashCode hash = HashCode.fromInt(33);
+
+    marshaller = new Marshaller(hashedDb);
+    marshaller.addInt(Ints.fromByteArray(bytes));
+    marshaller.store(hash);
+
+    verify(hashedDb).store(hash, bytes);
+  }
+
   private static byte[] pathToBytes(Path path) {
     byte[] sizeBytes = Ints.toByteArray(path.value().length());
     byte[] charBytes = path.value().getBytes(Charsets.UTF_8);
