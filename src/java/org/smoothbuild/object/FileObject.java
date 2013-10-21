@@ -9,7 +9,7 @@ import org.smoothbuild.type.api.File;
 
 import com.google.common.hash.HashCode;
 
-public class FileObject implements File {
+public class FileObject implements File, Hashed {
   private final Path path;
   private final BlobObject content;
   private final HashCode hash;
@@ -25,6 +25,7 @@ public class FileObject implements File {
     return path;
   }
 
+  @Override
   public HashCode hash() {
     return hash;
   }

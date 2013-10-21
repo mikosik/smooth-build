@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 import com.google.common.hash.HashCode;
 
-public class BlobObject {
+public class BlobObject implements Hashed {
   private final HashedDb hashedDb;
   private final HashCode hash;
 
@@ -15,6 +15,7 @@ public class BlobObject {
     this.hash = checkNotNull(hash);
   }
 
+  @Override
   public HashCode hash() {
     return hash;
   }
