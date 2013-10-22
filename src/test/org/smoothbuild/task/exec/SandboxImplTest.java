@@ -13,10 +13,10 @@ import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.object.FileBuilder;
 import org.smoothbuild.object.FileSetBuilder;
-import org.smoothbuild.object.HashedDb;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.object.FakeObjectsDb;
 import org.smoothbuild.type.api.File;
 
 public class SandboxImplTest {
@@ -27,7 +27,7 @@ public class SandboxImplTest {
   CallLocation callLocation = callLocation(simpleName("name"), codeLocation(1, 2, 4));
 
   FakeFileSystem fileSystem = new FakeFileSystem();
-  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(fileSystem));
+  ObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
 
   SandboxImpl sandbox = new SandboxImpl(fileSystem, objectsDb, root, callLocation);
 

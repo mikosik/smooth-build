@@ -16,12 +16,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
-import org.smoothbuild.object.HashedDb;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
+import org.smoothbuild.testing.object.FakeObjectsDb;
 
 import com.google.common.hash.HashCode;
 
@@ -30,7 +30,7 @@ public class TaskExecutorTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
   HashedTasks hashedTasks = hashedTasks(task1);
   FakeUserConsole userConsole = new FakeUserConsole();
-  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(fileSystem));
+  ObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
 
   TaskExecutor taskExecutor = new TaskExecutor(fileSystem, objectsDb, hashedTasks, userConsole);
 

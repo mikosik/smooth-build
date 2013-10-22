@@ -6,11 +6,10 @@ import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.object.HashedDb;
-import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeMessageGroup;
+import org.smoothbuild.testing.object.FakeObjectsDb;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -32,7 +31,7 @@ public class FakeSandbox extends SandboxImpl {
 
   public FakeSandbox(FakeFileSystem fileSystem, FakeFileSystem sandboxFileSystem,
       FakeMessageGroup messageGroup) {
-    super(fileSystem, sandboxFileSystem, new ObjectsDb(new HashedDb(fileSystem)), callLocation(
+    super(fileSystem, sandboxFileSystem, new FakeObjectsDb(fileSystem), callLocation(
         simpleName("name"), codeLocation(1, 2, 4)), messageGroup);
     this.fileSystem = fileSystem;
     this.sandboxFileSystem = sandboxFileSystem;
