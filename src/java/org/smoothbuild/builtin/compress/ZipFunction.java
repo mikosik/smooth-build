@@ -10,12 +10,12 @@ import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.object.FileBuilder;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.MutableFile;
 
 public class ZipFunction {
 
@@ -46,8 +46,10 @@ public class ZipFunction {
     }
 
     public File execute() {
-      MutableFile output = sandbox.createFile(outputPath());
-      try (ZipOutputStream zipOutputStream = new ZipOutputStream(output.openOutputStream());) {
+      FileBuilder fileBuilder = sandbox.fileBuilder();
+      fileBuilder.setPath(outputPath());
+
+      try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileBuilder.openOutputStream());) {
         for (File file : params.files()) {
           addEntry(zipOutputStream, file);
         }
@@ -55,7 +57,7 @@ public class ZipFunction {
         throw new FileSystemException(e);
       }
 
-      return output;
+      return fileBuilder.build();
     }
 
     private Path outputPath() {
