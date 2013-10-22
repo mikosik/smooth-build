@@ -1,5 +1,6 @@
 package org.smoothbuild.object;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
@@ -16,11 +17,15 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.type.api.File;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
 
 public class ObjectsDbTest {
-  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(new FakeFileSystem()));
+  FakeFileSystem fs = new FakeFileSystem();
+  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(fs));
 
   byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
@@ -33,6 +38,9 @@ public class ObjectsDbTest {
   Path path1 = path("my/path1");
   Path path2 = path("my/path2");
 
+  FileSetObject fileSet;
+  FileSetObject fileSet2;
+
   // file vs blob
 
   @Test
@@ -41,6 +49,80 @@ public class ObjectsDbTest {
     given(blob = objectsDb.blob(bytes));
     when(file.hash());
     thenReturned(not(blob.hash()));
+  }
+
+  // file set object
+
+  @Test
+  public void created_file_set_with_one_file_added_contains_one_file() throws Exception {
+    given(file = objectsDb.file(path1, bytes));
+    given(fileSet = objectsDb.fileSet(ImmutableList.<File> of(file)));
+    when(Iterables.size(fileSet));
+    thenReturned(1);
+  }
+
+  @Test
+  public void created_file_set_contains_file_with_path_of_file_that_was_added_to_it()
+      throws Exception {
+    given(file = objectsDb.file(path1, bytes));
+    given(fileSet = objectsDb.fileSet(ImmutableList.<File> of(file)));
+    when(fileSet.iterator().next().path());
+    thenReturned(path1);
+  }
+
+  @Test
+  public void created_file_set_contains_file_with_content_of_file_that_was_added_to_it()
+      throws Exception {
+    given(file = objectsDb.file(path1, bytes));
+    given(fileSet = objectsDb.fileSet(ImmutableList.<File> of(file)));
+    when(inputStreamToBytes(fileSet.iterator().next().openInputStream()));
+    thenReturned(bytes);
+  }
+
+  @Test
+  public void created_file_set_with_one_file_added_when_queried_by_hash_contains_one_file()
+      throws Exception {
+    given(file = objectsDb.file(path1, bytes));
+    given(fileSet = objectsDb.fileSet(ImmutableList.<File> of(file)));
+    when(Iterables.size(objectsDb.fileSet(fileSet.hash())));
+    thenReturned(1);
+  }
+
+  @Test
+  public void created_file_set_when_queried_by_hash_contains_file_with_path_of_file_that_was_added_to_it()
+      throws Exception {
+    given(file = objectsDb.file(path1, bytes));
+    given(fileSet = objectsDb.fileSet(ImmutableList.<File> of(file)));
+    when(objectsDb.fileSet(fileSet.hash()).iterator().next().path());
+    thenReturned(path1);
+  }
+
+  @Test
+  public void created_file_set_when_queried_by_hash_contains_file_with_content_of_file_that_was_added_to_it()
+      throws Exception {
+    given(file = objectsDb.file(path1, bytes));
+    given(fileSet = objectsDb.fileSet(ImmutableList.<File> of(file)));
+    when(inputStreamToBytes(objectsDb.fileSet(fileSet.hash()).iterator().next().openInputStream()));
+    thenReturned(bytes);
+  }
+
+  @Test
+  public void file_set_with_one_element_has_different_hash_from_file_set_with_two_elements()
+      throws Exception {
+    given(file = objectsDb.file(path1, bytes));
+    given(file2 = objectsDb.file(path2, bytes2));
+    given(fileSet = objectsDb.fileSet(ImmutableList.<File> of(file)));
+    given(fileSet2 = objectsDb.fileSet(ImmutableList.<File> of(file, file2)));
+
+    when(fileSet.hash());
+    thenReturned(not(equalTo(fileSet2.hash())));
+  }
+
+  @Test
+  public void reading_elements_from_not_stored_file_set_fails() throws Exception {
+    given(fileSet = objectsDb.fileSet(HashCode.fromInt(33)));
+    when(fileSet).iterator();
+    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
   // file object
