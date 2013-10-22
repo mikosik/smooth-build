@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.fs.base.Streams.copy;
 
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
@@ -9,13 +10,13 @@ import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.base.SubFileSystem;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.object.FileBuilder;
+import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.impl.StoredFileSet;
 
 public class FilesFunction {
   public interface Parameters {
@@ -41,24 +42,32 @@ public class FilesFunction {
       return createFiles(validatedPath("dir", params.dir()));
     }
 
-    private FileSet createFiles(Path path) {
+    private FileSet createFiles(Path dirPath) {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
-      if (path.isRoot()) {
+      if (dirPath.isRoot()) {
         throw new ErrorMessageException(new CannotListRootDirError());
       }
 
-      if (path.firstPart().equals(BUILD_DIR)) {
-        throw new ErrorMessageException(new ReadFromSmoothDirError(path));
+      if (dirPath.firstPart().equals(BUILD_DIR)) {
+        throw new ErrorMessageException(new ReadFromSmoothDirError(dirPath));
       }
 
-      switch (fileSystem.pathState(path)) {
+      switch (fileSystem.pathState(dirPath)) {
         case FILE:
-          throw new ErrorMessageException(new DirParamIsAFileError("dir", path));
+          throw new ErrorMessageException(new DirParamIsAFileError("dir", dirPath));
         case DIR:
-          return new StoredFileSet(new SubFileSystem(fileSystem, path));
+          FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
+          for (Path filePath : fileSystem.filesFrom(dirPath)) {
+            FileBuilder fileBuilder = sandbox.fileBuilder();
+            fileBuilder.setPath(filePath);
+            Path fullPath = dirPath.append(filePath);
+            copy(fileSystem.openInputStream(fullPath), fileBuilder.openOutputStream());
+            fileSetBuilder.add(fileBuilder.build());
+          }
+          return fileSetBuilder.build();
         case NOTHING:
-          throw new ErrorMessageException(new NoSuchPathError("dir", path));
+          throw new ErrorMessageException(new NoSuchPathError("dir", dirPath));
         default:
           throw new RuntimeException("unreachable case");
       }
