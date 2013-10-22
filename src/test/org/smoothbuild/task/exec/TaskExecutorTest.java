@@ -4,8 +4,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
@@ -16,7 +14,6 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
 import org.smoothbuild.object.HashedDb;
@@ -25,8 +22,6 @@ import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
-import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.type.api.MutableFile;
 
 import com.google.common.hash.HashCode;
 
@@ -51,27 +46,6 @@ public class TaskExecutorTest {
     when(task1.isResultCalculated()).thenReturn(false);
     taskExecutor.execute(task1.hash());
     verify(task1).execute(Matchers.<Sandbox> any(), Matchers.eq(hashedTasks));
-  }
-
-  @Test
-  public void results_can_be_stored_via_sandbox() throws Exception {
-    final Path filePath = path("my/file");
-    final String content = "content";
-    when(task1.isResultCalculated()).thenReturn(false);
-    Mockito.doAnswer(new Answer<Void>() {
-      @Override
-      public Void answer(InvocationOnMock invocation) throws Throwable {
-        Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
-        MutableFile file = sandbox.createFile(filePath);
-        FileTester.createContent(file, content);
-        return null;
-      }
-    }).when(task1).execute(Matchers.<Sandbox> any(), Matchers.<HashedTasks> any());
-
-    taskExecutor.execute(task1.hash());
-
-    Path fullPath = BUILD_DIR.append(path(task1.hash().toString())).append(filePath);
-    fileSystem.assertFileContains(fullPath, content);
   }
 
   @Test
