@@ -8,25 +8,24 @@ import java.util.Map;
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.mem.MemoryFileSystem;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.impl.MutableStoredFileSet;
+import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.collect.Maps;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, File> binaryNameToClassFile(Iterable<File> libraryJars) {
-    Unjarer unjarer = new Unjarer();
+  public static Map<String, File> binaryNameToClassFile(Sandbox sandbox, Iterable<File> libraryJars) {
+    Unjarer unjarer = new Unjarer(sandbox);
     Map<Path, Path> binaryNameToJar = Maps.newHashMap();
     Map<String, File> binaryNameToClassFile = Maps.newHashMap();
 
     for (File jarFile : libraryJars) {
-      MutableStoredFileSet files = new MutableStoredFileSet(new MemoryFileSystem());
-      unjarer.unjarFile(jarFile, isClassFilePredicate(), files);
+      FileSet fileSet = unjarer.unjarFile(jarFile, isClassFilePredicate());
 
-      for (File classFile : files) {
+      for (File classFile : fileSet) {
         Path path = classFile.path();
         String binaryName = toBinaryName(path);
         if (binaryNameToJar.containsKey(binaryName)) {

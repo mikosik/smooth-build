@@ -6,15 +6,13 @@ import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.common.JarTester.jaredFiles;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
-import java.util.Iterator;
-
 import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.object.FileSetBuilder;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.FakeFileSet;
 import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -24,17 +22,17 @@ public class UnjarerTest {
   String fileName2 = "file/path/file2.txt";
   String directoryName = "my/directory/";
 
-  FakeFileSet resultFileSet = new FakeFileSet();
-  Unjarer unjarer = new Unjarer();
+  FakeSandbox sandbox = new FakeSandbox();
+  Unjarer unjarer = new Unjarer(sandbox);
 
   @Test
   public void unjaringTwoFiles() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
-    unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));
+    FileSet fileSet = unjarer.unjarFile(jarFile);
 
     int fileCount = 0;
-    for (File file : resultFileSet) {
+    for (File file : fileSet) {
       fileCount++;
       assertContent(file.openInputStream(), file.path().value());
     }
@@ -45,22 +43,20 @@ public class UnjarerTest {
   public void unjaringIgnoresDirectories() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, directoryName);
 
-    unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));
+    FileSet fileSet = unjarer.unjarFile(jarFile);
 
-    assertThat(Iterables.size(resultFileSet)).isEqualTo(1);
-    assertThat(resultFileSet.iterator().next().path()).isEqualTo(path(fileName1));
+    assertThat(Iterables.size(fileSet)).isEqualTo(1);
+    assertThat(fileSet.iterator().next().path()).isEqualTo(path(fileName1));
   }
 
   @Test
   public void unjaringWithFilter() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
-    unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2), resultFileSet);
+    FileSet fileSet = unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2));
 
-    Iterator<File> it = resultFileSet.iterator();
-    File file = it.next();
-    assertThat(file.path().value()).isEqualTo(fileName2);
-    assertThat(it.hasNext()).isFalse();
+    assertThat(Iterables.size(fileSet)).isEqualTo(1);
+    assertThat(fileSet.iterator().next().path().value()).isEqualTo(fileName2);
   }
 
   @Test
@@ -69,7 +65,7 @@ public class UnjarerTest {
     FakeFile jarFile = jaredFiles(illegalFileName);
 
     try {
-      unjarer.unjarFile(jarFile, new FileSetBuilder(resultFileSet));
+      unjarer.unjarFile(jarFile);
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected

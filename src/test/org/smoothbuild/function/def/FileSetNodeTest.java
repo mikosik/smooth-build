@@ -19,7 +19,6 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
@@ -44,8 +43,9 @@ public class FileSetNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    FakeFile file1 = sandbox.sandboxFileSystem().createFileContainingItsPath(path1);
-    FakeFile file2 = sandbox.sandboxFileSystem().createFileContainingItsPath(path2);
+    File file1 = sandbox.objectDb().createFileContainingItsPath(path1);
+    File file2 = sandbox.objectDb().createFileContainingItsPath(path2);
+
     FakeTask task1 = new FakeTask(file1);
     FakeTask task2 = new FakeTask(file2);
 

@@ -11,6 +11,7 @@ import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
+import com.google.common.hash.HashCode;
 
 /**
  * Set of files on given fileSystem.
@@ -42,5 +43,10 @@ public class StoredFileSet implements FileSet {
     public File apply(Path path) {
       return new StoredFile(fileSystem, path);
     }
+  }
+
+  @Override
+  public HashCode hash() {
+    throw new UnsupportedOperationException();
   }
 }

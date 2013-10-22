@@ -1,28 +1,27 @@
 package org.smoothbuild.type.impl;
 
 import static org.hamcrest.Matchers.emptyIterable;
-import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.testing.type.impl.FileSetMatchers.containsFileContaining;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.object.FileObject;
 import org.smoothbuild.object.FileSetBuilder;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.type.api.FileSet;
+import org.smoothbuild.testing.object.FakeObjectsDb;
+
+import com.google.common.base.Charsets;
 
 public class FileSetBuilderTest {
   String content = "content";
   Path path = Path.path("my/file.txt");
-  FileSet fileSet;
-  OutputStream outputStream;
-  FakeFileSystem fileSystem = new FakeFileSystem();
-  FileSetBuilder fileSetBuilder = new FileSetBuilder(fileSystem);
+  FakeObjectsDb objectsDb = new FakeObjectsDb();
+
+  FileSetBuilder fileSetBuilder = new FileSetBuilder(objectsDb);
 
   @Test
   public void build_returns_empty_file_set_when_no_file_has_been_added() throws IOException {
@@ -31,15 +30,8 @@ public class FileSetBuilderTest {
   }
 
   @Test
-  public void returned_file_set_contains_streamed_file() throws Exception {
-    given(this).writeFile(fileSetBuilder, path, content);
-    when(fileSetBuilder).build();
-    thenReturned(containsFileContaining(path, content));
-  }
-
-  @Test
-  public void returned_file_set_contains_added_file_with_its_content() throws Exception {
-    given(fileSetBuilder).add(fileSystem.createFileWithContent(path, content));
+  public void returned_file_set_contains_added_file() throws Exception {
+    given(this).addFile(fileSetBuilder, path, content);
     when(fileSetBuilder).build();
     thenReturned(containsFileContaining(path, content));
   }
@@ -50,15 +42,8 @@ public class FileSetBuilderTest {
     thenReturned(false);
   }
 
-  @Test
-  public void builder_contains_streamed_file() throws IOException {
-    given(this).writeFile(fileSetBuilder, path, content);
-    when(fileSetBuilder.contains(path));
-    thenReturned(true);
-  }
-
-  private void writeFile(FileSetBuilder fileSetBuilder, Path path, String content)
-      throws IOException {
-    writeAndClose(fileSetBuilder.openFileOutputStream(path), content);
+  private void addFile(FileSetBuilder fileSetBuilder, Path path, String content) throws IOException {
+    FileObject file = objectsDb.file(path, content.getBytes(Charsets.UTF_8));
+    fileSetBuilder.add(file);
   }
 }

@@ -1,5 +1,5 @@
 package org.smoothbuild.type.api;
 
-public interface FileSet extends Iterable<File> {
+import org.smoothbuild.object.Hashed;
 
-}
+public interface FileSet extends Iterable<File>, Hashed {}
