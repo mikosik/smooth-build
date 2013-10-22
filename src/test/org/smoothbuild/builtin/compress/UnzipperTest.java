@@ -13,10 +13,11 @@ import java.util.zip.ZipOutputStream;
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.object.FileSetBuilder;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.FakeFileSet;
 import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.collect.Iterables;
 
@@ -25,14 +26,14 @@ public class UnzipperTest {
   String fileName2 = "file/path/file2.txt";
   String directoryName = "my/directory/";
 
-  FakeFileSet resultFileSet = new FakeFileSet();
-  Unzipper unzipper = new Unzipper();
+  FakeSandbox sandbox = new FakeSandbox();
+  Unzipper unzipper = new Unzipper(sandbox);
 
   @Test
   public void unzipping() throws Exception {
     FakeFile zipFile = zippedFiles(fileName1, fileName2);
 
-    unzipper.unzipFile(zipFile, new FileSetBuilder(resultFileSet));
+    FileSet resultFileSet = unzipper.unzipFile(zipFile);
 
     int fileCount = 0;
     for (File file : resultFileSet) {
@@ -44,9 +45,9 @@ public class UnzipperTest {
 
   @Test
   public void unzipperIgnoresDirectories() throws Exception {
-    FakeFile jarFile = zippedFiles(fileName1, directoryName);
+    FakeFile zipFile = zippedFiles(fileName1, directoryName);
 
-    unzipper.unzipFile(jarFile, new FileSetBuilder(resultFileSet));
+    FileSet resultFileSet = unzipper.unzipFile(zipFile);
 
     assertThat(Iterables.size(resultFileSet)).isEqualTo(1);
     assertThat(resultFileSet.iterator().next().path()).isEqualTo(path(fileName1));
@@ -58,7 +59,7 @@ public class UnzipperTest {
     FakeFile zipFile = zippedFiles(illegalFileName);
 
     try {
-      unzipper.unzipFile(zipFile, new FileSetBuilder(resultFileSet));
+      unzipper.unzipFile(zipFile);
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
