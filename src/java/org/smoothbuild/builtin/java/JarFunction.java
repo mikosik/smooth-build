@@ -5,6 +5,7 @@ import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -12,12 +13,12 @@ import java.util.jar.Manifest;
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.object.FileBuilder;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.api.MutableFile;
 
 public class JarFunction {
 
@@ -48,8 +49,9 @@ public class JarFunction {
     }
 
     public File execute() {
-      MutableFile output = sandbox.createFile(outputPath());
-      try (JarOutputStream jarOutputStream = createOutputStream(output);) {
+      FileBuilder fileBuilder = sandbox.fileBuilder();
+      fileBuilder.setPath(outputPath());
+      try (JarOutputStream jarOutputStream = createOutputStream(fileBuilder);) {
         for (File file : params.files()) {
           addEntry(jarOutputStream, file);
         }
@@ -57,7 +59,7 @@ public class JarFunction {
         throw new FileSystemException(e);
       }
 
-      return output;
+      return fileBuilder.build();
     }
 
     private Path outputPath() {
@@ -68,12 +70,13 @@ public class JarFunction {
       }
     }
 
-    private JarOutputStream createOutputStream(MutableFile output) throws IOException {
+    private JarOutputStream createOutputStream(FileBuilder fileBuilder) throws IOException {
+      OutputStream outputStream = fileBuilder.openOutputStream();
       if (params.manifest() == null) {
-        return new JarOutputStream(output.openOutputStream());
+        return new JarOutputStream(outputStream);
       } else {
         Manifest manifest = new Manifest(params.manifest().openInputStream());
-        return new JarOutputStream(output.openOutputStream(), manifest);
+        return new JarOutputStream(outputStream, manifest);
       }
     }
 
