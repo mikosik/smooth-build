@@ -8,12 +8,11 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.err.DuplicatePathError;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
-import org.smoothbuild.type.impl.FileSetBuilderInterface;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public class FileSetBuilder implements FileSetBuilderInterface {
+public class FileSetBuilder {
   private final ObjectsDb objectsDb;
   private final List<File> result;
   private final Set<Path> alreadyAdded;
@@ -24,7 +23,6 @@ public class FileSetBuilder implements FileSetBuilderInterface {
     this.alreadyAdded = Sets.newHashSet();
   }
 
-  @Override
   public void add(File file) {
     Path path = file.path();
     if (alreadyAdded.contains(path)) {
@@ -35,7 +33,6 @@ public class FileSetBuilder implements FileSetBuilderInterface {
     }
   }
 
-  @Override
   public boolean contains(Path path) {
     return alreadyAdded.contains(path);
   }

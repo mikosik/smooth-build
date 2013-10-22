@@ -8,8 +8,7 @@ import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.MutableFile;
 import org.smoothbuild.type.api.MutableFileSet;
 
-public class MutableStoredFileSet extends StoredFileSet implements MutableFileSet,
-    FileSetBuilderInterface {
+public class MutableStoredFileSet extends StoredFileSet implements MutableFileSet {
 
   public MutableStoredFileSet(FileSystem fileSystem) {
     super(fileSystem);
@@ -25,7 +24,6 @@ public class MutableStoredFileSet extends StoredFileSet implements MutableFileSe
     return createFile(path).openOutputStream();
   }
 
-  @Override
   public void add(File file) {
     createFile(file.path()).setContent(file);
   }
