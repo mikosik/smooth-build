@@ -7,17 +7,30 @@ import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.object.FileBuilder;
+import org.smoothbuild.object.FileSetBuilder;
+import org.smoothbuild.util.ForwardingOutputStream;
 
 public class OutputClassFile extends SimpleJavaFileObject {
-  private final OutputStream outputStream;
+  private final FileSetBuilder fileSetBuilder;
+  private final FileBuilder fileBuilder;
 
-  public OutputClassFile(Path path, OutputStream outputStream) {
+  public OutputClassFile(FileSetBuilder fileSetBuilder, Path path, FileBuilder fileBuilder) {
     super(URI.create("class:///" + path.value()), Kind.CLASS);
-    this.outputStream = outputStream;
+    this.fileSetBuilder = fileSetBuilder;
+    this.fileBuilder = fileBuilder;
+    fileBuilder.setPath(path);
   }
 
   @Override
   public OutputStream openOutputStream() throws IOException {
-    return outputStream;
+    final OutputStream out = fileBuilder.openOutputStream();
+    return new ForwardingOutputStream(out) {
+      @Override
+      public void close() throws IOException {
+        out.close();
+        fileSetBuilder.add(fileBuilder.build());
+      }
+    };
   }
 }
