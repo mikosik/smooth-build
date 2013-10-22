@@ -1,12 +1,8 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.fs.base.Path.path;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.task.base.Task;
@@ -40,11 +36,6 @@ public class TaskExecutor {
   }
 
   private SandboxImpl createSandbox(Task task) {
-    Path resultDirectory = resultDirectory(task.hash());
-    return new SandboxImpl(fileSystem, objectsDb, resultDirectory, task.location());
-  }
-
-  private static Path resultDirectory(HashCode hash) {
-    return BUILD_DIR.append(path(hash.toString()));
+    return new SandboxImpl(fileSystem, objectsDb, task.location());
   }
 }

@@ -42,7 +42,8 @@ public class JunitFunction {
     }
 
     public void execute() {
-      Map<String, File> binaryNameToClassFile = binaryNameToClassFile(nullToEmpty(params.libs()));
+      Map<String, File> binaryNameToClassFile = binaryNameToClassFile(sandbox,
+          nullToEmpty(params.libs()));
       FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
       JUnitCore jUnitCore = new JUnitCore();
 

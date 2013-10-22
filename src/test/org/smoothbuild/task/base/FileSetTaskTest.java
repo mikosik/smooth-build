@@ -10,18 +10,15 @@ import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.object.err.DuplicatePathError;
-import org.smoothbuild.task.base.FileSetTask;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
@@ -33,26 +30,32 @@ public class FileSetTaskTest {
   FakeSandbox sandbox = new FakeSandbox(fileSystem);
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
-  FakeFile file1 = fileSystem.createFileContainingItsPath(path1);
-  FakeFile file2 = fileSystem.createFileContainingItsPath(path2);
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
-  Task task1 = new FakeTask(file1);
-  Task task2 = new FakeTask(file2);
-  HashedTasks hashedTasks = hashedTasks(task1, task2);
+  File file1;
+  File file2;
+  Task task1;
+  Task task2;
 
-  FileSetTask fileSetTask = new FileSetTask(hashes(task1, task2), codeLocation);
-
-  public FileSetTaskTest() throws IOException {}
+  @Before
+  public void before() {
+    file1 = sandbox.objectDb().createFileContainingItsPath(path1);
+    file2 = sandbox.objectDb().createFileContainingItsPath(path2);
+    task1 = new FakeTask(file1);
+    task2 = new FakeTask(file2);
+  }
 
   @Test
   public void dependencies() {
+    FileSetTask fileSetTask = new FileSetTask(hashes(task1, task2), codeLocation);
     assertThat(fileSetTask.dependencies()).containsOnly(task1.hash(), task2.hash());
   }
 
   @Test
   public void execute() throws IOException {
-    fileSetTask.execute(sandbox, hashedTasks);
+    FileSetTask fileSetTask = new FileSetTask(hashes(task1, task2), codeLocation);
+
+    fileSetTask.execute(sandbox, hashedTasks(task1, task2));
 
     List<File> result = newArrayList((FileSet) fileSetTask.result());
 
@@ -71,7 +74,7 @@ public class FileSetTaskTest {
     ImmutableList<HashCode> hashes = ImmutableList.of(task1.hash(), task1.hash());
     FileSetTask fileSetTask = new FileSetTask(hashes, codeLocation);
 
-    fileSetTask.execute(sandbox, hashedTasks);
+    fileSetTask.execute(sandbox, hashedTasks(task1, task2));
 
     sandbox.messages().assertOnlyProblem(DuplicatePathError.class);
   }

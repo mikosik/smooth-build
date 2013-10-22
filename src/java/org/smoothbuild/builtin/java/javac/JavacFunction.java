@@ -138,7 +138,7 @@ public class JavacFunction {
       StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostic, null,
           defaultCharset());
       Multimap<String, JavaFileObject> libsClasses = PackagedJavaFileObjects
-          .packagedJavaFileObjects(nullToEmpty(params.libs()));
+          .packagedJavaFileObjects(sandbox, nullToEmpty(params.libs()));
       return new SandboxedJavaFileManager(fileManager, sandbox, libsClasses);
     }
 

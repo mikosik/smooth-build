@@ -8,8 +8,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.testing.type.impl.FileTester;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FakeFile;
+import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.ImmutableList;
@@ -21,7 +22,7 @@ public class BinaryNameToClassFileTest {
     String file1 = "a/Klass.class";
     String file2 = "b/Klass.class";
     FakeFile jarFile = jaredFiles(file1, file2);
-    Map<String, File> x = binaryNameToClassFile(ImmutableList.<File> of(jarFile));
+    Map<String, File> x = binaryNameToClassFile(new FakeSandbox(), ImmutableList.<File> of(jarFile));
 
     FileTester.assertContentContains(x.get("a.Klass"), file1);
     FileTester.assertContentContains(x.get("b.Klass"), file2);
@@ -33,7 +34,7 @@ public class BinaryNameToClassFileTest {
     String file1 = "a/Klass.txt";
     String file2 = "b/Klass.java";
     FakeFile jarFile = jaredFiles(file1, file2);
-    Map<String, File> x = binaryNameToClassFile(ImmutableList.<File> of(jarFile));
+    Map<String, File> x = binaryNameToClassFile(new FakeSandbox(), ImmutableList.<File> of(jarFile));
 
     assertThat(x.size()).isEqualTo(0);
   }

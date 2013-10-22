@@ -17,9 +17,11 @@ import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.object.FileBuilder;
 import org.smoothbuild.object.FileSetBuilder;
+import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.impl.FileSetBuilderInterface;
+import org.smoothbuild.type.api.FileSet;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
@@ -27,14 +29,21 @@ import com.google.common.base.Predicates;
 
 public class Unjarer {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
-  private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
 
-  public void unjarFile(File jarFile, FileSetBuilder result) {
-    unjarFile(jarFile, Predicates.<String> alwaysTrue(), result);
+  private final Sandbox sandbox;
+  private final byte[] buffer;
+
+  public Unjarer(Sandbox sandbox) {
+    this.sandbox = sandbox;
+    this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public void unjarFile(File jarFile, Predicate<String> nameFilter,
-      FileSetBuilderInterface resultFiles) {
+  public FileSet unjarFile(File jarFile) {
+    return unjarFile(jarFile, Predicates.<String> alwaysTrue());
+  }
+
+  public FileSet unjarFile(File jarFile, Predicate<String> nameFilter) {
+    FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
@@ -42,27 +51,32 @@ public class Unjarer {
         while ((entry = jarInputStream.getNextJarEntry()) != null) {
           String fileName = entry.getName();
           if (filter.apply(fileName)) {
-            unjarEntry(jarInputStream, fileName, resultFiles);
+            File file = unjarEntry(jarInputStream, fileName);
+            Path path = file.path();
+            if (fileSetBuilder.contains(path)) {
+              throw new ErrorMessageException(new DuplicatePathInJarError(path));
+            } else {
+              fileSetBuilder.add(file);
+            }
           }
         }
       }
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
+    return fileSetBuilder.build();
   }
 
-  private void unjarEntry(JarInputStream jarInputStream, String fileName,
-      FileSetBuilderInterface resultFiles) {
+  private File unjarEntry(JarInputStream jarInputStream, String fileName) {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
       throw new ErrorMessageException(new IllegalPathInJarError(fileName));
     }
     Path path = path(fileName);
-    if (resultFiles.contains(path)) {
-      throw new ErrorMessageException(new DuplicatePathInJarError(path));
-    }
+    FileBuilder fileBuilder = sandbox.fileBuilder();
+    fileBuilder.setPath(path);
     try {
-      try (OutputStream outputStream = resultFiles.openFileOutputStream(path)) {
+      try (OutputStream outputStream = fileBuilder.openOutputStream()) {
         int len = 0;
         while ((len = jarInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);
@@ -71,5 +85,6 @@ public class Unjarer {
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
+    return fileBuilder.build();
   }
 }
