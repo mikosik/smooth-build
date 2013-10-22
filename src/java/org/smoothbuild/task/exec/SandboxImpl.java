@@ -11,13 +11,10 @@ import org.smoothbuild.object.FileBuilder;
 import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.type.api.MutableFile;
-import org.smoothbuild.type.impl.MutableStoredFileSet;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final FileSystem sandboxFileSystem;
-  private final MutableStoredFileSet resultFileSet;
   private final MessageGroup messageGroup;
   private final CallLocation callLocation;
   private final ObjectsDb objectsDb;
@@ -33,7 +30,6 @@ public class SandboxImpl implements Sandbox {
     this.projectFileSystem = fileSystem;
     this.sandboxFileSystem = sandboxFileSystem;
     this.objectsDb = objectsDb;
-    this.resultFileSet = new MutableStoredFileSet(sandboxFileSystem);
     this.messageGroup = messageGroup;
     this.callLocation = callLocation;
   }
@@ -46,11 +42,6 @@ public class SandboxImpl implements Sandbox {
   @Override
   public FileSetBuilder fileSetBuilder() {
     return new FileSetBuilder(sandboxFileSystem);
-  }
-
-  @Override
-  public MutableFile createFile(Path path) {
-    return resultFileSet.createFile(path);
   }
 
   public FileSystem projectFileSystem() {

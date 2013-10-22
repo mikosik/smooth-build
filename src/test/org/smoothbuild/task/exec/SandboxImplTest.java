@@ -6,7 +6,6 @@ import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
@@ -19,7 +18,6 @@ import org.smoothbuild.object.ObjectsDb;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.MutableFile;
 
 public class SandboxImplTest {
   String content = "content";
@@ -50,14 +48,6 @@ public class SandboxImplTest {
     FileSetBuilder builder = sandbox.fileSetBuilder();
     StreamTester.writeAndClose(builder.openFileOutputStream(path1), content);
     fileSystem.assertFileContains(root.append(path1), content);
-  }
-
-  @Test
-  public void create_file_creates_file_on_file_system() throws Exception {
-    MutableFile newFile = sandbox.createFile(path1);
-    writeAndClose(newFile.openOutputStream(), path1.value());
-
-    fileSystem.subFileSystem(root).assertFileContainsItsPath(path1);
   }
 
   @Test
