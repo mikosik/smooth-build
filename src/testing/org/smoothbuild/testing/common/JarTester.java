@@ -1,28 +1,29 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.fs.base.Path.path;
-
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
+import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class JarTester {
   public static FakeFile jaredFiles(String... fileNames) throws IOException {
-    FakeFile jarFile = new FakeFileSet().createFile(path("input.jar"));
-    jarFiles(jarFile, fileNames);
-    return jarFile;
+    return jaredFiles(new FakeFileSystem(), fileNames);
   }
 
-  public static void jarFiles(FakeFile jarFile, String... fileNames) throws IOException {
-    try (JarOutputStream jarOutputStream = new JarOutputStream(jarFile.openOutputStream());) {
+  public static FakeFile jaredFiles(FakeFileSystem fileSystem, String... fileNames)
+      throws IOException {
+    Path path = Path.path("input.jar");
+    try (JarOutputStream jarOutputStream = new JarOutputStream(fileSystem.openOutputStream(path));) {
       for (String fileName : fileNames) {
         addEntry(jarOutputStream, fileName);
       }
     }
+
+    return new FakeFile(fileSystem, path);
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, String fileName) throws IOException {
