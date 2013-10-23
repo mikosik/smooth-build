@@ -4,18 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
+import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.testing.common.ZipTester;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.FakeFileSet;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
@@ -31,7 +31,7 @@ public class UnzipperTest {
 
   @Test
   public void unzipping() throws Exception {
-    FakeFile zipFile = zippedFiles(fileName1, fileName2);
+    FakeFile zipFile = zipped(fileName1, fileName2);
 
     FileSet resultFileSet = unzipper.unzipFile(zipFile);
 
@@ -45,7 +45,7 @@ public class UnzipperTest {
 
   @Test
   public void unzipperIgnoresDirectories() throws Exception {
-    FakeFile zipFile = zippedFiles(fileName1, directoryName);
+    FakeFile zipFile = zipped(fileName1, directoryName);
 
     FileSet resultFileSet = unzipper.unzipFile(zipFile);
 
@@ -56,10 +56,9 @@ public class UnzipperTest {
   @Test
   public void entryWithIllegalName() throws Exception {
     String illegalFileName = "/leading/slash/is/forbidden";
-    FakeFile zipFile = zippedFiles(illegalFileName);
-
+    FakeFile file = zipped(illegalFileName);
     try {
-      unzipper.unzipFile(zipFile);
+      unzipper.unzipFile(file);
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
@@ -67,25 +66,9 @@ public class UnzipperTest {
     }
   }
 
-  private static FakeFile zippedFiles(String... fileNames) throws IOException {
-    FakeFile inputFile = new FakeFileSet().createFile(path("input.zip"));
-
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(inputFile.openOutputStream());) {
-      for (String fileName : fileNames) {
-        addEntry(zipOutputStream, fileName);
-      }
-    }
-    return inputFile;
-  }
-
-  private static void addEntry(ZipOutputStream zipOutputStream, String fileName) throws IOException {
-    ZipEntry entry = new ZipEntry(fileName);
-    zipOutputStream.putNextEntry(entry);
-
-    OutputStreamWriter writer = new OutputStreamWriter(zipOutputStream);
-    writer.write(fileName);
-    writer.flush();
-
-    zipOutputStream.closeEntry();
+  private static FakeFile zipped(String... fileNames) throws IOException {
+    FakeFileSystem fileSystem = new FakeFileSystem();
+    Path path = ZipTester.zippedFiles(fileSystem, fileNames);
+    return new FakeFile(path, inputStreamToBytes(fileSystem.openInputStream(path)));
   }
 }

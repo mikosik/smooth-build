@@ -15,9 +15,13 @@ import com.google.common.io.CharStreams;
 
 public class StreamTester {
 
-  public static InputStream inputStreamWithContent(String content) throws IOException {
+  public static InputStream inputStreamWithContent(String content) {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    writeAndClose(stream, content);
+    try {
+      writeAndClose(stream, content);
+    } catch (IOException e) {
+      throw new RuntimeException("not possible");
+    }
     return new ByteArrayInputStream(stream.toByteArray());
   }
 

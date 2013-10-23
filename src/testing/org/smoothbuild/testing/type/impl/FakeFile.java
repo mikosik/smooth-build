@@ -1,34 +1,46 @@
 package org.smoothbuild.testing.type.impl;
 
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
-import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.type.impl.MutableStoredFile;
+import org.smoothbuild.hash.Hash;
+import org.smoothbuild.type.api.File;
 
-public class FakeFile extends MutableStoredFile {
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
+
+public class FakeFile implements File {
+  private final Path path;
+  private final HashCode hash;
+  private final byte[] content;
+
   public FakeFile(Path path) {
-    this(new FakeFileSystem(), path);
+    this(path, path.value());
   }
 
-  public FakeFile(FileSystem fileSystem, Path path) {
-    super(fileSystem, path);
+  public FakeFile(Path path, String content) {
+    this(path, content.getBytes(Charsets.UTF_8));
   }
 
-  public void createContentWithFilePath() throws IOException {
-    FileTester.createContentWithFilePath(this);
+  public FakeFile(Path path, byte[] bytes) {
+    this.path = path;
+    this.hash = Hash.function().hashBytes(bytes);
+    this.content = bytes.clone();
   }
 
-  public void createContent(String content) throws IOException {
-    FileTester.createContent(this, content);
+  @Override
+  public HashCode hash() {
+    return hash;
   }
 
-  public void assertContentContainsFilePath() throws IOException {
-    FileTester.assertContentContainsFilePath(this);
+  @Override
+  public Path path() {
+    return path;
   }
 
-  public void assertContentContains(String content) throws IOException {
-    FileTester.assertContentContains(this, content);
+  @Override
+  public InputStream openInputStream() {
+    return new ByteArrayInputStream(content);
   }
 }

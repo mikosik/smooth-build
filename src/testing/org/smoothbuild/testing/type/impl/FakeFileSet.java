@@ -1,32 +1,29 @@
 package org.smoothbuild.testing.type.impl;
 
-import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.type.impl.MutableStoredFileSet;
+import java.util.Iterator;
+import java.util.List;
 
-public class FakeFileSet extends MutableStoredFileSet {
-  private final FakeFileSystem fileSystem;
+import org.smoothbuild.hash.Hash;
+import org.smoothbuild.type.api.File;
+import org.smoothbuild.type.api.FileSet;
 
-  public FakeFileSet() {
-    this(new FakeFileSystem());
-  }
+import com.google.common.collect.Lists;
+import com.google.common.hash.HashCode;
 
-  public FakeFileSet(FakeFileSystem fileSystem) {
-    super(fileSystem);
-    this.fileSystem = fileSystem;
-  }
+public class FakeFileSet implements FileSet {
+  private final List<File> files = Lists.newArrayList();
 
-  public FakeFile file(Path path) {
-    return new FakeFile(fileSystem, path);
+  public void add(File file) {
+    files.add(file);
   }
 
   @Override
-  public FakeFileSystem fileSystem() {
-    return fileSystem;
+  public Iterator<File> iterator() {
+    return files.iterator();
   }
 
   @Override
-  public FakeFile createFile(Path path) {
-    return new FakeFile(fileSystem, path);
+  public HashCode hash() {
+    return Hash.function().hashInt(files.hashCode());
   }
 }

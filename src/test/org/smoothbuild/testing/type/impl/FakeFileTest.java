@@ -1,72 +1,40 @@
 package org.smoothbuild.testing.type.impl;
 
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.fs.base.Path.path;
-
-import java.io.IOException;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class FakeFileTest {
-  Path path = path("my/file");
-  FakeFileSystem fileSystem = new FakeFileSystem();
-
-  FakeFile fakeFile = new FakeFile(fileSystem, path);
+  Path path = path("my/path");
+  Path path2 = path("my/path2");
+  String content = "content";
+  String content2 = "content2";
+  FakeFile file;
 
   @Test
-  public void createContentWithFilePath() throws IOException {
-    fakeFile.createContentWithFilePath();
-
-    StreamTester.assertContent(fileSystem.openInputStream(path), path.value());
+  public void path_returns_path_passed_to_constructor() {
+    given(file = new FakeFile(path));
+    when(file.path());
+    thenReturned(path);
   }
 
   @Test
-  public void createContent() throws IOException {
-    String content = "some content";
-    fakeFile.createContent(content);
-
-    StreamTester.assertContent(fileSystem.openInputStream(path), content);
+  public void hash_of_files_with_different_paths_is_different() throws Exception {
+    given(file = new FakeFile(path));
+    when(file.hash());
+    thenReturned(not(equalTo(new FakeFile(path2).hash())));
   }
 
   @Test
-  public void assertContentContainsFilePathSucceeds() throws Exception {
-    StreamTester.writeAndClose(fileSystem.openOutputStream(path), path.value());
-    fakeFile.assertContentContainsFilePath();
-  }
-
-  @Test
-  public void assertContentContainsFilePathFails() throws Exception {
-    StreamTester.writeAndClose(fileSystem.openOutputStream(path), "other content");
-    try {
-      fakeFile.assertContentContainsFilePath();
-    } catch (AssertionError e) {
-      // expected
-      return;
-    }
-    fail("exception should be thrown");
-  }
-
-  @Test
-  public void assertContentContainsSucceeds() throws Exception {
-    String content = "content";
-    StreamTester.writeAndClose(fileSystem.openOutputStream(path), content);
-    fakeFile.assertContentContains(content);
-  }
-
-  @Test
-  public void assertContentContainsFails() throws Exception {
-    String content = "content";
-    StreamTester.writeAndClose(fileSystem.openOutputStream(path), content);
-    try {
-      fakeFile.assertContentContains(content + "suffix");
-    } catch (AssertionError e) {
-      // expected
-      return;
-    }
-    fail("exception should be thrown");
+  public void hash_of_files_with_different_content_is_different() throws Exception {
+    given(file = new FakeFile(path, content));
+    when(file.hash());
+    thenReturned(not(equalTo(new FakeFile(path, content2).hash())));
   }
 }

@@ -15,7 +15,6 @@ public class InputSourceFileTest {
   public void getCharContent() throws IOException {
     Path path = path("my/path");
     FakeFile file = new FakeFile(path);
-    file.createContentWithFilePath();
 
     CharSequence actual = new InputSourceFile(file).getCharContent(true);
 

@@ -1,6 +1,9 @@
 package org.smoothbuild.testing.common;
 
+import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
+
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -17,13 +20,14 @@ public class JarTester {
   public static FakeFile jaredFiles(FakeFileSystem fileSystem, String... fileNames)
       throws IOException {
     Path path = Path.path("input.jar");
-    try (JarOutputStream jarOutputStream = new JarOutputStream(fileSystem.openOutputStream(path));) {
+    OutputStream outputStream = fileSystem.openOutputStream(path);
+    try (JarOutputStream jarOutputStream = new JarOutputStream(outputStream);) {
       for (String fileName : fileNames) {
         addEntry(jarOutputStream, fileName);
       }
     }
 
-    return new FakeFile(fileSystem, path);
+    return new FakeFile(path, inputStreamToBytes(fileSystem.openInputStream(path)));
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, String fileName) throws IOException {
