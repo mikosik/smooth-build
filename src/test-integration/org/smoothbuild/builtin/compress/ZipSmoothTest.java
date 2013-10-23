@@ -20,8 +20,8 @@ public class ZipSmoothTest extends IntegrationTestCase {
   @Test
   public void testZipping() throws IOException {
     // given
-    fileSystem.createFileWithContent(path("dir/fileA.txt"), "fileA.txt");
-    fileSystem.createFileWithContent(path("dir/fileB.txt"), "fileB.txt");
+    fileSystem.createFile(path("dir/fileA.txt"), "fileA.txt");
+    fileSystem.createFile(path("dir/fileB.txt"), "fileB.txt");
     Path outDir = path("out");
     Path outputPath = path("myOutput.zip");
     script("run : files('dir') | zip(" + outputPath + ") | save(" + outDir + ");");

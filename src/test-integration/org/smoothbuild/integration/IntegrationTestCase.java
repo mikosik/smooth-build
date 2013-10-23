@@ -33,6 +33,6 @@ public class IntegrationTestCase {
   }
 
   public void script(String script) throws IOException {
-    fileSystem.createFileWithContent(DEFAULT_SCRIPT, ScriptBuilder.script(script));
+    fileSystem.createFile(DEFAULT_SCRIPT, ScriptBuilder.script(script));
   }
 }
