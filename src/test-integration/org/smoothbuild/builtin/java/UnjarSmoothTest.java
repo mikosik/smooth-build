@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.common.JarTester;
-import org.smoothbuild.testing.type.impl.FakeFileSet;
-import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.type.api.File;
 
 public class UnjarSmoothTest extends IntegrationTestCase {
@@ -17,9 +15,10 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     // given
     Path path1 = path("a/fileA.txt");
     Path path2 = path("b/fileB.txt");
+    Path outDir = path("out");
     File jarFile = JarTester.jaredFiles(fileSystem, path1.value(), path2.value());
 
-    script("run : file(" + jarFile.path() + ") | unjar | save('out');");
+    script("run : file(" + jarFile.path() + ") | unjar | save(" + outDir + ");");
 
     // when
     smoothApp.run("run");
@@ -27,9 +26,7 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     // then
     messages.assertNoProblems();
 
-    FakeFileSet outFiles = fileSet(path("out"));
-    outFiles.contains(path1);
-    outFiles.contains(path2);
-    FileTester.assertContentContainsFilePath(outFiles.file(path1));
+    fileSystem.assertFileContainsItsPath(outDir, path1);
+    fileSystem.assertFileContainsItsPath(outDir, path2);
   }
 }
