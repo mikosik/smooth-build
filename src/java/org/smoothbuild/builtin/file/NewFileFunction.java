@@ -16,6 +16,8 @@ import org.smoothbuild.plugin.api.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.type.api.File;
 
+import com.google.common.base.Charsets;
+
 public class NewFileFunction {
   public static final Charset US_ASCII = Charset.forName("US-ASCII");
 
@@ -50,7 +52,7 @@ public class NewFileFunction {
       fileBuilder.setPath(filePath);
 
       OutputStream outputStream = fileBuilder.openOutputStream();
-      try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, US_ASCII)) {
+      try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, Charsets.UTF_8)) {
         writer.write(params.content());
       } catch (IOException e) {
         throw new FileSystemException(e);
