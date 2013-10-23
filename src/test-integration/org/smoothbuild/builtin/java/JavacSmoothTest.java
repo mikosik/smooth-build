@@ -15,17 +15,16 @@ import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class JavacSmoothTest extends IntegrationTestCase {
   MyClassLoader classLoader = new MyClassLoader();
 
   @Test
   public void errorIsReportedForCompilationErrors() throws Exception {
-    FakeFile file = file(path("MyClass.java"));
-    file.createContent("public private class MyClass {}");
+    Path path = path("MyClass.java");
+    fileSystem.createFileWithContent(path, "public private class MyClass {}");
 
-    script("run : [ file(path=" + file.path() + ") ] | javac ;");
+    script("run : [ file(path=" + path + ") ] | javac ;");
     smoothApp.run("run");
 
     messages.assertOnlyProblem(JavaCompilerMessage.class);
@@ -42,10 +41,10 @@ public class JavacSmoothTest extends IntegrationTestCase {
     builder.append("  }");
     builder.append("}");
 
-    FakeFile file = file(path("MyClass.java"));
-    file.createContent(builder.toString());
+    Path path = path("MyClass.java");
+    fileSystem.createFileWithContent(path, builder.toString());
 
-    script("run : [ file(path=" + file.path() + ") ] | javac | save(dir='.');");
+    script("run : [ file(path=" + path + ") ] | javac | save(dir='.');");
     smoothApp.run("run");
 
     messages.assertNoProblems();
@@ -76,7 +75,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
       builder.append("  }");
       builder.append("}");
 
-      file(libraryJavaFile).createContent(builder.toString());
+      fileSystem.createFileWithContent(libraryJavaFile, builder.toString());
     }
     {
       StringBuilder builder = new StringBuilder();
@@ -87,7 +86,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
       builder.append("  }");
       builder.append("}");
 
-      file(appJavaFile).createContent(builder.toString());
+      fileSystem.createFileWithContent(appJavaFile, builder.toString());
     }
 
     ScriptBuilder builder = new ScriptBuilder();
@@ -108,10 +107,10 @@ public class JavacSmoothTest extends IntegrationTestCase {
 
   @Test
   public void illegalSourceParamCausesError() throws Exception {
-    FakeFile file = file(path("MyClass.java"));
-    file.createContent("public class MyClass {}");
+    Path path = path("MyClass.java");
+    fileSystem.createFileWithContent(path, "public class MyClass {}");
 
-    script("run : [ file(path=" + file.path() + ") ] | javac(source='0.9') ;");
+    script("run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
     smoothApp.run("run");
 
     messages.assertOnlyProblem(IllegalSourceParamError.class);
@@ -119,10 +118,10 @@ public class JavacSmoothTest extends IntegrationTestCase {
 
   @Test
   public void illegalTargetParamCausesError() throws Exception {
-    FakeFile file = file(path("MyClass.java"));
-    file.createContent("public class MyClass {}");
+    Path path = path("MyClass.java");
+    fileSystem.createFileWithContent(path, "public class MyClass {}");
 
-    script("run : [ file(path=" + file.path() + ") ] | javac(target='0.9') ;");
+    script("run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
     smoothApp.run("run");
 
     messages.assertOnlyProblem(IllegalTargetParamError.class);
@@ -130,10 +129,10 @@ public class JavacSmoothTest extends IntegrationTestCase {
 
   @Test
   public void compilingEnumWithSourceParamSetToTooOldJavaVersionCausesError() throws Exception {
-    FakeFile file = file(path("MyClass.java"));
-    file.createContent("public enum MyClass { VALUE }");
+    Path path = path("MyClass.java");
+    fileSystem.createFileWithContent(path, "public enum MyClass { VALUE }");
 
-    script("run : [ file(path=" + file.path() + ") ] | javac(source='1.4', target='1.4') ;");
+    script("run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
     smoothApp.run("run");
 
     messages.assertOnlyProblem(JavaCompilerMessage.class);
@@ -146,7 +145,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
   }
 
   private byte[] byteCode(Path classFilePath) throws IOException {
-    InputStream inputStream = file(classFilePath).openInputStream();
+    InputStream inputStream = fileSystem.openInputStream(classFilePath);
     byte[] result = toByteArray(inputStream);
     inputStream.close();
     return result;
