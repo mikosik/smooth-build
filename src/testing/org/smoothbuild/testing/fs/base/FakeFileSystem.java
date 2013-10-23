@@ -39,6 +39,10 @@ public class FakeFileSystem extends SubFileSystem {
     assertFileContains(path, path.value());
   }
 
+  public void assertFileContainsItsPath(Path root, Path path) throws IOException {
+    assertFileContains(root.append(path), path.value());
+  }
+
   public void assertFileContains(Path path, String content) throws IOException {
     InputStream inputStream = openInputStream(path);
     assertContent(inputStream, content);
