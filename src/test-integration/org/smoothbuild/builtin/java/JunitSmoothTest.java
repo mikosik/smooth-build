@@ -74,7 +74,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     String sourceCode = builder.build();
 
     Path path = fakeJunitPath.append(path("org/junit/Test.java"));
-    fileSystem.createFileWithContent(path, sourceCode);
+    fileSystem.createFile(path, sourceCode);
   }
 
   private void createSuccessfulTest() throws IOException {
@@ -87,7 +87,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     String sourceCode = builder.build();
 
     Path path = srcPath.append(path("MyClassTest.java"));
-    fileSystem.createFileWithContent(path, sourceCode);
+    fileSystem.createFile(path, sourceCode);
   }
 
   private void createFailingTest() throws IOException {
@@ -101,6 +101,6 @@ public class JunitSmoothTest extends IntegrationTestCase {
     String sourceCode = builder.build();
 
     Path path = srcPath.append(path("MyClassFailingTest.java"));
-    fileSystem.createFileWithContent(path, sourceCode);
+    fileSystem.createFile(path, sourceCode);
   }
 }

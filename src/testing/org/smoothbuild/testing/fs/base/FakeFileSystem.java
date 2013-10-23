@@ -23,18 +23,18 @@ public class FakeFileSystem extends SubFileSystem {
   }
 
   public void createFileContainingItsPath(Path path) throws IOException {
-    createFileWithContent(path, path.value());
+    createFile(path, path.value());
   }
 
   public void createFileContainingItsPath(Path root, Path path) throws IOException {
-    createFileWithContent(root.append(path), path.value());
+    createFile(root.append(path), path.value());
   }
 
   public void createEmptyFile(Path path) throws IOException {
-    createFileWithContent(path, "");
+    createFile(path, "");
   }
 
-  public void createFileWithContent(Path path, String content) throws IOException {
+  public void createFile(Path path, String content) throws IOException {
     OutputStream outputStream = openOutputStream(path);
     StreamTester.writeAndClose(outputStream, content);
   }

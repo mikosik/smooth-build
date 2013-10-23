@@ -22,7 +22,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
   @Test
   public void errorIsReportedForCompilationErrors() throws Exception {
     Path path = path("MyClass.java");
-    fileSystem.createFileWithContent(path, "public private class MyClass {}");
+    fileSystem.createFile(path, "public private class MyClass {}");
 
     script("run : [ file(path=" + path + ") ] | javac ;");
     smoothApp.run("run");
@@ -42,7 +42,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     builder.append("}");
 
     Path path = path("MyClass.java");
-    fileSystem.createFileWithContent(path, builder.toString());
+    fileSystem.createFile(path, builder.toString());
 
     script("run : [ file(path=" + path + ") ] | javac | save(dir='.');");
     smoothApp.run("run");
@@ -75,7 +75,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
       builder.append("  }");
       builder.append("}");
 
-      fileSystem.createFileWithContent(libraryJavaFile, builder.toString());
+      fileSystem.createFile(libraryJavaFile, builder.toString());
     }
     {
       StringBuilder builder = new StringBuilder();
@@ -86,7 +86,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
       builder.append("  }");
       builder.append("}");
 
-      fileSystem.createFileWithContent(appJavaFile, builder.toString());
+      fileSystem.createFile(appJavaFile, builder.toString());
     }
 
     ScriptBuilder builder = new ScriptBuilder();
@@ -108,7 +108,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
   @Test
   public void illegalSourceParamCausesError() throws Exception {
     Path path = path("MyClass.java");
-    fileSystem.createFileWithContent(path, "public class MyClass {}");
+    fileSystem.createFile(path, "public class MyClass {}");
 
     script("run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
     smoothApp.run("run");
@@ -119,7 +119,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
   @Test
   public void illegalTargetParamCausesError() throws Exception {
     Path path = path("MyClass.java");
-    fileSystem.createFileWithContent(path, "public class MyClass {}");
+    fileSystem.createFile(path, "public class MyClass {}");
 
     script("run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
     smoothApp.run("run");
@@ -130,7 +130,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
   @Test
   public void compilingEnumWithSourceParamSetToTooOldJavaVersionCausesError() throws Exception {
     Path path = path("MyClass.java");
-    fileSystem.createFileWithContent(path, "public enum MyClass { VALUE }");
+    fileSystem.createFile(path, "public enum MyClass { VALUE }");
 
     script("run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
     smoothApp.run("run");
