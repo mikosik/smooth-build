@@ -13,7 +13,6 @@ import org.smoothbuild.testing.fs.base.FakeFileSystemModule;
 import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.message.FakeUserConsoleModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
-import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 import com.google.inject.Injector;
@@ -41,9 +40,5 @@ public class IntegrationTestCase {
 
   protected FakeFileSet fileSet(Path path) {
     return new FakeFileSet(fileSystem.subFileSystem(path));
-  }
-
-  protected FakeFile file(Path path) {
-    return new FakeFile(fileSystem, path);
   }
 }

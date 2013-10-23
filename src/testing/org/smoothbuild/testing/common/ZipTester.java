@@ -7,22 +7,26 @@ import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class ZipTester {
   public static FakeFile zippedFiles(String... fileNames) throws IOException {
-    FakeFile zipFile = new FakeFileSet().createFile(path("file.zip"));
-    zipFiles(zipFile, fileNames);
-    return zipFile;
+    FakeFileSystem fileSystem = new FakeFileSystem();
+    return zippedFiles(fileSystem, fileNames);
   }
 
-  public static void zipFiles(FakeFile zipFile, String... fileNames) throws IOException {
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(zipFile.openOutputStream());) {
+  public static FakeFile zippedFiles(FakeFileSystem fileSystem, String... fileNames)
+      throws IOException {
+    Path path = path("input.zip");
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileSystem.openOutputStream(path));) {
       for (String fileName : fileNames) {
         addEntry(zipOutputStream, fileName);
       }
     }
+
+    return new FakeFile(fileSystem, path);
   }
 
   private static void addEntry(ZipOutputStream zipOutputStream, String fileName) throws IOException {
