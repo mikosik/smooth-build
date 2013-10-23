@@ -30,10 +30,6 @@ public class FakeFileSystem extends SubFileSystem {
     createFile(root.append(path), path.value());
   }
 
-  public void createEmptyFile(Path path) throws IOException {
-    createFile(path, "");
-  }
-
   public void createFile(Path path, String content) throws IOException {
     OutputStream outputStream = openOutputStream(path);
     StreamTester.writeAndClose(outputStream, content);
