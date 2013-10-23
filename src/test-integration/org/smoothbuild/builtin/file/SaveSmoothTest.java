@@ -18,10 +18,11 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.fs.base.PathTesting;
-import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class SaveSmoothTest extends IntegrationTestCase {
+  Path path = path("def/filename.txt");
+  Path path2 = path("def/filename2.txt");
 
   // successful execution
 
@@ -29,28 +30,27 @@ public class SaveSmoothTest extends IntegrationTestCase {
   public void executeWithFile() throws Exception {
     // given
     Path dirPath = path("output");
-    FakeFile file = file(path("def/filename.txt"));
-    file.createContentWithFilePath();
-    script("run : file(" + file.path() + ") | save(" + dirPath + ");");
+    Path path = path("def/filename.txt");
+    fileSystem.createFileContainingItsPath(path);
+
+    script("run : file(" + path + ") | save(" + dirPath + ");");
 
     // when
     smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
-    fileSet(dirPath).file(file.path()).assertContentContainsFilePath();
+    fileSet(dirPath).file(path).assertContentContainsFilePath();
   }
 
   @Test
   public void executeWithFileSet() throws Exception {
     // given
     Path dir = path("output");
-    FakeFile file = file(path("def/filename.txt"));
-    FakeFile file2 = file(path("def/filename2.txt"));
-    file.createContentWithFilePath();
-    file2.createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
+    fileSystem.createFileContainingItsPath(path2);
 
-    script("run : [ file(" + file.path() + "), file(" + file2.path() + ") ] | save(" + dir + ");");
+    script("run : [ file(" + path + "), file(" + path2 + ") ] | save(" + dir + ");");
 
     // when
     smoothApp.run("run");
@@ -58,8 +58,8 @@ public class SaveSmoothTest extends IntegrationTestCase {
     // then
     messages.assertNoProblems();
     FakeFileSet outputFiles = fileSet(dir);
-    outputFiles.file(file.path()).assertContentContainsFilePath();
-    outputFiles.file(file2.path()).assertContentContainsFilePath();
+    outputFiles.file(path).assertContentContainsFilePath();
+    outputFiles.file(path2).assertContentContainsFilePath();
   }
 
   // file/files param validation
@@ -79,13 +79,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void specifyingBotFileAndFileSetIsReported() throws Exception {
     // given
-    FakeFile file = file(path("def/filename.txt"));
-    FakeFile file2 = file(path("def/filename2.txt"));
-    file.createContentWithFilePath();
-    file2.createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
+    fileSystem.createFileContainingItsPath(path2);
 
-    script("run : [ file(" + file.path() + ") ] | save(file=file(" + file2.path() + "), "
-        + path("output") + ");");
+    script("run : [ file(" + path + ") ] | save(file=file(" + path2 + "), " + path("output") + ");");
 
     // when
     smoothApp.run("run");
@@ -99,10 +96,9 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void missingDirIsReported() throws IOException {
     // given
-    FakeFile file = file(path("def/filename.txt"));
-    file.createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
 
-    script("run : file(" + file.path() + ") | save();");
+    script("run : file(" + path + ") | save();");
 
     // when
     smoothApp.run("run");
@@ -113,14 +109,13 @@ public class SaveSmoothTest extends IntegrationTestCase {
 
   @Test
   public void illegalPathsAreReported() throws Exception {
-    for (String path : PathTesting.listOfInvalidPaths()) {
+    for (String destinationPath : PathTesting.listOfInvalidPaths()) {
       reset();
 
       // given
-      FakeFile file = file(path("def/filename.txt"));
-      file.createContentWithFilePath();
+      fileSystem.createFileContainingItsPath(path);
 
-      script("run : file(" + file.path() + ") | save('" + path + "');");
+      script("run : file(" + path + ") | save('" + destinationPath + "');");
 
       // when
       smoothApp.run("run");
@@ -133,10 +128,9 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void dirEqualSmoothDirIsReported() throws IOException {
     // given
-    FakeFile file = file(path("def/filename.txt"));
-    file.createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
 
-    script("run : file(" + file.path() + ") | save(" + BUILD_DIR + ");");
+    script("run : file(" + path + ") | save(" + BUILD_DIR + ");");
 
     // when
     smoothApp.run("run");
@@ -148,10 +142,9 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void dirStartingWithSmoothDirIsReported() throws IOException {
     // given
-    FakeFile file = file(path("def/filename.txt"));
-    file.createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
 
-    script("run : file(" + file.path() + ") | save(" + BUILD_DIR.append(path("abc")) + ");");
+    script("run : file(" + path + ") | save(" + BUILD_DIR.append(path("abc")) + ");");
 
     // when
     smoothApp.run("run");
@@ -163,12 +156,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void filePassedAsDirParamIsReported() throws Exception {
     // given
-    FakeFile file = file(path("def/filename.txt"));
-    FakeFile file2 = file(path("def/filename2.txt"));
-    file.createContentWithFilePath();
-    file2.createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
+    fileSystem.createFileContainingItsPath(path2);
 
-    script("run : file(" + file.path() + ") | save(" + file2.path() + ");");
+    script("run : file(" + path + ") | save(" + path2 + ");");
 
     // when
     smoothApp.run("run");
@@ -180,12 +171,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void dirParamContainingFileInsideItsPathIsReported() throws Exception {
     // given
-    FakeFile file = file(path("def/filename.txt"));
-    FakeFile file2 = file(path("def/filename2.txt"));
-    file.createContentWithFilePath();
-    file2.createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
+    fileSystem.createFileContainingItsPath(path2);
 
-    script("run : file(" + file.path() + ") | save(" + file2.path().append(path("abc")) + ");");
+    script("run : file(" + path + ") | save(" + path2.append(path("abc")) + ");");
 
     // when
     smoothApp.run("run");
@@ -199,10 +188,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void rootDirAndFileHavingSmoothDirButNotAtBeginningIsOk() throws IOException {
     // given
-    FakeFile file = file(path("abc").append(BUILD_DIR));
-    file.createContentWithFilePath();
+    path = path("abc").append(BUILD_DIR);
+    fileSystem.createFileContainingItsPath(path);
 
-    script("run : file(" + file.path() + ") | save(" + Path.rootPath() + ");");
+    script("run : file(" + path + ") | save(" + Path.rootPath() + ");");
 
     // when
     smoothApp.run("run");
@@ -215,12 +204,12 @@ public class SaveSmoothTest extends IntegrationTestCase {
   public void concateatedDirAndFileEqualToExistingDirPathIsReported() throws Exception {
     // given
     Path dir = path("abc");
-    FakeFile file = file(path("def/filename.txt"));
-    FakeFile file2 = file(dir.append(file.path()).append(path("abc")));
-    file.createContentWithFilePath();
-    file2.createContentWithFilePath();
+    path2 = dir.append(path).append(path("abc"));
 
-    script("run : file(" + file.path() + ") | save(" + dir + ");");
+    fileSystem.createFileContainingItsPath(path);
+    fileSystem.createFileContainingItsPath(path2);
+
+    script("run : file(" + path + ") | save(" + dir + ");");
 
     // when
     smoothApp.run("run");
@@ -232,11 +221,10 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void concatenatedDirAndFileContainingFileInsideItsPathIsReported() throws Exception {
     // given
-    FakeFile file = file(path("def/filename.txt"));
-    file.createContentWithFilePath();
-    file(path("abc/def")).createContentWithFilePath();
+    fileSystem.createFileContainingItsPath(path);
+    fileSystem.createFileContainingItsPath(path("abc/def"));
 
-    script("run : file(" + file.path() + ") | save('abc');");
+    script("run : file(" + path + ") | save('abc');");
 
     // when
     smoothApp.run("run");
