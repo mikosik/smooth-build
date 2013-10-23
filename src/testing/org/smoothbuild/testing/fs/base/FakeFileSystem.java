@@ -26,6 +26,10 @@ public class FakeFileSystem extends SubFileSystem {
     createFileWithContent(path, path.value());
   }
 
+  public void createFileContainingItsPath(Path root, Path path) throws IOException {
+    createFileWithContent(root.append(path), path.value());
+  }
+
   public void createEmptyFile(Path path) throws IOException {
     createFileWithContent(path, "");
   }
