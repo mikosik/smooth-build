@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
@@ -48,14 +49,13 @@ public class NewFileFunction {
       FileBuilder fileBuilder = sandbox.fileBuilder();
       fileBuilder.setPath(filePath);
 
-      OutputStreamWriter writer = new OutputStreamWriter(fileBuilder.openOutputStream(), US_ASCII);
-      try {
+      OutputStream outputStream = fileBuilder.openOutputStream();
+      try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, US_ASCII)) {
         writer.write(params.content());
-        writer.close();
-        return fileBuilder.build();
       } catch (IOException e) {
         throw new FileSystemException(e);
       }
+      return fileBuilder.build();
     }
   }
 }
