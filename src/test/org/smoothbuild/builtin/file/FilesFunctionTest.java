@@ -83,7 +83,7 @@ public class FilesFunctionTest {
   @Test
   public void nonDirPathIsReported() throws Exception {
     Path filePath = path("some/path/file.txt");
-    sandbox.projectFileSystem().createEmptyFile(filePath);
+    sandbox.projectFileSystem().createFileContainingItsPath(filePath);
 
     try {
       runExecute(params(filePath.value()));

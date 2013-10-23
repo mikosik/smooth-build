@@ -57,7 +57,7 @@ public class RecursiveFilesIterableTest {
   public void throwsExceptionWhenDirectoryIsAFile() throws Exception {
     FakeFileSystem fileSystem = new FakeFileSystem();
     Path path = path("my/file");
-    fileSystem.createEmptyFile(path);
+    fileSystem.createFileContainingItsPath(path);
 
     try {
       recursiveFilesIterable(fileSystem, path);
@@ -71,7 +71,7 @@ public class RecursiveFilesIterableTest {
       String[] expectedNames) throws IOException {
     FakeFileSystem fileSystem = new FakeFileSystem();
     for (String name : names) {
-      fileSystem.createEmptyFile(path(rootDir).append(path(name)));
+      fileSystem.createFileContainingItsPath(path(rootDir).append(path(name)));
     }
 
     List<Path> created = Lists.newArrayList();

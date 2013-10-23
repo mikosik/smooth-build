@@ -5,7 +5,6 @@ import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 import org.junit.Test;
@@ -34,12 +33,6 @@ public class FakeFileSystemTest {
   public void createFileWithContent() throws Exception {
     fileSystem.createFile(path, content);
     assertContent(fileSystem.openInputStream(path), content);
-  }
-
-  @Test
-  public void createEmptyFile() throws IOException {
-    fileSystem.createEmptyFile(path);
-    assertContent(fileSystem.openInputStream(path), "");
   }
 
   @Test
