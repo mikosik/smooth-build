@@ -16,14 +16,14 @@ public class MergeSmoothTest extends IntegrationTestCase {
   public void mergingTwoSets() throws Exception {
     // given
     Path outputPath = path("output");
-    FakeFile fileA = file(path("def/fileA.txt"));
-    FakeFile fileB = file(path("def/fileB.txt"));
-    fileA.createContentWithFilePath();
-    fileB.createContentWithFilePath();
+    Path path1 = path("def/fileA.txt");
+    Path path2 = path("def/fileB.txt");
+    fileSystem.createFileContainingItsPath(path1);
+    fileSystem.createFileContainingItsPath(path2);
 
     ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("a : [ file(" + fileA.path() + ") ];");
-    builder.addLine("b : [ file(" + fileB.path() + ") ];");
+    builder.addLine("a : [ file(" + path1 + ") ];");
+    builder.addLine("b : [ file(" + path2 + ") ];");
     builder.addLine("run : merge(files=a, with=b) | save(" + outputPath + ");");
     script(builder.build());
 
@@ -32,8 +32,8 @@ public class MergeSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    fileSet(outputPath).file(fileA.path()).assertContentContainsFilePath();
-    fileSet(outputPath).file(fileB.path()).assertContentContainsFilePath();
+    fileSet(outputPath).file(path1).assertContentContainsFilePath();
+    fileSet(outputPath).file(path2).assertContentContainsFilePath();
     assertThat(fileSet(outputPath)).hasSize(2);
   }
 
