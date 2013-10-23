@@ -59,6 +59,30 @@ public class FakeFileSystemTest {
   }
 
   @Test
+  public void assertFileContainsItsPathWithRootSucceedsWhenContentMatches() throws Exception {
+    Path root = path("root/dir");
+    OutputStream os = fileSystem.openOutputStream(root.append(path));
+    writeAndClose(os, path.value());
+
+    fileSystem.assertFileContainsItsPath(root, path);
+  }
+
+  @Test
+  public void assertFileContainsItsPathWithRootWhenContentDoesNotMatch() throws Exception {
+    Path root = path("root/dir");
+    OutputStream os = fileSystem.openOutputStream(root.append(path));
+    writeAndClose(os, path.value() + "abc");
+
+    try {
+      fileSystem.assertFileContainsItsPath(root, path);
+    } catch (AssertionError e) {
+      // expected
+      return;
+    }
+    fail("exception should be thrown");
+  }
+
+  @Test
   public void assertFileContainsSucceedsWhenContentMatches() throws Exception {
     OutputStream os = fileSystem.openOutputStream(path);
     writeAndClose(os, content);
