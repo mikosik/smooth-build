@@ -12,32 +12,30 @@ public class StringSmoothTest extends IntegrationTestCase {
   @Test
   public void escapingDoubleQuotes() throws IOException {
     // given
-    Path outDir = path("out");
     Path path = path("file.txt");
     String content = "\\\"";
-    script("run : newFile(" + path + ", content='" + content + "') | save(" + outDir + ");");
+    script("run : newFile(" + path + ", content='" + content + "') | save('.');");
 
     // when
     smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
-    fileSystem.assertFileContains(outDir.append(path), "\"");
+    fileSystem.assertFileContains(path, "\"");
   }
 
   @Test
   public void escapingBackslash() throws IOException {
     // given
-    Path outDir = path("out");
     Path path = path("file.txt");
     String content = "\\\\";
-    script("run : newFile(" + path + ", content='" + content + "') | save(" + outDir + ");");
+    script("run : newFile(" + path + ", content='" + content + "') | save('.');");
 
     // when
     smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
-    fileSystem.assertFileContains(outDir.append(path), "\\");
+    fileSystem.assertFileContains(path, "\\");
   }
 }
