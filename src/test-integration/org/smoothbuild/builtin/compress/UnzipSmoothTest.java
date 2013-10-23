@@ -6,9 +6,9 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.common.ZipTester;
-import org.smoothbuild.testing.type.impl.FileTester;
 import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.testing.type.impl.FakeFileSet;
+import org.smoothbuild.testing.type.impl.FileTester;
 
 public class UnzipSmoothTest extends IntegrationTestCase {
 
@@ -17,8 +17,7 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     // given
     Path fileA = path("a/fileA.txt");
     Path fileB = path("b/fileB.txt");
-    FakeFile zipFile = file(path("input.zip"));
-    ZipTester.zipFiles(zipFile, fileA.value(), fileB.value());
+    FakeFile zipFile = ZipTester.zippedFiles(fileSystem, fileA.value(), fileB.value());
 
     script("run : file(" + zipFile.path() + ") | unzip | save('out');");
 
