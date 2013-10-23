@@ -18,7 +18,6 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.fs.base.PathTesting;
-import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 public class SaveSmoothTest extends IntegrationTestCase {
   Path path = path("def/filename.txt");
@@ -40,7 +39,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    fileSet(dirPath).file(path).assertContentContainsFilePath();
+    fileSystem.assertFileContainsItsPath(dirPath, path);
   }
 
   @Test
@@ -57,9 +56,8 @@ public class SaveSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    FakeFileSet outputFiles = fileSet(dir);
-    outputFiles.file(path).assertContentContainsFilePath();
-    outputFiles.file(path2).assertContentContainsFilePath();
+    fileSystem.assertFileContainsItsPath(dir, path);
+    fileSystem.assertFileContainsItsPath(dir, path2);
   }
 
   // file/files param validation
