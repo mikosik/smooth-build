@@ -1,19 +1,18 @@
 package org.smoothbuild.builtin.java.junit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.type.impl.FakeFile;
 import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.ByteStreams;
 
 public class FileClassLoaderTest {
 
@@ -24,12 +23,10 @@ public class FileClassLoaderTest {
     String klassBinaryName = FileClassLoaderTest.class.getName() + "$MyClass";
     String filePath = klassBinaryName.replace('.', '/') + ".class";
 
-    FakeFile file = new FakeFile(Path.path("this/path/is/ignored/anyway"));
     InputStream classByteCode = this.getClass().getClassLoader().getResourceAsStream(filePath);
 
-    OutputStream outputStream = file.openOutputStream();
-    ByteStreams.copy(classByteCode, outputStream);
-    outputStream.close();
+    FakeFile file = new FakeFile(path("this/path/is/ignored/anyway"),
+        inputStreamToBytes(classByteCode));
 
     Map<String, File> binaryNameToFile = ImmutableMap.<String, File> of(klassBinaryName, file);
     FileClassLoader fileClassLoader = new FileClassLoader(binaryNameToFile);

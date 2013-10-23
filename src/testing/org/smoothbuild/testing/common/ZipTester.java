@@ -9,16 +9,10 @@ import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class ZipTester {
-  public static FakeFile zippedFiles(String... fileNames) throws IOException {
-    FakeFileSystem fileSystem = new FakeFileSystem();
-    return zippedFiles(fileSystem, fileNames);
-  }
 
-  public static FakeFile zippedFiles(FakeFileSystem fileSystem, String... fileNames)
-      throws IOException {
+  public static Path zippedFiles(FakeFileSystem fileSystem, String... fileNames) throws IOException {
     Path path = path("input.zip");
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileSystem.openOutputStream(path));) {
       for (String fileName : fileNames) {
@@ -26,7 +20,7 @@ public class ZipTester {
       }
     }
 
-    return new FakeFile(fileSystem, path);
+    return path;
   }
 
   private static void addEntry(ZipOutputStream zipOutputStream, String fileName) throws IOException {
