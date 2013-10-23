@@ -24,11 +24,11 @@ public class OutputClassFile extends SimpleJavaFileObject {
 
   @Override
   public OutputStream openOutputStream() throws IOException {
-    final OutputStream out = fileBuilder.openOutputStream();
-    return new ForwardingOutputStream(out) {
+    final OutputStream outputStream = fileBuilder.openOutputStream();
+    return new ForwardingOutputStream(outputStream) {
       @Override
       public void close() throws IOException {
-        out.close();
+        outputStream.close();
         fileSetBuilder.add(fileBuilder.build());
       }
     };
