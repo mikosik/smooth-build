@@ -10,7 +10,6 @@ import java.io.OutputStream;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.type.impl.FakeFile;
 
 public class FakeFileSystemTest {
   Path root = path("my/root");
@@ -21,26 +20,20 @@ public class FakeFileSystemTest {
 
   @Test
   public void createFileContiningItsPath() throws Exception {
-    FakeFile file = fileSystem.createFileContainingItsPath(path);
-
+    fileSystem.createFileContainingItsPath(path);
     assertContent(fileSystem.openInputStream(path), path.value());
-    assertContent(file.openInputStream(), path.value());
   }
 
   @Test
   public void createFileWithContent() throws Exception {
-    FakeFile file = fileSystem.createFileWithContent(path, content);
-
+    fileSystem.createFileWithContent(path, content);
     assertContent(fileSystem.openInputStream(path), content);
-    assertContent(file.openInputStream(), content);
   }
 
   @Test
   public void createEmptyFile() throws IOException {
-    FakeFile file = fileSystem.createEmptyFile(path);
-
+    fileSystem.createEmptyFile(path);
     assertContent(fileSystem.openInputStream(path), "");
-    assertContent(file.openInputStream(), "");
   }
 
   @Test
