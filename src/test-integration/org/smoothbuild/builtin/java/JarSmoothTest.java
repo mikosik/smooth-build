@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.java;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.base.Path.path;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -17,12 +18,15 @@ public class JarSmoothTest extends IntegrationTestCase {
   @Test
   public void testJaring() throws Exception {
     // given
-    FakeFileSet fileSet = fileSet(path("dir"));
-    fileSet.createFile(path("dir/fileA.txt")).createContentWithFilePath();
-    fileSet.createFile(path("dir/fileB.txt")).createContentWithFilePath();
+    Path root = path("dir");
+    Path path1 = path("dir/fileA.txt");
+    Path path2 = path("dir/fileB.txt");
+    fileSystem.createFileContainingItsPath(root, path1);
+    fileSystem.createFileContainingItsPath(root, path2);
+
     Path outDir = path("out");
     Path outputPath = path("myOutput.jar");
-    script("run : files('dir') | jar(" + outputPath + ") | save(" + outDir + ");");
+    script("run : files(" + root + ") | jar(" + outputPath + ") | save(" + outDir + ");");
 
     // when
     smoothApp.run("run");
@@ -33,8 +37,8 @@ public class JarSmoothTest extends IntegrationTestCase {
     FakeFileSet unpackedFiles = new FakeFileSet();
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    FakeFile outputFile = fileSet(outDir).file(outputPath);
-    try (JarInputStream jarInputStream = new JarInputStream(outputFile.openInputStream());) {
+    InputStream inputStream = fileSystem.openInputStream(outDir.append(outputPath));
+    try (JarInputStream jarInputStream = new JarInputStream(inputStream);) {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {
         fileCount++;
