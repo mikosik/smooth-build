@@ -23,6 +23,6 @@ public class FileSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    fileSet(dir).file(path).assertContentContainsFilePath();
+    fileSystem.assertFileContainsItsPath(dir, path);
   }
 }
