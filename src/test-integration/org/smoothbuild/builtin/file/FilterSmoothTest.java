@@ -8,8 +8,8 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.testing.type.impl.FakeFileSet;
 
 import com.google.common.collect.ImmutableList;
 
@@ -113,27 +113,25 @@ public class FilterSmoothTest extends IntegrationTestCase {
       ImmutableList<String> excluded) throws IOException {
     // given
     Path outputPath = path("output");
-    FakeFileSet files = fileSet(path("setA"));
+    Path pathA = path("setA");
     for (String path : included) {
-      createFileInFiles(files, path);
+      fileSystem.createFileContainingItsPath(pathA, path(path));
     }
     for (String path : excluded) {
-      createFileInFiles(files, path);
+      fileSystem.createFileContainingItsPath(pathA, path(path));
     }
-    script("run : files('setA') | filter('" + pattern + "')  | save(" + outputPath + ");");
+    script("run : files(" + pathA + ") | filter('" + pattern + "')  | save(" + outputPath + ");");
 
     // when
     smoothApp.run("run");
 
     // then
     messages.assertNoProblems();
-    assertThat(fileSet(outputPath)).hasSize(included.size());
-    for (String path : included) {
-      fileSet(outputPath).file(path(path)).assertContentContainsFilePath();
+    for (String path : excluded) {
+      assertThat(fileSystem.pathState(path(path))).isEqualTo(PathState.NOTHING);
     }
-  }
-
-  private void createFileInFiles(FakeFileSet files, String path) throws IOException {
-    files.file(path(path)).createContentWithFilePath();
+    for (String path : included) {
+      fileSystem.assertFileContainsItsPath(outputPath, path(path));
+    }
   }
 }
