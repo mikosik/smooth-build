@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.file;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
@@ -10,9 +9,6 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.object.err.DuplicatePathError;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.type.impl.FakeFileSet;
-
-import com.google.common.collect.Iterables;
 
 public class FileSetSmoothTest extends IntegrationTestCase {
   Path path1 = path("file/path/file1.txt");
@@ -34,8 +30,8 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    FakeFileSet resultFiles = fileSet(dir);
-    assertThat(Iterables.size(resultFiles)).isEqualTo(2);
+    fileSystem.assertFileContainsItsPath(dir, path1);
+    fileSystem.assertFileContainsItsPath(dir, path2);
   }
 
   @Test
@@ -67,10 +63,8 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    FakeFileSet resultFiles = fileSet(dir);
-    resultFiles.file(path1).assertContentContainsFilePath();
-    resultFiles.file(path2).assertContentContainsFilePath();
-    assertThat(Iterables.size(resultFiles)).isEqualTo(2);
+    fileSystem.assertFileContainsItsPath(dir, path1);
+    fileSystem.assertFileContainsItsPath(dir, path2);
   }
 
   @Test
@@ -90,9 +84,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    FakeFileSet resultFiles = fileSet(dir);
-    resultFiles.file(path1).assertContentContainsFilePath();
-    assertThat(Iterables.size(resultFiles)).isEqualTo(1);
+    fileSystem.assertFileContainsItsPath(dir, path1);
   }
 
   @Test
@@ -110,8 +102,6 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     messages.assertNoProblems();
-    FakeFileSet resultFiles = fileSet(dir);
-    assertThat(Iterables.size(resultFiles)).isEqualTo(0);
   }
 
   @Test
