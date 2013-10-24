@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Iterator;
 
-import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.FileSet;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
 
 import com.google.common.hash.HashCode;
 

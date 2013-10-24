@@ -14,13 +14,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

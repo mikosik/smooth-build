@@ -12,14 +12,14 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileBuilder;
+import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.FileSetBuilder;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.object.FakeObjectDb;
 import org.smoothbuild.testing.type.impl.FileSetMatchers;
-import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;

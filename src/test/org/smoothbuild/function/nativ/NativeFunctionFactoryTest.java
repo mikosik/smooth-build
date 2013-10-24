@@ -30,6 +30,8 @@ import org.smoothbuild.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
@@ -38,8 +40,6 @@ import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
-import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.FileSet;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;

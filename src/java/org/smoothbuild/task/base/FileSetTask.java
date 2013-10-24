@@ -8,11 +8,11 @@ import java.util.List;
 
 import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.FileSetBuilder;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.task.exec.HashedTasks;
-import org.smoothbuild.type.api.File;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;

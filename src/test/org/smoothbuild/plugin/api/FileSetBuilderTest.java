@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.api.err.CannotAddDuplicatePathError;
 import org.smoothbuild.testing.object.FakeObjectDb;
-import org.smoothbuild.type.api.File;
 
 import com.google.common.base.Charsets;
 

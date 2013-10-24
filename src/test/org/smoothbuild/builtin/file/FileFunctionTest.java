@@ -13,10 +13,10 @@ import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.testing.fs.base.PathTesting;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.type.api.File;
 
 public class FileFunctionTest {
   FakeSandbox sandbox = new FakeSandbox();

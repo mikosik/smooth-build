@@ -8,7 +8,6 @@ import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.ObjectDb;
-import org.smoothbuild.type.api.File;
 
 public class FileBuilder {
   private final ObjectDb objectDb;

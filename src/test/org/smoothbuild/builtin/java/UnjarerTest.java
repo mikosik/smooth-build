@@ -9,10 +9,10 @@ import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;

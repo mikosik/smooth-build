@@ -14,13 +14,13 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;
-import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.collect.ImmutableList;
 
