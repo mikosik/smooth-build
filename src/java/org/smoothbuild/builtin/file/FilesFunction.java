@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.fs.base.Streams.copy;
+import static org.smoothbuild.util.Streams.copy;
 
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
