@@ -3,7 +3,6 @@ package org.smoothbuild.function.base;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 import org.smoothbuild.type.api.StringSet;
-import org.smoothbuild.type.impl.EmptySet;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -115,5 +114,9 @@ public class Type {
     }
 
     return builder.build();
+  }
+
+  public static class EmptySet {
+    private EmptySet() {}
   }
 }
