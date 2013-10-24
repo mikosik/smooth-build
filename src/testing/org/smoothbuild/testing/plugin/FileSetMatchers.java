@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.plugin;
 
-import static org.smoothbuild.testing.common.StreamTester.inputStreamToString;
+import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.IOException;
 
