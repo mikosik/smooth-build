@@ -1,6 +1,7 @@
 package org.smoothbuild.object;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.smoothbuild.command.SmoothContants.OBJECTS_DIR;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.object.HashCodes.toPath;
@@ -8,11 +9,13 @@ import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInsta
 
 import java.io.DataOutputStream;
 
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.err.IllegalPathInObjectError;
+import org.smoothbuild.object.err.NoObjectWithGivenHashError;
 import org.smoothbuild.object.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 
@@ -182,6 +185,17 @@ public class UnmarshallerTest {
       } catch (ErrorMessageException e) {
         assertThat(containsInstanceOf(TooFewBytesToUnmarshallValue.class).matches(e)).isTrue();
       }
+    }
+  }
+
+  @Test
+  public void unmarshallling_not_stored_value_fails() throws Exception {
+    try {
+      new Unmarshaller(hashedDb, HashCode.fromInt(33));
+      fail("exception should be thrown");
+    } catch (ErrorMessageException e) {
+      // expected
+      MatcherAssert.assertThat(e, containsInstanceOf(NoObjectWithGivenHashError.class));
     }
   }
 }
