@@ -1,12 +1,9 @@
 package org.smoothbuild.object.err;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
-
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.message.Message;
 
-public class DuplicatePathError extends Message {
+public class DuplicatePathError extends ObjectDbError {
   public DuplicatePathError(Path path) {
-    super(ERROR, "Two Files with the same path = " + path + " cannot belong to the same File*");
+    super("Two Files with the same path = " + path + " cannot belong to the same File*");
   }
 }
