@@ -1,6 +1,4 @@
-package org.smoothbuild.object;
-
-import org.smoothbuild.hash.Hash;
+package org.smoothbuild.hash;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.hash.HashCode;
