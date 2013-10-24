@@ -5,11 +5,12 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.plugin.FakeFile;
+import org.testory.common.Closure;
 
 public class FakeFileTest {
   Path path = path("my/path");
@@ -17,6 +18,21 @@ public class FakeFileTest {
   String content = "content";
   String content2 = "content2";
   FakeFile file;
+
+  @Test
+  public void null_path_is_forbidden() throws Exception {
+    when($fakeFile(null));
+    thenThrown(NullPointerException.class);
+  }
+
+  private Closure $fakeFile(final Path path) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return new FakeFile(path);
+      }
+    };
+  }
 
   @Test
   public void path_returns_path_passed_to_constructor() {
