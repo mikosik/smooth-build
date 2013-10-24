@@ -8,10 +8,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.err.IllegalPathInObjectError;
+import org.smoothbuild.object.err.ReadingHashedObjectFailedError;
 import org.smoothbuild.object.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.object.err.WritingHashedObjectFailedError;
 
@@ -28,14 +28,6 @@ public class Unmarshaller implements Closeable {
   }
 
   public Path readPath() {
-    try {
-      return readPathImpl();
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
-  }
-
-  private Path readPathImpl() throws IOException {
     int size = readInt();
     byte[] bytes = readBytes(size, "path");
 
@@ -59,32 +51,24 @@ public class Unmarshaller implements Closeable {
   }
 
   public HashCode readHash() {
-    try {
-      return readHashImpl();
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
-  }
-
-  private HashCode readHashImpl() throws IOException {
     byte[] bytes = readBytes(Hash.size(), "hash");
     return HashCode.fromBytes(bytes);
   }
 
   public int readInt() {
-    try {
-      return readIntImpl();
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
-  }
-
-  private int readIntImpl() throws IOException {
     byte[] bytes = readBytes(4, "int");
     return Ints.fromByteArray(bytes);
   }
 
-  private byte[] readBytes(int size, String valueName) throws IOException {
+  private byte[] readBytes(int size, String valueName) {
+    try {
+      return readBytesImpl(size, valueName);
+    } catch (IOException e) {
+      throw new ErrorMessageException(new ReadingHashedObjectFailedError(hash, e));
+    }
+  }
+
+  private byte[] readBytesImpl(int size, String valueName) throws IOException {
     byte[] bytes = new byte[size];
     int read = inputStream.read(bytes);
     if (read < size) {
