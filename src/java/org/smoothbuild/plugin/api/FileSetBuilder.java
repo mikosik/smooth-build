@@ -6,7 +6,7 @@ import java.util.Set;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.ObjectDb;
-import org.smoothbuild.task.base.err.DuplicatePathError;
+import org.smoothbuild.plugin.api.err.CannotAddDuplicatePathError;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
@@ -27,7 +27,7 @@ public class FileSetBuilder {
   public void add(File file) {
     Path path = file.path();
     if (alreadyAdded.contains(path)) {
-      throw new ErrorMessageException(new DuplicatePathError(path));
+      throw new ErrorMessageException(new CannotAddDuplicatePathError(path));
     } else {
       result.add(file);
       alreadyAdded.add(path);
