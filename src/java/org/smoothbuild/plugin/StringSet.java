@@ -1,3 +1,3 @@
 package org.smoothbuild.plugin;
 
-public interface StringSet extends Iterable<String> {}
+public interface StringSet extends Iterable<StringValue> {}

@@ -31,9 +31,8 @@ public class StringSetTask extends AbstractTask {
     for (HashCode hash : elements) {
       builder.add((String) hashedTasks.get(hash).result());
     }
-    ImmutableList<String> strings = builder.build();
 
-    setResult(new ImmutableStringSet(strings));
+    setResult(new ImmutableStringSet(builder.build()));
   }
 
   @Override
