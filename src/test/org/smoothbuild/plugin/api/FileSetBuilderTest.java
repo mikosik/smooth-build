@@ -1,9 +1,11 @@
 package org.smoothbuild.plugin.api;
 
 import static org.hamcrest.Matchers.emptyIterable;
+import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.smoothbuild.testing.type.impl.FileSetMatchers.containsFileContaining;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.io.IOException;
@@ -11,8 +13,9 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.FileObject;
-import org.smoothbuild.plugin.api.FileSetBuilder;
+import org.smoothbuild.plugin.api.err.CannotAddDuplicatePathError;
 import org.smoothbuild.testing.object.FakeObjectDb;
+import org.smoothbuild.type.api.File;
 
 import com.google.common.base.Charsets;
 
@@ -20,6 +23,7 @@ public class FileSetBuilderTest {
   String content = "content";
   Path path = Path.path("my/file.txt");
   FakeObjectDb objectDb = new FakeObjectDb();
+  File file;
 
   FileSetBuilder fileSetBuilder = new FileSetBuilder(objectDb);
 
@@ -40,6 +44,14 @@ public class FileSetBuilderTest {
   public void builder_does_not_contain_not_added_file() throws IOException {
     when(fileSetBuilder.contains(path));
     thenReturned(false);
+  }
+
+  @Test
+  public void adding_two_files_with_the_same_path_fails() throws Exception {
+    given(file = objectDb.file(path, content.getBytes(Charsets.UTF_8)));
+    given(fileSetBuilder).add(file);
+    when(fileSetBuilder).add(file);
+    thenThrown(containsInstanceOf(CannotAddDuplicatePathError.class));
   }
 
   private void addFile(FileSetBuilder fileSetBuilder, Path path, String content) throws IOException {
