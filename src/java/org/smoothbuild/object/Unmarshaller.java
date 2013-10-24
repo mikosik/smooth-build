@@ -13,6 +13,7 @@ import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.err.IllegalPathInObjectError;
 import org.smoothbuild.object.err.TooFewBytesToUnmarshallValue;
+import org.smoothbuild.object.err.WritingHashedObjectFailedError;
 
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Ints;
@@ -97,7 +98,7 @@ public class Unmarshaller implements Closeable {
     try {
       inputStream.close();
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new ErrorMessageException(new WritingHashedObjectFailedError(hash, e));
     }
   }
 }
