@@ -1,5 +1,7 @@
 package org.smoothbuild.object;
 
+import static org.smoothbuild.object.HashedDb.STRING_CHARSET;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -80,6 +82,15 @@ public class ObjectDb {
 
       return new FileObject(path, blob, hash);
     }
+  }
+
+  public StringObject string(String string) {
+    HashCode hash = hashedDb.store(string.getBytes(STRING_CHARSET));
+    return new StringObject(hashedDb, hash);
+  }
+
+  public StringObject string(HashCode hash) {
+    return new StringObject(hashedDb, hash);
   }
 
   public BlobObject blob(byte[] objectBytes) {

@@ -30,6 +30,10 @@ public class ObjectDbTest {
   byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
 
+  String string = "a string";
+  StringObject stringObject;
+  StringObject stringObjectRead;
+
   BlobObject blob;
   BlobObject blobRead;
 
@@ -184,6 +188,45 @@ public class ObjectDbTest {
   @Test
   public void reading_not_stored_file_fails() throws Exception {
     when(objectDb).file(HashCode.fromInt(33));
+    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+  }
+
+  // string object
+
+  @Test
+  public void created_string_object_contains_stored_string() throws IOException {
+    given(stringObject = objectDb.string(string));
+    when(stringObject.value());
+    thenReturned(string);
+  }
+
+  @Test
+  public void created_string_contains_correct_hash() throws Exception {
+    given(stringObject = objectDb.string(string));
+    when(stringObject.hash());
+    thenReturned(Hash.string(string));
+  }
+
+  @Test
+  public void string_retrieved_via_hash_contains_this_hash() throws Exception {
+    given(stringObject = objectDb.string(string));
+    given(stringObjectRead = objectDb.string(stringObject.hash()));
+    when(stringObjectRead.value());
+    thenReturned(string);
+  }
+
+  @Test
+  public void string_object_retrieved_via_hash_contains_string_that_was_stored() throws Exception {
+    given(stringObject = objectDb.string(string));
+    given(stringObjectRead = objectDb.string(stringObject.hash()));
+    when(stringObjectRead.value());
+    thenReturned(string);
+  }
+
+  @Test
+  public void reading_not_stored_string_object_fails() throws Exception {
+    given(stringObject = objectDb.string(HashCode.fromInt(33)));
+    when(stringObject).value();
     thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
