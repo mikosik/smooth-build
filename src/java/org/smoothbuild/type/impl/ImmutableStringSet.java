@@ -18,8 +18,4 @@ public class ImmutableStringSet implements StringSet {
     return elements.iterator();
   }
 
-  @Override
-  public boolean contains(String string) {
-    return elements.contains(string);
-  }
 }

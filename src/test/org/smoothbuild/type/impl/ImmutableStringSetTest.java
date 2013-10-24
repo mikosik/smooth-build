@@ -7,14 +7,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.Test;
-import org.smoothbuild.type.impl.ImmutableStringSet;
 
 public class ImmutableStringSetTest {
-
-  @Test
-  public void doesNotContainRandomString() {
-    assertThat(create().contains("abc")).isFalse();
-  }
 
   @Test
   public void iteratorIsEmptyForEmptySet() throws Exception {
@@ -24,12 +18,6 @@ public class ImmutableStringSetTest {
   @Test
   public void iteratorIsNotEmptyAfterAddingString() throws Exception {
     assertThat(create("abc")).isNotEmpty();
-  }
-
-  @Test
-  public void containsElementPassedToConstructor() throws Exception {
-    String string = "abc";
-    assertThat(create(string).contains(string)).isTrue();
   }
 
   @Test
