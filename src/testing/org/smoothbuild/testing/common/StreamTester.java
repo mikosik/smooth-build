@@ -13,7 +13,7 @@ import com.google.common.io.ByteStreams;
 
 public class StreamTester {
 
-  public static InputStream inputStreamWithContent(String content) {
+  public static InputStream inputStreamContaining(String content) {
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
     try {
       writeAndClose(stream, content);

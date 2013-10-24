@@ -1,7 +1,7 @@
 package org.smoothbuild.util;
 
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamWithContent;
+import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.util.Streams.copy;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -28,7 +28,7 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_string() throws Exception {
-    given(inputStream = inputStreamWithContent(content));
+    given(inputStream = inputStreamContaining(content));
     when(Streams.inputStreamToString(inputStream));
     thenReturned(content);
   }
@@ -36,7 +36,7 @@ public class StreamsTest {
   @Test
   public void empty_input_stream_to_string() throws Exception {
     given(content = "");
-    given(inputStream = inputStreamWithContent(content));
+    given(inputStream = inputStreamContaining(content));
     when(Streams.inputStreamToString(inputStream));
     thenReturned(content);
   }
