@@ -6,6 +6,7 @@ import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class SandboxImplTest {
 
     File file = objectDb.file(hash);
     assertThat(file.path()).isEqualTo(path1);
-    assertThat(StreamTester.inputStreamToString(file.openInputStream())).isEqualTo(content);
+    assertThat(inputStreamToString(file.openInputStream())).isEqualTo(content);
   }
 
   @Test

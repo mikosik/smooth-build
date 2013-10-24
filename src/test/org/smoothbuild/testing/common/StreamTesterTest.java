@@ -6,9 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamToString;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamWithContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
+import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -73,28 +73,6 @@ public class StreamTesterTest {
       return;
     }
     fail("exception should be thrown");
-  }
-
-  // inputStreamToString
-
-  @Test
-  public void testInputStreamToString() throws Exception {
-    String content = "content";
-    InputStream inputStream = inputStreamWithContent(content);
-
-    String actual = inputStreamToString(inputStream);
-
-    assertThat(actual).isEqualTo(content);
-  }
-
-  @Test
-  public void testEmptyInputStreamToString() throws Exception {
-    String content = "";
-    InputStream inputStream = inputStreamWithContent(content);
-
-    String actual = inputStreamToString(inputStream);
-
-    assertThat(actual).isEqualTo(content);
   }
 
   // inputStreamToBytes
