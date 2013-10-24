@@ -11,8 +11,8 @@ import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.testing.plugin.FakeFile;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
-import org.smoothbuild.testing.type.impl.FakeFile;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;

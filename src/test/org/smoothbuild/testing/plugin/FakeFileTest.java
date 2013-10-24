@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.type.impl;
+package org.smoothbuild.testing.plugin;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -9,6 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.testing.plugin.FakeFile;
 
 public class FakeFileTest {
   Path path = path("my/path");

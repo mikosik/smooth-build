@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.type.impl;
+package org.smoothbuild.testing.plugin;
 
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToString;
 

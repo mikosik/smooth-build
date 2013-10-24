@@ -18,9 +18,9 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.plugin.FileTester;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
-import org.smoothbuild.testing.type.impl.FileTester;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

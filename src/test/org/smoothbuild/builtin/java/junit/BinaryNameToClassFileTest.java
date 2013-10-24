@@ -9,9 +9,9 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.testing.plugin.FakeFile;
+import org.smoothbuild.testing.plugin.FileTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
-import org.smoothbuild.testing.type.impl.FakeFile;
-import org.smoothbuild.testing.type.impl.FileTester;
 
 import com.google.common.collect.ImmutableList;
 

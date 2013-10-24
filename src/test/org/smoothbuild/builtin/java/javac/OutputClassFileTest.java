@@ -11,8 +11,8 @@ import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.testing.plugin.FileTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
-import org.smoothbuild.testing.type.impl.FileTester;
 
 import com.google.common.collect.Iterables;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.type.impl;
+package org.smoothbuild.testing.plugin;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
