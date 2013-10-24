@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.object.err.DuplicatePathError;
+import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
 
