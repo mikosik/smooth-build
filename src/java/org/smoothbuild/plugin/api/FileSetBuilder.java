@@ -7,8 +7,6 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.ObjectDb;
 import org.smoothbuild.plugin.api.err.CannotAddDuplicatePathError;
-import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

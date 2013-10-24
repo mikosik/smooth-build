@@ -1,12 +1,12 @@
 package org.smoothbuild.builtin.file;
 
 import org.smoothbuild.builtin.file.err.DuplicateMergedPathError;
+import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.FileSetBuilder;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.type.api.File;
-import org.smoothbuild.type.api.FileSet;
 
 public class MergeFunction {
 

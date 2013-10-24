@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.hash.Hash;
-import org.smoothbuild.type.api.File;
+import org.smoothbuild.plugin.api.File;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;

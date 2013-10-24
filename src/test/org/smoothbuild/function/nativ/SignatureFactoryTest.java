@@ -10,9 +10,9 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;
-import org.smoothbuild.type.api.File;
 
 public class SignatureFactoryTest {
 

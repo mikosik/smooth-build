@@ -16,9 +16,9 @@ import javax.tools.StandardLocation;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.plugin.api.FileSet;
 import org.smoothbuild.plugin.api.FileSetBuilder;
 import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.type.api.FileSet;
 
 import com.google.common.collect.Multimap;
 

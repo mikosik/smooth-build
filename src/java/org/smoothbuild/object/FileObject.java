@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.InputStream;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.type.api.File;
+import org.smoothbuild.plugin.api.File;
 
 import com.google.common.hash.HashCode;
 

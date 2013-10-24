@@ -8,8 +8,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.type.api.File;
 
 public class FakeObjectDbTest {
   Path path = Path.path("my/file");

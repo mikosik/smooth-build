@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
-import org.smoothbuild.type.api.File;
+import org.smoothbuild.plugin.api.File;
 import org.testory.common.Closure;
 
 import com.google.common.collect.ImmutableList;

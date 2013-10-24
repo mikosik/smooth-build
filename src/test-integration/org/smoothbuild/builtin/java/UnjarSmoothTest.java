@@ -5,8 +5,8 @@ import static org.smoothbuild.fs.base.Path.path;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.plugin.api.File;
 import org.smoothbuild.testing.common.JarTester;
-import org.smoothbuild.type.api.File;
 
 public class UnjarSmoothTest extends IntegrationTestCase {
 
