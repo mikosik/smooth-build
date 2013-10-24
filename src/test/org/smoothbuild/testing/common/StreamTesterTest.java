@@ -5,8 +5,8 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
+import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamWithContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
@@ -22,16 +22,16 @@ import org.mockito.Mockito;
 public class StreamTesterTest {
 
   @Test
-  public void testInputStreamWithContent() throws Exception {
+  public void testInputStreamContaining() throws Exception {
     String content = "content";
-    InputStream inputStream = inputStreamWithContent(content);
+    InputStream inputStream = inputStreamContaining(content);
     assertThat(inputStreamToString(inputStream)).isEqualTo(content);
   }
 
   @Test
   public void testInputStreamWithEmptyContent() throws Exception {
     String content = "";
-    InputStream inputStream = inputStreamWithContent(content);
+    InputStream inputStream = inputStreamContaining(content);
     assertThat(inputStreamToString(inputStream)).isEqualTo(content);
   }
 
@@ -56,7 +56,7 @@ public class StreamTesterTest {
   @Test
   public void testAssertContentSucceedsWhenContentIsEqual() throws Exception {
     String content = "content";
-    InputStream inputStream = inputStreamWithContent(content);
+    InputStream inputStream = inputStreamContaining(content);
 
     assertContent(inputStream, content);
   }
@@ -64,7 +64,7 @@ public class StreamTesterTest {
   @Test
   public void testAssertContentFailsWhenContentIsNotEqual() throws Exception {
     String content = "content";
-    InputStream inputStream = inputStreamWithContent(content + "suffix");
+    InputStream inputStream = inputStreamContaining(content + "suffix");
 
     try {
       assertContent(inputStream, content);
@@ -80,7 +80,7 @@ public class StreamTesterTest {
   @Test
   public void testInputStreamToBytes() throws Exception {
     String content = "content";
-    InputStream inputStream = inputStreamWithContent(content);
+    InputStream inputStream = inputStreamContaining(content);
 
     byte[] actual = inputStreamToBytes(inputStream);
 
@@ -90,7 +90,7 @@ public class StreamTesterTest {
   @Test
   public void testEmptyInputStreamToBytes() throws Exception {
     String content = "";
-    InputStream inputStream = inputStreamWithContent(content);
+    InputStream inputStream = inputStreamContaining(content);
 
     byte[] actual = inputStreamToBytes(inputStream);
 

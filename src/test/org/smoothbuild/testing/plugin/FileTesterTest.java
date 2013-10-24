@@ -4,7 +4,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamWithContent;
+import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +21,7 @@ public class FileTesterTest {
 
   @Test
   public void assertFileContainsSucceedsWhenContentIsEqualToExpected() throws IOException {
-    InputStream inputStream = inputStreamWithContent(content);
+    InputStream inputStream = inputStreamContaining(content);
     when(file.openInputStream()).thenReturn(inputStream);
 
     FileTester.assertContentContains(file, content);
@@ -29,7 +29,7 @@ public class FileTesterTest {
 
   @Test
   public void assertFileContainsFailsWhenContentIsNotEqualToExpected() throws IOException {
-    InputStream inputStream = inputStreamWithContent(content);
+    InputStream inputStream = inputStreamContaining(content);
     when(file.openInputStream()).thenReturn(inputStream);
 
     try {
@@ -43,7 +43,7 @@ public class FileTesterTest {
 
   @Test
   public void assertFileContainsFilePathSucceedsWhenContentIsEqualToExpected() throws IOException {
-    InputStream inputStream = inputStreamWithContent(path.value());
+    InputStream inputStream = inputStreamContaining(path.value());
     when(file.openInputStream()).thenReturn(inputStream);
     when(file.path()).thenReturn(path);
 
@@ -52,7 +52,7 @@ public class FileTesterTest {
 
   @Test
   public void assertFileContainsFilePathFailsWhenContentIsNotEqualToExpected() throws IOException {
-    InputStream inputStream = inputStreamWithContent(path.value() + "suffix");
+    InputStream inputStream = inputStreamContaining(path.value() + "suffix");
     when(file.openInputStream()).thenReturn(inputStream);
     when(file.path()).thenReturn(path);
 
