@@ -6,15 +6,20 @@ import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.FakeTask;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class StringSetNodeTest {
   String string1 = "string1";
@@ -43,7 +48,17 @@ public class StringSetNodeTest {
 
     Task task = stringSetNode.generateTask(taskGenerator);
     task.execute(null, hashedTasks(task1, task2));
-    assertThat((StringSet) task.result()).containsOnly(string1, string2);
+    StringSet result = (StringSet) task.result();
+
+    List<String> convertedResult = convert(result);
+    assertThat(convertedResult).containsOnly(string1, string2);
   }
 
+  private static List<String> convert(StringSet stringSet) {
+    ArrayList<String> result = Lists.newArrayList();
+    for (StringValue stringValue : stringSet) {
+      result.add(stringValue.value());
+    }
+    return result;
+  }
 }

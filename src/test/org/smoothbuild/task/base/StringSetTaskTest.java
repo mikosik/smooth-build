@@ -5,15 +5,16 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.task.base.TaskTester.hashes;
 import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.StringSet;
-import org.smoothbuild.task.base.StringSetTask;
-import org.smoothbuild.task.base.Task;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.task.base.FakeTask;
 
+import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
 public class StringSetTaskTest {
@@ -36,7 +37,15 @@ public class StringSetTaskTest {
   @Test
   public void execute() {
     stringSetTask.execute(null, hashedTasks(task1, task2));
-    assertThat((StringSet) stringSetTask.result()).containsOnly(string1, string2);
+    assertThat(convert((StringSet) stringSetTask.result())).containsOnly(string1, string2);
+  }
+
+  private static List<String> convert(StringSet stringSet) {
+    ArrayList<String> result = Lists.newArrayList();
+    for (StringValue stringValue : stringSet) {
+      result.add(stringValue.value());
+    }
+    return result;
   }
 
   @Test
