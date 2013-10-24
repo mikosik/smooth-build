@@ -33,6 +33,14 @@ public class HashedDbTest {
   }
 
   @Test
+  public void empty_byte_array_stored_can_be_read_back() throws IOException {
+    given(bytes1 = new byte[] {});
+    given(hash = hashedDb.store(bytes1));
+    when(inputStreamToBytes(hashedDb.openInputStream(hash)));
+    thenReturned(bytes1);
+  }
+
+  @Test
   public void bytes_stored_at_given_hash_can_be_read_back() throws IOException {
     given(hash = Hash.function().hashInt(33));
     given(hashedDb.store(hash, bytes1));
