@@ -46,7 +46,7 @@ public class Unmarshaller implements Closeable {
     try {
       return path(value);
     } catch (IllegalArgumentException e) {
-      throw new ErrorMessageException(new IllegalPathInObjectError(e.getMessage()));
+      throw new ErrorMessageException(new IllegalPathInObjectError(hash, e.getMessage()));
     }
   }
 

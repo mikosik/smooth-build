@@ -7,7 +7,7 @@ import com.google.common.hash.HashCode;
 
 public class WritingHashedObjectFailedError extends ObjectDbError {
   public WritingHashedObjectFailedError(HashCode hash, IOException e) {
-    super("IO error occurred while writing object with hash = " + hash + "\n"
+    super("IO error occurred while writing " + hash + " object.\n"
         + Throwables.getStackTraceAsString(e));
   }
 }
