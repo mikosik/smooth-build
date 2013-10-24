@@ -43,8 +43,7 @@ public class BlobObjectTest {
   }
 
   @Test
-  public void open_input_stream_reads_from_file_on_file_system_with_name_equal_to_blob_hash()
-      throws IOException {
+  public void open_input_stream_calls_hashed_db_open_input_stream() throws IOException {
     BDDMockito.given(hashedDb.openInputStream(hash)).willReturn(inputStream);
     given(blobObject = new BlobObject(hashedDb, hash));
     when(blobObject.openInputStream());
