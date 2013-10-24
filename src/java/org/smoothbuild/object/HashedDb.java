@@ -15,10 +15,10 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.fs.base.SubFileSystem;
-import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
+import org.smoothbuild.object.err.ReadingHashedObjectFailedError;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
@@ -49,17 +49,17 @@ public class HashedDb {
 
   public HashCode store(HashCode hash, byte[] bytes) {
     Path path = toPath(hash);
-    if (objectsFileSystem.pathState(path) != PathState.FILE) {
-      store(path, bytes);
-    }
-    return hash;
-  }
 
-  private void store(Path path, byte[] bytes) {
+    if (objectsFileSystem.pathState(path) == PathState.FILE) {
+      return hash;
+    }
+
     try (OutputStream outputStream = objectsFileSystem.openOutputStream(path)) {
       outputStream.write(bytes);
     } catch (IOException e) {
-      throw new ErrorMessageException(new FileSystemError(e));
+      throw new ErrorMessageException(new ReadingHashedObjectFailedError(hash, e));
     }
+
+    return hash;
   }
 }
