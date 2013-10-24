@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.object.FileBuilder;
-import org.smoothbuild.object.FileSetBuilder;
+import org.smoothbuild.plugin.api.FileBuilder;
+import org.smoothbuild.plugin.api.FileSetBuilder;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.testing.type.impl.FileTester;

@@ -13,7 +13,7 @@ import java.util.jar.Manifest;
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
-import org.smoothbuild.object.FileBuilder;
+import org.smoothbuild.plugin.api.FileBuilder;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;

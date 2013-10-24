@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import org.smoothbuild.builtin.file.err.DuplicateMergedPathError;
-import org.smoothbuild.object.FileSetBuilder;
+import org.smoothbuild.plugin.api.FileSetBuilder;
 import org.smoothbuild.plugin.api.Required;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.plugin.api.SmoothFunction;

@@ -1,10 +1,11 @@
-package org.smoothbuild.object;
+package org.smoothbuild.plugin.api;
 
 import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.object.ObjectDb;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;

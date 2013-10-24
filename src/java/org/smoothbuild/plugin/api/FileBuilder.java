@@ -1,4 +1,4 @@
-package org.smoothbuild.object;
+package org.smoothbuild.plugin.api;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.object.ObjectDb;
 import org.smoothbuild.type.api.File;
 
 public class FileBuilder {

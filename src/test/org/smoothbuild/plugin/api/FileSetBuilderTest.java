@@ -1,4 +1,4 @@
-package org.smoothbuild.type.impl;
+package org.smoothbuild.plugin.api;
 
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.smoothbuild.testing.type.impl.FileSetMatchers.containsFileContaining;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.FileObject;
-import org.smoothbuild.object.FileSetBuilder;
+import org.smoothbuild.plugin.api.FileSetBuilder;
 import org.smoothbuild.testing.object.FakeObjectDb;
 
 import com.google.common.base.Charsets;
