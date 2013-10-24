@@ -10,6 +10,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.hash.HashXorer;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.StringValue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -21,6 +22,8 @@ public class ObjectDb {
   public ObjectDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
   }
+
+  // FileSet
 
   public FileSetObject fileSet(List<File> elements) {
     HashCode hash = genericSet(elements);
@@ -62,6 +65,30 @@ public class ObjectDb {
     return builder.build();
   }
 
+  // StringSet
+
+  public StringSetObject stringSet(List<StringValue> elements) {
+    HashCode hash = genericSet(elements);
+    return new StringSetObject(this, hash);
+  }
+
+  public StringSetObject stringSet(HashCode hash) {
+    return new StringSetObject(this, hash);
+  }
+
+  public Iterable<StringValue> stringSetIterable(HashCode hash) {
+    ImmutableList.Builder<StringValue> builder = ImmutableList.builder();
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      int size = unmarshaller.readInt();
+      for (int i = 0; i < size; i++) {
+        builder.add(string(unmarshaller.readHash()));
+      }
+    }
+    return builder.build();
+  }
+
+  // File
+
   public FileObject file(Path path, byte[] bytes) {
     BlobObject blob = blob(bytes);
     HashCode contentHash = blob.hash();
@@ -84,6 +111,8 @@ public class ObjectDb {
     }
   }
 
+  // String
+
   public StringObject string(String string) {
     HashCode hash = hashedDb.store(string.getBytes(STRING_CHARSET));
     return new StringObject(hashedDb, hash);
@@ -92,6 +121,8 @@ public class ObjectDb {
   public StringObject string(HashCode hash) {
     return new StringObject(hashedDb, hash);
   }
+
+  // Blob
 
   public BlobObject blob(byte[] objectBytes) {
     HashCode hash = hashedDb.store(objectBytes);
