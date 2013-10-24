@@ -24,6 +24,11 @@ public class ImmutableStringSet implements StringSet {
   }
 
   @Override
+  public HashCode hash() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public Iterator<StringValue> iterator() {
     return elements.iterator();
   }

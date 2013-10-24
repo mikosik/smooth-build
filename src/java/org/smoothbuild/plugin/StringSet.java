@@ -1,3 +1,5 @@
 package org.smoothbuild.plugin;
 
-public interface StringSet extends Iterable<StringValue> {}
+import org.smoothbuild.object.Hashed;
+
+public interface StringSet extends Iterable<StringValue>, Hashed {}
