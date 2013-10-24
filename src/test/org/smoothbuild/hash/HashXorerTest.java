@@ -1,4 +1,4 @@
-package org.smoothbuild.object;
+package org.smoothbuild.hash;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;

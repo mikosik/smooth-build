@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.hash.Hash;
+import org.smoothbuild.hash.HashXorer;
 import org.smoothbuild.plugin.File;
 
 import com.google.common.collect.ImmutableList;
