@@ -16,12 +16,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
-import org.smoothbuild.object.ObjectsDb;
+import org.smoothbuild.object.ObjectDb;
 import org.smoothbuild.plugin.api.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
-import org.smoothbuild.testing.object.FakeObjectsDb;
+import org.smoothbuild.testing.object.FakeObjectDb;
 
 import com.google.common.hash.HashCode;
 
@@ -30,9 +30,9 @@ public class TaskExecutorTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
   HashedTasks hashedTasks = hashedTasks(task1);
   FakeUserConsole userConsole = new FakeUserConsole();
-  ObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
+  ObjectDb objectDb = new FakeObjectDb(fileSystem);
 
-  TaskExecutor taskExecutor = new TaskExecutor(fileSystem, objectsDb, hashedTasks, userConsole);
+  TaskExecutor taskExecutor = new TaskExecutor(fileSystem, objectDb, hashedTasks, userConsole);
 
   @Test
   public void task_with_result_already_calculate_is_not_executed() {

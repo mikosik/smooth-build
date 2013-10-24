@@ -12,16 +12,16 @@ import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.FileObject;
 import org.smoothbuild.object.FileSetBuilder;
-import org.smoothbuild.testing.object.FakeObjectsDb;
+import org.smoothbuild.testing.object.FakeObjectDb;
 
 import com.google.common.base.Charsets;
 
 public class FileSetBuilderTest {
   String content = "content";
   Path path = Path.path("my/file.txt");
-  FakeObjectsDb objectsDb = new FakeObjectsDb();
+  FakeObjectDb objectDb = new FakeObjectDb();
 
-  FileSetBuilder fileSetBuilder = new FileSetBuilder(objectsDb);
+  FileSetBuilder fileSetBuilder = new FileSetBuilder(objectDb);
 
   @Test
   public void build_returns_empty_file_set_when_no_file_has_been_added() throws IOException {
@@ -43,7 +43,7 @@ public class FileSetBuilderTest {
   }
 
   private void addFile(FileSetBuilder fileSetBuilder, Path path, String content) throws IOException {
-    FileObject file = objectsDb.file(path, content.getBytes(Charsets.UTF_8));
+    FileObject file = objectDb.file(path, content.getBytes(Charsets.UTF_8));
     fileSetBuilder.add(file);
   }
 }

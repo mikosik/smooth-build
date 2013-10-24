@@ -7,28 +7,28 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.object.FakeObjectsDb;
+import org.smoothbuild.testing.object.FakeObjectDb;
 
 public class FakeSandbox extends SandboxImpl {
   private final FakeFileSystem fileSystem;
   private final FakeMessageGroup messageGroup;
-  private final FakeObjectsDb objectsDb;
+  private final FakeObjectDb objectDb;
 
   public FakeSandbox() {
     this(new FakeFileSystem());
   }
 
   public FakeSandbox(FakeFileSystem fileSystem) {
-    this(fileSystem, new FakeMessageGroup(), new FakeObjectsDb(fileSystem));
+    this(fileSystem, new FakeMessageGroup(), new FakeObjectDb(fileSystem));
   }
 
   public FakeSandbox(FakeFileSystem fileSystem, FakeMessageGroup messageGroup,
-      FakeObjectsDb objectsDb) {
-    super(fileSystem, objectsDb, callLocation(simpleName("name"), codeLocation(1, 2, 4)),
+      FakeObjectDb objectDb) {
+    super(fileSystem, objectDb, callLocation(simpleName("name"), codeLocation(1, 2, 4)),
         messageGroup);
     this.fileSystem = fileSystem;
     this.messageGroup = messageGroup;
-    this.objectsDb = objectsDb;
+    this.objectDb = objectDb;
   }
 
   @Override
@@ -36,8 +36,8 @@ public class FakeSandbox extends SandboxImpl {
     return fileSystem;
   }
 
-  public FakeObjectsDb objectDb() {
-    return objectsDb;
+  public FakeObjectDb objectDb() {
+    return objectDb;
   }
 
   public FakeMessageGroup messages() {

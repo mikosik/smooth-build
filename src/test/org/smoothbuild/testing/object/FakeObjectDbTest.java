@@ -11,23 +11,23 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.type.api.File;
 
-public class FakeObjectsDbTest {
+public class FakeObjectDbTest {
   Path path = Path.path("my/file");
-  FakeObjectsDb fakeObjectsDb = new FakeObjectsDb();
+  FakeObjectDb fakeObjectDb = new FakeObjectDb();
 
   File file;
 
   @Test
   public void created_file_containing_its_path_can_be_read_from_db() {
-    given(file = fakeObjectsDb.createFileContainingItsPath(path));
-    when(fakeObjectsDb.file(file.hash()).path());
+    given(file = fakeObjectDb.createFileContainingItsPath(path));
+    when(fakeObjectDb.file(file.hash()).path());
     thenReturned(path);
   }
 
   @Test
   public void created_file_containing_its_path_can_be_read_from_db2() throws IOException {
-    given(file = fakeObjectsDb.createFileContainingItsPath(path));
-    when(StreamTester.inputStreamToString(fakeObjectsDb.file(file.hash()).openInputStream()));
+    given(file = fakeObjectDb.createFileContainingItsPath(path));
+    when(StreamTester.inputStreamToString(fakeObjectDb.file(file.hash()).openInputStream()));
     thenReturned(path.value());
   }
 }

@@ -10,13 +10,13 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.type.api.File;
 
 public class FileBuilder {
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
 
   private Path path;
   private ByteArrayOutputStream outputStream;
 
-  public FileBuilder(ObjectsDb objectsDb) {
-    this.objectsDb = objectsDb;
+  public FileBuilder(ObjectDb objectDb) {
+    this.objectDb = objectDb;
   }
 
   public void setPath(Path path) {
@@ -34,6 +34,6 @@ public class FileBuilder {
     checkState(outputStream != null, "No file content available. Create one via openOutputStream()");
     checkState(path != null, "No path set");
 
-    return objectsDb.file(path, outputStream.toByteArray());
+    return objectDb.file(path, outputStream.toByteArray());
   }
 }
