@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.type.impl;
+package org.smoothbuild.testing.plugin;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.fs.base.Path.path;
@@ -8,6 +8,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.testing.plugin.FakeFile;
+import org.smoothbuild.testing.plugin.FakeFileSet;
 
 import com.google.common.collect.Iterables;
 

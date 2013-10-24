@@ -15,8 +15,8 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.testing.fs.base.PathTesting;
+import org.smoothbuild.testing.plugin.FileTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
-import org.smoothbuild.testing.type.impl.FileTester;
 
 public class FileFunctionTest {
   FakeSandbox sandbox = new FakeSandbox();

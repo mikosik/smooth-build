@@ -19,7 +19,7 @@ import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.object.FakeObjectDb;
-import org.smoothbuild.testing.type.impl.FileSetMatchers;
+import org.smoothbuild.testing.plugin.FileSetMatchers;
 
 import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;

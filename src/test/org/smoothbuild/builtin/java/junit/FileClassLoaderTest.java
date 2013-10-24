@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.testing.type.impl.FakeFile;
+import org.smoothbuild.testing.plugin.FakeFile;
 
 import com.google.common.collect.ImmutableMap;
 

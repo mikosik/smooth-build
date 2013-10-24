@@ -2,7 +2,7 @@ package org.smoothbuild.plugin;
 
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
-import static org.smoothbuild.testing.type.impl.FileSetMatchers.containsFileContaining;
+import static org.smoothbuild.testing.plugin.FileSetMatchers.containsFileContaining;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
