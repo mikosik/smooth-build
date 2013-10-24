@@ -42,10 +42,6 @@ public class SandboxImpl implements Sandbox {
     return projectFileSystem;
   }
 
-  public ObjectDb objectDb() {
-    return objectDb;
-  }
-
   @Override
   public void report(Message message) {
     // TODO Smooth StackTrace (list of CodeLocations) should be added here. This
