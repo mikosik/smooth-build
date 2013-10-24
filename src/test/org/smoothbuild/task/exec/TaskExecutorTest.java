@@ -17,7 +17,7 @@ import org.mockito.stubbing.Answer;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
 import org.smoothbuild.object.ObjectDb;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;

@@ -5,7 +5,7 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.Sandbox;
 
 public class ReportingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
   private final Sandbox sandbox;

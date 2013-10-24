@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.lang.reflect.Method;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.Sandbox;
 
 import com.google.common.collect.ImmutableMap;
 

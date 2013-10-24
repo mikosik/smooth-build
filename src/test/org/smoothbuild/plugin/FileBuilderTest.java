@@ -1,4 +1,4 @@
-package org.smoothbuild.plugin.api;
+package org.smoothbuild.plugin;
 
 import static org.mockito.Mockito.mock;
 import static org.testory.Testory.given;
@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.FileObject;
 import org.smoothbuild.object.ObjectDb;
-import org.smoothbuild.plugin.api.FileBuilder;
+import org.smoothbuild.plugin.FileBuilder;
 
 public class FileBuilderTest {
   ObjectDb objectDb = mock(ObjectDb.class);

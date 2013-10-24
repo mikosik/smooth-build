@@ -1,4 +1,4 @@
-package org.smoothbuild.plugin.api;
+package org.smoothbuild.plugin;
 
 import java.util.List;
 import java.util.Set;
@@ -6,7 +6,7 @@ import java.util.Set;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.ObjectDb;
-import org.smoothbuild.plugin.api.err.CannotAddDuplicatePathError;
+import org.smoothbuild.plugin.err.CannotAddDuplicatePathError;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

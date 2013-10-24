@@ -16,8 +16,8 @@ import org.smoothbuild.function.nativ.exc.MissingNameException;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
 import org.smoothbuild.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.nativ.exc.ParamsIsNotInterfaceException;
-import org.smoothbuild.plugin.api.Required;
-import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.Required;
+import org.smoothbuild.plugin.SmoothFunction;
 
 import com.google.common.collect.Lists;
 import com.google.inject.TypeLiteral;

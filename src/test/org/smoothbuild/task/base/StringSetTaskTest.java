@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.api.StringSet;
+import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.task.base.StringSetTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.task.base.FakeTask;

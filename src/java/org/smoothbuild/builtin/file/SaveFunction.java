@@ -18,10 +18,10 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.Required;
-import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.Required;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.io.ByteStreams;

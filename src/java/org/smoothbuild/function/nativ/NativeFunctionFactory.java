@@ -12,8 +12,8 @@ import org.smoothbuild.function.nativ.exc.NoSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonPublicSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.plugin.api.Sandbox;
-import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class NativeFunctionFactory {

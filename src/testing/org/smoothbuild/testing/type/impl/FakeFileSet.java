@@ -4,8 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.hash.Hash;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileSet;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;

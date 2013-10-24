@@ -2,7 +2,7 @@ package org.smoothbuild.function.nativ.exc;
 
 import java.lang.reflect.Method;
 
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.Sandbox;
 
 @SuppressWarnings("serial")
 public class WrongParamsInSmoothFunctionException extends FunctionImplementationException {

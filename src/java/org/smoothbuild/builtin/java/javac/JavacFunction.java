@@ -21,10 +21,10 @@ import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.Required;
-import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.Required;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.base.Function;

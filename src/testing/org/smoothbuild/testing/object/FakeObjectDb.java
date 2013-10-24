@@ -4,7 +4,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.HashedDb;
 import org.smoothbuild.object.ObjectDb;
-import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.File;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 
 import com.google.common.base.Charsets;

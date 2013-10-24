@@ -11,11 +11,11 @@ import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.plugin.api.FileBuilder;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.FileSetBuilder;
-import org.smoothbuild.plugin.api.Required;
-import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.FileBuilder;
+import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.FileSetBuilder;
+import org.smoothbuild.plugin.Required;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class FilesFunction {

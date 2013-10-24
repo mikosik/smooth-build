@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.File;
 import org.smoothbuild.testing.common.StreamTester;
 
 public class FakeObjectDbTest {
