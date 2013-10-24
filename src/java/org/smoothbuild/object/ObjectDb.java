@@ -11,11 +11,11 @@ import org.smoothbuild.type.api.File;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class ObjectsDb {
+public class ObjectDb {
   private final HashedDb hashedDb;
 
   @Inject
-  public ObjectsDb(HashedDb hashedDb) {
+  public ObjectDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
   }
 

@@ -7,43 +7,43 @@ import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.object.FileBuilder;
 import org.smoothbuild.object.FileSetBuilder;
-import org.smoothbuild.object.ObjectsDb;
+import org.smoothbuild.object.ObjectDb;
 import org.smoothbuild.plugin.api.Sandbox;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MessageGroup messageGroup;
   private final CallLocation callLocation;
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
 
-  public SandboxImpl(FileSystem fileSystem, ObjectsDb objectsDb, CallLocation callLocation) {
-    this(fileSystem, objectsDb, callLocation, createMessages(callLocation));
+  public SandboxImpl(FileSystem fileSystem, ObjectDb objectDb, CallLocation callLocation) {
+    this(fileSystem, objectDb, callLocation, createMessages(callLocation));
   }
 
-  public SandboxImpl(FileSystem fileSystem, ObjectsDb objectsDb, CallLocation callLocation,
+  public SandboxImpl(FileSystem fileSystem, ObjectDb objectDb, CallLocation callLocation,
       MessageGroup messageGroup) {
     this.projectFileSystem = fileSystem;
-    this.objectsDb = objectsDb;
+    this.objectDb = objectDb;
     this.messageGroup = messageGroup;
     this.callLocation = callLocation;
   }
 
   @Override
   public FileBuilder fileBuilder() {
-    return new FileBuilder(objectsDb);
+    return new FileBuilder(objectDb);
   }
 
   @Override
   public FileSetBuilder fileSetBuilder() {
-    return new FileSetBuilder(objectsDb);
+    return new FileSetBuilder(objectDb);
   }
 
   public FileSystem projectFileSystem() {
     return projectFileSystem;
   }
 
-  public ObjectsDb objectsDb() {
-    return objectsDb;
+  public ObjectDb objectDb() {
+    return objectDb;
   }
 
   @Override

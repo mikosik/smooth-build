@@ -12,8 +12,8 @@ import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
 
 public class FileBuilderTest {
-  ObjectsDb objectsDb = mock(ObjectsDb.class);
-  FileBuilder fileBuilder = new FileBuilder(objectsDb);
+  ObjectDb objectDb = mock(ObjectDb.class);
+  FileBuilder fileBuilder = new FileBuilder(objectDb);
   Path path = Path.path("my/path");
   byte[] bytes = new byte[] { 1, 2, 3 };
   FileObject file = Mockito.mock(FileObject.class);
@@ -54,7 +54,7 @@ public class FileBuilderTest {
 
   @Test
   public void build_returns_file_stored_in_object_db_with_empty_content() throws Exception {
-    BDDMockito.given(objectsDb.file(path, new byte[] {})).willReturn(file);
+    BDDMockito.given(objectDb.file(path, new byte[] {})).willReturn(file);
     given(fileBuilder).openOutputStream();
     given(fileBuilder).setPath(path);
     when(fileBuilder).build();
@@ -63,7 +63,7 @@ public class FileBuilderTest {
 
   @Test
   public void build_returns_file_stored_in_object_db() throws Exception {
-    BDDMockito.given(objectsDb.file(path, bytes)).willReturn(file);
+    BDDMockito.given(objectDb.file(path, bytes)).willReturn(file);
     given(fileBuilder.openOutputStream()).write(bytes);
     given(fileBuilder).setPath(path);
     when(fileBuilder).build();

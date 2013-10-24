@@ -13,12 +13,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class FileSetBuilder {
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
   private final List<File> result;
   private final Set<Path> alreadyAdded;
 
-  public FileSetBuilder(ObjectsDb objectsDb) {
-    this.objectsDb = objectsDb;
+  public FileSetBuilder(ObjectDb objectDb) {
+    this.objectDb = objectDb;
     this.result = Lists.newArrayList();
     this.alreadyAdded = Sets.newHashSet();
   }
@@ -38,6 +38,6 @@ public class FileSetBuilder {
   }
 
   public FileSet build() {
-    return objectsDb.fileSet(result);
+    return objectDb.fileSet(result);
   }
 }

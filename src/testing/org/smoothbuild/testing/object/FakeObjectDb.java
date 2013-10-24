@@ -3,18 +3,18 @@ package org.smoothbuild.testing.object;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.HashedDb;
-import org.smoothbuild.object.ObjectsDb;
+import org.smoothbuild.object.ObjectDb;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.type.api.File;
 
 import com.google.common.base.Charsets;
 
-public class FakeObjectsDb extends ObjectsDb {
-  public FakeObjectsDb() {
+public class FakeObjectDb extends ObjectDb {
+  public FakeObjectDb() {
     this(new FakeFileSystem());
   }
 
-  public FakeObjectsDb(FileSystem fakeFileSystem) {
+  public FakeObjectDb(FileSystem fakeFileSystem) {
     super(new HashedDb(fakeFileSystem));
   }
 

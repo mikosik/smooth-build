@@ -16,7 +16,7 @@ import org.smoothbuild.object.FileBuilder;
 import org.smoothbuild.object.FileSetBuilder;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.object.FakeObjectsDb;
+import org.smoothbuild.testing.object.FakeObjectDb;
 import org.smoothbuild.testing.type.impl.FileSetMatchers;
 import org.smoothbuild.type.api.File;
 import org.smoothbuild.type.api.FileSet;
@@ -31,9 +31,9 @@ public class SandboxImplTest {
   CallLocation callLocation = callLocation(simpleName("name"), codeLocation(1, 2, 4));
 
   FakeFileSystem fileSystem = new FakeFileSystem();
-  FakeObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
+  FakeObjectDb objectDb = new FakeObjectDb(fileSystem);
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, objectsDb, callLocation);
+  SandboxImpl sandbox = new SandboxImpl(fileSystem, objectDb, callLocation);
 
   @Test
   public void file_builder_stores_file_in_object_db() throws Exception {
@@ -42,7 +42,7 @@ public class SandboxImplTest {
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
     HashCode hash = fileBuilder.build().hash();
 
-    File file = objectsDb.file(hash);
+    File file = objectDb.file(hash);
     assertThat(file.path()).isEqualTo(path1);
     assertThat(StreamTester.inputStreamToString(file.openInputStream())).isEqualTo(content);
   }
@@ -58,7 +58,7 @@ public class SandboxImplTest {
     builder.add(file);
     HashCode hash = builder.build().hash();
 
-    FileSet fileSet = objectsDb.fileSet(hash);
+    FileSet fileSet = objectDb.fileSet(hash);
     MatcherAssert.assertThat(fileSet, FileSetMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileSet)).isEqualTo(1);
   }

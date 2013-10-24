@@ -10,11 +10,11 @@ import org.smoothbuild.type.api.FileSet;
 import com.google.common.hash.HashCode;
 
 public class FileSetObject implements FileSet, Hashed {
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
   private final HashCode hash;
 
-  public FileSetObject(ObjectsDb objectsDb, HashCode hash) {
-    this.objectsDb = checkNotNull(objectsDb);
+  public FileSetObject(ObjectDb objectDb, HashCode hash) {
+    this.objectDb = checkNotNull(objectDb);
     this.hash = checkNotNull(hash);
   }
 
@@ -25,6 +25,6 @@ public class FileSetObject implements FileSet, Hashed {
 
   @Override
   public Iterator<File> iterator() {
-    return objectsDb.fileSetIterable(hash).iterator();
+    return objectDb.fileSetIterable(hash).iterator();
   }
 }
