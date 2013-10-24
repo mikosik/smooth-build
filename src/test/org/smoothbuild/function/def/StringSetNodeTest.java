@@ -9,7 +9,7 @@ import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.api.StringSet;
+import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.FakeTask;

@@ -6,9 +6,9 @@ import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.object.ObjectDb;
-import org.smoothbuild.plugin.api.FileBuilder;
-import org.smoothbuild.plugin.api.FileSetBuilder;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.FileBuilder;
+import org.smoothbuild.plugin.FileSetBuilder;
+import org.smoothbuild.plugin.Sandbox;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;

@@ -14,11 +14,11 @@ import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileBuilder;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.FileSetBuilder;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileBuilder;
+import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.FileSetBuilder;
+import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;

@@ -8,9 +8,9 @@ import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.Sandbox;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

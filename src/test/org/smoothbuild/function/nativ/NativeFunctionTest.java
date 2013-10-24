@@ -11,7 +11,7 @@ import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.util.Empty;

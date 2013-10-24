@@ -11,9 +11,9 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
-import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 /*

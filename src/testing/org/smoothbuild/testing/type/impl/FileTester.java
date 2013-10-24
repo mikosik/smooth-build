@@ -4,7 +4,7 @@ import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import java.io.IOException;
 
-import org.smoothbuild.plugin.api.File;
+import org.smoothbuild.plugin.File;
 
 public class FileTester {
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.function.nativ.exc;
 
-import org.smoothbuild.plugin.api.SmoothFunction;
+import org.smoothbuild.plugin.SmoothFunction;
 
 @SuppressWarnings("serial")
 public class NoSmoothFunctionException extends FunctionClassImplementationException {

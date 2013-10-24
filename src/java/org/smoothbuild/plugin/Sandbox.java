@@ -1,4 +1,4 @@
-package org.smoothbuild.plugin.api;
+package org.smoothbuild.plugin;
 
 import org.smoothbuild.message.message.Message;
 

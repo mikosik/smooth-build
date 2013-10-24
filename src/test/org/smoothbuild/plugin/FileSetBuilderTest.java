@@ -1,4 +1,4 @@
-package org.smoothbuild.plugin.api;
+package org.smoothbuild.plugin;
 
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
@@ -12,7 +12,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.plugin.api.err.CannotAddDuplicatePathError;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileSetBuilder;
+import org.smoothbuild.plugin.err.CannotAddDuplicatePathError;
 import org.smoothbuild.testing.object.FakeObjectDb;
 
 import com.google.common.base.Charsets;

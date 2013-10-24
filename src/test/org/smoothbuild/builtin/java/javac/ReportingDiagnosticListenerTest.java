@@ -12,7 +12,7 @@ import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.Sandbox;
 
 public class ReportingDiagnosticListenerTest {
   @SuppressWarnings("unchecked")

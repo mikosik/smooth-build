@@ -8,8 +8,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.plugin.api.File;
-import org.smoothbuild.plugin.api.FileSet;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileSet;
 
 public class FileSetMatchers {
 

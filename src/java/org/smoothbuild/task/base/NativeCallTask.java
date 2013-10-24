@@ -10,7 +10,7 @@ import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.api.Sandbox;
+import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
