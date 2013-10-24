@@ -7,8 +7,8 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.integration.IntegrationTestCase;
-import org.smoothbuild.object.err.DuplicatePathError;
 import org.smoothbuild.parse.err.SyntaxError;
+import org.smoothbuild.task.base.err.DuplicatePathError;
 
 public class FileSetSmoothTest extends IntegrationTestCase {
   Path path1 = path("file/path/file1.txt");
