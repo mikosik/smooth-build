@@ -12,7 +12,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.object.FileObject;
 import org.smoothbuild.plugin.api.err.CannotAddDuplicatePathError;
 import org.smoothbuild.testing.object.FakeObjectDb;
 import org.smoothbuild.type.api.File;
@@ -35,7 +34,8 @@ public class FileSetBuilderTest {
 
   @Test
   public void returned_file_set_contains_added_file() throws Exception {
-    given(this).addFile(fileSetBuilder, path, content);
+    given(file = objectDb.file(path, content.getBytes(Charsets.UTF_8)));
+    given(fileSetBuilder).add(file);
     when(fileSetBuilder).build();
     thenReturned(containsFileContaining(path, content));
   }
@@ -52,10 +52,5 @@ public class FileSetBuilderTest {
     given(fileSetBuilder).add(file);
     when(fileSetBuilder).add(file);
     thenThrown(containsInstanceOf(CannotAddDuplicatePathError.class));
-  }
-
-  private void addFile(FileSetBuilder fileSetBuilder, Path path, String content) throws IOException {
-    FileObject file = objectDb.file(path, content.getBytes(Charsets.UTF_8));
-    fileSetBuilder.add(file);
   }
 }
