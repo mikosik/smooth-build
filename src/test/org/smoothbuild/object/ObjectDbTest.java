@@ -118,6 +118,15 @@ public class ObjectDbTest {
   }
 
   @Test
+  public void file_set_with_one_element_has_different_hash_from_that_file() throws Exception {
+    given(file = objectDb.file(path1, bytes));
+    given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
+
+    when(file.hash());
+    thenReturned(not(equalTo(fileSet.hash())));
+  }
+
+  @Test
   public void file_set_with_one_element_has_different_hash_from_file_set_with_two_elements()
       throws Exception {
     given(file = objectDb.file(path1, bytes));
