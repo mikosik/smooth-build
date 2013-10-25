@@ -14,6 +14,7 @@ import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.base.Charsets;
@@ -23,10 +24,10 @@ public class NewFileFunction {
 
   public interface Parameters {
     @Required
-    public String path();
+    public StringValue path();
 
     @Required
-    public String content();
+    public StringValue content();
   }
 
   @SmoothFunction("newFile")
@@ -53,7 +54,7 @@ public class NewFileFunction {
 
       OutputStream outputStream = fileBuilder.openOutputStream();
       try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, Charsets.UTF_8)) {
-        writer.write(params.content());
+        writer.write(params.content().value());
       } catch (IOException e) {
         throw new FileSystemException(e);
       }

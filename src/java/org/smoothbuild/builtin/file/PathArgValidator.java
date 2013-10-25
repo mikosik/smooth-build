@@ -6,9 +6,11 @@ import static org.smoothbuild.fs.base.Path.validationError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.plugin.StringValue;
 
 public class PathArgValidator {
-  public static Path validatedPath(String name, String value) {
+  public static Path validatedPath(String name, StringValue stringValue) {
+    String value = stringValue.value();
     String message = validationError(value);
     if (message != null) {
       throw new ErrorMessageException(new IllegalPathError(name, message));

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.fs.base.PathTesting;
+import org.smoothbuild.testing.plugin.FakeString;
 
 public class PathArgValidatorTest {
   @Test
@@ -14,7 +15,7 @@ public class PathArgValidatorTest {
     String name = "name";
     for (String path : PathTesting.listOfInvalidPaths()) {
       try {
-        PathArgValidator.validatedPath(name, path);
+        PathArgValidator.validatedPath(name, new FakeString(path));
         fail("exception should be thrown");
       } catch (ErrorMessageException e) {
         // expected
@@ -26,7 +27,7 @@ public class PathArgValidatorTest {
   @Test
   public void validPathsAreAccepted() {
     for (String path : PathTesting.listOfCorrectPaths()) {
-      PathArgValidator.validatedPath("name", path);
+      PathArgValidator.validatedPath("name", new FakeString(path));
     }
   }
 }

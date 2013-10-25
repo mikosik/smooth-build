@@ -22,6 +22,7 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.io.ByteStreams;
@@ -33,7 +34,7 @@ public class SaveFunction {
     public FileSet files();
 
     @Required
-    public String dir();
+    public StringValue dir();
   }
 
   @SmoothFunction("save")

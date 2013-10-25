@@ -25,6 +25,7 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.base.Function;
@@ -41,9 +42,9 @@ public class JavacFunction {
 
     FileSet libs();
 
-    String source();
+    StringValue source();
 
-    String target();
+    StringValue target();
   }
 
   @SmoothFunction("javac")
@@ -111,8 +112,8 @@ public class JavacFunction {
     private Iterable<String> options() {
       List<String> result = Lists.newArrayList();
 
-      String sourceArg = params.source();
-      if (sourceArg != null) {
+      if (params.source() != null) {
+        String sourceArg = params.source().value();
         if (!SOURCE_VALUES.contains(sourceArg)) {
           Message error = new IllegalSourceParamError(sourceArg, SOURCE_VALUES);
           throw new ErrorMessageException(error);
@@ -121,8 +122,8 @@ public class JavacFunction {
         result.add(sourceArg);
       }
 
-      String targetArg = params.target();
-      if (targetArg != null) {
+      if (params.target() != null) {
+        String targetArg = params.target().value();
         if (!TARGET_VALUES.contains(targetArg)) {
           Message error = new IllegalTargetParamError(targetArg, TARGET_VALUES);
           throw new ErrorMessageException(error);
