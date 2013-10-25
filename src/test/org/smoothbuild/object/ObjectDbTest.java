@@ -26,37 +26,36 @@ import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
 
 public class ObjectDbTest {
-  FakeFileSystem fs = new FakeFileSystem();
-  ObjectDb objectDb = new ObjectDb(new HashedDb(fs));
+  ObjectDb objectDb = new ObjectDb(new HashedDb(new FakeFileSystem()));
 
   byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
 
-  String string = "a string";
-  String string2 = "a string 2";
-  StringObject stringObject;
-  StringObject stringObject2;
-  StringObject stringObjectRead;
+  FileSetObject fileSet;
+  FileSetObject fileSet2;
+
+  FileObject file;
+  FileObject file2;
+  Path path = path("my/path1");
+  Path path2 = path("my/path2");
 
   StringSet stringSet;
   StringSet stringSet2;
 
+  StringObject stringObject;
+  StringObject stringObject2;
+  StringObject stringObjectRead;
+  String string = "a string";
+  String string2 = "a string 2";
+
   BlobObject blob;
   BlobObject blobRead;
-
-  FileObject file;
-  FileObject file2;
-  Path path1 = path("my/path1");
-  Path path2 = path("my/path2");
-
-  FileSetObject fileSet;
-  FileSetObject fileSet2;
 
   // file vs blob
 
   @Test
   public void file_hash_is_different_from_file_content_hash() throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(blob = objectDb.blob(bytes));
     when(file.hash());
     thenReturned(not(blob.hash()));
@@ -66,7 +65,7 @@ public class ObjectDbTest {
 
   @Test
   public void created_file_set_with_one_file_added_contains_one_file() throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
     when(Iterables.size(fileSet));
     thenReturned(1);
@@ -75,16 +74,16 @@ public class ObjectDbTest {
   @Test
   public void created_file_set_contains_file_with_path_of_file_that_was_added_to_it()
       throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
     when(fileSet.iterator().next().path());
-    thenReturned(path1);
+    thenReturned(path);
   }
 
   @Test
   public void created_file_set_contains_file_with_content_of_file_that_was_added_to_it()
       throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
     when(inputStreamToBytes(fileSet.iterator().next().openInputStream()));
     thenReturned(bytes);
@@ -93,7 +92,7 @@ public class ObjectDbTest {
   @Test
   public void created_file_set_with_one_file_added_when_queried_by_hash_contains_one_file()
       throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
     when(Iterables.size(objectDb.fileSet(fileSet.hash())));
     thenReturned(1);
@@ -102,16 +101,16 @@ public class ObjectDbTest {
   @Test
   public void created_file_set_when_queried_by_hash_contains_file_with_path_of_file_that_was_added_to_it()
       throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
     when(objectDb.fileSet(fileSet.hash()).iterator().next().path());
-    thenReturned(path1);
+    thenReturned(path);
   }
 
   @Test
   public void created_file_set_when_queried_by_hash_contains_file_with_content_of_file_that_was_added_to_it()
       throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
     when(inputStreamToBytes(objectDb.fileSet(fileSet.hash()).iterator().next().openInputStream()));
     thenReturned(bytes);
@@ -119,7 +118,7 @@ public class ObjectDbTest {
 
   @Test
   public void file_set_with_one_element_has_different_hash_from_that_file() throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
 
     when(file.hash());
@@ -129,7 +128,7 @@ public class ObjectDbTest {
   @Test
   public void file_set_with_one_element_has_different_hash_from_file_set_with_two_elements()
       throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(file2 = objectDb.file(path2, bytes2));
     given(fileSet = objectDb.fileSet(ImmutableList.<File> of(file)));
     given(fileSet2 = objectDb.fileSet(ImmutableList.<File> of(file, file2)));
@@ -214,29 +213,29 @@ public class ObjectDbTest {
 
   @Test
   public void created_file_contains_stored_bytes() throws IOException {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     when(inputStreamToBytes(file.openInputStream()));
     thenReturned(bytes);
   }
 
   @Test
   public void created_file_contains_stored_path() throws IOException {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     when(file.path());
-    thenReturned(path1);
+    thenReturned(path);
   }
 
   @Test
   public void files_with_different_bytes_have_different_hashes() throws Exception {
-    given(file = objectDb.file(path1, bytes));
-    given(file2 = objectDb.file(path1, bytes2));
+    given(file = objectDb.file(path, bytes));
+    given(file2 = objectDb.file(path, bytes2));
     when(file.hash());
     thenReturned(not(file2.hash()));
   }
 
   @Test
   public void files_with_different_paths_have_different_hashes() throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(file2 = objectDb.file(path2, bytes));
     when(file.hash());
     thenReturned(not(file2.hash()));
@@ -244,7 +243,7 @@ public class ObjectDbTest {
 
   @Test
   public void file_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(file2 = objectDb.file(file.hash()));
     when(file2.hash());
     thenReturned(file.hash());
@@ -252,15 +251,15 @@ public class ObjectDbTest {
 
   @Test
   public void file_retrieved_via_hash_contains_path_that_were_stored() throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(file2 = objectDb.file(file.hash()));
     when(file2.path());
-    thenReturned(path1);
+    thenReturned(path);
   }
 
   @Test
   public void file_retrieved_via_hash_contains_bytes_that_were_stored() throws Exception {
-    given(file = objectDb.file(path1, bytes));
+    given(file = objectDb.file(path, bytes));
     given(file2 = objectDb.file(file.hash()));
     when(inputStreamToBytes(file2.openInputStream()));
     thenReturned(bytes);
