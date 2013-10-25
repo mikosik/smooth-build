@@ -30,11 +30,6 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
-  public FileBuilder fileBuilder() {
-    return new FileBuilder(objectDb);
-  }
-
-  @Override
   public FileSetBuilder fileSetBuilder() {
     return new FileSetBuilder(objectDb);
   }
@@ -42,6 +37,11 @@ public class SandboxImpl implements Sandbox {
   @Override
   public StringSetBuilder stringSetBuilder() {
     return new StringSetBuilder(objectDb);
+  }
+
+  @Override
+  public FileBuilder fileBuilder() {
+    return new FileBuilder(objectDb);
   }
 
   public FileSystem projectFileSystem() {
