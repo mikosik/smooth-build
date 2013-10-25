@@ -30,26 +30,6 @@ public class ObjectDb {
     return new FileSetObject(this, hash);
   }
 
-  private HashCode genericSet(List<? extends Hashed> elements) {
-    Marshaller marshaller = new Marshaller(hashedDb);
-    HashXorer hashXorer = new HashXorer();
-
-    marshaller.addInt(elements.size());
-    for (Hashed hashed : elements) {
-      HashCode hash = hashed.hash();
-      marshaller.addHash(hash);
-      hashXorer.xorWith(hash);
-    }
-
-    /*
-     * Xored hashes result has to be hashed once again so in case of single
-     * element list its hash is different from its only element hash.
-     */
-    HashCode hash = Hash.bytes(hashXorer.hash().asBytes());
-
-    return marshaller.store(hash);
-  }
-
   public FileSetObject fileSet(HashCode hash) {
     return new FileSetObject(this, hash);
   }
@@ -85,6 +65,28 @@ public class ObjectDb {
       }
     }
     return builder.build();
+  }
+
+  // generic set
+
+  private HashCode genericSet(List<? extends Hashed> elements) {
+    Marshaller marshaller = new Marshaller(hashedDb);
+    HashXorer hashXorer = new HashXorer();
+
+    marshaller.addInt(elements.size());
+    for (Hashed hashed : elements) {
+      HashCode hash = hashed.hash();
+      marshaller.addHash(hash);
+      hashXorer.xorWith(hash);
+    }
+
+    /*
+     * Xored hashes result has to be hashed once again so in case of single
+     * element list its hash is different from its only element hash.
+     */
+    HashCode hash = Hash.bytes(hashXorer.hash().asBytes());
+
+    return marshaller.store(hash);
   }
 
   // File
