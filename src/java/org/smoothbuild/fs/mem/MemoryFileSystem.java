@@ -93,14 +93,14 @@ public class MemoryFileSystem implements FileSystem {
     if (element.isFile()) {
       return element.createInputStream();
     } else {
-      throw new FileSystemException("Cannot read from file '" + path + "' as it is directory.");
+      throw new FileSystemException("Cannot read from file " + path + " as it is directory.");
     }
   }
 
   @Override
   public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
-      throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
+      throw new FileSystemException("Cannot open file " + path + " as it is directory.");
     }
     MemoryDirectory dir = createDirectory(path.parent());
 
@@ -110,7 +110,7 @@ public class MemoryFileSystem implements FileSystem {
       if (child.isFile()) {
         return child.createOutputStream();
       } else {
-        throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
+        throw new FileSystemException("Cannot open file " + path + " as it is directory.");
       }
     }
 
