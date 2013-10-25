@@ -85,12 +85,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public InputStream openInputStream(Path path) {
-    MemoryElement file = getFile(path);
-    if (file.isFile()) {
-      return file.createInputStream();
-    } else {
-      throw new FileSystemException("Cannot read from file " + path + " as it is directory.");
-    }
+    return getFile(path).createInputStream();
   }
 
   @Override
@@ -115,12 +110,14 @@ public class MemoryFileSystem implements FileSystem {
     return child.createOutputStream();
   }
 
-  private MemoryElement getFile(Path path) {
+  private MemoryFile getFile(Path path) {
     MemoryElement found = findElement(path);
     if (found == null) {
       throw new NoSuchFileException(path);
+    } else if (found instanceof MemoryFile) {
+      return (MemoryFile) found;
     } else {
-      return found;
+      throw new NoSuchFileException(path);
     }
   }
 
