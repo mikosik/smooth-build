@@ -1,11 +1,12 @@
 package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.testing.plugin.StringSetMatchers.containsOnly;
 import static org.smoothbuild.testing.task.base.TaskTester.hashes;
 import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -15,7 +16,6 @@ import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
-import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
 public class StringSetTaskTest {
@@ -39,16 +39,7 @@ public class StringSetTaskTest {
   @Test
   public void execute() {
     stringSetTask.execute(sandbox, hashedTasks(task1, task2));
-    assertThat(convert((StringSet) stringSetTask.result())).containsOnly(string1.value(),
-        string2.value());
-  }
-
-  private static List<String> convert(StringSet stringSet) {
-    ArrayList<String> result = Lists.newArrayList();
-    for (StringValue stringValue : stringSet) {
-      result.add(stringValue.value());
-    }
-    return result;
+    assertThat((StringSet) stringSetTask.result(), containsOnly(string1.value(), string2.value()));
   }
 
   @Test
