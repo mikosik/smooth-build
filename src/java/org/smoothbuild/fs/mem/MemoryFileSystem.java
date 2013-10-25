@@ -73,25 +73,21 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public void deleteDirectoryRecursively(Path directory) {
-    MemoryElement element = getDirectory(directory);
-    if (element.isDirectory()) {
-      MemoryDirectory parent = element.parent();
-      if (parent == null) {
-        throw new IllegalArgumentException("Cannot delete root directory.");
-      } else {
-        parent.removeChild(element);
-      }
+  public void deleteDirectoryRecursively(Path path) {
+    MemoryDirectory directory = getDirectory(path);
+    MemoryDirectory parent = directory.parent();
+    if (parent == null) {
+      throw new IllegalArgumentException("Cannot delete root directory.");
     } else {
-      throw new NoSuchDirException(directory);
+      parent.removeChild(directory);
     }
   }
 
   @Override
   public InputStream openInputStream(Path path) {
-    MemoryElement element = getFile(path);
-    if (element.isFile()) {
-      return element.createInputStream();
+    MemoryElement file = getFile(path);
+    if (file.isFile()) {
+      return file.createInputStream();
     } else {
       throw new FileSystemException("Cannot read from file " + path + " as it is directory.");
     }
@@ -128,12 +124,14 @@ public class MemoryFileSystem implements FileSystem {
     }
   }
 
-  private MemoryElement getDirectory(Path path) {
+  private MemoryDirectory getDirectory(Path path) {
     MemoryElement found = findElement(path);
     if (found == null) {
       throw new NoSuchDirException(path);
+    } else if (found instanceof MemoryDirectory) {
+      return (MemoryDirectory) found;
     } else {
-      return found;
+      throw new NoSuchDirException(path);
     }
   }
 

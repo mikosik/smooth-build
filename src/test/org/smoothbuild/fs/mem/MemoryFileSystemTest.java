@@ -97,6 +97,18 @@ public class MemoryFileSystemTest {
     }
   }
 
+  @Test
+  public void childNamesThrowsExceptionWhenPathIsAFile() throws Exception {
+    Path path = path("abc");
+    createEmptyFile(path);
+    try {
+      fileSystem.childNames(path("abc"));
+      Assert.fail("exception expected");
+    } catch (NoSuchDirException e) {
+      // expected
+    }
+  }
+
   public void filesFromDoesNotThrowExceptionWhenDirDoesNotExist() throws Exception {
     fileSystem.filesFrom(path("abc"));
   }
