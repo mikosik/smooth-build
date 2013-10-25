@@ -30,7 +30,7 @@ public class FakeStringTest {
   }
 
   @Test
-  public void hash_of_strings_with_different_values_is_different() throws Exception {
+  public void fake_strings_with_different_values_have_different_hashes() throws Exception {
     given(fakeString = new FakeString(value));
     when(fakeString.hash());
     thenReturned(not(equalTo(new FakeString(value2).hash())));
