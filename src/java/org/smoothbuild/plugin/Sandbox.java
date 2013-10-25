@@ -8,4 +8,6 @@ public interface Sandbox {
   public FileBuilder fileBuilder();
 
   public FileSetBuilder fileSetBuilder();
+
+  public StringSetBuilder stringSetBuilder();
 }

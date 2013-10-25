@@ -16,7 +16,9 @@ import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.fs.base.PathTesting;
+import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class FilesFunctionTest {
@@ -109,8 +111,8 @@ public class FilesFunctionTest {
   private static FilesFunction.Parameters params(final String dir) {
     return new FilesFunction.Parameters() {
       @Override
-      public String dir() {
-        return dir;
+      public StringValue dir() {
+        return new FakeString(dir);
       }
     };
   }

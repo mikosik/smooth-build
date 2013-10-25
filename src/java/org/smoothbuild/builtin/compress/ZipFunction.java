@@ -16,6 +16,7 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 
 public class ZipFunction {
 
@@ -23,7 +24,7 @@ public class ZipFunction {
     @Required
     public FileSet files();
 
-    public String output();
+    public StringValue output();
 
     // add missing parameters: level, comment, method
   }

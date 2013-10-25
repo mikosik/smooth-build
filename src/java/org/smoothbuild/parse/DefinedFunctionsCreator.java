@@ -43,8 +43,10 @@ import org.smoothbuild.function.def.args.ArgumentNodesCreator;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
+import org.smoothbuild.object.ObjectDb;
 import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
@@ -53,16 +55,18 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
+  private final ObjectDb objectDb;
   private final ArgumentNodesCreator argumentNodesCreator;
 
   @Inject
-  public DefinedFunctionsCreator(ArgumentNodesCreator argumentNodesCreator) {
+  public DefinedFunctionsCreator(ObjectDb objectDb, ArgumentNodesCreator argumentNodesCreator) {
+    this.objectDb = objectDb;
     this.argumentNodesCreator = argumentNodesCreator;
   }
 
   public Map<Name, DefinedFunction> createDefinedFunctions(MessageGroup messages,
       SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
-    Worker worker = new Worker(messages, symbolTable, functionContexts, sorted,
+    Worker worker = new Worker(messages, symbolTable, functionContexts, sorted, objectDb,
         argumentNodesCreator);
     Map<Name, DefinedFunction> result = worker.run();
     messages.failIfContainsErrors();
@@ -74,17 +78,19 @@ public class DefinedFunctionsCreator {
     private final SymbolTable symbolTable;
     private final Map<String, FunctionContext> functionContexts;
     private final List<String> sorted;
+    private final ObjectDb objectDb;
     private final ArgumentNodesCreator argumentNodesCreator;
 
     private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
 
     public Worker(MessageGroup messages, SymbolTable symbolTable,
-        Map<String, FunctionContext> functionContexts, List<String> sorted,
+        Map<String, FunctionContext> functionContexts, List<String> sorted, ObjectDb objectDb,
         ArgumentNodesCreator argumentNodesCreator) {
       this.messages = messages;
       this.symbolTable = symbolTable;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
+      this.objectDb = objectDb;
       this.argumentNodesCreator = argumentNodesCreator;
     }
 
@@ -257,7 +263,8 @@ public class DefinedFunctionsCreator {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
-        return new StringNode(unescaped(string));
+        StringValue stringValue = objectDb.string(unescaped(string));
+        return new StringNode(stringValue);
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));

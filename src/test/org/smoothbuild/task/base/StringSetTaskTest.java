@@ -13,13 +13,15 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.task.base.FakeTask;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
 public class StringSetTaskTest {
-  String string1 = "string1";
-  String string2 = "string2";
+  FakeSandbox sandbox = new FakeSandbox();
+  StringValue string1 = sandbox.objectDb().string("string1");
+  StringValue string2 = sandbox.objectDb().string("string2");
 
   Task task1 = new FakeTask(string1);
   Task task2 = new FakeTask(string2);
@@ -36,8 +38,9 @@ public class StringSetTaskTest {
 
   @Test
   public void execute() {
-    stringSetTask.execute(null, hashedTasks(task1, task2));
-    assertThat(convert((StringSet) stringSetTask.result())).containsOnly(string1, string2);
+    stringSetTask.execute(sandbox, hashedTasks(task1, task2));
+    assertThat(convert((StringSet) stringSetTask.result())).containsOnly(string1.value(),
+        string2.value());
   }
 
   private static List<String> convert(StringSet stringSet) {

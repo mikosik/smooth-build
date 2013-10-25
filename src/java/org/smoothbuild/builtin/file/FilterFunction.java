@@ -12,6 +12,7 @@ import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.base.Predicate;
@@ -22,7 +23,7 @@ public class FilterFunction {
     public FileSet files();
 
     @Required
-    public String include();
+    public StringValue include();
   }
 
   @SmoothFunction("filter")
@@ -54,7 +55,7 @@ public class FilterFunction {
 
     private Predicate<Path> createFilter() {
       try {
-        return pathMatcher(params.include());
+        return pathMatcher(params.include().value());
       } catch (IllegalPathPatternException e) {
         throw new ErrorMessageException(new IllegalPathPatternError("include", e.getMessage()));
       }

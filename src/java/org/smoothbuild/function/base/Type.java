@@ -3,13 +3,14 @@ package org.smoothbuild.function.base;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.StringValue;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class Type {
-  public static final Type STRING = create("String", String.class);
+  public static final Type STRING = create("String", StringValue.class);
   public static final Type STRING_SET = create("String*", StringSet.class);
   public static final Type FILE = create("File", File.class);
   public static final Type FILE_SET = create("File*", FileSet.class);

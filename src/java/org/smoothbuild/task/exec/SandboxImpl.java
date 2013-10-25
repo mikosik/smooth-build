@@ -9,6 +9,7 @@ import org.smoothbuild.object.ObjectDb;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.StringSetBuilder;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
@@ -36,6 +37,11 @@ public class SandboxImpl implements Sandbox {
   @Override
   public FileSetBuilder fileSetBuilder() {
     return new FileSetBuilder(objectDb);
+  }
+
+  @Override
+  public StringSetBuilder stringSetBuilder() {
+    return new StringSetBuilder(objectDb);
   }
 
   public FileSystem projectFileSystem() {

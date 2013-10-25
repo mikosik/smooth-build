@@ -19,6 +19,7 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 
 public class JarFunction {
 
@@ -26,7 +27,7 @@ public class JarFunction {
     @Required
     public FileSet files();
 
-    public String output();
+    public StringValue output();
 
     public File manifest();
   }

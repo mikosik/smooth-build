@@ -17,13 +17,16 @@ import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.FakeTask;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 public class StringSetNodeTest {
-  String string1 = "string1";
-  String string2 = "string2";
+  FakeSandbox sandbox = new FakeSandbox();
+
+  StringValue string1 = sandbox.objectDb().string("string1");
+  StringValue string2 = sandbox.objectDb().string("string2");
 
   StringNode node1 = mock(StringNode.class);
   StringNode node2 = mock(StringNode.class);
@@ -47,11 +50,11 @@ public class StringSetNodeTest {
     Mockito.when(taskGenerator.generateTask(node2)).thenReturn(task2.hash());
 
     Task task = stringSetNode.generateTask(taskGenerator);
-    task.execute(null, hashedTasks(task1, task2));
+    task.execute(sandbox, hashedTasks(task1, task2));
     StringSet result = (StringSet) task.result();
 
     List<String> convertedResult = convert(result);
-    assertThat(convertedResult).containsOnly(string1, string2);
+    assertThat(convertedResult).containsOnly(string1.value(), string2.value());
   }
 
   private static List<String> convert(StringSet stringSet) {

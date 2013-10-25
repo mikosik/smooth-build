@@ -16,12 +16,13 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class FilesFunction {
   public interface Parameters {
     @Required
-    public String dir();
+    public StringValue dir();
   }
 
   @SmoothFunction("files")

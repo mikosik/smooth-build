@@ -14,13 +14,14 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class FileFunction {
 
   public interface Parameters {
     @Required
-    public String path();
+    public StringValue path();
   }
 
   @SmoothFunction("file")

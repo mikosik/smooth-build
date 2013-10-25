@@ -35,9 +35,12 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
@@ -76,8 +79,8 @@ public class NativeFunctionFactoryTest {
   @Test
   public void testInvokation() throws Exception {
     Function function = NativeFunctionFactory.create(MyFunction.class, false);
-    FakeTask task1 = new FakeTask("abc");
-    FakeTask task2 = new FakeTask("def");
+    FakeTask task1 = new FakeTask(new FakeString("abc"));
+    FakeTask task2 = new FakeTask(new FakeString("def"));
     ImmutableMap<String, HashCode> dependencies = ImmutableMap.of("stringA", task1.hash(),
         "stringB", task2.hash());
     TaskGenerator taskGenerator = mock(TaskGenerator.class);
@@ -85,19 +88,19 @@ public class NativeFunctionFactoryTest {
     Task task = function.generateTask(taskGenerator, dependencies, codeLocation);
     task.execute(sandbox, hashedTasks(task1, task2));
     sandbox.messages().assertNoProblems();
-    assertThat(task.result()).isEqualTo("abcdef");
+    assertThat(((StringValue) task.result()).value()).isEqualTo("abcdef");
   }
 
   public interface Parameters {
-    public String stringA();
+    public StringValue stringA();
 
-    public String stringB();
+    public StringValue stringB();
   }
 
   public static class MyFunction {
     @SmoothFunction("my.package.myFunction")
-    public static String execute(Sandbox sandbox, Parameters params) {
-      return params.stringA() + params.stringB();
+    public static StringValue execute(Sandbox sandbox, Parameters params) {
+      return new FakeString(params.stringA().value() + params.stringB().value());
     }
   }
 
@@ -107,7 +110,9 @@ public class NativeFunctionFactoryTest {
   }
 
   public interface AllowedParameters {
-    public String string();
+    public StringValue string();
+
+    public StringSet stringSet();
 
     public File file();
 
@@ -116,8 +121,8 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithAllowedParamTypes {
     @SmoothFunction("my.package.myFunction")
-    public static String execute(Sandbox sandbox, Parameters params) {
-      return params.stringA() + params.stringB();
+    public static StringValue execute(Sandbox sandbox, AllowedParameters params) {
+      return new FakeString("string");
     }
   }
 
@@ -131,9 +136,9 @@ public class NativeFunctionFactoryTest {
 
   public interface AnnotatedParameters {
     @Required
-    public String string1();
+    public StringValue string1();
 
-    public String string2();
+    public StringValue string2();
   }
 
   public static class MyFunctionWithAnnotatedParams {
@@ -152,7 +157,7 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithForbiddenParamType {
     @SmoothFunction("my.package.myFunction")
-    public static String execute(Sandbox sandbox, ForbiddenParams params) {
+    public static StringValue execute(Sandbox sandbox, ForbiddenParams params) {
       return null;
     }
   }
@@ -166,7 +171,7 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithEmptyParameters {
     @SmoothFunction("my.package.myFunction")
-    public static String execute(Sandbox sandbox, EmptyParameters params) {
+    public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -178,7 +183,7 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithStringResult {
     @SmoothFunction("my.package.myFunction")
-    public static String execute(Sandbox sandbox, EmptyParameters params) {
+    public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }

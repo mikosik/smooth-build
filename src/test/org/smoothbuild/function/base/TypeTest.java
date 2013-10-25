@@ -19,6 +19,7 @@ import org.smoothbuild.function.base.Type.EmptySet;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.StringValue;
 
 import com.google.inject.TypeLiteral;
 
@@ -127,7 +128,7 @@ public class TypeTest {
 
   @Test
   public void testJavaParamTypetoType() {
-    assertThat(javaParamTypetoType(type(String.class))).isEqualTo(STRING);
+    assertThat(javaParamTypetoType(type(StringValue.class))).isEqualTo(STRING);
     assertThat(javaParamTypetoType(type(StringSet.class))).isEqualTo(STRING_SET);
     assertThat(javaParamTypetoType(type(File.class))).isEqualTo(FILE);
     assertThat(javaParamTypetoType(type(FileSet.class))).isEqualTo(FILE_SET);
@@ -145,7 +146,7 @@ public class TypeTest {
 
   @Test
   public void testJavaResultTypetoType() {
-    assertThat(javaResultTypetoType(type(String.class))).isEqualTo(STRING);
+    assertThat(javaResultTypetoType(type(StringValue.class))).isEqualTo(STRING);
     assertThat(javaResultTypetoType(type(StringSet.class))).isEqualTo(STRING_SET);
     assertThat(javaResultTypetoType(type(File.class))).isEqualTo(FILE);
     assertThat(javaResultTypetoType(type(FileSet.class))).isEqualTo(FILE_SET);

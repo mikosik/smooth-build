@@ -2,9 +2,9 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.util.Empty;
 
@@ -12,12 +12,10 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.hash.HashCode;
 
 public class StringTask implements Task {
-  private final String string;
-  private final HashCode hash;
+  private final StringValue string;
 
-  public StringTask(String string) {
+  public StringTask(StringValue string) {
     this.string = checkNotNull(string);
-    this.hash = HashTask.string(string);
   }
 
   @Override
@@ -49,6 +47,6 @@ public class StringTask implements Task {
 
   @Override
   public HashCode hash() {
-    return hash;
+    return string.hash();
   }
 }

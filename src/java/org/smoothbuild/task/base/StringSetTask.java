@@ -9,12 +9,12 @@ import java.util.List;
 import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.StringSetBuilder;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.HashedTasks;
-import org.smoothbuild.type.impl.ImmutableStringSet;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.hash.HashCode;
 
 public class StringSetTask extends AbstractTask {
@@ -27,12 +27,13 @@ public class StringSetTask extends AbstractTask {
 
   @Override
   public void execute(Sandbox sandbox, HashedTasks hashedTasks) {
-    Builder<String> builder = ImmutableList.builder();
+    StringSetBuilder stringSetBuilder = sandbox.stringSetBuilder();
+
     for (HashCode hash : elements) {
-      builder.add((String) hashedTasks.get(hash).result());
+      stringSetBuilder.add((StringValue) hashedTasks.get(hash).result());
     }
 
-    setResult(new ImmutableStringSet(builder.build()));
+    setResult(stringSetBuilder.build());
   }
 
   @Override
