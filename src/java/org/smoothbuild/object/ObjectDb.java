@@ -76,7 +76,7 @@ public class ObjectDb {
       marshaller.addHash(hashed.hash());
     }
 
-    return marshaller.store();
+    return hashedDb.store(marshaller.getBytes());
   }
 
   // File
@@ -88,7 +88,7 @@ public class ObjectDb {
     Marshaller marshaller = new Marshaller(hashedDb);
     marshaller.addHash(contentHash);
     marshaller.addPath(path);
-    HashCode hash = marshaller.store();
+    HashCode hash = hashedDb.store(marshaller.getBytes());
 
     return new FileObject(path, blob, hash);
   }
