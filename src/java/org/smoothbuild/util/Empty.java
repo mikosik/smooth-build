@@ -1,6 +1,7 @@
 package org.smoothbuild.util;
 
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -21,6 +22,10 @@ public class Empty {
   }
 
   public static ImmutableList<DefinitionNode> definitionNodeList() {
+    return ImmutableList.of();
+  }
+
+  public static ImmutableList<Task> taskList() {
     return ImmutableList.of();
   }
 

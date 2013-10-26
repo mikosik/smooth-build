@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -82,6 +83,24 @@ public class EmptyTest {
   @Test
   public void emptyDefinitionNodeAlwaysReturnsTheSameObject() {
     assertThat(Empty.definitionNodeList()).isSameAs(Empty.definitionNodeList());
+  }
+
+  // taskList()
+
+  @Test
+  public void emptyTaskListIsEmpty() {
+    assertThat(Empty.taskList()).isEmpty();
+  }
+
+  @Test
+  public void emptyTaskListIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableList<Task> list = Empty.taskList();
+  }
+
+  @Test
+  public void emptyTaskListAlwaysReturnsTheSameObject() {
+    assertThat(Empty.taskList()).isSameAs(Empty.taskList());
   }
 
   // nullToEmpty
