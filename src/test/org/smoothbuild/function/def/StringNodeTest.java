@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 
 public class StringNodeTest {
   StringValue string = mock(StringValue.class);
@@ -25,9 +24,7 @@ public class StringNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    TaskGenerator taskGenerator = mock(TaskGenerator.class);
-
-    Task task = stringNode.generateTask(taskGenerator);
+    Task task = stringNode.generateTask();
 
     assertThat(task.isResultCalculated()).isTrue();
     assertThat(task.result()).isSameAs(string);

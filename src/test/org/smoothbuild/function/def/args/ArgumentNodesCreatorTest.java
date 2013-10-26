@@ -15,7 +15,6 @@ import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +36,6 @@ import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -566,9 +564,8 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static void assertThatNodeHasEmptySet(DefinitionNode node) {
-    TaskGenerator taskGenerator = mock(TaskGenerator.class);
-    Task task = node.generateTask(taskGenerator);
-    task.execute(new FakeSandbox(), hashedTasks());
+    Task task = node.generateTask();
+    task.execute(new FakeSandbox());
     assertThat((Iterable<?>) task.result()).isEmpty();
   }
 

@@ -12,7 +12,6 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.NativeCallTask;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
@@ -37,8 +36,7 @@ public class NativeFunction extends AbstractFunction {
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator, Map<String, HashCode> args,
-      CodeLocation codeLocation) {
+  public Task generateTask(Map<String, Task> args, CodeLocation codeLocation) {
     return new NativeCallTask(this, codeLocation, args);
   }
 

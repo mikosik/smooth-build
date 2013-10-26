@@ -4,7 +4,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -16,39 +15,35 @@ import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.message.FakeUserConsole;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.hash.HashCode;
 
 public class TaskGraphExecutorTest {
   Task task1 = task(1);
   Task task2 = task(2);
-  HashedTasks hashedTasks = hashedTasks(task1, task2);
   UserConsole userConsole = new FakeUserConsole();
   TaskExecutor taskExecutor = mock(TaskExecutor.class);
 
-  TaskGraphExecutor taskGraphExecutor = new TaskGraphExecutor(hashedTasks, userConsole,
-      taskExecutor);
+  TaskGraphExecutor taskGraphExecutor = new TaskGraphExecutor(userConsole, taskExecutor);
 
   @Test
   public void dependency_task_is_executed_before_our_task() {
-    HashCode hash2 = task2.hash();
-    when(task1.dependencies()).thenReturn(ImmutableList.of(hash2));
-    when(task2.dependencies()).thenReturn(ImmutableList.<HashCode> of());
+    when(task1.dependencies()).thenReturn(ImmutableList.of(task2));
+    when(task2.dependencies()).thenReturn(Empty.taskList());
 
-    taskGraphExecutor.execute(task1.hash());
+    taskGraphExecutor.execute(task1);
 
     InOrder inOrder = inOrder(taskExecutor);
-    inOrder.verify(taskExecutor).execute(hash2);
-    inOrder.verify(taskExecutor).execute(task1.hash());
+    inOrder.verify(taskExecutor).execute(task2);
+    inOrder.verify(taskExecutor).execute(task1);
     inOrder.verifyNoMoreInteractions();
   }
 
   @Test
   public void no_more_task_is_executed_once_error_has_been_reported() {
-    HashCode hash2 = task2.hash();
-    when(task1.dependencies()).thenReturn(ImmutableList.of(hash2));
-    when(task2.dependencies()).thenReturn(ImmutableList.<HashCode> of());
+    when(task1.dependencies()).thenReturn(ImmutableList.of(task2));
+    when(task2.dependencies()).thenReturn(Empty.taskList());
     Mockito.doAnswer(new Answer<Void>() {
       @Override
       public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -57,18 +52,16 @@ public class TaskGraphExecutorTest {
         userConsole.report(messageGroup);
         return null;
       }
-    }).when(taskExecutor).execute(hash2);
+    }).when(taskExecutor).execute(task2);
 
-    taskGraphExecutor.execute(task1.hash());
+    taskGraphExecutor.execute(task1);
 
     InOrder inOrder = inOrder(taskExecutor);
-    inOrder.verify(taskExecutor).execute(hash2);
+    inOrder.verify(taskExecutor).execute(task2);
     inOrder.verifyNoMoreInteractions();
   }
 
   private Task task(int value) {
-    Task task = mock(Task.class);
-    when(task.hash()).thenReturn(HashCode.fromInt(value));
-    return task;
+    return mock(Task.class);
   }
 }

@@ -6,7 +6,6 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.StringTask;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 
 public class StringNode implements DefinitionNode {
   private final StringValue string;
@@ -21,7 +20,7 @@ public class StringNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator) {
+  public Task generateTask() {
     return new StringTask(string);
   }
 }

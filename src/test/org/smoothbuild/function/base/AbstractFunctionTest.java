@@ -11,10 +11,8 @@ import java.util.Map;
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.hash.HashCode;
 
 public class AbstractFunctionTest {
   Signature signature = mock(Signature.class);
@@ -53,8 +51,7 @@ public class AbstractFunctionTest {
     }
 
     @Override
-    public Task generateTask(TaskGenerator taskGenerator, Map<String, HashCode> arguments,
-        CodeLocation codeLocation) {
+    public Task generateTask(Map<String, Task> arguments, CodeLocation codeLocation) {
       return null;
     }
   }
