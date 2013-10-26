@@ -7,8 +7,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.hash.Hash;
-import org.smoothbuild.hash.HashXorer;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.StringValue;
 
@@ -71,22 +69,14 @@ public class ObjectDb {
 
   private HashCode genericSet(List<? extends Hashed> elements) {
     Marshaller marshaller = new Marshaller(hashedDb);
-    HashXorer hashXorer = new HashXorer();
+    List<Hashed> sortedElements = HashedSorter.sort(elements);
 
-    marshaller.addInt(elements.size());
-    for (Hashed hashed : elements) {
-      HashCode hash = hashed.hash();
-      marshaller.addHash(hash);
-      hashXorer.xorWith(hash);
+    marshaller.addInt(sortedElements.size());
+    for (Hashed hashed : sortedElements) {
+      marshaller.addHash(hashed.hash());
     }
 
-    /*
-     * Xored hashes result has to be hashed once again so in case of single
-     * element list its hash is different from its only element hash.
-     */
-    HashCode hash = Hash.bytes(hashXorer.hash().asBytes());
-
-    return marshaller.store(hash);
+    return marshaller.store();
   }
 
   // File
