@@ -112,9 +112,7 @@ public class MemoryFileSystem implements FileSystem {
 
   private MemoryFile getFile(Path path) {
     MemoryElement found = findElement(path);
-    if (found == null) {
-      throw new NoSuchFileException(path);
-    } else if (found instanceof MemoryFile) {
+    if (found instanceof MemoryFile) {
       return (MemoryFile) found;
     } else {
       throw new NoSuchFileException(path);
@@ -123,9 +121,7 @@ public class MemoryFileSystem implements FileSystem {
 
   private MemoryDirectory getDirectory(Path path) {
     MemoryElement found = findElement(path);
-    if (found == null) {
-      throw new NoSuchDirException(path);
-    } else if (found instanceof MemoryDirectory) {
+    if (found instanceof MemoryDirectory) {
       return (MemoryDirectory) found;
     } else {
       throw new NoSuchDirException(path);
