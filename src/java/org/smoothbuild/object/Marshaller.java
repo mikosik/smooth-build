@@ -32,10 +32,14 @@ public class Marshaller {
   }
 
   public HashCode store() {
-    return hashedDb.store(dataOutput.toByteArray());
+    return hashedDb.store(getBytes());
   }
 
   public HashCode store(HashCode hash) {
-    return hashedDb.store(hash, dataOutput.toByteArray());
+    return hashedDb.store(hash, getBytes());
+  }
+
+  public byte[] getBytes() {
+    return dataOutput.toByteArray();
   }
 }
