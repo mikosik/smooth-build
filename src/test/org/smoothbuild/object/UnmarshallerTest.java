@@ -29,9 +29,9 @@ public class UnmarshallerTest {
   public void marshalled_path_can_be_unmarshalled() {
     Path path = path("my/path");
 
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = new Marshaller();
     marshaller.addPath(path);
-    HashCode hash = marshaller.store();
+    HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
     Path actual = unmarshaller.readPath();
@@ -44,9 +44,9 @@ public class UnmarshallerTest {
   public void marshalled_hash_can_be_unmarshalled() {
     HashCode myHash = Hash.function().hashInt(33);
 
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = new Marshaller();
     marshaller.addHash(myHash);
-    HashCode hash = marshaller.store();
+    HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
     HashCode actual = unmarshaller.readHash();
@@ -58,9 +58,9 @@ public class UnmarshallerTest {
   @Test
   public void marshalled_int_can_be_unmarshalled() {
     int myInt = 0x12345678;
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = new Marshaller();
     marshaller.addInt(myInt);
-    HashCode hash = marshaller.store();
+    HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
     int actual = unmarshaller.readInt();
@@ -75,11 +75,11 @@ public class UnmarshallerTest {
     Path path = path("my/path");
     int myInt = 0x12345667;
 
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = new Marshaller();
     marshaller.addHash(myHash);
     marshaller.addPath(path);
     marshaller.addInt(myInt);
-    HashCode hash = marshaller.store();
+    HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
     HashCode actualHash = unmarshaller.readHash();

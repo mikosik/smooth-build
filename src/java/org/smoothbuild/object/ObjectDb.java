@@ -68,7 +68,7 @@ public class ObjectDb {
   // generic set
 
   private HashCode genericSet(List<? extends Hashed> elements) {
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = new Marshaller();
     List<Hashed> sortedElements = HashedSorter.sort(elements);
 
     marshaller.addInt(sortedElements.size());
@@ -85,7 +85,7 @@ public class ObjectDb {
     BlobObject blob = blob(bytes);
     HashCode contentHash = blob.hash();
 
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = new Marshaller();
     marshaller.addHash(contentHash);
     marshaller.addPath(path);
     HashCode hash = hashedDb.store(marshaller.getBytes());
