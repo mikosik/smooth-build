@@ -9,6 +9,10 @@ import com.google.common.hash.HashCode;
 
 public class Empty {
 
+  public static ImmutableMap<String, Task> stringTaskMap() {
+    return ImmutableMap.of();
+  }
+
   public static ImmutableMap<String, HashCode> stringHashMap() {
     return ImmutableMap.of();
   }
