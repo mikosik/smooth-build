@@ -7,36 +7,32 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
-import org.smoothbuild.hash.HashTask;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
-import org.smoothbuild.task.exec.HashedTasks;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.hash.HashCode;
 
 public class NativeCallTask extends AbstractTask {
   private final NativeFunction function;
-  private final ImmutableMap<String, HashCode> dependencies;
+  private final ImmutableMap<String, Task> dependencies;
 
   public NativeCallTask(NativeFunction function, CodeLocation codeLocation,
-      Map<String, HashCode> dependencies) {
-    super(callLocation(function.signature().name(), codeLocation), HashTask.call(function,
-        dependencies));
+      Map<String, Task> dependencies) {
+    super(callLocation(function.signature().name(), codeLocation));
     this.function = function;
     this.dependencies = ImmutableMap.copyOf(dependencies);
   }
 
   @Override
-  public void execute(Sandbox sandbox, HashedTasks hashedTasks) {
+  public void execute(Sandbox sandbox) {
     try {
-      Object result = function.invoke(sandbox, calculateArguments(hashedTasks));
+      Object result = function.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {
         sandbox.report(new NullResultError(location()));
       } else {
@@ -59,18 +55,18 @@ public class NativeCallTask extends AbstractTask {
     return function.type() == Type.VOID;
   }
 
-  private ImmutableMap<String, Object> calculateArguments(HashedTasks hashedTasks) {
+  private ImmutableMap<String, Object> calculateArguments() {
     Builder<String, Object> builder = ImmutableMap.builder();
-    for (Map.Entry<String, HashCode> entry : dependencies.entrySet()) {
+    for (Map.Entry<String, Task> entry : dependencies.entrySet()) {
       String paramName = entry.getKey();
-      Object value = hashedTasks.get(entry.getValue()).result();
-      builder.put(paramName, value);
+      Object result = entry.getValue().result();
+      builder.put(paramName, result);
     }
     return builder.build();
   }
 
   @Override
-  public ImmutableCollection<HashCode> dependencies() {
+  public ImmutableCollection<Task> dependencies() {
     return dependencies.values();
   }
 }

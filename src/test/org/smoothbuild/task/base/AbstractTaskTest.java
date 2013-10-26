@@ -7,22 +7,14 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import org.junit.Test;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.Sandbox;
-import org.smoothbuild.task.base.AbstractTask;
-import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;
-import com.google.common.hash.HashCode;
 
 public class AbstractTaskTest {
   @Test
   public void location() throws Exception {
     assertThat(new MyAbstractTask().location()).isEqualTo(MyAbstractTask.LOCATION);
-  }
-
-  @Test
-  public void hash() throws Exception {
-    assertThat(new MyAbstractTask().hash()).isEqualTo(MyAbstractTask.HASH);
   }
 
   @Test
@@ -53,10 +45,9 @@ public class AbstractTaskTest {
   public static class MyAbstractTask extends AbstractTask {
     public static final CallLocation LOCATION = CallLocation.callLocation(simpleName("name"),
         codeLocation(1, 2, 4));
-    public static final HashCode HASH = HashCode.fromInt(33);
 
     public MyAbstractTask() {
-      super(LOCATION, HASH);
+      super(LOCATION);
     }
 
     public void setMyResult(Object result) {
@@ -64,11 +55,11 @@ public class AbstractTaskTest {
     }
 
     @Override
-    public void execute(Sandbox sandbox, HashedTasks hashedTasks) {}
+    public void execute(Sandbox sandbox) {}
 
     @Override
-    public ImmutableCollection<HashCode> dependencies() {
-      return Empty.hashCodeList();
+    public ImmutableCollection<Task> dependencies() {
+      return Empty.taskList();
     }
   }
 }

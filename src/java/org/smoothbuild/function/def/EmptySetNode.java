@@ -4,7 +4,6 @@ import static org.smoothbuild.function.base.Type.EMPTY_SET;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 
 public class EmptySetNode implements DefinitionNode {
 
@@ -16,7 +15,7 @@ public class EmptySetNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator) {
+  public Task generateTask() {
     throw new UnsupportedOperationException("Cannot call EmptySetNode.generateTask(). "
         + "EmptySetNode should have been replaced by either StringSetNode or FileSetNode "
         + "during argument->parameters assignment.");

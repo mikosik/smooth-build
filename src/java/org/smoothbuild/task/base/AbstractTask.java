@@ -4,17 +4,13 @@ import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.message.message.CallLocation;
 
-import com.google.common.hash.HashCode;
-
 public abstract class AbstractTask implements Task {
   private final CallLocation callLocation;
-  private final HashCode hash;
   private Object result;
   private boolean isResultCalculated;
 
-  public AbstractTask(CallLocation callLocation, HashCode hash) {
+  public AbstractTask(CallLocation callLocation) {
     this.callLocation = callLocation;
-    this.hash = hash;
     this.result = null;
     this.isResultCalculated = false;
   }
@@ -38,10 +34,5 @@ public abstract class AbstractTask implements Task {
   protected void setResult(Object result) {
     this.result = result;
     this.isResultCalculated = true;
-  }
-
-  @Override
-  public HashCode hash() {
-    return hash;
   }
 }

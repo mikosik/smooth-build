@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import org.junit.Test;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
-import org.smoothbuild.task.exec.HashedTasks;
 import org.smoothbuild.testing.plugin.FakeString;
 
 public class StringTaskTest {
@@ -36,19 +35,11 @@ public class StringTaskTest {
 
   @Test(expected = UnsupportedOperationException.class)
   public void calculateResultThrowsException() throws Exception {
-    task.execute(mock(Sandbox.class), mock(HashedTasks.class));
+    task.execute(mock(Sandbox.class));
   }
 
   @Test(expected = UnsupportedOperationException.class)
   public void locationThrowsException() throws Exception {
     task.location();
-  }
-
-  @Test
-  public void hashesOfStringTasksWithDifferentStringsDiffer() throws Exception {
-    StringTask stringTask1 = new StringTask(new FakeString("abc"));
-    StringTask stringTask2 = new StringTask(new FakeString("def"));
-
-    assertThat(stringTask1.hash()).isNotEqualTo(stringTask2.hash());
   }
 }

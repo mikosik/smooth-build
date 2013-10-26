@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.plugin.StringSetMatchers.containsOnly;
-import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -14,7 +13,6 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -43,12 +41,11 @@ public class StringSetNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    TaskGenerator taskGenerator = mock(TaskGenerator.class);
-    Mockito.when(taskGenerator.generateTask(node1)).thenReturn(task1.hash());
-    Mockito.when(taskGenerator.generateTask(node2)).thenReturn(task2.hash());
+    Mockito.when(node1.generateTask()).thenReturn(task1);
+    Mockito.when(node2.generateTask()).thenReturn(task2);
 
-    Task task = stringSetNode.generateTask(taskGenerator);
-    task.execute(sandbox, hashedTasks(task1, task2));
+    Task task = stringSetNode.generateTask();
+    task.execute(sandbox);
     assertThat((StringSet) task.result(), containsOnly(string1.value(), string2.value()));
   }
 }

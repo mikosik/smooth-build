@@ -6,18 +6,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
-import static org.smoothbuild.testing.task.exec.HashedTasksTester.hashedTasks;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.hash.HashCode;
 
 public class NativeFunctionTest {
   Sandbox sandbox = mock(Sandbox.class);
@@ -44,18 +41,14 @@ public class NativeFunctionTest {
 
   @Test
   public void generateTaskReturnsTaskWithNoResultCalculated() throws Exception {
-    TaskGenerator taskGenerator = mock(TaskGenerator.class);
-
-    Task task = function.generateTask(taskGenerator, Empty.stringHashMap(), codeLocation);
+    Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);
     assertThat(task.isResultCalculated()).isFalse();
   }
 
   @Test
   public void generatedTaskHasPassedArgsAsDependencies() throws Exception {
-    ImmutableMap<String, HashCode> args = Empty.stringHashMap();
-    TaskGenerator taskGenerator = mock(TaskGenerator.class);
-
-    Task task = function.generateTask(taskGenerator, args, codeLocation);
+    ImmutableMap<String, Task> args = Empty.stringTaskMap();
+    Task task = function.generateTask(args, codeLocation);
     assertThat(task.dependencies()).isSameAs(args.values());
   }
 
@@ -65,11 +58,10 @@ public class NativeFunctionTest {
 
     // given
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(result);
-    TaskGenerator taskGenerator = mock(TaskGenerator.class);
 
     // when
-    Task task = function.generateTask(taskGenerator, Empty.stringHashMap(), codeLocation);
-    task.execute(sandbox, hashedTasks());
+    Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);
+    task.execute(sandbox);
 
     // then
     assertThat(task.isResultCalculated()).isTrue();

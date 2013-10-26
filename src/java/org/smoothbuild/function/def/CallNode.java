@@ -6,11 +6,9 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.hash.HashCode;
 
 public class CallNode implements DefinitionNode {
   private final Function function;
@@ -29,14 +27,14 @@ public class CallNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator) {
-    Builder<String, HashCode> builder = ImmutableMap.builder();
+  public Task generateTask() {
+    Builder<String, Task> builder = ImmutableMap.builder();
     for (Map.Entry<String, DefinitionNode> entry : args.entrySet()) {
       String argName = entry.getKey();
-      HashCode hash = taskGenerator.generateTask(entry.getValue());
-      builder.put(argName, hash);
+      Task dependency = entry.getValue().generateTask();
+      builder.put(argName, dependency);
     }
-    ImmutableMap<String, HashCode> argumentHashes = builder.build();
-    return function.generateTask(taskGenerator, argumentHashes, codeLocation);
+    ImmutableMap<String, Task> dependencies = builder.build();
+    return function.generateTask(dependencies, codeLocation);
   }
 }

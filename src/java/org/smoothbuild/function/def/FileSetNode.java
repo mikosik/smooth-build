@@ -4,11 +4,9 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.FileSetTask;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.hash.HashCode;
 
 public class FileSetNode implements DefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elements;
@@ -25,14 +23,13 @@ public class FileSetNode implements DefinitionNode {
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator) {
-    Builder<HashCode> builder = ImmutableList.builder();
+  public Task generateTask() {
+    Builder<Task> builder = ImmutableList.builder();
     for (DefinitionNode node : elements) {
-      HashCode hash = taskGenerator.generateTask(node);
-      builder.add(hash);
+      builder.add(node.generateTask());
     }
-    ImmutableList<HashCode> elementHashes = builder.build();
-    return new FileSetTask(elementHashes, codeLocation);
+    ImmutableList<Task> elementTasks = builder.build();
+    return new FileSetTask(elementTasks, codeLocation);
   }
 
 }

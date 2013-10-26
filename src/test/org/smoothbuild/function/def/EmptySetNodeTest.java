@@ -1,11 +1,9 @@
 package org.smoothbuild.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.task.exec.TaskGenerator;
 
 public class EmptySetNodeTest {
   EmptySetNode emptySetNode = new EmptySetNode();
@@ -17,8 +15,6 @@ public class EmptySetNodeTest {
 
   @Test(expected = UnsupportedOperationException.class)
   public void generateTaskThrowsException() throws Exception {
-    TaskGenerator taskGenerator = mock(TaskGenerator.class);
-
-    emptySetNode.generateTask(taskGenerator);
+    emptySetNode.generateTask();
   }
 }
