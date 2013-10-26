@@ -13,6 +13,24 @@ import com.google.common.hash.HashCode;
 
 public class EmptyTest {
 
+  // stringTaskMap()
+
+  @Test
+  public void emptyStringTaskMapIsEmpty() {
+    assertThat(Empty.stringTaskMap()).isEmpty();
+  }
+
+  @Test
+  public void emptyStringTaskMapIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableMap<String, Task> map = Empty.stringTaskMap();
+  }
+
+  @Test
+  public void emptyStringTaskMapAlwaysReturnsTheSameObject() {
+    assertThat(Empty.stringTaskMap()).isSameAs(Empty.stringTaskMap());
+  }
+
   // stringHashMap()
 
   @Test
