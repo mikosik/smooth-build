@@ -29,6 +29,9 @@ public class Signature {
     return name;
   }
 
+  /**
+   * Parameters sorted lexicographically by their names.
+   */
   public ImmutableMap<String, Param> params() {
     return params;
   }
