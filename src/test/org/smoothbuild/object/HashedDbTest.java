@@ -26,6 +26,20 @@ public class HashedDbTest {
   HashedDb hashedDb = new HashedDb(fileSystem);
 
   @Test
+  public void new_instance_does_not_contain_any_file() throws Exception {
+    given(hashedDb = new HashedDb(fileSystem));
+    when(hashedDb.contains(HashCode.fromInt(33)));
+    thenReturned(false);
+  }
+
+  @Test
+  public void hashed_db_contains_added_bytes() throws Exception {
+    given(hash = hashedDb.store(bytes1));
+    when(hashedDb.contains(hash));
+    thenReturned(true);
+  }
+
+  @Test
   public void bytes_stored_can_be_read_back() throws IOException {
     given(hash = hashedDb.store(bytes1));
     when(inputStreamToBytes(hashedDb.openInputStream(hash)));

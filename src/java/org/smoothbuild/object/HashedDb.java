@@ -27,6 +27,11 @@ public class HashedDb {
     this.dbFileSystem = dbFileSystem;
   }
 
+  public boolean contains(HashCode hash) {
+    Path path = toPath(hash);
+    return dbFileSystem.pathState(path) == PathState.FILE;
+  }
+
   public InputStream openInputStream(HashCode hash) {
     Path path = toPath(hash);
     if (dbFileSystem.pathState(path) == PathState.FILE) {
