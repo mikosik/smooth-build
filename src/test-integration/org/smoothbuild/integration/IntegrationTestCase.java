@@ -7,11 +7,8 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.smoothbuild.app.SmoothApp;
-import org.smoothbuild.object.ObjectModule;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.fs.base.FakeFileSystemModule;
 import org.smoothbuild.testing.message.FakeUserConsole;
-import org.smoothbuild.testing.message.FakeUserConsoleModule;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
 import com.google.inject.Injector;
@@ -27,8 +24,7 @@ public class IntegrationTestCase {
   }
 
   protected void reset() {
-    Injector injector = createInjector(new FakeFileSystemModule(), new ObjectModule(),
-        new FakeUserConsoleModule());
+    Injector injector = createInjector(new IntegrationTestModule());
     fileSystem = injector.getInstance(FakeFileSystem.class);
     messages = injector.getInstance(FakeUserConsole.class);
     smoothApp = injector.getInstance(SmoothApp.class);
