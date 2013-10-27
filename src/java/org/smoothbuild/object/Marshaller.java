@@ -32,4 +32,8 @@ public class Marshaller {
   public byte[] getBytes() {
     return dataOutput.toByteArray();
   }
+
+  public static byte[] marshallHash(HashCode hash) {
+    return hash.asBytes();
+  }
 }
