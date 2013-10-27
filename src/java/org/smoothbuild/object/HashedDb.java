@@ -21,16 +21,16 @@ import com.google.common.hash.HashCode;
 public class HashedDb {
   public static final Charset STRING_CHARSET = Charsets.UTF_8;
 
-  private final FileSystem objectsFileSystem;
+  private final FileSystem dbFileSystem;
 
-  public HashedDb(FileSystem objectsFileSystem) {
-    this.objectsFileSystem = objectsFileSystem;
+  public HashedDb(FileSystem dbFileSystem) {
+    this.dbFileSystem = dbFileSystem;
   }
 
   public InputStream openInputStream(HashCode hash) {
     Path path = toPath(hash);
-    if (objectsFileSystem.pathState(path) == PathState.FILE) {
-      return objectsFileSystem.openInputStream(path);
+    if (dbFileSystem.pathState(path) == PathState.FILE) {
+      return dbFileSystem.openInputStream(path);
     } else {
       throw new ErrorMessageException(new NoObjectWithGivenHashError(hash));
     }
@@ -43,11 +43,11 @@ public class HashedDb {
   public HashCode store(HashCode hash, byte[] bytes) {
     Path path = toPath(hash);
 
-    if (objectsFileSystem.pathState(path) == PathState.FILE) {
+    if (dbFileSystem.pathState(path) == PathState.FILE) {
       return hash;
     }
 
-    try (OutputStream outputStream = objectsFileSystem.openOutputStream(path)) {
+    try (OutputStream outputStream = dbFileSystem.openOutputStream(path)) {
       outputStream.write(bytes);
     } catch (IOException e) {
       throw new ErrorMessageException(new ReadingHashedObjectFailedError(hash, e));
