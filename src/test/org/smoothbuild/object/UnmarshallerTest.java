@@ -2,7 +2,6 @@ package org.smoothbuild.object;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.command.SmoothContants.OBJECTS_DIR;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.object.HashCodes.toPath;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
@@ -95,7 +94,7 @@ public class UnmarshallerTest {
   @Test
   public void too_short_hash_in_db_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = OBJECTS_DIR.append(toPath(objectHash));
+    Path objectPath = toPath(objectHash);
     try (DataOutputStream outputStream = new DataOutputStream(
         fileSystem.openOutputStream(objectPath))) {
       outputStream.write(new byte[Hash.size() - 1]);
@@ -113,7 +112,7 @@ public class UnmarshallerTest {
   @Test
   public void too_short_path_in_db_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = OBJECTS_DIR.append(toPath(objectHash));
+    Path objectPath = toPath(objectHash);
     try (DataOutputStream outputStream = new DataOutputStream(
         fileSystem.openOutputStream(objectPath))) {
       int size = 10;
@@ -133,7 +132,7 @@ public class UnmarshallerTest {
   @Test
   public void halfed_size_of_path_in_db_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = OBJECTS_DIR.append(toPath(objectHash));
+    Path objectPath = toPath(objectHash);
     try (DataOutputStream outputStream = new DataOutputStream(
         fileSystem.openOutputStream(objectPath))) {
       outputStream.write(new byte[3]);
@@ -151,7 +150,7 @@ public class UnmarshallerTest {
   @Test
   public void illegal_path_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = OBJECTS_DIR.append(toPath(objectHash));
+    Path objectPath = toPath(objectHash);
     String illegalPathValue = "/";
 
     try (DataOutputStream outputStream = new DataOutputStream(
@@ -173,7 +172,7 @@ public class UnmarshallerTest {
   @Test
   public void too_short_int_in_db_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = OBJECTS_DIR.append(toPath(objectHash));
+    Path objectPath = toPath(objectHash);
     try (DataOutputStream outputStream = new DataOutputStream(
         fileSystem.openOutputStream(objectPath))) {
       outputStream.write(new byte[3]);

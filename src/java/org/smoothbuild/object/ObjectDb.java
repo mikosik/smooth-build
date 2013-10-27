@@ -17,7 +17,7 @@ public class ObjectDb {
   private final HashedDb hashedDb;
 
   @Inject
-  public ObjectDb(HashedDb hashedDb) {
+  public ObjectDb(@Objects HashedDb hashedDb) {
     this.hashedDb = hashedDb;
   }
 
