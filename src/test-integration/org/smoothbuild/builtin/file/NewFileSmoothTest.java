@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 public class NewFileSmoothTest extends IntegrationTestCase {
 

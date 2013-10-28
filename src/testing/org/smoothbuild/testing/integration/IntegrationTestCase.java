@@ -1,4 +1,4 @@
-package org.smoothbuild.integration;
+package org.smoothbuild.testing.integration;
 
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;

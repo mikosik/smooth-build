@@ -1,4 +1,4 @@
-package org.smoothbuild.integration;
+package org.smoothbuild.testing.integration;
 
 import org.smoothbuild.object.ObjectModule;
 import org.smoothbuild.testing.fs.base.FakeFileSystemModule;

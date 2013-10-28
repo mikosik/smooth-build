@@ -8,7 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.junit.JunitTestFailedError;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
 // TODO

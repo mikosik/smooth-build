@@ -16,8 +16,8 @@ import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.WriteToSmoothDirError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
-import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.testing.fs.base.PathTesting;
+import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 public class SaveSmoothTest extends IntegrationTestCase {
   Path path = path("def/filename.txt");

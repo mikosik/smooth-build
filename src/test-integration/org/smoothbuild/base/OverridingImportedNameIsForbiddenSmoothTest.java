@@ -3,8 +3,8 @@ package org.smoothbuild.base;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.integration.IntegrationTestCase;
 import org.smoothbuild.parse.err.OverridenImportError;
+import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
 public class OverridingImportedNameIsForbiddenSmoothTest extends IntegrationTestCase {
