@@ -8,8 +8,10 @@ import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.plugin.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -24,12 +26,12 @@ public class ObjectDb {
 
   // FileSet
 
-  public FileSetObject fileSet(List<File> elements) {
+  public FileSet fileSet(List<File> elements) {
     HashCode hash = genericSet(elements);
     return new FileSetObject(this, hash);
   }
 
-  public FileSetObject fileSet(HashCode hash) {
+  public FileSet fileSet(HashCode hash) {
     return new FileSetObject(this, hash);
   }
 
@@ -46,12 +48,12 @@ public class ObjectDb {
 
   // StringSet
 
-  public StringSetObject stringSet(List<StringValue> elements) {
+  public StringSet stringSet(List<StringValue> elements) {
     HashCode hash = genericSet(elements);
     return new StringSetObject(this, hash);
   }
 
-  public StringSetObject stringSet(HashCode hash) {
+  public StringSet stringSet(HashCode hash) {
     return new StringSetObject(this, hash);
   }
 
@@ -82,7 +84,7 @@ public class ObjectDb {
 
   // File
 
-  public FileObject file(Path path, byte[] bytes) {
+  public File file(Path path, byte[] bytes) {
     BlobObject blob = blob(bytes);
     HashCode contentHash = blob.hash();
 
@@ -94,7 +96,7 @@ public class ObjectDb {
     return new FileObject(path, blob, hash);
   }
 
-  public FileObject file(HashCode hash) {
+  public File file(HashCode hash) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       HashCode blobHash = unmarshaller.readHash();
       Path path = unmarshaller.readPath();
@@ -106,12 +108,12 @@ public class ObjectDb {
 
   // String
 
-  public StringObject string(String string) {
+  public StringValue string(String string) {
     HashCode hash = hashedDb.store(string.getBytes(STRING_CHARSET));
     return new StringObject(hashedDb, hash);
   }
 
-  public StringObject string(HashCode hash) {
+  public StringValue string(HashCode hash) {
     return new StringObject(hashedDb, hash);
   }
 

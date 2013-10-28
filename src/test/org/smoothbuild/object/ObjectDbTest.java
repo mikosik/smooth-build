@@ -17,6 +17,7 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
@@ -31,20 +32,20 @@ public class ObjectDbTest {
   byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
 
-  FileSetObject fileSet;
-  FileSetObject fileSet2;
+  FileSet fileSet;
+  FileSet fileSet2;
 
-  FileObject file;
-  FileObject file2;
+  File file;
+  File file2;
   Path path = path("my/path1");
   Path path2 = path("my/path2");
 
   StringSet stringSet;
   StringSet stringSet2;
 
-  StringObject stringObject;
-  StringObject stringObject2;
-  StringObject stringObjectRead;
+  StringValue stringValue;
+  StringValue stringValue2;
+  StringValue stringValueRead;
   String string = "a string";
   String string2 = "a string 2";
 
@@ -148,16 +149,16 @@ public class ObjectDbTest {
 
   @Test
   public void created_string_set_with_one_string_added_contains_one_string() throws Exception {
-    given(stringObject = objectDb.string(string));
-    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringObject)));
+    given(stringValue = objectDb.string(string));
+    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringValue)));
     when(Iterables.size(stringSet));
     thenReturned(1);
   }
 
   @Test
   public void created_string_set_contains_string_that_was_added_to_it() throws Exception {
-    given(stringObject = objectDb.string(string));
-    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringObject)));
+    given(stringValue = objectDb.string(string));
+    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringValue)));
     when(stringSet.iterator().next().value());
     thenReturned(string);
   }
@@ -165,8 +166,8 @@ public class ObjectDbTest {
   @Test
   public void created_string_set_with_one_string_added_when_queried_by_hash_contains_one_string()
       throws Exception {
-    given(stringObject = objectDb.string(string));
-    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringObject)));
+    given(stringValue = objectDb.string(string));
+    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringValue)));
     when(Iterables.size(objectDb.stringSet(stringSet.hash())));
     thenReturned(1);
   }
@@ -174,29 +175,29 @@ public class ObjectDbTest {
   @Test
   public void created_string_set_when_queried_by_hash_contains_string_that_was_added_to_it()
       throws Exception {
-    given(stringObject = objectDb.string(string));
-    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringObject)));
+    given(stringValue = objectDb.string(string));
+    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringValue)));
     when(objectDb.stringSet(stringSet.hash()).iterator().next().value());
     thenReturned(string);
   }
 
   @Test
   public void string_set_with_one_element_has_different_hash_from_that_string() throws Exception {
-    given(stringObject = objectDb.string(string));
-    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringObject)));
+    given(stringValue = objectDb.string(string));
+    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringValue)));
 
-    when(stringObject.hash());
+    when(stringValue.hash());
     thenReturned(not(equalTo(stringSet.hash())));
   }
 
   @Test
   public void string_set_with_one_element_has_different_hash_from_string_set_with_two_elements()
       throws Exception {
-    given(stringObject = objectDb.string(string));
-    given(stringObject2 = objectDb.string(string2));
-    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringObject)));
-    given(stringSet2 = objectDb.stringSet(ImmutableList.<StringValue> of(stringObject,
-        stringObject2)));
+    given(stringValue = objectDb.string(string));
+    given(stringValue2 = objectDb.string(string2));
+    given(stringSet = objectDb.stringSet(ImmutableList.<StringValue> of(stringValue)));
+    given(stringSet2 = objectDb.stringSet(ImmutableList.<StringValue> of(stringValue,
+        stringValue2)));
 
     when(stringSet.hash());
     thenReturned(not(equalTo(stringSet2.hash())));
@@ -275,38 +276,38 @@ public class ObjectDbTest {
 
   @Test
   public void created_string_object_contains_stored_string() throws IOException {
-    given(stringObject = objectDb.string(string));
-    when(stringObject.value());
+    given(stringValue = objectDb.string(string));
+    when(stringValue.value());
     thenReturned(string);
   }
 
   @Test
   public void created_string_contains_correct_hash() throws Exception {
-    given(stringObject = objectDb.string(string));
-    when(stringObject.hash());
+    given(stringValue = objectDb.string(string));
+    when(stringValue.hash());
     thenReturned(Hash.string(string));
   }
 
   @Test
   public void string_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(stringObject = objectDb.string(string));
-    given(stringObjectRead = objectDb.string(stringObject.hash()));
-    when(stringObjectRead.value());
+    given(stringValue = objectDb.string(string));
+    given(stringValueRead = objectDb.string(stringValue.hash()));
+    when(stringValueRead.value());
     thenReturned(string);
   }
 
   @Test
   public void string_object_retrieved_via_hash_contains_string_that_was_stored() throws Exception {
-    given(stringObject = objectDb.string(string));
-    given(stringObjectRead = objectDb.string(stringObject.hash()));
-    when(stringObjectRead.value());
+    given(stringValue = objectDb.string(string));
+    given(stringValueRead = objectDb.string(stringValue.hash()));
+    when(stringValueRead.value());
     thenReturned(string);
   }
 
   @Test
   public void reading_not_stored_string_object_fails() throws Exception {
-    given(stringObject = objectDb.string(HashCode.fromInt(33)));
-    when(stringObject).value();
+    given(stringValue = objectDb.string(HashCode.fromInt(33)));
+    when(stringValue).value();
     thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
