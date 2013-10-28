@@ -374,13 +374,6 @@ public class NativeFunctionFactoryTest {
     public static void execute(Sandbox sandbox, Integer wrong) {}
   }
 
-  @Test
-  public void differentFunctionHaveDifferentHashes() throws Exception {
-    NativeFunction f1 = nativeFunctionFactory.create(FunctionForHash1.class, false);
-    NativeFunction f2 = nativeFunctionFactory.create(FunctionForHash2.class, false);
-    assertThat(f1.hash()).isNotEqualTo(f2.hash());
-  }
-
   public static class FunctionForHash1 {
     @SmoothFunction("function1")
     public static void execute(Sandbox sandbox, EmptyParameters params) {}
