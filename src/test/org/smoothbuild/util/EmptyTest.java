@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.object.Hashed;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
@@ -12,6 +13,24 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class EmptyTest {
+
+  // stringValueMap()
+
+  @Test
+  public void emptyStringValueMapIsEmpty() {
+    assertThat(Empty.stringValueMap()).isEmpty();
+  }
+
+  @Test
+  public void emptyStringValueMapIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableMap<String, Hashed> map = Empty.stringValueMap();
+  }
+
+  @Test
+  public void emptyStringValueMapAlwaysReturnsTheSameObject() {
+    assertThat(Empty.stringValueMap()).isSameAs(Empty.stringValueMap());
+  }
 
   // stringTaskMap()
 

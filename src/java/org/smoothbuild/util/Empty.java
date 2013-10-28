@@ -1,6 +1,7 @@
 package org.smoothbuild.util;
 
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.object.Hashed;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
@@ -8,6 +9,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class Empty {
+
+  public static ImmutableMap<String, Hashed> stringValueMap() {
+    return ImmutableMap.of();
+  }
 
   public static ImmutableMap<String, Task> stringTaskMap() {
     return ImmutableMap.of();
