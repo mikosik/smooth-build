@@ -1,6 +1,6 @@
 package org.smoothbuild.object;
 
-import static org.smoothbuild.command.SmoothContants.TASK_RESULT_DIR;
+import static org.smoothbuild.command.SmoothContants.TASK_DB_DIR;
 import static org.smoothbuild.command.SmoothContants.VALUE_DB_DIR;
 
 import javax.inject.Singleton;
@@ -16,10 +16,10 @@ public class DbModule extends AbstractModule {
   protected void configure() {}
 
   @Singleton
-  @Results
+  @HashedDbWithResults
   @Provides
   public HashedDb taskResultHashedDb(FileSystem fileSystem) {
-    FileSystem objectsFileSystem = new SubFileSystem(fileSystem, TASK_RESULT_DIR);
+    FileSystem objectsFileSystem = new SubFileSystem(fileSystem, TASK_DB_DIR);
     return new HashedDb(objectsFileSystem);
   }
 

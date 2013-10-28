@@ -24,9 +24,9 @@ import org.smoothbuild.testing.plugin.FakeString;
 import com.google.common.hash.HashCode;
 
 public class ResultDbTest {
-  HashedDb taskResultDb = new HashedDb(new FakeFileSystem());
+  HashedDb taskToResultDb = new HashedDb(new FakeFileSystem());
   ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
-  ResultDb resultDb = new ResultDb(taskResultDb, valueDb);
+  ResultDb resultDb = new ResultDb(taskToResultDb, valueDb);
   HashCode hash = Hash.string("abc");
 
   byte[] bytes = new byte[] {};

@@ -11,4 +11,4 @@ import com.google.inject.BindingAnnotation;
 @Retention(RUNTIME)
 @Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })
 @BindingAnnotation
-public @interface Results {}
+public @interface HashedDbWithResults {}
