@@ -23,8 +23,9 @@ import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.object.ResultCache;
 import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
@@ -42,8 +43,9 @@ public class NativeCallTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = codeLocation(1, 2, 4);
   HashCode hash = HashCode.fromInt(33);
-  NativeFunction function1 = new NativeFunction(testSignature(), invoker);
-  NativeFunction function2 = new NativeFunction(testSignature(), invoker);
+  ResultCache resultCache = mock(ResultCache.class);
+  NativeFunction function1 = new NativeFunction(resultCache, testSignature(), invoker);
+  NativeFunction function2 = new NativeFunction(resultCache, testSignature(), invoker);
 
   String name1 = "name1";
   String name2 = "name2";
@@ -52,7 +54,8 @@ public class NativeCallTaskTest {
 
   ImmutableList<Param> params = ImmutableList.of(param(STRING, name1), param(STRING, name2));
 
-  NativeCallTask nativeCallTask = new NativeCallTask(function1, codeLocation, Empty.stringTaskMap());
+  NativeCallTask nativeCallTask = new NativeCallTask(resultCache, function1, codeLocation,
+      Empty.stringTaskMap());
 
   @Test
   public void location() throws Exception {
@@ -66,8 +69,8 @@ public class NativeCallTaskTest {
     Task subTask = new FakeTask(argValue);
 
     String name = "param";
-    NativeCallTask nativeCallTask = new NativeCallTask(function1, codeLocation, ImmutableMap.of(
-        name, subTask));
+    NativeCallTask nativeCallTask = new NativeCallTask(resultCache, function1, codeLocation,
+        ImmutableMap.of(name, subTask));
 
     StringValue result = new FakeString("result");
     when(invoker.invoke(sandbox, ImmutableMap.<String, Value> of(name, argValue))).thenReturn(
@@ -92,8 +95,8 @@ public class NativeCallTaskTest {
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
     Signature signature = new Signature(VOID, simpleName("name"), params);
-    function1 = new NativeFunction(signature, invoker);
-    nativeCallTask = new NativeCallTask(function1, codeLocation, Empty.stringTaskMap());
+    function1 = new NativeFunction(resultCache, signature, invoker);
+    nativeCallTask = new NativeCallTask(resultCache, function1, codeLocation, Empty.stringTaskMap());
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
 
     nativeCallTask.execute(sandbox);
