@@ -25,12 +25,6 @@ public class MarshallerTest {
   }
 
   @Test
-  public void marshalling_single_hash_via_static_method() {
-    HashCode hashCode = HashCode.fromInt(33);
-    assertThat(Marshaller.marshallHash(hashCode)).isEqualTo(hashToBytes(hashCode));
-  }
-
-  @Test
   public void marshalling_single_path() {
     Path path = path("my/path");
 
