@@ -9,6 +9,7 @@ import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.object.Hashed;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.NativeCallTask;
 import org.smoothbuild.task.base.Task;
@@ -40,7 +41,7 @@ public class NativeFunction extends AbstractFunction {
     return new NativeCallTask(this, codeLocation, args);
   }
 
-  public Object invoke(Sandbox sandbox, ImmutableMap<String, Object> args)
+  public Hashed invoke(Sandbox sandbox, ImmutableMap<String, Object> args)
       throws IllegalAccessException, InvocationTargetException {
     return invoker.invoke(sandbox, args);
   }

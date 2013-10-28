@@ -11,7 +11,9 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
@@ -54,7 +56,7 @@ public class NativeFunctionTest {
 
   @Test
   public void generatedTaskUsesInvokerForCalculatingResult() throws Exception {
-    String result = "result";
+    StringValue result = new FakeString("result");
 
     // given
     when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(result);

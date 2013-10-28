@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.testing.plugin.FakeString;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -25,7 +27,7 @@ public class InvokerTest {
 
   @Test
   public void test() throws Exception {
-    String value = "stringParamValue";
+    StringValue value = new FakeString("stringParamValue");
     Method method = InvokerTest.class.getMethod("myMethod", Sandbox.class, Parameters.class);
 
     Invoker invoker = new Invoker(method, new ArgumentsCreator(Parameters.class));
@@ -36,10 +38,10 @@ public class InvokerTest {
   }
 
   public interface Parameters {
-    public String stringParam();
+    public StringValue stringParam();
   }
 
-  public static String myMethod(Sandbox sandbox, Parameters params) {
+  public static StringValue myMethod(Sandbox sandbox, Parameters params) {
     return params.stringParam();
   }
 }

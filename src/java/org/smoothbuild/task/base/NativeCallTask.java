@@ -9,6 +9,7 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.object.Hashed;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
@@ -32,7 +33,7 @@ public class NativeCallTask extends AbstractTask {
   @Override
   public void execute(Sandbox sandbox) {
     try {
-      Object result = function.invoke(sandbox, calculateArguments());
+      Hashed result = function.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {
         sandbox.report(new NullResultError(location()));
       } else {

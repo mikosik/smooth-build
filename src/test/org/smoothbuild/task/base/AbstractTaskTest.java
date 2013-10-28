@@ -6,7 +6,9 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.object.Hashed;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableCollection;
@@ -25,7 +27,7 @@ public class AbstractTaskTest {
 
   @Test
   public void resultIsSetAfterSetting() throws Exception {
-    doTestResultSetting("result");
+    doTestResultSetting(new FakeString("result"));
   }
 
   @Test
@@ -33,7 +35,7 @@ public class AbstractTaskTest {
     doTestResultSetting(null);
   }
 
-  private void doTestResultSetting(Object result) {
+  private void doTestResultSetting(Hashed result) {
     MyAbstractTask task = new MyAbstractTask();
 
     task.setMyResult(result);
@@ -50,7 +52,7 @@ public class AbstractTaskTest {
       super(LOCATION);
     }
 
-    public void setMyResult(Object result) {
+    public void setMyResult(Hashed result) {
       setResult(result);
     }
 
