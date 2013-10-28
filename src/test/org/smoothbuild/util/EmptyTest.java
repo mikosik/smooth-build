@@ -10,7 +10,6 @@ import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.hash.HashCode;
 
 public class EmptyTest {
 
@@ -48,60 +47,6 @@ public class EmptyTest {
   @Test
   public void emptyStringTaskMapAlwaysReturnsTheSameObject() {
     assertThat(Empty.stringTaskMap()).isSameAs(Empty.stringTaskMap());
-  }
-
-  // stringHashMap()
-
-  @Test
-  public void emptyStringHashMapIsEmpty() {
-    assertThat(Empty.stringHashMap()).isEmpty();
-  }
-
-  @Test
-  public void emptyStringHashMapIsImmutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<String, HashCode> map = Empty.stringHashMap();
-  }
-
-  @Test
-  public void emptyStringHashMapAlwaysReturnsTheSameObject() {
-    assertThat(Empty.stringHashMap()).isSameAs(Empty.stringHashMap());
-  }
-
-  // stringObjectMap()
-
-  @Test
-  public void emptyStringObjectIsEmpty() {
-    assertThat(Empty.stringObjectMap()).isEmpty();
-  }
-
-  @Test
-  public void emptyStringObjectMapIsImmutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<String, Object> map = Empty.stringObjectMap();
-  }
-
-  @Test
-  public void emptyStringObjectAlwaysReturnsTheSameObject() {
-    assertThat(Empty.stringObjectMap()).isSameAs(Empty.stringObjectMap());
-  }
-
-  // hashCodeList()
-
-  @Test
-  public void emptyHashCodeListIsEmpty() {
-    assertThat(Empty.hashCodeList()).isEmpty();
-  }
-
-  @Test
-  public void emptyHashCodeListIsImmutable() {
-    @SuppressWarnings("unused")
-    ImmutableList<HashCode> list = Empty.hashCodeList();
-  }
-
-  @Test
-  public void emptyHashCodeListAlwaysReturnsTheSameObject() {
-    assertThat(Empty.hashCodeList()).isSameAs(Empty.hashCodeList());
   }
 
   // definitionNodeList()
