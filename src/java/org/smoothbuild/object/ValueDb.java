@@ -16,11 +16,11 @@ import org.smoothbuild.plugin.Value;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class ObjectDb {
+public class ValueDb {
   private final HashedDb hashedDb;
 
   @Inject
-  public ObjectDb(@Objects HashedDb hashedDb) {
+  public ValueDb(@HashedDbWithValues HashedDb hashedDb) {
     this.hashedDb = hashedDb;
   }
 

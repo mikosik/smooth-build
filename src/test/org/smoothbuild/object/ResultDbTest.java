@@ -25,8 +25,8 @@ import com.google.common.hash.HashCode;
 
 public class ResultDbTest {
   HashedDb taskResultDb = new HashedDb(new FakeFileSystem());
-  ObjectDb objectDb = new ObjectDb(new HashedDb(new FakeFileSystem()));
-  ResultDb resultDb = new ResultDb(taskResultDb, objectDb);
+  ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
+  ResultDb resultDb = new ResultDb(taskResultDb, valueDb);
   HashCode hash = Hash.string("abc");
 
   byte[] bytes = new byte[] {};
@@ -59,8 +59,8 @@ public class ResultDbTest {
 
   @Test
   public void stored_file_set_can_be_read_back() throws Exception {
-    given(file = objectDb.file(path, bytes));
-    given(fileSet = objectDb.fileSet(newArrayList(file)));
+    given(file = valueDb.file(path, bytes));
+    given(fileSet = valueDb.fileSet(newArrayList(file)));
     given(resultDb).store(hash, fileSet);
     when(((FileSet) resultDb.read(hash)).iterator().next());
     thenReturned(equalTo(file));
@@ -68,8 +68,8 @@ public class ResultDbTest {
 
   @Test
   public void stored_string_set_can_be_read_back() throws Exception {
-    given(stringValue = objectDb.string(string));
-    given(stringSet = objectDb.stringSet(newArrayList(stringValue)));
+    given(stringValue = valueDb.string(string));
+    given(stringSet = valueDb.stringSet(newArrayList(stringValue)));
     given(resultDb).store(hash, stringSet);
     when(resultDb.read(hash));
     thenReturned(containsOnly(string));
@@ -77,7 +77,7 @@ public class ResultDbTest {
 
   @Test
   public void stored_file_can_be_read_back() throws Exception {
-    given(file = objectDb.file(path, bytes));
+    given(file = valueDb.file(path, bytes));
     given(resultDb).store(hash, file);
     when(resultDb.read(hash));
     thenReturned(equalTo(file));
@@ -85,7 +85,7 @@ public class ResultDbTest {
 
   @Test
   public void stored_string_object_can_be_read_back() throws Exception {
-    given(stringValue = objectDb.string(string));
+    given(stringValue = valueDb.string(string));
     given(resultDb).store(hash, stringValue);
     when(((StringValue) resultDb.read(hash)).value());
     thenReturned(string);

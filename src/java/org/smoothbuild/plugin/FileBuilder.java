@@ -7,16 +7,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.object.ObjectDb;
+import org.smoothbuild.object.ValueDb;
 
 public class FileBuilder {
-  private final ObjectDb objectDb;
+  private final ValueDb valueDb;
 
   private Path path;
   private ByteArrayOutputStream outputStream;
 
-  public FileBuilder(ObjectDb objectDb) {
-    this.objectDb = objectDb;
+  public FileBuilder(ValueDb valueDb) {
+    this.valueDb = valueDb;
   }
 
   public void setPath(Path path) {
@@ -34,6 +34,6 @@ public class FileBuilder {
     checkState(outputStream != null, "No file content available. Create one via openOutputStream()");
     checkState(path != null, "No path set");
 
-    return objectDb.file(path, outputStream.toByteArray());
+    return valueDb.file(path, outputStream.toByteArray());
   }
 }

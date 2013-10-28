@@ -4,18 +4,18 @@ import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.object.ObjectDb;
+import org.smoothbuild.object.ValueDb;
 import org.smoothbuild.task.base.Task;
 
 public class TaskExecutor {
   private final FileSystem fileSystem;
-  private final ObjectDb objectDb;
+  private final ValueDb valueDb;
   private final UserConsole userConsole;
 
   @Inject
-  public TaskExecutor(FileSystem fileSystem, ObjectDb objectDb, UserConsole userConsole) {
+  public TaskExecutor(FileSystem fileSystem, ValueDb valueDb, UserConsole userConsole) {
     this.fileSystem = fileSystem;
-    this.objectDb = objectDb;
+    this.valueDb = valueDb;
     this.userConsole = userConsole;
   }
 
@@ -30,6 +30,6 @@ public class TaskExecutor {
   }
 
   private SandboxImpl createSandbox(Task task) {
-    return new SandboxImpl(fileSystem, objectDb, task.location());
+    return new SandboxImpl(fileSystem, valueDb, task.location());
   }
 }

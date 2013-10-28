@@ -2,16 +2,16 @@ package org.smoothbuild.plugin;
 
 import java.util.List;
 
-import org.smoothbuild.object.ObjectDb;
+import org.smoothbuild.object.ValueDb;
 
 import com.google.common.collect.Lists;
 
 public class StringSetBuilder {
-  private final ObjectDb objectDb;
+  private final ValueDb valueDb;
   private final List<StringValue> result;
 
-  public StringSetBuilder(ObjectDb objectDb) {
-    this.objectDb = objectDb;
+  public StringSetBuilder(ValueDb valueDb) {
+    this.valueDb = valueDb;
     this.result = Lists.newArrayList();
   }
 
@@ -20,6 +20,6 @@ public class StringSetBuilder {
   }
 
   public StringSet build() {
-    return objectDb.stringSet(result);
+    return valueDb.stringSet(result);
   }
 }
