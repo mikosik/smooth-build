@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Param.paramsToString;
-import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 
@@ -40,20 +39,6 @@ public class ParamTest {
   @Test(expected = IllegalArgumentException.class)
   public void creatingEmptySetParamIsForbidden() throws Exception {
     Param.param(Type.EMPTY_SET, "name", true);
-  }
-
-  @Test
-  public void paramsWithDifferentNamesHaveDifferentHashes() throws Exception {
-    Param param1 = param(STRING, "param1");
-    Param param2 = param(STRING, "param2");
-    assertThat(param2.hash()).isNotEqualTo(param1.hash());
-  }
-
-  @Test
-  public void paramsWithDifferentTypesButTheSameNamesHaveTheSameHashes() throws Exception {
-    Param fileParam = param(FILE, "param1");
-    Param stringParam = param(STRING, "param1");
-    assertThat(stringParam.hash()).isEqualTo(fileParam.hash());
   }
 
   @Test

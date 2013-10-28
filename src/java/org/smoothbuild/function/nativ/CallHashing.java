@@ -16,7 +16,7 @@ public class CallHashing {
     for (Param param : function.params().values()) {
       Value argument = arguments.get(param.name());
       if (argument != null) {
-        hasher.putBytes(param.hash().asBytes());
+        hasher.putBytes(Hash.string(param.name()).asBytes());
         hasher.putBytes(argument.hash().asBytes());
       }
     }

@@ -7,15 +7,10 @@ import static org.smoothbuild.function.base.Type.allowedForParam;
 
 import java.util.Set;
 
-import org.smoothbuild.hash.Hash;
-
-import com.google.common.hash.HashCode;
-
 public class Param {
   private final Type type;
   private final String name;
   private final boolean isRequired;
-  private final HashCode hash;
 
   public static Param param(Type type, String name) {
     return param(type, name, false);
@@ -29,7 +24,6 @@ public class Param {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
-    this.hash = Hash.string(name);
   }
 
   private Type checkAllowedType(Type type) {
@@ -48,10 +42,6 @@ public class Param {
 
   public boolean isRequired() {
     return isRequired;
-  }
-
-  public HashCode hash() {
-    return hash;
   }
 
   @Override
