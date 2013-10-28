@@ -6,10 +6,11 @@ import java.util.Iterator;
 
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.Value;
 
 import com.google.common.hash.HashCode;
 
-public class FileSetObject implements FileSet, Hashed {
+public class FileSetObject implements FileSet, Value {
   private final ObjectDb objectDb;
   private final HashCode hash;
 

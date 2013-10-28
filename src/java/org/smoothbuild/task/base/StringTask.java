@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.util.Empty;
@@ -29,7 +29,7 @@ public class StringTask implements Task {
   }
 
   @Override
-  public Hashed result() {
+  public Value result() {
     return string;
   }
 

@@ -23,7 +23,7 @@ import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
@@ -70,7 +70,7 @@ public class NativeCallTaskTest {
         name, subTask));
 
     StringValue result = new FakeString("result");
-    when(invoker.invoke(sandbox, ImmutableMap.<String, Hashed> of(name, argValue))).thenReturn(
+    when(invoker.invoke(sandbox, ImmutableMap.<String, Value> of(name, argValue))).thenReturn(
         result);
 
     nativeCallTask.execute(sandbox);

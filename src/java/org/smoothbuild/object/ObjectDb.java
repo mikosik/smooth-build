@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.StringValue;
 
 import com.google.common.collect.ImmutableList;
@@ -67,13 +68,13 @@ public class ObjectDb {
 
   // generic set
 
-  private HashCode genericSet(List<? extends Hashed> elements) {
+  private HashCode genericSet(List<? extends Value> elements) {
     Marshaller marshaller = new Marshaller();
-    List<Hashed> sortedElements = HashedSorter.sort(elements);
+    List<Value> sortedElements = HashedSorter.sort(elements);
 
     marshaller.addInt(sortedElements.size());
-    for (Hashed hashed : sortedElements) {
-      marshaller.addHash(hashed.hash());
+    for (Value value : sortedElements) {
+      marshaller.addHash(value.hash());
     }
 
     return hashedDb.store(marshaller.getBytes());

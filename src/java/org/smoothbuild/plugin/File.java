@@ -3,9 +3,8 @@ package org.smoothbuild.plugin;
 import java.io.InputStream;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.object.Hashed;
 
-public interface File extends Hashed {
+public interface File extends Value {
   public Path path();
 
   public InputStream openInputStream();

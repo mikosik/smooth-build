@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
@@ -24,7 +24,7 @@ public class EmptyTest {
   @Test
   public void emptyStringValueMapIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<String, Hashed> map = Empty.stringValueMap();
+    ImmutableMap<String, Value> map = Empty.stringValueMap();
   }
 
   @Test

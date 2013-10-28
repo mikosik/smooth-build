@@ -6,6 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.plugin.Value;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
@@ -28,11 +29,11 @@ public class HashedSorterTest {
 
   @Test
   public void sorting_empty_list_returns_empty_list() throws Exception {
-    when(HashedSorter.sort(Lists.<Hashed> newArrayList()));
-    thenReturned(Lists.<Hashed> newArrayList());
+    when(HashedSorter.sort(Lists.<Value> newArrayList()));
+    thenReturned(Lists.<Value> newArrayList());
   }
 
-  private static class FakeHashed implements Hashed {
+  private static class FakeHashed implements Value {
     private final HashCode hash;
 
     public FakeHashed(byte[] bytes) {

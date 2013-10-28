@@ -1,7 +1,7 @@
 package org.smoothbuild.util;
 
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
@@ -10,7 +10,7 @@ import com.google.common.hash.HashCode;
 
 public class Empty {
 
-  public static ImmutableMap<String, Hashed> stringValueMap() {
+  public static ImmutableMap<String, Value> stringValueMap() {
     return ImmutableMap.of();
   }
 

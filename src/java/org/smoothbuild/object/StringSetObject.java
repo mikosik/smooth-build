@@ -4,12 +4,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Iterator;
 
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 
 import com.google.common.hash.HashCode;
 
-public class StringSetObject implements StringSet, Hashed {
+public class StringSetObject implements StringSet, Value {
   private final ObjectDb objectDb;
   private final HashCode hash;
 

@@ -6,10 +6,11 @@ import java.io.InputStream;
 
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Value;
 
 import com.google.common.hash.HashCode;
 
-public class FileObject implements File, Hashed {
+public class FileObject implements File, Value {
   private final Path path;
   private final BlobObject content;
   private final HashCode hash;
