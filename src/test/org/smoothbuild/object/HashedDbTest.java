@@ -11,7 +11,6 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.hash.Hash;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 

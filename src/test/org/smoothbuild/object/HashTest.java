@@ -1,4 +1,4 @@
-package org.smoothbuild.hash;
+package org.smoothbuild.object;
 
 import static org.hamcrest.Matchers.not;
 import static org.testory.Testory.thenReturned;
@@ -6,6 +6,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Name;
+import org.smoothbuild.object.Hash;
 
 public class HashTest {
   String string = "some string";

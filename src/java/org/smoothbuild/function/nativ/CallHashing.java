@@ -3,7 +3,7 @@ package org.smoothbuild.function.nativ;
 import java.util.Map;
 
 import org.smoothbuild.function.base.Param;
-import org.smoothbuild.hash.Hash;
+import org.smoothbuild.object.Hash;
 import org.smoothbuild.plugin.Value;
 
 import com.google.common.hash.HashCode;

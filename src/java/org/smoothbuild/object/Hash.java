@@ -1,4 +1,4 @@
-package org.smoothbuild.hash;
+package org.smoothbuild.object;
 
 import java.nio.charset.Charset;
 

@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.hash.Hash;
+import org.smoothbuild.object.Hash;
 import org.smoothbuild.plugin.File;
 
 import com.google.common.base.Charsets;
