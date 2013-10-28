@@ -12,7 +12,6 @@ import static org.smoothbuild.testing.function.base.ParamTester.params;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.mem.MemoryFileSystemModule;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
@@ -37,6 +36,7 @@ import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.UnexpectedError;
+import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
@@ -53,7 +53,7 @@ public class NativeFunctionFactoryTest {
 
   @Before
   public void before() {
-    nativeFunctionFactory = Guice.createInjector(new MemoryFileSystemModule()).getInstance(
+    nativeFunctionFactory = Guice.createInjector(new IntegrationTestModule()).getInstance(
         NativeFunctionFactory.class);
   }
 
