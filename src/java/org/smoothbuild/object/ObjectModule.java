@@ -16,7 +16,7 @@ public class ObjectModule extends AbstractModule {
   protected void configure() {}
 
   @Singleton
-  @TaskResults
+  @Results
   @Provides
   public HashedDb taskResultHashedDb(FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, TASK_RESULT_DIR);

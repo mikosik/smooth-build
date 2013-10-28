@@ -9,7 +9,7 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.object.ResultCache;
+import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
@@ -23,14 +23,14 @@ import com.google.common.collect.ImmutableMap.Builder;
 public class NativeCallTask extends AbstractTask {
   // TODO
   @SuppressWarnings("unused")
-  private final ResultCache resultCache;
+  private final ResultDb resultDb;
   private final NativeFunction function;
   private final ImmutableMap<String, Task> dependencies;
 
-  public NativeCallTask(ResultCache resultCache, NativeFunction function,
+  public NativeCallTask(ResultDb resultDb, NativeFunction function,
       CodeLocation codeLocation, Map<String, Task> dependencies) {
     super(callLocation(function.signature().name(), codeLocation));
-    this.resultCache = resultCache;
+    this.resultDb = resultDb;
     this.function = function;
     this.dependencies = ImmutableMap.copyOf(dependencies);
   }

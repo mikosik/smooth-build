@@ -10,18 +10,18 @@ import org.smoothbuild.plugin.Value;
 
 import com.google.common.hash.HashCode;
 
-public class ResultCache {
+public class ResultDb {
   private static final int FILE_SET_FLAG = 1;
   private static final int STRING_SET_FLAG = 2;
   private static final int FILE_FLAG = 3;
   private static final int STRING_FLAG = 4;
 
-  private final HashedDb taskResultDb;
+  private final HashedDb taskToResultsDb;
   private final ObjectDb objectDb;
 
   @Inject
-  public ResultCache(@TaskResults HashedDb taskResultsDb, ObjectDb objectDb) {
-    this.taskResultDb = taskResultsDb;
+  public ResultDb(@Results HashedDb taskToResultsDb, ObjectDb objectDb) {
+    this.taskToResultsDb = taskToResultsDb;
     this.objectDb = objectDb;
   }
 
@@ -35,15 +35,15 @@ public class ResultCache {
     marshaller.addInt(flagFor(value));
     marshaller.addHash(value.hash());
 
-    taskResultDb.store(taskHash, marshaller.getBytes());
+    taskToResultsDb.store(taskHash, marshaller.getBytes());
   }
 
   public boolean contains(HashCode taskHash) {
-    return taskResultDb.contains(taskHash);
+    return taskToResultsDb.contains(taskHash);
   }
 
   public Value read(HashCode taskHash) {
-    try (Unmarshaller unmarshaller = new Unmarshaller(taskResultDb, taskHash);) {
+    try (Unmarshaller unmarshaller = new Unmarshaller(taskToResultsDb, taskHash);) {
       int flag = unmarshaller.readInt();
       HashCode resultObjectHash = unmarshaller.readHash();
       return readValue(flag, resultObjectHash);

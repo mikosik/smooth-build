@@ -10,7 +10,7 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.object.ResultCache;
+import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
@@ -25,11 +25,11 @@ public class NativeFunctionTest {
   String name = "functionName";
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
-  ResultCache resultCache = mock(ResultCache.class);
+  ResultDb resultDb = mock(ResultDb.class);
   Signature signature = testSignature("functionName");
   Invoker invoker = mock(Invoker.class);
 
-  NativeFunction function = new NativeFunction(resultCache, signature, invoker);
+  NativeFunction function = new NativeFunction(resultDb, signature, invoker);
 
   @Test(expected = NullPointerException.class)
   public void nullResultCacheIsForbidden() throws Exception {
@@ -38,12 +38,12 @@ public class NativeFunctionTest {
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
-    new NativeFunction(resultCache, null, invoker);
+    new NativeFunction(resultDb, null, invoker);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullInvokerIsForbidden() throws Exception {
-    new NativeFunction(resultCache, signature, null);
+    new NativeFunction(resultDb, signature, null);
   }
 
   @Test
