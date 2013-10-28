@@ -20,7 +20,7 @@ public class ResultDb {
   private final ValueDb valueDb;
 
   @Inject
-  public ResultDb(@Results HashedDb taskToResultsDb, ValueDb valueDb) {
+  public ResultDb(@HashedDbWithResults HashedDb taskToResultsDb, ValueDb valueDb) {
     this.taskToResultsDb = taskToResultsDb;
     this.valueDb = valueDb;
   }
