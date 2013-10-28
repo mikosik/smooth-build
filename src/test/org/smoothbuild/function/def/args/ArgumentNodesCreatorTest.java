@@ -35,7 +35,7 @@ import org.smoothbuild.function.def.args.err.VoidArgError;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.PhaseFailedException;
-import org.smoothbuild.object.ResultCache;
+import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
@@ -557,7 +557,7 @@ public class ArgumentNodesCreatorTest {
 
   private static Function function(Iterable<Param> params) {
     Signature signature = new Signature(STRING, simpleName("name"), params);
-    return new NativeFunction(mock(ResultCache.class), signature, mock(Invoker.class));
+    return new NativeFunction(mock(ResultDb.class), signature, mock(Invoker.class));
   }
 
   private static ArrayList<Argument> list(Argument... args) {

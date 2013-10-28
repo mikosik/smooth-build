@@ -28,7 +28,7 @@ import org.smoothbuild.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.object.ResultCache;
+import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
@@ -50,8 +50,8 @@ import com.google.inject.Guice;
 public class NativeFunctionFactoryTest {
   FakeSandbox sandbox = new FakeSandbox();
   Path tempDir = path("tem/dir");
-  ResultCache resultCache = mock(ResultCache.class);
-  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory(resultCache);
+  ResultDb resultDb = mock(ResultDb.class);
+  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory(resultDb);
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   @Before

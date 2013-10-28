@@ -14,17 +14,17 @@ import org.smoothbuild.function.nativ.exc.NoSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonPublicSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.object.ResultCache;
+import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class NativeFunctionFactory {
-  private final ResultCache resultCache;
+  private final ResultDb resultDb;
 
   @Inject
-  public NativeFunctionFactory(ResultCache resultCache) {
-    this.resultCache = resultCache;
+  public NativeFunctionFactory(ResultDb resultDb) {
+    this.resultDb = resultDb;
   }
 
   public NativeFunction create(Class<?> klass, boolean builtin)
@@ -35,7 +35,7 @@ public class NativeFunctionFactory {
     Signature signature = SignatureFactory.create(method, paramsInterface);
     Invoker invoker = createInvoker(method, paramsInterface);
 
-    return new NativeFunction(resultCache, signature, invoker);
+    return new NativeFunction(resultDb, signature, invoker);
   }
 
   private static Invoker createInvoker(Method method, Class<?> paramsInterface)
