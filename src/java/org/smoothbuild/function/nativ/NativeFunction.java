@@ -41,7 +41,7 @@ public class NativeFunction extends AbstractFunction {
     return new NativeCallTask(this, codeLocation, args);
   }
 
-  public Hashed invoke(Sandbox sandbox, ImmutableMap<String, Object> args)
+  public Hashed invoke(Sandbox sandbox, ImmutableMap<String, Hashed> args)
       throws IllegalAccessException, InvocationTargetException {
     return invoker.invoke(sandbox, args);
   }

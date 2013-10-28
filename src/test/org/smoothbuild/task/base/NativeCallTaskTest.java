@@ -23,6 +23,7 @@ import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.object.Hashed;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
@@ -69,7 +70,7 @@ public class NativeCallTaskTest {
         name, subTask));
 
     StringValue result = new FakeString("result");
-    when(invoker.invoke(sandbox, ImmutableMap.<String, Object> of(name, argValue))).thenReturn(
+    when(invoker.invoke(sandbox, ImmutableMap.<String, Hashed> of(name, argValue))).thenReturn(
         result);
 
     nativeCallTask.execute(sandbox);
@@ -79,7 +80,7 @@ public class NativeCallTaskTest {
   @Test
   public void nullResultErrorIsReportedWhenNullIsReturnByFunctionReturningNonVoidType()
       throws Exception {
-    when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
+    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
 
     nativeCallTask.execute(sandbox);
 
@@ -93,7 +94,7 @@ public class NativeCallTaskTest {
     Signature signature = new Signature(VOID, simpleName("name"), params);
     function1 = new NativeFunction(signature, invoker);
     nativeCallTask = new NativeCallTask(function1, codeLocation, Empty.stringTaskMap());
-    when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(null);
+    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
 
     nativeCallTask.execute(sandbox);
 
@@ -133,7 +134,7 @@ public class NativeCallTaskTest {
 
   private void assertExceptionIsReportedAsProblem(Throwable thrown,
       Class<? extends Message> expected) throws Exception {
-    when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenThrow(thrown);
+    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenThrow(thrown);
 
     nativeCallTask.execute(sandbox);
 

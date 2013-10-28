@@ -56,11 +56,11 @@ public class NativeCallTask extends AbstractTask {
     return function.type() == Type.VOID;
   }
 
-  private ImmutableMap<String, Object> calculateArguments() {
-    Builder<String, Object> builder = ImmutableMap.builder();
+  private ImmutableMap<String, Hashed> calculateArguments() {
+    Builder<String, Hashed> builder = ImmutableMap.builder();
     for (Map.Entry<String, Task> entry : dependencies.entrySet()) {
       String paramName = entry.getKey();
-      Object result = entry.getValue().result();
+      Hashed result = entry.getValue().result();
       builder.put(paramName, result);
     }
     return builder.build();
