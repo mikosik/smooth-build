@@ -9,8 +9,9 @@ import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.object.ResultCache;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.NativeCallTask;
 import org.smoothbuild.task.base.Task;
 
@@ -23,11 +24,13 @@ import com.google.common.hash.HashCode;
  * Smooth script using Smooth language).
  */
 public class NativeFunction extends AbstractFunction {
+  private final ResultCache resultCache;
   private final Invoker invoker;
   private final HashCode hash;
 
-  public NativeFunction(Signature signature, Invoker invoker) {
+  public NativeFunction(ResultCache resultCache, Signature signature, Invoker invoker) {
     super(signature);
+    this.resultCache = checkNotNull(resultCache);
     this.hash = Hash.nativeFunction(signature.name());
     this.invoker = checkNotNull(invoker);
   }
@@ -38,7 +41,7 @@ public class NativeFunction extends AbstractFunction {
 
   @Override
   public Task generateTask(Map<String, Task> args, CodeLocation codeLocation) {
-    return new NativeCallTask(this, codeLocation, args);
+    return new NativeCallTask(resultCache, this, codeLocation, args);
   }
 
   public Value invoke(Sandbox sandbox, ImmutableMap<String, Value> args)

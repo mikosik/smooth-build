@@ -2,6 +2,7 @@ package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
@@ -27,6 +28,7 @@ import org.smoothbuild.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.object.ResultCache;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
@@ -48,7 +50,8 @@ import com.google.inject.Guice;
 public class NativeFunctionFactoryTest {
   FakeSandbox sandbox = new FakeSandbox();
   Path tempDir = path("tem/dir");
-  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory();
+  ResultCache resultCache = mock(ResultCache.class);
+  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory(resultCache);
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   @Before

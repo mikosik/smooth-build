@@ -9,8 +9,9 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.object.ResultCache;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
@@ -20,12 +21,16 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class NativeCallTask extends AbstractTask {
+  // TODO
+  @SuppressWarnings("unused")
+  private final ResultCache resultCache;
   private final NativeFunction function;
   private final ImmutableMap<String, Task> dependencies;
 
-  public NativeCallTask(NativeFunction function, CodeLocation codeLocation,
-      Map<String, Task> dependencies) {
+  public NativeCallTask(ResultCache resultCache, NativeFunction function,
+      CodeLocation codeLocation, Map<String, Task> dependencies) {
     super(callLocation(function.signature().name(), codeLocation));
+    this.resultCache = resultCache;
     this.function = function;
     this.dependencies = ImmutableMap.copyOf(dependencies);
   }

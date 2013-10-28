@@ -5,6 +5,8 @@ import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
 import java.lang.reflect.Method;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.exc.MoreThanOneSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
@@ -12,11 +14,18 @@ import org.smoothbuild.function.nativ.exc.NoSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonPublicSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
+import org.smoothbuild.object.ResultCache;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class NativeFunctionFactory {
+  private final ResultCache resultCache;
+
+  @Inject
+  public NativeFunctionFactory(ResultCache resultCache) {
+    this.resultCache = resultCache;
+  }
 
   public NativeFunction create(Class<?> klass, boolean builtin)
       throws NativeImplementationException {
@@ -26,7 +35,7 @@ public class NativeFunctionFactory {
     Signature signature = SignatureFactory.create(method, paramsInterface);
     Invoker invoker = createInvoker(method, paramsInterface);
 
-    return new NativeFunction(signature, invoker);
+    return new NativeFunction(resultCache, signature, invoker);
   }
 
   private static Invoker createInvoker(Method method, Class<?> paramsInterface)
