@@ -5,9 +5,10 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.testing.plugin.FakeString;
 
 public class FakeTaskTest {
-  FakeTask task = new FakeTask("result");
+  FakeTask task = new FakeTask(new FakeString("result"));
 
   @Test
   public void initiallyResultIsCalculated() {
@@ -21,7 +22,7 @@ public class FakeTaskTest {
 
   @Test
   public void resultPassedToConstructorIsReturned() {
-    String result = "result";
+    FakeString result = new FakeString("result");
     FakeTask task = new FakeTask(result);
     assertThat(task.result()).isSameAs(result);
   }

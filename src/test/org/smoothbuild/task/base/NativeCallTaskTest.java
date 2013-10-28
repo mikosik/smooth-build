@@ -23,9 +23,11 @@ import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
+import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeTask;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
@@ -59,15 +61,16 @@ public class NativeCallTaskTest {
 
   @Test
   public void calculateResult() throws IllegalAccessException, InvocationTargetException {
-    Object argValue = "subTaskResult";
+    StringValue argValue = new FakeString("subTaskResult");
     Task subTask = new FakeTask(argValue);
 
     String name = "param";
     NativeCallTask nativeCallTask = new NativeCallTask(function1, codeLocation, ImmutableMap.of(
         name, subTask));
 
-    String result = "result";
-    when(invoker.invoke(sandbox, ImmutableMap.of(name, argValue))).thenReturn(result);
+    StringValue result = new FakeString("result");
+    when(invoker.invoke(sandbox, ImmutableMap.<String, Object> of(name, argValue))).thenReturn(
+        result);
 
     nativeCallTask.execute(sandbox);
     assertThat(nativeCallTask.result()).isSameAs(result);

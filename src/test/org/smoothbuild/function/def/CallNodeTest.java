@@ -12,6 +12,7 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeTask;
 
 import com.google.common.collect.ImmutableMap;
@@ -34,7 +35,7 @@ public class CallNodeTest {
     DefinitionNode node = mock(DefinitionNode.class);
     Task task = mock(Task.class);
 
-    Task argTask = new FakeTask("arg");
+    Task argTask = new FakeTask(new FakeString("arg"));
 
     String name = "name";
     Map<String, DefinitionNode> argNodes = ImmutableMap.of(name, node);

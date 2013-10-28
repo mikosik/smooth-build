@@ -3,10 +3,11 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.object.Hashed;
 
 public abstract class AbstractTask implements Task {
   private final CallLocation callLocation;
-  private Object result;
+  private Hashed result;
   private boolean isResultCalculated;
 
   public AbstractTask(CallLocation callLocation) {
@@ -26,12 +27,12 @@ public abstract class AbstractTask implements Task {
   }
 
   @Override
-  public Object result() {
+  public Hashed result() {
     checkState(isResultCalculated, "Result not calculated yet.");
     return result;
   }
 
-  protected void setResult(Object result) {
+  protected void setResult(Hashed result) {
     this.result = result;
     this.isResultCalculated = true;
   }
