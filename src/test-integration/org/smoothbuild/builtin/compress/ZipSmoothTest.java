@@ -11,7 +11,7 @@ import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 import com.google.common.base.Charsets;
 

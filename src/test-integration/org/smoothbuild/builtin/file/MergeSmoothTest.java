@@ -5,7 +5,7 @@ import static org.smoothbuild.fs.base.Path.path;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.DuplicateMergedPathError;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
 public class MergeSmoothTest extends IntegrationTestCase {

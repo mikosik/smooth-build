@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.PathState;
-import org.smoothbuild.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 import com.google.common.collect.ImmutableList;
 
