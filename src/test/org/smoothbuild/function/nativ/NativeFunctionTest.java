@@ -10,6 +10,7 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.object.Hashed;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
@@ -36,7 +37,7 @@ public class NativeFunctionTest {
   @Test
   public void invokeIsForwardedToInvoker() throws Exception {
     @SuppressWarnings("unchecked")
-    ImmutableMap<String, Object> args = mock(ImmutableMap.class);
+    ImmutableMap<String, Hashed> args = mock(ImmutableMap.class);
     function.invoke(sandbox, args);
     verify(invoker).invoke(sandbox, args);
   }
@@ -59,7 +60,7 @@ public class NativeFunctionTest {
     StringValue result = new FakeString("result");
 
     // given
-    when(invoker.invoke(sandbox, Empty.stringObjectMap())).thenReturn(result);
+    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(result);
 
     // when
     Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);
