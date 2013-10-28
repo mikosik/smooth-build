@@ -45,7 +45,7 @@ public class HashTask {
 
   public static HashCode call(NativeFunction function, Map<String, HashCode> arguments) {
     Hasher hasher = newHasherFor(CALL_CODE);
-    hasher.putBytes(function.hash().asBytes());
+    hasher.putBytes(Hash.string(function.signature().name().full()).asBytes());
     for (Param param : function.params().values()) {
       HashCode argument = arguments.get(param.name());
       if (argument != null) {

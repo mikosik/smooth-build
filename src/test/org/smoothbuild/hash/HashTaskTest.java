@@ -30,8 +30,8 @@ public class HashTaskTest {
   Param param2 = param(STRING, "name2", false);
 
   ImmutableList<Param> params = ImmutableList.of(param1, param2);
-  NativeFunction function = createFunction(params, 1);
-  NativeFunction function2 = createFunction(params, 2);
+  NativeFunction function = createFunction(params, "func1");
+  NativeFunction function2 = createFunction(params, "func2");
 
   ImmutableMap<String, HashCode> arguments;
   ImmutableMap<String, HashCode> arguments2;
@@ -160,12 +160,11 @@ public class HashTaskTest {
 
   // helpers
 
-  private static NativeFunction createFunction(Iterable<Param> params, int hashValue) {
+  private static NativeFunction createFunction(Iterable<Param> params, String name) {
     NativeFunction function = mock(NativeFunction.class);
-    Signature signature = new Signature(STRING, simpleName("func"), params);
+    Signature signature = new Signature(STRING, simpleName(name), params);
     Mockito.when(function.signature()).thenReturn(signature);
     Mockito.when(function.params()).thenReturn(signature.params());
-    Mockito.when(function.hash()).thenReturn(HashCode.fromInt(hashValue));
     return function;
   }
 
