@@ -12,7 +12,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.hash.Hash;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;

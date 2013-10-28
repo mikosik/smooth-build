@@ -11,7 +11,6 @@ import java.io.DataOutputStream;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.err.IllegalPathInObjectError;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;

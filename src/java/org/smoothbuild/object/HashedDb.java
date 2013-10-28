@@ -10,7 +10,6 @@ import java.nio.charset.Charset;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.PathState;
-import org.smoothbuild.hash.Hash;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.object.err.NoObjectWithGivenHashError;
 import org.smoothbuild.object.err.ReadingHashedObjectFailedError;

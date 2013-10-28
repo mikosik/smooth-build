@@ -3,7 +3,7 @@ package org.smoothbuild.testing.plugin;
 import java.util.Iterator;
 import java.util.List;
 
-import org.smoothbuild.hash.Hash;
+import org.smoothbuild.object.Hash;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 
