@@ -19,11 +19,12 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.plugin.FakeString;
 
 import com.google.common.hash.HashCode;
 
 public class ResultCacheTest {
-  TaskResultDb taskResultDb = new TaskResultDb(new HashedDb(new FakeFileSystem()));
+  HashedDb taskResultDb = new HashedDb(new FakeFileSystem());
   ObjectDb objectDb = new ObjectDb(new HashedDb(new FakeFileSystem()));
   ResultCache resultCache = new ResultCache(taskResultDb, objectDb);
   HashCode hash = Hash.string("abc");
@@ -45,66 +46,48 @@ public class ResultCacheTest {
 
   @Test
   public void result_cache_contains_stored_result() {
-    given(resultCache).store(hash, Hash.string("result"));
+    given(resultCache).store(hash, new FakeString("result"));
     when(resultCache.contains(hash));
     thenReturned(true);
+  }
+
+  @Test
+  public void reading_not_stored_value_fails() throws Exception {
+    when(resultCache).read(hash);
+    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
   @Test
   public void stored_file_set_can_be_read_back() throws Exception {
     given(file = objectDb.file(path, bytes));
     given(fileSet = objectDb.fileSet(newArrayList(file)));
-    given(resultCache).store(hash, fileSet.hash());
-    when(resultCache.readFileSet(hash).iterator().next());
+    given(resultCache).store(hash, fileSet);
+    when(((FileSet) resultCache.read(hash)).iterator().next());
     thenReturned(equalTo(file));
-  }
-
-  @Test
-  public void reading_not_stored_file_set_fails() throws Exception {
-    when(resultCache).readFileSet(hash);
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
   @Test
   public void stored_string_set_can_be_read_back() throws Exception {
     given(stringValue = objectDb.string(string));
     given(stringSet = objectDb.stringSet(newArrayList(stringValue)));
-    given(resultCache).store(hash, stringSet.hash());
-    when(resultCache.readStringSet(hash));
+    given(resultCache).store(hash, stringSet);
+    when(resultCache.read(hash));
     thenReturned(containsOnly(string));
-  }
-
-  @Test
-  public void reading_not_stored_string_set_fails() throws Exception {
-    when(resultCache).readStringSet(hash);
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
   @Test
   public void stored_file_can_be_read_back() throws Exception {
     given(file = objectDb.file(path, bytes));
-    given(resultCache).store(hash, file.hash());
-    when(resultCache.readFile(hash));
+    given(resultCache).store(hash, file);
+    when(resultCache.read(hash));
     thenReturned(equalTo(file));
-  }
-
-  @Test
-  public void reading_not_stored_file_fails() throws Exception {
-    when(resultCache).readFile(hash);
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
   @Test
   public void stored_string_object_can_be_read_back() throws Exception {
     given(stringValue = objectDb.string(string));
-    given(resultCache).store(hash, stringValue.hash());
-    when(resultCache.readString(hash).value());
+    given(resultCache).store(hash, stringValue);
+    when(((StringValue) resultCache.read(hash)).value());
     thenReturned(string);
-  }
-
-  @Test
-  public void reading_not_stored_string_fails() throws Exception {
-    when(resultCache).readFile(hash);
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 }
