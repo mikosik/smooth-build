@@ -6,7 +6,6 @@ import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.hash.HashCode;
 
 public class Empty {
 
@@ -16,18 +15,6 @@ public class Empty {
 
   public static ImmutableMap<String, Task> stringTaskMap() {
     return ImmutableMap.of();
-  }
-
-  public static ImmutableMap<String, HashCode> stringHashMap() {
-    return ImmutableMap.of();
-  }
-
-  public static ImmutableMap<String, Object> stringObjectMap() {
-    return ImmutableMap.of();
-  }
-
-  public static ImmutableList<HashCode> hashCodeList() {
-    return ImmutableList.of();
   }
 
   public static ImmutableList<DefinitionNode> definitionNodeList() {
