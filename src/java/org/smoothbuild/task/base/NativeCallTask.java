@@ -9,7 +9,7 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
@@ -33,7 +33,7 @@ public class NativeCallTask extends AbstractTask {
   @Override
   public void execute(Sandbox sandbox) {
     try {
-      Hashed result = function.invoke(sandbox, calculateArguments());
+      Value result = function.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {
         sandbox.report(new NullResultError(location()));
       } else {
@@ -56,11 +56,11 @@ public class NativeCallTask extends AbstractTask {
     return function.type() == Type.VOID;
   }
 
-  private ImmutableMap<String, Hashed> calculateArguments() {
-    Builder<String, Hashed> builder = ImmutableMap.builder();
+  private ImmutableMap<String, Value> calculateArguments() {
+    Builder<String, Value> builder = ImmutableMap.builder();
     for (Map.Entry<String, Task> entry : dependencies.entrySet()) {
       String paramName = entry.getKey();
-      Hashed result = entry.getValue().result();
+      Value result = entry.getValue().result();
       builder.put(paramName, result);
     }
     return builder.build();

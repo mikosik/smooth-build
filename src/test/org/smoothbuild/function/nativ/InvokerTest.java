@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.lang.reflect.Method;
 
 import org.junit.Test;
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.plugin.FakeString;
@@ -32,7 +32,7 @@ public class InvokerTest {
     Method method = InvokerTest.class.getMethod("myMethod", Sandbox.class, Parameters.class);
 
     Invoker invoker = new Invoker(method, new ArgumentsCreator(Parameters.class));
-    ImmutableMap<String, Hashed> valuesMap = ImmutableMap.<String, Hashed> of("stringParam", value);
+    ImmutableMap<String, Value> valuesMap = ImmutableMap.<String, Value> of("stringParam", value);
     Object result = invoker.invoke(sandbox, valuesMap);
 
     assertThat(result).isSameAs(value);

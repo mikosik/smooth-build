@@ -3,7 +3,7 @@ package org.smoothbuild.testing.task.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.util.Empty;
@@ -11,9 +11,9 @@ import org.smoothbuild.util.Empty;
 import com.google.common.collect.ImmutableCollection;
 
 public class FakeTask implements Task {
-  private final Hashed result;
+  private final Value result;
 
-  public FakeTask(Hashed object) {
+  public FakeTask(Value object) {
     this.result = checkNotNull(object);
   }
 
@@ -29,7 +29,7 @@ public class FakeTask implements Task {
   }
 
   @Override
-  public Hashed result() {
+  public Value result() {
     return result;
   }
 

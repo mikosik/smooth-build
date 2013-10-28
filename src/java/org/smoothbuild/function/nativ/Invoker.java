@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.Sandbox;
 
 public class Invoker {
@@ -18,9 +18,9 @@ public class Invoker {
     this.argumentsCreator = checkNotNull(argumentsCreator);
   }
 
-  public Hashed invoke(Sandbox sandbox, Map<String, Hashed> args) throws IllegalAccessException,
+  public Value invoke(Sandbox sandbox, Map<String, Value> args) throws IllegalAccessException,
       InvocationTargetException {
     Object arguments = argumentsCreator.create(args);
-    return (Hashed) method.invoke(null, new Object[] { sandbox, arguments });
+    return (Value) method.invoke(null, new Object[] { sandbox, arguments });
   }
 }

@@ -2,17 +2,19 @@ package org.smoothbuild.object;
 
 import java.util.List;
 
+import org.smoothbuild.plugin.Value;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
 public class HashedSorter {
-  public static List<Hashed> sort(List<? extends Hashed> hashedObjects) {
+  public static List<Value> sort(List<? extends Value> hashedObjects) {
     Iterable<Element> elements = wrap(hashedObjects);
     List<Element> sortedElements = Ordering.natural().sortedCopy(elements);
     return unwrapElements(sortedElements);
   }
 
-  private static Iterable<Element> wrap(List<? extends Hashed> hashedObjects) {
+  private static Iterable<Element> wrap(List<? extends Value> hashedObjects) {
     List<Element> wrapped = Lists.newArrayList(new Element[hashedObjects.size()]);
     for (int i = 0; i < hashedObjects.size(); i++) {
       wrapped.set(i, new Element(hashedObjects.get(i)));
@@ -20,25 +22,25 @@ public class HashedSorter {
     return wrapped;
   }
 
-  private static List<Hashed> unwrapElements(List<Element> elements) {
-    List<Hashed> unwrapped = Lists.newArrayList(new Hashed[elements.size()]);
+  private static List<Value> unwrapElements(List<Element> elements) {
+    List<Value> unwrapped = Lists.newArrayList(new Value[elements.size()]);
     for (int i = 0; i < elements.size(); i++) {
-      unwrapped.set(i, elements.get(i).hashed());
+      unwrapped.set(i, elements.get(i).value());
     }
     return unwrapped;
   }
 
   private static class Element implements Comparable<Element> {
-    private final Hashed hashed;
+    private final Value value;
     private final byte[] bytes;
 
-    public Element(Hashed hashed) {
-      this.hashed = hashed;
-      this.bytes = hashed.hash().asBytes();
+    public Element(Value value) {
+      this.value = value;
+      this.bytes = value.hash().asBytes();
     }
 
-    public Hashed hashed() {
-      return hashed;
+    public Value value() {
+      return value;
     }
 
     @Override

@@ -4,9 +4,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.InputStream;
 
+import org.smoothbuild.plugin.Value;
+
 import com.google.common.hash.HashCode;
 
-public class BlobObject implements Hashed {
+public class BlobObject implements Value {
   private final HashedDb hashedDb;
   private final HashCode hash;
 

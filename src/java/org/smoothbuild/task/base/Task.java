@@ -1,7 +1,7 @@
 package org.smoothbuild.task.base;
 
 import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.object.Hashed;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.Sandbox;
 
 import com.google.common.collect.ImmutableCollection;
@@ -11,7 +11,7 @@ public interface Task {
 
   public boolean isResultCalculated();
 
-  public Hashed result();
+  public Value result();
 
   public void execute(Sandbox sandbox);
 
