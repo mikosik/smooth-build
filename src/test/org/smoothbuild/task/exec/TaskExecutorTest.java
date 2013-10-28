@@ -15,7 +15,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
-import org.smoothbuild.object.ObjectDb;
+import org.smoothbuild.object.ValueDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
@@ -26,9 +26,9 @@ public class TaskExecutorTest {
   Task task1 = task(1);
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeUserConsole userConsole = new FakeUserConsole();
-  ObjectDb objectDb = new FakeObjectDb(fileSystem);
+  ValueDb valueDb = new FakeObjectDb(fileSystem);
 
-  TaskExecutor taskExecutor = new TaskExecutor(fileSystem, objectDb, userConsole);
+  TaskExecutor taskExecutor = new TaskExecutor(fileSystem, valueDb, userConsole);
 
   @Test
   public void task_with_result_already_calculate_is_not_executed() {

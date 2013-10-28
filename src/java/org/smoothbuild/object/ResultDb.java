@@ -17,12 +17,12 @@ public class ResultDb {
   private static final int STRING_FLAG = 4;
 
   private final HashedDb taskToResultsDb;
-  private final ObjectDb objectDb;
+  private final ValueDb valueDb;
 
   @Inject
-  public ResultDb(@Results HashedDb taskToResultsDb, ObjectDb objectDb) {
+  public ResultDb(@Results HashedDb taskToResultsDb, ValueDb valueDb) {
     this.taskToResultsDb = taskToResultsDb;
-    this.objectDb = objectDb;
+    this.valueDb = valueDb;
   }
 
   public void store(HashCode taskHash, Value value) {
@@ -53,13 +53,13 @@ public class ResultDb {
   private Value readValue(int flag, HashCode resultObjectHash) {
     switch (flag) {
       case FILE_SET_FLAG:
-        return objectDb.fileSet(resultObjectHash);
+        return valueDb.fileSet(resultObjectHash);
       case STRING_SET_FLAG:
-        return objectDb.stringSet(resultObjectHash);
+        return valueDb.stringSet(resultObjectHash);
       case FILE_FLAG:
-        return objectDb.file(resultObjectHash);
+        return valueDb.file(resultObjectHash);
       case STRING_FLAG:
-        return objectDb.string(resultObjectHash);
+        return valueDb.string(resultObjectHash);
       default:
         throw new RuntimeException("Internal error in smooth binary. Unknown value flag = " + flag);
     }

@@ -11,11 +11,11 @@ import org.smoothbuild.plugin.StringValue;
 import com.google.common.hash.HashCode;
 
 public class StringSetObject implements StringSet, Value {
-  private final ObjectDb objectDb;
+  private final ValueDb valueDb;
   private final HashCode hash;
 
-  public StringSetObject(ObjectDb objectDb, HashCode hash) {
-    this.objectDb = checkNotNull(objectDb);
+  public StringSetObject(ValueDb valueDb, HashCode hash) {
+    this.valueDb = checkNotNull(valueDb);
     this.hash = checkNotNull(hash);
   }
 
@@ -26,6 +26,6 @@ public class StringSetObject implements StringSet, Value {
 
   @Override
   public Iterator<StringValue> iterator() {
-    return objectDb.stringSetIterable(hash).iterator();
+    return valueDb.stringSetIterable(hash).iterator();
   }
 }

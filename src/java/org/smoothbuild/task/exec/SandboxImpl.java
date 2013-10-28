@@ -5,7 +5,7 @@ import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.WrappedCodeMessage;
-import org.smoothbuild.object.ObjectDb;
+import org.smoothbuild.object.ValueDb;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Sandbox;
@@ -15,33 +15,33 @@ public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MessageGroup messageGroup;
   private final CallLocation callLocation;
-  private final ObjectDb objectDb;
+  private final ValueDb valueDb;
 
-  public SandboxImpl(FileSystem fileSystem, ObjectDb objectDb, CallLocation callLocation) {
-    this(fileSystem, objectDb, callLocation, createMessages(callLocation));
+  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, CallLocation callLocation) {
+    this(fileSystem, valueDb, callLocation, createMessages(callLocation));
   }
 
-  public SandboxImpl(FileSystem fileSystem, ObjectDb objectDb, CallLocation callLocation,
+  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, CallLocation callLocation,
       MessageGroup messageGroup) {
     this.projectFileSystem = fileSystem;
-    this.objectDb = objectDb;
+    this.valueDb = valueDb;
     this.messageGroup = messageGroup;
     this.callLocation = callLocation;
   }
 
   @Override
   public FileSetBuilder fileSetBuilder() {
-    return new FileSetBuilder(objectDb);
+    return new FileSetBuilder(valueDb);
   }
 
   @Override
   public StringSetBuilder stringSetBuilder() {
-    return new StringSetBuilder(objectDb);
+    return new StringSetBuilder(valueDb);
   }
 
   @Override
   public FileBuilder fileBuilder() {
-    return new FileBuilder(objectDb);
+    return new FileBuilder(valueDb);
   }
 
   public FileSystem projectFileSystem() {
