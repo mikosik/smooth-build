@@ -1,5 +1,7 @@
 package org.smoothbuild.parse;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.builtin.compress.UnzipFunction;
 import org.smoothbuild.builtin.compress.ZipFunction;
 import org.smoothbuild.builtin.file.FileFunction;
@@ -19,6 +21,12 @@ import org.smoothbuild.function.nativ.exc.NativeImplementationException;
 import com.google.inject.Provider;
 
 public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
+  private final NativeFunctionFactory nativeFunctionFactory;
+
+  @Inject
+  public ImportedFunctionsProvider(NativeFunctionFactory nativeFunctionFactory) {
+    this.nativeFunctionFactory = nativeFunctionFactory;
+  }
 
   @Override
   public ImportedFunctions get() {
@@ -47,7 +55,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
 
   private Function createFunction(Class<?> klass) {
     try {
-      return NativeFunctionFactory.create(klass, true);
+      return nativeFunctionFactory.create(klass, true);
     } catch (NativeImplementationException e) {
       throw new RuntimeException("Builtin function " + klass.getCanonicalName()
           + " has implementation problem.", e);

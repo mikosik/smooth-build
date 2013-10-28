@@ -48,7 +48,7 @@ import com.google.inject.Guice;
 public class NativeFunctionFactoryTest {
   FakeSandbox sandbox = new FakeSandbox();
   Path tempDir = path("tem/dir");
-  NativeFunctionFactory nativeFunctionFactory;
+  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory();
   CodeLocation codeLocation = codeLocation(1, 2, 4);
 
   @Before
@@ -59,7 +59,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void testSignature() throws Exception {
-    Function function = NativeFunctionFactory.create(MyFunction.class, false);
+    Function function = nativeFunctionFactory.create(MyFunction.class, false);
 
     assertThat(function.name()).isEqualTo(qualifiedName("my.package.myFunction"));
     Signature signature = function.signature();
@@ -74,7 +74,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void testInvokation() throws Exception {
-    Function function = NativeFunctionFactory.create(MyFunction.class, false);
+    Function function = nativeFunctionFactory.create(MyFunction.class, false);
     FakeTask task1 = new FakeTask(new FakeString("abc"));
     FakeTask task2 = new FakeTask(new FakeString("def"));
     ImmutableMap<String, Task> dependencies = ImmutableMap.<String, Task> of("stringA", task1,
@@ -101,7 +101,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void allowedParamTypesAreAccepted() throws Exception {
-    NativeFunctionFactory.create(MyFunctionWithAllowedParamTypes.class, false);
+    nativeFunctionFactory.create(MyFunctionWithAllowedParamTypes.class, false);
   }
 
   public interface AllowedParameters {
@@ -123,7 +123,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void paramsAnnotatedAsRequiredAreRequired() throws Exception {
-    Function f = NativeFunctionFactory.create(MyFunctionWithAnnotatedParams.class, false);
+    Function f = nativeFunctionFactory.create(MyFunctionWithAnnotatedParams.class, false);
     ImmutableMap<String, Param> params = f.params();
     assertThat(params.get("string1").isRequired()).isTrue();
     assertThat(params.get("string2").isRequired()).isFalse();
@@ -159,7 +159,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void emptyParamtersAreAccepted() throws Exception {
-    NativeFunctionFactory.create(MyFunctionWithEmptyParameters.class, false);
+    nativeFunctionFactory.create(MyFunctionWithEmptyParameters.class, false);
   }
 
   public interface EmptyParameters {}
@@ -173,7 +173,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void stringResultTypeIsAccepted() throws Exception {
-    NativeFunctionFactory.create(MyFunctionWithStringResult.class, false);
+    nativeFunctionFactory.create(MyFunctionWithStringResult.class, false);
   }
 
   public static class MyFunctionWithStringResult {
@@ -185,7 +185,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void fileResultTypeIsAccepted() throws Exception {
-    NativeFunctionFactory.create(MyFunctionWithFileResult.class, false);
+    nativeFunctionFactory.create(MyFunctionWithFileResult.class, false);
   }
 
   public static class MyFunctionWithFileResult {
@@ -197,7 +197,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void filesResultTypeIsAccepted() throws Exception {
-    NativeFunctionFactory.create(MyFunctionWithFilesResult.class, false);
+    nativeFunctionFactory.create(MyFunctionWithFilesResult.class, false);
   }
 
   public static class MyFunctionWithFilesResult {
@@ -210,7 +210,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void voidResultTypeIsAccepted() throws Exception {
-    NativeFunctionFactory.create(MyFunctionWithVoidResult.class, false);
+    nativeFunctionFactory.create(MyFunctionWithVoidResult.class, false);
   }
 
   public static class MyFunctionWithVoidResult {
@@ -256,7 +256,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void runtimeExceptionThrownAreReported() throws Exception {
-    Function function = NativeFunctionFactory.create(MyFunctionWithThrowingSmoothMethod.class,
+    Function function = nativeFunctionFactory.create(MyFunctionWithThrowingSmoothMethod.class,
         false);
     function.generateTask(Empty.stringTaskMap(), codeLocation).execute(sandbox);
     sandbox.messages().assertOnlyProblem(UnexpectedError.class);
@@ -373,8 +373,8 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void differentFunctionHaveDifferentHashes() throws Exception {
-    NativeFunction f1 = NativeFunctionFactory.create(FunctionForHash1.class, false);
-    NativeFunction f2 = NativeFunctionFactory.create(FunctionForHash2.class, false);
+    NativeFunction f1 = nativeFunctionFactory.create(FunctionForHash1.class, false);
+    NativeFunction f2 = nativeFunctionFactory.create(FunctionForHash2.class, false);
     assertThat(f1.hash()).isNotEqualTo(f2.hash());
   }
 
@@ -390,7 +390,7 @@ public class NativeFunctionFactoryTest {
 
   private void assertExceptionThrown(Class<?> klass, Class<?> exception) {
     try {
-      NativeFunctionFactory.create(klass, false);
+      nativeFunctionFactory.create(klass, false);
       fail("exception should be thrown");
     } catch (Throwable e) {
       // expected
