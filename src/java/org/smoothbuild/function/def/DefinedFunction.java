@@ -35,4 +35,9 @@ public class DefinedFunction extends AbstractFunction implements DefinitionNode 
   public Task generateTask() {
     return root.generateTask();
   }
+
+  @Override
+  public CodeLocation codeLocation() {
+    return root.codeLocation();
+  }
 }

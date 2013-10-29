@@ -10,13 +10,12 @@ import org.smoothbuild.task.base.Task;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class StringSetNode implements DefinitionNode {
+public class StringSetNode extends AbstractDefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elements;
-  private final CodeLocation codeLocation;
 
   public StringSetNode(ImmutableList<? extends DefinitionNode> elements, CodeLocation codeLocation) {
+    super(codeLocation);
     this.elements = elements;
-    this.codeLocation = codeLocation;
   }
 
   @Override
@@ -31,6 +30,6 @@ public class StringSetNode implements DefinitionNode {
       builder.add(node.generateTask());
     }
     ImmutableList<Task> dependencies = builder.build();
-    return new StringSetTask(dependencies, codeLocation);
+    return new StringSetTask(dependencies, codeLocation());
   }
 }

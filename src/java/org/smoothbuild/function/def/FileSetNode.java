@@ -8,13 +8,12 @@ import org.smoothbuild.task.base.Task;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class FileSetNode implements DefinitionNode {
+public class FileSetNode extends AbstractDefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elements;
-  private final CodeLocation codeLocation;
 
   public FileSetNode(ImmutableList<? extends DefinitionNode> elements, CodeLocation codeLocation) {
+    super(codeLocation);
     this.elements = elements;
-    this.codeLocation = codeLocation;
   }
 
   @Override
@@ -29,7 +28,7 @@ public class FileSetNode implements DefinitionNode {
       builder.add(node.generateTask());
     }
     ImmutableList<Task> elementTasks = builder.build();
-    return new FileSetTask(elementTasks, codeLocation);
+    return new FileSetTask(elementTasks, codeLocation());
   }
 
 }

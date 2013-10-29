@@ -217,7 +217,7 @@ public class DefinedFunctionsCreator {
           codeLocation, messages, function, args);
 
       if (namedArgs == null) {
-        return new InvalidNode(function.type());
+        return new InvalidNode(function.type(), locationOf(call.functionName()));
       } else {
         return new CallNode(function, codeLocation, namedArgs);
       }
@@ -264,11 +264,11 @@ public class DefinedFunctionsCreator {
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         StringValue stringValue = valueDb.string(unescaped(string));
-        return new StringNode(stringValue);
+        return new StringNode(stringValue, locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));
-        return new InvalidNode(STRING);
+        return new InvalidNode(STRING, locationOf(stringToken.getSymbol()));
       }
     }
   }

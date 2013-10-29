@@ -4,13 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class InvalidNodeTest {
-  InvalidNode invalidNode = new InvalidNode(Type.STRING);
+  InvalidNode invalidNode = new InvalidNode(Type.STRING, new FakeCodeLocation());
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() throws Exception {
-    new InvalidNode(null);
+    new InvalidNode(null, new FakeCodeLocation());
   }
 
   @Test

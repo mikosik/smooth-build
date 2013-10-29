@@ -7,11 +7,9 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.EmptySetTask;
 import org.smoothbuild.task.base.Task;
 
-public class EmptySetNode implements DefinitionNode {
-  private final CodeLocation codeLocation;
-
+public class EmptySetNode extends AbstractDefinitionNode {
   public EmptySetNode(CodeLocation codeLocation) {
-    this.codeLocation = codeLocation;
+    super(codeLocation);
   }
 
   @Override
@@ -21,6 +19,6 @@ public class EmptySetNode implements DefinitionNode {
 
   @Override
   public Task generateTask() {
-    return new EmptySetTask(codeLocation);
+    return new EmptySetTask(codeLocation());
   }
 }

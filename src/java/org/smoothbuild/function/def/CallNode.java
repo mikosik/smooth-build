@@ -10,14 +10,13 @@ import org.smoothbuild.task.base.Task;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class CallNode implements DefinitionNode {
+public class CallNode extends AbstractDefinitionNode {
   private final Function function;
   private final ImmutableMap<String, DefinitionNode> args;
-  private final CodeLocation codeLocation;
 
   public CallNode(Function function, CodeLocation codeLocation, Map<String, DefinitionNode> args) {
+    super(codeLocation);
     this.function = function;
-    this.codeLocation = codeLocation;
     this.args = ImmutableMap.copyOf(args);
   }
 
@@ -35,6 +34,6 @@ public class CallNode implements DefinitionNode {
       builder.put(argName, dependency);
     }
     ImmutableMap<String, Task> dependencies = builder.build();
-    return function.generateTask(dependencies, codeLocation);
+    return function.generateTask(dependencies, codeLocation());
   }
 }
