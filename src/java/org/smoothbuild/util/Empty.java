@@ -3,6 +3,7 @@ package org.smoothbuild.util;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskResult;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -10,6 +11,10 @@ import com.google.common.collect.ImmutableMap;
 public class Empty {
 
   public static ImmutableMap<String, Value> stringValueMap() {
+    return ImmutableMap.of();
+  }
+
+  public static ImmutableMap<String, TaskResult> stringTaskResultMap() {
     return ImmutableMap.of();
   }
 

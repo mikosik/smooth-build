@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskResult;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -29,6 +30,24 @@ public class EmptyTest {
   @Test
   public void emptyStringValueMapAlwaysReturnsTheSameObject() {
     assertThat(Empty.stringValueMap()).isSameAs(Empty.stringValueMap());
+  }
+
+  // stringTaskResultMap()
+
+  @Test
+  public void emptyStringTaskResultMapIsEmpty() {
+    assertThat(Empty.stringTaskResultMap()).isEmpty();
+  }
+
+  @Test
+  public void emptyStringTaskResultMapIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableMap<String, TaskResult> map = Empty.stringTaskResultMap();
+  }
+
+  @Test
+  public void emptyStringTaskResultMapAlwaysReturnsTheSameObject() {
+    assertThat(Empty.stringTaskResultMap()).isSameAs(Empty.stringTaskResultMap());
   }
 
   // stringTaskMap()
