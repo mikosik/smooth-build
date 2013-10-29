@@ -19,7 +19,6 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
-import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.message.message.CodeLocation;
 
 import com.google.common.collect.ImmutableList;

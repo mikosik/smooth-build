@@ -7,14 +7,20 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class StringNodeTest {
   StringValue string = mock(StringValue.class);
-  StringNode stringNode = new StringNode(string);
+  StringNode stringNode = new StringNode(string, new FakeCodeLocation());
 
   @Test(expected = NullPointerException.class)
-  public void nullExpressionIsForbidden() throws Exception {
-    new StringNode(null);
+  public void null_string_value_is_forbidden() throws Exception {
+    new StringNode(null, new FakeCodeLocation());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void null_code_location_is_forbidden() throws Exception {
+    new StringNode(string, null);
   }
 
   @Test
