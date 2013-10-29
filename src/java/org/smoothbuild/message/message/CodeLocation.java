@@ -11,7 +11,7 @@ public class CodeLocation {
     return new CodeLocation(line, start, end);
   }
 
-  private CodeLocation(int line, int start, int end) {
+  protected CodeLocation(int line, int start, int end) {
     checkArgument(0 <= line);
     checkArgument(0 <= start);
     checkArgument(0 <= end);

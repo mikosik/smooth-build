@@ -15,7 +15,7 @@ public class CallLocation {
     return new CallLocation(name, codeLocation);
   }
 
-  private CallLocation(Name name, CodeLocation codeLocation) {
+  protected CallLocation(Name name, CodeLocation codeLocation) {
     this.name = checkNotNull(name);
     this.codeLocation = checkNotNull(codeLocation);
   }
