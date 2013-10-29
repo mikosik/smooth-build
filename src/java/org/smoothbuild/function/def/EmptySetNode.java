@@ -1,15 +1,19 @@
 package org.smoothbuild.function.def;
 
+import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
+import static org.smoothbuild.task.base.Constants.SET_TASK_NAME;
 
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.EmptySetTask;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 public class EmptySetNode extends AbstractDefinitionNode {
   public EmptySetNode(CodeLocation codeLocation) {
-    super(codeLocation);
+    super(CallLocation.callLocation(simpleName(SET_TASK_NAME), codeLocation));
   }
 
   @Override
@@ -18,7 +22,7 @@ public class EmptySetNode extends AbstractDefinitionNode {
   }
 
   @Override
-  public Task generateTask() {
-    return new EmptySetTask(codeLocation());
+  public Task generateTask(TaskGenerator taskGenerator) {
+    return new EmptySetTask();
   }
 }

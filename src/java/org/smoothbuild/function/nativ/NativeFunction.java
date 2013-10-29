@@ -7,12 +7,13 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.NativeCallTask;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -32,8 +33,8 @@ public class NativeFunction extends AbstractFunction {
   }
 
   @Override
-  public Task generateTask(Map<String, Task> args, CodeLocation codeLocation) {
-    return new NativeCallTask(resultDb, this, codeLocation, args);
+  public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> args) {
+    return new NativeCallTask(resultDb, this, args);
   }
 
   public Value invoke(Sandbox sandbox, ImmutableMap<String, Value> args)

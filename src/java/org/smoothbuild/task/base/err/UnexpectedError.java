@@ -1,9 +1,8 @@
 package org.smoothbuild.task.base.err;
 
-import org.smoothbuild.message.message.CallLocation;
 
 public class UnexpectedError extends InvocationError {
-  public UnexpectedError(CallLocation callLocation, Throwable e) {
-    super(callLocation, e);
+  public UnexpectedError(Throwable e) {
+    super(e);
   }
 }

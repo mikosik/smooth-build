@@ -36,12 +36,13 @@ import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.object.ResultDb;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class ArgumentNodesCreatorTest {
-
   FakeMessageGroup messages;
 
   @Test
@@ -565,9 +566,10 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static void assertThatNodeHasEmptySet(DefinitionNode node) {
-    Task task = node.generateTask();
-    task.execute(new FakeSandbox());
-    assertThat((Iterable<?>) task.result()).isEmpty();
+    TaskGenerator taskGenerator = mock(TaskGenerator.class);
+    Task task = node.generateTask(taskGenerator);
+    Value result = task.execute(new FakeSandbox());
+    assertThat((Iterable<?>) result).isEmpty();
   }
 
   private static DefinitionNode emptySetNode() {

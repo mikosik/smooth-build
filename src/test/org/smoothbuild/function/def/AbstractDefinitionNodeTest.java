@@ -5,9 +5,12 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 public class AbstractDefinitionNodeTest {
   CodeLocation codeLocation;
@@ -22,13 +25,13 @@ public class AbstractDefinitionNodeTest {
   public void code_location_passed_to_constructor_is_returned() throws Exception {
     given(codeLocation = CodeLocation.codeLocation(1, 3, 7));
     given(definitionNode = new MyDefinitionNode(codeLocation));
-    when(definitionNode.codeLocation());
+    when(definitionNode.callLocation().location());
     thenReturned(codeLocation);
   }
 
   public class MyDefinitionNode extends AbstractDefinitionNode {
     public MyDefinitionNode(CodeLocation codeLocation) {
-      super(codeLocation);
+      super(CallLocation.callLocation(Name.simpleName("abc"), codeLocation));
     }
 
     @Override
@@ -37,7 +40,7 @@ public class AbstractDefinitionNodeTest {
     }
 
     @Override
-    public Task generateTask() {
+    public Task generateTask(TaskGenerator taskGenerator) {
       return null;
     }
   }

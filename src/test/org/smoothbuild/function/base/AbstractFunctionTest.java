@@ -9,8 +9,9 @@ import static org.smoothbuild.testing.function.base.ParamTester.params;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -51,7 +52,7 @@ public class AbstractFunctionTest {
     }
 
     @Override
-    public Task generateTask(Map<String, Task> arguments, CodeLocation codeLocation) {
+    public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> arguments) {
       return null;
     }
   }

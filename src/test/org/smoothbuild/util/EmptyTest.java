@@ -6,8 +6,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Test;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.plugin.Value;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.TaskResult;
+import org.smoothbuild.task.base.Result;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -42,30 +41,12 @@ public class EmptyTest {
   @Test
   public void emptyStringTaskResultMapIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<String, TaskResult> map = Empty.stringTaskResultMap();
+    ImmutableMap<String, Result> map = Empty.stringTaskResultMap();
   }
 
   @Test
   public void emptyStringTaskResultMapAlwaysReturnsTheSameObject() {
     assertThat(Empty.stringTaskResultMap()).isSameAs(Empty.stringTaskResultMap());
-  }
-
-  // stringTaskMap()
-
-  @Test
-  public void emptyStringTaskMapIsEmpty() {
-    assertThat(Empty.stringTaskMap()).isEmpty();
-  }
-
-  @Test
-  public void emptyStringTaskMapIsImmutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<String, Task> map = Empty.stringTaskMap();
-  }
-
-  @Test
-  public void emptyStringTaskMapAlwaysReturnsTheSameObject() {
-    assertThat(Empty.stringTaskMap()).isSameAs(Empty.stringTaskMap());
   }
 
   // definitionNodeList()
@@ -84,24 +65,6 @@ public class EmptyTest {
   @Test
   public void emptyDefinitionNodeAlwaysReturnsTheSameObject() {
     assertThat(Empty.definitionNodeList()).isSameAs(Empty.definitionNodeList());
-  }
-
-  // taskList()
-
-  @Test
-  public void emptyTaskListIsEmpty() {
-    assertThat(Empty.taskList()).isEmpty();
-  }
-
-  @Test
-  public void emptyTaskListIsImmutable() {
-    @SuppressWarnings("unused")
-    ImmutableList<Task> list = Empty.taskList();
-  }
-
-  @Test
-  public void emptyTaskListAlwaysReturnsTheSameObject() {
-    assertThat(Empty.taskList()).isSameAs(Empty.taskList());
   }
 
   // nullToEmpty
