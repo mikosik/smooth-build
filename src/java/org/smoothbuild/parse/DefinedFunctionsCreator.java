@@ -146,11 +146,11 @@ public class DefinedFunctionsCreator {
       ImmutableList<DefinitionNode> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return new EmptySetNode();
+        return new EmptySetNode(locationOf(list));
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return new EmptySetNode();
+        return new EmptySetNode(locationOf(list));
       }
 
       Type elemsType = elemNodes.get(0).type();

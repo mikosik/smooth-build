@@ -3,11 +3,16 @@ package org.smoothbuild.function.def;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
 
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.EmptySetTask;
 import org.smoothbuild.task.base.Task;
 
 public class EmptySetNode implements DefinitionNode {
+  private final CodeLocation codeLocation;
 
-  public EmptySetNode() {}
+  public EmptySetNode(CodeLocation codeLocation) {
+    this.codeLocation = codeLocation;
+  }
 
   @Override
   public Type type() {
@@ -16,9 +21,6 @@ public class EmptySetNode implements DefinitionNode {
 
   @Override
   public Task generateTask() {
-    throw new UnsupportedOperationException("Cannot call EmptySetNode.generateTask(). "
-        + "EmptySetNode should have been replaced by either StringSetNode or FileSetNode "
-        + "during argument->parameters assignment.");
+    return new EmptySetTask(codeLocation);
   }
-
 }
