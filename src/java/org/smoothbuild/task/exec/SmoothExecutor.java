@@ -7,14 +7,15 @@ import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.exec.err.UnknownFunctionError;
 
 public class SmoothExecutor {
-  private final TaskGraphExecutor taskGraphExecutor;
+  private final TaskGenerator taskGenerator;
 
   @Inject
-  public SmoothExecutor(TaskGraphExecutor taskGraphExecutor) {
-    this.taskGraphExecutor = taskGraphExecutor;
+  public SmoothExecutor(TaskGenerator taskGenerator) {
+    this.taskGenerator = taskGenerator;
   }
 
   public void execute(ExecutionData executionData) {
@@ -26,6 +27,7 @@ public class SmoothExecutor {
     if (function == null) {
       throw new ErrorMessageException(new UnknownFunctionError(name, module.availableNames()));
     }
-    taskGraphExecutor.execute(function.generateTask());
+    Result result = taskGenerator.generateTask(function);
+    result.result();
   }
 }

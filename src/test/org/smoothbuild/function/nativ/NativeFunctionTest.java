@@ -15,12 +15,14 @@ import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionTest {
+  TaskGenerator taskGenerator = mock(TaskGenerator.class);
   Sandbox sandbox = mock(Sandbox.class);
   String name = "functionName";
   CodeLocation codeLocation = codeLocation(1, 2, 4);
@@ -55,19 +57,6 @@ public class NativeFunctionTest {
   }
 
   @Test
-  public void generateTaskReturnsTaskWithNoResultCalculated() throws Exception {
-    Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);
-    assertThat(task.isResultCalculated()).isFalse();
-  }
-
-  @Test
-  public void generatedTaskHasPassedArgsAsDependencies() throws Exception {
-    ImmutableMap<String, Task> args = Empty.stringTaskMap();
-    Task task = function.generateTask(args, codeLocation);
-    assertThat(task.dependencies()).isSameAs(args.values());
-  }
-
-  @Test
   public void generatedTaskUsesInvokerForCalculatingResult() throws Exception {
     StringValue result = new FakeString("result");
 
@@ -75,11 +64,10 @@ public class NativeFunctionTest {
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(result);
 
     // when
-    Task task = function.generateTask(Empty.stringTaskMap(), codeLocation);
-    task.execute(sandbox);
+    Task task = function.generateTask(taskGenerator, Empty.stringTaskResultMap());
+    StringValue actual = (StringValue) task.execute(sandbox);
 
     // then
-    assertThat(task.isResultCalculated()).isTrue();
-    assertThat(task.result()).isSameAs(result);
+    assertThat(actual).isSameAs(result);
   }
 }

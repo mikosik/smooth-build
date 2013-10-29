@@ -2,13 +2,9 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
-import org.smoothbuild.util.Empty;
-
-import com.google.common.collect.ImmutableCollection;
+import org.smoothbuild.plugin.Value;
 
 public class StringTask implements Task {
   private final StringValue string;
@@ -18,29 +14,7 @@ public class StringTask implements Task {
   }
 
   @Override
-  public CallLocation location() {
-    throw new UnsupportedOperationException(StringTask.class.getSimpleName()
-        + " does not have location.");
-  }
-
-  @Override
-  public boolean isResultCalculated() {
-    return true;
-  }
-
-  @Override
-  public Value result() {
+  public Value execute(Sandbox sandbox) {
     return string;
-  }
-
-  @Override
-  public void execute(Sandbox sandbox) {
-    throw new UnsupportedOperationException("No need to call calculatedResult on "
-        + StringTask.class.getSimpleName() + ".");
-  }
-
-  @Override
-  public ImmutableCollection<Task> dependencies() {
-    return Empty.taskList();
   }
 }

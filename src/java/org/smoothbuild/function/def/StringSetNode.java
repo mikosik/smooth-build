@@ -1,11 +1,16 @@
 package org.smoothbuild.function.def;
 
+import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Type.STRING_SET;
+import static org.smoothbuild.task.base.Constants.SET_TASK_NAME;
 
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.StringSetTask;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -14,7 +19,7 @@ public class StringSetNode extends AbstractDefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elements;
 
   public StringSetNode(ImmutableList<? extends DefinitionNode> elements, CodeLocation codeLocation) {
-    super(codeLocation);
+    super(CallLocation.callLocation(simpleName(SET_TASK_NAME), codeLocation));
     this.elements = elements;
   }
 
@@ -24,12 +29,12 @@ public class StringSetNode extends AbstractDefinitionNode {
   }
 
   @Override
-  public Task generateTask() {
-    Builder<Task> builder = ImmutableList.builder();
+  public Task generateTask(TaskGenerator taskGenerator) {
+    Builder<Result> builder = ImmutableList.builder();
     for (DefinitionNode node : elements) {
-      builder.add(node.generateTask());
+      builder.add(taskGenerator.generateTask(node));
     }
-    ImmutableList<Task> dependencies = builder.build();
-    return new StringSetTask(dependencies, codeLocation());
+    ImmutableList<Result> dependencies = builder.build();
+    return new StringSetTask(dependencies);
   }
 }

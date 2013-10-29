@@ -7,7 +7,6 @@ import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.VOID;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 
@@ -21,7 +20,6 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.StringValue;
@@ -30,7 +28,7 @@ import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.plugin.FakeString;
-import org.smoothbuild.testing.task.base.FakeTask;
+import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
 
@@ -41,7 +39,6 @@ import com.google.common.hash.HashCode;
 public class NativeCallTaskTest {
   Invoker invoker = mock(Invoker.class);
   FakeSandbox sandbox = new FakeSandbox();
-  CodeLocation codeLocation = codeLocation(1, 2, 4);
   HashCode hash = HashCode.fromInt(33);
   ResultDb resultDb = mock(ResultDb.class);
   NativeFunction function1 = new NativeFunction(resultDb, testSignature(), invoker);
@@ -54,30 +51,23 @@ public class NativeCallTaskTest {
 
   ImmutableList<Param> params = ImmutableList.of(param(STRING, name1), param(STRING, name2));
 
-  NativeCallTask nativeCallTask = new NativeCallTask(resultDb, function1, codeLocation,
-      Empty.stringTaskMap());
-
-  @Test
-  public void location() throws Exception {
-    assertThat(nativeCallTask.location().name()).isEqualTo(testSignature().name());
-    assertThat(nativeCallTask.location().location()).isEqualTo(codeLocation);
-  }
+  NativeCallTask nativeCallTask = new NativeCallTask(resultDb, function1,
+      Empty.stringTaskResultMap());
 
   @Test
   public void calculateResult() throws IllegalAccessException, InvocationTargetException {
     StringValue argValue = new FakeString("subTaskResult");
-    Task subTask = new FakeTask(argValue);
+    Result subTask = new FakeResult(argValue);
 
     String name = "param";
-    NativeCallTask nativeCallTask = new NativeCallTask(resultDb, function1, codeLocation,
-        ImmutableMap.of(name, subTask));
+    NativeCallTask nativeCallTask = new NativeCallTask(resultDb, function1, ImmutableMap.of(name,
+        subTask));
 
     StringValue result = new FakeString("result");
     when(invoker.invoke(sandbox, ImmutableMap.<String, Value> of(name, argValue))).thenReturn(
         result);
 
-    nativeCallTask.execute(sandbox);
-    assertThat(nativeCallTask.result()).isSameAs(result);
+    assertThat(nativeCallTask.execute(sandbox)).isSameAs(result);
   }
 
   @Test
@@ -88,7 +78,6 @@ public class NativeCallTaskTest {
     nativeCallTask.execute(sandbox);
 
     sandbox.messages().assertOnlyProblem(NullResultError.class);
-    assertThat(nativeCallTask.isResultCalculated()).isFalse();
   }
 
   @Test
@@ -96,13 +85,12 @@ public class NativeCallTaskTest {
     ImmutableList<Param> params = ImmutableList.of();
     Signature signature = new Signature(VOID, simpleName("name"), params);
     function1 = new NativeFunction(resultDb, signature, invoker);
-    nativeCallTask = new NativeCallTask(resultDb, function1, codeLocation, Empty.stringTaskMap());
+    nativeCallTask = new NativeCallTask(resultDb, function1, Empty.stringTaskResultMap());
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
 
     nativeCallTask.execute(sandbox);
 
     sandbox.messages().assertNoProblems();
-    assertThat(nativeCallTask.isResultCalculated()).isTrue();
   }
 
   @Test
@@ -142,6 +130,5 @@ public class NativeCallTaskTest {
     nativeCallTask.execute(sandbox);
 
     sandbox.messages().assertOnlyProblem(expected);
-    assertThat(nativeCallTask.isResultCalculated()).isFalse();
   }
 }

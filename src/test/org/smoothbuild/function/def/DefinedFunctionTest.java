@@ -9,12 +9,15 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
 public class DefinedFunctionTest {
+  TaskGenerator taskGenerator = mock(TaskGenerator.class);
   Signature signature = testSignature();
   DefinitionNode root = mock(DefinitionNode.class);
   CodeLocation codeLocation = codeLocation(1, 2, 4);
@@ -29,24 +32,24 @@ public class DefinedFunctionTest {
   @Test
   public void generateTaskWithEmptyDependency() throws Exception {
     Task task = mock(Task.class);
-    when(root.generateTask()).thenReturn(task);
+    when(root.generateTask(taskGenerator)).thenReturn(task);
 
-    Task actual = definedFunction.generateTask(Empty.stringTaskMap(), codeLocation);
+    Task actual = definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap());
 
     assertThat(actual).isSameAs(task);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void generateTaskThrowsExceptionWhenDependenciesAreNotEmpty() throws Exception {
-    definedFunction.generateTask(ImmutableMap.of("name", mock(Task.class)), codeLocation);
+    definedFunction.generateTask(taskGenerator, ImmutableMap.of("name", mock(Result.class)));
   }
 
   @Test
   public void generateTaskForwardsCallToRootDefinitionNode() throws Exception {
     Task task = mock(Task.class);
-    when(root.generateTask()).thenReturn(task);
+    when(root.generateTask(taskGenerator)).thenReturn(task);
 
-    Task actual = definedFunction.generateTask();
+    Task actual = definedFunction.generateTask(taskGenerator);
 
     assertThat(actual).isSameAs(task);
   }

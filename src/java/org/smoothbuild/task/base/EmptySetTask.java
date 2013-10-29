@@ -1,23 +1,12 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.message.CallLocation.callLocation;
-import static org.smoothbuild.task.base.Constants.SET_TASK_NAME;
-
-import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Sandbox;
-import org.smoothbuild.util.Empty;
+import org.smoothbuild.plugin.Value;
 
-import com.google.common.collect.ImmutableCollection;
-
-public class EmptySetTask extends AbstractTask {
-  public EmptySetTask(CodeLocation codeLocation) {
-    super(callLocation(simpleName(SET_TASK_NAME), codeLocation));
-  }
+public class EmptySetTask implements Task {
 
   @Override
-  public void execute(Sandbox sandbox) {
+  public Value execute(Sandbox sandbox) {
     /*
      * We cheat here and return empty fileSet. Nobody will ever use this object
      * 
@@ -35,12 +24,6 @@ public class EmptySetTask extends AbstractTask {
      * ArgumentNodesCreator won't kick in.
      */
 
-    FileSet emptySet = sandbox.fileSetBuilder().build();
-    setResult(emptySet);
-  }
-
-  @Override
-  public ImmutableCollection<Task> dependencies() {
-    return Empty.taskList();
+    return sandbox.fileSetBuilder().build();
   }
 }

@@ -2,8 +2,9 @@ package org.smoothbuild.function.base;
 
 import java.util.Map;
 
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -16,5 +17,5 @@ public interface Function {
 
   public ImmutableMap<String, Param> params();
 
-  public Task generateTask(Map<String, Task> arguments, CodeLocation codeLocation);
+  public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> arguments);
 }

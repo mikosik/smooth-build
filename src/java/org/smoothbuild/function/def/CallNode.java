@@ -4,8 +4,11 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -15,7 +18,7 @@ public class CallNode extends AbstractDefinitionNode {
   private final ImmutableMap<String, DefinitionNode> args;
 
   public CallNode(Function function, CodeLocation codeLocation, Map<String, DefinitionNode> args) {
-    super(codeLocation);
+    super(CallLocation.callLocation(function.name(), codeLocation));
     this.function = function;
     this.args = ImmutableMap.copyOf(args);
   }
@@ -26,14 +29,14 @@ public class CallNode extends AbstractDefinitionNode {
   }
 
   @Override
-  public Task generateTask() {
-    Builder<String, Task> builder = ImmutableMap.builder();
+  public Task generateTask(TaskGenerator taskGenerator) {
+    Builder<String, Result> builder = ImmutableMap.builder();
     for (Map.Entry<String, DefinitionNode> entry : args.entrySet()) {
       String argName = entry.getKey();
-      Task dependency = entry.getValue().generateTask();
+      Result dependency = taskGenerator.generateTask(entry.getValue());
       builder.put(argName, dependency);
     }
-    ImmutableMap<String, Task> dependencies = builder.build();
-    return function.generateTask(dependencies, codeLocation());
+    ImmutableMap<String, Result> dependencies = builder.build();
+    return function.generateTask(taskGenerator, dependencies);
   }
 }

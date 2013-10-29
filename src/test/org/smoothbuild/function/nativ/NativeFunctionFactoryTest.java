@@ -36,11 +36,13 @@ import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.UnexpectedError;
+import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.plugin.FakeString;
-import org.smoothbuild.testing.task.base.FakeTask;
+import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
 
@@ -48,6 +50,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 
 public class NativeFunctionFactoryTest {
+  TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeSandbox sandbox = new FakeSandbox();
   Path tempDir = path("tem/dir");
   ResultDb resultDb = mock(ResultDb.class);
@@ -78,15 +81,15 @@ public class NativeFunctionFactoryTest {
   @Test
   public void testInvokation() throws Exception {
     Function function = nativeFunctionFactory.create(MyFunction.class, false);
-    FakeTask task1 = new FakeTask(new FakeString("abc"));
-    FakeTask task2 = new FakeTask(new FakeString("def"));
-    ImmutableMap<String, Task> dependencies = ImmutableMap.<String, Task> of("stringA", task1,
-        "stringB", task2);
+    Result result1 = new FakeResult(new FakeString("abc"));
+    Result result2 = new FakeResult(new FakeString("def"));
+    ImmutableMap<String, Result> dependencies = ImmutableMap.<String, Result> of("stringA",
+        result1, "stringB", result2);
 
-    Task task = function.generateTask(dependencies, codeLocation);
-    task.execute(sandbox);
+    Task task = function.generateTask(taskGenerator, dependencies);
+    StringValue result = (StringValue) task.execute(sandbox);
     sandbox.messages().assertNoProblems();
-    assertThat(((StringValue) task.result()).value()).isEqualTo("abcdef");
+    assertThat(result.value()).isEqualTo("abcdef");
   }
 
   public interface Parameters {
@@ -261,7 +264,7 @@ public class NativeFunctionFactoryTest {
   public void runtimeExceptionThrownAreReported() throws Exception {
     Function function = nativeFunctionFactory.create(MyFunctionWithThrowingSmoothMethod.class,
         false);
-    function.generateTask(Empty.stringTaskMap(), codeLocation).execute(sandbox);
+    function.generateTask(taskGenerator, Empty.stringTaskResultMap()).execute(sandbox);
     sandbox.messages().assertOnlyProblem(UnexpectedError.class);
   }
 
