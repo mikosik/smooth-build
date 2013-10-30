@@ -1,15 +1,15 @@
 package org.smoothbuild.function.def;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.task.base.Task;
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 public interface DefinitionNode {
 
-  public CallLocation callLocation();
+  public CodeLocation codeLocation();
 
   public Type type();
 
-  public Task generateTask(TaskGenerator taskGenerator);
+  public LocatedTask generateTask(TaskGenerator taskGenerator);
 }

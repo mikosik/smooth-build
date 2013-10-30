@@ -64,7 +64,7 @@ public class NativeFunctionTest {
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(result);
 
     // when
-    Task task = function.generateTask(taskGenerator, Empty.stringTaskResultMap());
+    Task task = function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation);
     StringValue actual = (StringValue) task.execute(sandbox);
 
     // then
