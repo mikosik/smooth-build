@@ -6,11 +6,10 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.function.base.Name;
 import org.testory.common.Closure;
 
 public class CallLocationTest {
-  Name name;
+  String name;
   CodeLocation codeLocation;
 
   @Before
@@ -30,8 +29,9 @@ public class CallLocationTest {
     thenThrown(NullPointerException.class);
   }
 
-  private static Closure callLocation(final Name name, final CodeLocation codeLocation) {
+  private static Closure callLocation(final String name, final CodeLocation codeLocation) {
     return new Closure() {
+      @Override
       public CallLocation invoke() {
         return CallLocation.callLocation(name, codeLocation);
       }

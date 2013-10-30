@@ -18,7 +18,7 @@ public class CallNode extends AbstractDefinitionNode {
   private final ImmutableMap<String, DefinitionNode> args;
 
   public CallNode(Function function, CodeLocation codeLocation, Map<String, DefinitionNode> args) {
-    super(CallLocation.callLocation(function.name(), codeLocation));
+    super(CallLocation.callLocation(function.name().simple(), codeLocation));
     this.function = function;
     this.args = ImmutableMap.copyOf(args);
   }

@@ -1,7 +1,6 @@
 package org.smoothbuild.function.def;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.function.base.Name.simpleName;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CallLocation;
@@ -13,7 +12,7 @@ public class InvalidNode extends AbstractDefinitionNode {
   private final Type type;
 
   public InvalidNode(Type type, CodeLocation codeLocation) {
-    super(CallLocation.callLocation(simpleName("invalid"), codeLocation));
+    super(CallLocation.callLocation("invalid", codeLocation));
     this.type = checkNotNull(type);
   }
 
