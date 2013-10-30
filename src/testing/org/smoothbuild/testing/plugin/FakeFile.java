@@ -3,8 +3,8 @@ package org.smoothbuild.testing.plugin;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.smoothbuild.db.Hash;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.object.Hash;
 import org.smoothbuild.plugin.File;
 
 import com.google.common.base.Charsets;

@@ -1,10 +1,10 @@
 package org.smoothbuild.testing.task.exec;
 
 import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.testing.db.FakeObjectDb;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCallLocation;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.object.FakeObjectDb;
 
 public class FakeSandbox extends SandboxImpl {
   private final FakeFileSystem fileSystem;

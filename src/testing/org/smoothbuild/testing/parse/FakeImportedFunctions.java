@@ -6,10 +6,10 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
-import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.parse.SymbolTable;
 
 import com.google.common.collect.ImmutableMap;

@@ -15,9 +15,9 @@ import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.testing.db.FakeObjectDb;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCallLocation;
-import org.smoothbuild.testing.object.FakeObjectDb;
 import org.smoothbuild.testing.plugin.FileSetMatchers;
 
 import com.google.common.collect.Iterables;

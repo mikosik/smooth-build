@@ -2,10 +2,10 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.ValueDb;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.CallLocation;
-import org.smoothbuild.object.ValueDb;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 

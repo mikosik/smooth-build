@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import org.smoothbuild.object.ResultDb;
+import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 

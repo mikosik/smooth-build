@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.exc.MoreThanOneSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
@@ -14,7 +15,6 @@ import org.smoothbuild.function.nativ.exc.NoSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonPublicSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;

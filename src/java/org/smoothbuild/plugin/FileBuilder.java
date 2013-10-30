@@ -6,8 +6,8 @@ import static com.google.common.base.Preconditions.checkState;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
+import org.smoothbuild.db.ValueDb;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.object.ValueDb;
 
 public class FileBuilder {
   private final ValueDb valueDb;
