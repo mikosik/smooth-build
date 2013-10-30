@@ -1,11 +1,8 @@
 package org.smoothbuild.testing.task.exec;
 
-import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.message.CallLocation.callLocation;
-
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.message.FakeCodeLocation;
+import org.smoothbuild.testing.message.FakeCallLocation;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.object.FakeObjectDb;
 
@@ -23,8 +20,7 @@ public class FakeSandbox extends SandboxImpl {
   }
 
   public FakeSandbox(FakeFileSystem fileSystem, FakeMessageGroup messageGroup, FakeObjectDb objectDb) {
-    super(fileSystem, objectDb, callLocation(simpleName("name"), new FakeCodeLocation()),
-        messageGroup);
+    super(fileSystem, objectDb, new FakeCallLocation(), messageGroup);
     this.fileSystem = fileSystem;
     this.messageGroup = messageGroup;
     this.objectDb = objectDb;

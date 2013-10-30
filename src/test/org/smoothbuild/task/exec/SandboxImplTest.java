@@ -2,8 +2,6 @@ package org.smoothbuild.task.exec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.function.base.Name.simpleName;
-import static org.smoothbuild.message.message.CallLocation.callLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
@@ -18,7 +16,7 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.message.FakeCodeLocation;
+import org.smoothbuild.testing.message.FakeCallLocation;
 import org.smoothbuild.testing.object.FakeObjectDb;
 import org.smoothbuild.testing.plugin.FileSetMatchers;
 
@@ -29,7 +27,7 @@ public class SandboxImplTest {
   String content = "content";
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
-  CallLocation callLocation = callLocation(simpleName("name"), new FakeCodeLocation());
+  CallLocation callLocation = new FakeCallLocation();
 
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeObjectDb objectDb = new FakeObjectDb(fileSystem);
