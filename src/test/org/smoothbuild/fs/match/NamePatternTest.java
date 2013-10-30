@@ -8,7 +8,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.fs.match.NamePattern;
 import org.testory.common.Closure;
 
 import com.google.common.collect.ImmutableList;

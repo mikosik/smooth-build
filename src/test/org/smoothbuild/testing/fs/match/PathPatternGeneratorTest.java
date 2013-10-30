@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.testing.fs.match.PathPatternGenerator;
 
 import com.google.common.base.Function;
 

@@ -12,7 +12,6 @@ import java.io.InputStream;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.File;
-import org.smoothbuild.testing.plugin.FileTester;
 
 public class FileTesterTest {
   String content = "some content";

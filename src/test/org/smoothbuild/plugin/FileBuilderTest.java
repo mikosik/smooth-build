@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.object.FileObject;
 import org.smoothbuild.object.ValueDb;
-import org.smoothbuild.plugin.FileBuilder;
 
 public class FileBuilderTest {
   ValueDb valueDb = mock(ValueDb.class);

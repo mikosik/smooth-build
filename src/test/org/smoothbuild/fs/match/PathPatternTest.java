@@ -3,8 +3,6 @@ package org.smoothbuild.fs.match;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.smoothbuild.fs.match.IllegalPathPatternException;
-import org.smoothbuild.fs.match.PathPattern;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

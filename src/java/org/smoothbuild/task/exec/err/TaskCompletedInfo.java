@@ -4,8 +4,8 @@ import static com.google.common.base.Strings.padEnd;
 import static org.smoothbuild.message.message.MessageType.INFO;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.CodeMessage;
 
 public class TaskCompletedInfo extends CodeMessage {
   public TaskCompletedInfo(CallLocation callLocation) {

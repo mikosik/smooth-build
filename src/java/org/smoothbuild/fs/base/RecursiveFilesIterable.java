@@ -2,7 +2,6 @@ package org.smoothbuild.fs.base;
 
 import java.util.Iterator;
 
-
 import com.google.common.collect.ImmutableList;
 
 public class RecursiveFilesIterable implements Iterable<Path> {

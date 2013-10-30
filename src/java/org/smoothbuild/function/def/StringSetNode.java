@@ -7,8 +7,8 @@ import static org.smoothbuild.task.base.Constants.SET_TASK_NAME;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.base.StringSetTask;
 import org.smoothbuild.task.base.Result;
+import org.smoothbuild.task.base.StringSetTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
