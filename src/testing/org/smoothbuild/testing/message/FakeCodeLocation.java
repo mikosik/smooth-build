@@ -4,6 +4,6 @@ import org.smoothbuild.message.message.CodeLocation;
 
 public class FakeCodeLocation extends CodeLocation {
   public FakeCodeLocation() {
-    super(1);
+    super(2);
   }
 }

@@ -35,20 +35,20 @@ public class AmbiguousNamelessArgsErrorTest {
     AssignmentList assignmentList = new AssignmentList();
 
     Param p1 = param(STRING, "param1");
-    Argument a1 = namedArg(12, "arg1", node(STRING), codeLocation(1));
+    Argument a1 = namedArg(12, "arg1", node(STRING), codeLocation(2));
     assignmentList.add(assignment(p1, a1));
 
     Param p2 = param(STRING_SET, "param2");
-    Argument a2 = namelessArg(7, node(STRING_SET), codeLocation(11));
+    Argument a2 = namelessArg(7, node(STRING_SET), codeLocation(12));
     assignmentList.add(assignment(p2, a2));
 
     Param p3 = param(FILE, "param3");
-    Argument a3 = pipedArg(node(FILE), codeLocation(13));
+    Argument a3 = pipedArg(node(FILE), codeLocation(14));
     assignmentList.add(assignment(p3, a3));
 
     Set<Argument> availableArgs = newHashSet();
-    availableArgs.add(namedArg(3, "arg4", node(EMPTY_SET), codeLocation(6)));
-    availableArgs.add(namedArg(7, "arg5", node(VOID), codeLocation(16)));
+    availableArgs.add(namedArg(3, "arg4", node(EMPTY_SET), codeLocation(7)));
+    availableArgs.add(namedArg(7, "arg5", node(VOID), codeLocation(17)));
 
     TypedParamsPool availableParams = new TypedParamsPool();
     availableParams.add(param(FILE_SET, "param4"));

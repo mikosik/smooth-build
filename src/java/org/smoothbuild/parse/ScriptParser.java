@@ -65,7 +65,7 @@ public class ScriptParser {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol,
         int line, int charPositionInLine, String msg, @Nullable RecognitionException e) {
-      CodeLocation location = createLocation(offendingSymbol, line - 1, charPositionInLine);
+      CodeLocation location = createLocation(offendingSymbol, line, charPositionInLine);
       messages.report(new SyntaxError(location, msg));
     }
 

@@ -4,30 +4,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class CodeLocationTest {
 
   @Test
   public void testGetters() {
-    CodeLocation location = codeLocation(1);
-    assertThat(location.line()).isEqualTo(1);
+    CodeLocation location = codeLocation(13);
+    assertThat(location.line()).isEqualTo(13);
   }
 
-  @Test
-  public void zeroIndexesAreAllowed() {
+  @Test(expected = IllegalArgumentException.class)
+  public void zeroIndexesAreForbidden() {
     codeLocation(0);
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void negativeLineIsForbidden() throws Exception {
-    try {
-      codeLocation(-1);
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+    codeLocation(-1);
   }
 
   @Test
@@ -37,6 +31,6 @@ public class CodeLocationTest {
 
   @Test
   public void testToString() throws Exception {
-    assertThat(codeLocation(1).toString()).isEqualTo("[2]");
+    assertThat(codeLocation(2).toString()).isEqualTo("[2]");
   }
 }
