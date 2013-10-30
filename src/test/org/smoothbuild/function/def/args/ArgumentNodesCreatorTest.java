@@ -14,7 +14,6 @@ import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +38,7 @@ import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -534,11 +534,11 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static Argument argument(DefinitionNode node) {
-    return namelessArg(1, node, codeLocation(1, 2, 3));
+    return namelessArg(1, node, new FakeCodeLocation());
   }
 
   private static Argument argument(String name, DefinitionNode node) {
-    return namedArg(1, name, node, codeLocation(1, 2, 3));
+    return namedArg(1, name, node, new FakeCodeLocation());
   }
 
   private static DefinitionNode node(Type type) {
@@ -550,7 +550,7 @@ public class ArgumentNodesCreatorTest {
   private Map<String, DefinitionNode> create(Iterable<Param> params, List<Argument> args) {
     ArgumentNodesCreator creator = new ArgumentNodesCreator();
     try {
-      return creator.createArgumentNodes(codeLocation(1, 2, 3), messages, function(params), args);
+      return creator.createArgumentNodes(new FakeCodeLocation(), messages, function(params), args);
     } catch (PhaseFailedException e) {
       return null;
     }

@@ -8,7 +8,6 @@ import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.function.def.args.Assignment.assignment;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -18,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.common.Closure;
 
 public class AssignmentTest {
@@ -45,7 +45,7 @@ public class AssignmentTest {
   public void incompatible_param_and_argument_throws_exception() throws Exception {
     DefinitionNode argNode = mock(DefinitionNode.class);
     Mockito.when(argNode.type()).thenReturn(FILE);
-    argument = pipedArg(argNode, codeLocation(1, 2, 4));
+    argument = pipedArg(argNode, new FakeCodeLocation());
     try {
       assignment(param(STRING, "name"), argument);
       fail("exception should be thrown");
@@ -60,7 +60,7 @@ public class AssignmentTest {
     Mockito.when(argNode.type()).thenReturn(STRING);
     String name = "name";
     param = param(STRING, name);
-    argument = pipedArg(argNode, codeLocation(1, 2, 4));
+    argument = pipedArg(argNode, new FakeCodeLocation());
 
     Assignment assignment = assignment(param, argument);
     assertThat(assignment.argument()).isSameAs(argument);

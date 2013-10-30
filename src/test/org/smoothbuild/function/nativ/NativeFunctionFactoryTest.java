@@ -7,7 +7,6 @@ import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.qualifiedName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import org.junit.Before;
@@ -41,6 +40,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
@@ -55,7 +55,7 @@ public class NativeFunctionFactoryTest {
   Path tempDir = path("tem/dir");
   ResultDb resultDb = mock(ResultDb.class);
   NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory(resultDb);
-  CodeLocation codeLocation = codeLocation(1, 2, 4);
+  CodeLocation codeLocation = new FakeCodeLocation();
 
   @Before
   public void before() {

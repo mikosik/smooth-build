@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Type.FILE_SET;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.plugin.FileSetMatchers.containsFileContainingItsPath;
 
 import org.junit.Test;
@@ -17,6 +16,7 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -28,7 +28,7 @@ public class FileSetNodeTest {
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
 
-  CodeLocation codeLocation = codeLocation(1, 2, 4);
+  CodeLocation codeLocation = new FakeCodeLocation();
   DefinitionNode node1 = mock(DefinitionNode.class);
   DefinitionNode node2 = mock(DefinitionNode.class);
 

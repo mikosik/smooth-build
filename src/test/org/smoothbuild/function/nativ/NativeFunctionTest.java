@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 
 import org.junit.Test;
@@ -16,6 +15,7 @@ import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.util.Empty;
 
@@ -25,7 +25,7 @@ public class NativeFunctionTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   Sandbox sandbox = mock(Sandbox.class);
   String name = "functionName";
-  CodeLocation codeLocation = codeLocation(1, 2, 4);
+  CodeLocation codeLocation = new FakeCodeLocation();
 
   ResultDb resultDb = mock(ResultDb.class);
   Signature signature = testSignature("functionName");

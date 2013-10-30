@@ -2,7 +2,6 @@ package org.smoothbuild.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
@@ -10,11 +9,12 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class EmptySetNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  EmptySetNode emptySetNode = new EmptySetNode(codeLocation(1, 2, 4));
+  EmptySetNode emptySetNode = new EmptySetNode(new FakeCodeLocation());
 
   @Test
   public void type() {

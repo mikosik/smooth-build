@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Type.STRING_SET;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.plugin.StringSetMatchers.containsOnly;
 
 import org.junit.Test;
@@ -15,6 +14,7 @@ import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -33,7 +33,7 @@ public class StringSetNodeTest {
   Result result1 = new FakeResult(string1);
   Result result2 = new FakeResult(string2);
 
-  CodeLocation codeLocation = codeLocation(1, 2, 4);
+  CodeLocation codeLocation = new FakeCodeLocation();
   ImmutableList<StringNode> elemNodes = ImmutableList.of(node1, node2);
   StringSetNode stringSetNode = new StringSetNode(elemNodes, codeLocation);
 
