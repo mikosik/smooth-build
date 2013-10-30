@@ -12,7 +12,6 @@ import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.function.def.args.Argument.pipedArg;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import java.util.Set;
 
@@ -20,6 +19,7 @@ import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -138,7 +138,7 @@ public class ArgumentTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 4));
+    Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
     String actual = arg.toPaddedString(10, 13, 7);
 
     assertThat(actual).isEqualTo("String    : myName        #1       [2:3-4]");
@@ -149,7 +149,7 @@ public class ArgumentTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = namedArg(1, "myName", node, codeLocation(1, 2, 4));
+    Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
     String actual = arg.toPaddedString(1, 1, 1);
 
     assertThat(actual).isEqualTo("String: myName #1 [2:3-4]");
@@ -190,7 +190,7 @@ public class ArgumentTest {
   }
 
   private static Argument named(String name) {
-    return Argument.namedArg(1, name, mock(DefinitionNode.class), codeLocation(1, 2, 3));
+    return Argument.namedArg(1, name, mock(DefinitionNode.class), new FakeCodeLocation());
   }
 
   private static Argument nameless() {
@@ -200,6 +200,6 @@ public class ArgumentTest {
   private static Argument nameless(Type type) {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
-    return Argument.namelessArg(1, node, codeLocation(1, 2, 3));
+    return Argument.namelessArg(1, node, new FakeCodeLocation());
   }
 }

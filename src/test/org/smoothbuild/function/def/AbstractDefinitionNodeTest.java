@@ -11,6 +11,7 @@ import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class AbstractDefinitionNodeTest {
   CodeLocation codeLocation;
@@ -23,7 +24,7 @@ public class AbstractDefinitionNodeTest {
 
   @Test
   public void code_location_passed_to_constructor_is_returned() throws Exception {
-    given(codeLocation = CodeLocation.codeLocation(1, 3, 7));
+    given(codeLocation = new FakeCodeLocation());
     given(definitionNode = new MyDefinitionNode(codeLocation));
     when(definitionNode.callLocation().location());
     thenReturned(codeLocation);

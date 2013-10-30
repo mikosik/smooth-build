@@ -5,6 +5,7 @@ import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.WARNING;
 
 import org.junit.Test;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class CodeMessageTest {
 
@@ -15,7 +16,7 @@ public class CodeMessageTest {
 
   @Test
   public void testCodeLocation() throws Exception {
-    CodeLocation codeLocation = codeLocation(1, 2, 4);
+    CodeLocation codeLocation = new FakeCodeLocation();
     CodeMessage message = new CodeMessage(WARNING, codeLocation, "problem description");
     assertThat(message.codeLocation()).isEqualTo(codeLocation);
   }

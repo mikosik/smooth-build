@@ -1,6 +1,5 @@
 package org.smoothbuild.testing.message;
 
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.message.message.MessageType.INFO;
 import static org.smoothbuild.message.message.MessageType.WARNING;
@@ -12,7 +11,7 @@ import org.smoothbuild.message.message.WrappedCodeMessage;
 
 public class FakeUserConsoleTest {
   FakeUserConsole fakeUserConsole = new FakeUserConsole();
-  CodeLocation location = codeLocation(1, 2, 4);
+  CodeLocation location = new FakeCodeLocation();
 
   @Test(expected = AssertionError.class)
   public void problemsFoundFailsWhenNothingFound() throws Exception {

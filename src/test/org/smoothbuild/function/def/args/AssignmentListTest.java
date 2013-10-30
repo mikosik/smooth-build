@@ -9,12 +9,12 @@ import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Assignment.assignment;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class AssignmentListTest {
   AssignmentList assignmentList = new AssignmentList();
@@ -112,6 +112,6 @@ public class AssignmentListTest {
     DefinitionNode node = mock(DefinitionNode.class);
     when(node.type()).thenReturn(type);
 
-    return namedArg(number, name, node, codeLocation(1, 2, 4));
+    return namedArg(number, name, node, new FakeCodeLocation());
   }
 }
