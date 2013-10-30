@@ -18,6 +18,11 @@ public class CachingTask implements Task {
   }
 
   @Override
+  public String name() {
+    return task.name();
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     HashCode hash = nativeCallHasher.hash();
     if (resultDb.contains(hash)) {

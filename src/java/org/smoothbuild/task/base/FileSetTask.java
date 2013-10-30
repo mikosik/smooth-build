@@ -18,6 +18,11 @@ public class FileSetTask implements Task {
   }
 
   @Override
+  public String name() {
+    return "File*";
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     FileSetBuilder builder = sandbox.fileSetBuilder();
 

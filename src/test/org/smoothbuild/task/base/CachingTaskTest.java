@@ -17,12 +17,19 @@ public class CachingTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
   Value value = mock(Value.class);
   HashCode hash = Hash.string("abc");
+  String taskName = "name";
 
   ResultDb resultDb = mock(ResultDb.class);
   NativeCallHasher nativeCallHasher = mock(NativeCallHasher.class);
   Task task = mock(Task.class);
 
   CachingTask cachingTask = new CachingTask(resultDb, nativeCallHasher, task);
+
+  @Test
+  public void name_of_wrapped_task_is_returned() throws Exception {
+    BDDMockito.given(task.name()).willReturn(taskName);
+    assertThat(cachingTask.name()).isEqualTo(taskName);
+  }
 
   @Test
   public void task_is_executed_when_result_db_does_not_contain_its_result() {

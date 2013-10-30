@@ -25,6 +25,11 @@ public class NativeCallTask implements Task {
   }
 
   @Override
+  public String name() {
+    return function.name().value();
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     try {
       Value result = function.invoke(sandbox, calculateArguments());

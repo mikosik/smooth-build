@@ -14,6 +14,11 @@ public class StringTask implements Task {
   }
 
   @Override
+  public String name() {
+    return "String";
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     return string;
   }
