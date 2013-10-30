@@ -71,9 +71,7 @@ public class ScriptParser {
 
     private CodeLocation createLocation(Object offendingSymbol, int line, int charPositionInLine) {
       if (offendingSymbol == null) {
-        int start = charPositionInLine;
-        int stop = charPositionInLine;
-        return codeLocation(line, start, stop);
+        return codeLocation(line);
       } else {
         return locationOf((Token) offendingSymbol);
       }

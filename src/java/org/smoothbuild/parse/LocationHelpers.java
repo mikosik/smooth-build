@@ -19,31 +19,10 @@ public class LocationHelpers {
   }
 
   public static CodeLocation locationOf(ParserRuleContext parserRuleContext) {
-    Token startToken = parserRuleContext.getStart();
-    Token endToken = parserRuleContext.getStop();
-
-    return locationOf(startToken, endToken);
+    return locationOf(parserRuleContext.getStart());
   }
 
   public static CodeLocation locationOf(Token token) {
-    int line = token.getLine() - 1;
-    int start = token.getCharPositionInLine();
-    int end = start + token.getText().length();
-
-    return codeLocation(line, start, end);
-  }
-
-  private static CodeLocation locationOf(Token startToken, Token endToken) {
-    int line = startToken.getLine() - 1;
-    int start = startToken.getCharPositionInLine();
-    int end = endToken.getCharPositionInLine() + endToken.getText().length();
-
-    return codeLocation(line, start, end);
-  }
-
-  public static CodeLocation locationIn(Token token, int offset) {
-    int line = token.getLine() - 1;
-    int column = token.getCharPositionInLine() + offset;
-    return codeLocation(line, column, column);
+    return codeLocation(token.getLine() - 1);
   }
 }

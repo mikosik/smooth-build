@@ -6,7 +6,6 @@ import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.parse.LocationHelpers.locationIn;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -266,7 +265,7 @@ public class DefinedFunctionsCreator {
         StringValue stringValue = valueDb.string(unescaped(string));
         return new StringNode(stringValue, locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
-        CodeLocation location = locationIn(stringToken.getSymbol(), 1 + e.charIndex());
+        CodeLocation location = locationOf(stringToken.getSymbol());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));
         return new InvalidNode(STRING, locationOf(stringToken.getSymbol()));
       }
