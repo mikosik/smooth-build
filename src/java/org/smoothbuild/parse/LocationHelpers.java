@@ -23,6 +23,6 @@ public class LocationHelpers {
   }
 
   public static CodeLocation locationOf(Token token) {
-    return codeLocation(token.getLine() - 1);
+    return codeLocation(token.getLine());
   }
 }

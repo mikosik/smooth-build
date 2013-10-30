@@ -10,12 +10,12 @@ public class CodeLocation {
   }
 
   protected CodeLocation(int line) {
-    checkArgument(0 <= line);
+    checkArgument(0 < line);
     this.line = line;
   }
 
   /**
-   * Line in build script. (first line = 0)
+   * Line in build script. (first line = 1)
    */
   public int line() {
     return line;
@@ -37,10 +37,6 @@ public class CodeLocation {
 
   @Override
   public String toString() {
-    return "[" + str(line + 1) + "]";
-  }
-
-  private static String str(int integer) {
-    return Integer.toString(integer);
+    return "[" + Integer.toString(line) + "]";
   }
 }

@@ -23,7 +23,7 @@ public class CodeMessageTest {
 
   @Test
   public void testToString() throws Exception {
-    Message message = new CodeMessage(WARNING, codeLocation(1), "problem description");
+    Message message = new CodeMessage(WARNING, codeLocation(2), "problem description");
     assertThat(message.toString()).isEqualTo("WARNING [2]: problem description");
   }
 }

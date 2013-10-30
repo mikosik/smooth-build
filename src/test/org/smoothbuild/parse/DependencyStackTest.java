@@ -1,12 +1,12 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import java.util.NoSuchElementException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 
 import com.google.common.collect.ImmutableSet;
@@ -132,9 +132,9 @@ public class DependencyStackTest {
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
-    builder.append("name2[3] -> name3\n");
-    builder.append("name3[4] -> name4\n");
-    builder.append("name4[5] -> name2\n");
+    builder.append("name2[2] -> name3\n");
+    builder.append("name3[3] -> name4\n");
+    builder.append("name4[4] -> name2\n");
 
     assertThat(error.message()).isEqualTo(builder.toString());
   }
@@ -148,7 +148,7 @@ public class DependencyStackTest {
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
-    builder.append("name2[3] -> name2\n");
+    builder.append("name2[2] -> name2\n");
 
     assertThat(error.message()).isEqualTo(builder.toString());
   }
@@ -156,7 +156,7 @@ public class DependencyStackTest {
   private DependencyStackElem elem(String from, String to, int location) {
     ImmutableSet<Dependency> deps = ImmutableSet.of();
     DependencyStackElem elem = new DependencyStackElem(from, deps);
-    elem.setMissing(new Dependency(codeLocation(location), to));
+    elem.setMissing(new Dependency(CodeLocation.codeLocation(location), to));
     return elem;
   }
 
