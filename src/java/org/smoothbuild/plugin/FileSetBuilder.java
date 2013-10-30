@@ -3,9 +3,9 @@ package org.smoothbuild.plugin;
 import java.util.List;
 import java.util.Set;
 
+import org.smoothbuild.db.ValueDb;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.object.ValueDb;
 import org.smoothbuild.plugin.err.CannotAddDuplicatePathError;
 
 import com.google.common.collect.Lists;

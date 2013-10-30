@@ -6,8 +6,8 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
-import org.smoothbuild.object.Hash;
-import org.smoothbuild.object.ResultDb;
+import org.smoothbuild.db.Hash;
+import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 

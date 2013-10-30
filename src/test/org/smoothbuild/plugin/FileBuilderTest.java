@@ -9,9 +9,9 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
+import org.smoothbuild.db.FileObject;
+import org.smoothbuild.db.ValueDb;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.object.FileObject;
-import org.smoothbuild.object.ValueDb;
 
 public class FileBuilderTest {
   ValueDb valueDb = mock(ValueDb.class);

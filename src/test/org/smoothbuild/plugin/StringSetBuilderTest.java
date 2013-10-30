@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.testing.object.FakeObjectDb;
+import org.smoothbuild.testing.db.FakeObjectDb;
 
 import com.google.common.collect.Iterables;
 

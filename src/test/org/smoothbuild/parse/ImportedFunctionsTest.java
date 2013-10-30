@@ -6,11 +6,11 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.function.nativ.exc.FunctionImplementationException;
-import org.smoothbuild.object.ResultDb;
 
 public class ImportedFunctionsTest {
   ImportedFunctions importedFunctions = new ImportedFunctions();

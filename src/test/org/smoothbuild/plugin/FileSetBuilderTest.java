@@ -13,7 +13,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.err.CannotAddDuplicatePathError;
-import org.smoothbuild.testing.object.FakeObjectDb;
+import org.smoothbuild.testing.db.FakeObjectDb;
 
 import com.google.common.base.Charsets;
 

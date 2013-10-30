@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
@@ -34,7 +35,6 @@ import org.smoothbuild.function.def.args.err.VoidArgError;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.PhaseFailedException;
-import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;

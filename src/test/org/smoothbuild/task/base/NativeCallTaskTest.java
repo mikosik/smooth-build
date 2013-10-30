@@ -13,6 +13,7 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
+import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Param;
@@ -21,7 +22,6 @@ import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;

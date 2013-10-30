@@ -8,16 +8,16 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.smoothbuild.db.ValueDb;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
-import org.smoothbuild.object.ValueDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.testing.db.FakeObjectDb;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCallLocation;
 import org.smoothbuild.testing.message.FakeUserConsole;
-import org.smoothbuild.testing.object.FakeObjectDb;
 
 public class TaskExecutorTest {
   Task task1 = mock(Task.class);

@@ -11,6 +11,7 @@ import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
@@ -27,7 +28,6 @@ import org.smoothbuild.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
