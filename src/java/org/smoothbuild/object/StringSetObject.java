@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Iterator;
 
-import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.plugin.Value;
 
 import com.google.common.hash.HashCode;
 

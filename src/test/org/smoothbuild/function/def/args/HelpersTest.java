@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.args.Helpers;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

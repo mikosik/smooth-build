@@ -13,8 +13,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.plugin.FakeFile;
-import org.smoothbuild.testing.plugin.FakeFileSet;
 
 public class FileSetMatchersTest {
   FakeFile file;

@@ -12,8 +12,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.err.CannotAddDuplicatePathError;
 import org.smoothbuild.testing.object.FakeObjectDb;
 

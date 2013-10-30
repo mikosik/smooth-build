@@ -6,9 +6,9 @@ import static org.mockito.Mockito.mock;
 import java.lang.reflect.Method;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.testing.plugin.FakeString;
 
 import com.google.common.collect.ImmutableMap;

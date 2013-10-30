@@ -8,8 +8,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.testing.plugin.FakeFile;
-import org.smoothbuild.testing.plugin.FakeFileSet;
 
 import com.google.common.collect.Iterables;
 

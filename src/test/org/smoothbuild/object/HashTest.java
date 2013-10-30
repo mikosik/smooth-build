@@ -6,7 +6,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.object.Hash;
 
 public class HashTest {
   String string = "some string";

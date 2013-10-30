@@ -3,8 +3,8 @@ package org.smoothbuild.function.nativ;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.smoothbuild.plugin.Value;
 import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.plugin.Value;
 import org.smoothbuild.testing.plugin.FakeString;
 
 import com.google.common.collect.ImmutableMap;

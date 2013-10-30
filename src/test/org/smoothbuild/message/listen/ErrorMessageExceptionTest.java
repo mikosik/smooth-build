@@ -7,7 +7,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.Message;
 
 public class ErrorMessageExceptionTest {

@@ -12,7 +12,6 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.PathTesting;
 
 import com.google.common.collect.ImmutableList;
