@@ -2,64 +2,28 @@ package org.smoothbuild.function.base;
 
 import java.util.regex.Pattern;
 
-import com.google.common.base.Splitter;
-
 public class Name {
-  private static final char SEPARATOR = '.';
-  private static final Pattern PART_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
+  private static final Pattern PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
 
-  private final String aPackage;
-  private final String simple;
-  private final String full;
+  private final String value;
 
-  public static Name simpleName(String simple) {
-    if (!isLegalSimpleName(simple)) {
-      throw new IllegalArgumentException("Illegal function name: '" + simple + "'");
+  public static Name simpleName(String value) {
+    if (!isLegalName(value)) {
+      throw new IllegalArgumentException("Illegal function name: '" + value + "'");
     }
-    return new Name("", simple, simple);
+    return new Name(value);
   }
 
-  public static boolean isLegalSimpleName(String simple) {
-    return isLegalPart(simple);
+  public static boolean isLegalName(String simple) {
+    return PATTERN.matcher(simple).matches();
   }
 
-  public static Name qualifiedName(String qualified) {
-    for (String part : Splitter.on(SEPARATOR).split(qualified)) {
-      if (!isLegalPart(part)) {
-        throw new IllegalArgumentException("Illegal qualified function name: '" + qualified
-            + "'");
-      }
-    }
-    int index = qualified.lastIndexOf(SEPARATOR);
-    if (index == -1) {
-      return new Name("", qualified, qualified);
-    } else {
-      String aPackage = qualified.substring(0, index);
-      String name = qualified.substring(index + 1);
-      return new Name(aPackage, name, qualified);
-    }
+  private Name(String value) {
+    this.value = value;
   }
 
-  private static boolean isLegalPart(String part) {
-    return PART_PATTERN.matcher(part).matches();
-  }
-
-  private Name(String aPackage, String simple, String full) {
-    this.aPackage = aPackage;
-    this.simple = simple;
-    this.full = full;
-  }
-
-  public String aPackage() {
-    return aPackage;
-  }
-
-  public String simple() {
-    return simple;
-  }
-
-  public String full() {
-    return full;
+  public String value() {
+    return value;
   }
 
   @Override
@@ -68,16 +32,16 @@ public class Name {
       return false;
     }
     Name that = (Name) object;
-    return this.full.equals(that.full);
+    return this.value.equals(that.value);
   }
 
   @Override
   public final int hashCode() {
-    return full.hashCode();
+    return value.hashCode();
   }
 
   @Override
   public String toString() {
-    return "'" + full + "'";
+    return "'" + value + "'";
   }
 }

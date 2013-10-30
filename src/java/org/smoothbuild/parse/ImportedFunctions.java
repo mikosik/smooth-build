@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.inject.Singleton;
 
 import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.Name;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
@@ -17,10 +18,11 @@ public class ImportedFunctions implements SymbolTable {
   private final Map<String, Function> map = Maps.newHashMap();
 
   public void add(Function function) {
-    String name = function.name().simple();
+    Name functionName = function.name();
+    String name = functionName.value();
     if (containsFunction(name)) {
-      throw new IllegalArgumentException("Function with short name '" + name
-          + "' has already been imported from '" + function.name().full() + "'");
+      throw new IllegalArgumentException("Function with name " + functionName
+          + " has already been imported.");
     } else {
       map.put(name, function);
     }

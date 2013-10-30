@@ -28,15 +28,15 @@ public class AmbiguousNamelessArgsError extends CodeMessage {
   private static String message(Name functionName, AssignmentList assignmentList,
       List<Argument> availableArgs, TypedParamsPool availableTypedParams) {
     if (availableTypedParams.size() == 0) {
-      return "Can't find parameter(s) of proper type in '" + functionName.simple()
-          + "' function for some nameless argument(s):\n"
+      return "Can't find parameter(s) of proper type in " + functionName
+          + " function for some nameless argument(s):\n"
           + "List of assignments that were successfully detected so far is following:\n"
           + assignmentList.toString()
           + "List of arguments for which no parameter could be found is following:\n"
           + argsToList(availableArgs);
     } else {
-      return "Can't decide unambiguously to which parameters in '" + functionName.simple()
-          + "' function some nameless arguments should be assigned:\n"
+      return "Can't decide unambiguously to which parameters in " + functionName
+          + " function some nameless arguments should be assigned:\n"
           + "List of assignments that were successfully detected is following:\n"
           + assignmentList.toString() + "List of nameless arguments that caused problems:\n"
           + argsToList(availableArgs)
