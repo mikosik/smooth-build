@@ -86,7 +86,7 @@ public class NativeFunctionFactoryTest {
     ImmutableMap<String, Result> dependencies = ImmutableMap.<String, Result> of("stringA",
         result1, "stringB", result2);
 
-    Task task = function.generateTask(taskGenerator, dependencies);
+    Task task = function.generateTask(taskGenerator, dependencies, codeLocation);
     StringValue result = (StringValue) task.execute(sandbox);
     sandbox.messages().assertNoProblems();
     assertThat(result.value()).isEqualTo("abcdef");
@@ -264,7 +264,8 @@ public class NativeFunctionFactoryTest {
   public void runtimeExceptionThrownAreReported() throws Exception {
     Function function = nativeFunctionFactory.create(MyFunctionWithThrowingSmoothMethod.class,
         false);
-    function.generateTask(taskGenerator, Empty.stringTaskResultMap()).execute(sandbox);
+    function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation)
+        .execute(sandbox);
     sandbox.messages().assertOnlyProblem(UnexpectedError.class);
   }
 

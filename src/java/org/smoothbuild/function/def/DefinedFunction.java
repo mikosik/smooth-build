@@ -6,9 +6,9 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.message.message.CallLocation;
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
-import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.base.Preconditions;
@@ -27,19 +27,20 @@ public class DefinedFunction extends AbstractFunction implements DefinitionNode 
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> arguments) {
+  public LocatedTask generateTask(TaskGenerator taskGenerator, Map<String, Result> arguments,
+      CodeLocation codeLocation) {
     Preconditions.checkArgument(arguments.isEmpty(),
         "DefinedFunction.generateTask() cannot accept non-empty arguments");
     return generateTask(taskGenerator);
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator) {
+  public LocatedTask generateTask(TaskGenerator taskGenerator) {
     return root.generateTask(taskGenerator);
   }
 
   @Override
-  public CallLocation callLocation() {
-    return root.callLocation();
+  public CodeLocation codeLocation() {
+    return root.codeLocation();
   }
 }

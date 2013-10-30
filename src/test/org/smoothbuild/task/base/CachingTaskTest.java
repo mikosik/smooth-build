@@ -8,7 +8,9 @@ import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.db.Hash;
 import org.smoothbuild.db.ResultDb;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Value;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 import com.google.common.hash.HashCode;
@@ -18,6 +20,7 @@ public class CachingTaskTest {
   Value value = mock(Value.class);
   HashCode hash = Hash.string("abc");
   String taskName = "name";
+  CodeLocation codeLocation = new FakeCodeLocation();
 
   ResultDb resultDb = mock(ResultDb.class);
   NativeCallHasher nativeCallHasher = mock(NativeCallHasher.class);

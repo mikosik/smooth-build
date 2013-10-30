@@ -5,9 +5,8 @@ import javax.inject.Inject;
 import org.smoothbuild.db.ValueDb;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.plugin.Value;
-import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.LocatedTask;
 
 public class TaskExecutor {
   private final FileSystem fileSystem;
@@ -21,14 +20,14 @@ public class TaskExecutor {
     this.userConsole = userConsole;
   }
 
-  public Value execute(Task task, CallLocation callLocation) {
-    SandboxImpl sandbox = createSandbox(callLocation);
+  public Value execute(LocatedTask task) {
+    SandboxImpl sandbox = createSandbox(task);
     Value result = task.execute(sandbox);
     userConsole.report(sandbox.messageGroup());
     return result;
   }
 
-  private SandboxImpl createSandbox(CallLocation callLocation) {
-    return new SandboxImpl(fileSystem, valueDb, callLocation);
+  private SandboxImpl createSandbox(LocatedTask task) {
+    return new SandboxImpl(fileSystem, valueDb, task.name(), task.codeLocation());
   }
 }

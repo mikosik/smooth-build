@@ -11,6 +11,7 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
@@ -39,7 +40,7 @@ public class CallNodeTest {
   public void generateTask() throws Exception {
     Function function = mock(Function.class);
     DefinitionNode node = mock(DefinitionNode.class);
-    Task task = mock(Task.class);
+    LocatedTask task = mock(LocatedTask.class);
     when(function.name()).thenReturn(Name.simpleName("function"));
 
     Result result = new FakeResult(new FakeString("arg"));
@@ -48,7 +49,8 @@ public class CallNodeTest {
     Map<String, DefinitionNode> argNodes = ImmutableMap.of(name, node);
 
     when(taskGenerator.generateTask(node)).thenReturn(result);
-    when(function.generateTask(taskGenerator, ImmutableMap.of(name, result))).thenReturn(task);
+    when(function.generateTask(taskGenerator, ImmutableMap.of(name, result), codeLocation))
+        .thenReturn(task);
 
     Task actual = new CallNode(function, codeLocation, argNodes).generateTask(taskGenerator);
 
