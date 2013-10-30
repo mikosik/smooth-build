@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
  * Smooth script using Smooth language).
  */
 public class NativeFunction extends AbstractFunction {
+  @SuppressWarnings("unused")
   private final ResultDb resultDb;
   private final Invoker invoker;
 
@@ -34,7 +35,7 @@ public class NativeFunction extends AbstractFunction {
 
   @Override
   public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> args) {
-    return new NativeCallTask(resultDb, this, args);
+    return new NativeCallTask(this, args);
   }
 
   public Value invoke(Sandbox sandbox, ImmutableMap<String, Value> args)
