@@ -14,25 +14,20 @@ import com.google.common.collect.ImmutableList;
 
 public class SmoothApp {
   private final UserConsole userConsole;
-  private final Cleaner cleaner;
   private final CommandLineParserPhase commandLineParserPhase;
   private final ModuleParserPhase moduleParserPhase;
   private final SmoothExecutorPhase smoothExecutorPhase;
 
   @Inject
-  public SmoothApp(UserConsole userConsole, Cleaner cleaner,
-      CommandLineParserPhase commandLineParserPhase, ModuleParserPhase moduleParserPhase,
-      SmoothExecutorPhase smoothExecutorPhase) {
+  public SmoothApp(UserConsole userConsole, CommandLineParserPhase commandLineParserPhase,
+      ModuleParserPhase moduleParserPhase, SmoothExecutorPhase smoothExecutorPhase) {
     this.userConsole = userConsole;
-    this.cleaner = cleaner;
     this.commandLineParserPhase = commandLineParserPhase;
     this.moduleParserPhase = moduleParserPhase;
     this.smoothExecutorPhase = smoothExecutorPhase;
   }
 
   public void run(String... commandLine) {
-    cleaner.clearBuildDir();
-
     CommandLineArguments args = commandLineParserPhase.execute(ImmutableList.copyOf(commandLine));
 
     if (args != null) {
