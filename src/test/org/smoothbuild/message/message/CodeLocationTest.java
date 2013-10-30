@@ -11,42 +11,19 @@ public class CodeLocationTest {
 
   @Test
   public void testGetters() {
-    CodeLocation location = codeLocation(1, 2, 3);
-
+    CodeLocation location = codeLocation(1);
     assertThat(location.line()).isEqualTo(1);
-    assertThat(location.start()).isEqualTo(2);
-    assertThat(location.end()).isEqualTo(3);
   }
 
   @Test
   public void zeroIndexesAreAllowed() {
-    codeLocation(0, 0, 0);
+    codeLocation(0);
   }
 
   @Test
   public void negativeLineIsForbidden() throws Exception {
     try {
-      codeLocation(-1, 1, 1);
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void negativeStartIsForbidden() throws Exception {
-    try {
-      codeLocation(1, -1, 1);
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
-  }
-
-  @Test
-  public void negativeEndIsForbidden() throws Exception {
-    try {
-      codeLocation(1, 1, -1);
+      codeLocation(-1);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -59,12 +36,7 @@ public class CodeLocationTest {
   }
 
   @Test
-  public void testToStringForSingleCharacter() throws Exception {
-    assertThat(codeLocation(1, 2, 3).toString()).isEqualTo("[2:3]");
-  }
-
-  @Test
   public void testToString() throws Exception {
-    assertThat(codeLocation(1, 2, 4).toString()).isEqualTo("[2:3-4]");
+    assertThat(codeLocation(1).toString()).isEqualTo("[2]");
   }
 }

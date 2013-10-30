@@ -3,8 +3,6 @@ package org.smoothbuild.parse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.parse.LocationHelpers.locationIn;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -40,8 +38,6 @@ public class LocationHelpersTest {
 
     // then
     assertThat(location.line()).isEqualTo(line);
-    assertThat(location.start()).isEqualTo(start);
-    assertThat(location.end()).isEqualTo(end + text.length());
   }
 
   @Test
@@ -66,8 +62,6 @@ public class LocationHelpersTest {
 
     // then
     assertThat(location.line()).isEqualTo(line);
-    assertThat(location.start()).isEqualTo(start);
-    assertThat(location.end()).isEqualTo(end + text.length());
   }
 
   @Test
@@ -90,8 +84,6 @@ public class LocationHelpersTest {
 
     // then
     assertThat(location.line()).isEqualTo(line);
-    assertThat(location.start()).isEqualTo(start);
-    assertThat(location.end()).isEqualTo(end + text.length());
   }
 
   @Test
@@ -109,20 +101,5 @@ public class LocationHelpersTest {
 
     // then
     assertThat(location.line()).isEqualTo(line);
-    assertThat(location.start()).isEqualTo(start);
-    assertThat(location.end()).isEqualTo(start + text.length());
-  }
-
-  @Test
-  public void locationInToken() throws Exception {
-    // given
-    when(startToken.getLine()).thenReturn(7 + 1);
-    when(startToken.getCharPositionInLine()).thenReturn(11);
-
-    // when
-    CodeLocation codeLocation = locationIn(startToken, 13);
-
-    // then
-    assertThat(codeLocation).isEqualTo(codeLocation(7, 24, 24));
   }
 }

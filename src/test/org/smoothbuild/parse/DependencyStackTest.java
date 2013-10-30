@@ -132,9 +132,9 @@ public class DependencyStackTest {
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
-    builder.append("name2[3:3-4] -> name3\n");
-    builder.append("name3[4:4-5] -> name4\n");
-    builder.append("name4[5:5-6] -> name2\n");
+    builder.append("name2[3] -> name3\n");
+    builder.append("name3[4] -> name4\n");
+    builder.append("name4[5] -> name2\n");
 
     assertThat(error.message()).isEqualTo(builder.toString());
   }
@@ -148,7 +148,7 @@ public class DependencyStackTest {
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
-    builder.append("name2[3:3-4] -> name2\n");
+    builder.append("name2[3] -> name2\n");
 
     assertThat(error.message()).isEqualTo(builder.toString());
   }
@@ -156,7 +156,7 @@ public class DependencyStackTest {
   private DependencyStackElem elem(String from, String to, int location) {
     ImmutableSet<Dependency> deps = ImmutableSet.of();
     DependencyStackElem elem = new DependencyStackElem(from, deps);
-    elem.setMissing(new Dependency(codeLocation(location, location, location + 2), to));
+    elem.setMissing(new Dependency(codeLocation(location), to));
     return elem;
   }
 

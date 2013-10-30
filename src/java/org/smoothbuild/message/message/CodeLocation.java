@@ -4,21 +4,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class CodeLocation {
   private final int line;
-  private final int start;
-  private final int end;
 
-  public static CodeLocation codeLocation(int line, int start, int end) {
-    return new CodeLocation(line, start, end);
+  public static CodeLocation codeLocation(int line) {
+    return new CodeLocation(line);
   }
 
-  protected CodeLocation(int line, int start, int end) {
+  protected CodeLocation(int line) {
     checkArgument(0 <= line);
-    checkArgument(0 <= start);
-    checkArgument(0 <= end);
-
     this.line = line;
-    this.start = start;
-    this.end = end;
   }
 
   /**
@@ -28,46 +21,23 @@ public class CodeLocation {
     return line;
   }
 
-  /**
-   * Start position within line. (first character in line = 0)
-   */
-  public int start() {
-    return start;
-  }
-
-  /**
-   * End position within line. (first character in line = 0)
-   */
-  public int end() {
-    return end;
-  }
-
   @Override
   public final boolean equals(Object object) {
     if (object instanceof CodeLocation) {
       CodeLocation that = (CodeLocation) object;
-      return this.line == that.line && this.start == that.start && this.end == that.end;
+      return this.line == that.line;
     }
     return false;
   }
 
   @Override
   public final int hashCode() {
-    return line + 17 * (start + 17 * (end));
+    return line;
   }
 
   @Override
   public String toString() {
-    return "[" + str(line + 1) + ":" + startToEndString() + "]";
-  }
-
-  private String startToEndString() {
-    int startNumber = start + 1;
-    if (startNumber == end) {
-      return str(startNumber);
-    } else {
-      return str(startNumber) + "-" + str(end);
-    }
+    return "[" + str(line + 1) + "]";
   }
 
   private static String str(int integer) {
