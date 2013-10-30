@@ -26,7 +26,7 @@ public class UserConsoleTest {
 
     userConsole.report(messageGroup);
     InOrder inOrder = inOrder(printStream);
-    inOrder.verify(printStream).println("[GROUP NAME] FAILED");
+    inOrder.verify(printStream).println("[GROUP NAME]");
     inOrder.verify(printStream).print("  ");
     inOrder.verify(printStream).println("ERROR: message string");
     inOrder.verify(printStream).println("");

@@ -23,8 +23,7 @@ public class UserConsole {
   }
 
   public void report(MessageGroup messageGroup) {
-    String status = messageGroup.containsErrors() ? " FAILED" : "";
-    println("[" + messageGroup.name() + "]" + status);
+    println("[" + messageGroup.name() + "]");
 
     isErrorReported = isErrorReported || messageGroup.containsErrors();
 
