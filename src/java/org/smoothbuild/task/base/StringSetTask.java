@@ -17,6 +17,11 @@ public class StringSetTask implements Task {
   }
 
   @Override
+  public String name() {
+    return "String*";
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     StringSetBuilder stringSetBuilder = sandbox.stringSetBuilder();
 

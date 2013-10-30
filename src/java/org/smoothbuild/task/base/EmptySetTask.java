@@ -6,6 +6,11 @@ import org.smoothbuild.plugin.Value;
 public class EmptySetTask implements Task {
 
   @Override
+  public String name() {
+    return "Empty*";
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     /*
      * We cheat here and return empty fileSet. Nobody will ever use this object
