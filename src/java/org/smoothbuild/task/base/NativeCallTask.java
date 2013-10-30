@@ -6,7 +6,6 @@ import java.util.Map;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.object.ResultDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
@@ -17,15 +16,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class NativeCallTask implements Task {
-  // TODO
-  @SuppressWarnings("unused")
-  private final ResultDb resultDb;
   private final NativeFunction function;
   private final ImmutableMap<String, Result> dependencies;
 
-  public NativeCallTask(ResultDb resultDb, NativeFunction function,
-      Map<String, Result> dependencies) {
-    this.resultDb = resultDb;
+  public NativeCallTask(NativeFunction function, Map<String, Result> dependencies) {
     this.function = function;
     this.dependencies = ImmutableMap.copyOf(dependencies);
   }

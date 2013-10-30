@@ -51,8 +51,7 @@ public class NativeCallTaskTest {
 
   ImmutableList<Param> params = ImmutableList.of(param(STRING, name1), param(STRING, name2));
 
-  NativeCallTask nativeCallTask = new NativeCallTask(resultDb, function1,
-      Empty.stringTaskResultMap());
+  NativeCallTask nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap());
 
   @Test
   public void calculateResult() throws IllegalAccessException, InvocationTargetException {
@@ -60,8 +59,7 @@ public class NativeCallTaskTest {
     Result subTask = new FakeResult(argValue);
 
     String name = "param";
-    NativeCallTask nativeCallTask = new NativeCallTask(resultDb, function1, ImmutableMap.of(name,
-        subTask));
+    NativeCallTask nativeCallTask = new NativeCallTask(function1, ImmutableMap.of(name, subTask));
 
     StringValue result = new FakeString("result");
     when(invoker.invoke(sandbox, ImmutableMap.<String, Value> of(name, argValue))).thenReturn(
@@ -85,7 +83,7 @@ public class NativeCallTaskTest {
     ImmutableList<Param> params = ImmutableList.of();
     Signature signature = new Signature(VOID, simpleName("name"), params);
     function1 = new NativeFunction(resultDb, signature, invoker);
-    nativeCallTask = new NativeCallTask(resultDb, function1, Empty.stringTaskResultMap());
+    nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap());
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
 
     nativeCallTask.execute(sandbox);
