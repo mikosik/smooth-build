@@ -1,6 +1,5 @@
 package org.smoothbuild.function.def;
 
-import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.task.base.Constants.SET_TASK_NAME;
 
 import org.smoothbuild.function.base.Type;
@@ -18,7 +17,7 @@ public class FileSetNode extends AbstractDefinitionNode {
   private final ImmutableList<? extends DefinitionNode> elements;
 
   public FileSetNode(ImmutableList<? extends DefinitionNode> elements, CodeLocation codeLocation) {
-    super(CallLocation.callLocation(simpleName(SET_TASK_NAME), codeLocation));
+    super(CallLocation.callLocation(SET_TASK_NAME, codeLocation));
     this.elements = elements;
   }
 

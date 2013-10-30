@@ -1,7 +1,6 @@
 package org.smoothbuild.function.def;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.function.base.Name.simpleName;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CallLocation;
@@ -15,7 +14,7 @@ public class StringNode extends AbstractDefinitionNode {
   private final StringValue string;
 
   public StringNode(StringValue string, CodeLocation codeLocation) {
-    super(CallLocation.callLocation(simpleName("string"), codeLocation));
+    super(CallLocation.callLocation("string", codeLocation));
     this.string = checkNotNull(string);
   }
 

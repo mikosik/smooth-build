@@ -62,6 +62,6 @@ public class SandboxImpl implements Sandbox {
   }
 
   private static MessageGroup createMessages(CallLocation callLocation) {
-    return new MessageGroup(callLocation.name().simple());
+    return new MessageGroup(callLocation.name());
   }
 }

@@ -5,7 +5,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CallLocation;
 import org.smoothbuild.message.message.CodeLocation;
@@ -32,7 +31,7 @@ public class AbstractDefinitionNodeTest {
 
   public class MyDefinitionNode extends AbstractDefinitionNode {
     public MyDefinitionNode(CodeLocation codeLocation) {
-      super(CallLocation.callLocation(Name.simpleName("abc"), codeLocation));
+      super(CallLocation.callLocation("abc", codeLocation));
     }
 
     @Override
