@@ -20,7 +20,7 @@ public class NativeCallHasher {
 
   public HashCode hash() {
     Hasher hasher = Hash.function().newHasher();
-    hasher.putBytes(Hash.string(nativeFunction.signature().name().full()).asBytes());
+    hasher.putBytes(Hash.string(nativeFunction.signature().name().value()).asBytes());
     for (Param param : nativeFunction.params().values()) {
       Result argument = args.get(param.name());
       if (argument != null) {

@@ -2,7 +2,7 @@ package org.smoothbuild.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.function.base.Name.qualifiedName;
+import static org.smoothbuild.function.base.Name.simpleName;
 
 import java.util.Map;
 
@@ -12,8 +12,8 @@ import org.smoothbuild.function.def.DefinedFunction;
 import com.google.common.collect.ImmutableMap;
 
 public class ModuleTest {
-  Name name1 = qualifiedName("name1");
-  Name name2 = qualifiedName("name2");
+  Name name1 = simpleName("name1");
+  Name name2 = simpleName("name2");
   DefinedFunction function1 = mock(DefinedFunction.class);
   DefinedFunction function2 = mock(DefinedFunction.class);
 

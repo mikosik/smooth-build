@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.function.base.Name.qualifiedName;
+import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.testing.function.base.ParamTester.params;
@@ -67,9 +67,9 @@ public class NativeFunctionFactoryTest {
   public void testSignature() throws Exception {
     Function function = nativeFunctionFactory.create(MyFunction.class, false);
 
-    assertThat(function.name()).isEqualTo(qualifiedName("my.package.myFunction"));
+    assertThat(function.name()).isEqualTo(simpleName("myFunction"));
     Signature signature = function.signature();
-    assertThat(signature.name()).isEqualTo(qualifiedName("my.package.myFunction"));
+    assertThat(signature.name()).isEqualTo(simpleName("myFunction"));
     assertThat(signature.type()).isEqualTo(Type.STRING);
 
     Param paramA = param(STRING, "stringA");
@@ -99,7 +99,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunction {
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static StringValue execute(Sandbox sandbox, Parameters params) {
       return new FakeString(params.stringA().value() + params.stringB().value());
     }
@@ -121,7 +121,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithAllowedParamTypes {
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static StringValue execute(Sandbox sandbox, AllowedParameters params) {
       return new FakeString("string");
     }
@@ -143,7 +143,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithAnnotatedParams {
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static void execute(Sandbox sandbox, AnnotatedParameters params) {}
   }
 
@@ -157,7 +157,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithForbiddenParamType {
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static StringValue execute(Sandbox sandbox, ForbiddenParams params) {
       return null;
     }
@@ -171,7 +171,7 @@ public class NativeFunctionFactoryTest {
   public interface EmptyParameters {}
 
   public static class MyFunctionWithEmptyParameters {
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
@@ -183,7 +183,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithStringResult {
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
@@ -195,7 +195,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithFileResult {
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static File execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
@@ -208,7 +208,7 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithFilesResult {
 
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static FileSet execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
@@ -220,7 +220,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithVoidResult {
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static void execute(Sandbox sandbox, EmptyParameters params) {}
   }
 
@@ -231,7 +231,7 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithIllegalReturnType {
 
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public static Runnable execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
@@ -245,7 +245,7 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithParamThatIsNotInterface {
 
-    @SmoothFunction("my.package.myFunction")
+    @SmoothFunction("myFunction")
     public static void execute(Sandbox sandbox, String string) {}
   }
 
@@ -269,7 +269,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithThrowingSmoothMethod {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public static void execute(Sandbox sandbox, EmptyParameters params) {
       throw new RuntimeException();
     }
@@ -282,10 +282,10 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithTwoSmoothMethods {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public static void execute(Sandbox sandbox, EmptyParameters params) {}
 
-    @SmoothFunction("my.package.MyFunction2")
+    @SmoothFunction("MyFunction2")
     public static void execute2(Sandbox sandbox, EmptyParameters params) {}
   }
 
@@ -303,7 +303,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithPrivateSmoothMethod {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     private static void execute(Sandbox sandbox, EmptyParameters params) {}
   }
 
@@ -318,7 +318,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithParamMethodThatHasParameters {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public static void execute(Sandbox sandbox, ParametersWithMethodWithParameters params) {}
   }
 
@@ -329,7 +329,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithNonStaticSmoothMethod {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public void execute(Sandbox sandbox, EmptyParameters params) {}
   }
 
@@ -340,7 +340,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithSmoothMethodWithZeroParams {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public static void execute() {}
   }
 
@@ -351,7 +351,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithSmoothMethodWithOneParam {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public static void execute() {}
   }
 
@@ -362,7 +362,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithSmoothMethodWithWrongFirstParam {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public static void execute(Parameters wrong, Parameters params) {}
   }
 
@@ -373,7 +373,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithSmoothMethodWithWrongSecondParam {
-    @SmoothFunction("my.package.MyFunction")
+    @SmoothFunction("MyFunction")
     public static void execute(Sandbox sandbox, Integer wrong) {}
   }
 

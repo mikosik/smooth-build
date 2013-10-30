@@ -1,6 +1,6 @@
 package org.smoothbuild.function.nativ;
 
-import static org.smoothbuild.function.base.Name.qualifiedName;
+import static org.smoothbuild.function.base.Name.simpleName;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -39,7 +39,7 @@ public class SignatureFactory {
       throw new MissingNameException(method);
     }
     try {
-      return qualifiedName(annotation.value());
+      return simpleName(annotation.value());
     } catch (IllegalArgumentException e) {
       throw new IllegalFunctionNameException(method, e.getMessage());
     }

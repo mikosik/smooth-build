@@ -1,8 +1,8 @@
 package org.smoothbuild.command;
 
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
-import static org.smoothbuild.function.base.Name.isLegalSimpleName;
-import static org.smoothbuild.function.base.Name.qualifiedName;
+import static org.smoothbuild.function.base.Name.isLegalName;
+import static org.smoothbuild.function.base.Name.simpleName;
 
 import java.util.List;
 
@@ -23,9 +23,9 @@ public class CommandLineParser {
     }
 
     String functionString = args.get(0);
-    if (!isLegalSimpleName(functionString)) {
+    if (!isLegalName(functionString)) {
       throw new ErrorMessageException(new IllegalFunctionNameError(functionString));
     }
-    return new CommandLineArguments(DEFAULT_SCRIPT, qualifiedName(functionString));
+    return new CommandLineArguments(DEFAULT_SCRIPT, simpleName(functionString));
   }
 }
