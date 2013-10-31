@@ -1,5 +1,7 @@
 package org.smoothbuild.task.base;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.smoothbuild.db.ResultDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
@@ -12,9 +14,9 @@ public class CachingTask implements Task {
   private final Task task;
 
   public CachingTask(ResultDb resultDb, NativeCallHasher nativeCallHasher, Task task) {
-    this.resultDb = resultDb;
-    this.nativeCallHasher = nativeCallHasher;
-    this.task = task;
+    this.resultDb = checkNotNull(resultDb);
+    this.nativeCallHasher = checkNotNull(nativeCallHasher);
+    this.task = checkNotNull(task);
   }
 
   @Override
