@@ -10,6 +10,9 @@ import com.google.common.base.Splitter;
 
 @Singleton
 public class UserConsole {
+  private static final String MESSAGE_GROUP_PREFIX = " + ";
+  private static final String MESSAGE_PREFIX = "  " + MESSAGE_GROUP_PREFIX;
+
   private final PrintStream printStream;
   private boolean isErrorReported;
 
@@ -23,21 +26,14 @@ public class UserConsole {
   }
 
   public void report(MessageGroup messageGroup) {
-    println("[" + messageGroup.name() + "]");
-
+    println(MESSAGE_GROUP_PREFIX + messageGroup.name());
     isErrorReported = isErrorReported || messageGroup.containsErrors();
-
     printGroup(messageGroup);
   }
 
   private void printGroup(MessageGroup messageGroup) {
-    boolean printedAnything = false;
     for (Message message : messageGroup) {
       report(message);
-      printedAnything = true;
-    }
-    if (printedAnything) {
-      println("");
     }
   }
 
@@ -47,15 +43,15 @@ public class UserConsole {
 
   public void printFinalSummary() {
     if (isErrorReported) {
-      println("*** FAILED ***");
+      println(MESSAGE_GROUP_PREFIX + "FAILED");
     } else {
-      println("*** SUCCESS ***");
+      println(MESSAGE_GROUP_PREFIX + "SUCCESS");
     }
   }
 
   protected void report(Message message) {
     for (String line : Splitter.on("\n").split(message.toString())) {
-      print("  ");
+      print(MESSAGE_PREFIX);
       println(line);
     }
   }

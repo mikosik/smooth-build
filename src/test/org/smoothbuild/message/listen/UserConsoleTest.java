@@ -26,10 +26,9 @@ public class UserConsoleTest {
 
     userConsole.report(messageGroup);
     InOrder inOrder = inOrder(printStream);
-    inOrder.verify(printStream).println("[GROUP NAME]");
-    inOrder.verify(printStream).print("  ");
+    inOrder.verify(printStream).println(" + GROUP NAME");
+    inOrder.verify(printStream).print("   + ");
     inOrder.verify(printStream).println("ERROR: message string");
-    inOrder.verify(printStream).println("");
     verifyNoMoreInteractions(printStream);
   }
 
@@ -40,14 +39,14 @@ public class UserConsoleTest {
     messageGroup.report(new Message(WARNING, "message string"));
 
     userConsole.report(messageGroup);
-    verify(printStream).println("[GROUP NAME]");
+    verify(printStream).println(" + GROUP NAME");
+    verify(printStream).print("   + ");
     verify(printStream).println("WARNING: message string");
   }
 
   @Test
   public void isErrorReported_returns_false_when_only_warning_was_reported() throws Exception {
-    String name = "GROUP NAME";
-    MessageGroup messageGroup = new MessageGroup(name);
+    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
     messageGroup.report(new Message(WARNING, "message string"));
 
     userConsole.report(messageGroup);
@@ -56,8 +55,7 @@ public class UserConsoleTest {
 
   @Test
   public void isErrorReported_returns_true_when_error_was_reported() throws Exception {
-    String name = "GROUP NAME";
-    MessageGroup messageGroup = new MessageGroup(name);
+    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
     messageGroup.report(new Message(ERROR, "message string"));
 
     userConsole.report(messageGroup);
@@ -67,25 +65,23 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_is_success_when_only_warning_was_reported() throws Exception {
-    String name = "GROUP NAME";
-    MessageGroup messageGroup = new MessageGroup(name);
+    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
     messageGroup.report(new Message(WARNING, "message string"));
 
     userConsole.report(messageGroup);
     userConsole.printFinalSummary();
 
-    verify(printStream).println("*** SUCCESS ***");
+    verify(printStream).println(" + SUCCESS");
   }
 
   @Test
   public void final_summary_is_failed_when_error_was_reported() throws Exception {
-    String name = "GROUP NAME";
-    MessageGroup messageGroup = new MessageGroup(name);
+    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
     messageGroup.report(new Message(ERROR, "message string"));
 
     userConsole.report(messageGroup);
     userConsole.printFinalSummary();
 
-    verify(printStream).println("*** FAILED ***");
+    verify(printStream).println(" + FAILED");
   }
 }
