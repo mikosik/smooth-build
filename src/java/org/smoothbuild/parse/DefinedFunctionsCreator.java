@@ -32,7 +32,7 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.CallNode;
 import org.smoothbuild.function.def.DefinedFunction;
-import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.EmptySetNode;
 import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.InvalidNode;
@@ -102,7 +102,7 @@ public class DefinedFunctionsCreator {
     }
 
     public DefinedFunction build(FunctionContext function) {
-      DefinitionNode node = build(function.pipe());
+      Node node = build(function.pipe());
 
       Type type = node.type();
       String name = function.functionName().getText();
@@ -112,8 +112,8 @@ public class DefinedFunctionsCreator {
       return new DefinedFunction(signature, node);
     }
 
-    private DefinitionNode build(PipeContext pipe) {
-      DefinitionNode result = build(pipe.expression());
+    private Node build(PipeContext pipe) {
+      Node result = build(pipe.expression());
       List<CallContext> elements = pipe.call();
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
@@ -126,7 +126,7 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
-    private DefinitionNode build(ExpressionContext expression) {
+    private Node build(ExpressionContext expression) {
       if (expression.set() != null) {
         return build(expression.set());
       }
@@ -140,9 +140,9 @@ public class DefinedFunctionsCreator {
           + " without children.");
     }
 
-    private DefinitionNode build(SetContext list) {
+    private Node build(SetContext list) {
       List<SetElemContext> elems = list.setElem();
-      ImmutableList<DefinitionNode> elemNodes = build(elems);
+      ImmutableList<Node> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
         return new EmptySetNode(locationOf(list));
@@ -163,10 +163,10 @@ public class DefinedFunctionsCreator {
           + elemsType);
     }
 
-    private ImmutableList<DefinitionNode> build(List<SetElemContext> elems) {
-      Builder<DefinitionNode> builder = ImmutableList.builder();
+    private ImmutableList<Node> build(List<SetElemContext> elems) {
+      Builder<Node> builder = ImmutableList.builder();
       for (SetElemContext elem : elems) {
-        DefinitionNode node = build(elem);
+        Node node = build(elem);
         if (!Type.allowedForSetElem().contains(node.type())) {
           messages.report(new ForbiddenSetElemTypeError(locationOf(elem), node.type()));
         } else {
@@ -176,7 +176,7 @@ public class DefinedFunctionsCreator {
       return builder.build();
     }
 
-    private DefinitionNode build(SetElemContext elem) {
+    private Node build(SetElemContext elem) {
       if (elem.STRING() != null) {
         return buildStringNode(elem.STRING());
       }
@@ -187,11 +187,11 @@ public class DefinedFunctionsCreator {
           + " without children.");
     }
 
-    private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<DefinitionNode> elemNodes) {
+    private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<Node> elemNodes) {
       boolean success = true;
       Type firstType = elemNodes.get(0).type();
       for (int i = 0; i < elemNodes.size(); i++) {
-        DefinitionNode elemNode = elemNodes.get(i);
+        Node elemNode = elemNodes.get(i);
         if (elemNode.type() != firstType) {
           CodeLocation location = locationOf(elems.get(i));
           messages.report(new IncompatibleSetElemsError(location, firstType, i, elemNode.type()));
@@ -201,18 +201,18 @@ public class DefinedFunctionsCreator {
       return success;
     }
 
-    private DefinitionNode build(CallContext call) {
+    private Node build(CallContext call) {
       List<Argument> arguments = build(call.argList());
       return build(call, arguments);
     }
 
-    private DefinitionNode build(CallContext call, List<Argument> args) {
+    private Node build(CallContext call, List<Argument> args) {
       String functionName = call.functionName().getText();
 
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, DefinitionNode> namedArgs = argumentNodesCreator.createArgumentNodes(
+      Map<String, Node> namedArgs = argumentNodesCreator.createArgumentNodes(
           codeLocation, messages, function, args);
 
       if (namedArgs == null) {
@@ -247,7 +247,7 @@ public class DefinedFunctionsCreator {
     }
 
     private Argument build(int index, ArgContext arg) {
-      DefinitionNode node = build(arg.expression());
+      Node node = build(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
@@ -258,7 +258,7 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private DefinitionNode buildStringNode(TerminalNode stringToken) {
+    private Node buildStringNode(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {

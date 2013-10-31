@@ -7,7 +7,7 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class InvalidNode extends AbstractDefinitionNode {
+public class InvalidNode extends AbstractNode {
   private final Type type;
 
   public InvalidNode(Type type, CodeLocation codeLocation) {

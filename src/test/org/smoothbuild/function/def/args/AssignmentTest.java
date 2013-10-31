@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.function.base.Param;
-import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.common.Closure;
 
@@ -43,7 +43,7 @@ public class AssignmentTest {
 
   @Test
   public void incompatible_param_and_argument_throws_exception() throws Exception {
-    DefinitionNode argNode = mock(DefinitionNode.class);
+    Node argNode = mock(Node.class);
     Mockito.when(argNode.type()).thenReturn(FILE);
     argument = pipedArg(argNode, new FakeCodeLocation());
     try {
@@ -56,7 +56,7 @@ public class AssignmentTest {
 
   @Test
   public void param_and_argument_are_returned() throws Exception {
-    DefinitionNode argNode = mock(DefinitionNode.class);
+    Node argNode = mock(Node.class);
     Mockito.when(argNode.type()).thenReturn(STRING);
     String name = "name";
     param = param(STRING, name);

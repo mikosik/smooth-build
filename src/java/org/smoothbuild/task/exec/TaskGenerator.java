@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
 
@@ -14,7 +14,7 @@ public class TaskGenerator {
     this.taskExecutor = taskExecutor;
   }
 
-  public Result generateTask(DefinitionNode node) {
+  public Result generateTask(Node node) {
     LocatedTask task = node.generateTask(this);
     return new TaskContainer(taskExecutor, task);
   }

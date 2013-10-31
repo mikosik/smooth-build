@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 public class DefinedFunctionTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   Signature signature = testSignature();
-  DefinitionNode root = mock(DefinitionNode.class);
+  Node root = mock(Node.class);
   CodeLocation codeLocation = new FakeCodeLocation();
 
   DefinedFunction definedFunction = new DefinedFunction(signature, root);
@@ -48,7 +48,7 @@ public class DefinedFunctionTest {
   }
 
   @Test
-  public void generateTaskForwardsCallToRootDefinitionNode() throws Exception {
+  public void generateTaskForwardsCallToRootNode() throws Exception {
     LocatedTask task = mock(LocatedTask.class);
     when(root.generateTask(taskGenerator)).thenReturn(task);
 

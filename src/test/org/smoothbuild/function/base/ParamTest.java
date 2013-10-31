@@ -15,7 +15,7 @@ import java.util.Set;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
-import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.Node;
 
 import com.google.common.hash.HashCode;
 
@@ -65,7 +65,7 @@ public class ParamTest {
 
   @Test
   public void toPaddedString() throws Exception {
-    DefinitionNode node = mock(DefinitionNode.class);
+    Node node = mock(Node.class);
     when(node.type()).thenReturn(STRING);
 
     Param param = param(STRING, "myName", false);
@@ -76,7 +76,7 @@ public class ParamTest {
 
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
-    DefinitionNode node = mock(DefinitionNode.class);
+    Node node = mock(Node.class);
     when(node.type()).thenReturn(STRING);
 
     Param param = param(STRING, "myName", false);

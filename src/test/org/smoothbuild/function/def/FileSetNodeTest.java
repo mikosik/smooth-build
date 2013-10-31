@@ -29,10 +29,10 @@ public class FileSetNodeTest {
   Path path2 = path("my/file2");
 
   CodeLocation codeLocation = new FakeCodeLocation();
-  DefinitionNode node1 = mock(DefinitionNode.class);
-  DefinitionNode node2 = mock(DefinitionNode.class);
+  Node node1 = mock(Node.class);
+  Node node2 = mock(Node.class);
 
-  ImmutableList<DefinitionNode> elemNodes = ImmutableList.of(node1, node2);
+  ImmutableList<Node> elemNodes = ImmutableList.of(node1, node2);
   FileSetNode fileSetNode = new FileSetNode(elemNodes, codeLocation);
 
   @Test

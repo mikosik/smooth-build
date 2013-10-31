@@ -8,7 +8,7 @@ import org.smoothbuild.task.base.EmptySetTask;
 import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class EmptySetNode extends AbstractDefinitionNode {
+public class EmptySetNode extends AbstractNode {
   public EmptySetNode(CodeLocation codeLocation) {
     super(codeLocation);
   }

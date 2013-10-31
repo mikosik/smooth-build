@@ -11,25 +11,25 @@ import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
-public class AbstractDefinitionNodeTest {
+public class AbstractNodeTest {
   CodeLocation codeLocation;
-  MyDefinitionNode definitionNode;
+  MyNode node;
 
   @Test(expected = NullPointerException.class)
   public void null_code_location_is_forbidden() {
-    new MyDefinitionNode(null);
+    new MyNode(null);
   }
 
   @Test
   public void code_location_passed_to_constructor_is_returned() throws Exception {
     given(codeLocation = new FakeCodeLocation());
-    given(definitionNode = new MyDefinitionNode(codeLocation));
-    when(definitionNode.codeLocation());
+    given(node = new MyNode(codeLocation));
+    when(node.codeLocation());
     thenReturned(codeLocation);
   }
 
-  public class MyDefinitionNode extends AbstractDefinitionNode {
-    public MyDefinitionNode(CodeLocation codeLocation) {
+  public class MyNode extends AbstractNode {
+    public MyNode(CodeLocation codeLocation) {
       super(codeLocation);
     }
 
