@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableMap;
 public class ArgumentTest {
   String name = "name";
   LocatedNode node = mock(LocatedNode.class);
-  CodeLocation codeLocation = mock(CodeLocation.class);
+  CodeLocation codeLocation = new FakeCodeLocation();
 
   @Test(expected = IllegalArgumentException.class)
   public void negativeIndexIsForbiddenInNamedArg() {
@@ -137,10 +137,10 @@ public class ArgumentTest {
   public void toPaddedString() throws Exception {
     when(node.type()).thenReturn(STRING);
 
-    Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
+    Argument arg = namedArg(1, "myName", node, codeLocation);
     String actual = arg.toPaddedString(10, 13, 7);
 
-    assertThat(actual).isEqualTo("String    : myName        #1       [2]");
+    assertThat(actual).isEqualTo("String    : myName        #1       " + codeLocation.toString());
   }
 
   @Test
@@ -150,7 +150,7 @@ public class ArgumentTest {
     Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
     String actual = arg.toPaddedString(1, 1, 1);
 
-    assertThat(actual).isEqualTo("String: myName #1 [2]");
+    assertThat(actual).isEqualTo("String: myName #1 " + codeLocation.toString());
   }
 
   @Test
