@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.function.base;
 
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
@@ -16,7 +16,7 @@ public class FakeSignature {
 
   public static Signature testSignature(String name) {
     Type type = Type.STRING;
-    Name simpleName = simpleName(name);
+    Name simpleName = name(name);
     ImmutableList<Param> params = ImmutableList.of();
 
     return new Signature(type, simpleName, params);

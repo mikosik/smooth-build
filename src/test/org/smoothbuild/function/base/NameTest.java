@@ -3,7 +3,7 @@ package org.smoothbuild.function.base;
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.base.Name.isLegalName;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
@@ -25,7 +25,7 @@ public class NameTest {
 
   private static void doTestSimple(String name) {
     assertThat(isLegalName(name)).isTrue();
-    assertThat(simpleName(name).value()).isEqualTo(name);
+    assertThat(name(name).value()).isEqualTo(name);
   }
 
   @Test
@@ -66,7 +66,7 @@ public class NameTest {
   private static void assertIllegalSimpleName(String name) {
     assertThat(isLegalName(name)).isFalse();
     try {
-      simpleName(name);
+      name(name);
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -75,11 +75,11 @@ public class NameTest {
 
   @Test
   public void testToString() throws Exception {
-    assertThat(simpleName("abc").toString()).isEqualTo("'abc'");
+    assertThat(name("abc").toString()).isEqualTo("'abc'");
   }
 
   @Test
   public void testEquals() throws Exception {
-    EqualsVerifier.forExamples(simpleName("a"), simpleName("b"), simpleName("c")).suppress(NULL_FIELDS).verify();
+    EqualsVerifier.forExamples(name("a"), name("b"), name("c")).suppress(NULL_FIELDS).verify();
   }
 }

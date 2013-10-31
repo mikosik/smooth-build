@@ -2,7 +2,7 @@ package org.smoothbuild.command;
 
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.function.base.Name.isLegalName;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 
 import java.util.List;
 
@@ -26,6 +26,6 @@ public class CommandLineParser {
     if (!isLegalName(functionString)) {
       throw new ErrorMessageException(new IllegalFunctionNameError(functionString));
     }
-    return new CommandLineArguments(DEFAULT_SCRIPT, simpleName(functionString));
+    return new CommandLineArguments(DEFAULT_SCRIPT, name(functionString));
   }
 }

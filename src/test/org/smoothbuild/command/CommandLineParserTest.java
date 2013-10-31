@@ -2,7 +2,7 @@ package org.smoothbuild.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 
 import org.junit.Test;
 import org.smoothbuild.command.err.CommandLineError;
@@ -18,7 +18,7 @@ public class CommandLineParserTest {
   @Test
   public void functionToRun() {
     CommandLineArguments args = parser.parse(ImmutableList.of(functionName));
-    assertThat(args.functionToRun()).isEqualTo(simpleName(functionName));
+    assertThat(args.functionToRun()).isEqualTo(name(functionName));
   }
 
   public void functionToRunMustBePresent() throws Exception {

@@ -3,7 +3,6 @@ package org.smoothbuild.function.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.function.base.Name.simpleName;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.testing.function.base.ParamTester.params;
 
@@ -34,7 +33,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void name() {
-    Name name = simpleName("name");
+    Name name = Name.name("name");
     when(signature.name()).thenReturn(name);
 
     assertThat(function.name()).isEqualTo(name);

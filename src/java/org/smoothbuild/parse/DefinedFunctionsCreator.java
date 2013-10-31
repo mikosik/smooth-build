@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
@@ -96,7 +96,7 @@ public class DefinedFunctionsCreator {
     public Map<Name, DefinedFunction> run() {
       for (String name : sorted) {
         DefinedFunction definedFunction = build(functionContexts.get(name));
-        functions.put(simpleName(name), definedFunction);
+        functions.put(name(name), definedFunction);
       }
       return functions;
     }
@@ -107,7 +107,7 @@ public class DefinedFunctionsCreator {
       Type type = node.type();
       String name = function.functionName().getText();
       ImmutableList<Param> params = ImmutableList.of();
-      Signature signature = new Signature(type, simpleName(name), params);
+      Signature signature = new Signature(type, name(name), params);
 
       return new DefinedFunction(signature, node);
     }
@@ -229,7 +229,7 @@ public class DefinedFunctionsCreator {
 
       Function function = symbolTable.getFunction(functionName);
       if (function == null) {
-        return functions.get(simpleName(functionName));
+        return functions.get(name(functionName));
       } else {
         return function;
       }
