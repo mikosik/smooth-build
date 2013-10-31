@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class ArgumentTest {
   String name = "name";
-  DefinitionNode node = mock(DefinitionNode.class);
+  Node node = mock(Node.class);
   CodeLocation codeLocation = mock(CodeLocation.class);
 
   @Test(expected = IllegalArgumentException.class)
@@ -45,7 +45,7 @@ public class ArgumentTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullDefinitionNodeIsForbiddenInNamedArg() {
+  public void nullNodeIsForbiddenInNamedArg() {
     namedArg(1, name, null, codeLocation);
   }
 
@@ -65,7 +65,7 @@ public class ArgumentTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullDefinitionNodeIsForbiddenInNamelessArg() {
+  public void nullNodeIsForbiddenInNamelessArg() {
     namelessArg(1, null, codeLocation);
   }
 
@@ -75,7 +75,7 @@ public class ArgumentTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullDefinitionNodeIsForbiddenInPipedArg() {
+  public void nullNodeIsForbiddenInPipedArg() {
     pipedArg(null, codeLocation);
   }
 
@@ -85,7 +85,7 @@ public class ArgumentTest {
   }
 
   @Test
-  public void typeReturnsTypeOfDefinitionNode() throws Exception {
+  public void typeReturnsTypeOfNode() throws Exception {
     when(node.type()).thenReturn(FILE);
     Type arg = namedArg(1, name, node, codeLocation).type();
     assertThat(arg).isEqualTo(FILE);
@@ -135,7 +135,7 @@ public class ArgumentTest {
 
   @Test
   public void toPaddedString() throws Exception {
-    DefinitionNode node = mock(DefinitionNode.class);
+    Node node = mock(Node.class);
     when(node.type()).thenReturn(STRING);
 
     Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
@@ -146,7 +146,7 @@ public class ArgumentTest {
 
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
-    DefinitionNode node = mock(DefinitionNode.class);
+    Node node = mock(Node.class);
     when(node.type()).thenReturn(STRING);
 
     Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
@@ -190,7 +190,7 @@ public class ArgumentTest {
   }
 
   private static Argument named(String name) {
-    return Argument.namedArg(1, name, mock(DefinitionNode.class), new FakeCodeLocation());
+    return Argument.namedArg(1, name, mock(Node.class), new FakeCodeLocation());
   }
 
   private static Argument nameless() {
@@ -198,7 +198,7 @@ public class ArgumentTest {
   }
 
   private static Argument nameless(Type type) {
-    DefinitionNode node = mock(DefinitionNode.class);
+    Node node = mock(Node.class);
     when(node.type()).thenReturn(type);
     return Argument.namelessArg(1, node, new FakeCodeLocation());
   }

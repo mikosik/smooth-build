@@ -18,10 +18,10 @@ import com.google.common.base.Preconditions;
  * (as opposed to {@link org.smoothbuild.function.nativ.NativeFunction} which is
  * implemented completely in java language).
  */
-public class DefinedFunction extends AbstractFunction implements DefinitionNode {
-  private final DefinitionNode root;
+public class DefinedFunction extends AbstractFunction implements Node {
+  private final Node root;
 
-  public DefinedFunction(Signature signature, DefinitionNode root) {
+  public DefinedFunction(Signature signature, Node root) {
     super(signature);
     this.root = checkNotNull(root);
   }

@@ -26,7 +26,7 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.function.def.args.err.TypeMismatchError;
@@ -62,11 +62,11 @@ public class ArgumentNodesCreatorTest {
     Argument a1 = argument(p1.name(), node(type));
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1, p2), list(a1));
+    Map<String, Node> result = create(params(p1, p2), list(a1));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
+    assertThat(result.get(p1.name())).isSameAs(a1.node());
     assertThat(result.size()).isEqualTo(1);
   }
 
@@ -85,7 +85,7 @@ public class ArgumentNodesCreatorTest {
     Argument a1 = argument(p1.name(), emptySetNode());
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1, p2), list(a1));
+    Map<String, Node> result = create(params(p1, p2), list(a1));
 
     // then
     messages.assertNoProblems();
@@ -243,7 +243,7 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(STRING, "name1");
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1), list());
+    Map<String, Node> result = create(params(p1), list());
 
     // then
     messages.assertNoProblems();
@@ -288,11 +288,11 @@ public class ArgumentNodesCreatorTest {
     Argument a1 = argument(node(type));
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1));
+    Map<String, Node> result = create(params(p1, p2, p3), list(a1));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p2.name())).isSameAs(a1.definitionNode());
+    assertThat(result.get(p2.name())).isSameAs(a1.node());
     assertThat(result.size()).isEqualTo(1);
   }
 
@@ -315,7 +315,7 @@ public class ArgumentNodesCreatorTest {
     Argument a1 = argument(node(EMPTY_SET));
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1));
+    Map<String, Node> result = create(params(p1, p2, p3), list(a1));
 
     // then
     messages.assertNoProblems();
@@ -343,13 +343,13 @@ public class ArgumentNodesCreatorTest {
     Argument a3 = argument(p3.name(), node(type));
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1, a2, a3));
+    Map<String, Node> result = create(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
-    assertThat(result.get(p2.name())).isSameAs(a2.definitionNode());
-    assertThat(result.get(p3.name())).isSameAs(a3.definitionNode());
+    assertThat(result.get(p1.name())).isSameAs(a1.node());
+    assertThat(result.get(p2.name())).isSameAs(a2.node());
+    assertThat(result.get(p3.name())).isSameAs(a3.node());
     assertThat(result.size()).isEqualTo(3);
   }
 
@@ -382,12 +382,12 @@ public class ArgumentNodesCreatorTest {
     Argument a2 = argument(node(type2));
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1, p2), list(a1, a2));
+    Map<String, Node> result = create(params(p1, p2), list(a1, a2));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
-    assertThat(result.get(p2.name())).isSameAs(a2.definitionNode());
+    assertThat(result.get(p1.name())).isSameAs(a1.node());
+    assertThat(result.get(p2.name())).isSameAs(a2.node());
     assertThat(result.size()).isEqualTo(2);
   }
 
@@ -409,13 +409,13 @@ public class ArgumentNodesCreatorTest {
     Argument a3 = argument(p3.name(), node(type));
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1, p2, p3), list(a1, a2, a3));
+    Map<String, Node> result = create(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
+    assertThat(result.get(p1.name())).isSameAs(a1.node());
     assertThatNodeHasEmptySet(result.get(p2.name()));
-    assertThat(result.get(p3.name())).isSameAs(a3.definitionNode());
+    assertThat(result.get(p3.name())).isSameAs(a3.node());
     assertThat(result.size()).isEqualTo(3);
   }
 
@@ -435,11 +435,11 @@ public class ArgumentNodesCreatorTest {
     Argument a2 = argument(node(EMPTY_SET));
 
     // when
-    Map<String, DefinitionNode> result = create(params(p1, p2), list(a1, a2));
+    Map<String, Node> result = create(params(p1, p2), list(a1, a2));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.definitionNode());
+    assertThat(result.get(p1.name())).isSameAs(a1.node());
     assertThatNodeHasEmptySet(result.get(p2.name()));
     assertThat(result.size()).isEqualTo(2);
   }
@@ -533,21 +533,21 @@ public class ArgumentNodesCreatorTest {
     messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
-  private static Argument argument(DefinitionNode node) {
+  private static Argument argument(Node node) {
     return namelessArg(1, node, new FakeCodeLocation());
   }
 
-  private static Argument argument(String name, DefinitionNode node) {
+  private static Argument argument(String name, Node node) {
     return namedArg(1, name, node, new FakeCodeLocation());
   }
 
-  private static DefinitionNode node(Type type) {
-    DefinitionNode node = mock(DefinitionNode.class);
+  private static Node node(Type type) {
+    Node node = mock(Node.class);
     when(node.type()).thenReturn(type);
     return node;
   }
 
-  private Map<String, DefinitionNode> create(Iterable<Param> params, List<Argument> args) {
+  private Map<String, Node> create(Iterable<Param> params, List<Argument> args) {
     ArgumentNodesCreator creator = new ArgumentNodesCreator();
     try {
       return creator.createArgumentNodes(new FakeCodeLocation(), messages, function(params), args);
@@ -565,15 +565,15 @@ public class ArgumentNodesCreatorTest {
     return newArrayList(args);
   }
 
-  private static void assertThatNodeHasEmptySet(DefinitionNode node) {
+  private static void assertThatNodeHasEmptySet(Node node) {
     TaskGenerator taskGenerator = mock(TaskGenerator.class);
     Task task = node.generateTask(taskGenerator);
     Value result = task.execute(new FakeSandbox());
     assertThat((Iterable<?>) result).isEmpty();
   }
 
-  private static DefinitionNode emptySetNode() {
-    DefinitionNode node = mock(DefinitionNode.class);
+  private static Node emptySetNode() {
+    Node node = mock(Node.class);
     when(node.type()).thenReturn(EMPTY_SET);
     return node;
   }

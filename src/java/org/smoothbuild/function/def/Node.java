@@ -5,7 +5,7 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public interface DefinitionNode {
+public interface Node {
 
   public CodeLocation codeLocation();
 

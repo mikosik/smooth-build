@@ -7,10 +7,10 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public abstract class AbstractDefinitionNode implements DefinitionNode {
+public abstract class AbstractNode implements Node {
   private final CodeLocation codeLocation;
 
-  public AbstractDefinitionNode(CodeLocation codeLocation) {
+  public AbstractNode(CodeLocation codeLocation) {
     this.codeLocation = checkNotNull(codeLocation);
   }
 

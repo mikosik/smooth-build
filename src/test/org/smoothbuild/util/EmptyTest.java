@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-import org.smoothbuild.function.def.DefinitionNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Result;
 
@@ -49,22 +49,22 @@ public class EmptyTest {
     assertThat(Empty.stringTaskResultMap()).isSameAs(Empty.stringTaskResultMap());
   }
 
-  // definitionNodeList()
+  // nodeList()
 
   @Test
-  public void definitionNodeListIsEmpty() {
-    assertThat(Empty.definitionNodeList()).isEmpty();
+  public void nodeListIsEmpty() {
+    assertThat(Empty.nodeList()).isEmpty();
   }
 
   @Test
-  public void emptyDefinitionNodeListIsImmutable() {
+  public void emptyNodeListIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableList<DefinitionNode> list = Empty.definitionNodeList();
+    ImmutableList<Node> list = Empty.nodeList();
   }
 
   @Test
-  public void emptyDefinitionNodeAlwaysReturnsTheSameObject() {
-    assertThat(Empty.definitionNodeList()).isSameAs(Empty.definitionNodeList());
+  public void emptyNodeAlwaysReturnsTheSameObject() {
+    assertThat(Empty.nodeList()).isSameAs(Empty.nodeList());
   }
 
   // nullToEmpty

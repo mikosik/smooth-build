@@ -31,7 +31,7 @@ public class CallNodeTest {
     when(function.type()).thenReturn(Type.STRING);
     when(function.name()).thenReturn(name("function"));
 
-    ImmutableMap<String, DefinitionNode> empty = ImmutableMap.<String, DefinitionNode> of();
+    ImmutableMap<String, Node> empty = ImmutableMap.<String, Node> of();
 
     assertThat(new CallNode(function, codeLocation, empty).type()).isEqualTo(Type.STRING);
   }
@@ -39,14 +39,14 @@ public class CallNodeTest {
   @Test
   public void generateTask() throws Exception {
     Function function = mock(Function.class);
-    DefinitionNode node = mock(DefinitionNode.class);
+    Node node = mock(Node.class);
     LocatedTask task = mock(LocatedTask.class);
     when(function.name()).thenReturn(name("function"));
 
     Result result = new FakeResult(new FakeString("arg"));
 
     String name = "name";
-    Map<String, DefinitionNode> argNodes = ImmutableMap.of(name, node);
+    Map<String, Node> argNodes = ImmutableMap.of(name, node);
 
     when(taskGenerator.generateTask(node)).thenReturn(result);
     when(function.generateTask(taskGenerator, ImmutableMap.of(name, result), codeLocation))
