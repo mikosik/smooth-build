@@ -3,7 +3,6 @@ package org.smoothbuild.testing.task.exec;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.db.FakeObjectDb;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 
 public class FakeSandbox extends SandboxImpl {
@@ -20,7 +19,7 @@ public class FakeSandbox extends SandboxImpl {
   }
 
   public FakeSandbox(FakeFileSystem fileSystem, FakeMessageGroup messageGroup, FakeObjectDb objectDb) {
-    super(fileSystem, objectDb, new FakeCodeLocation(), messageGroup);
+    super(fileSystem, objectDb, messageGroup);
     this.fileSystem = fileSystem;
     this.messageGroup = messageGroup;
     this.objectDb = objectDb;

@@ -3,9 +3,7 @@ package org.smoothbuild.task.exec;
 import org.smoothbuild.db.ValueDb;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.WrappedCodeMessage;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Sandbox;
@@ -17,19 +15,16 @@ import com.google.common.base.Strings;
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MessageGroup messageGroup;
-  private final CodeLocation codeLocation;
   private final ValueDb valueDb;
 
   public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, LocatedTask task) {
-    this(fileSystem, valueDb, task.codeLocation(), createMessages(task));
+    this(fileSystem, valueDb, createMessages(task));
   }
 
-  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, CodeLocation codeLocation,
-      MessageGroup messageGroup) {
+  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, MessageGroup messageGroup) {
     this.projectFileSystem = fileSystem;
     this.valueDb = valueDb;
     this.messageGroup = messageGroup;
-    this.codeLocation = codeLocation;
   }
 
   @Override
@@ -57,7 +52,7 @@ public class SandboxImpl implements Sandbox {
     // will be possible when each Task will have parent field pointing in
     // direction to nearest root node (build run can have more than one
     // task-to-run [soon]).
-    messageGroup.report(new WrappedCodeMessage(message, codeLocation));
+    messageGroup.report(message);
   }
 
   public MessageGroup messageGroup() {
