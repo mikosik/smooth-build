@@ -38,6 +38,6 @@ public class CodeLocation {
 
   @Override
   public String toString() {
-    return "[" + DEFAULT_SCRIPT.value() + ":" + Integer.toString(line) + "]";
+    return "[ " + DEFAULT_SCRIPT.value() + ":" + Integer.toString(line) + " ]";
   }
 }
