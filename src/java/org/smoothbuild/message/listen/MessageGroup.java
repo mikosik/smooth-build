@@ -17,7 +17,7 @@ public class MessageGroup implements Iterable<Message> {
   private boolean containsErrors;
 
   public MessageGroup(String name) {
-    this.name = name;
+    this.name = checkNotNull(name);
     this.messages = Lists.newArrayList();
   }
 

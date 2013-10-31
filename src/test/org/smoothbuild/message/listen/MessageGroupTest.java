@@ -10,6 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.message.message.Message;
+import org.testory.common.Closure;
 
 public class MessageGroupTest {
   String name = "name";
@@ -17,6 +18,21 @@ public class MessageGroupTest {
   Message error = new Message(ERROR, "message");
 
   MessageGroup messageGroup = new MessageGroup(name);
+
+  @Test
+  public void null_name_is_forbidden() throws Exception {
+    when($messageGroup(null));
+    thenThrown(NullPointerException.class);
+  }
+
+  private Closure $messageGroup(final String name) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return new MessageGroup(name);
+      }
+    };
+  }
 
   @Test
   public void name() throws Exception {
