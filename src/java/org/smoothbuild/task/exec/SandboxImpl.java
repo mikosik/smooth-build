@@ -17,8 +17,8 @@ public class SandboxImpl implements Sandbox {
   private final CodeLocation codeLocation;
   private final ValueDb valueDb;
 
-  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, String name, CodeLocation codeLocation) {
-    this(fileSystem, valueDb, codeLocation, createMessages(name));
+  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, String taskName, CodeLocation codeLocation) {
+    this(fileSystem, valueDb, codeLocation, createMessages(taskName));
   }
 
   public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, CodeLocation codeLocation,
@@ -61,7 +61,7 @@ public class SandboxImpl implements Sandbox {
     return messageGroup;
   }
 
-  private static MessageGroup createMessages(String name) {
-    return new MessageGroup(name);
+  private static MessageGroup createMessages(String taskName) {
+    return new MessageGroup(taskName);
   }
 }
