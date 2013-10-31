@@ -8,6 +8,7 @@ import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
@@ -31,7 +32,7 @@ public class SandboxImplTest {
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
   CodeLocation codeLocation = new FakeCodeLocation();
-  Task task = mock(Task.class);
+  Task task = task();
 
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeObjectDb objectDb = new FakeObjectDb(fileSystem);
@@ -76,5 +77,11 @@ public class SandboxImplTest {
     Message errorMessage = new Message(ERROR, "message");
     sandbox.report(errorMessage);
     assertThat(sandbox.messageGroup()).containsOnly(errorMessage);
+  }
+
+  private static Task task() {
+    Task task = mock(Task.class);
+    Mockito.when(task.name()).thenReturn("name");
+    return task;
   }
 }
