@@ -12,6 +12,8 @@ import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringSetBuilder;
 import org.smoothbuild.task.base.LocatedTask;
 
+import com.google.common.base.Strings;
+
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
   private final MessageGroup messageGroup;
@@ -19,7 +21,7 @@ public class SandboxImpl implements Sandbox {
   private final ValueDb valueDb;
 
   public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, LocatedTask task) {
-    this(fileSystem, valueDb, task.codeLocation(), createMessages(task.name()));
+    this(fileSystem, valueDb, task.codeLocation(), createMessages(task));
   }
 
   public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, CodeLocation codeLocation,
@@ -62,7 +64,8 @@ public class SandboxImpl implements Sandbox {
     return messageGroup;
   }
 
-  private static MessageGroup createMessages(String taskName) {
-    return new MessageGroup(taskName);
+  private static MessageGroup createMessages(LocatedTask locatedTask) {
+    String name = Strings.padEnd(locatedTask.name(), 15, ' ');
+    return new MessageGroup(name + locatedTask.codeLocation());
   }
 }
