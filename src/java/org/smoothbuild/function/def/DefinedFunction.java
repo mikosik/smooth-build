@@ -18,10 +18,10 @@ import com.google.common.base.Preconditions;
  * (as opposed to {@link org.smoothbuild.function.nativ.NativeFunction} which is
  * implemented completely in java language).
  */
-public class DefinedFunction extends AbstractFunction implements Node {
-  private final Node root;
+public class DefinedFunction extends AbstractFunction implements LocatedNode {
+  private final LocatedNode root;
 
-  public DefinedFunction(Signature signature, Node root) {
+  public DefinedFunction(Signature signature, LocatedNode root) {
     super(signature);
     this.root = checkNotNull(root);
   }
@@ -37,10 +37,5 @@ public class DefinedFunction extends AbstractFunction implements Node {
   @Override
   public LocatedTask generateTask(TaskGenerator taskGenerator) {
     return root.generateTask(taskGenerator);
-  }
-
-  @Override
-  public CodeLocation codeLocation() {
-    return root.codeLocation();
   }
 }

@@ -12,13 +12,14 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class CallNode extends AbstractNode {
+public class CallNode implements LocatedNode {
   private final Function function;
-  private final ImmutableMap<String, Node> args;
+  private final ImmutableMap<String, LocatedNode> args;
+  private final CodeLocation codeLocation;
 
-  public CallNode(Function function, CodeLocation codeLocation, Map<String, Node> args) {
-    super(codeLocation);
+  public CallNode(Function function, CodeLocation codeLocation, Map<String, LocatedNode> args) {
     this.function = function;
+    this.codeLocation = codeLocation;
     this.args = ImmutableMap.copyOf(args);
   }
 
@@ -30,12 +31,12 @@ public class CallNode extends AbstractNode {
   @Override
   public LocatedTask generateTask(TaskGenerator taskGenerator) {
     Builder<String, Result> builder = ImmutableMap.builder();
-    for (Map.Entry<String, Node> entry : args.entrySet()) {
+    for (Map.Entry<String, LocatedNode> entry : args.entrySet()) {
       String argName = entry.getKey();
       Result dependency = taskGenerator.generateTask(entry.getValue());
       builder.put(argName, dependency);
     }
     ImmutableMap<String, Result> dependencies = builder.build();
-    return function.generateTask(taskGenerator, dependencies, codeLocation());
+    return function.generateTask(taskGenerator, dependencies, codeLocation);
   }
 }

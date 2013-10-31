@@ -10,13 +10,11 @@ import static org.smoothbuild.testing.plugin.FileSetMatchers.containsFileContain
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -28,12 +26,11 @@ public class FileSetNodeTest {
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
 
-  CodeLocation codeLocation = new FakeCodeLocation();
-  Node node1 = mock(Node.class);
-  Node node2 = mock(Node.class);
+  LocatedNode node1 = mock(LocatedNode.class);
+  LocatedNode node2 = mock(LocatedNode.class);
 
-  ImmutableList<Node> elemNodes = ImmutableList.of(node1, node2);
-  FileSetNode fileSetNode = new FileSetNode(elemNodes, codeLocation);
+  ImmutableList<LocatedNode> elemNodes = ImmutableList.of(node1, node2);
+  FileSetNode fileSetNode = new FileSetNode(elemNodes);
 
   @Test
   public void type() {

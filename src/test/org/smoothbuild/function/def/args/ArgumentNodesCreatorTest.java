@@ -26,6 +26,7 @@ import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.def.LocatedNode;
 import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
@@ -62,7 +63,7 @@ public class ArgumentNodesCreatorTest {
     Argument a1 = argument(p1.name(), node(type));
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1));
+    Map<String, LocatedNode> result = create(params(p1, p2), list(a1));
 
     // then
     messages.assertNoProblems();
@@ -85,7 +86,7 @@ public class ArgumentNodesCreatorTest {
     Argument a1 = argument(p1.name(), emptySetNode());
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1));
+    Map<String, LocatedNode> result = create(params(p1, p2), list(a1));
 
     // then
     messages.assertNoProblems();
@@ -243,7 +244,7 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(STRING, "name1");
 
     // when
-    Map<String, Node> result = create(params(p1), list());
+    Map<String, LocatedNode> result = create(params(p1), list());
 
     // then
     messages.assertNoProblems();
@@ -288,7 +289,7 @@ public class ArgumentNodesCreatorTest {
     Argument a1 = argument(node(type));
 
     // when
-    Map<String, Node> result = create(params(p1, p2, p3), list(a1));
+    Map<String, LocatedNode> result = create(params(p1, p2, p3), list(a1));
 
     // then
     messages.assertNoProblems();
@@ -315,7 +316,7 @@ public class ArgumentNodesCreatorTest {
     Argument a1 = argument(node(EMPTY_SET));
 
     // when
-    Map<String, Node> result = create(params(p1, p2, p3), list(a1));
+    Map<String, LocatedNode> result = create(params(p1, p2, p3), list(a1));
 
     // then
     messages.assertNoProblems();
@@ -343,7 +344,7 @@ public class ArgumentNodesCreatorTest {
     Argument a3 = argument(p3.name(), node(type));
 
     // when
-    Map<String, Node> result = create(params(p1, p2, p3), list(a1, a2, a3));
+    Map<String, LocatedNode> result = create(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
@@ -382,7 +383,7 @@ public class ArgumentNodesCreatorTest {
     Argument a2 = argument(node(type2));
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1, a2));
+    Map<String, LocatedNode> result = create(params(p1, p2), list(a1, a2));
 
     // then
     messages.assertNoProblems();
@@ -409,7 +410,7 @@ public class ArgumentNodesCreatorTest {
     Argument a3 = argument(p3.name(), node(type));
 
     // when
-    Map<String, Node> result = create(params(p1, p2, p3), list(a1, a2, a3));
+    Map<String, LocatedNode> result = create(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
@@ -435,7 +436,7 @@ public class ArgumentNodesCreatorTest {
     Argument a2 = argument(node(EMPTY_SET));
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1, a2));
+    Map<String, LocatedNode> result = create(params(p1, p2), list(a1, a2));
 
     // then
     messages.assertNoProblems();
@@ -533,21 +534,21 @@ public class ArgumentNodesCreatorTest {
     messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
-  private static Argument argument(Node node) {
+  private static Argument argument(LocatedNode node) {
     return namelessArg(1, node, new FakeCodeLocation());
   }
 
-  private static Argument argument(String name, Node node) {
+  private static Argument argument(String name, LocatedNode node) {
     return namedArg(1, name, node, new FakeCodeLocation());
   }
 
-  private static Node node(Type type) {
-    Node node = mock(Node.class);
+  private static LocatedNode node(Type type) {
+    LocatedNode node = mock(LocatedNode.class);
     when(node.type()).thenReturn(type);
     return node;
   }
 
-  private Map<String, Node> create(Iterable<Param> params, List<Argument> args) {
+  private Map<String, LocatedNode> create(Iterable<Param> params, List<Argument> args) {
     ArgumentNodesCreator creator = new ArgumentNodesCreator();
     try {
       return creator.createArgumentNodes(new FakeCodeLocation(), messages, function(params), args);
@@ -572,8 +573,8 @@ public class ArgumentNodesCreatorTest {
     assertThat((Iterable<?>) result).isEmpty();
   }
 
-  private static Node emptySetNode() {
-    Node node = mock(Node.class);
+  private static LocatedNode emptySetNode() {
+    LocatedNode node = mock(LocatedNode.class);
     when(node.type()).thenReturn(EMPTY_SET);
     return node;
   }

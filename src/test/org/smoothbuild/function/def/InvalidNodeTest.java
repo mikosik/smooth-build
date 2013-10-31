@@ -8,15 +8,14 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class InvalidNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  InvalidNode invalidNode = new InvalidNode(Type.STRING, new FakeCodeLocation());
+  InvalidNode invalidNode = new InvalidNode(Type.STRING);
 
   @Test(expected = NullPointerException.class)
   public void null_type_is_forbidden() throws Exception {
-    new InvalidNode(null, new FakeCodeLocation());
+    new InvalidNode(null);
   }
 
   @Test

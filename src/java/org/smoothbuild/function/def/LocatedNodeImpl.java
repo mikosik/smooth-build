@@ -7,21 +7,22 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public abstract class AbstractNode implements Node {
+public class LocatedNodeImpl implements LocatedNode {
+  private final Node node;
   private final CodeLocation codeLocation;
 
-  public AbstractNode(CodeLocation codeLocation) {
+  public LocatedNodeImpl(Node node, CodeLocation codeLocation) {
+    this.node = checkNotNull(node);
     this.codeLocation = checkNotNull(codeLocation);
   }
 
   @Override
-  public CodeLocation codeLocation() {
-    return codeLocation;
+  public LocatedTask generateTask(TaskGenerator taskGenerator) {
+    return new LocatedTask(node.generateTask(taskGenerator), codeLocation);
   }
 
   @Override
-  public abstract Type type();
-
-  @Override
-  public abstract LocatedTask generateTask(TaskGenerator taskGenerator);
+  public Type type() {
+    return node.type();
+  }
 }
