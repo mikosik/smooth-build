@@ -7,7 +7,6 @@ import static org.smoothbuild.message.message.MessageType.WARNING;
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.WrappedCodeMessage;
 
 public class FakeMessageGroupTest {
   FakeMessageGroup testingProblemListener = new FakeMessageGroup();
@@ -83,27 +82,6 @@ public class FakeMessageGroupTest {
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneProblemExistsFailsWhenOneProblemOfWrongTypeExists() {
     testingProblemListener.report(new Message(WARNING, "message"));
-
-    testingProblemListener.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test
-  public void assertingThatOnlyOneProblemExistsSucceedsWhenWrappedOneExists() {
-    testingProblemListener.report(new WrappedCodeMessage(new MyProblem(), location));
-    testingProblemListener.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assertingThatOnlyOneProblemExistsFailsWhenTwoWrappedProblemsExist() {
-    testingProblemListener.report(new WrappedCodeMessage(new MyProblem(), location));
-    testingProblemListener.report(new WrappedCodeMessage(new MyProblem(), location));
-
-    testingProblemListener.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assertingThatOnlyOneProblemExistsFailsWhenOneWrappedProblemOfWrongTypeExists() {
-    testingProblemListener.report(new WrappedCodeMessage(new Message(WARNING, ""), location));
 
     testingProblemListener.assertOnlyProblem(MyProblem.class);
   }

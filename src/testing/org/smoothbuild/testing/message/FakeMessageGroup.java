@@ -7,7 +7,6 @@ import java.util.List;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
-import org.smoothbuild.message.message.WrappedCodeMessage;
 
 import com.google.common.collect.Lists;
 
@@ -45,12 +44,7 @@ public class FakeMessageGroup extends MessageGroup {
       throw new AssertionError("Expected one problem,\nbut got:\n" + problems.toString());
     }
     Message onlyProblem = problems.get(0);
-    if (onlyProblem instanceof WrappedCodeMessage) {
-      Message wrapped = ((WrappedCodeMessage) onlyProblem).wrappedMessage();
-      assertThat(wrapped).isInstanceOf(klass);
-    } else {
-      assertThat(onlyProblem).isInstanceOf(klass);
-    }
+    assertThat(onlyProblem).isInstanceOf(klass);
   }
 
   public void assertNoProblems() {

@@ -7,7 +7,6 @@ import static org.smoothbuild.message.message.MessageType.WARNING;
 import org.junit.Test;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.WrappedCodeMessage;
 
 public class FakeUserConsoleTest {
   FakeUserConsole fakeUserConsole = new FakeUserConsole();
@@ -83,27 +82,6 @@ public class FakeUserConsoleTest {
   @Test(expected = AssertionError.class)
   public void assertingThatOnlyOneProblemExistsFailsWhenOneProblemOfWrongTypeExists() {
     fakeUserConsole.report(new Message(WARNING, "message"));
-
-    fakeUserConsole.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test
-  public void assertingThatOnlyOneProblemExistsSucceedsWhenWrappedOneExists() {
-    fakeUserConsole.report(new WrappedCodeMessage(new MyProblem(), location));
-    fakeUserConsole.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assertingThatOnlyOneProblemExistsFailsWhenTwoWrappedProblemsExist() {
-    fakeUserConsole.report(new WrappedCodeMessage(new MyProblem(), location));
-    fakeUserConsole.report(new WrappedCodeMessage(new MyProblem(), location));
-
-    fakeUserConsole.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assertingThatOnlyOneProblemExistsFailsWhenOneWrappedProblemOfWrongTypeExists() {
-    fakeUserConsole.report(new WrappedCodeMessage(new Message(WARNING, ""), location));
 
     fakeUserConsole.assertOnlyProblem(MyProblem.class);
   }
