@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.testing.function.base.ParamTester.params;
@@ -67,9 +67,9 @@ public class NativeFunctionFactoryTest {
   public void testSignature() throws Exception {
     Function function = nativeFunctionFactory.create(MyFunction.class, false);
 
-    assertThat(function.name()).isEqualTo(simpleName("myFunction"));
+    assertThat(function.name()).isEqualTo(name("myFunction"));
     Signature signature = function.signature();
-    assertThat(signature.name()).isEqualTo(simpleName("myFunction"));
+    assertThat(signature.name()).isEqualTo(name("myFunction"));
     assertThat(signature.type()).isEqualTo(Type.STRING);
 
     Param paramA = param(STRING, "stringA");

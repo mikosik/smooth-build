@@ -7,7 +7,7 @@ public class Name {
 
   private final String value;
 
-  public static Name simpleName(String value) {
+  public static Name name(String value) {
     if (!isLegalName(value)) {
       throw new IllegalArgumentException("Illegal function name: '" + value + "'");
     }

@@ -4,7 +4,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.function.base.Type.FILE;
@@ -54,7 +54,7 @@ public class AmbiguousNamelessArgsErrorTest {
     availableParams.add(param(FILE_SET, "param4"));
     availableParams.add(param(STRING_SET, "param6"));
 
-    AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(simpleName("func"),
+    AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(name("func"),
         assignmentList, availableArgs, availableParams);
 
     StringBuilder builder = new StringBuilder();

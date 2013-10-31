@@ -1,7 +1,7 @@
 package org.smoothbuild.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.testing.function.base.ParamTester.params;
@@ -23,7 +23,7 @@ public class SignatureFactoryTest {
 
     Signature signature = SignatureFactory.create(method, Params.class);
     assertThat(signature.type()).isEqualTo(FILE);
-    assertThat(signature.name()).isEqualTo(simpleName("function"));
+    assertThat(signature.name()).isEqualTo(name("function"));
     assertThat(signature.params()).isEqualTo(params(param(FILE, "param1", false)));
   }
 

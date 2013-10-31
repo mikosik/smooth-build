@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.testory.Testory.given;
@@ -62,7 +62,7 @@ public class NativeCallHasherTest {
 
   private static NativeFunction createFunction(Iterable<Param> params, String name) {
     NativeFunction function = mock(NativeFunction.class);
-    Signature signature = new Signature(STRING, simpleName(name), params);
+    Signature signature = new Signature(STRING, name(name), params);
     Mockito.when(function.signature()).thenReturn(signature);
     Mockito.when(function.params()).thenReturn(signature.params());
     return function;

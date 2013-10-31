@@ -4,7 +4,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.function.base.Type.FILE;
@@ -557,7 +557,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   private static Function function(Iterable<Param> params) {
-    Signature signature = new Signature(STRING, simpleName("name"), params);
+    Signature signature = new Signature(STRING, name("name"), params);
     return new NativeFunction(mock(ResultDb.class), signature, mock(Invoker.class));
   }
 

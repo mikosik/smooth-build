@@ -1,7 +1,7 @@
 package org.smoothbuild.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 
@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class SignatureTest {
   Type type = Type.STRING;
-  Name name = simpleName("name");
+  Name name = name("name");
   ImmutableList<Param> params = ImmutableList.of();
 
   @Test(expected = NullPointerException.class)

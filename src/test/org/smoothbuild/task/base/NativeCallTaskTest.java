@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.function.base.Name.simpleName;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.VOID;
@@ -81,7 +81,7 @@ public class NativeCallTaskTest {
   @Test
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
-    Signature signature = new Signature(VOID, simpleName("name"), params);
+    Signature signature = new Signature(VOID, name("name"), params);
     function1 = new NativeFunction(resultDb, signature, invoker);
     nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap());
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
