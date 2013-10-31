@@ -3,6 +3,7 @@ package org.smoothbuild.task.base;
 import static org.mockito.Mockito.mock;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.testing.message.FakeCodeLocation;
+import org.testory.common.Closure;
 
 public class LocatedTaskTest {
   String name = "name";
@@ -21,6 +23,27 @@ public class LocatedTaskTest {
   CodeLocation codeLocation = new FakeCodeLocation();
 
   LocatedTask locatedTask;
+
+  @Test
+  public void null_task_is_forbidden() throws Exception {
+    when($locatedTask(null, codeLocation));
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void null_code_location_is_forbidden() throws Exception {
+    when($locatedTask(task, null));
+    thenThrown(NullPointerException.class);
+  }
+
+  private static Closure $locatedTask(final Task task, final CodeLocation codeLocation) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return new LocatedTask(task, codeLocation);
+      }
+    };
+  }
 
   @Test
   public void name_returns_value_from_wrapped_task_name() throws Exception {
