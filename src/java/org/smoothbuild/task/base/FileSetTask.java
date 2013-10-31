@@ -23,6 +23,11 @@ public class FileSetTask implements Task {
   }
 
   @Override
+  public boolean isInternal() {
+    return true;
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     FileSetBuilder builder = sandbox.fileSetBuilder();
 

@@ -3,6 +3,8 @@ package org.smoothbuild.task.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
@@ -53,6 +55,24 @@ public class CachingTaskTest {
   public void name_of_wrapped_task_is_returned() throws Exception {
     BDDMockito.given(task.name()).willReturn(taskName);
     assertThat(cachingTask.name()).isEqualTo(taskName);
+  }
+
+  @Test
+  public void is_internal_forwards_negative_result_from_wrapped_task() throws Exception {
+    BDDMockito.given(task.isInternal()).willReturn(false);
+
+    given(cachingTask = new CachingTask(resultDb, nativeCallHasher, task));
+    when(cachingTask.isInternal());
+    thenReturned(false);
+  }
+
+  @Test
+  public void is_internal_forwards_positive_result_from_wrapped_task() throws Exception {
+    BDDMockito.given(task.isInternal()).willReturn(true);
+
+    given(cachingTask = new CachingTask(resultDb, nativeCallHasher, task));
+    when(cachingTask.isInternal());
+    thenReturned(true);
   }
 
   @Test

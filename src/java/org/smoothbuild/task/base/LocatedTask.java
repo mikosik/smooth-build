@@ -21,6 +21,11 @@ public class LocatedTask implements Task {
   }
 
   @Override
+  public boolean isInternal() {
+    return task.isInternal();
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     return task.execute(sandbox);
   }

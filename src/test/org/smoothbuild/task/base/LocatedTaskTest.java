@@ -54,6 +54,22 @@ public class LocatedTaskTest {
   }
 
   @Test
+  public void is_internal_forwards_negative_result_from_wrapped_task() throws Exception {
+    BDDMockito.given(task.isInternal()).willReturn(false);
+    given(locatedTask = new LocatedTask(task, codeLocation));
+    when(locatedTask.isInternal());
+    thenReturned(false);
+  }
+
+  @Test
+  public void is_internal_forwards_positive_result_from_wrapped_task() throws Exception {
+    BDDMockito.given(task.isInternal()).willReturn(true);
+    given(locatedTask = new LocatedTask(task, codeLocation));
+    when(locatedTask.isInternal());
+    thenReturned(true);
+  }
+
+  @Test
   public void execute_returns_value_from_wrapped_task_execute() throws Exception {
     BDDMockito.given(task.execute(sandbox)).willReturn(value);
     given(locatedTask = new LocatedTask(task, codeLocation));

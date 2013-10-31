@@ -25,6 +25,11 @@ public class CachingTask implements Task {
   }
 
   @Override
+  public boolean isInternal() {
+    return task.isInternal();
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     HashCode hash = nativeCallHasher.hash();
     if (resultDb.contains(hash)) {

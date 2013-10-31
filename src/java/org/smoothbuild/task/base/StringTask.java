@@ -19,6 +19,11 @@ public class StringTask implements Task {
   }
 
   @Override
+  public boolean isInternal() {
+    return true;
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     return string;
   }
