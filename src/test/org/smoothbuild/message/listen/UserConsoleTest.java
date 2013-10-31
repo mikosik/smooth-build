@@ -71,7 +71,7 @@ public class UserConsoleTest {
     userConsole.report(messageGroup);
     userConsole.printFinalSummary();
 
-    verify(printStream).println(" + SUCCESS");
+    verify(printStream).println(" + SUCCESS :)");
   }
 
   @Test
@@ -82,6 +82,6 @@ public class UserConsoleTest {
     userConsole.report(messageGroup);
     userConsole.printFinalSummary();
 
-    verify(printStream).println(" + FAILED");
+    verify(printStream).println(" + FAILED :(");
   }
 }

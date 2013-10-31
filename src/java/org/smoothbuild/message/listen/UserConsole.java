@@ -43,9 +43,9 @@ public class UserConsole {
 
   public void printFinalSummary() {
     if (isErrorReported) {
-      println(MESSAGE_GROUP_PREFIX + "FAILED");
+      println(MESSAGE_GROUP_PREFIX + "FAILED :(");
     } else {
-      println(MESSAGE_GROUP_PREFIX + "SUCCESS");
+      println(MESSAGE_GROUP_PREFIX + "SUCCESS :)");
     }
   }
 
