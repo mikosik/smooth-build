@@ -92,10 +92,11 @@ public class AssignmentListTest {
     String actual = assignmentList.toString();
 
     // then
+    String l = new FakeCodeLocation().toString();
     StringBuilder expected = new StringBuilder();
-    expected.append("  String: name1-that-is-long <- String: name4              #1    [2]\n");
-    expected.append("  String: name2              <- String: name5              #1234 [2]\n");
-    expected.append("  File  : name3              <- File  : name6-that-is-long #7    [2]\n");
+    expected.append("  String: name1-that-is-long <- String: name4              #1    " + l + "\n");
+    expected.append("  String: name2              <- String: name5              #1234 " + l + "\n");
+    expected.append("  File  : name3              <- File  : name6-that-is-long #7    " + l + "\n");
 
     assertThat(actual).isEqualTo(expected.toString());
   }

@@ -46,9 +46,11 @@ public class AmbiguousNamelessArgsErrorTest {
     Argument a3 = pipedArg(node(FILE), codeLocation(14));
     assignmentList.add(assignment(p3, a3));
 
+    Argument a4 = namedArg(3, "arg4", node(EMPTY_SET), codeLocation(7));
+    Argument a5 = namedArg(7, "arg5", node(VOID), codeLocation(17));
     Set<Argument> availableArgs = newHashSet();
-    availableArgs.add(namedArg(3, "arg4", node(EMPTY_SET), codeLocation(7)));
-    availableArgs.add(namedArg(7, "arg5", node(VOID), codeLocation(17)));
+    availableArgs.add(a4);
+    availableArgs.add(a5);
 
     TypedParamsPool availableParams = new TypedParamsPool();
     availableParams.add(param(FILE_SET, "param4"));
@@ -59,14 +61,14 @@ public class AmbiguousNamelessArgsErrorTest {
 
     StringBuilder builder = new StringBuilder();
     builder
-        .append("ERROR [7]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:\n");
+        .append("ERROR [build.smooth:7]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:\n");
     builder.append("List of assignments that were successfully detected is following:\n");
-    builder.append("  String : param1 <- String : arg1       #12 [2]\n");
-    builder.append("  String*: param2 <- String*: <nameless> #7  [12]\n");
-    builder.append("  File   : param3 <- File   : <nameless> #|  [14]\n");
+    builder.append("  String : param1 <- String : arg1       #12 " + a1.codeLocation() + "\n");
+    builder.append("  String*: param2 <- String*: <nameless> #7  " + a2.codeLocation() + "\n");
+    builder.append("  File   : param3 <- File   : <nameless> #|  " + a3.codeLocation() + "\n");
     builder.append("List of nameless arguments that caused problems:\n");
-    builder.append("  Any*: arg4 #3 [7]\n");
-    builder.append("  Void: arg5 #7 [17]\n");
+    builder.append("  Any*: arg4 #3 " + a4.codeLocation() + "\n");
+    builder.append("  Void: arg5 #7 " + a5.codeLocation() + "\n");
     builder.append("List of unassigned parameters of desired type is following:\n");
     builder.append("  File*  : param4\n");
     builder.append("  String*: param6\n");

@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import java.util.NoSuchElementException;
 
@@ -132,9 +133,9 @@ public class DependencyStackTest {
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
-    builder.append("name2[2] -> name3\n");
-    builder.append("name3[3] -> name4\n");
-    builder.append("name4[4] -> name2\n");
+    builder.append("name2" + codeLocation(2) + " -> name3\n");
+    builder.append("name3" + codeLocation(3) + " -> name4\n");
+    builder.append("name4" + codeLocation(4) + " -> name2\n");
 
     assertThat(error.message()).isEqualTo(builder.toString());
   }
@@ -148,7 +149,7 @@ public class DependencyStackTest {
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
-    builder.append("name2[2] -> name2\n");
+    builder.append("name2" + codeLocation(2) + " -> name2\n");
 
     assertThat(error.message()).isEqualTo(builder.toString());
   }

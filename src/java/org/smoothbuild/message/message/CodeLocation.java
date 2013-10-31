@@ -1,6 +1,7 @@
 package org.smoothbuild.message.message;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 
 public class CodeLocation {
   private final int line;
@@ -37,6 +38,6 @@ public class CodeLocation {
 
   @Override
   public String toString() {
-    return "[" + Integer.toString(line) + "]";
+    return "[" + DEFAULT_SCRIPT.value() + ":" + Integer.toString(line) + "]";
   }
 }
