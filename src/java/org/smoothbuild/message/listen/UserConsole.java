@@ -27,8 +27,9 @@ public class UserConsole {
 
   public void report(MessageGroup messageGroup) {
     println(MESSAGE_GROUP_PREFIX + messageGroup.name());
-    isErrorReported = isErrorReported || messageGroup.containsErrors();
     printGroup(messageGroup);
+
+    isErrorReported = isErrorReported || messageGroup.containsErrors();
   }
 
   private void printGroup(MessageGroup messageGroup) {
