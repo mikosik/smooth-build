@@ -3,15 +3,13 @@ package org.smoothbuild.function.def;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.base.LocatedTask;
+import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class InvalidNode extends AbstractNode {
+public class InvalidNode implements Node {
   private final Type type;
 
-  public InvalidNode(Type type, CodeLocation codeLocation) {
-    super(codeLocation);
+  public InvalidNode(Type type) {
     this.type = checkNotNull(type);
   }
 
@@ -21,7 +19,7 @@ public class InvalidNode extends AbstractNode {
   }
 
   @Override
-  public LocatedTask generateTask(TaskGenerator taskGenerator) {
+  public Task generateTask(TaskGenerator taskGenerator) {
     throw new RuntimeException("InvalidNode.generateTask() should not be called.");
   }
 }

@@ -14,8 +14,9 @@ import java.util.Set;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.FileSetNode;
+import org.smoothbuild.function.def.LocatedNode;
+import org.smoothbuild.function.def.LocatedNodeImpl;
 import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
@@ -34,9 +35,9 @@ import com.google.common.collect.Sets;
 
 public class ArgumentNodesCreator {
 
-  public Map<String, Node> createArgumentNodes(CodeLocation codeLocation,
+  public Map<String, LocatedNode> createArgumentNodes(CodeLocation codeLocation,
       MessageGroup messages, Function function, Collection<Argument> arguments) {
-    Map<String, Node> result = new Worker(codeLocation, messages, function, arguments)
+    Map<String, LocatedNode> result = new Worker(codeLocation, messages, function, arguments)
         .convert();
     messages.failIfContainsErrors();
     return result;
@@ -58,7 +59,7 @@ public class ArgumentNodesCreator {
       this.allArguments = arguments;
     }
 
-    public Map<String, Node> convert() {
+    public Map<String, LocatedNode> convert() {
       ImmutableList<Argument> namedArgs = Argument.filterNamed(allArguments);
 
       detectDuplicatedAndUnknownArgNames(namedArgs);
@@ -174,25 +175,27 @@ public class ArgumentNodesCreator {
       }
     }
 
-    private Map<String, Node> createArgumentNodes(AssignmentList assignments) {
-      Builder<String, Node> builder = ImmutableMap.builder();
+    private Map<String, LocatedNode> createArgumentNodes(AssignmentList assignments) {
+      Builder<String, LocatedNode> builder = ImmutableMap.builder();
 
       for (Assignment assignment : assignments) {
-        Node node = argumentNode(assignment);
+        LocatedNode node = argumentNode(assignment);
         builder.put(assignment.assignedName(), node);
       }
 
       return builder.build();
     }
 
-    private Node argumentNode(Assignment assignment) {
+    private LocatedNode argumentNode(Assignment assignment) {
       Type type = assignment.param().type();
       Argument argument = assignment.argument();
       if (argument.type() == Type.EMPTY_SET) {
         if (type == Type.STRING_SET) {
-          return new StringSetNode(Empty.nodeList(), argument.codeLocation());
+          StringSetNode node = new StringSetNode(Empty.locatedNodeList());
+          return new LocatedNodeImpl(node, argument.codeLocation());
         } else if (type == Type.FILE_SET) {
-          return new FileSetNode(Empty.nodeList(), argument.codeLocation());
+          FileSetNode node = new FileSetNode(Empty.locatedNodeList());
+          return new LocatedNodeImpl(node, argument.codeLocation());
         } else {
           throw new RuntimeException("Cannot convert from " + argument.type() + " to " + type + ".");
         }

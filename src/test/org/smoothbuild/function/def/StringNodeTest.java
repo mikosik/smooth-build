@@ -11,22 +11,16 @@ import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class StringNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   StringValue string = mock(StringValue.class);
-  StringNode stringNode = new StringNode(string, new FakeCodeLocation());
+  StringNode stringNode = new StringNode(string);
   Task task;
 
   public void null_string_value_is_forbidden() throws Exception {
-    when($stringNode(null, new FakeCodeLocation()));
-    thenThrown(NullPointerException.class);
-  }
-
-  public void null_code_location_is_forbidden() throws Exception {
-    when($stringNode(string, null));
+    when($stringNode(null));
     thenThrown(NullPointerException.class);
   }
 
@@ -43,7 +37,7 @@ public class StringNodeTest {
     thenReturned(string);
   }
 
-  private static StringNode $stringNode(StringValue string, FakeCodeLocation codeLocation) {
-    return new StringNode(string, codeLocation);
+  private static StringNode $stringNode(StringValue string) {
+    return new StringNode(string);
   }
 }

@@ -1,20 +1,18 @@
 package org.smoothbuild.function.def;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.FileSetTask;
-import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
+import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class FileSetNode extends AbstractNode {
-  private final ImmutableList<? extends Node> elements;
+public class FileSetNode implements Node {
+  private final ImmutableList<? extends LocatedNode> elements;
 
-  public FileSetNode(ImmutableList<? extends Node> elements, CodeLocation codeLocation) {
-    super(codeLocation);
+  public FileSetNode(ImmutableList<? extends LocatedNode> elements) {
     this.elements = elements;
   }
 
@@ -24,13 +22,12 @@ public class FileSetNode extends AbstractNode {
   }
 
   @Override
-  public LocatedTask generateTask(TaskGenerator taskGenerator) {
+  public Task generateTask(TaskGenerator taskGenerator) {
     Builder<Result> builder = ImmutableList.builder();
-    for (Node node : elements) {
+    for (LocatedNode node : elements) {
       builder.add(taskGenerator.generateTask(node));
     }
     ImmutableList<Result> elementTasks = builder.build();
-    FileSetTask task = new FileSetTask(elementTasks);
-    return new LocatedTask(task, codeLocation());
+    return new FileSetTask(elementTasks);
   }
 }

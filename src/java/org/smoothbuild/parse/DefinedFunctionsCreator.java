@@ -32,10 +32,12 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.CallNode;
 import org.smoothbuild.function.def.DefinedFunction;
-import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.EmptySetNode;
 import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.InvalidNode;
+import org.smoothbuild.function.def.LocatedNode;
+import org.smoothbuild.function.def.LocatedNodeImpl;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.function.def.args.Argument;
@@ -102,7 +104,7 @@ public class DefinedFunctionsCreator {
     }
 
     public DefinedFunction build(FunctionContext function) {
-      Node node = build(function.pipe());
+      LocatedNode node = build(function.pipe());
 
       Type type = node.type();
       String name = function.functionName().getText();
@@ -112,8 +114,8 @@ public class DefinedFunctionsCreator {
       return new DefinedFunction(signature, node);
     }
 
-    private Node build(PipeContext pipe) {
-      Node result = build(pipe.expression());
+    private LocatedNode build(PipeContext pipe) {
+      LocatedNode result = build(pipe.expression());
       List<CallContext> elements = pipe.call();
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
@@ -126,7 +128,7 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
-    private Node build(ExpressionContext expression) {
+    private LocatedNode build(ExpressionContext expression) {
       if (expression.set() != null) {
         return build(expression.set());
       }
@@ -140,33 +142,33 @@ public class DefinedFunctionsCreator {
           + " without children.");
     }
 
-    private Node build(SetContext list) {
+    private LocatedNode build(SetContext list) {
       List<SetElemContext> elems = list.setElem();
-      ImmutableList<Node> elemNodes = build(elems);
+      ImmutableList<LocatedNode> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return new EmptySetNode(locationOf(list));
+        return new LocatedNodeImpl(new EmptySetNode(), locationOf(list));
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return new EmptySetNode(locationOf(list));
+        return new LocatedNodeImpl(new EmptySetNode(), locationOf(list));
       }
 
       Type elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
-        return new StringSetNode(elemNodes, locationOf(list));
+        return new LocatedNodeImpl(new StringSetNode(elemNodes), locationOf(list));
       }
       if (elemsType == Type.FILE) {
-        return new FileSetNode(elemNodes, locationOf(list));
+        return new LocatedNodeImpl(new FileSetNode(elemNodes), locationOf(list));
       }
       throw new RuntimeException("Bug in Smooth implementation. No code to handle type = "
           + elemsType);
     }
 
-    private ImmutableList<Node> build(List<SetElemContext> elems) {
-      Builder<Node> builder = ImmutableList.builder();
+    private ImmutableList<LocatedNode> build(List<SetElemContext> elems) {
+      Builder<LocatedNode> builder = ImmutableList.builder();
       for (SetElemContext elem : elems) {
-        Node node = build(elem);
+        LocatedNode node = build(elem);
         if (!Type.allowedForSetElem().contains(node.type())) {
           messages.report(new ForbiddenSetElemTypeError(locationOf(elem), node.type()));
         } else {
@@ -176,7 +178,7 @@ public class DefinedFunctionsCreator {
       return builder.build();
     }
 
-    private Node build(SetElemContext elem) {
+    private LocatedNode build(SetElemContext elem) {
       if (elem.STRING() != null) {
         return buildStringNode(elem.STRING());
       }
@@ -187,7 +189,7 @@ public class DefinedFunctionsCreator {
           + " without children.");
     }
 
-    private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<Node> elemNodes) {
+    private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<LocatedNode> elemNodes) {
       boolean success = true;
       Type firstType = elemNodes.get(0).type();
       for (int i = 0; i < elemNodes.size(); i++) {
@@ -201,22 +203,23 @@ public class DefinedFunctionsCreator {
       return success;
     }
 
-    private Node build(CallContext call) {
+    private LocatedNode build(CallContext call) {
       List<Argument> arguments = build(call.argList());
       return build(call, arguments);
     }
 
-    private Node build(CallContext call, List<Argument> args) {
+    private LocatedNode build(CallContext call, List<Argument> args) {
       String functionName = call.functionName().getText();
 
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, Node> namedArgs = argumentNodesCreator.createArgumentNodes(
-          codeLocation, messages, function, args);
+      Map<String, LocatedNode> namedArgs = argumentNodesCreator.createArgumentNodes(codeLocation,
+          messages, function, args);
 
       if (namedArgs == null) {
-        return new InvalidNode(function.type(), locationOf(call.functionName()));
+        InvalidNode node = new InvalidNode(function.type());
+        return new LocatedNodeImpl(node, locationOf(call.functionName()));
       } else {
         return new CallNode(function, codeLocation, namedArgs);
       }
@@ -247,7 +250,7 @@ public class DefinedFunctionsCreator {
     }
 
     private Argument build(int index, ArgContext arg) {
-      Node node = build(arg.expression());
+      LocatedNode node = build(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
@@ -258,16 +261,16 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private Node buildStringNode(TerminalNode stringToken) {
+    private LocatedNode buildStringNode(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         StringValue stringValue = valueDb.string(unescaped(string));
-        return new StringNode(stringValue, locationOf(stringToken.getSymbol()));
+        return new LocatedNodeImpl(new StringNode(stringValue), locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));
-        return new InvalidNode(STRING, locationOf(stringToken.getSymbol()));
+        return new LocatedNodeImpl(new InvalidNode(STRING), locationOf(stringToken.getSymbol()));
       }
     }
   }

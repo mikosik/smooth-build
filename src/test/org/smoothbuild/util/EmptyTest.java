@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
+import org.smoothbuild.function.def.LocatedNode;
 import org.smoothbuild.function.def.Node;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Result;
@@ -65,6 +66,24 @@ public class EmptyTest {
   @Test
   public void emptyNodeAlwaysReturnsTheSameObject() {
     assertThat(Empty.nodeList()).isSameAs(Empty.nodeList());
+  }
+
+  // locatedNodeList()
+
+  @Test
+  public void locatedNodeListIsEmpty() {
+    assertThat(Empty.locatedNodeList()).isEmpty();
+  }
+
+  @Test
+  public void emptyLocatedNodeListIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableList<LocatedNode> list = Empty.locatedNodeList();
+  }
+
+  @Test
+  public void emptyLocatedNodeAlwaysReturnsTheSameObject() {
+    assertThat(Empty.locatedNodeList()).isSameAs(Empty.locatedNodeList());
   }
 
   // nullToEmpty

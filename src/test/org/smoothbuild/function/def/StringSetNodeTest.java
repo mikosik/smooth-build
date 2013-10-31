@@ -8,13 +8,11 @@ import static org.smoothbuild.testing.plugin.StringSetMatchers.containsOnly;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -27,15 +25,14 @@ public class StringSetNodeTest {
   StringValue string1 = sandbox.objectDb().string("string1");
   StringValue string2 = sandbox.objectDb().string("string2");
 
-  StringNode node1 = mock(StringNode.class);
-  StringNode node2 = mock(StringNode.class);
+  LocatedNode node1 = mock(LocatedNode.class);
+  LocatedNode node2 = mock(LocatedNode.class);
 
   Result result1 = new FakeResult(string1);
   Result result2 = new FakeResult(string2);
 
-  CodeLocation codeLocation = new FakeCodeLocation();
-  ImmutableList<StringNode> elemNodes = ImmutableList.of(node1, node2);
-  StringSetNode stringSetNode = new StringSetNode(elemNodes, codeLocation);
+  ImmutableList<LocatedNode> elemNodes = ImmutableList.of(node1, node2);
+  StringSetNode stringSetNode = new StringSetNode(elemNodes);
 
   @Test
   public void type() {

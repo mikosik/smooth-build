@@ -9,12 +9,11 @@ import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class EmptySetNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  EmptySetNode emptySetNode = new EmptySetNode(new FakeCodeLocation());
+  EmptySetNode emptySetNode = new EmptySetNode();
 
   @Test
   public void type() {

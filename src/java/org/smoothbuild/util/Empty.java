@@ -1,5 +1,6 @@
 package org.smoothbuild.util;
 
+import org.smoothbuild.function.def.LocatedNode;
 import org.smoothbuild.function.def.Node;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Result;
@@ -18,6 +19,10 @@ public class Empty {
   }
 
   public static ImmutableList<Node> nodeList() {
+    return ImmutableList.of();
+  }
+
+  public static ImmutableList<LocatedNode> locatedNodeList() {
     return ImmutableList.of();
   }
 

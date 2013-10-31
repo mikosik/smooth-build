@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.Node;
+import org.smoothbuild.function.def.LocatedNode;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class ArgumentTest {
   String name = "name";
-  Node node = mock(Node.class);
+  LocatedNode node = mock(LocatedNode.class);
   CodeLocation codeLocation = mock(CodeLocation.class);
 
   @Test(expected = IllegalArgumentException.class)
@@ -135,7 +135,6 @@ public class ArgumentTest {
 
   @Test
   public void toPaddedString() throws Exception {
-    Node node = mock(Node.class);
     when(node.type()).thenReturn(STRING);
 
     Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
@@ -146,7 +145,6 @@ public class ArgumentTest {
 
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
-    Node node = mock(Node.class);
     when(node.type()).thenReturn(STRING);
 
     Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
@@ -190,7 +188,7 @@ public class ArgumentTest {
   }
 
   private static Argument named(String name) {
-    return Argument.namedArg(1, name, mock(Node.class), new FakeCodeLocation());
+    return Argument.namedArg(1, name, mock(LocatedNode.class), new FakeCodeLocation());
   }
 
   private static Argument nameless() {
@@ -198,7 +196,7 @@ public class ArgumentTest {
   }
 
   private static Argument nameless(Type type) {
-    Node node = mock(Node.class);
+    LocatedNode node = mock(LocatedNode.class);
     when(node.type()).thenReturn(type);
     return Argument.namelessArg(1, node, new FakeCodeLocation());
   }

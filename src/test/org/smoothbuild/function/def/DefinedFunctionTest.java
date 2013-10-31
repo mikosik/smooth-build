@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 public class DefinedFunctionTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   Signature signature = testSignature();
-  Node root = mock(Node.class);
+  LocatedNode root = mock(LocatedNode.class);
   CodeLocation codeLocation = new FakeCodeLocation();
 
   DefinedFunction definedFunction = new DefinedFunction(signature, root);
