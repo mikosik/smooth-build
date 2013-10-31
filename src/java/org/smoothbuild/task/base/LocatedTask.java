@@ -1,5 +1,7 @@
 package org.smoothbuild.task.base;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
@@ -9,8 +11,8 @@ public class LocatedTask implements Task {
   private final CodeLocation codeLocation;
 
   public LocatedTask(Task task, CodeLocation codeLocation) {
-    this.task = task;
-    this.codeLocation = codeLocation;
+    this.task = checkNotNull(task);
+    this.codeLocation = checkNotNull(codeLocation);
   }
 
   @Override
