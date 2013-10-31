@@ -3,6 +3,8 @@ package org.smoothbuild.task.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
@@ -12,6 +14,7 @@ import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
 
@@ -27,6 +30,24 @@ public class CachingTaskTest {
   Task task = mock(Task.class);
 
   CachingTask cachingTask = new CachingTask(resultDb, nativeCallHasher, task);
+
+  @Test
+  public void null_result_db_is_forbidden() throws Exception {
+    when($cachingTask(null, nativeCallHasher, task));
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void null_native_call_hasher_is_forbidden() throws Exception {
+    when($cachingTask(resultDb, null, task));
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void null_task_is_forbidden() throws Exception {
+    when($cachingTask(resultDb, nativeCallHasher, null));
+    thenThrown(NullPointerException.class);
+  }
 
   @Test
   public void name_of_wrapped_task_is_returned() throws Exception {
@@ -51,5 +72,15 @@ public class CachingTaskTest {
 
     assertThat(cachingTask.execute(sandbox)).isEqualTo(value);
     verifyZeroInteractions(task);
+  }
+
+  private static Closure $cachingTask(final ResultDb resultDb,
+      final NativeCallHasher nativeCallHasher, final Task task) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return new CachingTask(resultDb, nativeCallHasher, task);
+      }
+    };
   }
 }
