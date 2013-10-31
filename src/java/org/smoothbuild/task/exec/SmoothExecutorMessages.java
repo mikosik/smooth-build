@@ -7,6 +7,6 @@ import org.smoothbuild.message.listen.MessageGroup;
 @Singleton
 public class SmoothExecutorMessages extends MessageGroup {
   public SmoothExecutorMessages() {
-    super("smooth executor");
+    super("SMOOTH EXECUTOR");
   }
 }
