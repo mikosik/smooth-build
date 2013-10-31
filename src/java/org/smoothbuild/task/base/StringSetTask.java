@@ -22,6 +22,11 @@ public class StringSetTask implements Task {
   }
 
   @Override
+  public boolean isInternal() {
+    return true;
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     StringSetBuilder stringSetBuilder = sandbox.stringSetBuilder();
 

@@ -30,6 +30,11 @@ public class NativeCallTask implements Task {
   }
 
   @Override
+  public boolean isInternal() {
+    return false;
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     try {
       Value result = function.invoke(sandbox, calculateArguments());

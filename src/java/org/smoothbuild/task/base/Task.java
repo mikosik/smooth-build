@@ -6,5 +6,7 @@ import org.smoothbuild.plugin.Value;
 public interface Task {
   public String name();
 
+  public boolean isInternal();
+
   public Value execute(Sandbox sandbox);
 }

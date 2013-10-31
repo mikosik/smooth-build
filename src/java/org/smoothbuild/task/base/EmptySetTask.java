@@ -11,6 +11,11 @@ public class EmptySetTask implements Task {
   }
 
   @Override
+  public boolean isInternal() {
+    return true;
+  }
+
+  @Override
   public Value execute(Sandbox sandbox) {
     /*
      * We cheat here and return empty fileSet. Nobody will ever use this object
