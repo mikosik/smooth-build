@@ -10,6 +10,7 @@ import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringSetBuilder;
+import org.smoothbuild.task.base.LocatedTask;
 
 public class SandboxImpl implements Sandbox {
   private final FileSystem projectFileSystem;
@@ -17,8 +18,8 @@ public class SandboxImpl implements Sandbox {
   private final CodeLocation codeLocation;
   private final ValueDb valueDb;
 
-  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, String taskName, CodeLocation codeLocation) {
-    this(fileSystem, valueDb, codeLocation, createMessages(taskName));
+  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, LocatedTask task) {
+    this(fileSystem, valueDb, task.codeLocation(), createMessages(task.name()));
   }
 
   public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, CodeLocation codeLocation,

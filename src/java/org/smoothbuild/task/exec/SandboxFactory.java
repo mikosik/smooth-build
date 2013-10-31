@@ -17,6 +17,6 @@ public class SandboxFactory {
   }
 
   public SandboxImpl createSandbox(LocatedTask task) {
-    return new SandboxImpl(fileSystem, valueDb, task.name(), task.codeLocation());
+    return new SandboxImpl(fileSystem, valueDb, task);
   }
 }
