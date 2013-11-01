@@ -15,16 +15,6 @@ public class MarshallerTest {
   private Marshaller marshaller;
 
   @Test
-  public void marshalling_single_hash() {
-    HashCode hashCode = HashCode.fromInt(33);
-
-    marshaller = new Marshaller();
-    marshaller.addHash(hashCode);
-
-    assertThat(marshaller.getBytes()).isEqualTo(hashToBytes(hashCode));
-  }
-
-  @Test
   public void marshalling_single_path() {
     Path path = path("my/path");
 
@@ -32,6 +22,16 @@ public class MarshallerTest {
     marshaller.addPath(path);
 
     assertThat(marshaller.getBytes()).isEqualTo(pathToBytes(path));
+  }
+
+  @Test
+  public void marshalling_single_hash() {
+    HashCode hashCode = HashCode.fromInt(33);
+
+    marshaller = new Marshaller();
+    marshaller.addHash(hashCode);
+
+    assertThat(marshaller.getBytes()).isEqualTo(hashToBytes(hashCode));
   }
 
   @Test
