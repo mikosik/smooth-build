@@ -25,6 +25,10 @@ public class Marshaller {
     dataOutput.write(hash.asBytes());
   }
 
+  public void addByte(byte byteValue) {
+    dataOutput.writeByte(byteValue);
+  }
+
   public void addInt(int intValue) {
     dataOutput.writeInt(intValue);
   }
