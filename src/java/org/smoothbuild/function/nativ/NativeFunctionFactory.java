@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.ResultDb;
+import org.smoothbuild.db.result.ResultDb;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.exc.MoreThanOneSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;

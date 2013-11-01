@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.ValueDb;
+import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.task.base.LocatedTask;
 

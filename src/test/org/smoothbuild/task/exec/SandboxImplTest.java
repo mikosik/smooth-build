@@ -19,7 +19,7 @@ import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.db.FakeObjectDb;
+import org.smoothbuild.testing.db.value.FakeValueDb;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FileSetMatchers;
@@ -35,7 +35,7 @@ public class SandboxImplTest {
   Task task = task();
 
   FakeFileSystem fileSystem = new FakeFileSystem();
-  FakeObjectDb objectDb = new FakeObjectDb(fileSystem);
+  FakeValueDb objectDb = new FakeValueDb(fileSystem);
 
   SandboxImpl sandbox = new SandboxImpl(fileSystem, objectDb, new LocatedTask(task, codeLocation));
 

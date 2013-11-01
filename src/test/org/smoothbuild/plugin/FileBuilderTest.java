@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import org.smoothbuild.db.FileObject;
-import org.smoothbuild.db.ValueDb;
+import org.smoothbuild.db.value.FileObject;
+import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.fs.base.Path;
 
 public class FileBuilderTest {

@@ -8,12 +8,12 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.testing.db.FakeObjectDb;
+import org.smoothbuild.testing.db.value.FakeValueDb;
 
 import com.google.common.collect.Iterables;
 
 public class StringSetBuilderTest {
-  FakeObjectDb objectDb = new FakeObjectDb();
+  FakeValueDb objectDb = new FakeValueDb();
 
   StringSetBuilder stringSetBuilder = new StringSetBuilder(objectDb);
   StringValue stringValue;

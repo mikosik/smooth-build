@@ -11,7 +11,7 @@ import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.ResultDb;
+import org.smoothbuild.db.result.ResultDb;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;

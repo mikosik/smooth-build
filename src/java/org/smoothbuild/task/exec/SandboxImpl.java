@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import org.smoothbuild.db.ValueDb;
+import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.Message;

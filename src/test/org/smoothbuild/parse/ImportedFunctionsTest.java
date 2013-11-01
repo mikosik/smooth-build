@@ -6,7 +6,7 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.db.ResultDb;
+import org.smoothbuild.db.result.ResultDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;

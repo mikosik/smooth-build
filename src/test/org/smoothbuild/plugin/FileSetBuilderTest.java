@@ -13,14 +13,14 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.err.CannotAddDuplicatePathError;
-import org.smoothbuild.testing.db.FakeObjectDb;
+import org.smoothbuild.testing.db.value.FakeValueDb;
 
 import com.google.common.base.Charsets;
 
 public class FileSetBuilderTest {
   String content = "content";
   Path path = Path.path("my/file.txt");
-  FakeObjectDb objectDb = new FakeObjectDb();
+  FakeValueDb objectDb = new FakeValueDb();
   File file;
 
   FileSetBuilder fileSetBuilder = new FileSetBuilder(objectDb);

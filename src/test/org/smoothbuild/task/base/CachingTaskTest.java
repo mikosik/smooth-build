@@ -10,8 +10,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
-import org.smoothbuild.db.Hash;
-import org.smoothbuild.db.ResultDb;
+import org.smoothbuild.db.hash.Hash;
+import org.smoothbuild.db.result.ResultDb;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.testing.message.FakeCodeLocation;

@@ -3,7 +3,7 @@ package org.smoothbuild.plugin;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.db.ValueDb;
+import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.err.CannotAddDuplicatePathError;
