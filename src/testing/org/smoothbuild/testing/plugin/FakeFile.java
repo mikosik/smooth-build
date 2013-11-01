@@ -3,7 +3,7 @@ package org.smoothbuild.testing.plugin;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.db.hash.Hash;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.File;
 

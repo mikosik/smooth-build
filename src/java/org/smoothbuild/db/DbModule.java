@@ -5,6 +5,9 @@ import static org.smoothbuild.command.SmoothContants.VALUE_DB_DIR;
 
 import javax.inject.Singleton;
 
+import org.smoothbuild.db.hash.HashedDb;
+import org.smoothbuild.db.hash.HashedDbWithTasks;
+import org.smoothbuild.db.hash.HashedDbWithValues;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 

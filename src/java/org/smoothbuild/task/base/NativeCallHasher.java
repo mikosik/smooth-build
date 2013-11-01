@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import java.util.Map;
 
-import org.smoothbuild.db.Hash;
+import org.smoothbuild.db.hash.Hash;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.nativ.NativeFunction;
 

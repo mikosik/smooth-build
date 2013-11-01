@@ -13,7 +13,7 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
-import org.smoothbuild.db.ResultDb;
+import org.smoothbuild.db.result.ResultDb;
 import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Param;

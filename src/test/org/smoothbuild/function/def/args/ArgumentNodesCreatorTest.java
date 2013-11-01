@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.db.ResultDb;
+import org.smoothbuild.db.result.ResultDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;

@@ -24,7 +24,7 @@ import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.SmoothParser.SetContext;
 import org.smoothbuild.antlr.SmoothParser.SetElemContext;
-import org.smoothbuild.db.ValueDb;
+import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;

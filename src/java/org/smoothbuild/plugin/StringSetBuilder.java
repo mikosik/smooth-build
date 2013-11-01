@@ -2,7 +2,7 @@ package org.smoothbuild.plugin;
 
 import java.util.List;
 
-import org.smoothbuild.db.ValueDb;
+import org.smoothbuild.db.value.ValueDb;
 
 import com.google.common.collect.Lists;
 
