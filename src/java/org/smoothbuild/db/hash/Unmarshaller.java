@@ -7,6 +7,7 @@ import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import org.smoothbuild.db.hash.err.CorruptedBoolError;
 import org.smoothbuild.db.hash.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hash.err.ReadingHashedObjectFailedError;
 import org.smoothbuild.db.hash.err.TooFewBytesToUnmarshallValue;
@@ -52,6 +53,18 @@ public class Unmarshaller implements Closeable {
   public HashCode readHash() {
     byte[] bytes = readBytes(Hash.size(), "hash");
     return HashCode.fromBytes(bytes);
+  }
+
+  public boolean readBool() {
+    byte byteValue = readBytes(1, "bool")[0];
+    switch (byteValue) {
+      case HashedDb.FALSE_AS_BYTE:
+        return false;
+      case HashedDb.TRUE_AS_BYTE:
+        return true;
+      default:
+        throw new ErrorMessageException(new CorruptedBoolError(byteValue));
+    }
   }
 
   public byte readByte() {

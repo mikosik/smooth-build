@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hash;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.db.hash.HashCodes.toPath;
 import static org.smoothbuild.fs.base.Path.path;
@@ -10,6 +11,7 @@ import java.io.DataOutputStream;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
+import org.smoothbuild.db.hash.err.CorruptedBoolError;
 import org.smoothbuild.db.hash.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hash.err.TooFewBytesToUnmarshallValue;
@@ -54,17 +56,44 @@ public class UnmarshallerTest {
   }
 
   @Test
-  public void marshalled_int_can_be_unmarshalled() {
-    int myInt = 0x12345678;
+  public void marshalled_false_bool_value_can_be_unmarshalled() {
+    boolean myBool = false;
     Marshaller marshaller = new Marshaller();
-    marshaller.addInt(myInt);
+    marshaller.addBool(myBool);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    int actual = unmarshaller.readInt();
+    boolean actual = unmarshaller.readBool();
     unmarshaller.close();
 
-    assertThat(actual).isEqualTo(myInt);
+    assertThat(actual).isEqualTo(myBool);
+  }
+
+  @Test
+  public void marshalled_true_bool_value_can_be_unmarshalled() {
+    boolean myBool = true;
+    Marshaller marshaller = new Marshaller();
+    marshaller.addBool(myBool);
+    HashCode hash = hashedDb.store(marshaller.getBytes());
+
+    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
+    boolean actual = unmarshaller.readBool();
+    unmarshaller.close();
+
+    assertThat(actual).isEqualTo(myBool);
+  }
+
+  @Test
+  public void unmarshalling_corrupted_bool_throws_exception() {
+    Marshaller marshaller = new Marshaller();
+    marshaller.addByte((byte) 7);
+    HashCode hash = hashedDb.store(marshaller.getBytes());
+
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
+      unmarshaller.readBool();
+    } catch (ErrorMessageException e) {
+      assertThat(e, containsInstanceOf(CorruptedBoolError.class));
+    }
   }
 
   @Test
@@ -79,6 +108,20 @@ public class UnmarshallerTest {
     unmarshaller.close();
 
     assertThat(actual).isEqualTo(myByte);
+  }
+
+  @Test
+  public void marshalled_int_can_be_unmarshalled() {
+    int myInt = 0x12345678;
+    Marshaller marshaller = new Marshaller();
+    marshaller.addInt(myInt);
+    HashCode hash = hashedDb.store(marshaller.getBytes());
+
+    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
+    int actual = unmarshaller.readInt();
+    unmarshaller.close();
+
+    assertThat(actual).isEqualTo(myInt);
   }
 
   @Test
