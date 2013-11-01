@@ -1,0 +1,79 @@
+package org.smoothbuild.message.message;
+
+import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.INFO;
+import static org.smoothbuild.message.message.MessageType.SUGGESTION;
+import static org.smoothbuild.message.message.MessageType.WARNING;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
+
+import org.junit.Test;
+
+public class MessageStatsTest {
+  MessageStats messageStats;
+
+  // initially count is zero
+
+  @Test
+  public void initially_error_count_is_zero() {
+    given(messageStats = new MessageStats());
+    when(messageStats.getCount(ERROR));
+    thenReturned(0);
+  }
+
+  @Test
+  public void initially_warning_count_is_zero() {
+    given(messageStats = new MessageStats());
+    when(messageStats.getCount(WARNING));
+    thenReturned(0);
+  }
+
+  @Test
+  public void initially_suggestion_count_is_zero() {
+    given(messageStats = new MessageStats());
+    when(messageStats.getCount(SUGGESTION));
+    thenReturned(0);
+  }
+
+  @Test
+  public void initially_info_count_is_zero() {
+    given(messageStats = new MessageStats());
+    when(messageStats.getCount(INFO));
+    thenReturned(0);
+  }
+
+  // count is one after incrementing
+
+  @Test
+  public void error_count_is_one_after_incrementing_it() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(ERROR);
+    when(messageStats.getCount(ERROR));
+    thenReturned(1);
+  }
+
+  @Test
+  public void warning_count_is_one_after_incrementing_it() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(WARNING);
+    when(messageStats.getCount(WARNING));
+    thenReturned(1);
+  }
+
+  @Test
+  public void suggestion_count_is_one_after_incrementing_it() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(SUGGESTION);
+    when(messageStats.getCount(SUGGESTION));
+    thenReturned(1);
+  }
+
+  @Test
+  public void info_count_is_one_after_incrementing_it() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(INFO);
+    when(messageStats.getCount(INFO));
+    thenReturned(1);
+  }
+}
