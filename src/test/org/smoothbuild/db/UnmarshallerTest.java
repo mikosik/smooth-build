@@ -68,25 +68,43 @@ public class UnmarshallerTest {
   }
 
   @Test
+  public void marshalled_byte_can_be_unmarshalled() {
+    byte myByte = 123;
+    Marshaller marshaller = new Marshaller();
+    marshaller.addByte(myByte);
+    HashCode hash = hashedDb.store(marshaller.getBytes());
+
+    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
+    byte actual = unmarshaller.readByte();
+    unmarshaller.close();
+
+    assertThat(actual).isEqualTo(myByte);
+  }
+
+  @Test
   public void marshalled_all_type_of_objects_can_be_unmarshalled() {
     HashCode myHash = Hash.function().hashInt(33);
     Path path = path("my/path");
+    byte myByte = 123;
     int myInt = 0x12345667;
 
     Marshaller marshaller = new Marshaller();
     marshaller.addHash(myHash);
     marshaller.addPath(path);
+    marshaller.addByte(myByte);
     marshaller.addInt(myInt);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
     HashCode actualHash = unmarshaller.readHash();
     Path actualPath = unmarshaller.readPath();
+    byte actualByte = unmarshaller.readByte();
     int actualInt = unmarshaller.readInt();
     unmarshaller.close();
 
     assertThat(actualHash).isEqualTo(myHash);
     assertThat(actualPath).isEqualTo(path);
+    assertThat(actualByte).isEqualTo(myByte);
     assertThat(actualInt).isEqualTo(myInt);
   }
 
