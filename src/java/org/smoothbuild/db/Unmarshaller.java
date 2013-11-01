@@ -54,6 +54,11 @@ public class Unmarshaller implements Closeable {
     return HashCode.fromBytes(bytes);
   }
 
+  public byte readByte() {
+    byte[] bytes = readBytes(1, "byte");
+    return bytes[0];
+  }
+
   public int readInt() {
     byte[] bytes = readBytes(4, "int");
     return Ints.fromByteArray(bytes);
