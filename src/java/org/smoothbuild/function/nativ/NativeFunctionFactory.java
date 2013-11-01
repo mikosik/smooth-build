@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.result.ResultDb;
+import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.exc.MoreThanOneSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
@@ -20,11 +20,11 @@ import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class NativeFunctionFactory {
-  private final ResultDb resultDb;
+  private final TaskDb taskDb;
 
   @Inject
-  public NativeFunctionFactory(ResultDb resultDb) {
-    this.resultDb = resultDb;
+  public NativeFunctionFactory(TaskDb taskDb) {
+    this.taskDb = taskDb;
   }
 
   public NativeFunction create(Class<?> klass, boolean builtin)
@@ -35,7 +35,7 @@ public class NativeFunctionFactory {
     Signature signature = SignatureFactory.create(method, paramsInterface);
     Invoker invoker = createInvoker(method, paramsInterface);
 
-    return new NativeFunction(resultDb, signature, invoker);
+    return new NativeFunction(taskDb, signature, invoker);
   }
 
   private static Invoker createInvoker(Method method, Class<?> paramsInterface)

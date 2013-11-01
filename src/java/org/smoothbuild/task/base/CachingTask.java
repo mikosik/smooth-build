@@ -2,19 +2,19 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.db.result.ResultDb;
+import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 
 import com.google.common.hash.HashCode;
 
 public class CachingTask implements Task {
-  private final ResultDb resultDb;
+  private final TaskDb taskDb;
   private final NativeCallHasher nativeCallHasher;
   private final Task task;
 
-  public CachingTask(ResultDb resultDb, NativeCallHasher nativeCallHasher, Task task) {
-    this.resultDb = checkNotNull(resultDb);
+  public CachingTask(TaskDb taskDb, NativeCallHasher nativeCallHasher, Task task) {
+    this.taskDb = checkNotNull(taskDb);
     this.nativeCallHasher = checkNotNull(nativeCallHasher);
     this.task = checkNotNull(task);
   }
@@ -32,8 +32,8 @@ public class CachingTask implements Task {
   @Override
   public Value execute(Sandbox sandbox) {
     HashCode hash = nativeCallHasher.hash();
-    if (resultDb.contains(hash)) {
-      return resultDb.read(hash);
+    if (taskDb.contains(hash)) {
+      return taskDb.read(hash);
     }
 
     Value result = task.execute(sandbox);
@@ -41,7 +41,7 @@ public class CachingTask implements Task {
     // TODO Remove null checking once Void is no longer allowed return type for
     // smooth functions. This will happen when save() function is removed.
     if (result != null) {
-      resultDb.store(hash, result);
+      taskDb.store(hash, result);
     }
     return result;
   }

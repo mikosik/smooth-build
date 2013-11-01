@@ -1,4 +1,4 @@
-package org.smoothbuild.db.result;
+package org.smoothbuild.db.task;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.smoothbuild.fs.base.Path.path;
@@ -25,10 +25,10 @@ import org.smoothbuild.testing.plugin.FakeString;
 
 import com.google.common.hash.HashCode;
 
-public class ResultDbTest {
-  HashedDb taskToResultDb = new HashedDb(new FakeFileSystem());
+public class TaskDbTest {
+  HashedDb taskResultsDb = new HashedDb(new FakeFileSystem());
   ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
-  ResultDb resultDb = new ResultDb(taskToResultDb, valueDb);
+  TaskDb taskDb = new TaskDb(taskResultsDb, valueDb);
   HashCode hash = Hash.string("abc");
 
   byte[] bytes = new byte[] {};
@@ -42,20 +42,20 @@ public class ResultDbTest {
 
   @Test
   public void result_cache_does_not_contain_not_stored_result() {
-    when(resultDb.contains(hash));
+    when(taskDb.contains(hash));
     thenReturned(false);
   }
 
   @Test
   public void result_cache_contains_stored_result() {
-    given(resultDb).store(hash, new FakeString("result"));
-    when(resultDb.contains(hash));
+    given(taskDb).store(hash, new FakeString("result"));
+    when(taskDb.contains(hash));
     thenReturned(true);
   }
 
   @Test
   public void reading_not_stored_value_fails() throws Exception {
-    when(resultDb).read(hash);
+    when(taskDb).read(hash);
     thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
@@ -63,8 +63,8 @@ public class ResultDbTest {
   public void stored_file_set_can_be_read_back() throws Exception {
     given(file = valueDb.file(path, bytes));
     given(fileSet = valueDb.fileSet(newArrayList(file)));
-    given(resultDb).store(hash, fileSet);
-    when(((FileSet) resultDb.read(hash)).iterator().next());
+    given(taskDb).store(hash, fileSet);
+    when(((FileSet) taskDb.read(hash)).iterator().next());
     thenReturned(equalTo(file));
   }
 
@@ -72,24 +72,24 @@ public class ResultDbTest {
   public void stored_string_set_can_be_read_back() throws Exception {
     given(stringValue = valueDb.string(string));
     given(stringSet = valueDb.stringSet(newArrayList(stringValue)));
-    given(resultDb).store(hash, stringSet);
-    when(resultDb.read(hash));
+    given(taskDb).store(hash, stringSet);
+    when(taskDb.read(hash));
     thenReturned(containsOnly(string));
   }
 
   @Test
   public void stored_file_can_be_read_back() throws Exception {
     given(file = valueDb.file(path, bytes));
-    given(resultDb).store(hash, file);
-    when(resultDb.read(hash));
+    given(taskDb).store(hash, file);
+    when(taskDb.read(hash));
     thenReturned(equalTo(file));
   }
 
   @Test
   public void stored_string_object_can_be_read_back() throws Exception {
     given(stringValue = valueDb.string(string));
-    given(resultDb).store(hash, stringValue);
-    when(((StringValue) resultDb.read(hash)).value());
+    given(taskDb).store(hash, stringValue);
+    when(((StringValue) taskDb.read(hash)).value());
     thenReturned(string);
   }
 }

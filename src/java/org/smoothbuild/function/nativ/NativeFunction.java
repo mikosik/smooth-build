@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.smoothbuild.db.result.ResultDb;
+import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
@@ -26,12 +26,12 @@ import com.google.common.collect.ImmutableMap;
  * Smooth script using Smooth language).
  */
 public class NativeFunction extends AbstractFunction {
-  private final ResultDb resultDb;
+  private final TaskDb taskDb;
   private final Invoker invoker;
 
-  public NativeFunction(ResultDb resultDb, Signature signature, Invoker invoker) {
+  public NativeFunction(TaskDb taskDb, Signature signature, Invoker invoker) {
     super(signature);
-    this.resultDb = checkNotNull(resultDb);
+    this.taskDb = checkNotNull(taskDb);
     this.invoker = checkNotNull(invoker);
   }
 
@@ -40,7 +40,7 @@ public class NativeFunction extends AbstractFunction {
       CodeLocation codeLocation) {
     NativeCallTask nativeCallTask = new NativeCallTask(this, args);
     NativeCallHasher nativeCallHasher = new NativeCallHasher(this, args);
-    CachingTask task = new CachingTask(resultDb, nativeCallHasher, nativeCallTask);
+    CachingTask task = new CachingTask(taskDb, nativeCallHasher, nativeCallTask);
     return new LocatedTask(task, codeLocation);
   }
 

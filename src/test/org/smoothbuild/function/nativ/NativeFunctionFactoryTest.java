@@ -11,7 +11,7 @@ import static org.smoothbuild.testing.function.base.ParamTester.params;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.result.ResultDb;
+import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
@@ -53,8 +53,8 @@ public class NativeFunctionFactoryTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeSandbox sandbox = new FakeSandbox();
   Path tempDir = path("tem/dir");
-  ResultDb resultDb = mock(ResultDb.class);
-  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory(resultDb);
+  TaskDb taskDb = mock(TaskDb.class);
+  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory(taskDb);
   CodeLocation codeLocation = new FakeCodeLocation();
 
   @Before
