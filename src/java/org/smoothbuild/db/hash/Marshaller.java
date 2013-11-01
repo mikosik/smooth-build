@@ -1,6 +1,8 @@
 package org.smoothbuild.db.hash;
 
+import static org.smoothbuild.db.hash.HashedDb.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hash.HashedDb.STRING_CHARSET;
+import static org.smoothbuild.db.hash.HashedDb.TRUE_AS_BYTE;
 
 import org.smoothbuild.fs.base.Path;
 
@@ -23,6 +25,10 @@ public class Marshaller {
 
   public void addHash(HashCode hash) {
     dataOutput.write(hash.asBytes());
+  }
+
+  public void addBool(boolean boolValue) {
+    dataOutput.writeByte(boolValue ? TRUE_AS_BYTE : FALSE_AS_BYTE);
   }
 
   public void addByte(byte byteValue) {
