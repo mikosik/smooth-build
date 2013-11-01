@@ -1,6 +1,8 @@
 package org.smoothbuild.db.hash;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.db.hash.HashedDb.FALSE_AS_BYTE;
+import static org.smoothbuild.db.hash.HashedDb.TRUE_AS_BYTE;
 import static org.smoothbuild.fs.base.Path.path;
 
 import org.junit.Test;
@@ -40,6 +42,22 @@ public class MarshallerTest {
     marshaller.addByte((byte) 123);
 
     assertThat(marshaller.getBytes()).isEqualTo(new byte[] { 123 });
+  }
+
+  @Test
+  public void marshalling_true_boolean() throws Exception {
+    marshaller = new Marshaller();
+    marshaller.addBool(true);
+
+    assertThat(marshaller.getBytes()).isEqualTo(new byte[] { TRUE_AS_BYTE });
+  }
+
+  @Test
+  public void marshalling_false_boolean() throws Exception {
+    marshaller = new Marshaller();
+    marshaller.addBool(false);
+
+    assertThat(marshaller.getBytes()).isEqualTo(new byte[] { FALSE_AS_BYTE });
   }
 
   @Test
