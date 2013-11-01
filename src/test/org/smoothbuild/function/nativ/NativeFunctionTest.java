@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 
 import org.junit.Test;
-import org.smoothbuild.db.result.ResultDb;
+import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
@@ -27,11 +27,11 @@ public class NativeFunctionTest {
   String name = "functionName";
   CodeLocation codeLocation = new FakeCodeLocation();
 
-  ResultDb resultDb = mock(ResultDb.class);
+  TaskDb taskDb = mock(TaskDb.class);
   Signature signature = testSignature("functionName");
   Invoker invoker = mock(Invoker.class);
 
-  NativeFunction function = new NativeFunction(resultDb, signature, invoker);
+  NativeFunction function = new NativeFunction(taskDb, signature, invoker);
 
   @Test(expected = NullPointerException.class)
   public void nullResultCacheIsForbidden() throws Exception {
@@ -40,12 +40,12 @@ public class NativeFunctionTest {
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
-    new NativeFunction(resultDb, null, invoker);
+    new NativeFunction(taskDb, null, invoker);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullInvokerIsForbidden() throws Exception {
-    new NativeFunction(resultDb, signature, null);
+    new NativeFunction(taskDb, signature, null);
   }
 
   @Test

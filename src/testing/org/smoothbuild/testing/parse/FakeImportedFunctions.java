@@ -6,7 +6,7 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.db.result.ResultDb;
+import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
@@ -20,7 +20,7 @@ public class FakeImportedFunctions implements SymbolTable {
   private final Map<String, Function> map;
 
   public FakeImportedFunctions() {
-    Function function = new NativeFunction(mock(ResultDb.class), testSignature(IMPORTED_NAME),
+    Function function = new NativeFunction(mock(TaskDb.class), testSignature(IMPORTED_NAME),
         mock(Invoker.class));
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
