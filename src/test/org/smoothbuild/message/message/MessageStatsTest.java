@@ -5,6 +5,7 @@ import static org.smoothbuild.message.message.MessageType.INFO;
 import static org.smoothbuild.message.message.MessageType.SUGGESTION;
 import static org.smoothbuild.message.message.MessageType.WARNING;
 import static org.testory.Testory.given;
+import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
@@ -12,6 +13,7 @@ import org.junit.Test;
 
 public class MessageStatsTest {
   MessageStats messageStats;
+  MessageStats messageStats2;
 
   // initially count is zero
 
@@ -75,5 +77,67 @@ public class MessageStatsTest {
     given(messageStats).incCount(INFO);
     when(messageStats.getCount(INFO));
     thenReturned(1);
+  }
+
+  // add()
+
+  @Test
+  public void errors_are_added_when_message_stats_are_added() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats2 = new MessageStats());
+    given(messageStats).incCount(ERROR);
+    given(messageStats2).incCount(ERROR);
+
+    when(messageStats).add(messageStats2);
+
+    thenEqual(messageStats.getCount(ERROR), 2);
+    thenEqual(messageStats.getCount(WARNING), 0);
+    thenEqual(messageStats.getCount(SUGGESTION), 0);
+    thenEqual(messageStats.getCount(INFO), 0);
+  }
+
+  @Test
+  public void warnings_are_added_when_message_stats_are_added() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats2 = new MessageStats());
+    given(messageStats).incCount(WARNING);
+    given(messageStats2).incCount(WARNING);
+
+    when(messageStats).add(messageStats2);
+
+    thenEqual(messageStats.getCount(ERROR), 0);
+    thenEqual(messageStats.getCount(WARNING), 2);
+    thenEqual(messageStats.getCount(SUGGESTION), 0);
+    thenEqual(messageStats.getCount(INFO), 0);
+  }
+
+  @Test
+  public void suggestions_are_added_when_message_stats_are_added() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats2 = new MessageStats());
+    given(messageStats).incCount(SUGGESTION);
+    given(messageStats2).incCount(SUGGESTION);
+
+    when(messageStats).add(messageStats2);
+
+    thenEqual(messageStats.getCount(ERROR), 0);
+    thenEqual(messageStats.getCount(WARNING), 0);
+    thenEqual(messageStats.getCount(SUGGESTION), 2);
+    thenEqual(messageStats.getCount(INFO), 0);
+  }
+
+  @Test
+  public void infos_are_added_when_message_stats_are_added() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats2 = new MessageStats());
+    given(messageStats).incCount(INFO);
+    given(messageStats2).incCount(INFO);
+
+    when(messageStats).add(messageStats2);
+
+    thenEqual(messageStats.getCount(ERROR), 0);
+    thenEqual(messageStats.getCount(WARNING), 0);
+    thenEqual(messageStats.getCount(SUGGESTION), 0);
+    thenEqual(messageStats.getCount(INFO), 2);
   }
 }
