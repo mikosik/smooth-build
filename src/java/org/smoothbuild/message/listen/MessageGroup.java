@@ -52,6 +52,10 @@ public class MessageGroup implements Iterable<Message> {
     }
   }
 
+  public MessageStats messageStats() {
+    return messageStats;
+  }
+
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
