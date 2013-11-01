@@ -1,6 +1,7 @@
 package org.smoothbuild.message.message;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.collect.ImmutableMap;
@@ -15,6 +16,12 @@ public class MessageStats {
 
   public int getCount(MessageType messageType) {
     return map.get(messageType).get();
+  }
+
+  public void add(MessageStats messageStats) {
+    for (Entry<MessageType, AtomicInteger> entry : map.entrySet()) {
+      entry.getValue().addAndGet(messageStats.getCount(entry.getKey()));
+    }
   }
 
   private static ImmutableMap<MessageType, AtomicInteger> createMap() {
