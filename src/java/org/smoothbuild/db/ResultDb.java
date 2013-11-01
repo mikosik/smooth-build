@@ -26,11 +26,6 @@ public class ResultDb {
   }
 
   public void store(HashCode taskHash, Value value) {
-    // TODO remove once null values are forbidden
-    if (value == null) {
-      return;
-    }
-
     Marshaller marshaller = new Marshaller();
     marshaller.addInt(flagFor(value));
     marshaller.addHash(value.hash());
