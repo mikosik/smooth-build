@@ -35,6 +35,14 @@ public class MarshallerTest {
   }
 
   @Test
+  public void marshalling_byte() throws Exception {
+    marshaller = new Marshaller();
+    marshaller.addByte((byte) 123);
+
+    assertThat(marshaller.getBytes()).isEqualTo(new byte[] { 123 });
+  }
+
+  @Test
   public void marshalling_int() throws Exception {
     byte[] bytes = new byte[] { 0x12, 0x34, 0x56, 0x78 };
 
