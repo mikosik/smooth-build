@@ -1,10 +1,14 @@
 package org.smoothbuild.message.listen;
 
+import static org.smoothbuild.message.message.MessageType.ERROR;
+
 import java.io.PrintStream;
 
 import javax.inject.Singleton;
 
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.message.MessageStats;
+import org.smoothbuild.message.message.MessageType;
 
 import com.google.common.base.Splitter;
 
@@ -14,7 +18,7 @@ public class UserConsole {
   private static final String MESSAGE_PREFIX = "  " + MESSAGE_GROUP_PREFIX;
 
   private final PrintStream printStream;
-  private boolean isErrorReported;
+  private final MessageStats messageStats;
 
   public UserConsole() {
     this(System.out);
@@ -22,14 +26,14 @@ public class UserConsole {
 
   public UserConsole(PrintStream printStream) {
     this.printStream = printStream;
-    this.isErrorReported = false;
+    this.messageStats = new MessageStats();
   }
 
   public void report(MessageGroup messageGroup) {
     println(MESSAGE_GROUP_PREFIX + messageGroup.name());
     printGroup(messageGroup);
 
-    isErrorReported = isErrorReported || messageGroup.containsErrors();
+    messageStats.add(messageGroup.messageStats());
   }
 
   private void printGroup(MessageGroup messageGroup) {
@@ -39,14 +43,25 @@ public class UserConsole {
   }
 
   public boolean isErrorReported() {
-    return isErrorReported;
+    return 0 < messageStats.getCount(ERROR);
   }
 
   public void printFinalSummary() {
-    if (isErrorReported) {
+    if (isErrorReported()) {
       println(MESSAGE_GROUP_PREFIX + "FAILED :(");
+      printMessageStats();
     } else {
       println(MESSAGE_GROUP_PREFIX + "SUCCESS :)");
+      printMessageStats();
+    }
+  }
+
+  private void printMessageStats() {
+    for (MessageType messageType : MessageType.values()) {
+      int count = messageStats.getCount(messageType);
+      if (0 < count) {
+        println(MESSAGE_PREFIX + count + " " + messageType.namePlural());
+      }
     }
   }
 
