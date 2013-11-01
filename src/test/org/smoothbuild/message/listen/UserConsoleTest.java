@@ -1,21 +1,18 @@
 package org.smoothbuild.message.listen;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.message.message.MessageType.WARNING;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.Test;
-import org.mockito.InOrder;
 import org.smoothbuild.message.message.Message;
 
 public class UserConsoleTest {
-  PrintStream printStream = mock(PrintStream.class);
+  ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+  PrintStream printStream = new PrintStream(outputStream);
   UserConsole userConsole = new UserConsole(printStream);
 
   @Test
@@ -25,11 +22,12 @@ public class UserConsoleTest {
     messageGroup.report(new Message(ERROR, "message string"));
 
     userConsole.report(messageGroup);
-    InOrder inOrder = inOrder(printStream);
-    inOrder.verify(printStream).println(" + GROUP NAME");
-    inOrder.verify(printStream).print("   + ");
-    inOrder.verify(printStream).println("ERROR: message string");
-    verifyNoMoreInteractions(printStream);
+
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + ERROR: message string\n");
+
+    assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
 
   @Test
@@ -39,9 +37,11 @@ public class UserConsoleTest {
     messageGroup.report(new Message(WARNING, "message string"));
 
     userConsole.report(messageGroup);
-    verify(printStream).println(" + GROUP NAME");
-    verify(printStream).print("   + ");
-    verify(printStream).println("WARNING: message string");
+
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + WARNING: message string\n");
+    assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
 
   @Test
@@ -71,7 +71,12 @@ public class UserConsoleTest {
     userConsole.report(messageGroup);
     userConsole.printFinalSummary();
 
-    verify(printStream).println(" + SUCCESS :)");
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + WARNING: message string\n");
+    builder.append(" + SUCCESS :)\n");
+
+    assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
 
   @Test
@@ -82,6 +87,11 @@ public class UserConsoleTest {
     userConsole.report(messageGroup);
     userConsole.printFinalSummary();
 
-    verify(printStream).println(" + FAILED :(");
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + ERROR: message string\n");
+    builder.append(" + FAILED :(\n");
+
+    assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
 }
