@@ -36,13 +36,14 @@ public class UserConsoleTest {
   public void reporting_message_group_without_error_message() throws Exception {
     String name = "GROUP NAME";
     MessageGroup messageGroup = new MessageGroup(name);
-    messageGroup.report(new Message(WARNING, "message string"));
+    messageGroup.report(new Message(WARNING, "message string\nsecond line"));
 
     userConsole.report(messageGroup);
 
     StringBuilder builder = new StringBuilder();
     builder.append(" + GROUP NAME\n");
     builder.append("   + WARNING: message string\n");
+    builder.append("     second line\n");
     assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
 
