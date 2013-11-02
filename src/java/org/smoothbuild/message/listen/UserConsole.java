@@ -3,6 +3,7 @@ package org.smoothbuild.message.listen;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import java.io.PrintStream;
+import java.util.Iterator;
 
 import javax.inject.Singleton;
 
@@ -14,8 +15,9 @@ import com.google.common.base.Splitter;
 
 @Singleton
 public class UserConsole {
-  private static final String MESSAGE_GROUP_PREFIX = " + ";
-  private static final String MESSAGE_PREFIX = "  " + MESSAGE_GROUP_PREFIX;
+  private static final String GROUP_PREFIX = " + ";
+  private static final String MESSAGE_FIRST_LINE_PREFIX = "  " + GROUP_PREFIX;
+  private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
 
   private final PrintStream printStream;
   private final MessageStats messageStats;
@@ -30,7 +32,7 @@ public class UserConsole {
   }
 
   public void report(MessageGroup messageGroup) {
-    println(MESSAGE_GROUP_PREFIX + messageGroup.name());
+    println(GROUP_PREFIX + messageGroup.name());
     printGroup(messageGroup);
 
     messageStats.add(messageGroup.messageStats());
@@ -48,10 +50,10 @@ public class UserConsole {
 
   public void printFinalSummary() {
     if (isErrorReported()) {
-      println(MESSAGE_GROUP_PREFIX + "FAILED :(");
+      println(GROUP_PREFIX + "FAILED :(");
       printMessageStats();
     } else {
-      println(MESSAGE_GROUP_PREFIX + "SUCCESS :)");
+      println(GROUP_PREFIX + "SUCCESS :)");
       printMessageStats();
     }
   }
@@ -60,15 +62,20 @@ public class UserConsole {
     for (MessageType messageType : MessageType.values()) {
       int count = messageStats.getCount(messageType);
       if (0 < count) {
-        println(MESSAGE_PREFIX + count + " " + messageType.namePlural());
+        println(MESSAGE_FIRST_LINE_PREFIX + count + " " + messageType.namePlural());
       }
     }
   }
 
   protected void report(Message message) {
-    for (String line : Splitter.on("\n").split(message.toString())) {
-      print(MESSAGE_PREFIX);
-      println(line);
+    Iterator<String> it = Splitter.on("\n").split(message.toString()).iterator();
+
+    print(MESSAGE_FIRST_LINE_PREFIX);
+    println(it.next());
+
+    while (it.hasNext()) {
+      print(MESSAGE_OTHER_LINES_PREFIX);
+      println(it.next());
     }
   }
 
