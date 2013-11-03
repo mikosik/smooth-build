@@ -31,6 +31,6 @@ public class CodeLocationTest {
 
   @Test
   public void testToString() throws Exception {
-    assertThat(codeLocation(2).toString()).isEqualTo("[ build.smooth:2 ]");
+    assertThat(codeLocation(2).toString()).isEqualTo("[ line 2 ]");
   }
 }
