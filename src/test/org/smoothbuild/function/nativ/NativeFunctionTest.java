@@ -17,13 +17,14 @@ import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FakeString;
+import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  SandboxImpl sandbox = mock(SandboxImpl.class);
+  SandboxImpl sandbox = new FakeSandbox();
   String name = "functionName";
   CodeLocation codeLocation = new FakeCodeLocation();
 

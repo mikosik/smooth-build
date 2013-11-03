@@ -11,11 +11,13 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.db.hash.Hash;
+import org.smoothbuild.db.task.CachedResult;
 import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.util.Empty;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
@@ -88,14 +90,14 @@ public class CachingTaskTest {
   public void task_is_not_executed_when_result_from_db_is_returned() throws Exception {
     BDDMockito.given(nativeCallHasher.hash()).willReturn(hash);
     BDDMockito.given(taskDb.contains(hash)).willReturn(true);
-    BDDMockito.given(taskDb.read(hash)).willReturn(value);
+    BDDMockito.given(taskDb.read(hash)).willReturn(new CachedResult(value, Empty.messageList()));
 
     assertThat(cachingTask.execute(sandbox)).isEqualTo(value);
     verifyZeroInteractions(task);
   }
 
-  private static Closure $cachingTask(final TaskDb taskDb,
-      final NativeCallHasher nativeCallHasher, final Task task) {
+  private static Closure $cachingTask(final TaskDb taskDb, final NativeCallHasher nativeCallHasher,
+      final Task task) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
