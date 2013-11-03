@@ -10,16 +10,16 @@ import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.common.Closure;
 
 public class LocatedNodeImplTest {
-  Sandbox sandbox = mock(Sandbox.class);
+  SandboxImpl sandbox = mock(SandboxImpl.class);
   Value value = mock(Value.class);
   Task task = mock(Task.class);
   LocatedTask locatedTask;

@@ -9,15 +9,15 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
+import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.common.Closure;
 
 public class LocatedTaskTest {
   String name = "name";
   Value value = mock(Value.class);
-  Sandbox sandbox = mock(Sandbox.class);
+  SandboxImpl sandbox = mock(SandboxImpl.class);
 
   Task task = mock(Task.class);
   CodeLocation codeLocation = new FakeCodeLocation();

@@ -6,11 +6,11 @@ import java.util.Map;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
+import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -35,7 +35,7 @@ public class NativeCallTask implements Task {
   }
 
   @Override
-  public Value execute(Sandbox sandbox) {
+  public Value execute(SandboxImpl sandbox) {
     try {
       Value result = function.invoke(sandbox, calculateArguments());
       if (result == null && !isNullResultAllowed()) {

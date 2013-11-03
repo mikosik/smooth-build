@@ -3,8 +3,8 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
+import org.smoothbuild.task.exec.SandboxImpl;
 
 public class LocatedTask implements Task {
   private final Task task;
@@ -26,7 +26,7 @@ public class LocatedTask implements Task {
   }
 
   @Override
-  public Value execute(Sandbox sandbox) {
+  public Value execute(SandboxImpl sandbox) {
     return task.execute(sandbox);
   }
 
