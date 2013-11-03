@@ -61,7 +61,7 @@ public class AmbiguousNamelessArgsErrorTest {
 
     StringBuilder builder = new StringBuilder();
     builder
-        .append("ERROR [ build.smooth:7 ]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:\n");
+        .append("ERROR [ line 7 ]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:\n");
     builder.append("List of assignments that were successfully detected is following:\n");
     builder.append("  String : param1 <- String : arg1       #12 " + a1.codeLocation() + "\n");
     builder.append("  String*: param2 <- String*: <nameless> #7  " + a2.codeLocation() + "\n");
