@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.db.hash.Hash;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 
@@ -12,6 +13,11 @@ import com.google.common.hash.HashCode;
 
 public class FakeFileSet implements FileSet {
   private final List<File> files = Lists.newArrayList();
+
+  @Override
+  public Type type() {
+    return Type.FILE_SET;
+  }
 
   public void add(File file) {
     files.add(file);

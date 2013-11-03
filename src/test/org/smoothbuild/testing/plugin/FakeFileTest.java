@@ -10,6 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.function.base.Type;
 import org.testory.common.Closure;
 
 public class FakeFileTest {
@@ -32,6 +33,13 @@ public class FakeFileTest {
         return new FakeFile(path);
       }
     };
+  }
+
+  @Test
+  public void type() throws Exception {
+    given(file = new FakeFile(path));
+    when(file.type());
+    thenReturned(Type.FILE);
   }
 
   @Test

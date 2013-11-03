@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.InputStream;
 
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.Value;
 
@@ -19,6 +20,11 @@ public class FileObject implements File, Value {
     this.path = checkNotNull(path);
     this.content = checkNotNull(content);
     this.hash = checkNotNull(hash);
+  }
+
+  @Override
+  public Type type() {
+    return Type.FILE;
   }
 
   @Override

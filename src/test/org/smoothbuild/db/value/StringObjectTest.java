@@ -14,6 +14,7 @@ import java.io.InputStream;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.db.hash.HashedDb;
+import org.smoothbuild.function.base.Type;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
@@ -36,6 +37,13 @@ public class StringObjectTest {
   public void null_file_system_is_forbidden() throws Exception {
     when(stringObject(null, hash));
     thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void type() throws Exception {
+    given(stringObject = new StringObject(hashedDb, hash));
+    when(stringObject.type());
+    thenReturned(Type.STRING);
   }
 
   @Test

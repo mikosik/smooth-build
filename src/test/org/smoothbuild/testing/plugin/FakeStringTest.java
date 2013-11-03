@@ -8,6 +8,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Type;
 import org.testory.common.Closure;
 
 public class FakeStringTest {
@@ -27,6 +28,13 @@ public class FakeStringTest {
     given(fakeString = new FakeString(value));
     when(fakeString.value());
     thenReturned(value);
+  }
+
+  @Test
+  public void type() throws Exception {
+    given(fakeString = new FakeString(value));
+    when(fakeString.type());
+    thenReturned(Type.STRING);
   }
 
   @Test

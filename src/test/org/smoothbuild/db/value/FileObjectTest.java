@@ -11,6 +11,7 @@ import java.io.InputStream;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.function.base.Type;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
@@ -39,6 +40,13 @@ public class FileObjectTest {
   public void null_path_is_forbidden() throws Exception {
     when(fileObject(null, content, hash));
     thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void type() throws Exception {
+    given(fileObject = new FileObject(path, content, hash));
+    when(fileObject.type());
+    thenReturned(Type.FILE);
   }
 
   @Test

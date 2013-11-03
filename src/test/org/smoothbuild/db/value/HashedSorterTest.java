@@ -6,6 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.Value;
 
 import com.google.common.collect.Lists;
@@ -45,5 +46,9 @@ public class HashedSorterTest {
       return hash;
     }
 
+    @Override
+    public Type type() {
+      return Type.STRING;
+    }
   }
 }

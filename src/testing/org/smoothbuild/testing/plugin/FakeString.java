@@ -3,6 +3,7 @@ package org.smoothbuild.testing.plugin;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.db.hash.Hash;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.StringValue;
 
 import com.google.common.hash.HashCode;
@@ -12,6 +13,11 @@ public class FakeString implements StringValue {
 
   public FakeString(String value) {
     this.value = checkNotNull(value);
+  }
+
+  @Override
+  public Type type() {
+    return Type.STRING;
   }
 
   @Override

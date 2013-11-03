@@ -9,6 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.File;
 import org.testory.common.Closure;
 
@@ -32,6 +33,13 @@ public class FileSetObjectTest {
   public void null_hash_is_forbidden() {
     when(newFileSetObject(valueDb, null));
     thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void type() throws Exception {
+    given(fileSetObject = new FileSetObject(valueDb, hash));
+    when(fileSetObject.type());
+    thenReturned(Type.FILE_SET);
   }
 
   @Test
