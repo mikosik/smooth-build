@@ -1,5 +1,7 @@
 package org.smoothbuild.testing.plugin;
 
+import static org.smoothbuild.command.SmoothContants.CHARSET;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -8,7 +10,6 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.File;
 
-import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 
 public class FakeFile implements File {
@@ -21,7 +22,7 @@ public class FakeFile implements File {
   }
 
   public FakeFile(Path path, String content) {
-    this(path, content.getBytes(Charsets.UTF_8));
+    this(path, content.getBytes(CHARSET));
   }
 
   public FakeFile(Path path, byte[] bytes) {

@@ -5,7 +5,6 @@ import static org.smoothbuild.db.hash.HashCodes.toPath;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 
 import org.smoothbuild.db.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hash.err.ReadingHashedObjectFailedError;
@@ -14,11 +13,9 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
-import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 
 public class HashedDb {
-  public static final Charset STRING_CHARSET = Charsets.UTF_8;
   public static final byte FALSE_AS_BYTE = 1;
   public static final byte TRUE_AS_BYTE = 2;
 

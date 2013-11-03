@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static com.google.common.base.Charsets.UTF_8;
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.parse.ScriptBuilder.script;
 
@@ -81,7 +81,7 @@ public class ScriptParserTest {
 
   private static FakeMessageGroup parse(String string) throws IOException {
     FakeMessageGroup messages = new FakeMessageGroup();
-    ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(UTF_8));
+    ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(CHARSET));
     try {
       ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));
     } catch (PhaseFailedException e) {

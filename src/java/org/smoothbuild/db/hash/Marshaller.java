@@ -1,7 +1,7 @@
 package org.smoothbuild.db.hash;
 
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.db.hash.HashedDb.FALSE_AS_BYTE;
-import static org.smoothbuild.db.hash.HashedDb.STRING_CHARSET;
 import static org.smoothbuild.db.hash.HashedDb.TRUE_AS_BYTE;
 
 import org.smoothbuild.fs.base.Path;
@@ -18,7 +18,7 @@ public class Marshaller {
   }
 
   public void addPath(Path path) {
-    byte[] pathBytes = path.value().getBytes(STRING_CHARSET);
+    byte[] pathBytes = path.value().getBytes(CHARSET);
     dataOutput.writeInt(pathBytes.length);
     dataOutput.write(pathBytes);
   }

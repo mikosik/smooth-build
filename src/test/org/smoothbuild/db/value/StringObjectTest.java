@@ -1,7 +1,7 @@
 package org.smoothbuild.db.value;
 
-import static com.google.common.base.Charsets.UTF_8;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -56,7 +56,7 @@ public class StringObjectTest {
   @Test
   public void open_input_stream_calls_hashed_db_open_input_stream() throws IOException {
     BDDMockito.given(hashedDb.openInputStream(hash)).willReturn(
-        new ByteArrayInputStream(content.getBytes(UTF_8)));
+        new ByteArrayInputStream(content.getBytes(CHARSET)));
     given(stringObject = new StringObject(hashedDb, hash));
     when(stringObject.value());
     thenReturned(content);

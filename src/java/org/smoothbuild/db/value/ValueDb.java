@@ -1,6 +1,6 @@
 package org.smoothbuild.db.value;
 
-import static org.smoothbuild.db.hash.HashedDb.STRING_CHARSET;
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 
 import java.util.List;
 
@@ -113,7 +113,7 @@ public class ValueDb {
   // String
 
   public StringValue string(String string) {
-    HashCode hash = hashedDb.store(string.getBytes(STRING_CHARSET));
+    HashCode hash = hashedDb.store(string.getBytes(CHARSET));
     return new StringObject(hashedDb, hash);
   }
 
