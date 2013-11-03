@@ -2,9 +2,6 @@ package org.smoothbuild.db.task;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.MessageType.INFO;
-import static org.smoothbuild.message.message.MessageType.SUGGESTION;
-import static org.smoothbuild.message.message.MessageType.WARNING;
 
 import java.util.List;
 
@@ -32,11 +29,6 @@ public class TaskDb {
   private static final byte FILE_FLAG = 3;
   private static final byte STRING_FLAG = 4;
 
-  private static final byte ERROR_FLAG = 1;
-  private static final byte WARNING_FLAG = 2;
-  private static final byte SUGGESTION_FLAG = 3;
-  private static final byte INFO_FLAG = 4;
-
   private final HashedDb taskResultsDb;
   private final ValueDb valueDb;
 
@@ -57,7 +49,7 @@ public class TaskDb {
     for (Message message : messages) {
       StringValue messageString = valueDb.string(message.message());
 
-      marshaller.write(flagFor(message.type()));
+      marshaller.write(AllMessageTypes.INSTANCE.valueToByte(message.type()));
       marshaller.write(messageString.hash());
       hasErrors = hasErrors || message.type() == ERROR;
     }
@@ -80,7 +72,7 @@ public class TaskDb {
       boolean hasErrors = false;
       List<Message> messages = newArrayList();
       for (int i = 0; i < size; i++) {
-        MessageType type = flagToMessageType(unmarshaller.readByte());
+        MessageType type = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();
         String messageString = valueDb.string(messageStringHash).value();
         messages.add(new Message(type, messageString));
@@ -128,36 +120,5 @@ public class TaskDb {
     }
     throw new RuntimeException("Internal error in smooth binary. Unknown value type = "
         + value.getClass().getName());
-  }
-
-  private static MessageType flagToMessageType(byte messageTypeFlag) {
-    switch (messageTypeFlag) {
-      case ERROR_FLAG:
-        return ERROR;
-      case WARNING_FLAG:
-        return WARNING;
-      case SUGGESTION_FLAG:
-        return SUGGESTION;
-      case INFO_FLAG:
-        return INFO;
-      default:
-        throw new RuntimeException("Internal error in smooth binary. Unknown MessageType flag = "
-            + messageTypeFlag);
-    }
-  }
-
-  private static byte flagFor(MessageType type) {
-    switch (type) {
-      case ERROR:
-        return ERROR_FLAG;
-      case WARNING:
-        return WARNING_FLAG;
-      case SUGGESTION:
-        return SUGGESTION_FLAG;
-      case INFO:
-        return INFO_FLAG;
-      default:
-        throw new RuntimeException("Internal error in smooth binary. Unknown MessageType = " + type);
-    }
   }
 }
