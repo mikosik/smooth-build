@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import org.junit.Test;
 import org.smoothbuild.function.def.LocatedNode;
 import org.smoothbuild.function.def.Node;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Result;
 
@@ -84,6 +85,24 @@ public class EmptyTest {
   @Test
   public void emptyLocatedNodeAlwaysReturnsTheSameObject() {
     assertThat(Empty.locatedNodeList()).isSameAs(Empty.locatedNodeList());
+  }
+
+  // messageList()
+
+  @Test
+  public void messageListIsEmpty() {
+    assertThat(Empty.messageList()).isEmpty();
+  }
+
+  @Test
+  public void emptyMessageListIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableList<Message> list = Empty.messageList();
+  }
+
+  @Test
+  public void emptyMessageListAlwaysReturnsTheSameObject() {
+    assertThat(Empty.messageList()).isSameAs(Empty.messageList());
   }
 
   // nullToEmpty
