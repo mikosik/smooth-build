@@ -1,5 +1,6 @@
 package org.smoothbuild.function.base;
 
+import org.smoothbuild.plugin.Blob;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.StringSet;
@@ -12,6 +13,7 @@ import com.google.inject.TypeLiteral;
 public class Type {
   public static final Type STRING = create("String", StringValue.class);
   public static final Type STRING_SET = create("String*", StringSet.class);
+  public static final Type BLOB = create("Blob", Blob.class);
   public static final Type FILE = create("File", File.class);
   public static final Type FILE_SET = create("File*", FileSet.class);
   public static final Type VOID = create("Void", Void.TYPE);
@@ -21,8 +23,8 @@ public class Type {
   static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE,
       FILE_SET, VOID);
   static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET);
-  static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET,
-      VOID, EMPTY_SET);
+  static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB, FILE,
+      FILE_SET, VOID, EMPTY_SET);
 
   static final ImmutableSet<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
   static final ImmutableSet<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
