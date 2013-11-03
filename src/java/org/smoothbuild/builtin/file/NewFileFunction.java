@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,8 +17,6 @@ import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
-
-import com.google.common.base.Charsets;
 
 public class NewFileFunction {
   public static final Charset US_ASCII = Charset.forName("US-ASCII");
@@ -53,7 +52,7 @@ public class NewFileFunction {
       fileBuilder.setPath(filePath);
 
       OutputStream outputStream = fileBuilder.openOutputStream();
-      try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, Charsets.UTF_8)) {
+      try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, CHARSET)) {
         writer.write(params.content().value());
       } catch (IOException e) {
         throw new FileSystemException(e);

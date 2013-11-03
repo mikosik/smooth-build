@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.ByteArrayOutputStream;
@@ -12,8 +13,6 @@ import java.util.zip.ZipInputStream;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
-
-import com.google.common.base.Charsets;
 
 public class ZipSmoothTest extends IntegrationTestCase {
 
@@ -46,8 +45,7 @@ public class ZipSmoothTest extends IntegrationTestCase {
           while ((len = zipInputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, len);
           }
-          assertThat(new String(outputStream.toByteArray(), Charsets.UTF_8))
-              .isEqualTo(path.value());
+          assertThat(new String(outputStream.toByteArray(), CHARSET)).isEqualTo(path.value());
         }
       }
     }

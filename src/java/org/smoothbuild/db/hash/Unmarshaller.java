@@ -1,6 +1,6 @@
 package org.smoothbuild.db.hash;
 
-import static org.smoothbuild.db.hash.HashedDb.STRING_CHARSET;
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.Closeable;
@@ -38,7 +38,7 @@ public class Unmarshaller implements Closeable {
      * java.nio.charset.CharsetDecoder} class should be used when more control
      * over the decoding process is required.
      */
-    String value = new String(bytes, STRING_CHARSET);
+    String value = new String(bytes, CHARSET);
 
     return toPathSafely(value);
   }

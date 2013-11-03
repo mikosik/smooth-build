@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hash;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.db.hash.HashedDb.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hash.HashedDb.TRUE_AS_BYTE;
 import static org.smoothbuild.fs.base.Path.path;
@@ -8,7 +9,6 @@ import static org.smoothbuild.fs.base.Path.path;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 
-import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;
@@ -72,7 +72,7 @@ public class MarshallerTest {
 
   private static byte[] pathToBytes(Path path) {
     byte[] sizeBytes = Ints.toByteArray(path.value().length());
-    byte[] charBytes = path.value().getBytes(Charsets.UTF_8);
+    byte[] charBytes = path.value().getBytes(CHARSET);
     byte[] bytes = Bytes.concat(sizeBytes, charBytes);
     return bytes;
   }

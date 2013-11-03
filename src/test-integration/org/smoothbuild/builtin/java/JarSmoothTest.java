@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.java;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.ByteArrayOutputStream;
@@ -11,8 +12,6 @@ import java.util.jar.JarInputStream;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
-
-import com.google.common.base.Charsets;
 
 public class JarSmoothTest extends IntegrationTestCase {
   @Test
@@ -47,8 +46,7 @@ public class JarSmoothTest extends IntegrationTestCase {
           while ((len = jarInputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, len);
           }
-          assertThat(new String(outputStream.toByteArray(), Charsets.UTF_8))
-              .isEqualTo(path.value());
+          assertThat(new String(outputStream.toByteArray(), CHARSET)).isEqualTo(path.value());
         }
       }
     }
