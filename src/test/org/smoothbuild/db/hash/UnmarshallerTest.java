@@ -45,7 +45,7 @@ public class UnmarshallerTest {
     HashCode myHash = Hash.function().hashInt(33);
 
     Marshaller marshaller = new Marshaller();
-    marshaller.addHash(myHash);
+    marshaller.write(myHash);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
@@ -59,7 +59,7 @@ public class UnmarshallerTest {
   public void marshalled_false_bool_value_can_be_unmarshalled() {
     boolean myBool = false;
     Marshaller marshaller = new Marshaller();
-    marshaller.addBool(myBool);
+    marshaller.write(myBool);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
@@ -73,7 +73,7 @@ public class UnmarshallerTest {
   public void marshalled_true_bool_value_can_be_unmarshalled() {
     boolean myBool = true;
     Marshaller marshaller = new Marshaller();
-    marshaller.addBool(myBool);
+    marshaller.write(myBool);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
@@ -86,7 +86,7 @@ public class UnmarshallerTest {
   @Test
   public void unmarshalling_corrupted_bool_throws_exception() {
     Marshaller marshaller = new Marshaller();
-    marshaller.addByte((byte) 7);
+    marshaller.write((byte) 7);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
@@ -100,7 +100,7 @@ public class UnmarshallerTest {
   public void marshalled_byte_can_be_unmarshalled() {
     byte myByte = 123;
     Marshaller marshaller = new Marshaller();
-    marshaller.addByte(myByte);
+    marshaller.write(myByte);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
@@ -114,7 +114,7 @@ public class UnmarshallerTest {
   public void marshalled_int_can_be_unmarshalled() {
     int myInt = 0x12345678;
     Marshaller marshaller = new Marshaller();
-    marshaller.addInt(myInt);
+    marshaller.write(myInt);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
@@ -132,10 +132,10 @@ public class UnmarshallerTest {
     int myInt = 0x12345667;
 
     Marshaller marshaller = new Marshaller();
-    marshaller.addHash(myHash);
+    marshaller.write(myHash);
     marshaller.addPath(path);
-    marshaller.addByte(myByte);
-    marshaller.addInt(myInt);
+    marshaller.write(myByte);
+    marshaller.write(myInt);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);

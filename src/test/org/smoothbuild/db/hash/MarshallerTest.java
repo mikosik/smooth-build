@@ -31,7 +31,7 @@ public class MarshallerTest {
     HashCode hashCode = HashCode.fromInt(33);
 
     marshaller = new Marshaller();
-    marshaller.addHash(hashCode);
+    marshaller.write(hashCode);
 
     assertThat(marshaller.getBytes()).isEqualTo(hashToBytes(hashCode));
   }
@@ -39,7 +39,7 @@ public class MarshallerTest {
   @Test
   public void marshalling_byte() throws Exception {
     marshaller = new Marshaller();
-    marshaller.addByte((byte) 123);
+    marshaller.write((byte) 123);
 
     assertThat(marshaller.getBytes()).isEqualTo(new byte[] { 123 });
   }
@@ -47,7 +47,7 @@ public class MarshallerTest {
   @Test
   public void marshalling_true_boolean() throws Exception {
     marshaller = new Marshaller();
-    marshaller.addBool(true);
+    marshaller.write(true);
 
     assertThat(marshaller.getBytes()).isEqualTo(new byte[] { TRUE_AS_BYTE });
   }
@@ -55,7 +55,7 @@ public class MarshallerTest {
   @Test
   public void marshalling_false_boolean() throws Exception {
     marshaller = new Marshaller();
-    marshaller.addBool(false);
+    marshaller.write(false);
 
     assertThat(marshaller.getBytes()).isEqualTo(new byte[] { FALSE_AS_BYTE });
   }
@@ -65,7 +65,7 @@ public class MarshallerTest {
     byte[] bytes = new byte[] { 0x12, 0x34, 0x56, 0x78 };
 
     marshaller = new Marshaller();
-    marshaller.addInt(Ints.fromByteArray(bytes));
+    marshaller.write(Ints.fromByteArray(bytes));
 
     assertThat(marshaller.getBytes()).isEqualTo(bytes);
   }

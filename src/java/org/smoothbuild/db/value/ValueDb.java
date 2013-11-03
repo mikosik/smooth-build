@@ -78,9 +78,9 @@ public class ValueDb {
     Marshaller marshaller = new Marshaller();
     List<Value> sortedElements = HashedSorter.sort(elements);
 
-    marshaller.addInt(sortedElements.size());
+    marshaller.write(sortedElements.size());
     for (Value value : sortedElements) {
-      marshaller.addHash(value.hash());
+      marshaller.write(value.hash());
     }
 
     return hashedDb.store(marshaller.getBytes());
@@ -93,7 +93,7 @@ public class ValueDb {
     HashCode contentHash = blob.hash();
 
     Marshaller marshaller = new Marshaller();
-    marshaller.addHash(contentHash);
+    marshaller.write(contentHash);
     marshaller.addPath(path);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
