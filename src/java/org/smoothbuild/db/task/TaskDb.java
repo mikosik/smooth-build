@@ -16,10 +16,10 @@ import org.smoothbuild.plugin.Value;
 import com.google.common.hash.HashCode;
 
 public class TaskDb {
-  private static final int FILE_SET_FLAG = 1;
-  private static final int STRING_SET_FLAG = 2;
-  private static final int FILE_FLAG = 3;
-  private static final int STRING_FLAG = 4;
+  private static final byte FILE_SET_FLAG = 1;
+  private static final byte STRING_SET_FLAG = 2;
+  private static final byte FILE_FLAG = 3;
+  private static final byte STRING_FLAG = 4;
 
   private final HashedDb taskResultsDb;
   private final ValueDb valueDb;
@@ -32,7 +32,7 @@ public class TaskDb {
 
   public void store(HashCode taskHash, Value value) {
     Marshaller marshaller = new Marshaller();
-    marshaller.addInt(flagFor(value));
+    marshaller.addByte(flagFor(value));
     marshaller.addHash(value.hash());
 
     taskResultsDb.store(taskHash, marshaller.getBytes());
@@ -44,13 +44,13 @@ public class TaskDb {
 
   public Value read(HashCode taskHash) {
     try (Unmarshaller unmarshaller = new Unmarshaller(taskResultsDb, taskHash);) {
-      int flag = unmarshaller.readInt();
+      byte flag = unmarshaller.readByte();
       HashCode resultObjectHash = unmarshaller.readHash();
       return readValue(flag, resultObjectHash);
     }
   }
 
-  private Value readValue(int flag, HashCode resultObjectHash) {
+  private Value readValue(byte flag, HashCode resultObjectHash) {
     switch (flag) {
       case FILE_SET_FLAG:
         return valueDb.fileSet(resultObjectHash);
@@ -65,7 +65,7 @@ public class TaskDb {
     }
   }
 
-  private static int flagFor(Value value) {
+  private static byte flagFor(Value value) {
     if (value instanceof FileSet) {
       return FILE_SET_FLAG;
     }
