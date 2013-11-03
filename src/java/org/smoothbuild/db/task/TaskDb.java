@@ -53,18 +53,18 @@ public class TaskDb {
 
     boolean hasErrors = false;
     ImmutableList<Message> messages = cachedResult.messages();
-    marshaller.addInt(messages.size());
+    marshaller.write(messages.size());
     for (Message message : messages) {
       StringValue messageString = valueDb.string(message.message());
 
-      marshaller.addByte(flagFor(message.type()));
-      marshaller.addHash(messageString.hash());
+      marshaller.write(flagFor(message.type()));
+      marshaller.write(messageString.hash());
       hasErrors = hasErrors || message.type() == ERROR;
     }
 
     if (!hasErrors) {
-      marshaller.addByte(flagFor(value));
-      marshaller.addHash(value.hash());
+      marshaller.write(flagFor(value));
+      marshaller.write(value.hash());
     }
 
     taskResultsDb.store(taskHash, marshaller.getBytes());

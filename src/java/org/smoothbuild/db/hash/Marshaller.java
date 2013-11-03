@@ -23,19 +23,19 @@ public class Marshaller {
     dataOutput.write(pathBytes);
   }
 
-  public void addHash(HashCode hash) {
+  public void write(HashCode hash) {
     dataOutput.write(hash.asBytes());
   }
 
-  public void addBool(boolean boolValue) {
+  public void write(boolean boolValue) {
     dataOutput.writeByte(boolValue ? TRUE_AS_BYTE : FALSE_AS_BYTE);
   }
 
-  public void addByte(byte byteValue) {
+  public void write(byte byteValue) {
     dataOutput.writeByte(byteValue);
   }
 
-  public void addInt(int intValue) {
+  public void write(int intValue) {
     dataOutput.writeInt(intValue);
   }
 
