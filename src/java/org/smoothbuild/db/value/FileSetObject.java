@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Iterator;
 
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Value;
@@ -17,6 +18,11 @@ public class FileSetObject implements FileSet, Value {
   public FileSetObject(ValueDb valueDb, HashCode hash) {
     this.valueDb = checkNotNull(valueDb);
     this.hash = checkNotNull(hash);
+  }
+
+  @Override
+  public Type type() {
+    return Type.FILE_SET;
   }
 
   @Override

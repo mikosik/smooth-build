@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hash.HashedDb;
 import org.smoothbuild.db.hash.err.ReadingHashedObjectFailedError;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.StringValue;
 
@@ -19,6 +20,11 @@ public class StringObject implements StringValue {
   public StringObject(HashedDb hashedDb, HashCode hash) {
     this.hashedDb = checkNotNull(hashedDb);
     this.hash = checkNotNull(hash);
+  }
+
+  @Override
+  public Type type() {
+    return Type.STRING;
   }
 
   @Override

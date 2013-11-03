@@ -9,6 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.StringValue;
 import org.testory.common.Closure;
 
@@ -32,6 +33,13 @@ public class StringSetObjectTest {
   public void null_hash_is_forbidden() {
     when(newStringSetObject(valueDb, null));
     thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void type() throws Exception {
+    given(stringSetObject = new StringSetObject(valueDb, hash));
+    when(stringSetObject.type());
+    thenReturned(Type.STRING_SET);
   }
 
   @Test

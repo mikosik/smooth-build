@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Iterator;
 
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
@@ -17,6 +18,11 @@ public class StringSetObject implements StringSet, Value {
   public StringSetObject(ValueDb valueDb, HashCode hash) {
     this.valueDb = checkNotNull(valueDb);
     this.hash = checkNotNull(hash);
+  }
+
+  @Override
+  public Type type() {
+    return Type.STRING_SET;
   }
 
   @Override

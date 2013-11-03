@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import org.hamcrest.Matcher;
 import org.junit.Test;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 
@@ -82,6 +83,11 @@ public class StringSetMatchersTest {
     @Override
     public HashCode hash() {
       throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Type type() {
+      return Type.STRING_SET;
     }
   }
 }

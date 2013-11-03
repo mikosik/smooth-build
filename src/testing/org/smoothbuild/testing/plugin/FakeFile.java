@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import org.smoothbuild.db.hash.Hash;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.plugin.File;
 
 import com.google.common.base.Charsets;
@@ -27,6 +28,11 @@ public class FakeFile implements File {
     this.path = path;
     this.hash = Hash.function().hashBytes(bytes);
     this.content = bytes.clone();
+  }
+
+  @Override
+  public Type type() {
+    return Type.FILE;
   }
 
   @Override

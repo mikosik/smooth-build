@@ -8,12 +8,19 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Type;
 
 import com.google.common.collect.Iterables;
 
 public class FakeFileSetTest {
   FakeFile file;
   FakeFileSet fileSet = new FakeFileSet();
+
+  @Test
+  public void type() throws Exception {
+    when(fileSet.type());
+    thenReturned(Type.FILE_SET);
+  }
 
   @Test
   public void initially_file_set_is_empty() throws Exception {
