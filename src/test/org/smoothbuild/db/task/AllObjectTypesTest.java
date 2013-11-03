@@ -1,9 +1,9 @@
 package org.smoothbuild.db.task;
 
-import static org.smoothbuild.db.task.ObjectType.FILE_SET_TYPE;
-import static org.smoothbuild.db.task.ObjectType.FILE_TYPE;
-import static org.smoothbuild.db.task.ObjectType.STRING_SET_TYPE;
-import static org.smoothbuild.db.task.ObjectType.STRING_TYPE;
+import static org.smoothbuild.function.base.Type.FILE;
+import static org.smoothbuild.function.base.Type.FILE_SET;
+import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
@@ -13,25 +13,25 @@ public class AllObjectTypesTest {
 
   @Test
   public void byte_value_for_error_is_zero() {
-    when(AllObjectTypes.INSTANCE.valueToByte(STRING_TYPE));
+    when(AllObjectTypes.INSTANCE.valueToByte(STRING));
     thenReturned((byte) 0);
   }
 
   @Test
   public void byte_value_for_warning_is_one() {
-    when(AllObjectTypes.INSTANCE.valueToByte(STRING_SET_TYPE));
+    when(AllObjectTypes.INSTANCE.valueToByte(STRING_SET));
     thenReturned((byte) 1);
   }
 
   @Test
   public void byte_value_for_suggestion_is_two() {
-    when(AllObjectTypes.INSTANCE.valueToByte(FILE_TYPE));
+    when(AllObjectTypes.INSTANCE.valueToByte(FILE));
     thenReturned((byte) 2);
   }
 
   @Test
   public void byte_value_for_info_is_three() {
-    when(AllObjectTypes.INSTANCE.valueToByte(FILE_SET_TYPE));
+    when(AllObjectTypes.INSTANCE.valueToByte(FILE_SET));
     thenReturned((byte) 3);
   }
 }
