@@ -12,11 +12,9 @@ import org.smoothbuild.db.hash.HashedDbWithTasks;
 import org.smoothbuild.db.hash.Marshaller;
 import org.smoothbuild.db.hash.Unmarshaller;
 import org.smoothbuild.db.value.ValueDb;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.message.message.MessageType;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileSet;
-import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 
@@ -50,8 +48,7 @@ public class TaskDb {
     }
 
     if (!hasErrors) {
-      ObjectType objectType = objectTypeOf(value);
-      marshaller.write(AllObjectTypes.INSTANCE.valueToByte(objectType));
+      marshaller.write(AllObjectTypes.INSTANCE.valueToByte(value.type()));
       marshaller.write(value.hash());
     }
 
@@ -78,28 +75,28 @@ public class TaskDb {
       if (hasErrors) {
         return new CachedResult(null, messages);
       } else {
-        ObjectType objectType = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
+        Type type = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
         HashCode resultObjectHash = unmarshaller.readHash();
-        Value value = objectType.readFrom(valueDb, resultObjectHash);
+        Value value = readValue(type, resultObjectHash);
         return new CachedResult(value, messages);
       }
     }
   }
 
-  private static ObjectType objectTypeOf(Value value) {
-    if (value instanceof FileSet) {
-      return ObjectType.FILE_SET_TYPE;
+  private Value readValue(Type type, HashCode resultObjectHash) {
+    if (type == Type.STRING) {
+      return valueDb.string(resultObjectHash);
     }
-    if (value instanceof StringSet) {
-      return ObjectType.STRING_SET_TYPE;
+    if (type == Type.STRING_SET) {
+      return valueDb.stringSet(resultObjectHash);
     }
-    if (value instanceof File) {
-      return ObjectType.FILE_TYPE;
+    if (type == Type.FILE) {
+      return valueDb.file(resultObjectHash);
     }
-    if (value instanceof StringValue) {
-      return ObjectType.STRING_TYPE;
+    if (type == Type.FILE_SET) {
+      return valueDb.fileSet(resultObjectHash);
     }
-    throw new RuntimeException("Internal error in smooth binary. Unknown value type = "
-        + value.getClass().getName());
+    throw new RuntimeException("Internal smooth error: Cannot read value of type " + type
+        + " from valueDb.");
   }
 }
