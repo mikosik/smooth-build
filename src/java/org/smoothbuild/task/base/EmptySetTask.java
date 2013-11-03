@@ -1,7 +1,7 @@
 package org.smoothbuild.task.base;
 
-import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
+import org.smoothbuild.task.exec.SandboxImpl;
 
 public class EmptySetTask implements Task {
 
@@ -16,7 +16,7 @@ public class EmptySetTask implements Task {
   }
 
   @Override
-  public Value execute(Sandbox sandbox) {
+  public Value execute(SandboxImpl sandbox) {
     /*
      * We cheat here and return empty fileSet. Nobody will ever use this object
      * 

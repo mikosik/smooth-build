@@ -2,10 +2,10 @@ package org.smoothbuild.task.base;
 
 import java.util.List;
 
-import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringSetBuilder;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
+import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableList;
 
@@ -27,7 +27,7 @@ public class StringSetTask implements Task {
   }
 
   @Override
-  public Value execute(Sandbox sandbox) {
+  public Value execute(SandboxImpl sandbox) {
     StringSetBuilder stringSetBuilder = sandbox.stringSetBuilder();
 
     for (Result task : elements) {

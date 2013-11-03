@@ -10,10 +10,10 @@ import org.junit.Test;
 import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FakeString;
@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  Sandbox sandbox = mock(Sandbox.class);
+  SandboxImpl sandbox = mock(SandboxImpl.class);
   String name = "functionName";
   CodeLocation codeLocation = new FakeCodeLocation();
 

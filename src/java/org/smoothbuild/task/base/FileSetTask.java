@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSetBuilder;
-import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.DuplicatePathError;
+import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableList;
 
@@ -28,7 +28,7 @@ public class FileSetTask implements Task {
   }
 
   @Override
-  public Value execute(Sandbox sandbox) {
+  public Value execute(SandboxImpl sandbox) {
     FileSetBuilder builder = sandbox.fileSetBuilder();
 
     for (Result task : elements) {
