@@ -12,6 +12,7 @@ import java.io.DataOutputStream;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.smoothbuild.db.hash.err.CorruptedBoolError;
+import org.smoothbuild.db.hash.err.CorruptedEnumValue;
 import org.smoothbuild.db.hash.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hash.err.TooFewBytesToUnmarshallValue;
@@ -122,6 +123,43 @@ public class UnmarshallerTest {
     unmarshaller.close();
 
     assertThat(actual).isEqualTo(myInt);
+  }
+
+  @Test
+  public void marshalled_enum_can_be_unmarshalled() throws Exception {
+    String value1 = "abc";
+    String value2 = "def";
+    String value3 = "ghi";
+    EnumValues<String> enumValues = new EnumValues<String>(value1, value2, value3);
+
+    Marshaller marshaller = new Marshaller();
+    marshaller.write(enumValues.valueToByte(value2));
+    HashCode hash = hashedDb.store(marshaller.getBytes());
+
+    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
+    String actual = unmarshaller.readEnum(enumValues);
+    unmarshaller.close();
+
+    assertThat(actual).isEqualTo(value2);
+  }
+
+  @Test
+  public void unmarshalling_enum_throws_corrupted_enum_exception_when_db_is_corrupted()
+      throws Exception {
+    String value1 = "abc";
+    String value2 = "def";
+    String value3 = "ghi";
+    EnumValues<String> enumValues = new EnumValues<String>(value1, value2, value3);
+
+    Marshaller marshaller = new Marshaller();
+    marshaller.write((byte) 100);
+    HashCode hash = hashedDb.store(marshaller.getBytes());
+
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
+      unmarshaller.readEnum(enumValues);
+    } catch (ErrorMessageException e) {
+      assertThat(e, containsInstanceOf(CorruptedEnumValue.class));
+    }
   }
 
   @Test
