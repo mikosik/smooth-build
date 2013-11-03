@@ -8,6 +8,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import org.smoothbuild.db.hash.err.CorruptedBoolError;
+import org.smoothbuild.db.hash.err.CorruptedEnumValue;
 import org.smoothbuild.db.hash.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hash.err.ReadingHashedObjectFailedError;
 import org.smoothbuild.db.hash.err.TooFewBytesToUnmarshallValue;
@@ -75,6 +76,15 @@ public class Unmarshaller implements Closeable {
   public int readInt() {
     byte[] bytes = readBytes(4, "int");
     return Ints.fromByteArray(bytes);
+  }
+
+  public <T> T readEnum(EnumValues<T> enumValues) {
+    byte byteValue = readByte();
+    if (enumValues.isValidByte(byteValue)) {
+      return enumValues.byteToValue(byteValue);
+    } else {
+      throw new ErrorMessageException(new CorruptedEnumValue(enumValues, byteValue));
+    }
   }
 
   private byte[] readBytes(int size, String valueName) {
