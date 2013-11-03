@@ -24,11 +24,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class TaskDb {
-  private static final byte FILE_SET_FLAG = 1;
-  private static final byte STRING_SET_FLAG = 2;
-  private static final byte FILE_FLAG = 3;
-  private static final byte STRING_FLAG = 4;
-
   private final HashedDb taskResultsDb;
   private final ValueDb valueDb;
 
@@ -55,7 +50,8 @@ public class TaskDb {
     }
 
     if (!hasErrors) {
-      marshaller.write(flagFor(value));
+      ObjectType objectType = objectTypeOf(value);
+      marshaller.write(AllObjectTypes.INSTANCE.valueToByte(objectType));
       marshaller.write(value.hash());
     }
 
@@ -82,41 +78,26 @@ public class TaskDb {
       if (hasErrors) {
         return new CachedResult(null, messages);
       } else {
-        byte flag = unmarshaller.readByte();
+        ObjectType objectType = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
         HashCode resultObjectHash = unmarshaller.readHash();
-        Value value = readValue(flag, resultObjectHash);
+        Value value = objectType.readFrom(valueDb, resultObjectHash);
         return new CachedResult(value, messages);
       }
     }
   }
 
-  private Value readValue(byte flag, HashCode resultObjectHash) {
-    switch (flag) {
-      case FILE_SET_FLAG:
-        return valueDb.fileSet(resultObjectHash);
-      case STRING_SET_FLAG:
-        return valueDb.stringSet(resultObjectHash);
-      case FILE_FLAG:
-        return valueDb.file(resultObjectHash);
-      case STRING_FLAG:
-        return valueDb.string(resultObjectHash);
-      default:
-        throw new RuntimeException("Internal error in smooth binary. Unknown value flag = " + flag);
-    }
-  }
-
-  private static byte flagFor(Value value) {
+  private static ObjectType objectTypeOf(Value value) {
     if (value instanceof FileSet) {
-      return FILE_SET_FLAG;
+      return ObjectType.FILE_SET_TYPE;
     }
     if (value instanceof StringSet) {
-      return STRING_SET_FLAG;
+      return ObjectType.STRING_SET_TYPE;
     }
     if (value instanceof File) {
-      return FILE_FLAG;
+      return ObjectType.FILE_TYPE;
     }
     if (value instanceof StringValue) {
-      return STRING_FLAG;
+      return ObjectType.STRING_TYPE;
     }
     throw new RuntimeException("Internal error in smooth binary. Unknown value type = "
         + value.getClass().getName());
