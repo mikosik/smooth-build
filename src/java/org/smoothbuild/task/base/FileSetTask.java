@@ -10,7 +10,7 @@ import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableList;
 
-public class FileSetTask implements Task {
+public class FileSetTask extends InternalTask {
   private final ImmutableList<Result> elements;
 
   public FileSetTask(List<Result> elements) {
@@ -20,11 +20,6 @@ public class FileSetTask implements Task {
   @Override
   public String name() {
     return "File*";
-  }
-
-  @Override
-  public boolean isInternal() {
-    return true;
   }
 
   @Override

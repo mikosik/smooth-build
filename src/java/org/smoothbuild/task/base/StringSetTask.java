@@ -9,7 +9,7 @@ import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableList;
 
-public class StringSetTask implements Task {
+public class StringSetTask extends InternalTask {
   private final ImmutableList<Result> elements;
 
   public StringSetTask(List<Result> elements) {
@@ -19,11 +19,6 @@ public class StringSetTask implements Task {
   @Override
   public String name() {
     return "String*";
-  }
-
-  @Override
-  public boolean isInternal() {
-    return true;
   }
 
   @Override

@@ -6,7 +6,7 @@ import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;
 
-public class StringTask implements Task {
+public class StringTask extends InternalTask {
   private final StringValue string;
 
   public StringTask(StringValue string) {
@@ -16,11 +16,6 @@ public class StringTask implements Task {
   @Override
   public String name() {
     return "String";
-  }
-
-  @Override
-  public boolean isInternal() {
-    return true;
   }
 
   @Override
