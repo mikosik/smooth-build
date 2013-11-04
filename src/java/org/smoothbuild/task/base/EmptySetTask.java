@@ -3,16 +3,11 @@ package org.smoothbuild.task.base;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;
 
-public class EmptySetTask implements Task {
+public class EmptySetTask extends InternalTask {
 
   @Override
   public String name() {
     return "Empty*";
-  }
-
-  @Override
-  public boolean isInternal() {
-    return true;
   }
 
   @Override
