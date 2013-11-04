@@ -24,14 +24,6 @@ public class FakeUserConsole extends UserConsole {
     messageGroup.report(message);
   }
 
-  public void assertProblemsFound() {
-    messageGroup.assertProblemsFound();
-  }
-
-  public void assertOnlyInfo(Class<? extends Message> klass) {
-    messageGroup.assertOnlyInfo(klass);
-  }
-
   public void assertOnlyProblem(Class<? extends Message> klass) {
     messageGroup.assertOnlyProblem(klass);
   }
