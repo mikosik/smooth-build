@@ -14,12 +14,12 @@ import com.google.common.collect.Lists;
 public class MessageGroup implements Iterable<Message> {
   private final String name;
   private final List<Message> messages;
-  private final MessageStats messageStats;
+  private final MessageStats stats;
 
   public MessageGroup(String name) {
     this.name = checkNotNull(name);
     this.messages = Lists.newArrayList();
-    this.messageStats = new MessageStats();
+    this.stats = new MessageStats();
   }
 
   public String name() {
@@ -34,7 +34,7 @@ public class MessageGroup implements Iterable<Message> {
   public void report(Message message) {
     checkNotNull(message);
     messages.add(message);
-    messageStats.incCount(message.type());
+    stats.incCount(message.type());
   }
 
   public boolean containsMessages() {
@@ -42,7 +42,7 @@ public class MessageGroup implements Iterable<Message> {
   }
 
   public boolean containsProblems() {
-    return messageStats.containsProblems();
+    return stats.containsProblems();
   }
 
   public void failIfContainsProblems() {
@@ -51,8 +51,8 @@ public class MessageGroup implements Iterable<Message> {
     }
   }
 
-  public MessageStats messageStats() {
-    return messageStats;
+  public MessageStats stats() {
+    return stats;
   }
 
   @Override
