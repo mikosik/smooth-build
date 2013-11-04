@@ -4,7 +4,11 @@ import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.db.hash.HashedDb.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hash.HashedDb.TRUE_AS_BYTE;
 
+import java.util.List;
+
+import org.smoothbuild.db.value.HashedSorter;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.plugin.Hashed;
 
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteArrayDataOutput;
@@ -15,6 +19,15 @@ public class Marshaller {
 
   public Marshaller() {
     this.dataOutput = ByteStreams.newDataOutput(256);
+  }
+
+  public void write(List<? extends Hashed> elements) {
+    List<Hashed> sortedElements = HashedSorter.sort(elements);
+
+    write(sortedElements.size());
+    for (Hashed element : sortedElements) {
+      write(element.hash());
+    }
   }
 
   public void write(Path path) {
