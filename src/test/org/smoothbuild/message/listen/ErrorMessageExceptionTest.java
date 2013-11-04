@@ -2,6 +2,9 @@ package org.smoothbuild.message.listen;
 
 import static org.hamcrest.Matchers.sameInstance;
 import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.INFO;
+import static org.smoothbuild.message.message.MessageType.SUGGESTION;
+import static org.smoothbuild.message.message.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -18,5 +21,20 @@ public class ErrorMessageExceptionTest {
     given(exception = new ErrorMessageException(errorMessage));
     when(exception).errorMessage();
     thenReturned(sameInstance(errorMessage));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void cannot_create_error_message_exception_from_warning() throws Exception {
+    new ErrorMessageException(new Message(WARNING, "message"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void cannot_create_error_message_exception_from_suggestion() throws Exception {
+    new ErrorMessageException(new Message(SUGGESTION, "message"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void cannot_create_error_message_exception_from_info() throws Exception {
+    new ErrorMessageException(new Message(INFO, "message"));
   }
 }
