@@ -6,7 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.function.base.Type;
+import org.smoothbuild.plugin.Hashed;
 import org.smoothbuild.plugin.Value;
 
 import com.google.common.collect.Lists;
@@ -34,7 +34,7 @@ public class HashedSorterTest {
     thenReturned(Lists.<Value> newArrayList());
   }
 
-  private static class FakeHashed implements Value {
+  private static class FakeHashed implements Hashed {
     private final HashCode hash;
 
     public FakeHashed(byte[] bytes) {
@@ -44,11 +44,6 @@ public class HashedSorterTest {
     @Override
     public HashCode hash() {
       return hash;
-    }
-
-    @Override
-    public Type type() {
-      return Type.STRING;
     }
   }
 }
