@@ -33,7 +33,7 @@ public class UserConsole {
     println(GROUP_PREFIX + messageGroup.name());
     printGroup(messageGroup);
 
-    messageStats.add(messageGroup.messageStats());
+    messageStats.add(messageGroup.stats());
   }
 
   private void printGroup(MessageGroup messageGroup) {
