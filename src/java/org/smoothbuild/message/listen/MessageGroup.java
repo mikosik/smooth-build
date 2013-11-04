@@ -15,6 +15,7 @@ public class MessageGroup implements Iterable<Message> {
   private final String name;
   private final List<Message> messages;
   private final MessageStats stats;
+  private boolean isResultFromCache;
 
   public MessageGroup(String name) {
     this.name = checkNotNull(name);
@@ -53,6 +54,14 @@ public class MessageGroup implements Iterable<Message> {
 
   public MessageStats stats() {
     return stats;
+  }
+
+  public void setResultIsFromCache() {
+    isResultFromCache = true;
+  }
+
+  public boolean isResultFromCache() {
+    return isResultFromCache;
   }
 
   @Override

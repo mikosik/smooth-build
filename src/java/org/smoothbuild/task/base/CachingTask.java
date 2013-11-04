@@ -35,6 +35,7 @@ public class CachingTask implements Task {
   public Value execute(SandboxImpl sandbox) {
     HashCode hash = nativeCallHasher.hash();
     if (taskDb.contains(hash)) {
+      sandbox.messageGroup().setResultIsFromCache();
       CachedResult cachedResult = taskDb.read(hash);
       for (Message message : cachedResult.messages()) {
         sandbox.report(message);
