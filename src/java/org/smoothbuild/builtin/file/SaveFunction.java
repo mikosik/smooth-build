@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.message.message.MessageType.FATAL;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +19,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.Required;
@@ -120,7 +122,8 @@ public class SaveFunction {
             path = path.parent();
             break;
           default:
-            throw new RuntimeException("unreachable case");
+            throw new ErrorMessageException(new Message(FATAL,
+                "Broken 'save' function implementation: unreachable case"));
         }
       }
     }
@@ -155,7 +158,8 @@ public class SaveFunction {
             path = path.parent();
             break;
           default:
-            throw new RuntimeException("unreachable case");
+            throw new ErrorMessageException(new Message(FATAL,
+                "Broken 'save' function implementation: unreachable case"));
         }
       }
     }

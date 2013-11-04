@@ -1,5 +1,8 @@
 package org.smoothbuild.parse;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
+import static org.smoothbuild.message.message.MessageType.FATAL;
+
 import javax.inject.Inject;
 
 import org.smoothbuild.builtin.compress.UnzipFunction;
@@ -17,6 +20,8 @@ import org.smoothbuild.builtin.java.junit.JunitFunction;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
+import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 
 import com.google.inject.Provider;
 
@@ -57,8 +62,9 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
     try {
       return nativeFunctionFactory.create(klass, true);
     } catch (NativeImplementationException e) {
-      throw new RuntimeException("Builtin function " + klass.getCanonicalName()
-          + " has implementation problem.", e);
+      throw new ErrorMessageException(new Message(FATAL, "Bug in smooth binary: Builtin function "
+          + klass.getCanonicalName() + " has implementation problem.\nJava stack trace is:\n"
+          + getStackTraceAsString(e)));
     }
   }
 }
