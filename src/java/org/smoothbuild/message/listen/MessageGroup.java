@@ -2,7 +2,6 @@ package org.smoothbuild.message.listen;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
-import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import java.util.Iterator;
 import java.util.List;
@@ -42,12 +41,12 @@ public class MessageGroup implements Iterable<Message> {
     return !messages.isEmpty();
   }
 
-  public boolean containsErrors() {
-    return 0 < messageStats.getCount(ERROR);
+  public boolean containsProblems() {
+    return messageStats.containsProblems();
   }
 
-  public void failIfContainsErrors() {
-    if (containsErrors()) {
+  public void failIfContainsProblems() {
+    if (containsProblems()) {
       throw new PhaseFailedException();
     }
   }

@@ -39,7 +39,7 @@ public class ArgumentNodesCreator {
       MessageGroup messages, Function function, Collection<Argument> arguments) {
     Map<String, LocatedNode> result = new Worker(codeLocation, messages, function, arguments)
         .convert();
-    messages.failIfContainsErrors();
+    messages.failIfContainsProblems();
     return result;
   }
 
@@ -63,23 +63,23 @@ public class ArgumentNodesCreator {
       ImmutableList<Argument> namedArgs = Argument.filterNamed(allArguments);
 
       detectDuplicatedAndUnknownArgNames(namedArgs);
-      if (messages.containsErrors()) {
+      if (messages.containsProblems()) {
         return null;
       }
 
       detectVoidArguments();
-      if (messages.containsErrors()) {
+      if (messages.containsProblems()) {
         return null;
       }
 
       AssignmentList assignmentList = new AssignmentList();
       processNamedArguments(assignmentList, namedArgs);
-      if (messages.containsErrors()) {
+      if (messages.containsProblems()) {
         return null;
       }
 
       processNamelessArguments(assignmentList);
-      if (messages.containsErrors()) {
+      if (messages.containsProblems()) {
         return null;
       }
 

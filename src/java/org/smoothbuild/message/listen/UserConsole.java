@@ -1,7 +1,5 @@
 package org.smoothbuild.message.listen;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
-
 import java.io.PrintStream;
 import java.util.Iterator;
 
@@ -44,12 +42,12 @@ public class UserConsole {
     }
   }
 
-  public boolean isErrorReported() {
-    return 0 < messageStats.getCount(ERROR);
+  public boolean isProblemReported() {
+    return messageStats.containsProblems();
   }
 
   public void printFinalSummary() {
-    if (isErrorReported()) {
+    if (isProblemReported()) {
       println(GROUP_PREFIX + "FAILED :(");
       printMessageStats();
     } else {

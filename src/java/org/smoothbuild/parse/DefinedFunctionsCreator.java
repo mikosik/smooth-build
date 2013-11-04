@@ -70,7 +70,7 @@ public class DefinedFunctionsCreator {
     Worker worker = new Worker(messages, symbolTable, functionContexts, sorted, valueDb,
         argumentNodesCreator);
     Map<Name, DefinedFunction> result = worker.run();
-    messages.failIfContainsErrors();
+    messages.failIfContainsProblems();
     return result;
   }
 
