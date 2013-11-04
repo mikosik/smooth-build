@@ -41,11 +41,8 @@ public class ValueDb {
 
   public Iterable<File> fileSetIterable(HashCode hash) {
     ImmutableList.Builder<File> builder = ImmutableList.builder();
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      int size = unmarshaller.readInt();
-      for (int i = 0; i < size; i++) {
-        builder.add(file(unmarshaller.readHash()));
-      }
+    for (HashCode elemHash : readHashCodeList(hash)) {
+      builder.add(file(elemHash));
     }
     return builder.build();
   }
@@ -63,11 +60,8 @@ public class ValueDb {
 
   public Iterable<StringValue> stringSetIterable(HashCode hash) {
     ImmutableList.Builder<StringValue> builder = ImmutableList.builder();
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      int size = unmarshaller.readInt();
-      for (int i = 0; i < size; i++) {
-        builder.add(string(unmarshaller.readHash()));
-      }
+    for (HashCode elemHash : readHashCodeList(hash)) {
+      builder.add(string(elemHash));
     }
     return builder.build();
   }
@@ -76,14 +70,14 @@ public class ValueDb {
 
   private HashCode genericSet(List<? extends Hashed> elements) {
     Marshaller marshaller = new Marshaller();
-    List<Hashed> sortedElements = HashedSorter.sort(elements);
-
-    marshaller.write(sortedElements.size());
-    for (Hashed element : sortedElements) {
-      marshaller.write(element.hash());
-    }
-
+    marshaller.write(elements);
     return hashedDb.store(marshaller.getBytes());
+  }
+
+  private List<HashCode> readHashCodeList(HashCode hash) {
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      return unmarshaller.readHashCodeList();
+    }
   }
 
   // File
