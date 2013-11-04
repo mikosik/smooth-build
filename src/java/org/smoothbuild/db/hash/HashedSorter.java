@@ -1,4 +1,4 @@
-package org.smoothbuild.db.value;
+package org.smoothbuild.db.hash;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.db.value;
+package org.smoothbuild.db.hash;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.testory.Testory.given;

@@ -6,7 +6,6 @@ import static org.smoothbuild.db.hash.HashedDb.TRUE_AS_BYTE;
 
 import java.util.List;
 
-import org.smoothbuild.db.value.HashedSorter;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.Hashed;
 
