@@ -1,6 +1,11 @@
 package org.smoothbuild.fs.base;
 
+import static org.smoothbuild.message.message.MessageType.FATAL;
+
 import java.util.Iterator;
+
+import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 
 import com.google.common.collect.ImmutableList;
 
@@ -16,7 +21,9 @@ public class RecursiveFilesIterable implements Iterable<Path> {
       case NOTHING:
         return ImmutableList.of();
       default:
-        throw new RuntimeException("unreachable case");
+        throw new ErrorMessageException(new Message(FATAL, "Bug in smooth binary: Unhandled case "
+            + fileSystem.pathState(directory) + " in "
+            + RecursiveFilesIterable.class.getSimpleName()));
     }
   }
 

@@ -6,6 +6,7 @@ import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -42,9 +43,11 @@ import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.function.def.args.ArgumentNodesCreator;
+import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleSetElemsError;
 import org.smoothbuild.plugin.StringValue;
@@ -138,8 +141,9 @@ public class DefinedFunctionsCreator {
       if (expression.STRING() != null) {
         return buildStringNode(expression.STRING());
       }
-      throw new RuntimeException("Illegal parse tree: " + ExpressionContext.class.getSimpleName()
-          + " without children.");
+      throw new ErrorMessageException(new Message(FATAL,
+          "Bug in smooth binary: Illegal parse tree: " + ExpressionContext.class.getSimpleName()
+              + " without children."));
     }
 
     private LocatedNode build(SetContext list) {
@@ -161,8 +165,9 @@ public class DefinedFunctionsCreator {
       if (elemsType == Type.FILE) {
         return new LocatedNodeImpl(new FileSetNode(elemNodes), locationOf(list));
       }
-      throw new RuntimeException("Bug in Smooth implementation. No code to handle type = "
-          + elemsType);
+
+      throw new ErrorMessageException(new Message(FATAL,
+          "Bug in smooth binary: Unexpected list element type = " + elemsType));
     }
 
     private ImmutableList<LocatedNode> build(List<SetElemContext> elems) {
@@ -185,8 +190,10 @@ public class DefinedFunctionsCreator {
       if (elem.call() != null) {
         return build(elem.call());
       }
-      throw new RuntimeException("Illegal parse tree: " + SetElemContext.class.getSimpleName()
-          + " without children.");
+
+      throw new ErrorMessageException(new Message(FATAL,
+          "Bug in smooth binary: Illegal parse tree: " + SetElemContext.class.getSimpleName()
+              + " without children."));
     }
 
     private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<LocatedNode> elemNodes) {

@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.message.message.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.copy;
 
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
@@ -11,6 +12,7 @@ import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.FileSetBuilder;
@@ -70,7 +72,8 @@ public class FilesFunction {
         case NOTHING:
           throw new ErrorMessageException(new NoSuchPathError("dir", dirPath));
         default:
-          throw new RuntimeException("unreachable case");
+          throw new ErrorMessageException(new Message(FATAL,
+              "Broken 'files' function implementation: unreachable case"));
       }
     }
   }

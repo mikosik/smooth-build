@@ -1,10 +1,14 @@
 package org.smoothbuild.fs.base;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.fs.base.PathState.NOTHING;
+import static org.smoothbuild.message.message.MessageType.FATAL;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
+import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.message.Message;
 
 public class RecursiveFilesIterator implements Iterator<Path> {
   private final FileSystem fileSystem;
@@ -52,9 +56,14 @@ public class RecursiveFilesIterator implements Iterator<Path> {
             directoryStack.push(file);
             break;
           case NOTHING:
-            throw new RuntimeException("should not happend");
+            throw new ErrorMessageException(new Message(FATAL,
+                "Bug in smooth binary: Unexpected case " + NOTHING + " in "
+                    + RecursiveFilesIterator.class.getSimpleName()));
           default:
-            throw new RuntimeException("unreachable case");
+            throw new ErrorMessageException(new Message(FATAL,
+                "Bug in smooth binary: Unhandled case " + fileSystem.pathState(file) + " in "
+                    + RecursiveFilesIterator.class.getSimpleName()));
+
         }
       }
     }
