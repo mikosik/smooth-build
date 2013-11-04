@@ -39,11 +39,10 @@ public class UnmarshallerTest {
     marshaller.write(ImmutableList.of(hashed1, hashed2));
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    List<HashCode> actual = unmarshaller.readHashCodeList();
-    unmarshaller.close();
-
-    assertThat(actual).isEqualTo(ImmutableList.of(hashed1.hash(), hashed2.hash()));
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      List<HashCode> actual = unmarshaller.readHashCodeList();
+      assertThat(actual).isEqualTo(ImmutableList.of(hashed1.hash(), hashed2.hash()));
+    }
   }
 
   @Test
@@ -54,11 +53,10 @@ public class UnmarshallerTest {
     marshaller.write(path);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    Path actual = unmarshaller.readPath();
-    unmarshaller.close();
-
-    assertThat(actual).isEqualTo(path);
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      Path actual = unmarshaller.readPath();
+      assertThat(actual).isEqualTo(path);
+    }
   }
 
   @Test
@@ -69,11 +67,10 @@ public class UnmarshallerTest {
     marshaller.write(myHash);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    HashCode actual = unmarshaller.readHash();
-    unmarshaller.close();
-
-    assertThat(actual).isEqualTo(myHash);
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      HashCode actual = unmarshaller.readHash();
+      assertThat(actual).isEqualTo(myHash);
+    }
   }
 
   @Test
@@ -83,11 +80,10 @@ public class UnmarshallerTest {
     marshaller.write(myBool);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    boolean actual = unmarshaller.readBool();
-    unmarshaller.close();
-
-    assertThat(actual).isEqualTo(myBool);
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      boolean actual = unmarshaller.readBool();
+      assertThat(actual).isEqualTo(myBool);
+    }
   }
 
   @Test
@@ -97,11 +93,10 @@ public class UnmarshallerTest {
     marshaller.write(myBool);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    boolean actual = unmarshaller.readBool();
-    unmarshaller.close();
-
-    assertThat(actual).isEqualTo(myBool);
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      boolean actual = unmarshaller.readBool();
+      assertThat(actual).isEqualTo(myBool);
+    }
   }
 
   @Test
@@ -124,11 +119,10 @@ public class UnmarshallerTest {
     marshaller.write(myByte);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    byte actual = unmarshaller.readByte();
-    unmarshaller.close();
-
-    assertThat(actual).isEqualTo(myByte);
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      byte actual = unmarshaller.readByte();
+      assertThat(actual).isEqualTo(myByte);
+    }
   }
 
   @Test
@@ -138,11 +132,10 @@ public class UnmarshallerTest {
     marshaller.write(myInt);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    int actual = unmarshaller.readInt();
-    unmarshaller.close();
-
-    assertThat(actual).isEqualTo(myInt);
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      int actual = unmarshaller.readInt();
+      assertThat(actual).isEqualTo(myInt);
+    }
   }
 
   @Test
@@ -156,11 +149,10 @@ public class UnmarshallerTest {
     marshaller.write(enumValues.valueToByte(value2));
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    String actual = unmarshaller.readEnum(enumValues);
-    unmarshaller.close();
-
-    assertThat(actual).isEqualTo(value2);
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      String actual = unmarshaller.readEnum(enumValues);
+      assertThat(actual).isEqualTo(value2);
+    }
   }
 
   @Test
@@ -196,17 +188,17 @@ public class UnmarshallerTest {
     marshaller.write(myInt);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
-    HashCode actualHash = unmarshaller.readHash();
-    Path actualPath = unmarshaller.readPath();
-    byte actualByte = unmarshaller.readByte();
-    int actualInt = unmarshaller.readInt();
-    unmarshaller.close();
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+      HashCode actualHash = unmarshaller.readHash();
+      Path actualPath = unmarshaller.readPath();
+      byte actualByte = unmarshaller.readByte();
+      int actualInt = unmarshaller.readInt();
 
-    assertThat(actualHash).isEqualTo(myHash);
-    assertThat(actualPath).isEqualTo(path);
-    assertThat(actualByte).isEqualTo(myByte);
-    assertThat(actualInt).isEqualTo(myInt);
+      assertThat(actualHash).isEqualTo(myHash);
+      assertThat(actualPath).isEqualTo(path);
+      assertThat(actualByte).isEqualTo(myByte);
+      assertThat(actualInt).isEqualTo(myInt);
+    }
   }
 
   @Test
