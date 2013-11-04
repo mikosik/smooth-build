@@ -6,6 +6,7 @@ import static org.smoothbuild.fs.base.Path.path;
 import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.List;
 
 import org.smoothbuild.db.hash.err.CorruptedBoolError;
 import org.smoothbuild.db.hash.err.CorruptedEnumValue;
@@ -16,6 +17,7 @@ import org.smoothbuild.db.hash.err.WritingHashedObjectFailedError;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Ints;
 
@@ -26,6 +28,15 @@ public class Unmarshaller implements Closeable {
   public Unmarshaller(HashedDb hashedDb, HashCode hash) {
     this.hash = hash;
     this.inputStream = new DataInputStream(hashedDb.openInputStream(hash));
+  }
+
+  public List<HashCode> readHashCodeList() {
+    ImmutableList.Builder<HashCode> builder = ImmutableList.builder();
+    int size = readInt();
+    for (int i = 0; i < size; i++) {
+      builder.add(readHash());
+    }
+    return builder.build();
   }
 
   public Path readPath() {
