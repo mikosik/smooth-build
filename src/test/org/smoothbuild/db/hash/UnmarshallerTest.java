@@ -8,6 +8,7 @@ import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 
 import java.io.DataOutputStream;
+import java.util.List;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -18,13 +19,32 @@ import org.smoothbuild.db.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hash.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.plugin.Hashed;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.plugin.FakeHashed;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
   HashedDb hashedDb = new HashedDb(fileSystem);
+
+  @Test
+  public void marshalled_hashed_list_can_be_unmarshalled() {
+    Hashed hashed1 = new FakeHashed("abc");
+    Hashed hashed2 = new FakeHashed("def");
+
+    Marshaller marshaller = new Marshaller();
+    marshaller.write(ImmutableList.of(hashed1, hashed2));
+    HashCode hash = hashedDb.store(marshaller.getBytes());
+
+    Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
+    List<HashCode> actual = unmarshaller.readHashCodeList();
+    unmarshaller.close();
+
+    assertThat(actual).isEqualTo(ImmutableList.of(hashed1.hash(), hashed2.hash()));
+  }
 
   @Test
   public void marshalled_path_can_be_unmarshalled() {
