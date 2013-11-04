@@ -31,7 +31,7 @@ public class FunctionsCollector {
       SymbolTable importedFunctions, ModuleContext module) {
     Worker worker = new Worker(messages, importedFunctions);
     worker.visit(module);
-    messages.failIfContainsErrors();
+    messages.failIfContainsProblems();
     return worker.result();
   }
 

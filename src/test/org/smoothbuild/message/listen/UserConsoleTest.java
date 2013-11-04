@@ -2,6 +2,7 @@ package org.smoothbuild.message.listen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.FATAL;
 import static org.smoothbuild.message.message.MessageType.INFO;
 import static org.smoothbuild.message.message.MessageType.SUGGESTION;
 import static org.smoothbuild.message.message.MessageType.WARNING;
@@ -47,24 +48,56 @@ public class UserConsoleTest {
     assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
 
+  // isProblemReported()
+
   @Test
-  public void isErrorReported_returns_false_when_only_warning_was_reported() throws Exception {
+  public void isProblemReported_returns_false_when_only_info_was_reported() throws Exception {
+    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    messageGroup.report(new Message(INFO, "message string"));
+
+    userConsole.report(messageGroup);
+    assertThat(userConsole.isProblemReported()).isFalse();
+  }
+
+  @Test
+  public void isProblemReported_returns_false_when_only_suggestion_was_reported() throws Exception {
+    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    messageGroup.report(new Message(SUGGESTION, "message string"));
+
+    userConsole.report(messageGroup);
+    assertThat(userConsole.isProblemReported()).isFalse();
+  }
+
+  @Test
+  public void isProblemReported_returns_false_when_only_warning_was_reported() throws Exception {
     MessageGroup messageGroup = new MessageGroup("GROUP NAME");
     messageGroup.report(new Message(WARNING, "message string"));
 
     userConsole.report(messageGroup);
-    assertThat(userConsole.isErrorReported()).isFalse();
+    assertThat(userConsole.isProblemReported()).isFalse();
   }
 
   @Test
-  public void isErrorReported_returns_true_when_error_was_reported() throws Exception {
+  public void isProblemReported_returns_true_when_error_was_reported() throws Exception {
     MessageGroup messageGroup = new MessageGroup("GROUP NAME");
     messageGroup.report(new Message(ERROR, "message string"));
 
     userConsole.report(messageGroup);
 
-    assertThat(userConsole.isErrorReported()).isTrue();
+    assertThat(userConsole.isProblemReported()).isTrue();
   }
+
+  @Test
+  public void isProblemReported_returns_true_when_fatal_was_reported() throws Exception {
+    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    messageGroup.report(new Message(FATAL, "message string"));
+
+    userConsole.report(messageGroup);
+
+    assertThat(userConsole.isProblemReported()).isTrue();
+  }
+
+  // printFinalSummary()
 
   @Test
   public void final_summary_is_success_when_only_warning_was_reported() throws Exception {
@@ -113,6 +146,9 @@ public class UserConsoleTest {
     for (int i = 0; i < 4; i++) {
       messageGroup.report(new Message(ERROR, "error string"));
     }
+    for (int i = 0; i < 5; i++) {
+      messageGroup.report(new Message(FATAL, "fatal string"));
+    }
 
     userConsole.report(messageGroup);
     userConsole.printFinalSummary();
@@ -129,8 +165,12 @@ public class UserConsoleTest {
     for (int i = 0; i < 4; i++) {
       builder.append("   + ERROR: error string\n");
     }
+    for (int i = 0; i < 5; i++) {
+      builder.append("   + FATAL: fatal string\n");
+    }
 
     builder.append(" + FAILED :(\n");
+    builder.append("   + 5 fatals\n");
     builder.append("   + 4 errors\n");
     builder.append("   + 3 warnings\n");
     builder.append("   + 2 suggestions\n");

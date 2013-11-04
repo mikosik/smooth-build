@@ -51,7 +51,7 @@ public class ScriptParser {
     parser.addErrorListener(errorListener);
 
     ModuleContext result = parser.module();
-    messages.failIfContainsErrors();
+    messages.failIfContainsProblems();
     return result;
   }
 

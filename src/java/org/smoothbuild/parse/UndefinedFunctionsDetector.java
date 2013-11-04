@@ -23,6 +23,6 @@ public class UndefinedFunctionsDetector {
         }
       }
     }
-    messages.failIfContainsErrors();
+    messages.failIfContainsProblems();
   }
 }

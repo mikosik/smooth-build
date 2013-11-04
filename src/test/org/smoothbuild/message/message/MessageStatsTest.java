@@ -1,6 +1,7 @@
 package org.smoothbuild.message.message;
 
 import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.FATAL;
 import static org.smoothbuild.message.message.MessageType.INFO;
 import static org.smoothbuild.message.message.MessageType.SUGGESTION;
 import static org.smoothbuild.message.message.MessageType.WARNING;
@@ -16,6 +17,13 @@ public class MessageStatsTest {
   MessageStats messageStats2;
 
   // initially count is zero
+
+  @Test
+  public void initially_fatal_count_is_zero() {
+    given(messageStats = new MessageStats());
+    when(messageStats.getCount(FATAL));
+    thenReturned(0);
+  }
 
   @Test
   public void initially_error_count_is_zero() {
@@ -46,6 +54,14 @@ public class MessageStatsTest {
   }
 
   // count is one after incrementing
+
+  @Test
+  public void fatal_count_is_one_after_incrementing_it() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(FATAL);
+    when(messageStats.getCount(FATAL));
+    thenReturned(1);
+  }
 
   @Test
   public void error_count_is_one_after_incrementing_it() throws Exception {
@@ -79,7 +95,72 @@ public class MessageStatsTest {
     thenReturned(1);
   }
 
+  // containsProblems()
+
+  @Test
+  public void initially_contains_no_problems() throws Exception {
+    given(messageStats = new MessageStats());
+    when(messageStats.containsProblems());
+    thenReturned(false);
+  }
+
+  @Test
+  public void contains_no_problem_after_adding_info() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(INFO);
+    when(messageStats.containsProblems());
+    thenReturned(false);
+  }
+
+  @Test
+  public void contains_no_problem_after_adding_suggestion() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(SUGGESTION);
+    when(messageStats.containsProblems());
+    thenReturned(false);
+  }
+
+  @Test
+  public void contains_no_problem_after_adding_warning() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(WARNING);
+    when(messageStats.containsProblems());
+    thenReturned(false);
+  }
+
+  @Test
+  public void contains_problem_after_adding_error() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(ERROR);
+    when(messageStats.containsProblems());
+    thenReturned(true);
+  }
+
+  @Test
+  public void contains_problem_after_adding_fatal() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats).incCount(FATAL);
+    when(messageStats.containsProblems());
+    thenReturned(true);
+  }
+
   // add()
+
+  @Test
+  public void fatals_are_added_when_message_stats_are_added() throws Exception {
+    given(messageStats = new MessageStats());
+    given(messageStats2 = new MessageStats());
+    given(messageStats).incCount(FATAL);
+    given(messageStats2).incCount(FATAL);
+
+    when(messageStats).add(messageStats2);
+
+    thenEqual(messageStats.getCount(FATAL), 2);
+    thenEqual(messageStats.getCount(ERROR), 0);
+    thenEqual(messageStats.getCount(WARNING), 0);
+    thenEqual(messageStats.getCount(SUGGESTION), 0);
+    thenEqual(messageStats.getCount(INFO), 0);
+  }
 
   @Test
   public void errors_are_added_when_message_stats_are_added() throws Exception {
@@ -90,6 +171,7 @@ public class MessageStatsTest {
 
     when(messageStats).add(messageStats2);
 
+    thenEqual(messageStats.getCount(FATAL), 0);
     thenEqual(messageStats.getCount(ERROR), 2);
     thenEqual(messageStats.getCount(WARNING), 0);
     thenEqual(messageStats.getCount(SUGGESTION), 0);
@@ -105,6 +187,7 @@ public class MessageStatsTest {
 
     when(messageStats).add(messageStats2);
 
+    thenEqual(messageStats.getCount(FATAL), 0);
     thenEqual(messageStats.getCount(ERROR), 0);
     thenEqual(messageStats.getCount(WARNING), 2);
     thenEqual(messageStats.getCount(SUGGESTION), 0);
@@ -120,6 +203,7 @@ public class MessageStatsTest {
 
     when(messageStats).add(messageStats2);
 
+    thenEqual(messageStats.getCount(FATAL), 0);
     thenEqual(messageStats.getCount(ERROR), 0);
     thenEqual(messageStats.getCount(WARNING), 0);
     thenEqual(messageStats.getCount(SUGGESTION), 2);
@@ -135,6 +219,7 @@ public class MessageStatsTest {
 
     when(messageStats).add(messageStats2);
 
+    thenEqual(messageStats.getCount(FATAL), 0);
     thenEqual(messageStats.getCount(ERROR), 0);
     thenEqual(messageStats.getCount(WARNING), 0);
     thenEqual(messageStats.getCount(SUGGESTION), 0);

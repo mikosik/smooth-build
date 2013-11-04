@@ -32,7 +32,7 @@ public class SmoothApp {
 
     if (args != null) {
       Module module = moduleParserPhase.execute(args);
-      if (!userConsole.isErrorReported()) {
+      if (!userConsole.isProblemReported()) {
         smoothExecutorPhase.execute(new ExecutionData(args, module));
       }
     }

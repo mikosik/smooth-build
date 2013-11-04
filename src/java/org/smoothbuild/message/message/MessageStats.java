@@ -1,5 +1,8 @@
 package org.smoothbuild.message.message;
 
+import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.message.MessageType.FATAL;
+
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,6 +19,10 @@ public class MessageStats {
 
   public int getCount(MessageType messageType) {
     return map.get(messageType).get();
+  }
+
+  public boolean containsProblems() {
+    return 0 < getCount(ERROR) || 0 < getCount(FATAL);
   }
 
   public void add(MessageStats messageStats) {

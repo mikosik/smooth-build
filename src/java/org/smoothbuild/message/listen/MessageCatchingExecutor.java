@@ -19,11 +19,11 @@ public abstract class MessageCatchingExecutor<A, R> {
     } catch (ErrorMessageException e) {
       messageGroup.report(e.errorMessage());
     } catch (PhaseFailedException e) {
-      if (!messageGroup.containsErrors()) {
+      if (!messageGroup.containsProblems()) {
         messageGroup.report(new PhaseFailedWithoutErrorError());
       }
     } finally {
-      if (messageGroup.containsErrors()) {
+      if (messageGroup.containsProblems()) {
         userConsole.report(messageGroup);
       }
     }
