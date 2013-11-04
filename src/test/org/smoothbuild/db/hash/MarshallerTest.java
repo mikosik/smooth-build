@@ -27,6 +27,16 @@ public class MarshallerTest {
   }
 
   @Test
+  public void marshalling_single_string() {
+    String string = "some string";
+
+    marshaller = new Marshaller();
+    marshaller.write(string);
+
+    assertThat(marshaller.getBytes()).isEqualTo(stringToBytes(string));
+  }
+
+  @Test
   public void marshalling_single_hash() {
     HashCode hashCode = HashCode.fromInt(33);
 
@@ -71,10 +81,13 @@ public class MarshallerTest {
   }
 
   private static byte[] pathToBytes(Path path) {
-    byte[] sizeBytes = Ints.toByteArray(path.value().length());
-    byte[] charBytes = path.value().getBytes(CHARSET);
-    byte[] bytes = Bytes.concat(sizeBytes, charBytes);
-    return bytes;
+    return stringToBytes(path.value());
+  }
+
+  private static byte[] stringToBytes(String string) {
+    byte[] sizeBytes = Ints.toByteArray(string.length());
+    byte[] charBytes = string.getBytes(CHARSET);
+    return Bytes.concat(sizeBytes, charBytes);
   }
 
   private static byte[] hashToBytes(HashCode hashCode) {

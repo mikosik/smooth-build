@@ -18,7 +18,11 @@ public class Marshaller {
   }
 
   public void addPath(Path path) {
-    byte[] pathBytes = path.value().getBytes(CHARSET);
+    write(path.value());
+  }
+
+  public void write(String string) {
+    byte[] pathBytes = string.getBytes(CHARSET);
     dataOutput.writeInt(pathBytes.length);
     dataOutput.write(pathBytes);
   }
