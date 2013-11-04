@@ -60,7 +60,7 @@ public class SandboxImpl implements Sandbox {
   }
 
   private static MessageGroup createMessages(LocatedTask locatedTask) {
-    String name = Strings.padEnd(locatedTask.name(), 15, ' ');
+    String name = Strings.padEnd(locatedTask.name(), 30, ' ');
     return new MessageGroup(name + locatedTask.codeLocation());
   }
 }
