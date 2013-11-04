@@ -13,9 +13,9 @@ import org.smoothbuild.db.hash.Unmarshaller;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
+import org.smoothbuild.plugin.Hashed;
 import org.smoothbuild.plugin.StringSet;
 import org.smoothbuild.plugin.StringValue;
-import org.smoothbuild.plugin.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -74,13 +74,13 @@ public class ValueDb {
 
   // generic set
 
-  private HashCode genericSet(List<? extends Value> elements) {
+  private HashCode genericSet(List<? extends Hashed> elements) {
     Marshaller marshaller = new Marshaller();
-    List<Value> sortedElements = HashedSorter.sort(elements);
+    List<Hashed> sortedElements = HashedSorter.sort(elements);
 
     marshaller.write(sortedElements.size());
-    for (Value value : sortedElements) {
-      marshaller.write(value.hash());
+    for (Hashed element : sortedElements) {
+      marshaller.write(element.hash());
     }
 
     return hashedDb.store(marshaller.getBytes());
