@@ -21,7 +21,7 @@ public class MarshallerTest {
     Path path = path("my/path");
 
     marshaller = new Marshaller();
-    marshaller.addPath(path);
+    marshaller.write(path);
 
     assertThat(marshaller.getBytes()).isEqualTo(pathToBytes(path));
   }

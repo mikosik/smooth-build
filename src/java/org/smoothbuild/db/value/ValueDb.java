@@ -94,7 +94,7 @@ public class ValueDb {
 
     Marshaller marshaller = new Marshaller();
     marshaller.write(contentHash);
-    marshaller.addPath(path);
+    marshaller.write(path);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     return new FileObject(path, blob, hash);

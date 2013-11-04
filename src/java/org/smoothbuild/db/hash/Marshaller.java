@@ -17,7 +17,7 @@ public class Marshaller {
     this.dataOutput = ByteStreams.newDataOutput(256);
   }
 
-  public void addPath(Path path) {
+  public void write(Path path) {
     write(path.value());
   }
 

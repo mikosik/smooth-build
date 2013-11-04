@@ -31,7 +31,7 @@ public class UnmarshallerTest {
     Path path = path("my/path");
 
     Marshaller marshaller = new Marshaller();
-    marshaller.addPath(path);
+    marshaller.write(path);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
     Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);
@@ -171,7 +171,7 @@ public class UnmarshallerTest {
 
     Marshaller marshaller = new Marshaller();
     marshaller.write(myHash);
-    marshaller.addPath(path);
+    marshaller.write(path);
     marshaller.write(myByte);
     marshaller.write(myInt);
     HashCode hash = hashedDb.store(marshaller.getBytes());
