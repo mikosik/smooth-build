@@ -8,13 +8,28 @@ import static org.smoothbuild.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.plugin.Hashed;
+import org.smoothbuild.testing.plugin.FakeHashed;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;
 
 public class MarshallerTest {
   private Marshaller marshaller;
+
+  @Test
+  public void marshalling_list_of_hashed_objects() throws Exception {
+    byte[] hash1 = new byte[] { 1, 2, 3 };
+    Hashed hashed1 = new FakeHashed(hash1);
+    byte[] hash2 = new byte[] { 5, 6, 7 };
+    Hashed hashed2 = new FakeHashed(hash2);
+
+    marshaller = new Marshaller();
+    marshaller.write(ImmutableList.of(hashed1, hashed2));
+    assertThat(marshaller.getBytes()).isEqualTo(Bytes.concat(Ints.toByteArray(2), hash1, hash2));
+  }
 
   @Test
   public void marshalling_single_path() {
