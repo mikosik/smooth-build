@@ -7,8 +7,9 @@ import java.util.Map;
 import org.smoothbuild.function.base.AbstractFunction;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.Taskable;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.base.Preconditions;
@@ -18,16 +19,16 @@ import com.google.common.base.Preconditions;
  * (as opposed to {@link org.smoothbuild.function.nativ.NativeFunction} which is
  * implemented completely in java language).
  */
-public class DefinedFunction extends AbstractFunction implements LocatedNode {
-  private final LocatedNode root;
+public class DefinedFunction extends AbstractFunction implements Taskable {
+  private final Node root;
 
-  public DefinedFunction(Signature signature, LocatedNode root) {
+  public DefinedFunction(Signature signature, Node root) {
     super(signature);
     this.root = checkNotNull(root);
   }
 
   @Override
-  public LocatedTask generateTask(TaskGenerator taskGenerator, Map<String, Result> arguments,
+  public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> arguments,
       CodeLocation codeLocation) {
     Preconditions.checkArgument(arguments.isEmpty(),
         "DefinedFunction.generateTask() cannot accept non-empty arguments");
@@ -35,7 +36,7 @@ public class DefinedFunction extends AbstractFunction implements LocatedNode {
   }
 
   @Override
-  public LocatedTask generateTask(TaskGenerator taskGenerator) {
+  public Task generateTask(TaskGenerator taskGenerator) {
     return root.generateTask(taskGenerator);
   }
 }

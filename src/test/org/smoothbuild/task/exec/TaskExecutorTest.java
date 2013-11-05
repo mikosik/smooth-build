@@ -13,10 +13,10 @@ import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.Value;
-import org.smoothbuild.task.base.LocatedTask;
+import org.smoothbuild.task.base.Task;
 
 public class TaskExecutorTest {
-  LocatedTask task = mock(LocatedTask.class);
+  Task task = mock(Task.class);
   Value value = mock(Value.class);
   UserConsole userConsole = mock(UserConsole.class);
   MessageGroup messageGroup = new MessageGroup("name");

@@ -8,7 +8,6 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
@@ -20,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 public class DefinedFunctionTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   Signature signature = testSignature();
-  LocatedNode root = mock(LocatedNode.class);
+  Node root = mock(Node.class);
   CodeLocation codeLocation = new FakeCodeLocation();
 
   DefinedFunction definedFunction = new DefinedFunction(signature, root);
@@ -32,7 +31,7 @@ public class DefinedFunctionTest {
 
   @Test
   public void generateTaskWithEmptyDependency() throws Exception {
-    LocatedTask task = mock(LocatedTask.class);
+    Task task = mock(Task.class);
     when(root.generateTask(taskGenerator)).thenReturn(task);
 
     Task actual = definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap(),
@@ -49,7 +48,7 @@ public class DefinedFunctionTest {
 
   @Test
   public void generateTaskForwardsCallToRootNode() throws Exception {
-    LocatedTask task = mock(LocatedTask.class);
+    Task task = mock(Task.class);
     when(root.generateTask(taskGenerator)).thenReturn(task);
 
     Task actual = definedFunction.generateTask(taskGenerator);

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
@@ -15,23 +16,15 @@ import org.smoothbuild.task.exec.SandboxImpl;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class NativeCallTask implements Task {
+public class NativeCallTask extends Task {
   private final NativeFunction function;
   private final ImmutableMap<String, Result> dependencies;
 
-  public NativeCallTask(NativeFunction function, Map<String, Result> dependencies) {
+  public NativeCallTask(NativeFunction function, Map<String, Result> dependencies,
+      CodeLocation codeLocation) {
+    super(function.name().value(), false, codeLocation);
     this.function = function;
     this.dependencies = ImmutableMap.copyOf(dependencies);
-  }
-
-  @Override
-  public String name() {
-    return function.name().value();
-  }
-
-  @Override
-  public boolean isInternal() {
-    return false;
   }
 
   @Override

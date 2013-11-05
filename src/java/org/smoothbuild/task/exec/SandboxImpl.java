@@ -8,7 +8,7 @@ import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringSetBuilder;
-import org.smoothbuild.task.base.LocatedTask;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.base.Strings;
 
@@ -17,7 +17,7 @@ public class SandboxImpl implements Sandbox {
   private final MessageGroup messageGroup;
   private final ValueDb valueDb;
 
-  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, LocatedTask task) {
+  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, Task task) {
     this(fileSystem, valueDb, createMessages(task));
   }
 
@@ -59,7 +59,7 @@ public class SandboxImpl implements Sandbox {
     return messageGroup;
   }
 
-  private static MessageGroup createMessages(LocatedTask locatedTask) {
+  private static MessageGroup createMessages(Task locatedTask) {
     String name = Strings.padEnd(locatedTask.name(), 30, ' ');
     return new MessageGroup(name + locatedTask.codeLocation());
   }

@@ -4,15 +4,15 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.function.def.LocatedNode;
-import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.Taskable;
 
 import com.google.common.collect.Maps;
 
 public class TaskGenerator {
   private final TaskExecutor taskExecutor;
-  private final Map<LocatedTask, TaskContainer> map;
+  private final Map<Task, TaskContainer> map;
 
   @Inject
   public TaskGenerator(TaskExecutor taskExecutor) {
@@ -20,8 +20,8 @@ public class TaskGenerator {
     this.map = Maps.newHashMap();
   }
 
-  public Result generateTask(LocatedNode node) {
-    LocatedTask task = node.generateTask(this);
+  public Result generateTask(Taskable taskable) {
+    Task task = taskable.generateTask(this);
     TaskContainer taskContainer = map.get(task);
     if (taskContainer != null) {
       return taskContainer;

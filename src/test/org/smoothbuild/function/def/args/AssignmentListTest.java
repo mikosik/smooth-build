@@ -13,7 +13,7 @@ import static org.smoothbuild.function.def.args.Assignment.assignment;
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.LocatedNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class AssignmentListTest {
@@ -110,7 +110,7 @@ public class AssignmentListTest {
   }
 
   private static Argument arg(int number, Type type, String name) {
-    LocatedNode node = mock(LocatedNode.class);
+    Node node = mock(Node.class);
     when(node.type()).thenReturn(type);
 
     return namedArg(number, name, node, new FakeCodeLocation());

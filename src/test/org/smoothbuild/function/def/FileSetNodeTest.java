@@ -6,15 +6,20 @@ import static org.mockito.Mockito.mock;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.testing.plugin.FileSetMatchers.containsFileContainingItsPath;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -23,18 +28,26 @@ import com.google.common.collect.ImmutableList;
 public class FileSetNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeSandbox sandbox = new FakeSandbox();
+  CodeLocation codeLocation = new FakeCodeLocation();
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
 
-  LocatedNode node1 = mock(LocatedNode.class);
-  LocatedNode node2 = mock(LocatedNode.class);
+  Node node1 = mock(Node.class);
+  Node node2 = mock(Node.class);
 
-  ImmutableList<LocatedNode> elemNodes = ImmutableList.of(node1, node2);
-  FileSetNode fileSetNode = new FileSetNode(elemNodes);
+  ImmutableList<Node> elemNodes = ImmutableList.of(node1, node2);
+  FileSetNode fileSetNode = new FileSetNode(elemNodes, codeLocation);
 
   @Test
   public void type() {
     assertThat(fileSetNode.type()).isEqualTo(FILE_SET);
+  }
+
+  @Test
+  public void code_location() throws Exception {
+    given(fileSetNode = new FileSetNode(elemNodes, codeLocation));
+    when(fileSetNode.codeLocation());
+    thenReturned(codeLocation);
   }
 
   @Test

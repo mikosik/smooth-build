@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.function.base.Name.name;
+import static org.smoothbuild.function.base.Type.STRING;
 
 import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
@@ -28,25 +27,26 @@ public class CallNodeTest {
 
   @Test
   public void type() throws Exception {
-    when(function.type()).thenReturn(Type.STRING);
+    when(function.type()).thenReturn(STRING);
     when(function.name()).thenReturn(name("function"));
 
-    ImmutableMap<String, LocatedNode> empty = ImmutableMap.<String, LocatedNode> of();
+    ImmutableMap<String, Node> empty = ImmutableMap.<String, Node> of();
 
-    assertThat(new CallNode(function, codeLocation, empty).type()).isEqualTo(Type.STRING);
+    assertThat(new CallNode(function, codeLocation, empty).type()).isEqualTo(STRING);
   }
 
   @Test
   public void generateTask() throws Exception {
     Function function = mock(Function.class);
-    LocatedNode node = mock(LocatedNode.class);
-    LocatedTask task = mock(LocatedTask.class);
+    Node node = mock(Node.class);
+    Task task = mock(Task.class);
     when(function.name()).thenReturn(name("function"));
+    when(function.type()).thenReturn(STRING);
 
     Result result = new FakeResult(new FakeString("arg"));
 
     String name = "name";
-    Map<String, LocatedNode> argNodes = ImmutableMap.of(name, node);
+    Map<String, Node> argNodes = ImmutableMap.of(name, node);
 
     when(taskGenerator.generateTask(node)).thenReturn(result);
     when(function.generateTask(taskGenerator, ImmutableMap.of(name, result), codeLocation))

@@ -2,6 +2,7 @@ package org.smoothbuild.task.base;
 
 import java.util.List;
 
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Value;
@@ -10,10 +11,11 @@ import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableList;
 
-public class FileSetTask extends InternalTask {
+public class FileSetTask extends Task {
   private final ImmutableList<Result> elements;
 
-  public FileSetTask(List<Result> elements) {
+  public FileSetTask(List<Result> elements, CodeLocation codeLocation) {
+    super("File*", true, codeLocation);
     this.elements = ImmutableList.copyOf(elements);
   }
 

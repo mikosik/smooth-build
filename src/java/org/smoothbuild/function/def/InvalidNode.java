@@ -5,14 +5,16 @@ import static org.smoothbuild.message.message.MessageType.FATAL;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class InvalidNode implements Node {
+public class InvalidNode extends AbstractNode {
   private final Type type;
 
-  public InvalidNode(Type type) {
+  public InvalidNode(Type type, CodeLocation codeLocation) {
+    super(type, codeLocation);
     this.type = checkNotNull(type);
   }
 

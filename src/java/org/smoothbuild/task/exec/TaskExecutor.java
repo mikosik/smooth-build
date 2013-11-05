@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.plugin.Value;
-import org.smoothbuild.task.base.LocatedTask;
+import org.smoothbuild.task.base.Task;
 
 public class TaskExecutor {
   private final SandboxFactory sandboxFactory;
@@ -17,7 +17,7 @@ public class TaskExecutor {
     this.userConsole = userConsole;
   }
 
-  public Value execute(LocatedTask task) {
+  public Value execute(Task task) {
     SandboxImpl sandbox = sandboxFactory.createSandbox(task);
     Value result = task.execute(sandbox);
 
