@@ -1,13 +1,13 @@
 package org.smoothbuild.task.base;
 
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;
 
-public class EmptySetTask extends InternalTask {
+public class EmptySetTask extends Task {
 
-  @Override
-  public String name() {
-    return "Empty*";
+  public EmptySetTask(CodeLocation codeLocation) {
+    super("Empty*", true, codeLocation);
   }
 
   @Override

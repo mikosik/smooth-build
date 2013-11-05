@@ -37,8 +37,6 @@ import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.EmptySetNode;
 import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.InvalidNode;
-import org.smoothbuild.function.def.LocatedNode;
-import org.smoothbuild.function.def.LocatedNodeImpl;
 import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.StringNode;
 import org.smoothbuild.function.def.StringSetNode;
@@ -108,7 +106,7 @@ public class DefinedFunctionsCreator {
     }
 
     public DefinedFunction build(FunctionContext function) {
-      LocatedNode node = build(function.pipe());
+      Node node = build(function.pipe());
 
       Type type = node.type();
       String name = function.functionName().getText();
@@ -118,8 +116,8 @@ public class DefinedFunctionsCreator {
       return new DefinedFunction(signature, node);
     }
 
-    private LocatedNode build(PipeContext pipe) {
-      LocatedNode result = build(pipe.expression());
+    private Node build(PipeContext pipe) {
+      Node result = build(pipe.expression());
       List<CallContext> elements = pipe.call();
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
@@ -132,7 +130,7 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
-    private LocatedNode build(ExpressionContext expression) {
+    private Node build(ExpressionContext expression) {
       if (expression.set() != null) {
         return build(expression.set());
       }
@@ -147,34 +145,34 @@ public class DefinedFunctionsCreator {
               + " without children."));
     }
 
-    private LocatedNode build(SetContext list) {
+    private Node build(SetContext list) {
       List<SetElemContext> elems = list.setElem();
-      ImmutableList<LocatedNode> elemNodes = build(elems);
+      ImmutableList<Node> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return new CachingNode(new LocatedNodeImpl(new EmptySetNode(), locationOf(list)));
+        return new CachingNode(new EmptySetNode(locationOf(list)));
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return new CachingNode(new LocatedNodeImpl(new EmptySetNode(), locationOf(list)));
+        return new CachingNode(new EmptySetNode(locationOf(list)));
       }
 
       Type elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
-        return new CachingNode(new LocatedNodeImpl(new StringSetNode(elemNodes), locationOf(list)));
+        return new CachingNode(new StringSetNode(elemNodes, locationOf(list)));
       }
       if (elemsType == Type.FILE) {
-        return new CachingNode(new LocatedNodeImpl(new FileSetNode(elemNodes), locationOf(list)));
+        return new CachingNode(new FileSetNode(elemNodes, locationOf(list)));
       }
 
       throw new ErrorMessageException(new Message(FATAL,
           "Bug in smooth binary: Unexpected list element type = " + elemsType));
     }
 
-    private ImmutableList<LocatedNode> build(List<SetElemContext> elems) {
-      Builder<LocatedNode> builder = ImmutableList.builder();
+    private ImmutableList<Node> build(List<SetElemContext> elems) {
+      Builder<Node> builder = ImmutableList.builder();
       for (SetElemContext elem : elems) {
-        LocatedNode node = build(elem);
+        Node node = build(elem);
         if (!Type.allowedForSetElem().contains(node.type())) {
           messages.report(new ForbiddenSetElemTypeError(locationOf(elem), node.type()));
         } else {
@@ -184,7 +182,7 @@ public class DefinedFunctionsCreator {
       return builder.build();
     }
 
-    private LocatedNode build(SetElemContext elem) {
+    private Node build(SetElemContext elem) {
       if (elem.STRING() != null) {
         return buildStringNode(elem.STRING());
       }
@@ -197,7 +195,7 @@ public class DefinedFunctionsCreator {
               + " without children."));
     }
 
-    private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<LocatedNode> elemNodes) {
+    private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<Node> elemNodes) {
       boolean success = true;
       Type firstType = elemNodes.get(0).type();
       for (int i = 0; i < elemNodes.size(); i++) {
@@ -211,23 +209,23 @@ public class DefinedFunctionsCreator {
       return success;
     }
 
-    private LocatedNode build(CallContext call) {
+    private Node build(CallContext call) {
       List<Argument> arguments = build(call.argList());
       return build(call, arguments);
     }
 
-    private LocatedNode build(CallContext call, List<Argument> args) {
+    private Node build(CallContext call, List<Argument> args) {
       String functionName = call.functionName().getText();
 
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, LocatedNode> namedArgs = argumentNodesCreator.createArgumentNodes(codeLocation,
+      Map<String, Node> namedArgs = argumentNodesCreator.createArgumentNodes(codeLocation,
           messages, function, args);
 
       if (namedArgs == null) {
-        InvalidNode node = new InvalidNode(function.type());
-        return new CachingNode(new LocatedNodeImpl(node, locationOf(call.functionName())));
+        InvalidNode node = new InvalidNode(function.type(), locationOf(call.functionName()));
+        return new CachingNode(node);
       } else {
         return new CachingNode(new CallNode(function, codeLocation, namedArgs));
       }
@@ -258,7 +256,7 @@ public class DefinedFunctionsCreator {
     }
 
     private Argument build(int index, ArgContext arg) {
-      LocatedNode node = build(arg.expression());
+      Node node = build(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
@@ -269,18 +267,16 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private LocatedNode buildStringNode(TerminalNode stringToken) {
+    private Node buildStringNode(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         StringValue stringValue = valueDb.string(unescaped(string));
-        return new CachingNode(new LocatedNodeImpl(new StringNode(stringValue),
-            locationOf(stringToken.getSymbol())));
+        return new CachingNode(new StringNode(stringValue, locationOf(stringToken.getSymbol())));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));
-        return new CachingNode(new LocatedNodeImpl(new InvalidNode(STRING),
-            locationOf(stringToken.getSymbol())));
+        return new CachingNode(new InvalidNode(STRING, locationOf(stringToken.getSymbol())));
       }
     }
   }

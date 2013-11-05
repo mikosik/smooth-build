@@ -1,7 +1,6 @@
 package org.smoothbuild.util;
 
-import org.smoothbuild.function.def.LocatedNode;
-import org.smoothbuild.function.def.Node;
+import org.smoothbuild.function.def.AbstractNode;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Result;
@@ -19,11 +18,7 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableList<Node> nodeList() {
-    return ImmutableList.of();
-  }
-
-  public static ImmutableList<LocatedNode> locatedNodeList() {
+  public static ImmutableList<AbstractNode> nodeList() {
     return ImmutableList.of();
   }
 

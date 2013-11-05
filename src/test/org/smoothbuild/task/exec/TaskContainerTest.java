@@ -8,11 +8,11 @@ import static org.mockito.Mockito.verify;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.plugin.Value;
-import org.smoothbuild.task.base.LocatedTask;
+import org.smoothbuild.task.base.Task;
 
 public class TaskContainerTest {
   TaskExecutor taskExecutor = mock(TaskExecutor.class);
-  LocatedTask task = mock(LocatedTask.class);
+  Task task = mock(Task.class);
   Value value = mock(Value.class);
 
   TaskContainer taskContainer = new TaskContainer(taskExecutor, task);

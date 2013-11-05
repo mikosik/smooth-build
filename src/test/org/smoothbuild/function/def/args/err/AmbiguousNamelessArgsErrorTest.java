@@ -23,7 +23,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.LocatedNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.function.def.args.AssignmentList;
 import org.smoothbuild.function.def.args.TypedParamsPool;
@@ -76,8 +76,8 @@ public class AmbiguousNamelessArgsErrorTest {
     assertThat(error.toString()).isEqualTo(builder.toString());
   }
 
-  private LocatedNode node(Type type) {
-    LocatedNode result = mock(LocatedNode.class);
+  private Node node(Type type) {
+    Node result = mock(Node.class);
     when(result.type()).thenReturn(type);
     return result;
   }

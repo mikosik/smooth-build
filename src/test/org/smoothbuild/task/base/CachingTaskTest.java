@@ -2,7 +2,8 @@ package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -33,7 +34,7 @@ public class CachingTaskTest {
   NativeCallHasher nativeCallHasher = mock(NativeCallHasher.class);
   Task task = mock(Task.class);
 
-  CachingTask cachingTask = new CachingTask(taskDb, nativeCallHasher, task);
+  CachingTask cachingTask;
 
   @Test
   public void null_result_db_is_forbidden() throws Exception {
@@ -56,7 +57,10 @@ public class CachingTaskTest {
   @Test
   public void name_of_wrapped_task_is_returned() throws Exception {
     BDDMockito.given(task.name()).willReturn(taskName);
-    assertThat(cachingTask.name()).isEqualTo(taskName);
+
+    given(cachingTask = new CachingTask(taskDb, nativeCallHasher, task));
+    when(cachingTask.name());
+    thenReturned(taskName);
   }
 
   @Test
@@ -83,7 +87,9 @@ public class CachingTaskTest {
     BDDMockito.given(taskDb.contains(hash)).willReturn(false);
     BDDMockito.given(task.execute(sandbox)).willReturn(value);
 
-    assertThat(cachingTask.execute(sandbox)).isEqualTo(value);
+    given(cachingTask = new CachingTask(taskDb, nativeCallHasher, task));
+    when(cachingTask.execute(sandbox));
+    thenReturned(value);
   }
 
   @Test
@@ -92,8 +98,9 @@ public class CachingTaskTest {
     BDDMockito.given(taskDb.contains(hash)).willReturn(true);
     BDDMockito.given(taskDb.read(hash)).willReturn(new CachedResult(value, Empty.messageList()));
 
+    cachingTask = new CachingTask(taskDb, nativeCallHasher, task);
     assertThat(cachingTask.execute(sandbox)).isEqualTo(value);
-    verifyZeroInteractions(task);
+    verify(task, times(0)).execute(sandbox);
   }
 
   private static Closure $cachingTask(final TaskDb taskDb, final NativeCallHasher nativeCallHasher,

@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.def.LocatedNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.message.message.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
@@ -18,25 +18,24 @@ import com.google.common.collect.Ordering;
 public class Argument {
   private final int number;
   private final String name;
-  private final LocatedNode node;
+  private final Node node;
   private final CodeLocation codeLocation;
 
-  public static Argument namedArg(int number, String name, LocatedNode node,
-      CodeLocation codeLocation) {
+  public static Argument namedArg(int number, String name, Node node, CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Argument(number, checkNotNull(name), node, codeLocation);
   }
 
-  public static Argument namelessArg(int number, LocatedNode node, CodeLocation codeLocation) {
+  public static Argument namelessArg(int number, Node node, CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Argument(number, null, node, codeLocation);
   }
 
-  public static Argument pipedArg(LocatedNode node, CodeLocation codeLocation) {
+  public static Argument pipedArg(Node node, CodeLocation codeLocation) {
     return new Argument(0, null, node, codeLocation);
   }
 
-  private Argument(int number, String name, LocatedNode node, CodeLocation codeLocation) {
+  private Argument(int number, String name, Node node, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
@@ -67,7 +66,7 @@ public class Argument {
     return node.type();
   }
 
-  public LocatedNode node() {
+  public Node node() {
     return node;
   }
 

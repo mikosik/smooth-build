@@ -1,12 +1,11 @@
 package org.smoothbuild.function.def;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.task.base.Taskable;
 
-public interface Node {
-
+public interface Node extends Taskable {
   public Type type();
 
-  public Task generateTask(TaskGenerator taskGenerator);
+  public CodeLocation codeLocation();
 }

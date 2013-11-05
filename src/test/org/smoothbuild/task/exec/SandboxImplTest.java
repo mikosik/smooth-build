@@ -10,18 +10,15 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.FileSetBuilder;
-import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.db.value.FakeValueDb;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FileSetMatchers;
 
 import com.google.common.collect.Iterables;
@@ -31,13 +28,12 @@ public class SandboxImplTest {
   String content = "content";
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
-  CodeLocation codeLocation = new FakeCodeLocation();
   Task task = task();
 
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeValueDb objectDb = new FakeValueDb(fileSystem);
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, objectDb, new LocatedTask(task, codeLocation));
+  SandboxImpl sandbox = new SandboxImpl(fileSystem, objectDb, task);
 
   @Test
   public void file_builder_stores_file_in_object_db() throws Exception {

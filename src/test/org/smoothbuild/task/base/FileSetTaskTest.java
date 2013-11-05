@@ -10,16 +10,19 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class FileSetTaskTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeSandbox sandbox = new FakeSandbox(fileSystem);
+  CodeLocation codeLocation = new FakeCodeLocation();
   Path path1 = path("my/file1");
   Path path2 = path("my/file2");
 
@@ -38,7 +41,7 @@ public class FileSetTaskTest {
 
   @Test
   public void execute() throws IOException {
-    FileSetTask fileSetTask = new FileSetTask(newArrayList(result1, result2));
+    FileSetTask fileSetTask = new FileSetTask(newArrayList(result1, result2), codeLocation);
 
     FileSet result = (FileSet) fileSetTask.execute(sandbox);
 
@@ -48,7 +51,7 @@ public class FileSetTaskTest {
 
   @Test
   public void duplicatedFileCausesError() throws IOException {
-    FileSetTask fileSetTask = new FileSetTask(newArrayList(result1, result1));
+    FileSetTask fileSetTask = new FileSetTask(newArrayList(result1, result1), codeLocation);
     fileSetTask.execute(sandbox);
     sandbox.messages().assertOnlyProblem(DuplicatePathError.class);
   }

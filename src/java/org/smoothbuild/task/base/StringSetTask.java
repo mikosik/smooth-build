@@ -2,6 +2,7 @@ package org.smoothbuild.task.base;
 
 import java.util.List;
 
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.StringSetBuilder;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
@@ -9,16 +10,12 @@ import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableList;
 
-public class StringSetTask extends InternalTask {
+public class StringSetTask extends Task {
   private final ImmutableList<Result> elements;
 
-  public StringSetTask(List<Result> elements) {
+  public StringSetTask(List<Result> elements, CodeLocation codeLocation) {
+    super("String*", true, codeLocation);
     this.elements = ImmutableList.copyOf(elements);
-  }
-
-  @Override
-  public String name() {
-    return "String*";
   }
 
   @Override

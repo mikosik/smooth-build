@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.task.base.LocatedTask;
+import org.smoothbuild.task.base.Task;
 
 public class SandboxFactory {
   private final FileSystem fileSystem;
@@ -16,7 +16,7 @@ public class SandboxFactory {
     this.valueDb = valueDb;
   }
 
-  public SandboxImpl createSandbox(LocatedTask task) {
+  public SandboxImpl createSandbox(Task task) {
     return new SandboxImpl(fileSystem, valueDb, task);
   }
 }

@@ -17,8 +17,7 @@ import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.CachingNode;
 import org.smoothbuild.function.def.FileSetNode;
-import org.smoothbuild.function.def.LocatedNode;
-import org.smoothbuild.function.def.LocatedNodeImpl;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.function.def.StringSetNode;
 import org.smoothbuild.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.function.def.args.err.DuplicateArgNameError;
@@ -39,10 +38,9 @@ import com.google.common.collect.Sets;
 
 public class ArgumentNodesCreator {
 
-  public Map<String, LocatedNode> createArgumentNodes(CodeLocation codeLocation,
-      MessageGroup messages, Function function, Collection<Argument> arguments) {
-    Map<String, LocatedNode> result = new Worker(codeLocation, messages, function, arguments)
-        .convert();
+  public Map<String, Node> createArgumentNodes(CodeLocation codeLocation, MessageGroup messages,
+      Function function, Collection<Argument> arguments) {
+    Map<String, Node> result = new Worker(codeLocation, messages, function, arguments).convert();
     messages.failIfContainsProblems();
     return result;
   }
@@ -63,7 +61,7 @@ public class ArgumentNodesCreator {
       this.allArguments = arguments;
     }
 
-    public Map<String, LocatedNode> convert() {
+    public Map<String, Node> convert() {
       ImmutableList<Argument> namedArgs = Argument.filterNamed(allArguments);
 
       detectDuplicatedAndUnknownArgNames(namedArgs);
@@ -179,27 +177,27 @@ public class ArgumentNodesCreator {
       }
     }
 
-    private Map<String, LocatedNode> createArgumentNodes(AssignmentList assignments) {
-      Builder<String, LocatedNode> builder = ImmutableMap.builder();
+    private Map<String, Node> createArgumentNodes(AssignmentList assignments) {
+      Builder<String, Node> builder = ImmutableMap.builder();
 
       for (Assignment assignment : assignments) {
-        LocatedNode node = argumentNode(assignment);
+        Node node = argumentNode(assignment);
         builder.put(assignment.assignedName(), node);
       }
 
       return builder.build();
     }
 
-    private LocatedNode argumentNode(Assignment assignment) {
+    private Node argumentNode(Assignment assignment) {
       Type type = assignment.param().type();
       Argument argument = assignment.argument();
       if (argument.type() == Type.EMPTY_SET) {
         if (type == Type.STRING_SET) {
-          StringSetNode node = new StringSetNode(Empty.locatedNodeList());
-          return new CachingNode(new LocatedNodeImpl(node, argument.codeLocation()));
+          StringSetNode node = new StringSetNode(Empty.nodeList(), argument.codeLocation());
+          return new CachingNode(node);
         } else if (type == Type.FILE_SET) {
-          FileSetNode node = new FileSetNode(Empty.locatedNodeList());
-          return new CachingNode(new LocatedNodeImpl(node, argument.codeLocation()));
+          FileSetNode node = new FileSetNode(Empty.nodeList(), argument.codeLocation());
+          return new CachingNode(node);
         } else {
           throw new ErrorMessageException(new Message(FATAL,
               "Bug in smooth binary: Cannot convert from " + argument.type() + " to " + type + "."));

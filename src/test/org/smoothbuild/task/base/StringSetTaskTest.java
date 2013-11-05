@@ -6,7 +6,9 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
@@ -14,6 +16,7 @@ import com.google.common.collect.Lists;
 
 public class StringSetTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
+  CodeLocation codeLocation = new FakeCodeLocation();
   StringValue string1 = sandbox.objectDb().string("string1");
   StringValue string2 = sandbox.objectDb().string("string2");
 
@@ -24,7 +27,7 @@ public class StringSetTaskTest {
 
   @Test
   public void execute() {
-    given(stringSetTask = new StringSetTask(Lists.newArrayList(result1, result2)));
+    given(stringSetTask = new StringSetTask(Lists.newArrayList(result1, result2), codeLocation));
     when(stringSetTask.execute(sandbox));
     thenReturned(containsOnly(string1.value(), string2.value()));
   }

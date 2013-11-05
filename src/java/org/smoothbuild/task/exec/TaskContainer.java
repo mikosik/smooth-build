@@ -1,15 +1,15 @@
 package org.smoothbuild.task.exec;
 
 import org.smoothbuild.plugin.Value;
-import org.smoothbuild.task.base.LocatedTask;
 import org.smoothbuild.task.base.Result;
+import org.smoothbuild.task.base.Task;
 
 public class TaskContainer implements Result {
   private final TaskExecutor taskExecutor;
-  private final LocatedTask task;
+  private final Task task;
   private Value result;
 
-  public TaskContainer(TaskExecutor taskExecutor, LocatedTask task) {
+  public TaskContainer(TaskExecutor taskExecutor, Task task) {
     this.taskExecutor = taskExecutor;
     this.task = task;
     this.result = null;

@@ -10,25 +10,16 @@ import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.hash.HashCode;
 
-public class CachingTask implements Task {
+public class CachingTask extends Task {
   private final TaskDb taskDb;
   private final NativeCallHasher nativeCallHasher;
   private final Task task;
 
   public CachingTask(TaskDb taskDb, NativeCallHasher nativeCallHasher, Task task) {
+    super(task.name(), task.isInternal(), task.codeLocation());
     this.taskDb = checkNotNull(taskDb);
     this.nativeCallHasher = checkNotNull(nativeCallHasher);
     this.task = checkNotNull(task);
-  }
-
-  @Override
-  public String name() {
-    return task.name();
-  }
-
-  @Override
-  public boolean isInternal() {
-    return task.isInternal();
   }
 
   @Override
