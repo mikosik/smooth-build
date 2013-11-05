@@ -15,6 +15,7 @@ import java.util.Set;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.def.CachingNode;
 import org.smoothbuild.function.def.FileSetNode;
 import org.smoothbuild.function.def.LocatedNode;
 import org.smoothbuild.function.def.LocatedNodeImpl;
@@ -195,10 +196,10 @@ public class ArgumentNodesCreator {
       if (argument.type() == Type.EMPTY_SET) {
         if (type == Type.STRING_SET) {
           StringSetNode node = new StringSetNode(Empty.locatedNodeList());
-          return new LocatedNodeImpl(node, argument.codeLocation());
+          return new CachingNode(new LocatedNodeImpl(node, argument.codeLocation()));
         } else if (type == Type.FILE_SET) {
           FileSetNode node = new FileSetNode(Empty.locatedNodeList());
-          return new LocatedNodeImpl(node, argument.codeLocation());
+          return new CachingNode(new LocatedNodeImpl(node, argument.codeLocation()));
         } else {
           throw new ErrorMessageException(new Message(FATAL,
               "Bug in smooth binary: Cannot convert from " + argument.type() + " to " + type + "."));
