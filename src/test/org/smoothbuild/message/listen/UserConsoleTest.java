@@ -48,6 +48,22 @@ public class UserConsoleTest {
     assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
 
+  @Test
+  public void reporting_message_group_with_cache_result() throws Exception {
+    String name = "GROUP NAME";
+    MessageGroup messageGroup = new MessageGroup(name);
+    messageGroup.setResultIsFromCache();
+    messageGroup.report(new Message(WARNING, "message string\nsecond line"));
+
+    userConsole.report(messageGroup);
+
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME                              CACHE\n");
+    builder.append("   + WARNING: message string\n");
+    builder.append("     second line\n");
+    assertThat(outputStream.toString()).isEqualTo(builder.toString());
+  }
+
   // isProblemReported()
 
   @Test
