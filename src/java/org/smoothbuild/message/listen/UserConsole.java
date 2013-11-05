@@ -33,7 +33,7 @@ public class UserConsole {
   public void report(MessageGroup messageGroup) {
     String groupHeader = GROUP_PREFIX + messageGroup.name();
     if (messageGroup.isResultFromCache()) {
-      groupHeader = Strings.padEnd(messageGroup.name(), 42, ' ') + " CACHE";
+      groupHeader = Strings.padEnd(groupHeader, 42, ' ') + " CACHE";
     }
     println(groupHeader);
 
