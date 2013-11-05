@@ -31,6 +31,7 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.function.def.CachingNode;
 import org.smoothbuild.function.def.CallNode;
 import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.function.def.EmptySetNode;
@@ -151,19 +152,19 @@ public class DefinedFunctionsCreator {
       ImmutableList<LocatedNode> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return new LocatedNodeImpl(new EmptySetNode(), locationOf(list));
+        return new CachingNode(new LocatedNodeImpl(new EmptySetNode(), locationOf(list)));
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return new LocatedNodeImpl(new EmptySetNode(), locationOf(list));
+        return new CachingNode(new LocatedNodeImpl(new EmptySetNode(), locationOf(list)));
       }
 
       Type elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
-        return new LocatedNodeImpl(new StringSetNode(elemNodes), locationOf(list));
+        return new CachingNode(new LocatedNodeImpl(new StringSetNode(elemNodes), locationOf(list)));
       }
       if (elemsType == Type.FILE) {
-        return new LocatedNodeImpl(new FileSetNode(elemNodes), locationOf(list));
+        return new CachingNode(new LocatedNodeImpl(new FileSetNode(elemNodes), locationOf(list)));
       }
 
       throw new ErrorMessageException(new Message(FATAL,
@@ -226,9 +227,9 @@ public class DefinedFunctionsCreator {
 
       if (namedArgs == null) {
         InvalidNode node = new InvalidNode(function.type());
-        return new LocatedNodeImpl(node, locationOf(call.functionName()));
+        return new CachingNode(new LocatedNodeImpl(node, locationOf(call.functionName())));
       } else {
-        return new CallNode(function, codeLocation, namedArgs);
+        return new CachingNode(new CallNode(function, codeLocation, namedArgs));
       }
     }
 
@@ -273,11 +274,13 @@ public class DefinedFunctionsCreator {
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         StringValue stringValue = valueDb.string(unescaped(string));
-        return new LocatedNodeImpl(new StringNode(stringValue), locationOf(stringToken.getSymbol()));
+        return new CachingNode(new LocatedNodeImpl(new StringNode(stringValue),
+            locationOf(stringToken.getSymbol())));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));
-        return new LocatedNodeImpl(new InvalidNode(STRING), locationOf(stringToken.getSymbol()));
+        return new CachingNode(new LocatedNodeImpl(new InvalidNode(STRING),
+            locationOf(stringToken.getSymbol())));
       }
     }
   }
