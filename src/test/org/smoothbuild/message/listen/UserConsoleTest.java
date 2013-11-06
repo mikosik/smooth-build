@@ -58,7 +58,8 @@ public class UserConsoleTest {
     userConsole.report(messageGroup);
 
     StringBuilder builder = new StringBuilder();
-    builder.append(" + GROUP NAME                              CACHE\n");
+    builder
+        .append(" + GROUP NAME                                                             CACHE\n");
     builder.append("   + WARNING: message string\n");
     builder.append("     second line\n");
     assertThat(outputStream.toString()).isEqualTo(builder.toString());

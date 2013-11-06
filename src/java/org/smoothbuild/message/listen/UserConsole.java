@@ -14,6 +14,8 @@ import com.google.common.base.Strings;
 
 @Singleton
 public class UserConsole {
+  public static final int MESSAGE_GROUP_NAME_HEADER_LENGTH = 73;
+
   private static final String GROUP_PREFIX = " + ";
   private static final String MESSAGE_FIRST_LINE_PREFIX = "  " + GROUP_PREFIX;
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
@@ -33,7 +35,7 @@ public class UserConsole {
   public void report(MessageGroup messageGroup) {
     String groupHeader = GROUP_PREFIX + messageGroup.name();
     if (messageGroup.isResultFromCache()) {
-      groupHeader = Strings.padEnd(groupHeader, 42, ' ') + " CACHE";
+      groupHeader = Strings.padEnd(groupHeader, MESSAGE_GROUP_NAME_HEADER_LENGTH, ' ') + " CACHE";
     }
     println(groupHeader);
 

@@ -3,6 +3,7 @@ package org.smoothbuild.task.exec;
 import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
@@ -60,7 +61,9 @@ public class SandboxImpl implements Sandbox {
   }
 
   private static MessageGroup createMessages(Task task) {
-    String name = Strings.padEnd(task.name(), 30, ' ');
-    return new MessageGroup(name + task.codeLocation());
+    String locationString = task.codeLocation().toString();
+    int paddedLength = UserConsole.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
+    String name = Strings.padEnd(task.name(), paddedLength, ' ');
+    return new MessageGroup(name + locationString);
   }
 }

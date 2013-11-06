@@ -19,6 +19,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.db.value.FakeValueDb;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FileSetMatchers;
 
 import com.google.common.collect.Iterables;
@@ -78,6 +79,7 @@ public class SandboxImplTest {
   private static Task task() {
     Task task = mock(Task.class);
     Mockito.when(task.name()).thenReturn("name");
+    Mockito.when(task.codeLocation()).thenReturn(new FakeCodeLocation());
     return task;
   }
 }
