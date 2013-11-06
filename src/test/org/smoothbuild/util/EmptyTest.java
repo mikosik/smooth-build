@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
-import org.smoothbuild.function.def.AbstractNode;
+import org.smoothbuild.function.def.Node;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Result;
@@ -60,7 +60,7 @@ public class EmptyTest {
   @Test
   public void emptyNodeListIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableList<AbstractNode> list = Empty.nodeList();
+    ImmutableList<Node> list = Empty.nodeList();
   }
 
   @Test

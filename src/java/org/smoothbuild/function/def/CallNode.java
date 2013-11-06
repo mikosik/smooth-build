@@ -12,7 +12,7 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class CallNode extends AbstractNode {
+public class CallNode extends Node {
   private final Function function;
   private final ImmutableMap<String, Node> args;
 

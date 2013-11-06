@@ -7,7 +7,7 @@ import org.smoothbuild.task.base.EmptySetTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class EmptySetNode extends AbstractNode {
+public class EmptySetNode extends Node {
 
   public EmptySetNode(CodeLocation codeLocation) {
     super(EMPTY_SET, codeLocation);
