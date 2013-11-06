@@ -30,12 +30,10 @@ import com.google.inject.Provider;
 
 public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
   private final TaskDb taskDb;
-  private final NativeFunctionFactory nativeFunctionFactory;
 
   @Inject
-  public ImportedFunctionsProvider(TaskDb taskDb, NativeFunctionFactory nativeFunctionFactory) {
+  public ImportedFunctionsProvider(TaskDb taskDb) {
     this.taskDb = taskDb;
-    this.nativeFunctionFactory = nativeFunctionFactory;
   }
 
   @Override
@@ -74,7 +72,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
 
   private NativeFunction functionRaw(Class<?> klass) {
     try {
-      return nativeFunctionFactory.create(klass, true);
+      return NativeFunctionFactory.create(klass, true);
     } catch (NativeImplementationException e) {
       throw new ErrorMessageException(new Message(FATAL, "Bug in smooth binary: Builtin function "
           + klass.getCanonicalName() + " has implementation problem.\nJava stack trace is:\n"

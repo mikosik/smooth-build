@@ -18,7 +18,7 @@ import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class NativeFunctionFactory {
-  public NativeFunction create(Class<?> klass, boolean builtin)
+  public static NativeFunction create(Class<?> klass, boolean builtin)
       throws NativeImplementationException {
     Method method = getExecuteMethod(klass, builtin);
     Class<?> paramsInterface = method.getParameterTypes()[1];

@@ -9,7 +9,6 @@ import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.testing.function.base.ParamTester.params;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.fs.base.Path;
@@ -39,7 +38,6 @@ import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeResult;
@@ -47,25 +45,17 @@ import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Guice;
 
 public class NativeFunctionFactoryTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeSandbox sandbox = new FakeSandbox();
   Path tempDir = path("tem/dir");
   TaskDb taskDb = mock(TaskDb.class);
-  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory();
   CodeLocation codeLocation = new FakeCodeLocation();
-
-  @Before
-  public void before() {
-    nativeFunctionFactory = Guice.createInjector(new IntegrationTestModule()).getInstance(
-        NativeFunctionFactory.class);
-  }
 
   @Test
   public void testSignature() throws Exception {
-    Function function = nativeFunctionFactory.create(MyFunction.class, false);
+    Function function = NativeFunctionFactory.create(MyFunction.class, false);
 
     assertThat(function.name()).isEqualTo(name("myFunction"));
     Signature signature = function.signature();
@@ -80,7 +70,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void testInvokation() throws Exception {
-    Function function = nativeFunctionFactory.create(MyFunction.class, false);
+    Function function = NativeFunctionFactory.create(MyFunction.class, false);
     Result result1 = new FakeResult(new FakeString("abc"));
     Result result2 = new FakeResult(new FakeString("def"));
     ImmutableMap<String, Result> dependencies = ImmutableMap.<String, Result> of("stringA",
@@ -107,7 +97,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void allowedParamTypesAreAccepted() throws Exception {
-    nativeFunctionFactory.create(MyFunctionWithAllowedParamTypes.class, false);
+    NativeFunctionFactory.create(MyFunctionWithAllowedParamTypes.class, false);
   }
 
   public interface AllowedParameters {
@@ -129,7 +119,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void paramsAnnotatedAsRequiredAreRequired() throws Exception {
-    Function f = nativeFunctionFactory.create(MyFunctionWithAnnotatedParams.class, false);
+    Function f = NativeFunctionFactory.create(MyFunctionWithAnnotatedParams.class, false);
     ImmutableMap<String, Param> params = f.params();
     assertThat(params.get("string1").isRequired()).isTrue();
     assertThat(params.get("string2").isRequired()).isFalse();
@@ -165,7 +155,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void emptyParamtersAreAccepted() throws Exception {
-    nativeFunctionFactory.create(MyFunctionWithEmptyParameters.class, false);
+    NativeFunctionFactory.create(MyFunctionWithEmptyParameters.class, false);
   }
 
   public interface EmptyParameters {}
@@ -179,7 +169,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void stringResultTypeIsAccepted() throws Exception {
-    nativeFunctionFactory.create(MyFunctionWithStringResult.class, false);
+    NativeFunctionFactory.create(MyFunctionWithStringResult.class, false);
   }
 
   public static class MyFunctionWithStringResult {
@@ -191,7 +181,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void fileResultTypeIsAccepted() throws Exception {
-    nativeFunctionFactory.create(MyFunctionWithFileResult.class, false);
+    NativeFunctionFactory.create(MyFunctionWithFileResult.class, false);
   }
 
   public static class MyFunctionWithFileResult {
@@ -203,7 +193,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void filesResultTypeIsAccepted() throws Exception {
-    nativeFunctionFactory.create(MyFunctionWithFilesResult.class, false);
+    NativeFunctionFactory.create(MyFunctionWithFilesResult.class, false);
   }
 
   public static class MyFunctionWithFilesResult {
@@ -216,7 +206,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void voidResultTypeIsAccepted() throws Exception {
-    nativeFunctionFactory.create(MyFunctionWithVoidResult.class, false);
+    NativeFunctionFactory.create(MyFunctionWithVoidResult.class, false);
   }
 
   public static class MyFunctionWithVoidResult {
@@ -262,7 +252,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void runtimeExceptionThrownAreReported() throws Exception {
-    Function function = nativeFunctionFactory.create(MyFunctionWithThrowingSmoothMethod.class,
+    Function function = NativeFunctionFactory.create(MyFunctionWithThrowingSmoothMethod.class,
         false);
     function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation)
         .execute(sandbox);
@@ -390,7 +380,7 @@ public class NativeFunctionFactoryTest {
 
   private void assertExceptionThrown(Class<?> klass, Class<?> exception) {
     try {
-      nativeFunctionFactory.create(klass, false);
+      NativeFunctionFactory.create(klass, false);
       fail("exception should be thrown");
     } catch (Throwable e) {
       // expected
