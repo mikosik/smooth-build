@@ -2,8 +2,6 @@ package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -15,7 +13,7 @@ import org.smoothbuild.db.hash.Hash;
 import org.smoothbuild.db.task.CachedResult;
 import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;
@@ -25,14 +23,14 @@ import com.google.common.hash.HashCode;
 
 public class CachingTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
-  Value value = mock(Value.class);
+  StringValue stringValue = mock(StringValue.class);
+  StringValue stringValue2 = mock(StringValue.class);
   HashCode hash = Hash.string("abc");
-  String taskName = "name";
   CodeLocation codeLocation = new FakeCodeLocation();
 
   TaskDb taskDb = mock(TaskDb.class);
   NativeCallHasher nativeCallHasher = mock(NativeCallHasher.class);
-  Task task = mock(Task.class);
+  Task task = new StringTask(stringValue, codeLocation);
 
   CachingTask cachingTask;
 
@@ -56,16 +54,17 @@ public class CachingTaskTest {
 
   @Test
   public void name_of_wrapped_task_is_returned() throws Exception {
-    BDDMockito.given(task.name()).willReturn(taskName);
-
     given(cachingTask = new CachingTask(taskDb, nativeCallHasher, task));
     when(cachingTask.name());
-    thenReturned(taskName);
+    thenReturned(task.name());
   }
 
   @Test
   public void is_internal_forwards_negative_result_from_wrapped_task() throws Exception {
+    task = mock(Task.class);
+    BDDMockito.given(task.name()).willReturn("name");
     BDDMockito.given(task.isInternal()).willReturn(false);
+    BDDMockito.given(task.codeLocation()).willReturn(codeLocation);
 
     given(cachingTask = new CachingTask(taskDb, nativeCallHasher, task));
     when(cachingTask.isInternal());
@@ -74,8 +73,6 @@ public class CachingTaskTest {
 
   @Test
   public void is_internal_forwards_positive_result_from_wrapped_task() throws Exception {
-    BDDMockito.given(task.isInternal()).willReturn(true);
-
     given(cachingTask = new CachingTask(taskDb, nativeCallHasher, task));
     when(cachingTask.isInternal());
     thenReturned(true);
@@ -85,22 +82,21 @@ public class CachingTaskTest {
   public void task_is_executed_when_result_db_does_not_contain_its_result() {
     BDDMockito.given(nativeCallHasher.hash()).willReturn(hash);
     BDDMockito.given(taskDb.contains(hash)).willReturn(false);
-    BDDMockito.given(task.execute(sandbox)).willReturn(value);
 
     given(cachingTask = new CachingTask(taskDb, nativeCallHasher, task));
     when(cachingTask.execute(sandbox));
-    thenReturned(value);
+    thenReturned(stringValue);
   }
 
   @Test
   public void task_is_not_executed_when_result_from_db_is_returned() throws Exception {
     BDDMockito.given(nativeCallHasher.hash()).willReturn(hash);
     BDDMockito.given(taskDb.contains(hash)).willReturn(true);
-    BDDMockito.given(taskDb.read(hash)).willReturn(new CachedResult(value, Empty.messageList()));
+    BDDMockito.given(taskDb.read(hash)).willReturn(
+        new CachedResult(stringValue2, Empty.messageList()));
 
     cachingTask = new CachingTask(taskDb, nativeCallHasher, task);
-    assertThat(cachingTask.execute(sandbox)).isEqualTo(value);
-    verify(task, times(0)).execute(sandbox);
+    assertThat(cachingTask.execute(sandbox)).isEqualTo(stringValue2);
   }
 
   private static Closure $cachingTask(final TaskDb taskDb, final NativeCallHasher nativeCallHasher,
