@@ -11,12 +11,12 @@ import org.smoothbuild.task.base.Taskable;
 import com.google.common.collect.Maps;
 
 public class TaskGenerator {
-  private final TaskExecutor taskExecutor;
+  private final TaskContainerCreator taskContainerCreator;
   private final Map<Task, TaskContainer> map;
 
   @Inject
-  public TaskGenerator(TaskExecutor taskExecutor) {
-    this.taskExecutor = taskExecutor;
+  public TaskGenerator(TaskContainerCreator taskContainerCreator) {
+    this.taskContainerCreator = taskContainerCreator;
     this.map = Maps.newHashMap();
   }
 
@@ -27,7 +27,7 @@ public class TaskGenerator {
       return taskContainer;
     }
 
-    taskContainer = new TaskContainer(taskExecutor, task);
+    taskContainer = taskContainerCreator.create(task);
     map.put(task, taskContainer);
 
     return taskContainer;
