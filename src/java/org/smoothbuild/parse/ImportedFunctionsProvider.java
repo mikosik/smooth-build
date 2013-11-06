@@ -42,29 +42,33 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
     ImportedFunctions importedFunctions = new ImportedFunctions();
 
     // file related
-    importedFunctions.add(createFunction(FileFunction.class));
-    importedFunctions.add(createFunction(NewFileFunction.class));
-    importedFunctions.add(createFunction(FilesFunction.class));
-    importedFunctions.add(createFunction(FilterFunction.class));
-    importedFunctions.add(createFunction(MergeFunction.class));
-    importedFunctions.add(createFunction(SaveFunction.class));
+    importedFunctions.add(nonCachableFunction(FileFunction.class));
+    importedFunctions.add(nonCachableFunction(FilesFunction.class));
+    importedFunctions.add(function(NewFileFunction.class));
+    importedFunctions.add(function(FilterFunction.class));
+    importedFunctions.add(function(MergeFunction.class));
+    importedFunctions.add(function(SaveFunction.class));
 
     // java related
-    importedFunctions.add(createFunction(JavacFunction.class));
-    importedFunctions.add(createFunction(JarFunction.class));
-    importedFunctions.add(createFunction(UnjarFunction.class));
-    importedFunctions.add(createFunction(JunitFunction.class));
+    importedFunctions.add(function(JavacFunction.class));
+    importedFunctions.add(function(JarFunction.class));
+    importedFunctions.add(function(UnjarFunction.class));
+    importedFunctions.add(function(JunitFunction.class));
 
     // compression related
-    importedFunctions.add(createFunction(ZipFunction.class));
-    importedFunctions.add(createFunction(UnzipFunction.class));
+    importedFunctions.add(function(ZipFunction.class));
+    importedFunctions.add(function(UnzipFunction.class));
 
     return importedFunctions;
   }
 
-  private Function createFunction(Class<?> klass) {
+  private Function function(Class<?> klass) {
+    return new CachableFunction(taskDb, nonCachableFunction(klass));
+  }
+
+  private Function nonCachableFunction(Class<?> klass) {
     try {
-      return new CachableFunction(taskDb, nativeFunctionFactory.create(klass, true));
+      return nativeFunctionFactory.create(klass, true);
     } catch (NativeImplementationException e) {
       throw new ErrorMessageException(new Message(FATAL, "Bug in smooth binary: Builtin function "
           + klass.getCanonicalName() + " has implementation problem.\nJava stack trace is:\n"
