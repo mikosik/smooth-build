@@ -28,6 +28,10 @@ public class SmoothExecutor {
       throw new ErrorMessageException(new UnknownFunctionError(name, module.availableNames()));
     }
     Result result = taskGenerator.generateTask(function);
-    result.result();
+    try {
+      result.result();
+    } catch (BuildInterruptedException e) {
+      // Nothing to do. Just quit the build process.
+    }
   }
 }
