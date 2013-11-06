@@ -29,7 +29,7 @@ public class ZipSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;

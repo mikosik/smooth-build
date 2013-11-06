@@ -29,7 +29,7 @@ public class MergeSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContainsItsPath(outputPath, path1);
     fileSystem.assertFileContainsItsPath(outputPath, path2);
   }
@@ -55,6 +55,6 @@ public class MergeSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(DuplicateMergedPathError.class);
+    userConsole.assertOnlyProblem(DuplicateMergedPathError.class);
   }
 }

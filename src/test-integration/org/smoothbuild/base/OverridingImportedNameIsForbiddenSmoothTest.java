@@ -20,6 +20,6 @@ public class OverridingImportedNameIsForbiddenSmoothTest extends IntegrationTest
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(OverridenImportError.class);
+    userConsole.assertOnlyProblem(OverridenImportError.class);
   }
 }

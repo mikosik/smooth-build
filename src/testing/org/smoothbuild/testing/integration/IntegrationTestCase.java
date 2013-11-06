@@ -16,7 +16,7 @@ import com.google.inject.Injector;
 public class IntegrationTestCase {
   protected FakeFileSystem fileSystem;
   protected SmoothApp smoothApp;
-  protected FakeUserConsole messages;
+  protected FakeUserConsole userConsole;
 
   @Before
   public void before() {
@@ -26,7 +26,7 @@ public class IntegrationTestCase {
   protected void reset() {
     Injector injector = createInjector(new IntegrationTestModule());
     fileSystem = injector.getInstance(FakeFileSystem.class);
-    messages = injector.getInstance(FakeUserConsole.class);
+    userConsole = injector.getInstance(FakeUserConsole.class);
     smoothApp = injector.getInstance(SmoothApp.class);
   }
 

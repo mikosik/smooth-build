@@ -24,7 +24,7 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
 
     fileSystem.assertFileContainsItsPath(outDir, path1);
     fileSystem.assertFileContainsItsPath(outDir, path2);

@@ -23,7 +23,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(IllegalPathPatternError.class);
+    userConsole.assertOnlyProblem(IllegalPathPatternError.class);
   }
 
   @Test
@@ -126,7 +126,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     for (String path : excluded) {
       assertThat(fileSystem.pathState(path(path))).isEqualTo(PathState.NOTHING);
     }

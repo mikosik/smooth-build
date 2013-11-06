@@ -20,7 +20,7 @@ public class StringSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContains(path, "\"");
   }
 
@@ -35,7 +35,7 @@ public class StringSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContains(path, "\\");
   }
 }

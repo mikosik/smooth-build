@@ -20,7 +20,7 @@ public class NewFileSmoothTest extends IntegrationTestCase {
 
     smoothApp.run("run");
 
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContains(path, content);
   }
 }

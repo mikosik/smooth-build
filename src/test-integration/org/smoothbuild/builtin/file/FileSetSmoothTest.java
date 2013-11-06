@@ -29,7 +29,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContainsItsPath(dir, path1);
     fileSystem.assertFileContainsItsPath(dir, path2);
   }
@@ -43,7 +43,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(SyntaxError.class);
+    userConsole.assertOnlyProblem(SyntaxError.class);
   }
 
   @Test
@@ -62,7 +62,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContainsItsPath(dir, path1);
     fileSystem.assertFileContainsItsPath(dir, path2);
   }
@@ -83,7 +83,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContainsItsPath(dir, path1);
   }
 
@@ -101,7 +101,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
   }
 
   @Test
@@ -115,6 +115,6 @@ public class FileSetSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(DuplicatePathError.class);
+    userConsole.assertOnlyProblem(DuplicatePathError.class);
   }
 }
