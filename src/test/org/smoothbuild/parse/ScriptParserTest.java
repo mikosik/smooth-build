@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.junit.Assert.fail;
 import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.parse.ScriptBuilder.script;
@@ -8,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
@@ -51,7 +53,14 @@ public class ScriptParserTest {
 
   @Test
   public void notClosedStringLiteralFails() throws Exception {
-    parse(script("functionA : 'abc ;")).assertProblemsFound();
+    FakeMessageGroup messages = new FakeMessageGroup();
+    try {
+      runScriptParser(script("functionA : 'abc ;"), messages);
+      fail("exception should be thrown");
+    } catch (PhaseFailedException e) {
+      // expected
+      messages.assertProblemsFound();
+    }
   }
 
   @Test
@@ -69,24 +78,30 @@ public class ScriptParserTest {
     assertParsingFails("abc");
   }
 
-  private static void assertParsingSucceeds(String scriptText) throws IOException {
-    FakeMessageGroup messages = parse(scriptText);
+  private static void assertParsingSucceeds(String script) throws IOException {
+    FakeMessageGroup messages = new FakeMessageGroup();
+    try {
+      runScriptParser(script, messages);
+    } catch (PhaseFailedException e) {
+      messages.assertNoProblems();
+      fail("no exception should be thrown");
+    }
     messages.assertNoProblems();
   }
 
   private static void assertParsingFails(String script) throws IOException {
-    FakeMessageGroup messages = parse(script);
-    messages.assertOnlyProblem(SyntaxError.class);
+    FakeMessageGroup messages = new FakeMessageGroup();
+    try {
+      runScriptParser(script, messages);
+      fail("exception should be thrown");
+    } catch (PhaseFailedException e) {
+      // expected
+      messages.assertOnlyProblem(SyntaxError.class);
+    }
   }
 
-  private static FakeMessageGroup parse(String string) throws IOException {
-    FakeMessageGroup messages = new FakeMessageGroup();
+  private static void runScriptParser(String string, MessageGroup messages) {
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(CHARSET));
-    try {
-      ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));
-    } catch (PhaseFailedException e) {
-      // ignore
-    }
-    return messages;
+    ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));
   }
 }
