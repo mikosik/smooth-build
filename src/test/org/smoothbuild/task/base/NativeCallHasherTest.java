@@ -11,9 +11,9 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeResult;
 
@@ -28,8 +28,8 @@ public class NativeCallHasherTest {
   Param param2 = param(STRING, "name2", false);
 
   ImmutableList<Param> params = ImmutableList.of(param1, param2);
-  NativeFunction function = createFunction(params, "func1");
-  NativeFunction function2 = createFunction(params, "func2");
+  Function function = createFunction(params, "func1");
+  Function function2 = createFunction(params, "func2");
 
   ImmutableMap<String, Result> arguments;
   ImmutableMap<String, Result> arguments2;
@@ -60,8 +60,8 @@ public class NativeCallHasherTest {
 
   // helpers
 
-  private static NativeFunction createFunction(Iterable<Param> params, String name) {
-    NativeFunction function = mock(NativeFunction.class);
+  private static Function createFunction(Iterable<Param> params, String name) {
+    Function function = mock(Function.class);
     Signature signature = new Signature(STRING, name(name), params);
     Mockito.when(function.signature()).thenReturn(signature);
     Mockito.when(function.params()).thenReturn(signature.params());
