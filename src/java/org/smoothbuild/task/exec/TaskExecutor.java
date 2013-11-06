@@ -25,6 +25,9 @@ public class TaskExecutor {
     if (!task.isInternal() || messageGroup.containsMessages()) {
       userConsole.report(messageGroup);
     }
+    if (messageGroup.containsProblems()) {
+      throw new BuildInterruptedException();
+    }
     return result;
   }
 }
