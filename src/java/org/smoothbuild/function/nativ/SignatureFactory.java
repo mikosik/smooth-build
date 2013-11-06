@@ -39,7 +39,7 @@ public class SignatureFactory {
       throw new MissingNameException(method);
     }
     try {
-      return name(annotation.value());
+      return name(annotation.name());
     } catch (IllegalArgumentException e) {
       throw new IllegalFunctionNameException(method, e.getMessage());
     }

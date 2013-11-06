@@ -12,7 +12,7 @@ public class UnzipFunction {
     public File file();
   }
 
-  @SmoothFunction("unzip")
+  @SmoothFunction(name = "unzip")
   public static FileSet execute(Sandbox sandbox, Parameters params) {
     return new Unzipper(sandbox).unzipFile(params.file());
   }

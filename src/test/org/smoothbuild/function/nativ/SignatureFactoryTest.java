@@ -31,7 +31,7 @@ public class SignatureFactoryTest {
     public File param1();
   }
 
-  @SmoothFunction("function")
+  @SmoothFunction(name = "function")
   public static File smoothMethod(Sandbox sandbox, Params params) {
     return null;
   }

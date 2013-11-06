@@ -47,7 +47,7 @@ public class JavacFunction {
     StringValue target();
   }
 
-  @SmoothFunction("javac")
+  @SmoothFunction(name = "javac")
   public static FileSet execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }

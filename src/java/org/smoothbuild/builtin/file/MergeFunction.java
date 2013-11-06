@@ -18,7 +18,7 @@ public class MergeFunction {
     public FileSet with();
   }
 
-  @SmoothFunction("merge")
+  @SmoothFunction(name = "merge")
   public static FileSet execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }

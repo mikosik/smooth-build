@@ -27,7 +27,7 @@ public class JunitFunction {
     FileSet libs();
   }
 
-  @SmoothFunction("junit")
+  @SmoothFunction(name = "junit")
   public static void execute(SandboxImpl sandbox, Parameters params) {
     new Worker(sandbox, params).execute();
   }

@@ -32,7 +32,7 @@ public class JarFunction {
     public File manifest();
   }
 
-  @SmoothFunction("jar")
+  @SmoothFunction(name = "jar")
   public static File execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }

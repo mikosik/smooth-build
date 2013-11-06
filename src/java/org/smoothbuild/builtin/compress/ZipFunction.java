@@ -29,7 +29,7 @@ public class ZipFunction {
     // add missing parameters: level, comment, method
   }
 
-  @SmoothFunction("zip")
+  @SmoothFunction(name = "zip")
   public static File execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
