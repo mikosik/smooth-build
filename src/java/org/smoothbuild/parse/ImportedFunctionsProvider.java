@@ -18,8 +18,6 @@ import org.smoothbuild.builtin.java.UnjarFunction;
 import org.smoothbuild.builtin.java.javac.JavacFunction;
 import org.smoothbuild.builtin.java.junit.JunitFunction;
 import org.smoothbuild.db.task.TaskDb;
-import org.smoothbuild.function.base.CachableFunction;
-import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
@@ -38,7 +36,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
 
   @Override
   public ImportedFunctions get() {
-    ImportedFunctions importedFunctions = new ImportedFunctions();
+    ImportedFunctions importedFunctions = new ImportedFunctions(taskDb);
 
     // file related
     importedFunctions.add(function(FileFunction.class));
@@ -61,16 +59,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
     return importedFunctions;
   }
 
-  private Function function(Class<?> klass) {
-    NativeFunction function = functionRaw(klass);
-    if (function.isCacheable()) {
-      return new CachableFunction(taskDb, function);
-    } else {
-      return function;
-    }
-  }
-
-  private NativeFunction functionRaw(Class<?> klass) {
+  private NativeFunction function(Class<?> klass) {
     try {
       return NativeFunctionFactory.create(klass, true);
     } catch (NativeImplementationException e) {

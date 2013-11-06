@@ -6,13 +6,13 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.function.base.Function;
+import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.function.nativ.exc.FunctionImplementationException;
 
 public class ImportedFunctionsTest {
-  ImportedFunctions importedFunctions = new ImportedFunctions();
+  ImportedFunctions importedFunctions = new ImportedFunctions(mock(TaskDb.class));
 
   @Test
   public void doesNotContainNotAddedType() throws Exception {
@@ -34,7 +34,7 @@ public class ImportedFunctionsTest {
   @Test
   public void returnsAddedType() throws FunctionImplementationException {
     String name = "nameA";
-    Function function = function(name);
+    NativeFunction function = function(name);
 
     importedFunctions.add(function);
 
@@ -64,7 +64,7 @@ public class ImportedFunctionsTest {
     }
   }
 
-  private static Function function(String name) {
-    return new NativeFunction(testSignature(name), mock(Invoker.class), true);
+  private static NativeFunction function(String name) {
+    return new NativeFunction(testSignature(name), mock(Invoker.class), false);
   }
 }
