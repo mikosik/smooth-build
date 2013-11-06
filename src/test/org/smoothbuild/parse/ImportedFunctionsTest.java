@@ -65,6 +65,6 @@ public class ImportedFunctionsTest {
   }
 
   private static Function function(String name) {
-    return new NativeFunction(testSignature(name), mock(Invoker.class));
+    return new NativeFunction(testSignature(name), mock(Invoker.class), true);
   }
 }

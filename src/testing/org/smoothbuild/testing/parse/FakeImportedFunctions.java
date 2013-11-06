@@ -19,7 +19,7 @@ public class FakeImportedFunctions implements SymbolTable {
   private final Map<String, Function> map;
 
   public FakeImportedFunctions() {
-    Function function = new NativeFunction(testSignature(IMPORTED_NAME), mock(Invoker.class));
+    Function function = new NativeFunction(testSignature(IMPORTED_NAME), mock(Invoker.class), true);
     this.map = ImmutableMap.of(IMPORTED_NAME, function);
   }
 
