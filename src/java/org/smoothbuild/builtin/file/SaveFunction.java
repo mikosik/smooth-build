@@ -39,7 +39,7 @@ public class SaveFunction {
     public StringValue dir();
   }
 
-  @SmoothFunction("save")
+  @SmoothFunction(name = "save")
   public static void execute(SandboxImpl sandbox, Parameters params) {
     new Worker(sandbox, params).execute();
   }

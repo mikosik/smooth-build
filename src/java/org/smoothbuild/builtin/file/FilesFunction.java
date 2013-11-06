@@ -27,7 +27,7 @@ public class FilesFunction {
     public StringValue dir();
   }
 
-  @SmoothFunction(value = "files", cacheable = false)
+  @SmoothFunction(name = "files", cacheable = false)
   public static FileSet execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }

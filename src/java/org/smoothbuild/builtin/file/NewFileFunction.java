@@ -29,7 +29,7 @@ public class NewFileFunction {
     public StringValue content();
   }
 
-  @SmoothFunction("newFile")
+  @SmoothFunction(name = "newFile")
   public static File execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }

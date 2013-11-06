@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface SmoothFunction {
-  String value();
+  String name();
 
   boolean cacheable() default true;
 }

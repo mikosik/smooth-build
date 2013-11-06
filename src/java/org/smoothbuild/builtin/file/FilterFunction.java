@@ -26,7 +26,7 @@ public class FilterFunction {
     public StringValue include();
   }
 
-  @SmoothFunction("filter")
+  @SmoothFunction(name = "filter")
   public static FileSet execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }

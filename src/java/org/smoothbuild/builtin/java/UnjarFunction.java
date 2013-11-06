@@ -12,7 +12,7 @@ public class UnjarFunction {
     public File file();
   }
 
-  @SmoothFunction("unjar")
+  @SmoothFunction(name = "unjar")
   public static FileSet execute(Sandbox sandbox, Parameters params) {
     return new Unjarer(sandbox).unjarFile(params.file());
   }

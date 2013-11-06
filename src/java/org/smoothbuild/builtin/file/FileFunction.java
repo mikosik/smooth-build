@@ -26,7 +26,7 @@ public class FileFunction {
     public StringValue path();
   }
 
-  @SmoothFunction(value = "file", cacheable = false)
+  @SmoothFunction(name = "file", cacheable = false)
   public static File execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
