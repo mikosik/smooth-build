@@ -24,10 +24,16 @@ import com.google.common.collect.ImmutableMap;
  */
 public class NativeFunction extends AbstractFunction {
   private final Invoker invoker;
+  private final boolean isCacheable;
 
-  public NativeFunction(Signature signature, Invoker invoker) {
+  public NativeFunction(Signature signature, Invoker invoker, boolean isCacheable) {
     super(signature);
     this.invoker = checkNotNull(invoker);
+    this.isCacheable = isCacheable;
+  }
+
+  public boolean isCacheable() {
+    return isCacheable;
   }
 
   @Override

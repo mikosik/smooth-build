@@ -32,16 +32,16 @@ public class NativeFunctionTest {
   Signature signature = testSignature("functionName");
   Invoker invoker = mock(Invoker.class);
 
-  NativeFunction function = new NativeFunction(signature, invoker);
+  NativeFunction function = new NativeFunction(signature, invoker, true);
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
-    new NativeFunction(null, invoker);
+    new NativeFunction(null, invoker, true);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullInvokerIsForbidden() throws Exception {
-    new NativeFunction(signature, null);
+    new NativeFunction(signature, null, true);
   }
 
   @Test

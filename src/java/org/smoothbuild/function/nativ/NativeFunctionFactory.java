@@ -6,6 +6,7 @@ import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 import java.lang.reflect.Method;
 
 import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.function.nativ.exc.MissingNameException;
 import org.smoothbuild.function.nativ.exc.MoreThanOneSmoothFunctionException;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
 import org.smoothbuild.function.nativ.exc.NoSmoothFunctionException;
@@ -24,8 +25,9 @@ public class NativeFunctionFactory {
 
     Signature signature = SignatureFactory.create(method, paramsInterface);
     Invoker invoker = createInvoker(method, paramsInterface);
+    boolean isCacheable = isCacheable(method);
 
-    return new NativeFunction(signature, invoker);
+    return new NativeFunction(signature, invoker, isCacheable);
   }
 
   private static Invoker createInvoker(Method method, Class<?> paramsInterface)
@@ -66,5 +68,13 @@ public class NativeFunctionFactory {
       throw new NoSmoothFunctionException(klass);
     }
     return result;
+  }
+
+  private static boolean isCacheable(Method method) throws MissingNameException {
+    SmoothFunction annotation = method.getAnnotation(SmoothFunction.class);
+    if (annotation == null) {
+      throw new MissingNameException(method);
+    }
+    return annotation.cacheable();
   }
 }

@@ -42,8 +42,8 @@ public class NativeCallTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
   HashCode hash = HashCode.fromInt(33);
-  NativeFunction function1 = new NativeFunction(testSignature(), invoker);
-  NativeFunction function2 = new NativeFunction(testSignature(), invoker);
+  NativeFunction function1 = new NativeFunction(testSignature(), invoker, true);
+  NativeFunction function2 = new NativeFunction(testSignature(), invoker, true);
 
   String name1 = "name1";
   String name2 = "name2";
@@ -85,7 +85,7 @@ public class NativeCallTaskTest {
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
     Signature signature = new Signature(VOID, name("name"), params);
-    function1 = new NativeFunction(signature, invoker);
+    function1 = new NativeFunction(signature, invoker, true);
     nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
 
