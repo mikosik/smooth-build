@@ -27,7 +27,6 @@ public class NameMatcher implements Predicate<Path> {
   @Override
   public boolean apply(Path path) {
     String string = path.value();
-    // TODO use 'array = string.toCharArray();' to improve speed
 
     // matching leftmost characters to first '*'
 
@@ -88,8 +87,6 @@ public class NameMatcher implements Predicate<Path> {
       String part = patternParts.get(pLeft);
       int steps = stillAvailable - part.length() + 1;
 
-      // TODO use Boyer-Moore algorithm instead
-      // http://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm
       boolean found = false;
       for (int i = 0; i < steps; i++) {
         if (string.substring(sLeft + i).startsWith(part)) {
