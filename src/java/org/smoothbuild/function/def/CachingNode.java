@@ -3,7 +3,7 @@ package org.smoothbuild.function.def;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class CachingNode extends AbstractNode {
+public class CachingNode extends Node {
   private final Node abstractNode;
   private Task cachedTask;
 

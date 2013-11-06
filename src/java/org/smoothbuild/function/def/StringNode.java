@@ -9,7 +9,7 @@ import org.smoothbuild.task.base.StringTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class StringNode extends AbstractNode {
+public class StringNode extends Node {
   private final StringValue string;
 
   public StringNode(StringValue string, CodeLocation codeLocation) {
