@@ -13,7 +13,6 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
-import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Param;
@@ -43,9 +42,8 @@ public class NativeCallTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
   HashCode hash = HashCode.fromInt(33);
-  TaskDb taskDb = mock(TaskDb.class);
-  NativeFunction function1 = new NativeFunction(taskDb, testSignature(), invoker);
-  NativeFunction function2 = new NativeFunction(taskDb, testSignature(), invoker);
+  NativeFunction function1 = new NativeFunction(testSignature(), invoker);
+  NativeFunction function2 = new NativeFunction(testSignature(), invoker);
 
   String name1 = "name1";
   String name2 = "name2";
@@ -87,7 +85,7 @@ public class NativeCallTaskTest {
   public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
     Signature signature = new Signature(VOID, name("name"), params);
-    function1 = new NativeFunction(taskDb, signature, invoker);
+    function1 = new NativeFunction(signature, invoker);
     nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
 

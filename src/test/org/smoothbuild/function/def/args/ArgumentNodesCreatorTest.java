@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
@@ -558,7 +557,7 @@ public class ArgumentNodesCreatorTest {
 
   private static Function function(Iterable<Param> params) {
     Signature signature = new Signature(STRING, name("name"), params);
-    return new NativeFunction(mock(TaskDb.class), signature, mock(Invoker.class));
+    return new NativeFunction(signature, mock(Invoker.class));
   }
 
   private static ArrayList<Argument> list(Argument... args) {
