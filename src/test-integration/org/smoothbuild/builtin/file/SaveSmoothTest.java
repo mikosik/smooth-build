@@ -38,7 +38,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContainsItsPath(dirPath, path);
   }
 
@@ -55,7 +55,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContainsItsPath(dir, path);
     fileSystem.assertFileContainsItsPath(dir, path2);
   }
@@ -71,7 +71,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(EitherFileOrFilesMustBeProvidedError.class);
+    userConsole.assertOnlyProblem(EitherFileOrFilesMustBeProvidedError.class);
   }
 
   @Test
@@ -86,7 +86,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(FileAndFilesSpecifiedError.class);
+    userConsole.assertOnlyProblem(FileAndFilesSpecifiedError.class);
   }
 
   // dir param validation
@@ -102,7 +102,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(MissingRequiredArgsError.class);
+    userConsole.assertOnlyProblem(MissingRequiredArgsError.class);
   }
 
   @Test
@@ -119,7 +119,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
       smoothApp.run("run");
 
       // then
-      messages.assertOnlyProblem(IllegalPathError.class);
+      userConsole.assertOnlyProblem(IllegalPathError.class);
     }
   }
 
@@ -134,7 +134,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(WriteToSmoothDirError.class);
+    userConsole.assertOnlyProblem(WriteToSmoothDirError.class);
   }
 
   @Test
@@ -148,7 +148,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(WriteToSmoothDirError.class);
+    userConsole.assertOnlyProblem(WriteToSmoothDirError.class);
   }
 
   @Test
@@ -163,7 +163,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(DirParamIsAFileError.class);
+    userConsole.assertOnlyProblem(DirParamIsAFileError.class);
   }
 
   @Test
@@ -178,7 +178,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(DirParamSubdirIsAFileError.class);
+    userConsole.assertOnlyProblem(DirParamSubdirIsAFileError.class);
   }
 
   // validating dir+file path
@@ -195,7 +195,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
   }
 
   @Test
@@ -213,7 +213,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(FileOutputIsADirError.class);
+    userConsole.assertOnlyProblem(FileOutputIsADirError.class);
   }
 
   @Test
@@ -228,7 +228,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(FileOutputSubdirIsAFileError.class);
+    userConsole.assertOnlyProblem(FileOutputSubdirIsAFileError.class);
   }
 
 }

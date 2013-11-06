@@ -21,6 +21,6 @@ public class DependencyCycleIsForbiddenSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertOnlyProblem(CycleInCallGraphError.class);
+    userConsole.assertOnlyProblem(CycleInCallGraphError.class);
   }
 }

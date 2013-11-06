@@ -25,7 +25,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     script(createScript());
 
     smoothApp.run("run");
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
   }
 
   @Test
@@ -36,7 +36,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     script(createScript());
 
     smoothApp.run("run");
-    messages.assertOnlyProblem(JunitTestFailedError.class);
+    userConsole.assertOnlyProblem(JunitTestFailedError.class);
   }
 
   private String createScript() {

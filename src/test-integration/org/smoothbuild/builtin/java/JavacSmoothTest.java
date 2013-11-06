@@ -27,7 +27,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac ;");
     smoothApp.run("run");
 
-    messages.assertOnlyProblem(JavaCompilerMessage.class);
+    userConsole.assertOnlyProblem(JavaCompilerMessage.class);
   }
 
   @Test
@@ -47,7 +47,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac | save(dir='.');");
     smoothApp.run("run");
 
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
 
     String classFile = "MyClass.class";
     String method = "myMethod";
@@ -98,7 +98,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
 
     smoothApp.run("run");
 
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     loadClass(byteCode(libClassFile));
     String method = "myMethod";
     Object result = invoke(appClassFile, method);
@@ -113,7 +113,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
     smoothApp.run("run");
 
-    messages.assertOnlyProblem(IllegalSourceParamError.class);
+    userConsole.assertOnlyProblem(IllegalSourceParamError.class);
   }
 
   @Test
@@ -124,7 +124,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
     smoothApp.run("run");
 
-    messages.assertOnlyProblem(IllegalTargetParamError.class);
+    userConsole.assertOnlyProblem(IllegalTargetParamError.class);
   }
 
   @Test
@@ -135,7 +135,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
     smoothApp.run("run");
 
-    messages.assertOnlyProblem(JavaCompilerMessage.class);
+    userConsole.assertOnlyProblem(JavaCompilerMessage.class);
   }
 
   private Object invoke(Path appClassFile, String method) throws IOException,

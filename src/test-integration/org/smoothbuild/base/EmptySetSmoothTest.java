@@ -15,6 +15,6 @@ public class EmptySetSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
   }
 }

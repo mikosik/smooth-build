@@ -23,7 +23,7 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
 
     fileSystem.assertFileContainsItsPath(outPath, fileA);
     fileSystem.assertFileContainsItsPath(outPath, fileB);

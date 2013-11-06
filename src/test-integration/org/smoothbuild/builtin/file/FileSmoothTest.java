@@ -22,7 +22,7 @@ public class FileSmoothTest extends IntegrationTestCase {
     smoothApp.run("run");
 
     // then
-    messages.assertNoProblems();
+    userConsole.assertNoProblems();
     fileSystem.assertFileContainsItsPath(dir, path);
   }
 }
