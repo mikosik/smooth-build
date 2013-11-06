@@ -1,5 +1,7 @@
 package org.smoothbuild.task.base;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;
@@ -10,9 +12,9 @@ public abstract class Task {
   private final CodeLocation codeLocation;
 
   public Task(String name, boolean isInternal, CodeLocation codeLocation) {
-    this.name = name;
+    this.name = checkNotNull(name);
     this.isInternal = isInternal;
-    this.codeLocation = codeLocation;
+    this.codeLocation = checkNotNull(codeLocation);
   }
 
   public String name() {
