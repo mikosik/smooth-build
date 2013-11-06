@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.db.task.CachedResult;
 import org.smoothbuild.db.task.TaskDb;
+import org.smoothbuild.function.base.CallHasher;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;
@@ -12,19 +13,19 @@ import com.google.common.hash.HashCode;
 
 public class CachingTask extends Task {
   private final TaskDb taskDb;
-  private final NativeCallHasher nativeCallHasher;
+  private final CallHasher callHasher;
   private final Task task;
 
-  public CachingTask(TaskDb taskDb, NativeCallHasher nativeCallHasher, Task task) {
+  public CachingTask(TaskDb taskDb, CallHasher callHasher, Task task) {
     super(task.name(), task.isInternal(), task.codeLocation());
     this.taskDb = checkNotNull(taskDb);
-    this.nativeCallHasher = checkNotNull(nativeCallHasher);
+    this.callHasher = checkNotNull(callHasher);
     this.task = checkNotNull(task);
   }
 
   @Override
   public Value execute(SandboxImpl sandbox) {
-    HashCode hash = nativeCallHasher.hash();
+    HashCode hash = callHasher.hash();
     if (taskDb.contains(hash)) {
       sandbox.messageGroup().setResultIsFromCache();
       CachedResult cachedResult = taskDb.read(hash);

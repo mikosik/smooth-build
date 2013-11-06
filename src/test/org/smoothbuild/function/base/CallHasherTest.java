@@ -1,4 +1,4 @@
-package org.smoothbuild.task.base;
+package org.smoothbuild.function.base;
 
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.mock;
@@ -12,15 +12,17 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.CallHasher;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.task.base.Result;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeResult;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class NativeCallHasherTest {
+public class CallHasherTest {
   Result value1 = new FakeResult(new FakeString("abc"));
   Result value2 = new FakeResult(new FakeString("def"));
 
@@ -34,28 +36,28 @@ public class NativeCallHasherTest {
   ImmutableMap<String, Result> arguments;
   ImmutableMap<String, Result> arguments2;
 
-  NativeCallHasher nativeCallHasher;
+  CallHasher callHasher;
 
   @Test
   public void hash_of_given_call_is_always_the_same() {
     given(arguments = ImmutableMap.of(param1.name(), value1));
-    when(new NativeCallHasher(function, arguments).hash());
-    thenReturned(new NativeCallHasher(function, arguments).hash());
+    when(new CallHasher(function, arguments).hash());
+    thenReturned(new CallHasher(function, arguments).hash());
   }
 
   @Test
   public void hash_of_function_call_with_different_arguments_is_different() {
     given(arguments = ImmutableMap.of(param1.name(), value1));
     given(arguments2 = ImmutableMap.of(param1.name(), value1, param2.name(), value2));
-    when(new NativeCallHasher(function, arguments).hash());
-    thenReturned(not(new NativeCallHasher(function, arguments2).hash()));
+    when(new CallHasher(function, arguments).hash());
+    thenReturned(not(new CallHasher(function, arguments2).hash()));
   }
 
   @Test
   public void hash_of_different_function_call_with_the_same_arguments_is_different() {
     given(arguments = ImmutableMap.of(param1.name(), value1));
-    when(new NativeCallHasher(function, arguments).hash());
-    thenReturned(not(new NativeCallHasher(function2, arguments).hash()));
+    when(new CallHasher(function, arguments).hash());
+    thenReturned(not(new CallHasher(function2, arguments).hash()));
   }
 
   // helpers

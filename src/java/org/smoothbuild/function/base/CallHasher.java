@@ -1,19 +1,18 @@
-package org.smoothbuild.task.base;
+package org.smoothbuild.function.base;
 
 import java.util.Map;
 
 import org.smoothbuild.db.hash.Hash;
-import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.Param;
+import org.smoothbuild.task.base.Result;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
-public class NativeCallHasher {
+public class CallHasher {
   private final Function function;
   private final Map<String, Result> args;
 
-  public NativeCallHasher(Function function, Map<String, Result> args) {
+  public CallHasher(Function function, Map<String, Result> args) {
     this.function = function;
     this.args = args;
   }

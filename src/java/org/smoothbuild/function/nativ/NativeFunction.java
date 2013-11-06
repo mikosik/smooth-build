@@ -7,12 +7,12 @@ import java.util.Map;
 
 import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.AbstractFunction;
+import org.smoothbuild.function.base.CallHasher;
 import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.CachingTask;
-import org.smoothbuild.task.base.NativeCallHasher;
 import org.smoothbuild.task.base.NativeCallTask;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -39,8 +39,8 @@ public class NativeFunction extends AbstractFunction {
   public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> args,
       CodeLocation codeLocation) {
     NativeCallTask nativeCallTask = new NativeCallTask(this, args, codeLocation);
-    NativeCallHasher nativeCallHasher = new NativeCallHasher(this, args);
-    return new CachingTask(taskDb, nativeCallHasher, nativeCallTask);
+    CallHasher callHasher = new CallHasher(this, args);
+    return new CachingTask(taskDb, callHasher, nativeCallTask);
   }
 
   public Value invoke(Sandbox sandbox, ImmutableMap<String, Value> args)
