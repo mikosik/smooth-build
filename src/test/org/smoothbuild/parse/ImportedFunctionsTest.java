@@ -6,7 +6,6 @@ import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
@@ -66,6 +65,6 @@ public class ImportedFunctionsTest {
   }
 
   private static Function function(String name) {
-    return new NativeFunction(mock(TaskDb.class), testSignature(name), mock(Invoker.class));
+    return new NativeFunction(testSignature(name), mock(Invoker.class));
   }
 }

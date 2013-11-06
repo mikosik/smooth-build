@@ -54,7 +54,7 @@ public class NativeFunctionFactoryTest {
   FakeSandbox sandbox = new FakeSandbox();
   Path tempDir = path("tem/dir");
   TaskDb taskDb = mock(TaskDb.class);
-  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory(taskDb);
+  NativeFunctionFactory nativeFunctionFactory = new NativeFunctionFactory();
   CodeLocation codeLocation = new FakeCodeLocation();
 
   @Before

@@ -17,6 +17,8 @@ import org.smoothbuild.builtin.java.JarFunction;
 import org.smoothbuild.builtin.java.UnjarFunction;
 import org.smoothbuild.builtin.java.javac.JavacFunction;
 import org.smoothbuild.builtin.java.junit.JunitFunction;
+import org.smoothbuild.db.task.TaskDb;
+import org.smoothbuild.function.base.CachableFunction;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.function.nativ.exc.NativeImplementationException;
@@ -26,10 +28,12 @@ import org.smoothbuild.message.message.Message;
 import com.google.inject.Provider;
 
 public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
+  private final TaskDb taskDb;
   private final NativeFunctionFactory nativeFunctionFactory;
 
   @Inject
-  public ImportedFunctionsProvider(NativeFunctionFactory nativeFunctionFactory) {
+  public ImportedFunctionsProvider(TaskDb taskDb, NativeFunctionFactory nativeFunctionFactory) {
+    this.taskDb = taskDb;
     this.nativeFunctionFactory = nativeFunctionFactory;
   }
 
@@ -60,7 +64,7 @@ public class ImportedFunctionsProvider implements Provider<ImportedFunctions> {
 
   private Function createFunction(Class<?> klass) {
     try {
-      return nativeFunctionFactory.create(klass, true);
+      return new CachableFunction(taskDb, nativeFunctionFactory.create(klass, true));
     } catch (NativeImplementationException e) {
       throw new ErrorMessageException(new Message(FATAL, "Bug in smooth binary: Builtin function "
           + klass.getCanonicalName() + " has implementation problem.\nJava stack trace is:\n"
