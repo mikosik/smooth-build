@@ -8,7 +8,7 @@ import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.VOID;
 import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
+import static org.smoothbuild.testing.function.base.FakeSignature.fakeSignature;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -42,8 +42,8 @@ public class NativeCallTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
   HashCode hash = HashCode.fromInt(33);
-  NativeFunction function1 = new NativeFunction(testSignature(), invoker, true);
-  NativeFunction function2 = new NativeFunction(testSignature(), invoker, true);
+  NativeFunction function1 = new NativeFunction(fakeSignature(), invoker, true);
+  NativeFunction function2 = new NativeFunction(fakeSignature(), invoker, true);
 
   String name1 = "name1";
   String name2 = "name2";
