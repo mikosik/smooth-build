@@ -12,7 +12,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
-import org.smoothbuild.parse.err.OverridenImportError;
+import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.parse.FakeImportedFunctions;
 import org.smoothbuild.testing.parse.FakeModule;
@@ -51,9 +51,9 @@ public class FunctionsCollectorTest {
   }
 
   @Test
-  public void overridenImport() throws Exception {
+  public void overridenBuiltinFunction() throws Exception {
     collectFunctions(module(function(IMPORTED_NAME)));
-    messages.assertOnlyProblem(OverridenImportError.class);
+    messages.assertOnlyProblem(OverridenBuiltinFunctionError.class);
   }
 
   private Map<String, FunctionContext> collectFunctions(FakeModule module) {
