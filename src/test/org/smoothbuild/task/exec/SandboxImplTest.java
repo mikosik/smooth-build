@@ -6,6 +6,8 @@ import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
+import java.util.List;
+
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -15,6 +17,8 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.FileSetBuilder;
+import org.smoothbuild.plugin.StringSet;
+import org.smoothbuild.plugin.StringSetBuilder;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
@@ -24,6 +28,7 @@ import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FileSetMatchers;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
 public class SandboxImplTest {
@@ -36,18 +41,6 @@ public class SandboxImplTest {
   FakeValueDb valueDb = new FakeValueDb(fileSystem);
 
   SandboxImpl sandbox = new SandboxImpl(fileSystem, valueDb, task);
-
-  @Test
-  public void file_builder_stores_file_in_value_db() throws Exception {
-    FileBuilder fileBuilder = sandbox.fileBuilder();
-    fileBuilder.setPath(path1);
-    StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
-    HashCode hash = fileBuilder.build().hash();
-
-    File file = valueDb.file(hash);
-    assertThat(file.path()).isEqualTo(path1);
-    assertThat(inputStreamToString(file.openInputStream())).isEqualTo(content);
-  }
 
   @Test
   public void file_set_builder_stores_files_in_value_db() throws Exception {
@@ -63,6 +56,40 @@ public class SandboxImplTest {
     FileSet fileSet = valueDb.fileSet(hash);
     MatcherAssert.assertThat(fileSet, FileSetMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileSet)).isEqualTo(1);
+  }
+
+  @Test
+  public void string_set_builder_stores_files_in_value_db() throws Exception {
+    String jdkString1 = "my string 1";
+    String jdkString2 = "my string 2";
+
+    StringValue string1 = sandbox.string(jdkString1);
+    StringValue string2 = sandbox.string(jdkString2);
+
+    StringSetBuilder builder = sandbox.stringSetBuilder();
+    builder.add(string1);
+    builder.add(string2);
+    StringSet stringSet = builder.build();
+
+    StringSet stringSetRead = valueDb.stringSet(stringSet.hash());
+    List<String> strings = Lists.newArrayList();
+    for (StringValue string : stringSetRead) {
+      strings.add(string.value());
+    }
+
+    assertThat(strings).containsOnly(jdkString1, jdkString2);
+  }
+
+  @Test
+  public void file_builder_stores_file_in_value_db() throws Exception {
+    FileBuilder fileBuilder = sandbox.fileBuilder();
+    fileBuilder.setPath(path1);
+    StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
+    HashCode hash = fileBuilder.build().hash();
+
+    File file = valueDb.file(hash);
+    assertThat(file.path()).isEqualTo(path1);
+    assertThat(inputStreamToString(file.openInputStream())).isEqualTo(content);
   }
 
   @Test
