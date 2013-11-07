@@ -51,7 +51,7 @@ public class DefinedFunctionTest {
     Task task = mock(Task.class);
     when(root.generateTask(taskGenerator)).thenReturn(task);
 
-    Task actual = definedFunction.generateTask(taskGenerator);
+    Task actual = definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap(), null);
 
     assertThat(actual).isSameAs(task);
   }

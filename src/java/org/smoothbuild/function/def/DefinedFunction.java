@@ -9,7 +9,6 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.Taskable;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 import com.google.common.base.Preconditions;
@@ -19,7 +18,7 @@ import com.google.common.base.Preconditions;
  * (as opposed to {@link org.smoothbuild.function.nativ.NativeFunction} which is
  * implemented completely in java language).
  */
-public class DefinedFunction extends AbstractFunction implements Taskable {
+public class DefinedFunction extends AbstractFunction {
   private final Node root;
 
   public DefinedFunction(Signature signature, Node root) {
@@ -32,11 +31,6 @@ public class DefinedFunction extends AbstractFunction implements Taskable {
       CodeLocation codeLocation) {
     Preconditions.checkArgument(arguments.isEmpty(),
         "DefinedFunction.generateTask() cannot accept non-empty arguments");
-    return generateTask(taskGenerator);
-  }
-
-  @Override
-  public Task generateTask(TaskGenerator taskGenerator) {
     return root.generateTask(taskGenerator);
   }
 }
