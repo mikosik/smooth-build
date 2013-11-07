@@ -1,5 +1,7 @@
 package org.smoothbuild.util;
 
+import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.Node;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.Value;
@@ -15,6 +17,10 @@ public class Empty {
   }
 
   public static ImmutableMap<String, Result> stringTaskResultMap() {
+    return ImmutableMap.of();
+  }
+
+  public static ImmutableMap<Name, Function> nameToFunctionMap() {
     return ImmutableMap.of();
   }
 
