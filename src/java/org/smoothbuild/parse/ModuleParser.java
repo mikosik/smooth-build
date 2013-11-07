@@ -4,7 +4,7 @@ import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
-import static org.smoothbuild.parse.UndefinedFunctionsDetector.detectUndefinedFunctions;
+import static org.smoothbuild.parse.UnknownFunctionCallsDetector.detectUndefinedFunctions;
 
 import java.io.InputStream;
 import java.util.List;

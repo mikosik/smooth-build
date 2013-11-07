@@ -6,8 +6,8 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.message.message.CodeMessage;
 
-public class UndefinedFunctionError extends CodeMessage {
-  public UndefinedFunctionError(CodeLocation codeLocation, Name name) {
-    super(ERROR, codeLocation, "Undefined function " + name);
+public class UnknownFunctionCallError extends CodeMessage {
+  public UnknownFunctionCallError(CodeLocation codeLocation, Name name) {
+    super(ERROR, codeLocation, "Call to unknown function " + name);
   }
 }
