@@ -13,6 +13,11 @@ public class ImmutableModule implements Module {
   }
 
   @Override
+  public boolean containsFunction(Name name) {
+    return functions.containsKey(name);
+  }
+
+  @Override
   public Function getFunction(Name name) {
     return functions.get(name);
   }
