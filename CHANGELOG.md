@@ -4,6 +4,8 @@ Change Log
 Version 0.4.0 (??????????)
 --------------------------
 
+ * added task result caching based on content digest
+ * improved formatting/content of user visible messages
  * added single line comments (comment starts with '#' character)
 
 Version 0.3.0 (2013.10.08)
