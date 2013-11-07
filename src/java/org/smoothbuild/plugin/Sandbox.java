@@ -10,4 +10,6 @@ public interface Sandbox {
   public StringSetBuilder stringSetBuilder();
 
   public FileBuilder fileBuilder();
+
+  public StringValue string(String string);
 }

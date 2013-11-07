@@ -15,6 +15,7 @@ import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.FileSetBuilder;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.db.value.FakeValueDb;
@@ -62,6 +63,16 @@ public class SandboxImplTest {
     FileSet fileSet = objectDb.fileSet(hash);
     MatcherAssert.assertThat(fileSet, FileSetMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileSet)).isEqualTo(1);
+  }
+
+  @Test
+  public void string_stores_its_content_in_value_db() throws Exception {
+    String jdkString = "my string";
+    StringValue string = sandbox.string(jdkString);
+
+    StringValue stringRead = objectDb.string(string.hash());
+
+    assertThat(stringRead.value()).isEqualTo(jdkString);
   }
 
   @Test

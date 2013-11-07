@@ -9,6 +9,7 @@ import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringSetBuilder;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.base.Strings;
@@ -41,6 +42,11 @@ public class SandboxImpl implements Sandbox {
   @Override
   public FileBuilder fileBuilder() {
     return new FileBuilder(valueDb);
+  }
+
+  @Override
+  public StringValue string(String string) {
+    return valueDb.string(string);
   }
 
   public FileSystem projectFileSystem() {
