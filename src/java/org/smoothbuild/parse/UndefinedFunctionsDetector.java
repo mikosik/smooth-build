@@ -19,7 +19,7 @@ public class UndefinedFunctionsDetector {
     for (Set<Dependency> functionDependecies : dependencies.values()) {
       for (Dependency dependency : functionDependecies) {
         Name name = dependency.functionName();
-        if (!importedFunctions.containsFunction(name.value()) && !declaredFunctions.contains(name)) {
+        if (!importedFunctions.containsFunction(name) && !declaredFunctions.contains(name)) {
           messages.report(new UndefinedFunctionError(dependency.location(), name));
         }
       }

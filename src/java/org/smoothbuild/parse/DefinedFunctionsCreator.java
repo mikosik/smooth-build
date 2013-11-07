@@ -236,9 +236,10 @@ public class DefinedFunctionsCreator {
       // this point that function with given name exists either among imported
       // functions or among already handled defined functions.
 
-      Function function = symbolTable.getFunction(functionName);
+      Name name = Name.name(functionName);
+      Function function = symbolTable.getFunction(name);
       if (function == null) {
-        return functions.get(name(functionName));
+        return functions.get(name);
       } else {
         return function;
       }

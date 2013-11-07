@@ -35,7 +35,7 @@ public class UndefinedFunctionsDetectorTest {
   @Test
   public void referenceToImportedFunction() {
     Name imported = name("imported");
-    when(importedFunctions.containsFunction(imported.value())).thenReturn(true);
+    when(importedFunctions.containsFunction(imported)).thenReturn(true);
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(name1, dependencies(imported));
 

@@ -53,7 +53,7 @@ public class FunctionsCollectorTest {
 
   @Test
   public void overridenBuiltinFunction() throws Exception {
-    collectFunctions(module(function(IMPORTED_NAME)));
+    collectFunctions(module(function(IMPORTED_NAME.value())));
     messages.assertOnlyProblem(OverridenBuiltinFunctionError.class);
   }
 

@@ -2,38 +2,40 @@ package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.testing.function.base.FakeSignature.fakeSignature;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.db.task.TaskDb;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.function.nativ.exc.FunctionImplementationException;
 
 public class ImportedFunctionsTest {
+  Name name = name("functionA");
+  Name name2 = name("functionB");
   ImportedFunctions importedFunctions = new ImportedFunctions(mock(TaskDb.class));
 
   @Test
   public void doesNotContainNotAddedType() throws Exception {
-    assertThat(importedFunctions.containsFunction("nameA")).isFalse();
+    assertThat(importedFunctions.containsFunction(name)).isFalse();
   }
 
   @Test
   public void returnsNullWhenQueriedForNotRegisteredType() throws Exception {
-    assertThat(importedFunctions.getFunction("abc")).isNull();
+    assertThat(importedFunctions.getFunction(name)).isNull();
   }
 
   @Test
   public void containsImportedFunction() throws FunctionImplementationException {
-    String name = "nameA";
     importedFunctions.add(function(name));
     assertThat(importedFunctions.containsFunction(name)).isTrue();
   }
 
   @Test
   public void returnsAddedType() throws FunctionImplementationException {
-    String name = "nameA";
     NativeFunction function = function(name);
 
     importedFunctions.add(function);
@@ -43,18 +45,14 @@ public class ImportedFunctionsTest {
 
   @Test
   public void namesReturnsNamesOfAllAddedFunctions() throws FunctionImplementationException {
-    String name1 = "name1";
-    String name2 = "name2";
-    importedFunctions.add(function(name1));
+    importedFunctions.add(function(name));
     importedFunctions.add(function(name2));
 
-    assertThat(importedFunctions.names()).containsOnly(name1, name2);
+    assertThat(importedFunctions.names()).containsOnly(name, name2);
   }
 
   @Test
   public void cannotRegisterTwiceUnderTheSameName() throws Exception {
-    String name = "nameA";
-
     importedFunctions.add(function(name));
     try {
       importedFunctions.add(function(name));
@@ -64,7 +62,7 @@ public class ImportedFunctionsTest {
     }
   }
 
-  private static NativeFunction function(String name) {
+  private static NativeFunction function(Name name) {
     return new NativeFunction(fakeSignature(name), mock(Invoker.class), false);
   }
 }
