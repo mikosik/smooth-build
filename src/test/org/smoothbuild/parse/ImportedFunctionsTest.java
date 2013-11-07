@@ -48,7 +48,7 @@ public class ImportedFunctionsTest {
     importedFunctions.add(function(name));
     importedFunctions.add(function(name2));
 
-    assertThat(importedFunctions.names()).containsOnly(name, name2);
+    assertThat(importedFunctions.availableNames()).containsOnly(name, name2);
   }
 
   @Test

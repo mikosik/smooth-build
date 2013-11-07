@@ -34,7 +34,7 @@ public class FakeImportedFunctions implements SymbolTable {
   }
 
   @Override
-  public ImmutableSet<Name> names() {
+  public ImmutableSet<Name> availableNames() {
     return map.keySet();
   }
 }
