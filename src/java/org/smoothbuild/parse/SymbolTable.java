@@ -11,5 +11,5 @@ public interface SymbolTable {
 
   public Function getFunction(Name name);
 
-  public ImmutableSet<Name> names();
+  public ImmutableSet<Name> availableNames();
 }

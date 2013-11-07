@@ -35,7 +35,7 @@ public class DependencySorter {
 
     public Worker(SymbolTable importedFunctions, Map<Name, Set<Dependency>> dependenciesOrig) {
       this.notSorted = Maps.newHashMap(dependenciesOrig);
-      this.reachableNames = Sets.newHashSet(importedFunctions.names());
+      this.reachableNames = Sets.newHashSet(importedFunctions.availableNames());
       this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
       this.stack = new DependencyStack();
     }
