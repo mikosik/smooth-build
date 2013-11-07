@@ -20,6 +20,7 @@ import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.ImmutableModule;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
@@ -68,6 +69,6 @@ public class ModuleParser {
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
         messageGroup, importedFunctions, functions, sorted);
 
-    return new Module(definedFunctions);
+    return new ImmutableModule(definedFunctions);
   }
 }
