@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -30,8 +29,8 @@ public class DependencySorter {
   }
 
   private static class Worker {
-    private final HashMap<Name, Set<Dependency>> notSorted;
-    private final HashSet<Name> reachableNames;
+    private final Map<Name, Set<Dependency>> notSorted;
+    private final Set<Name> reachableNames;
     private final List<Name> sorted;
     private final DependencyStack stack;
 
