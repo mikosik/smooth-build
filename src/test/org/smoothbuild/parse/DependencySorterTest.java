@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
@@ -17,19 +19,19 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 public class DependencySorterTest {
-  private static final String NAME1 = "funcation1";
-  private static final String NAME2 = "funcation2";
-  private static final String NAME3 = "funcation3";
-  private static final String NAME4 = "funcation4";
-  private static final String NAME5 = "funcation5";
-  private static final String NAME6 = "funcation6";
+  private static final Name NAME1 = name("funcation1");
+  private static final Name NAME2 = name("funcation2");
+  private static final Name NAME3 = name("funcation3");
+  private static final Name NAME4 = name("funcation4");
+  private static final Name NAME5 = name("funcation5");
+  private static final Name NAME6 = name("funcation6");
 
   FakeMessageGroup messageGroup = new FakeMessageGroup();
   SymbolTable importedFunctions = new FakeImportedFunctions();
 
   @Test
   public void linearDependency() {
-    Map<String, Set<Dependency>> map = Maps.newHashMap();
+    Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(NAME3, dependencies(NAME4));
     map.put(NAME1, dependencies(NAME2));
     map.put(NAME4, dependencies());
@@ -41,7 +43,7 @@ public class DependencySorterTest {
 
   @Test
   public void treeDependency() {
-    Map<String, Set<Dependency>> map = Maps.newHashMap();
+    Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(NAME1, dependencies(NAME2, NAME3));
     map.put(NAME2, dependencies(NAME4));
     map.put(NAME3, dependencies(NAME5));
@@ -49,7 +51,7 @@ public class DependencySorterTest {
     map.put(NAME5, dependencies(NAME6));
     map.put(NAME6, dependencies());
 
-    List<String> actual = sort(map);
+    List<Name> actual = sort(map);
 
     assertThat(actual).containsSubsequence(NAME4, NAME2, NAME1);
     assertThat(actual).containsSubsequence(NAME6, NAME5, NAME3, NAME1);
@@ -59,7 +61,7 @@ public class DependencySorterTest {
 
   @Test
   public void simpleRecursionIsReported() throws Exception {
-    Map<String, Set<Dependency>> map = Maps.newHashMap();
+    Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(NAME1, dependencies(NAME1));
 
     sort(map);
@@ -69,7 +71,7 @@ public class DependencySorterTest {
 
   @Test
   public void cycleIsReported() throws Exception {
-    Map<String, Set<Dependency>> map = Maps.newHashMap();
+    Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(NAME1, dependencies(NAME2));
     map.put(NAME2, dependencies(NAME3));
     map.put(NAME3, dependencies(NAME1));
@@ -79,7 +81,7 @@ public class DependencySorterTest {
     messageGroup.assertOnlyProblem(CycleInCallGraphError.class);
   }
 
-  private List<String> sort(Map<String, Set<Dependency>> map) {
+  private List<Name> sort(Map<Name, Set<Dependency>> map) {
     try {
       return DependencySorter.sortDependencies(importedFunctions, map);
     } catch (ErrorMessageException e) {

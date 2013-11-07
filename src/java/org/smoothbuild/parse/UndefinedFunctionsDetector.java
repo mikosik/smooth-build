@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.parse.err.UndefinedFunctionError;
 
@@ -11,14 +12,14 @@ import org.smoothbuild.parse.err.UndefinedFunctionError;
  */
 public class UndefinedFunctionsDetector {
   public static void detectUndefinedFunctions(MessageGroup messages, SymbolTable importedFunctions,
-      Map<String, Set<Dependency>> dependencies) {
+      Map<Name, Set<Dependency>> dependencies) {
 
-    Set<String> declaredFunctions = dependencies.keySet();
+    Set<Name> declaredFunctions = dependencies.keySet();
 
     for (Set<Dependency> functionDependecies : dependencies.values()) {
       for (Dependency dependency : functionDependecies) {
-        String name = dependency.functionName();
-        if (!importedFunctions.containsFunction(name) && !declaredFunctions.contains(name)) {
+        Name name = dependency.functionName();
+        if (!importedFunctions.containsFunction(name.value()) && !declaredFunctions.contains(name)) {
           messages.report(new UndefinedFunctionError(dependency.location(), name));
         }
       }

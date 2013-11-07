@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.ImmutableList;
@@ -20,8 +21,8 @@ import com.google.common.collect.Sets;
  * function in returned list. Detects cycles in dependency graph.
  */
 public class DependencySorter {
-  public static List<String> sortDependencies(SymbolTable importedFunctions,
-      Map<String, Set<Dependency>> dependenciesOrig) {
+  public static List<Name> sortDependencies(SymbolTable importedFunctions,
+      Map<Name, Set<Dependency>> dependenciesOrig) {
 
     Worker worker = new Worker(importedFunctions, dependenciesOrig);
     worker.work();
@@ -29,16 +30,25 @@ public class DependencySorter {
   }
 
   private static class Worker {
-    private final HashMap<String, Set<Dependency>> notSorted;
-    private final HashSet<String> reachableNames;
-    private final List<String> sorted;
+    private final HashMap<Name, Set<Dependency>> notSorted;
+    private final HashSet<Name> reachableNames;
+    private final List<Name> sorted;
     private final DependencyStack stack;
 
-    public Worker(SymbolTable importedFunctions, Map<String, Set<Dependency>> dependenciesOrig) {
+    public Worker(SymbolTable importedFunctions, Map<Name, Set<Dependency>> dependenciesOrig) {
       this.notSorted = Maps.newHashMap(dependenciesOrig);
-      this.reachableNames = Sets.newHashSet(importedFunctions.names());
+      this.reachableNames = reachableNames(importedFunctions);
       this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
       this.stack = new DependencyStack();
+    }
+
+    // TODO remove once importedFunctions.names returns proper type
+    private static HashSet<Name> reachableNames(SymbolTable importedFunctions) {
+      HashSet<Name> result = Sets.newHashSet();
+      for (String name : importedFunctions.names()) {
+        result.add(Name.name(name));
+      }
+      return result;
     }
 
     public void work() {
@@ -70,16 +80,16 @@ public class DependencySorter {
     }
 
     private void addStackTopToSorted() {
-      String name = stack.pop().name();
+      Name name = stack.pop().name();
       sorted.add(name);
       reachableNames.add(name);
     }
 
-    public List<String> result() {
+    public List<Name> result() {
       return ImmutableList.copyOf(sorted);
     }
 
-    private Dependency findUnreachableDependency(Set<String> reachableNames,
+    private Dependency findUnreachableDependency(Set<Name> reachableNames,
         Set<Dependency> dependencies) {
       for (Dependency dependency : dependencies) {
         if (!reachableNames.contains(dependency.functionName())) {
@@ -89,9 +99,9 @@ public class DependencySorter {
       return null;
     }
 
-    private DependencyStackElem removeNext(Map<String, Set<Dependency>> dependencies) {
-      Iterator<Entry<String, Set<Dependency>>> it = dependencies.entrySet().iterator();
-      Entry<String, Set<Dependency>> element = it.next();
+    private DependencyStackElem removeNext(Map<Name, Set<Dependency>> dependencies) {
+      Iterator<Entry<Name, Set<Dependency>>> it = dependencies.entrySet().iterator();
+      Entry<Name, Set<Dependency>> element = it.next();
       it.remove();
       return new DependencyStackElem(element.getKey(), element.getValue());
     }

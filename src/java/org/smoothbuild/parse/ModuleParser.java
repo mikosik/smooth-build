@@ -59,12 +59,11 @@ public class ModuleParser {
   private Module createModule(MessageGroup messageGroup, InputStream inputStream, Path scriptFile) {
     ModuleContext module = parseScript(messageGroup, inputStream, scriptFile);
 
-    Map<String, FunctionContext> functions = collectFunctions(messageGroup, importedFunctions,
-        module);
+    Map<Name, FunctionContext> functions = collectFunctions(messageGroup, importedFunctions, module);
 
-    Map<String, Set<Dependency>> dependencies = collectDependencies(module);
+    Map<Name, Set<Dependency>> dependencies = collectDependencies(messageGroup, module);
     detectUndefinedFunctions(messageGroup, importedFunctions, dependencies);
-    List<String> sorted = sortDependencies(importedFunctions, dependencies);
+    List<Name> sorted = sortDependencies(importedFunctions, dependencies);
 
     Map<Name, DefinedFunction> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
         messageGroup, importedFunctions, functions, sorted);
