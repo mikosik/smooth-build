@@ -16,7 +16,7 @@ import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
-import org.smoothbuild.parse.err.OverridenImportError;
+import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 
 import com.google.common.collect.Maps;
 
@@ -64,7 +64,7 @@ public class FunctionsCollector {
       if (importedFunctions.containsFunction(name)) {
         Name importedName = importedFunctions.getFunction(name).name();
         CodeLocation location = locationOf(nameContext);
-        messages.report(new OverridenImportError(location, name, importedName));
+        messages.report(new OverridenBuiltinFunctionError(location, importedName));
         return null;
       }
 

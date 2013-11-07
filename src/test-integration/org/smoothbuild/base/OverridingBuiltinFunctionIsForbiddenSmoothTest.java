@@ -3,11 +3,11 @@ package org.smoothbuild.base;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.parse.err.OverridenImportError;
+import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
-public class OverridingImportedNameIsForbiddenSmoothTest extends IntegrationTestCase {
+public class OverridingBuiltinFunctionIsForbiddenSmoothTest extends IntegrationTestCase {
   @Test
   public void test() throws IOException {
     // given
@@ -20,6 +20,6 @@ public class OverridingImportedNameIsForbiddenSmoothTest extends IntegrationTest
     smoothApp.run("run");
 
     // then
-    userConsole.assertOnlyProblem(OverridenImportError.class);
+    userConsole.assertOnlyProblem(OverridenBuiltinFunctionError.class);
   }
 }
