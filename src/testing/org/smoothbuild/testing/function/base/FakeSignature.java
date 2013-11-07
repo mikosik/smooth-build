@@ -10,11 +10,11 @@ import org.smoothbuild.function.base.Type;
 import com.google.common.collect.ImmutableList;
 
 public class FakeSignature {
-  public static Signature testSignature() {
-    return testSignature("name");
+  public static Signature fakeSignature() {
+    return fakeSignature("name");
   }
 
-  public static Signature testSignature(String name) {
+  public static Signature fakeSignature(String name) {
     Type type = Type.STRING;
     Name simpleName = name(name);
     ImmutableList<Param> params = ImmutableList.of();

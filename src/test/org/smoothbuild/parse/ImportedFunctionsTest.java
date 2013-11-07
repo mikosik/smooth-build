@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
+import static org.smoothbuild.testing.function.base.FakeSignature.fakeSignature;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -65,6 +65,6 @@ public class ImportedFunctionsTest {
   }
 
   private static NativeFunction function(String name) {
-    return new NativeFunction(testSignature(name), mock(Invoker.class), false);
+    return new NativeFunction(fakeSignature(name), mock(Invoker.class), false);
   }
 }

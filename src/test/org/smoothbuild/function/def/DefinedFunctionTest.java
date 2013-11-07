@@ -3,7 +3,7 @@ package org.smoothbuild.function.def;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.testing.function.base.FakeSignature.testSignature;
+import static org.smoothbuild.testing.function.base.FakeSignature.fakeSignature;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class DefinedFunctionTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  Signature signature = testSignature();
+  Signature signature = fakeSignature();
   Node root = mock(Node.class);
   CodeLocation codeLocation = new FakeCodeLocation();
 
