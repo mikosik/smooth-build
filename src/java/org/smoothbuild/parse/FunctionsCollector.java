@@ -62,7 +62,7 @@ public class FunctionsCollector {
         messages.report(new DuplicateFunctionError(locationOf(nameContext), name));
         return null;
       }
-      if (importedFunctions.containsFunction(nameString)) {
+      if (importedFunctions.containsFunction(name)) {
         CodeLocation location = locationOf(nameContext);
         messages.report(new OverridenBuiltinFunctionError(location, name));
         return null;

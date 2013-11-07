@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,18 +35,9 @@ public class DependencySorter {
 
     public Worker(SymbolTable importedFunctions, Map<Name, Set<Dependency>> dependenciesOrig) {
       this.notSorted = Maps.newHashMap(dependenciesOrig);
-      this.reachableNames = reachableNames(importedFunctions);
+      this.reachableNames = Sets.newHashSet(importedFunctions.names());
       this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
       this.stack = new DependencyStack();
-    }
-
-    // TODO remove once importedFunctions.names returns proper type
-    private static HashSet<Name> reachableNames(SymbolTable importedFunctions) {
-      HashSet<Name> result = Sets.newHashSet();
-      for (String name : importedFunctions.names()) {
-        result.add(Name.name(name));
-      }
-      return result;
     }
 
     public void work() {

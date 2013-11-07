@@ -1,14 +1,15 @@
 package org.smoothbuild.parse;
 
-import java.util.Set;
-
 import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.Name;
+
+import com.google.common.collect.ImmutableSet;
 
 public interface SymbolTable {
 
-  public boolean containsFunction(String name);
+  public boolean containsFunction(Name name);
 
-  public Function getFunction(String name);
+  public Function getFunction(Name name);
 
-  public Set<String> names();
+  public ImmutableSet<Name> names();
 }

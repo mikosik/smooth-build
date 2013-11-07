@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Singleton;
 
@@ -19,17 +18,16 @@ import com.google.inject.ProvidedBy;
 @ProvidedBy(ImportedFunctionsProvider.class)
 public class ImportedFunctions implements SymbolTable {
   private final TaskDb taskDb;
-  private final Map<String, Function> map = Maps.newHashMap();
+  private final Map<Name, Function> map = Maps.newHashMap();
 
   public ImportedFunctions(TaskDb taskDb) {
     this.taskDb = taskDb;
   }
 
   public void add(NativeFunction function) {
-    Name functionName = function.name();
-    String name = functionName.value();
+    Name name = function.name();
     if (containsFunction(name)) {
-      throw new IllegalArgumentException("Function with name " + functionName
+      throw new IllegalArgumentException("Function with name " + name
           + " has already been imported.");
     } else {
       map.put(name, makeCacheable(function));
@@ -45,17 +43,17 @@ public class ImportedFunctions implements SymbolTable {
   }
 
   @Override
-  public boolean containsFunction(String name) {
+  public boolean containsFunction(Name name) {
     return map.containsKey(name);
   }
 
   @Override
-  public Function getFunction(String name) {
+  public Function getFunction(Name name) {
     return map.get(name);
   }
 
   @Override
-  public Set<String> names() {
+  public ImmutableSet<Name> names() {
     return ImmutableSet.copyOf(map.keySet());
   }
 }

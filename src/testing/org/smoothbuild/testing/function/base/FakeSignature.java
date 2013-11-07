@@ -15,10 +15,10 @@ public class FakeSignature {
   }
 
   public static Signature fakeSignature(String name) {
-    Type type = Type.STRING;
-    Name simpleName = name(name);
-    ImmutableList<Param> params = ImmutableList.of();
+    return fakeSignature(name(name));
+  }
 
-    return new Signature(type, simpleName, params);
+  public static Signature fakeSignature(Name name) {
+    return new Signature(Type.STRING, name, ImmutableList.<Param> of());
   }
 }
