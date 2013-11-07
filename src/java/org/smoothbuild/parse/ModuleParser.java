@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.builtin.Builtin;
 import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
@@ -30,15 +31,15 @@ import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 public class ModuleParser {
   private final FileSystem fileSystem;
   private final ModuleParserMessages messages;
-  private final ImportedFunctions importedFunctions;
+  private final Module builtinModule;
   private final DefinedFunctionsCreator definedFunctionsCreator;
 
   @Inject
   public ModuleParser(FileSystem fileSystem, ModuleParserMessages messages,
-      ImportedFunctions importedFunctions, DefinedFunctionsCreator definedFunctionsCreator) {
+      @Builtin Module builtinModule, DefinedFunctionsCreator definedFunctionsCreator) {
     this.fileSystem = fileSystem;
     this.messages = messages;
-    this.importedFunctions = importedFunctions;
+    this.builtinModule = builtinModule;
     this.definedFunctionsCreator = definedFunctionsCreator;
   }
 
@@ -60,14 +61,14 @@ public class ModuleParser {
   private Module createModule(MessageGroup messageGroup, InputStream inputStream, Path scriptFile) {
     ModuleContext module = parseScript(messageGroup, inputStream, scriptFile);
 
-    Map<Name, FunctionContext> functions = collectFunctions(messageGroup, importedFunctions, module);
+    Map<Name, FunctionContext> functions = collectFunctions(messageGroup, builtinModule, module);
 
     Map<Name, Set<Dependency>> dependencies = collectDependencies(messageGroup, module);
-    detectUndefinedFunctions(messageGroup, importedFunctions, dependencies);
-    List<Name> sorted = sortDependencies(importedFunctions, dependencies);
+    detectUndefinedFunctions(messageGroup, builtinModule, dependencies);
+    List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        messageGroup, importedFunctions, functions, sorted);
+        messageGroup, builtinModule, functions, sorted);
 
     return new ImmutableModule(definedFunctions);
   }

@@ -9,11 +9,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.ImmutableModule;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.parse.FakeImportedFunctions;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -27,7 +28,6 @@ public class DependencySorterTest {
   private static final Name NAME6 = name("funcation6");
 
   FakeMessageGroup messageGroup = new FakeMessageGroup();
-  SymbolTable importedFunctions = new FakeImportedFunctions();
 
   @Test
   public void linearDependency() {
@@ -83,7 +83,8 @@ public class DependencySorterTest {
 
   private List<Name> sort(Map<Name, Set<Dependency>> map) {
     try {
-      return DependencySorter.sortDependencies(importedFunctions, map);
+      ImmutableModule builtinModule = new ImmutableModule(Empty.nameToFunctionMap());
+      return DependencySorter.sortDependencies(builtinModule, map);
     } catch (ErrorMessageException e) {
       messageGroup.report(e.errorMessage());
       return null;

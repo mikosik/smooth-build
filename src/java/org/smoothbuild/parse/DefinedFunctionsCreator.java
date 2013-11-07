@@ -27,6 +27,7 @@ import org.smoothbuild.antlr.SmoothParser.SetContext;
 import org.smoothbuild.antlr.SmoothParser.SetElemContext;
 import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
@@ -67,9 +68,9 @@ public class DefinedFunctionsCreator {
     this.argumentNodesCreator = argumentNodesCreator;
   }
 
-  public Map<Name, Function> createDefinedFunctions(MessageGroup messages, SymbolTable symbolTable,
+  public Map<Name, Function> createDefinedFunctions(MessageGroup messages, Module builtinModule,
       Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    Worker worker = new Worker(messages, symbolTable, functionContexts, sorted, valueDb,
+    Worker worker = new Worker(messages, builtinModule, functionContexts, sorted, valueDb,
         argumentNodesCreator);
     Map<Name, Function> result = worker.run();
     messages.failIfContainsProblems();
@@ -78,7 +79,7 @@ public class DefinedFunctionsCreator {
 
   private static class Worker {
     private final MessageGroup messages;
-    private final SymbolTable symbolTable;
+    private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
     private final ValueDb valueDb;
@@ -86,11 +87,11 @@ public class DefinedFunctionsCreator {
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
-    public Worker(MessageGroup messages, SymbolTable symbolTable,
+    public Worker(MessageGroup messages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValueDb valueDb,
         ArgumentNodesCreator argumentNodesCreator) {
       this.messages = messages;
-      this.symbolTable = symbolTable;
+      this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
       this.valueDb = valueDb;
@@ -237,7 +238,7 @@ public class DefinedFunctionsCreator {
       // functions or among already handled defined functions.
 
       Name name = Name.name(functionName);
-      Function function = symbolTable.getFunction(name);
+      Function function = builtinModule.getFunction(name);
       if (function == null) {
         return functions.get(name);
       } else {
