@@ -1,23 +1,26 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.testing.parse.FakeFunction.function;
-import static org.smoothbuild.testing.parse.FakeImportedFunctions.IMPORTED_NAME;
 import static org.smoothbuild.testing.parse.FakeModule.module;
 
 import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
+import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.ImmutableModule;
+import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.parse.FakeImportedFunctions;
 import org.smoothbuild.testing.parse.FakeModule;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -26,7 +29,6 @@ public class FunctionsCollectorTest {
   Name name2 = name("funcation2");
 
   FakeMessageGroup messages = new FakeMessageGroup();
-  SymbolTable importedFunctions = new FakeImportedFunctions();
 
   @Test
   public void visitedFunctionNamesAreReturned() throws Exception {
@@ -53,13 +55,20 @@ public class FunctionsCollectorTest {
 
   @Test
   public void overridenBuiltinFunction() throws Exception {
-    collectFunctions(module(function(IMPORTED_NAME.value())));
+    Function function = mock(Function.class);
+    Module builtinModule = new ImmutableModule(ImmutableMap.of(name1, function));
+    collectFunctions(module(function(name1.value())), builtinModule);
     messages.assertOnlyProblem(OverridenBuiltinFunctionError.class);
   }
 
-  private Map<Name, FunctionContext> collectFunctions(FakeModule module) {
+  private Map<Name, FunctionContext> collectFunctions(FakeModule moduleContext) {
+    ImmutableModule emptyBuiltinModule = new ImmutableModule(Empty.nameToFunctionMap());
+    return collectFunctions(moduleContext, emptyBuiltinModule);
+  }
+
+  private Map<Name, FunctionContext> collectFunctions(FakeModule moduleContext, Module builtinModule) {
     try {
-      return FunctionsCollector.collectFunctions(messages, importedFunctions, module);
+      return FunctionsCollector.collectFunctions(messages, builtinModule, moduleContext);
     } catch (PhaseFailedException e) {
       return null;
     }

@@ -11,6 +11,7 @@ import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.message.CodeLocation;
@@ -28,21 +29,21 @@ import com.google.common.collect.Maps;
 public class FunctionsCollector {
 
   public static Map<Name, FunctionContext> collectFunctions(MessageGroup messages,
-      SymbolTable importedFunctions, ModuleContext module) {
-    Worker worker = new Worker(messages, importedFunctions);
+      Module builtinModule, ModuleContext module) {
+    Worker worker = new Worker(messages, builtinModule);
     worker.visit(module);
     messages.failIfContainsProblems();
     return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
-    private final SymbolTable importedFunctions;
+    private final Module builtinModule;
     private final MessageGroup messages;
     private final Map<Name, FunctionContext> functions;
 
     @Inject
-    public Worker(MessageGroup messages, SymbolTable importedFunctions) {
-      this.importedFunctions = importedFunctions;
+    public Worker(MessageGroup messages, Module builtinModule) {
+      this.builtinModule = builtinModule;
       this.messages = messages;
       this.functions = Maps.newHashMap();
     }
@@ -62,7 +63,7 @@ public class FunctionsCollector {
         messages.report(new DuplicateFunctionError(locationOf(nameContext), name));
         return null;
       }
-      if (importedFunctions.containsFunction(name)) {
+      if (builtinModule.containsFunction(name)) {
         CodeLocation location = locationOf(nameContext);
         messages.report(new OverridenBuiltinFunctionError(location, name));
         return null;
