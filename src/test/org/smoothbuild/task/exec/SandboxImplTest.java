@@ -33,24 +33,24 @@ public class SandboxImplTest {
   Task task = task();
 
   FakeFileSystem fileSystem = new FakeFileSystem();
-  FakeValueDb objectDb = new FakeValueDb(fileSystem);
+  FakeValueDb valueDb = new FakeValueDb(fileSystem);
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, objectDb, task);
+  SandboxImpl sandbox = new SandboxImpl(fileSystem, valueDb, task);
 
   @Test
-  public void file_builder_stores_file_in_object_db() throws Exception {
+  public void file_builder_stores_file_in_value_db() throws Exception {
     FileBuilder fileBuilder = sandbox.fileBuilder();
     fileBuilder.setPath(path1);
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
     HashCode hash = fileBuilder.build().hash();
 
-    File file = objectDb.file(hash);
+    File file = valueDb.file(hash);
     assertThat(file.path()).isEqualTo(path1);
     assertThat(inputStreamToString(file.openInputStream())).isEqualTo(content);
   }
 
   @Test
-  public void file_set_builder_stores_files_in_object_db() throws Exception {
+  public void file_set_builder_stores_files_in_value_db() throws Exception {
     FileBuilder fileBuilder = sandbox.fileBuilder();
     fileBuilder.setPath(path1);
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
@@ -60,7 +60,7 @@ public class SandboxImplTest {
     builder.add(file);
     HashCode hash = builder.build().hash();
 
-    FileSet fileSet = objectDb.fileSet(hash);
+    FileSet fileSet = valueDb.fileSet(hash);
     MatcherAssert.assertThat(fileSet, FileSetMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileSet)).isEqualTo(1);
   }
@@ -70,7 +70,7 @@ public class SandboxImplTest {
     String jdkString = "my string";
     StringValue string = sandbox.string(jdkString);
 
-    StringValue stringRead = objectDb.string(string.hash());
+    StringValue stringRead = valueDb.string(string.hash());
 
     assertThat(stringRead.value()).isEqualTo(jdkString);
   }
