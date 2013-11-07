@@ -15,7 +15,7 @@ public class Helpers {
     return token;
   }
 
-  public static ParserRuleContext stringChild(final String string) {
+  public static ParserRuleContext stringChildCtx(final String string) {
     return new ParserRuleContext() {
       @Override
       public String getText() {
@@ -24,9 +24,9 @@ public class Helpers {
     };
   }
 
-  public static FunctionNameContext functionName(ParserRuleContext parent, String name) {
+  public static FunctionNameContext functionNameCtx(ParserRuleContext parent, String name) {
     FunctionNameContext functionName = new FunctionNameContext(parent, 0);
-    functionName.addChild(stringChild(name));
+    functionName.addChild(stringChildCtx(name));
     functionName.start = token();
     functionName.stop = token();
     return functionName;

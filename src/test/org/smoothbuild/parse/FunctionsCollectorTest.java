@@ -3,8 +3,8 @@ package org.smoothbuild.parse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Name.name;
-import static org.smoothbuild.testing.parse.FakeFunction.function;
-import static org.smoothbuild.testing.parse.FakeModule.module;
+import static org.smoothbuild.testing.parse.FakeFunctionContext.functionCtx;
+import static org.smoothbuild.testing.parse.FakeModuleContext.moduleCtx;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.parse.FakeModule;
+import org.smoothbuild.testing.parse.FakeModuleContext;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
@@ -32,9 +32,9 @@ public class FunctionsCollectorTest {
 
   @Test
   public void visitedFunctionNamesAreReturned() throws Exception {
-    FunctionContext function1 = function(name1.value());
-    FunctionContext function2 = function(name2.value());
-    FakeModule module = module(function1, function2);
+    FunctionContext function1 = functionCtx(name1.value());
+    FunctionContext function2 = functionCtx(name2.value());
+    FakeModuleContext module = moduleCtx(function1, function2);
 
     ImmutableMap<Name, FunctionContext> expected = ImmutableMap.of(name1, function1, name2,
         function2);
@@ -43,13 +43,13 @@ public class FunctionsCollectorTest {
 
   @Test
   public void illegalFunctionNameIsReported() {
-    collectFunctions(module(function("function-name")));
+    collectFunctions(moduleCtx(functionCtx("function-name")));
     messages.assertOnlyProblem(IllegalFunctionNameError.class);
   }
 
   @Test
   public void duplicateFunction() throws Exception {
-    collectFunctions(module(function("functionA"), function("functionA")));
+    collectFunctions(moduleCtx(functionCtx("functionA"), functionCtx("functionA")));
     messages.assertOnlyProblem(DuplicateFunctionError.class);
   }
 
@@ -57,16 +57,16 @@ public class FunctionsCollectorTest {
   public void overridenBuiltinFunction() throws Exception {
     Function function = mock(Function.class);
     Module builtinModule = new ImmutableModule(ImmutableMap.of(name1, function));
-    collectFunctions(module(function(name1.value())), builtinModule);
+    collectFunctions(moduleCtx(functionCtx(name1.value())), builtinModule);
     messages.assertOnlyProblem(OverridenBuiltinFunctionError.class);
   }
 
-  private Map<Name, FunctionContext> collectFunctions(FakeModule moduleContext) {
+  private Map<Name, FunctionContext> collectFunctions(FakeModuleContext moduleContext) {
     ImmutableModule emptyBuiltinModule = new ImmutableModule(Empty.nameToFunctionMap());
     return collectFunctions(moduleContext, emptyBuiltinModule);
   }
 
-  private Map<Name, FunctionContext> collectFunctions(FakeModule moduleContext, Module builtinModule) {
+  private Map<Name, FunctionContext> collectFunctions(FakeModuleContext moduleContext, Module builtinModule) {
     try {
       return FunctionsCollector.collectFunctions(messages, builtinModule, moduleContext);
     } catch (PhaseFailedException e) {
