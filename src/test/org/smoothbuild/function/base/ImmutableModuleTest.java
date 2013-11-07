@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-public class ModuleTest {
+public class ImmutableModuleTest {
   Name name1 = name("name1");
   Name name2 = name("name2");
   Function function1 = mock(Function.class);
@@ -20,21 +20,21 @@ public class ModuleTest {
 
   @Test
   public void getFunction() {
-    Module module = new Module(map);
+    Module immutableModule = new ImmutableModule(map);
 
-    assertThat(module.getFunction(name1)).isSameAs(function1);
-    assertThat(module.getFunction(name2)).isSameAs(function2);
+    assertThat(immutableModule.getFunction(name1)).isSameAs(function1);
+    assertThat(immutableModule.getFunction(name2)).isSameAs(function2);
   }
 
   @Test
   public void nullReturnedWhenFunctionDoesNotExist() throws Exception {
-    Module module = new Module(ImmutableMap.<Name, Function> of());
-    assertThat(module.getFunction(name1)).isNull();
+    Module immutableModule = new ImmutableModule(ImmutableMap.<Name, Function> of());
+    assertThat(immutableModule.getFunction(name1)).isNull();
   }
 
   @Test
   public void availableNames() throws Exception {
-    Module module = new Module(map);
-    assertThat(module.availableNames()).containsOnly(name1, name2);
+    Module immutableModule = new ImmutableModule(map);
+    assertThat(immutableModule.availableNames()).containsOnly(name1, name2);
   }
 }
