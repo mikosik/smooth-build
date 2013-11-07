@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.function.base.Name.name;
-import static org.smoothbuild.parse.UndefinedFunctionsDetector.detectUndefinedFunctions;
+import static org.smoothbuild.parse.UnknownFunctionCallsDetector.detectUndefinedFunctions;
 import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
 
 import java.util.Map;
@@ -15,14 +15,14 @@ import org.smoothbuild.function.base.ImmutableModule;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.PhaseFailedException;
-import org.smoothbuild.parse.err.UndefinedFunctionError;
+import org.smoothbuild.parse.err.UnknownFunctionCallError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-public class UndefinedFunctionsDetectorTest {
+public class UnknownFunctionCallsDetectorTest {
   Name name1 = name("function1");
   Name name2 = name("function2");
 
@@ -67,6 +67,6 @@ public class UndefinedFunctionsDetectorTest {
       // expected
     }
 
-    messageGroup.assertOnlyProblem(UndefinedFunctionError.class);
+    messageGroup.assertOnlyProblem(UnknownFunctionCallError.class);
   }
 }
