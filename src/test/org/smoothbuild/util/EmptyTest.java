@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
+import org.smoothbuild.function.base.Function;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.Node;
 import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.Value;
@@ -48,6 +50,24 @@ public class EmptyTest {
   @Test
   public void emptyStringTaskResultMapAlwaysReturnsTheSameObject() {
     assertThat(Empty.stringTaskResultMap()).isSameAs(Empty.stringTaskResultMap());
+  }
+
+  // nameToFunctionMap();
+
+  @Test
+  public void emptyNameToFunctionMapIsEmpty() {
+    assertThat(Empty.nameToFunctionMap()).isEmpty();
+  }
+
+  @Test
+  public void emptyNameToFunctionMapIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableMap<Name, Function> map = Empty.nameToFunctionMap();
+  }
+
+  @Test
+  public void emptyNameToFunctionMapAlwaysReturnsTheSameObject() {
+    assertThat(Empty.nameToFunctionMap()).isSameAs(Empty.nameToFunctionMap());
   }
 
   // nodeList()
