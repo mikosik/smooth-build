@@ -19,9 +19,9 @@ import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
+import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.function.def.DefinedFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.parse.err.ScriptFileNotFoundError;
@@ -65,7 +65,7 @@ public class ModuleParser {
     detectUndefinedFunctions(messageGroup, importedFunctions, dependencies);
     List<Name> sorted = sortDependencies(importedFunctions, dependencies);
 
-    Map<Name, DefinedFunction> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
+    Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
         messageGroup, importedFunctions, functions, sorted);
 
     return new Module(definedFunctions);

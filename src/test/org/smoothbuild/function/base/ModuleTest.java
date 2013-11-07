@@ -7,17 +7,16 @@ import static org.smoothbuild.function.base.Name.name;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.function.def.DefinedFunction;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ModuleTest {
   Name name1 = name("name1");
   Name name2 = name("name2");
-  DefinedFunction function1 = mock(DefinedFunction.class);
-  DefinedFunction function2 = mock(DefinedFunction.class);
+  Function function1 = mock(Function.class);
+  Function function2 = mock(Function.class);
 
-  Map<Name, DefinedFunction> map = ImmutableMap.of(name1, function1, name2, function2);
+  Map<Name, Function> map = ImmutableMap.of(name1, function1, name2, function2);
 
   @Test
   public void getFunction() {
@@ -29,7 +28,7 @@ public class ModuleTest {
 
   @Test
   public void nullReturnedWhenFunctionDoesNotExist() throws Exception {
-    Module module = new Module(ImmutableMap.<Name, DefinedFunction> of());
+    Module module = new Module(ImmutableMap.<Name, Function> of());
     assertThat(module.getFunction(name1)).isNull();
   }
 

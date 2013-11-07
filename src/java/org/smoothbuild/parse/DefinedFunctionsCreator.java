@@ -67,11 +67,11 @@ public class DefinedFunctionsCreator {
     this.argumentNodesCreator = argumentNodesCreator;
   }
 
-  public Map<Name, DefinedFunction> createDefinedFunctions(MessageGroup messages,
-      SymbolTable symbolTable, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+  public Map<Name, Function> createDefinedFunctions(MessageGroup messages, SymbolTable symbolTable,
+      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker = new Worker(messages, symbolTable, functionContexts, sorted, valueDb,
         argumentNodesCreator);
-    Map<Name, DefinedFunction> result = worker.run();
+    Map<Name, Function> result = worker.run();
     messages.failIfContainsProblems();
     return result;
   }
@@ -84,7 +84,7 @@ public class DefinedFunctionsCreator {
     private final ValueDb valueDb;
     private final ArgumentNodesCreator argumentNodesCreator;
 
-    private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
+    private final Map<Name, Function> functions = Maps.newHashMap();
 
     public Worker(MessageGroup messages, SymbolTable symbolTable,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValueDb valueDb,
@@ -97,7 +97,7 @@ public class DefinedFunctionsCreator {
       this.argumentNodesCreator = argumentNodesCreator;
     }
 
-    public Map<Name, DefinedFunction> run() {
+    public Map<Name, Function> run() {
       for (Name name : sorted) {
         DefinedFunction definedFunction = build(functionContexts.get(name));
         functions.put(name, definedFunction);
