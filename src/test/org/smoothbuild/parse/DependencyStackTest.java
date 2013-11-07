@@ -1,18 +1,25 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.message.message.CodeLocation.codeLocation;
 
 import java.util.NoSuchElementException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 
 import com.google.common.collect.ImmutableSet;
 
 public class DependencyStackTest {
+  Name name1 = name("funcation1");
+  Name name2 = name("funcation2");
+  Name name3 = name("funcation3");
+  Name name4 = name("funcation4");
+
   DependencyStack dependencyStack = new DependencyStack();
 
   @Test
@@ -124,37 +131,37 @@ public class DependencyStackTest {
 
   @Test
   public void createCycleError() throws Exception {
-    dependencyStack.push(elem("name1", "name2", 1));
-    dependencyStack.push(elem("name2", "name3", 2));
-    dependencyStack.push(elem("name3", "name4", 3));
-    dependencyStack.push(elem("name4", "name2", 4));
+    dependencyStack.push(elem(name1, name2, 1));
+    dependencyStack.push(elem(name2, name3, 2));
+    dependencyStack.push(elem(name3, name4, 3));
+    dependencyStack.push(elem(name4, name2, 4));
 
     CycleInCallGraphError error = dependencyStack.createCycleError();
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
-    builder.append("name2" + codeLocation(2) + " -> name3\n");
-    builder.append("name3" + codeLocation(3) + " -> name4\n");
-    builder.append("name4" + codeLocation(4) + " -> name2\n");
+    builder.append(name2.value() + codeLocation(2) + " -> " + name3.value() + "\n");
+    builder.append(name3.value() + codeLocation(3) + " -> " + name4.value() + "\n");
+    builder.append(name4.value() + codeLocation(4) + " -> " + name2.value() + "\n");
 
     assertThat(error.message()).isEqualTo(builder.toString());
   }
 
   @Test
   public void createCycleErrorForRecursiveCall() throws Exception {
-    dependencyStack.push(elem("name1", "name2", 1));
-    dependencyStack.push(elem("name2", "name2", 2));
+    dependencyStack.push(elem(name1, name2, 1));
+    dependencyStack.push(elem(name2, name2, 2));
 
     CycleInCallGraphError error = dependencyStack.createCycleError();
 
     StringBuilder builder = new StringBuilder();
     builder.append("Function call graph contains cycle:\n");
-    builder.append("name2" + codeLocation(2) + " -> name2\n");
+    builder.append(name2.value() + codeLocation(2) + " -> " + name2.value() + "\n");
 
     assertThat(error.message()).isEqualTo(builder.toString());
   }
 
-  private DependencyStackElem elem(String from, String to, int location) {
+  private DependencyStackElem elem(Name from, Name to, int location) {
     ImmutableSet<Dependency> deps = ImmutableSet.of();
     DependencyStackElem elem = new DependencyStackElem(from, deps);
     elem.setMissing(new Dependency(CodeLocation.codeLocation(location), to));
@@ -162,6 +169,6 @@ public class DependencyStackTest {
   }
 
   private static DependencyStackElem elem() {
-    return new DependencyStackElem("name", ImmutableSet.<Dependency> of());
+    return new DependencyStackElem(name("name"), ImmutableSet.<Dependency> of());
   }
 }

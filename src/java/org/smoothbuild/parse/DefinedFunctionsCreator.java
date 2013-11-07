@@ -68,7 +68,7 @@ public class DefinedFunctionsCreator {
   }
 
   public Map<Name, DefinedFunction> createDefinedFunctions(MessageGroup messages,
-      SymbolTable symbolTable, Map<String, FunctionContext> functionContexts, List<String> sorted) {
+      SymbolTable symbolTable, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker = new Worker(messages, symbolTable, functionContexts, sorted, valueDb,
         argumentNodesCreator);
     Map<Name, DefinedFunction> result = worker.run();
@@ -79,15 +79,15 @@ public class DefinedFunctionsCreator {
   private static class Worker {
     private final MessageGroup messages;
     private final SymbolTable symbolTable;
-    private final Map<String, FunctionContext> functionContexts;
-    private final List<String> sorted;
+    private final Map<Name, FunctionContext> functionContexts;
+    private final List<Name> sorted;
     private final ValueDb valueDb;
     private final ArgumentNodesCreator argumentNodesCreator;
 
     private final Map<Name, DefinedFunction> functions = Maps.newHashMap();
 
     public Worker(MessageGroup messages, SymbolTable symbolTable,
-        Map<String, FunctionContext> functionContexts, List<String> sorted, ValueDb valueDb,
+        Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValueDb valueDb,
         ArgumentNodesCreator argumentNodesCreator) {
       this.messages = messages;
       this.symbolTable = symbolTable;
@@ -98,9 +98,9 @@ public class DefinedFunctionsCreator {
     }
 
     public Map<Name, DefinedFunction> run() {
-      for (String name : sorted) {
+      for (Name name : sorted) {
         DefinedFunction definedFunction = build(functionContexts.get(name));
-        functions.put(name(name), definedFunction);
+        functions.put(name, definedFunction);
       }
       return functions;
     }

@@ -1,12 +1,13 @@
 package org.smoothbuild.parse;
 
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.message.CodeLocation;
 
 public class Dependency {
   private final CodeLocation location;
-  private final String functionName;
+  private final Name functionName;
 
-  public Dependency(CodeLocation location, String functionName) {
+  public Dependency(CodeLocation location, Name functionName) {
     this.location = location;
     this.functionName = functionName;
   }
@@ -15,7 +16,7 @@ public class Dependency {
     return location;
   }
 
-  public String functionName() {
+  public Name functionName() {
     return functionName;
   }
 

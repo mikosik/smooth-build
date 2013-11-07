@@ -27,7 +27,7 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<String, FunctionContext> collectFunctions(MessageGroup messages,
+  public static Map<Name, FunctionContext> collectFunctions(MessageGroup messages,
       SymbolTable importedFunctions, ModuleContext module) {
     Worker worker = new Worker(messages, importedFunctions);
     worker.visit(module);
@@ -38,7 +38,7 @@ public class FunctionsCollector {
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final SymbolTable importedFunctions;
     private final MessageGroup messages;
-    private final Map<String, FunctionContext> functions;
+    private final Map<Name, FunctionContext> functions;
 
     @Inject
     public Worker(MessageGroup messages, SymbolTable importedFunctions) {
@@ -50,21 +50,21 @@ public class FunctionsCollector {
     @Override
     public Void visitFunction(FunctionContext functionContext) {
       FunctionNameContext nameContext = functionContext.functionName();
-      String name = nameContext.getText();
+      String nameString = nameContext.getText();
 
-      if (!isLegalName(name)) {
-        messages.report(new IllegalFunctionNameError(locationOf(nameContext), name));
+      if (!isLegalName(nameString)) {
+        messages.report(new IllegalFunctionNameError(locationOf(nameContext), nameString));
         return null;
       }
 
+      Name name = Name.name(nameString);
       if (functions.keySet().contains(name)) {
         messages.report(new DuplicateFunctionError(locationOf(nameContext), name));
         return null;
       }
-      if (importedFunctions.containsFunction(name)) {
-        Name importedName = importedFunctions.getFunction(name).name();
+      if (importedFunctions.containsFunction(nameString)) {
         CodeLocation location = locationOf(nameContext);
-        messages.report(new OverridenBuiltinFunctionError(location, importedName));
+        messages.report(new OverridenBuiltinFunctionError(location, name));
         return null;
       }
 
@@ -72,7 +72,7 @@ public class FunctionsCollector {
       return null;
     }
 
-    public Map<String, FunctionContext> result() {
+    public Map<Name, FunctionContext> result() {
       return functions;
     }
   }
