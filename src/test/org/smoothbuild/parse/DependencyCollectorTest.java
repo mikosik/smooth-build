@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
-import static org.smoothbuild.testing.parse.FakeModule.module;
+import static org.smoothbuild.testing.parse.FakeModuleContext.moduleCtx;
 
 import java.util.Map;
 import java.util.Set;
@@ -12,9 +12,9 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.parse.FakeFunction;
-import org.smoothbuild.testing.parse.FakeModule;
-import org.smoothbuild.testing.parse.FakePipe;
+import org.smoothbuild.testing.parse.FakeFunctionContext;
+import org.smoothbuild.testing.parse.FakeModuleContext;
+import org.smoothbuild.testing.parse.FakePipeContext;
 
 import com.google.common.collect.Maps;
 
@@ -27,17 +27,17 @@ public class DependencyCollectorTest {
 
   @Test
   public void emptyMapIsReturnedForEmptyModule() throws Exception {
-    assertThat(collectDependencies(messages, module())).isEmpty();
+    assertThat(collectDependencies(messages, moduleCtx())).isEmpty();
   }
 
   @Test
   public void singleFunction() {
 
-    FakeModule module = module();
-    FakeFunction function = module.addFunction(name1.value());
-    FakePipe pipe = function.addPipeExpression();
-    pipe.addFunctionCall(name2.value());
-    pipe.addFunctionCall(name3.value());
+    FakeModuleContext module = moduleCtx();
+    FakeFunctionContext function = module.addFunctionCtx(name1.value());
+    FakePipeContext pipe = function.addPipeExpressionCtx();
+    pipe.addCallCtx(name2.value());
+    pipe.addCallCtx(name3.value());
 
     Map<Name, Set<Dependency>> expected = Maps.newHashMap();
     expected.put(name1, dependencies(name2, name3));
@@ -47,16 +47,16 @@ public class DependencyCollectorTest {
 
   @Test
   public void twoFunctionsWithCycle() {
-    FakeModule module = module();
+    FakeModuleContext module = moduleCtx();
     {
-      FakeFunction function = module.addFunction(name1.value());
-      FakePipe pipe = function.addPipeExpression();
-      pipe.addFunctionCall(name2.value());
+      FakeFunctionContext function = module.addFunctionCtx(name1.value());
+      FakePipeContext pipe = function.addPipeExpressionCtx();
+      pipe.addCallCtx(name2.value());
     }
     {
-      FakeFunction function = module.addFunction(name2.value());
-      FakePipe pipe = function.addPipeExpression();
-      pipe.addFunctionCall(name1.value());
+      FakeFunctionContext function = module.addFunctionCtx(name2.value());
+      FakePipeContext pipe = function.addPipeExpressionCtx();
+      pipe.addCallCtx(name1.value());
     }
 
     Map<Name, Set<Dependency>> expected = Maps.newHashMap();
