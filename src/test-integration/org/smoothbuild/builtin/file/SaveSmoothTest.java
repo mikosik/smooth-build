@@ -107,20 +107,18 @@ public class SaveSmoothTest extends IntegrationTestCase {
 
   @Test
   public void illegalPathsAreReported() throws Exception {
-    for (String destinationPath : PathTesting.listOfInvalidPaths()) {
-      reset();
+    String destinationPath = PathTesting.listOfInvalidPaths().get(0);
 
-      // given
-      fileSystem.createFileContainingItsPath(path);
+    // given
+    fileSystem.createFileContainingItsPath(path);
 
-      script("run : file(" + path + ") | save('" + destinationPath + "');");
+    script("run : file(" + path + ") | save('" + destinationPath + "');");
 
-      // when
-      smoothApp.run("run");
+    // when
+    smoothApp.run("run");
 
-      // then
-      userConsole.assertOnlyProblem(IllegalPathError.class);
-    }
+    // then
+    userConsole.assertOnlyProblem(IllegalPathError.class);
   }
 
   @Test

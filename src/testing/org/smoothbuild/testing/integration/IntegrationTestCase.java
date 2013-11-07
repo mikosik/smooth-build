@@ -20,10 +20,6 @@ public class IntegrationTestCase {
 
   @Before
   public void before() {
-    reset();
-  }
-
-  protected void reset() {
     Injector injector = createInjector(new IntegrationTestModule());
     fileSystem = injector.getInstance(FakeFileSystem.class);
     userConsole = injector.getInstance(FakeUserConsole.class);
