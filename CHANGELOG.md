@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.4.0 (??????????)
+Version 0.4.0 (2013.11.08)
 --------------------------
 
  * added build/clean commands to smooth binary
