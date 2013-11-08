@@ -1,0 +1,94 @@
+package org.smoothbuild.base;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.smoothbuild.function.base.Name.name;
+import static org.smoothbuild.function.base.Param.param;
+import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.message.message.MessageType.ERROR;
+
+import java.util.Map;
+
+import javax.inject.Singleton;
+
+import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.smoothbuild.builtin.Builtin;
+import org.smoothbuild.builtin.BuiltinFunctions;
+import org.smoothbuild.function.base.Module;
+import org.smoothbuild.function.base.ModuleBuilder;
+import org.smoothbuild.function.base.Param;
+import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.function.nativ.Invoker;
+import org.smoothbuild.function.nativ.NativeFunction;
+import org.smoothbuild.function.nativ.NativeFunctionFactory;
+import org.smoothbuild.message.message.Message;
+import org.smoothbuild.plugin.Sandbox;
+import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.plugin.Value;
+import org.smoothbuild.testing.integration.IntegrationTestCase;
+
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Provides;
+
+public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
+  String normalFunction = "myFunction";
+  String erroneousFunction = "erroneous";
+  Invoker normalInvoker = mock(Invoker.class);
+  Invoker erroneousInvoker = mock(Invoker.class);
+
+  @Provides
+  @Singleton
+  @Builtin
+  public Module provideBuiltinModule(ModuleBuilder builder) throws Exception {
+    Mockito.when(
+        normalInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Value>> any()))
+        .thenAnswer(new Answer<StringValue>() {
+          @Override
+          public StringValue answer(InvocationOnMock invocation) throws Throwable {
+            Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
+            return sandbox.string("abc");
+          }
+        });
+    builder.addFunction(function(normalFunction, normalInvoker));
+
+    Mockito.when(
+        erroneousInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Value>> any()))
+        .thenAnswer(new Answer<StringValue>() {
+          @Override
+          public StringValue answer(InvocationOnMock invocation) throws Throwable {
+            Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
+            sandbox.report(new Message(ERROR, "message"));
+            return null;
+          }
+        });
+    builder.addFunction(function(erroneousFunction, erroneousInvoker));
+
+    for (Class<?> klass : BuiltinFunctions.BUILTIN_FUNCTION_CLASSES) {
+      builder.addFunction(NativeFunctionFactory.create(klass, true));
+    }
+    return builder.build();
+  }
+
+  @Test
+  public void error_stops_building() throws Exception {
+    // given
+    script("run: " + erroneousFunction + " | " + normalFunction + " ;");
+
+    // when
+    smoothApp.run("run");
+
+    // then
+    userConsole.assertOnlyProblem(Message.class);
+    verifyZeroInteractions(normalInvoker);
+  }
+
+  private static NativeFunction function(String name, Invoker invoker) {
+    ImmutableList<Param> params = ImmutableList.of(param(STRING, "value"));
+    Signature signature = new Signature(STRING, name(name), params);
+    return new NativeFunction(signature, invoker, true);
+  }
+}
