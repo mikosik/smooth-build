@@ -56,7 +56,7 @@ public class NativeCallTaskTest {
       codeLocation);
 
   @Test
-  public void calculateResult() throws IllegalAccessException, InvocationTargetException {
+  public void calculate_result() throws IllegalAccessException, InvocationTargetException {
     StringValue argValue = new FakeString("subTaskResult");
     Result subTask = new FakeResult(argValue);
 
@@ -72,8 +72,7 @@ public class NativeCallTaskTest {
   }
 
   @Test
-  public void nullResultErrorIsReportedWhenNullIsReturnByFunctionReturningNonVoidType()
-      throws Exception {
+  public void null_result_is_reported_when_functio_has_non_void_return_type() throws Exception {
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
 
     nativeCallTask.execute(sandbox);
@@ -82,7 +81,7 @@ public class NativeCallTaskTest {
   }
 
   @Test
-  public void nullCanBeReturnedByFunctionOfVoidType() throws Exception {
+  public void null_can_be_returned_by_function_with_void_result_type() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
     Signature signature = new Signature(VOID, name("name"), params);
     function1 = new NativeFunction(signature, invoker, true);
@@ -95,25 +94,25 @@ public class NativeCallTaskTest {
   }
 
   @Test
-  public void reflexiveInternalErrorIsReportedForIllegalAccessException() throws Exception {
+  public void reflexive_internal_error_is_reported_for_illegal_access_exception() throws Exception {
     assertExceptionIsReportedAsProblem(new IllegalAccessException(""), ReflexiveInternalError.class);
   }
 
   @Test
-  public void fileSystemErrorIsReportedForFileSystemException() throws Exception {
+  public void file_system_error_is_reported_for_file_system_exception() throws Exception {
     InvocationTargetException exception = new InvocationTargetException(new FileSystemException(""));
     assertExceptionIsReportedAsProblem(exception, FileSystemError.class);
   }
 
   @Test
-  public void messageThrownIsReported() throws Exception {
+  public void message_thrown_as_error_message_exception_is_reported() throws Exception {
     InvocationTargetException exception = new InvocationTargetException(new ErrorMessageException(
         new MyError()));
     assertExceptionIsReportedAsProblem(exception, MyError.class);
   }
 
   @Test
-  public void unexpectedErrorIsReportedForUnexpectedRuntimeException() throws Exception {
+  public void unexpected_error_is_reported_for_unexpected_runtime_exception() throws Exception {
     InvocationTargetException exception = new InvocationTargetException(new RuntimeException());
     assertExceptionIsReportedAsProblem(exception, UnexpectedError.class);
   }
