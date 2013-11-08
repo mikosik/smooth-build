@@ -7,15 +7,15 @@ import javax.inject.Inject;
 
 import org.smoothbuild.fs.base.FileSystem;
 
-public class Cleaner {
+public class CleanWorker {
   private final FileSystem fileSystem;
 
   @Inject
-  public Cleaner(FileSystem fileSystem) {
+  public CleanWorker(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
   }
 
-  public void clearBuildDir() {
+  public void run() {
     if (fileSystem.pathState(BUILD_DIR) == DIR) {
       fileSystem.deleteDirectoryRecursively(BUILD_DIR);
     }

@@ -6,11 +6,12 @@ import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import java.io.IOException;
 
 import org.junit.Before;
-import org.smoothbuild.app.SmoothApp;
+import org.smoothbuild.app.BuildWorker;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -19,7 +20,7 @@ import com.google.inject.util.Modules;
 public class IntegrationTestCase extends AbstractModule {
   protected FakeFileSystem fileSystem;
   protected FakeUserConsole userConsole;
-  private SmoothApp smoothApp;
+  private BuildWorker buildWorker;
 
   @Before
   public void before() {
@@ -27,7 +28,7 @@ public class IntegrationTestCase extends AbstractModule {
     Injector injector = createInjector(module);
     fileSystem = injector.getInstance(FakeFileSystem.class);
     userConsole = injector.getInstance(FakeUserConsole.class);
-    smoothApp = injector.getInstance(SmoothApp.class);
+    buildWorker = injector.getInstance(BuildWorker.class);
   }
 
   public void script(String script) throws IOException {
@@ -35,7 +36,7 @@ public class IntegrationTestCase extends AbstractModule {
   }
 
   public void build(String... strings) {
-    smoothApp.run(strings);
+    buildWorker.run(ImmutableList.copyOf(strings));
   }
 
   @Override

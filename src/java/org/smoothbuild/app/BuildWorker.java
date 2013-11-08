@@ -1,5 +1,7 @@
 package org.smoothbuild.app;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.smoothbuild.command.CommandLineArguments;
@@ -12,14 +14,14 @@ import org.smoothbuild.task.exec.SmoothExecutorPhase;
 
 import com.google.common.collect.ImmutableList;
 
-public class SmoothApp {
+public class BuildWorker {
   private final UserConsole userConsole;
   private final CommandLineParserPhase commandLineParserPhase;
   private final ModuleParserPhase moduleParserPhase;
   private final SmoothExecutorPhase smoothExecutorPhase;
 
   @Inject
-  public SmoothApp(UserConsole userConsole, CommandLineParserPhase commandLineParserPhase,
+  public BuildWorker(UserConsole userConsole, CommandLineParserPhase commandLineParserPhase,
       ModuleParserPhase moduleParserPhase, SmoothExecutorPhase smoothExecutorPhase) {
     this.userConsole = userConsole;
     this.commandLineParserPhase = commandLineParserPhase;
@@ -27,8 +29,8 @@ public class SmoothApp {
     this.smoothExecutorPhase = smoothExecutorPhase;
   }
 
-  public void run(String... commandLine) {
-    CommandLineArguments args = commandLineParserPhase.execute(ImmutableList.copyOf(commandLine));
+  public void run(List<String> functions) {
+    CommandLineArguments args = commandLineParserPhase.execute(ImmutableList.copyOf(functions));
 
     if (args != null) {
       Module module = moduleParserPhase.execute(args);

@@ -1,13 +1,22 @@
 package org.smoothbuild;
 
-import static com.google.inject.Guice.createInjector;
+import io.airlift.command.Cli;
+import io.airlift.command.Cli.CliBuilder;
+import io.airlift.command.Help;
 
-import org.smoothbuild.app.SmoothApp;
-import org.smoothbuild.builtin.BuiltinModule;
-import org.smoothbuild.db.DbModule;
+import org.smoothbuild.app.BuildCommand;
+import org.smoothbuild.app.CleanCommand;
 
 public class Main {
   public static void main(String[] args) {
-    createInjector(new DbModule(), new BuiltinModule()).getInstance(SmoothApp.class).run(args);
+    CliBuilder<Runnable> builder = Cli.<Runnable> builder("smooth");
+    builder.withDescription("powerful build tool with simple language");
+    builder.withDefaultCommand(Help.class);
+    builder.withCommand(Help.class);
+    builder.withCommand(BuildCommand.class);
+    builder.withCommand(CleanCommand.class);
+    Cli<Runnable> gitParser = builder.build();
+
+    gitParser.parse(args).run();
   }
 }
