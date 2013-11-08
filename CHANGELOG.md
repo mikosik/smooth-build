@@ -4,6 +4,7 @@ Change Log
 Version 0.4.0 (??????????)
 --------------------------
 
+ * added build/clean commands to smooth binary
  * added task result caching based on content digest
  * improved formatting/content of user visible messages
  * added single line comments (comment starts with '#' character)
