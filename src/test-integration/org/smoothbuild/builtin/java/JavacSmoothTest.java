@@ -25,7 +25,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     fileSystem.createFile(path, "public private class MyClass {}");
 
     script("run : [ file(path=" + path + ") ] | javac ;");
-    smoothApp.run("run");
+    build("run");
 
     userConsole.assertOnlyProblem(JavaCompilerMessage.class);
   }
@@ -45,7 +45,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     fileSystem.createFile(path, builder.toString());
 
     script("run : [ file(path=" + path + ") ] | javac | save(dir='.');");
-    smoothApp.run("run");
+    build("run");
 
     userConsole.assertNoProblems();
 
@@ -96,7 +96,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     builder.addLine("run: libraryClasses | merge(with=appClasses) | save(" + classDir + ");");
     this.script(builder.build());
 
-    smoothApp.run("run");
+    build("run");
 
     userConsole.assertNoProblems();
     loadClass(byteCode(libClassFile));
@@ -111,7 +111,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     fileSystem.createFile(path, "public class MyClass {}");
 
     script("run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
-    smoothApp.run("run");
+    build("run");
 
     userConsole.assertOnlyProblem(IllegalSourceParamError.class);
   }
@@ -122,7 +122,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     fileSystem.createFile(path, "public class MyClass {}");
 
     script("run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
-    smoothApp.run("run");
+    build("run");
 
     userConsole.assertOnlyProblem(IllegalTargetParamError.class);
   }
@@ -133,7 +133,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     fileSystem.createFile(path, "public enum MyClass { VALUE }");
 
     script("run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
-    smoothApp.run("run");
+    build("run");
 
     userConsole.assertOnlyProblem(JavaCompilerMessage.class);
   }

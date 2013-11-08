@@ -79,7 +79,7 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
     script("run: " + erroneousFunction + " | " + normalFunction + " ;");
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertOnlyProblem(Message.class);
