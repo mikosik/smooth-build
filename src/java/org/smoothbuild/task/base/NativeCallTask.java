@@ -31,7 +31,7 @@ public class NativeCallTask extends Task {
   public Value execute(SandboxImpl sandbox) {
     try {
       Value result = function.invoke(sandbox, calculateArguments());
-      if (result == null && !isNullResultAllowed()) {
+      if (result == null && !isNullResultAllowed() && !sandbox.messageGroup().containsProblems()) {
         sandbox.report(new NullResultError());
       } else {
         return result;

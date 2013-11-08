@@ -13,15 +13,21 @@ import static org.smoothbuild.testing.function.base.FakeSignature.fakeSignature;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.smoothbuild.fs.base.exc.FileSystemError;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.function.base.Param;
 import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.message.message.Message;
+import org.smoothbuild.plugin.File;
+import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
@@ -91,6 +97,26 @@ public class NativeCallTaskTest {
     nativeCallTask.execute(sandbox);
 
     sandbox.messages().assertNoProblems();
+  }
+
+  @Test
+  public void null_can_be_returned_when_function_reported_errors() throws Exception {
+    ImmutableList<Param> params = ImmutableList.of();
+    Signature signature = new Signature(Type.FILE, name("name"), params);
+    function1 = new NativeFunction(signature, invoker, true);
+    nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
+    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenAnswer(new Answer<File>() {
+      @Override
+      public File answer(InvocationOnMock invocation) throws Throwable {
+        Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
+        sandbox.report(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
+        return null;
+      }
+    });
+
+    nativeCallTask.execute(sandbox);
+
+    sandbox.messages().assertOnlyProblem(CodeMessage.class);
   }
 
   @Test
