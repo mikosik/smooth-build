@@ -20,7 +20,7 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     script("run : file(" + zipFile + ") | unzip | save(" + outPath + ");");
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();

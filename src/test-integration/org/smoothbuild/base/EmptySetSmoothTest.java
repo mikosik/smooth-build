@@ -12,7 +12,7 @@ public class EmptySetSmoothTest extends IntegrationTestCase {
     script("run : [];");
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();

@@ -18,8 +18,8 @@ import com.google.inject.util.Modules;
 
 public class IntegrationTestCase extends AbstractModule {
   protected FakeFileSystem fileSystem;
-  protected SmoothApp smoothApp;
   protected FakeUserConsole userConsole;
+  private SmoothApp smoothApp;
 
   @Before
   public void before() {
@@ -32,6 +32,10 @@ public class IntegrationTestCase extends AbstractModule {
 
   public void script(String script) throws IOException {
     fileSystem.createFile(DEFAULT_SCRIPT, ScriptBuilder.script(script));
+  }
+
+  public void build(String... strings) {
+    smoothApp.run(strings);
   }
 
   @Override

@@ -26,7 +26,7 @@ public class MergeSmoothTest extends IntegrationTestCase {
     script(builder.build());
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();
@@ -52,7 +52,7 @@ public class MergeSmoothTest extends IntegrationTestCase {
     script(builder.build());
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertOnlyProblem(DuplicateMergedPathError.class);

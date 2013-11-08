@@ -66,8 +66,8 @@ public class CacheSmoothTest extends IntegrationTestCase {
     script("run: " + name + " ;");
 
     // when
-    smoothApp.run("run");
-    smoothApp.run("run");
+    build("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();
@@ -82,9 +82,9 @@ public class CacheSmoothTest extends IntegrationTestCase {
     script("run: file(" + path + ") | " + name + " ;");
 
     // when
-    smoothApp.run("run");
+    build("run");
     fileSystem.createFile(path, "def");
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();

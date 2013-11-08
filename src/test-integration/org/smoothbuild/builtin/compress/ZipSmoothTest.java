@@ -26,7 +26,7 @@ public class ZipSmoothTest extends IntegrationTestCase {
     script("run : files('dir') | zip(" + outputPath + ") | save(" + outDir + ");");
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();

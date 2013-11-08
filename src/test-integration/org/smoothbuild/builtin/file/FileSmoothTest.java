@@ -19,7 +19,7 @@ public class FileSmoothTest extends IntegrationTestCase {
     script("run : file(" + path + ") | save(" + dir + ");");
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();

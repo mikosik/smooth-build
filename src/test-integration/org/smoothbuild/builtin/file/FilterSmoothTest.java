@@ -20,7 +20,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
     script("run : [] | filter('///');");
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertOnlyProblem(IllegalPathPatternError.class);
@@ -123,7 +123,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
     script("run : files(" + pathA + ") | filter('" + pattern + "')  | save(" + outputPath + ");");
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();

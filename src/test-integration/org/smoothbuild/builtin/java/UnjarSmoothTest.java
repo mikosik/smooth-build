@@ -21,7 +21,7 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     script("run : file(" + jarFile.path() + ") | unjar | save(" + outDir + ");");
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertNoProblems();

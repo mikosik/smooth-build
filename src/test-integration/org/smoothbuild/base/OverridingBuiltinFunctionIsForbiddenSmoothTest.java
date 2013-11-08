@@ -17,7 +17,7 @@ public class OverridingBuiltinFunctionIsForbiddenSmoothTest extends IntegrationT
     script(builder.build());
 
     // when
-    smoothApp.run("run");
+    build("run");
 
     // then
     userConsole.assertOnlyProblem(OverridenBuiltinFunctionError.class);
