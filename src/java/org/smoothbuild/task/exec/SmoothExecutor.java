@@ -21,12 +21,14 @@ public class SmoothExecutor {
     CommandLineArguments args = executionData.args();
     Module module = executionData.module();
 
-    Name name = args.functionToRun();
-    Function function = module.getFunction(name);
-    if (function == null) {
-      throw new ErrorMessageException(new UnknownFunctionError(name, module.availableNames()));
+    for (Name name : args.functionsToRun()) {
+      Function function = module.getFunction(name);
+      if (function == null) {
+        throw new ErrorMessageException(new UnknownFunctionError(name, module.availableNames()));
+      }
+      artifactBuilder.addArtifact(function);
     }
-    artifactBuilder.addArtifact(function);
+
     artifactBuilder.runBuild();
   }
 }
