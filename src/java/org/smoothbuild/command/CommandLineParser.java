@@ -6,10 +6,13 @@ import static org.smoothbuild.function.base.Name.name;
 
 import java.util.List;
 
-import org.smoothbuild.command.err.CommandLineError;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.command.err.NothingToDoError;
+import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 public class CommandLineParser {
   public CommandLineArguments parse(List<String> args) {
@@ -17,15 +20,18 @@ public class CommandLineParser {
       throw new ErrorMessageException(new NothingToDoError());
     }
 
-    if (args.size() > 1) {
-      throw new ErrorMessageException(new CommandLineError(
-          "Too many functions. Only one can be specified. (This will change in future version)"));
-    }
+    return new CommandLineArguments(DEFAULT_SCRIPT, names(args));
+  }
 
-    String functionString = args.get(0);
-    if (!isLegalName(functionString)) {
-      throw new ErrorMessageException(new IllegalFunctionNameError(functionString));
+  private static ImmutableList<Name> names(List<String> args) {
+    Builder<Name> builder = ImmutableList.builder();
+
+    for (String nameString : args) {
+      if (!isLegalName(nameString)) {
+        throw new ErrorMessageException(new IllegalFunctionNameError(nameString));
+      }
+      builder.add(name(nameString));
     }
-    return new CommandLineArguments(DEFAULT_SCRIPT, name(functionString));
+    return builder.build();
   }
 }
