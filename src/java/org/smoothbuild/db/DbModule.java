@@ -29,7 +29,7 @@ public class DbModule extends AbstractModule {
   @Singleton
   @HashedDbWithValues
   @Provides
-  public HashedDb objectHashedDb(FileSystem fileSystem) {
+  public HashedDb valuesHashedDb(FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, VALUE_DB_DIR);
     return new HashedDb(objectsFileSystem);
   }
