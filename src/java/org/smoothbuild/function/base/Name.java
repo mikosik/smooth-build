@@ -3,7 +3,7 @@ package org.smoothbuild.function.base;
 import java.util.regex.Pattern;
 
 public class Name {
-  private static final Pattern PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
+  private static final Pattern PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9\\.]*");
 
   private final String value;
 
