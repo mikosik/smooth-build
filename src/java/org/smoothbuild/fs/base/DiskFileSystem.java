@@ -7,14 +7,14 @@ import static org.smoothbuild.fs.base.RecursiveFilesIterable.recursiveFilesItera
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Paths;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,6 +25,8 @@ import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 @Singleton
 public class DiskFileSystem implements FileSystem {
@@ -32,7 +34,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Inject
   public DiskFileSystem() {
-    this(null);
+    this(".");
   }
 
   @VisibleForTesting
@@ -47,11 +49,11 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public PathState pathState(Path path) {
-    File file = jdkFile(path);
-    if (!file.exists()) {
+    java.nio.file.Path jdkPath = jdkPath(path);
+    if (!Files.exists(jdkPath)) {
       return NOTHING;
     }
-    if (file.isDirectory()) {
+    if (Files.isDirectory(jdkPath)) {
       return DIR;
     }
     return FILE;
@@ -59,11 +61,17 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public Iterable<String> childNames(Path directory) {
-    String[] list = jdkFile(directory).list();
-    if (list == null) {
+    assertDirExists(directory);
+    try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(directory))) {
+      Builder<String> builder = ImmutableList.builder();
+      for (java.nio.file.Path path : stream) {
+        builder.add(path.getFileName().toString());
+      }
+      return builder.build();
+    } catch (NotDirectoryException e) {
       throw new NoSuchDirException(directory);
-    } else {
-      return Arrays.asList(list);
+    } catch (IOException e) {
+      throw new FileSystemException(e);
     }
   }
 
@@ -72,53 +80,66 @@ public class DiskFileSystem implements FileSystem {
     return recursiveFilesIterable(this, directory);
   }
 
-  private void createDirectory(Path path) {
-    File directory = jdkFile(path);
-    if (!directory.exists()) {
-      createDirectory(path.parent());
-      if (!directory.mkdir()) {
-        throw new FileSystemException("Could not create directory '" + path + "'.");
-      }
-    }
-  }
-
   @Override
   public InputStream openInputStream(Path path) {
+    assertFileExists(path);
     try {
-      return new BufferedInputStream(new FileInputStream(jdkFile(path)));
-    } catch (FileNotFoundException e) {
+      return new BufferedInputStream(Files.newInputStream(jdkPath(path)));
+    } catch (java.nio.file.NoSuchFileException e) {
       throw new NoSuchFileException(path);
+    } catch (IOException e) {
+      throw new FileSystemException("Could not read " + path, e);
     }
   }
 
   @Override
   public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
-      throw new FileSystemException("Cannot open file '" + path + "' as it is directory.");
+      throw new FileSystemException("Cannot open file " + path + " as it is directory.");
     }
     createDirectory(path.parent());
 
     try {
-      return new BufferedOutputStream(new FileOutputStream(jdkFile(path)));
-    } catch (FileNotFoundException e) {
+      return new BufferedOutputStream(java.nio.file.Files.newOutputStream(jdkPath(path)));
+    } catch (IOException e) {
       throw new CannotCreateFileException(path, e);
+    }
+  }
+
+  private void createDirectory(Path path) {
+    try {
+      Files.createDirectories(jdkPath(path));
+    } catch (FileAlreadyExistsException e) {
+      throw new FileSystemException("Could not create directory " + path
+          + " as it's either a file of one of its parents is a file.");
+    } catch (IOException e) {
+      throw new FileSystemException("Could not create directory " + path + ".");
     }
   }
 
   @Override
   public void deleteDirectoryRecursively(Path directory) {
-    if (pathState(directory) == DIR) {
-      try {
-        RecursiveDirectoryDeleter.deleteRecursively(jdkFile(directory));
-      } catch (IOException e) {
-        throw new FileSystemException(e);
-      }
-    } else {
+    assertDirExists(directory);
+    try {
+      RecursiveDirectoryDeleter.deleteRecursively(jdkPath(directory));
+    } catch (IOException e) {
+      throw new FileSystemException(e);
+    }
+  }
+
+  private void assertDirExists(Path directory) {
+    if (pathState(directory) != DIR) {
       throw new NoSuchDirException(directory);
     }
   }
 
-  private File jdkFile(Path path) {
-    return new File(projectRoot, path.value());
+  private void assertFileExists(Path path) {
+    if (pathState(path) != FILE) {
+      throw new NoSuchFileException(path);
+    }
+  }
+
+  private java.nio.file.Path jdkPath(Path path) {
+    return Paths.get(projectRoot, path.value());
   }
 }

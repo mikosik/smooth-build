@@ -66,7 +66,7 @@ public class RecursiveDirectoryDeleterTest {
   @Test
   public void filesFromReturnsAllFilesRecursively() throws Exception {
     // when
-    RecursiveDirectoryDeleter.deleteRecursively(mainDir);
+    RecursiveDirectoryDeleter.deleteRecursively(mainDir.toPath());
 
     // then
     assertThat(fileOutside.exists()).isTrue();
