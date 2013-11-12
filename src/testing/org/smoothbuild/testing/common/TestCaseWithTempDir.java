@@ -27,6 +27,6 @@ public class TestCaseWithTempDir {
 
   @After
   public void after() throws IOException {
-    deleteRecursively(tempDirectory);
+    deleteRecursively(tempDirectory.toPath());
   }
 }
