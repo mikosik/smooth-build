@@ -73,13 +73,16 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public void deleteDirectoryRecursively(Path path) {
-    MemoryDirectory directory = getDirectory(path);
-    MemoryDirectory parent = directory.parent();
+  public void delete(Path path) {
+    MemoryElement element = findElement(path);
+    if (element == null) {
+      return;
+    }
+    MemoryDirectory parent = element.parent();
     if (parent == null) {
       throw new IllegalArgumentException("Cannot delete root directory.");
     } else {
-      parent.removeChild(directory);
+      parent.removeChild(element);
     }
   }
 

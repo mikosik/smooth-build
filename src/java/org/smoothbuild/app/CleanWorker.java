@@ -17,7 +17,7 @@ public class CleanWorker {
 
   public void run() {
     if (fileSystem.pathState(BUILD_DIR) == DIR) {
-      fileSystem.deleteDirectoryRecursively(BUILD_DIR);
+      fileSystem.delete(BUILD_DIR);
     }
   }
 }

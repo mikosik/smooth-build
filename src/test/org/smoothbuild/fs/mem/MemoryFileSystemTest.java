@@ -1,7 +1,6 @@
 package org.smoothbuild.fs.mem;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.fs.base.PathState.DIR;
 import static org.smoothbuild.fs.base.PathState.FILE;
@@ -166,7 +165,7 @@ public class MemoryFileSystemTest {
   }
 
   @Test
-  public void deleteDirectoryRecursively() throws Exception {
+  public void delete_directory() throws Exception {
     // given
     Path fileOutsideMain = path("fileOutsideMain");
     Path mainDir = path("mainDir");
@@ -182,7 +181,7 @@ public class MemoryFileSystemTest {
     createEmptyFile(notDirectFile);
 
     // when
-    fileSystem.deleteDirectoryRecursively(mainDir);
+    fileSystem.delete(mainDir);
 
     // then
     assertThat(fileSystem.pathState(fileOutsideMain)).isEqualTo(FILE);
@@ -195,27 +194,17 @@ public class MemoryFileSystemTest {
   }
 
   @Test
-  public void deleteDirectoryRecursivelyThrowsExceptionForNonDir() throws Exception {
+  public void delete_file() throws Exception {
     Path file = path("myFile");
     createEmptyFile(file);
 
-    try {
-      fileSystem.deleteDirectoryRecursively(file);
-      fail("exception should be thrown");
-    } catch (NoSuchDirException e) {
-      // expected
-    }
+    fileSystem.delete(file);
+    assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
   }
 
   @Test
-  public void deleteDirectoryRecursivelyThrowsExceptionForNonexistentDir() throws Exception {
-    Path nonexistentPath = path("nonexistent");
-    try {
-      fileSystem.deleteDirectoryRecursively(nonexistentPath);
-      fail("exception should be thrown");
-    } catch (NoSuchDirException e) {
-      // expected
-    }
+  public void delete_does_nothing_for_nonexistet_path() throws Exception {
+    fileSystem.delete(path("nonexistent"));
   }
 
   private void createEmptyFile(String path) throws IOException {
