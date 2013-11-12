@@ -21,6 +21,20 @@ public class NameTest {
     doTestSimple("my_function");
     doTestSimple("MY_FUNCTION");
     doTestSimple("myFunction");
+
+    doTestSimple("a.b");
+    doTestSimple("a.b.c");
+    doTestSimple("a.b.c.d");
+
+    doTestSimple("a.");
+    doTestSimple("a.b.");
+    doTestSimple("a.b.c.");
+
+    doTestSimple("a..b");
+    doTestSimple("a...b");
+
+    doTestSimple("_._._");
+    doTestSimple("a_._b._c_");
   }
 
   private static void doTestSimple(String name) {
@@ -30,16 +44,6 @@ public class NameTest {
 
   @Test
   public void illegalSimpleNames() {
-    assertIllegalSimpleName("a.b");
-    assertIllegalSimpleName("a.b.c");
-    assertIllegalSimpleName("a.b.c.d");
-
-    assertIllegalSimpleName("my.package.FuncA");
-    assertIllegalSimpleName("MY.PACKAGE.FUNC_A");
-
-    assertIllegalSimpleName("a_package.my_function");
-    assertIllegalSimpleName("_._._");
-    assertIllegalSimpleName("a_._b._c_");
 
     assertIllegalSimpleName("");
     assertIllegalSimpleName(".");
@@ -52,12 +56,6 @@ public class NameTest {
     assertIllegalSimpleName(".a");
     assertIllegalSimpleName(".a.b");
     assertIllegalSimpleName(".a.b.c");
-
-    assertIllegalSimpleName("a.");
-    assertIllegalSimpleName("a.b.");
-    assertIllegalSimpleName("a.b.c.");
-
-    assertIllegalSimpleName("a..b");
 
     assertIllegalSimpleName("my-function");
     assertIllegalSimpleName("a-package.myFunction");

@@ -246,7 +246,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithIllegalFunctionName {
-    @SmoothFunction(name = "my..package")
+    @SmoothFunction(name = "my-package")
     public static void execute(Sandbox sandbox, EmptyParameters params) {}
   }
 
