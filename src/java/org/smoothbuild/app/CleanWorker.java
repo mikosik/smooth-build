@@ -1,7 +1,6 @@
 package org.smoothbuild.app;
 
 import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
-import static org.smoothbuild.fs.base.PathState.DIR;
 
 import javax.inject.Inject;
 
@@ -16,8 +15,6 @@ public class CleanWorker {
   }
 
   public void run() {
-    if (fileSystem.pathState(BUILD_DIR) == DIR) {
-      fileSystem.delete(BUILD_DIR);
-    }
+    fileSystem.delete(BUILD_DIR);
   }
 }
