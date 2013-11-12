@@ -118,10 +118,12 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public void deleteDirectoryRecursively(Path directory) {
-    assertDirExists(directory);
+  public void delete(Path path) {
+    if (pathState(path) == NOTHING) {
+      return;
+    }
     try {
-      RecursiveDirectoryDeleter.deleteRecursively(jdkPath(directory));
+      RecursiveDirectoryDeleter.deleteRecursively(jdkPath(path));
     } catch (IOException e) {
       throw new FileSystemException(e);
     }

@@ -241,7 +241,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   // delete()
 
   @Test
-  public void deleteDirectoryRecursively() throws Exception {
+  public void delete_directory() throws Exception {
     // given
     File fileOutside = createEmptyFile(root, "fileOutsideMain");
 
@@ -261,7 +261,7 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
     File notDirectDir = createDir(directDir, notDirectDirName);
 
     // when
-    fileSystem.deleteDirectoryRecursively(path(mainDirName));
+    fileSystem.delete(path(mainDirName));
 
     // then
     assertThat(fileOutside.exists()).isTrue();
@@ -274,28 +274,17 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   }
 
   @Test
-  public void deleteDirectoryRecursivelyThrowsExceptionForNonDir() throws Exception {
+  public void delete_file() throws Exception {
     String fileName = "fileName";
-    createEmptyFile(root, fileName);
+    File file = createEmptyFile(root, fileName);
     Path path = path(fileName);
 
-    try {
-      fileSystem.deleteDirectoryRecursively(path);
-      fail("exception should be thrown");
-    } catch (NoSuchDirException e) {
-      // expected
-    }
+    fileSystem.delete(path);
+    assertThat(file.exists()).isFalse();
   }
 
   @Test
-  public void deleteDirectoryRecursivelyThrowsExceptionForNonexistentDir() throws Exception {
-    Path path = path("nonexistent");
-
-    try {
-      fileSystem.deleteDirectoryRecursively(path);
-      fail("exception should be thrown");
-    } catch (NoSuchDirException e) {
-      // expected
-    }
+  public void delete_does_nothing_for_nonexistent_path() throws Exception {
+    fileSystem.delete(path("nonexistent"));
   }
 }

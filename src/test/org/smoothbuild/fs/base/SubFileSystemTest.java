@@ -51,8 +51,8 @@ public class SubFileSystemTest {
 
   @Test
   public void deleteDirectoryRecursively() {
-    subFileSystem.deleteDirectoryRecursively(path);
-    verify(fileSystem).deleteDirectoryRecursively(absolutePath);
+    subFileSystem.delete(path);
+    verify(fileSystem).delete(absolutePath);
   }
 
   @Test

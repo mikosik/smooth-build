@@ -33,8 +33,8 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
-  public void deleteDirectoryRecursively(Path directory) {
-    fileSystem.deleteDirectoryRecursively(absolutePath(directory));
+  public void delete(Path directory) {
+    fileSystem.delete(absolutePath(directory));
   }
 
   @Override

@@ -20,7 +20,7 @@ public interface FileSystem {
 
   public Iterable<Path> filesFrom(Path directory);
 
-  public void deleteDirectoryRecursively(Path directory);
+  public void delete(Path path);
 
   public InputStream openInputStream(Path path);
 
