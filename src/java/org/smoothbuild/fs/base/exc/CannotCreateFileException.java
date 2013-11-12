@@ -1,6 +1,6 @@
 package org.smoothbuild.fs.base.exc;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.smoothbuild.fs.base.Path;
 
@@ -12,8 +12,8 @@ import org.smoothbuild.fs.base.Path;
 @SuppressWarnings("serial")
 public class CannotCreateFileException extends FileSystemException {
 
-  public CannotCreateFileException(Path path, FileNotFoundException e) {
-    super(buildMessage(path));
+  public CannotCreateFileException(Path path, IOException e) {
+    super(buildMessage(path), e);
   }
 
   private static String buildMessage(Path path) {
