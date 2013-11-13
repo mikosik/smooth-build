@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.db.hash.HashedDb;
 import org.smoothbuild.db.hash.HashedDbWithTasks;
 import org.smoothbuild.db.hash.HashedDbWithValues;
+import org.smoothbuild.fs.ProjectDir;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.SubFileSystem;
 
@@ -21,7 +22,7 @@ public class DbModule extends AbstractModule {
   @Singleton
   @HashedDbWithTasks
   @Provides
-  public HashedDb taskResultHashedDb(FileSystem fileSystem) {
+  public HashedDb taskResultHashedDb(@ProjectDir FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, TASK_DB_DIR);
     return new HashedDb(objectsFileSystem);
   }
@@ -29,7 +30,7 @@ public class DbModule extends AbstractModule {
   @Singleton
   @HashedDbWithValues
   @Provides
-  public HashedDb valuesHashedDb(FileSystem fileSystem) {
+  public HashedDb valuesHashedDb(@ProjectDir FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, VALUE_DB_DIR);
     return new HashedDb(objectsFileSystem);
   }

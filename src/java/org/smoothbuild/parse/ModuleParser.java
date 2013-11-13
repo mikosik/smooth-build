@@ -17,6 +17,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.builtin.Builtin;
 import org.smoothbuild.command.CommandLineArguments;
+import org.smoothbuild.fs.ProjectDir;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
@@ -35,7 +36,7 @@ public class ModuleParser {
   private final DefinedFunctionsCreator definedFunctionsCreator;
 
   @Inject
-  public ModuleParser(FileSystem fileSystem, ModuleParserMessages messages,
+  public ModuleParser(@ProjectDir FileSystem fileSystem, ModuleParserMessages messages,
       @Builtin Module builtinModule, DefinedFunctionsCreator definedFunctionsCreator) {
     this.fileSystem = fileSystem;
     this.messages = messages;
