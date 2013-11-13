@@ -2,6 +2,7 @@ package org.smoothbuild.app;
 
 import org.smoothbuild.builtin.BuiltinModule;
 import org.smoothbuild.db.DbModule;
+import org.smoothbuild.fs.FileSystemModule;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -17,6 +18,7 @@ public class Bootstrapper {
     @Override
     protected void configure() {
       install(new DbModule());
+      install(new FileSystemModule());
       install(new BuiltinModule());
     }
   }

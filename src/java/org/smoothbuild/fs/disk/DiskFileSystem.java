@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Paths;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.fs.base.FileSystem;
@@ -35,7 +34,6 @@ import com.google.common.collect.ImmutableList.Builder;
 public class DiskFileSystem implements FileSystem {
   private final String projectRoot;
 
-  @Inject
   public DiskFileSystem() {
     this(".");
   }
