@@ -123,7 +123,7 @@ public class DiskFileSystem implements FileSystem {
       return;
     }
     try {
-      RecursiveDirectoryDeleter.deleteRecursively(jdkPath(path));
+      RecursiveDeleter.deleteRecursively(jdkPath(path));
     } catch (IOException e) {
       throw new FileSystemException(e);
     }

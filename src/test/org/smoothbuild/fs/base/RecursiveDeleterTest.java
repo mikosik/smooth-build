@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.google.common.io.Files;
 
-public class RecursiveDirectoryDeleterTest {
+public class RecursiveDeleterTest {
   private File tempDir;
 
   private File fileOutside;
@@ -66,7 +66,7 @@ public class RecursiveDirectoryDeleterTest {
   @Test
   public void filesFromReturnsAllFilesRecursively() throws Exception {
     // when
-    RecursiveDirectoryDeleter.deleteRecursively(mainDir.toPath());
+    RecursiveDeleter.deleteRecursively(mainDir.toPath());
 
     // then
     assertThat(fileOutside.exists()).isTrue();

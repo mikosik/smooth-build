@@ -5,7 +5,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class RecursiveDirectoryDeleter {
+public class RecursiveDeleter {
   public static void deleteRecursively(java.nio.file.Path file) throws IOException {
     if (Files.isDirectory(file) && !Files.isSymbolicLink(file)) {
       deleteDirectoryContents(file);
