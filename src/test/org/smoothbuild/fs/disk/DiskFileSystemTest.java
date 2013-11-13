@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base;
+package org.smoothbuild.fs.disk;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -18,9 +18,12 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 
 import org.junit.Test;
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
+import org.smoothbuild.fs.disk.DiskFileSystem;
 import org.smoothbuild.testing.common.TestCaseWithTempDir;
 
 public class DiskFileSystemTest extends TestCaseWithTempDir {

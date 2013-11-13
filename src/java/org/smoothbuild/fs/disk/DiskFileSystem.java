@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base;
+package org.smoothbuild.fs.disk;
 
 import static org.smoothbuild.fs.base.PathState.DIR;
 import static org.smoothbuild.fs.base.PathState.FILE;
@@ -19,6 +19,9 @@ import java.nio.file.Paths;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;

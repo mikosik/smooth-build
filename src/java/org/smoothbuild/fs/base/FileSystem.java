@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.fs.disk.DiskFileSystem;
 
 import com.google.inject.ImplementedBy;
 
