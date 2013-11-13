@@ -26,7 +26,6 @@ import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -34,12 +33,7 @@ import com.google.common.collect.ImmutableList.Builder;
 public class DiskFileSystem implements FileSystem {
   private final String projectRoot;
 
-  public DiskFileSystem() {
-    this(".");
-  }
-
-  @VisibleForTesting
-  DiskFileSystem(String projectRoot) {
+  public DiskFileSystem(String projectRoot) {
     this.projectRoot = projectRoot;
   }
 
