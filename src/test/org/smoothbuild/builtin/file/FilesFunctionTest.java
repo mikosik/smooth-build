@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
 import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.testing.plugin.FileSetMatchers.containsFileContainingItsPath;
 
@@ -38,7 +38,7 @@ public class FilesFunctionTest {
   @Test
   public void accessToSmoothDirIsReported() throws Exception {
     try {
-      runExecute(params(BUILD_DIR.value()));
+      runExecute(params(SMOOTH_DIR.value()));
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
@@ -49,7 +49,7 @@ public class FilesFunctionTest {
   @Test
   public void accessToSmoothSubDirIsReported() throws Exception {
     try {
-      runExecute(params(BUILD_DIR.append(path("abc")).value()));
+      runExecute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected

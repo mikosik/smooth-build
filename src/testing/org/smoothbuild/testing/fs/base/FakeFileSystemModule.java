@@ -1,9 +1,13 @@
 package org.smoothbuild.testing.fs.base;
 
+import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
+
 import javax.inject.Singleton;
 
 import org.smoothbuild.fs.ProjectDir;
+import org.smoothbuild.fs.SmoothDir;
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.fs.base.SubFileSystem;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -23,5 +27,11 @@ public class FakeFileSystemModule extends AbstractModule {
   @ProjectDir
   public FileSystem provideProjectFileSystem(@ProjectDir FakeFileSystem fakeFileSystem) {
     return fakeFileSystem;
+  }
+
+  @Provides
+  @SmoothDir
+  public FileSystem provideSmoothFileSystem(@ProjectDir FakeFileSystem fakeFileSystem) {
+    return new SubFileSystem(fakeFileSystem, SMOOTH_DIR);
   }
 }

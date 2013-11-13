@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
 import static org.smoothbuild.fs.base.Path.path;
 
 import java.io.IOException;
@@ -126,7 +126,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFileContainingItsPath(path);
 
-    script("run : file(" + path + ") | save(" + BUILD_DIR + ");");
+    script("run : file(" + path + ") | save(" + SMOOTH_DIR + ");");
 
     // when
     build("run");
@@ -140,7 +140,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFileContainingItsPath(path);
 
-    script("run : file(" + path + ") | save(" + BUILD_DIR.append(path("abc")) + ");");
+    script("run : file(" + path + ") | save(" + SMOOTH_DIR.append(path("abc")) + ");");
 
     // when
     build("run");
@@ -184,7 +184,7 @@ public class SaveSmoothTest extends IntegrationTestCase {
   @Test
   public void rootDirAndFileHavingSmoothDirButNotAtBeginningIsOk() throws IOException {
     // given
-    path = path("abc").append(BUILD_DIR);
+    path = path("abc").append(SMOOTH_DIR);
     fileSystem.createFileContainingItsPath(path);
 
     script("run : file(" + path + ") | save(" + Path.rootPath() + ");");

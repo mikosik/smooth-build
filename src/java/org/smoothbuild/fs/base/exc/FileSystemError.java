@@ -1,6 +1,6 @@
 package org.smoothbuild.fs.base.exc;
 
-import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
 import static org.smoothbuild.message.message.MessageType.ERROR;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class FileSystemError extends Message {
     b.append("Accessing file system caused error:\n");
     b.append("It was probably caused by:\n");
     b.append(" - some other process (maybe other instance of Smooth) changing content of "
-        + BUILD_DIR + " dir\n");
+        + SMOOTH_DIR + " dir\n");
     b.append(" - bug in plugin implementation\n");
     b.append(" - bug in Smooth tool or one of builtin functions\n");
     b.append("Full java stacktrace below:\n");

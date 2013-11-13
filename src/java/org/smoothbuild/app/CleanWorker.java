@@ -1,6 +1,6 @@
 package org.smoothbuild.app;
 
-import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
 
 import javax.inject.Inject;
 
@@ -16,6 +16,6 @@ public class CleanWorker {
   }
 
   public void run() {
-    fileSystem.delete(BUILD_DIR);
+    fileSystem.delete(SMOOTH_DIR);
   }
 }
