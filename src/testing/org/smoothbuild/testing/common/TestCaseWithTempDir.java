@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.fs.base.RecursiveDirectoryDeleter.deleteRecursively;
+import static org.smoothbuild.fs.base.RecursiveDeleter.deleteRecursively;
 
 import java.io.File;
 import java.io.IOException;
