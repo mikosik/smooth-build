@@ -4,13 +4,14 @@ import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.fs.ProjectDir;
 import org.smoothbuild.fs.base.FileSystem;
 
 public class CleanWorker {
   private final FileSystem fileSystem;
 
   @Inject
-  public CleanWorker(FileSystem fileSystem) {
+  public CleanWorker(@ProjectDir FileSystem fileSystem) {
     this.fileSystem = fileSystem;
   }
 

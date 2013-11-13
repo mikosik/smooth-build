@@ -3,6 +3,7 @@ package org.smoothbuild.task.exec;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.value.ValueDb;
+import org.smoothbuild.fs.ProjectDir;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.task.base.Task;
 
@@ -11,7 +12,7 @@ public class SandboxFactory {
   private final ValueDb valueDb;
 
   @Inject
-  public SandboxFactory(FileSystem fileSystem, ValueDb valueDb) {
+  public SandboxFactory(@ProjectDir FileSystem fileSystem, ValueDb valueDb) {
     this.fileSystem = fileSystem;
     this.valueDb = valueDb;
   }

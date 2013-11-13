@@ -12,7 +12,8 @@ public class FileSystemModule extends AbstractModule {
   protected void configure() {}
 
   @Provides
-  public FileSystem provideFileSystem() {
+  @ProjectDir
+  public FileSystem provideProjectFileSystem() {
     return new DiskFileSystem(".");
   }
 }
