@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base;
+package org.smoothbuild.fs.disk;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.fs.disk.RecursiveDeleter;
 import org.smoothbuild.testing.common.JdkFileTester;
 
 import com.google.common.collect.Lists;

@@ -1,4 +1,4 @@
-package org.smoothbuild.fs.base;
+package org.smoothbuild.fs.disk;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
