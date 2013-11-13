@@ -111,7 +111,7 @@ public class DiskFileSystem implements FileSystem {
       Files.createDirectories(jdkPath(path));
     } catch (FileAlreadyExistsException e) {
       throw new FileSystemException("Could not create directory " + path
-          + " as it's either a file of one of its parents is a file.");
+          + " as it's either a file or one of its ancestors is a file.");
     } catch (IOException e) {
       throw new FileSystemException("Could not create directory " + path + ".");
     }
