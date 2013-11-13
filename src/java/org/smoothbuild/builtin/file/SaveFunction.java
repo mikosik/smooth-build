@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.command.SmoothContants.BUILD_DIR;
+import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
 import static org.smoothbuild.message.message.MessageType.FATAL;
 
 import java.io.IOException;
@@ -102,7 +102,7 @@ public class SaveFunction {
       if (dirPath.isRoot()) {
         return;
       }
-      if (dirPath.firstPart().equals(BUILD_DIR)) {
+      if (dirPath.firstPart().equals(SMOOTH_DIR)) {
         throw new ErrorMessageException(new WriteToSmoothDirError(dirPath));
       }
 
@@ -129,7 +129,7 @@ public class SaveFunction {
     }
 
     private void checkFilePath(Path dirPath, Path filePath) {
-      if (dirPath.isRoot() && filePath.firstPart().equals(BUILD_DIR)) {
+      if (dirPath.isRoot() && filePath.firstPart().equals(SMOOTH_DIR)) {
         throw new ErrorMessageException(new WriteToSmoothDirError(filePath));
       }
 
