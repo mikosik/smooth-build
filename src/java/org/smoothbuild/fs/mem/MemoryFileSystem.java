@@ -51,28 +51,6 @@ public class MemoryFileSystem implements FileSystem {
     return recursiveFilesIterable(this, directory);
   }
 
-  private MemoryDirectory createDirectory(Path directory) {
-    Iterator<Path> it = directory.parts().iterator();
-    MemoryDirectory currentDir = root;
-    while (it.hasNext()) {
-      String name = it.next().value();
-      if (currentDir.hasChild(name)) {
-        MemoryElement child = currentDir.child(name);
-        if (child.isDirectory()) {
-          currentDir = (MemoryDirectory) child;
-        } else {
-          throw new FileSystemException("Path (or subpath) of to be created directory ("
-              + directory + ") is taken by some file.");
-        }
-      } else {
-        MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
-        currentDir.addChild(newDir);
-        currentDir = newDir;
-      }
-    }
-    return currentDir;
-  }
-
   @Override
   public void delete(Path path) {
     MemoryElement element = findElement(path);
@@ -127,6 +105,28 @@ public class MemoryFileSystem implements FileSystem {
       throw new FileSystemException("Cannot create link as path " + link + " exists.");
     }
     dir.addChild(new MemoryLink(dir, name, targetElement));
+  }
+
+  private MemoryDirectory createDirectory(Path directory) {
+    Iterator<Path> it = directory.parts().iterator();
+    MemoryDirectory currentDir = root;
+    while (it.hasNext()) {
+      String name = it.next().value();
+      if (currentDir.hasChild(name)) {
+        MemoryElement child = currentDir.child(name);
+        if (child.isDirectory()) {
+          currentDir = (MemoryDirectory) child;
+        } else {
+          throw new FileSystemException("Path (or subpath) of to be created directory ("
+              + directory + ") is taken by some file.");
+        }
+      } else {
+        MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
+        currentDir.addChild(newDir);
+        currentDir = newDir;
+      }
+    }
+    return currentDir;
   }
 
   private MemoryElement getFile(Path path) {
