@@ -19,7 +19,7 @@ public interface MemoryElement {
 
   public List<String> childNames();
 
-  public void addChild(MemoryElement newDir);
+  public void addChild(MemoryElement element);
 
   public InputStream createInputStream();
 
