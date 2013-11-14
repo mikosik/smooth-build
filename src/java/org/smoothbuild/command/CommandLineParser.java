@@ -5,16 +5,33 @@ import static org.smoothbuild.function.base.Name.isLegalName;
 import static org.smoothbuild.function.base.Name.name;
 
 import java.util.List;
+import java.util.Set;
 
+import javax.inject.Inject;
+
+import org.smoothbuild.command.err.DuplicatedFunctionNameWarning;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.command.err.NothingToDoError;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.listen.MessageGroup;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Sets;
 
 public class CommandLineParser {
+  private final MessageGroup messages;
+
+  @Inject
+  public CommandLineParser(CommandLineParserMessages messages) {
+    this((MessageGroup) messages);
+  }
+
+  public CommandLineParser(MessageGroup messages) {
+    this.messages = messages;
+  }
+
   public CommandLineArguments parse(List<String> args) {
     if (args.size() == 0) {
       throw new ErrorMessageException(new NothingToDoError());
@@ -23,15 +40,29 @@ public class CommandLineParser {
     return new CommandLineArguments(DEFAULT_SCRIPT, names(args));
   }
 
-  private static ImmutableList<Name> names(List<String> args) {
-    Builder<Name> builder = ImmutableList.builder();
+  private ImmutableList<Name> names(List<String> args) {
+    Set<Name> names = Sets.newHashSet();
+    Set<Name> duplicated = Sets.newHashSet();
 
+    Builder<Name> builder = ImmutableList.builder();
     for (String nameString : args) {
-      if (!isLegalName(nameString)) {
-        throw new ErrorMessageException(new IllegalFunctionNameError(nameString));
+      if (isLegalName(nameString)) {
+        Name name = name(nameString);
+        if (names.contains(name)) {
+          duplicated.add(name);
+        } else {
+          builder.add(name);
+          names.add(name);
+        }
+      } else {
+        messages.report(new IllegalFunctionNameError(nameString));
       }
-      builder.add(name(nameString));
     }
+
+    for (Name name : duplicated) {
+      messages.report(new DuplicatedFunctionNameWarning(name));
+    }
+
     return builder.build();
   }
 }

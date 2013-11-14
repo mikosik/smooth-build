@@ -9,13 +9,14 @@ import org.junit.Test;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.command.err.NothingToDoError;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.testing.message.ErrorMessageMatchers;
+import org.smoothbuild.testing.message.FakeMessageGroup;
 
 import com.google.common.collect.ImmutableList;
 
 public class CommandLineParserTest {
   String functionName = "function1";
-  CommandLineParser parser = new CommandLineParser();
+  FakeMessageGroup messages = new FakeMessageGroup();
+  CommandLineParser parser = new CommandLineParser(messages);
 
   @Test
   public void functionToRun() {
@@ -35,12 +36,8 @@ public class CommandLineParserTest {
 
   @Test
   public void illegal_function_name_is_reported() throws Exception {
-    try {
-      parser.parse(ImmutableList.of("illegal-namme"));
-      fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
-      ErrorMessageMatchers.containsInstanceOf(IllegalFunctionNameError.class);
-    }
+    parser.parse(ImmutableList.of("illegal-namme"));
+    messages.assertOnlyProblem(IllegalFunctionNameError.class);
   }
 
   @Test
