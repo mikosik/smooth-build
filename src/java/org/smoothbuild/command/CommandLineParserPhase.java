@@ -13,8 +13,9 @@ public class CommandLineParserPhase extends
   private final CommandLineParser commandLineParser;
 
   @Inject
-  public CommandLineParserPhase(UserConsole userConsole, CommandLineParser commandLineParser) {
-    super(userConsole, "COMMAND LINE PARSER");
+  public CommandLineParserPhase(UserConsole userConsole,
+      CommandLineParserMessages commandLineParserMessages, CommandLineParser commandLineParser) {
+    super(userConsole, commandLineParserMessages);
     this.commandLineParser = commandLineParser;
   }
 
