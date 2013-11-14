@@ -11,6 +11,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.util.Streams;
 import org.testory.common.Closure;
 
 public class FakeFileTest {
@@ -47,6 +48,27 @@ public class FakeFileTest {
     given(file = new FakeFile(path));
     when(file.path());
     thenReturned(path);
+  }
+
+  @Test
+  public void open_output_stream_returns_data_passed_to_constructor() throws Exception {
+    given(file = new FakeFile(path, content));
+    when(Streams.inputStreamToString(file.openInputStream()));
+    thenReturned(content);
+  }
+
+  @Test
+  public void open_output_stream_on_content_returns_data_passed_to_constructor() throws Exception {
+    given(file = new FakeFile(path, content));
+    when(Streams.inputStreamToString(file.content().openInputStream()));
+    thenReturned(content);
+  }
+
+  @Test
+  public void hash_of_file_is_different_from_hash_of_its_content() throws Exception {
+    given(file = new FakeFile(path));
+    when(file.content().hash());
+    thenReturned(not(equalTo(file.hash())));
   }
 
   @Test
