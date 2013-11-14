@@ -113,19 +113,19 @@ public class MemoryFileSystem implements FileSystem {
     return child.createOutputStream();
   }
 
-  private MemoryFile getFile(Path path) {
+  private MemoryElement getFile(Path path) {
     MemoryElement found = findElement(path);
-    if (found instanceof MemoryFile) {
-      return (MemoryFile) found;
+    if (found != null && found.isFile()) {
+      return found;
     } else {
       throw new NoSuchFileException(path);
     }
   }
 
-  private MemoryDirectory getDirectory(Path path) {
+  private MemoryElement getDirectory(Path path) {
     MemoryElement found = findElement(path);
-    if (found instanceof MemoryDirectory) {
-      return (MemoryDirectory) found;
+    if (found != null && found.isDirectory()) {
+      return found;
     } else {
       throw new NoSuchDirException(path);
     }
