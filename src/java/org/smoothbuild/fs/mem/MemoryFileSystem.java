@@ -16,6 +16,7 @@ import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
+import org.smoothbuild.fs.base.exc.NoSuchPathException;
 
 /**
  * In memory implementation of FileSystem.
@@ -111,6 +112,21 @@ public class MemoryFileSystem implements FileSystem {
     MemoryFile child = new MemoryFile(dir, name);
     dir.addChild(child);
     return child.createOutputStream();
+  }
+
+  @Override
+  public void createLink(Path link, Path target) {
+    MemoryElement targetElement = findElement(target);
+    if (targetElement == null) {
+      throw new NoSuchPathException(target);
+    }
+
+    String name = link.lastPart().value();
+    MemoryDirectory dir = createDirectory(link.parent());
+    if (dir.hasChild(name)) {
+      throw new FileSystemException("Cannot create link as path " + link + " exists.");
+    }
+    dir.addChild(new MemoryLink(dir, name, targetElement));
   }
 
   private MemoryElement getFile(Path path) {

@@ -23,12 +23,13 @@ import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.fs.disk.DiskFileSystem;
 import org.smoothbuild.testing.common.TestCaseWithTempDir;
 
 public class DiskFileSystemTest extends TestCaseWithTempDir {
   File root = getTempDirectory();
   FileSystem fileSystem = new DiskFileSystem(root.getAbsolutePath());
+  String content = "file content";
+  Path path = path("my/dir/myFile");
 
   @Test
   public void root() throws Exception {
@@ -289,5 +290,67 @@ public class DiskFileSystemTest extends TestCaseWithTempDir {
   @Test
   public void delete_does_nothing_for_nonexistent_path() throws Exception {
     fileSystem.delete(path("nonexistent"));
+  }
+
+  // links
+
+  @Test
+  public void link_contains_data_from_target() throws Exception {
+    writeAndClose(fileSystem.openOutputStream(path), content);
+    Path linkPath = path("link");
+
+    fileSystem.createLink(linkPath, path);
+
+    assertContent(fileSystem.openInputStream(linkPath), content);
+  }
+
+  @Test
+  public void creating_links_creates_missing_directories() throws Exception {
+    writeAndClose(fileSystem.openOutputStream(path), content);
+    Path linkPath = path("very/long/directory/name/link");
+
+    fileSystem.createLink(linkPath, path);
+
+    assertThat(fileSystem.pathState(linkPath)).isEqualTo(FILE);
+  }
+
+  @Test
+  public void deleting_link_to_file_does_not_delete_target() throws Exception {
+    writeAndClose(fileSystem.openOutputStream(path), content);
+    Path linkPath = path("my/link");
+    fileSystem.createLink(linkPath, path);
+
+    fileSystem.delete(linkPath);
+
+    assertThat(fileSystem.pathState(path)).isEqualTo(FILE);
+    assertThat(fileSystem.pathState(linkPath)).isEqualTo(NOTHING);
+  }
+
+  @Test
+  public void link_to_a_directory() throws Exception {
+    Path dir = path("dir1");
+    Path file = path("file");
+    Path targetPath = dir.append(file);
+    writeAndClose(fileSystem.openOutputStream(targetPath), content);
+
+    Path dirLink = path("dir2");
+    Path linkPath = dirLink.append(file);
+
+    fileSystem.createLink(dirLink, dir);
+
+    assertContent(fileSystem.openInputStream(linkPath), content);
+  }
+
+  @Test
+  public void deleting_link_to_directory_does_not_delete_target() throws Exception {
+    Path dir = path("dir1");
+    Path dirLink = path("dir2");
+    writeAndClose(fileSystem.openOutputStream(dir.append(path("ignore"))), content);
+
+    fileSystem.createLink(dirLink, dir);
+    fileSystem.delete(dirLink);
+
+    assertThat(fileSystem.pathState(dirLink)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
   }
 }

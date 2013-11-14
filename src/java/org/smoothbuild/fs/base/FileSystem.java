@@ -22,4 +22,6 @@ public interface FileSystem {
   public InputStream openInputStream(Path path);
 
   public OutputStream openOutputStream(Path path);
+
+  public void createLink(Path link, Path target);
 }
