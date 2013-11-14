@@ -15,6 +15,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import javax.inject.Singleton;
 
@@ -25,7 +26,9 @@ import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
+import org.smoothbuild.fs.base.exc.NoSuchPathException;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -124,6 +127,32 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
+  @Override
+  public void createLink(Path link, Path target) {
+    assertPathExists(target);
+
+    if (link.isRoot()) {
+      throw new FileSystemException("Cannot create link " + link + " as it is directory.");
+    }
+    createDirectory(link.parent());
+
+    try {
+      String escape = escapeString(link.parts().size());
+      java.nio.file.Path targetJdkPath = Paths.get(escape, target.value());
+      Files.createSymbolicLink(jdkPath(link), targetJdkPath);
+    } catch (FileAlreadyExistsException e) {
+      throw new CannotCreateFileException(link, e);
+    } catch (IOException e) {
+      throw new FileSystemException(e);
+    }
+  }
+
+  private static String escapeString(int length) {
+    String[] escapeElements = new String[length - 1];
+    Arrays.fill(escapeElements, "..");
+    return Joiner.on('/').join(escapeElements);
+  }
+
   private void assertDirExists(Path directory) {
     if (pathState(directory) != DIR) {
       throw new NoSuchDirException(directory);
@@ -133,6 +162,12 @@ public class DiskFileSystem implements FileSystem {
   private void assertFileExists(Path path) {
     if (pathState(path) != FILE) {
       throw new NoSuchFileException(path);
+    }
+  }
+
+  private void assertPathExists(Path path) {
+    if (pathState(path) == NOTHING) {
+      throw new NoSuchPathException(path);
     }
   }
 

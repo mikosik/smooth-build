@@ -5,6 +5,7 @@ import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.fs.base.PathState.DIR;
 import static org.smoothbuild.fs.base.PathState.FILE;
 import static org.smoothbuild.fs.base.PathState.NOTHING;
+import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import java.io.IOException;
@@ -22,6 +23,8 @@ import com.google.common.io.LineReader;
 
 public class MemoryFileSystemTest {
   MemoryFileSystem fileSystem = new MemoryFileSystem();
+  String content = "file content";
+  Path path = path("my/dir/myFile");
 
   @Test
   public void root() throws Exception {
@@ -98,7 +101,6 @@ public class MemoryFileSystemTest {
 
   @Test
   public void childNamesThrowsExceptionWhenPathIsAFile() throws Exception {
-    Path path = path("abc");
     createEmptyFile(path);
     try {
       fileSystem.childNames(path("abc"));
@@ -128,14 +130,11 @@ public class MemoryFileSystemTest {
 
   @Test
   public void writingAndReading() throws Exception {
-    String line = "abcdefgh";
-    Path path = path("a/b/file.txt");
-
-    createFile(path, line);
+    createFile(path, content);
 
     LineReader reader = new LineReader(new InputStreamReader(fileSystem.openInputStream(path)));
 
-    assertThat(reader.readLine()).isEqualTo(line);
+    assertThat(reader.readLine()).isEqualTo(content);
     assertThat(reader.readLine()).isNull();
   }
 
@@ -195,17 +194,70 @@ public class MemoryFileSystemTest {
 
   @Test
   public void delete_file() throws Exception {
-    Path file = path("myFile");
-    createEmptyFile(file);
-
-    fileSystem.delete(file);
-    assertThat(fileSystem.pathState(file)).isEqualTo(NOTHING);
+    createEmptyFile(path);
+    fileSystem.delete(path);
+    assertThat(fileSystem.pathState(path)).isEqualTo(NOTHING);
   }
 
   @Test
   public void delete_does_nothing_for_nonexistet_path() throws Exception {
     fileSystem.delete(path("nonexistent"));
   }
+
+  // links
+
+  @Test
+  public void link_contains_data_from_target() throws Exception {
+    createFile(path, content);
+    Path linkPath = path("my/link");
+
+    fileSystem.createLink(linkPath, path);
+
+    assertContent(fileSystem.openInputStream(linkPath), content);
+  }
+
+  @Test
+  public void deleting_link_to_file_does_not_delete_target() throws Exception {
+    createFile(path, content);
+    Path linkPath = path("my/link");
+    fileSystem.createLink(linkPath, path);
+
+    fileSystem.delete(linkPath);
+
+    assertThat(fileSystem.pathState(path)).isEqualTo(FILE);
+    assertThat(fileSystem.pathState(linkPath)).isEqualTo(NOTHING);
+  }
+
+  @Test
+  public void link_to_a_directory() throws Exception {
+    Path dir = path("dir1");
+    Path file = path("file");
+    Path targetPath = dir.append(file);
+
+    Path dirLink = path("dir2");
+    Path linkPath = dirLink.append(file);
+
+    createFile(targetPath, content);
+
+    fileSystem.createLink(linkPath, targetPath);
+
+    assertContent(fileSystem.openInputStream(linkPath), content);
+  }
+
+  @Test
+  public void deleting_link_to_directory_does_not_delete_target() throws Exception {
+    Path dir = path("dir1");
+    Path dirLink = path("dir2");
+    createEmptyFile(dir.append(path("ignore")));
+
+    fileSystem.createLink(dirLink, dir);
+    fileSystem.delete(dirLink);
+
+    assertThat(fileSystem.pathState(dirLink)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
+  }
+
+  // helpers
 
   private void createEmptyFile(String path) throws IOException {
     createEmptyFile(path(path));

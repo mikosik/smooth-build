@@ -69,4 +69,13 @@ public class SubFileSystemTest {
     assertThat(subFileSystem.openOutputStream(path)).isSameAs(outputStream);
   }
 
+  @Test
+  public void createLink() {
+    Path link = path("my/link");
+    Path absoluteLink = root.append(link);
+
+    subFileSystem.createLink(link, path);
+    verify(fileSystem).createLink(absoluteLink, absolutePath);
+  }
+
 }
