@@ -54,7 +54,7 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public void addChild(MemoryElement newDir) {
+  public void addChild(MemoryElement element) {
     throw new UnsupportedOperationException();
   }
 
