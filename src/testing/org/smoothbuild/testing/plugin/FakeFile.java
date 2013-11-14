@@ -15,7 +15,7 @@ import com.google.common.hash.HashCode;
 
 public class FakeFile implements File {
   private final Path path;
-  private final Blob blob;
+  private final Blob content;
   private final HashCode hash;
 
   public FakeFile(Path path) {
@@ -28,8 +28,8 @@ public class FakeFile implements File {
 
   public FakeFile(Path path, byte[] bytes) {
     this.path = path;
-    this.blob = new FakeBlob(bytes);
-    this.hash = calculateHash(path, blob);
+    this.content = new FakeBlob(bytes);
+    this.hash = calculateHash(path, content);
   }
 
   @Override
@@ -48,8 +48,13 @@ public class FakeFile implements File {
   }
 
   @Override
+  public Blob content() {
+    return content;
+  }
+
+  @Override
   public InputStream openInputStream() {
-    return blob.openInputStream();
+    return content.openInputStream();
   }
 
   private static HashCode calculateHash(Path path, Blob blob) {
