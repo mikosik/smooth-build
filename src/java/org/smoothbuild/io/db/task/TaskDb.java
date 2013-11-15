@@ -9,7 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.io.db.hash.HashedDb;
-import org.smoothbuild.io.db.hash.HashedDbWithTasks;
+import org.smoothbuild.io.db.hash.TasksCache;
 import org.smoothbuild.io.db.hash.Marshaller;
 import org.smoothbuild.io.db.hash.Unmarshaller;
 import org.smoothbuild.io.db.value.ValueDb;
@@ -28,7 +28,7 @@ public class TaskDb {
   private final ValueDb valueDb;
 
   @Inject
-  public TaskDb(@HashedDbWithTasks HashedDb taskResultsDb, ValueDb valueDb) {
+  public TaskDb(@TasksCache HashedDb taskResultsDb, ValueDb valueDb) {
     this.taskResultsDb = taskResultsDb;
     this.valueDb = valueDb;
   }

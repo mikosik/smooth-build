@@ -5,8 +5,8 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import javax.inject.Singleton;
 
 import org.smoothbuild.io.db.hash.HashedDb;
-import org.smoothbuild.io.db.hash.HashedDbWithTasks;
-import org.smoothbuild.io.db.hash.HashedDbWithValues;
+import org.smoothbuild.io.db.hash.TasksCache;
+import org.smoothbuild.io.db.hash.ValuesCache;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -24,17 +24,17 @@ public class DbModule extends AbstractModule {
   protected void configure() {}
 
   @Singleton
-  @HashedDbWithTasks
+  @TasksCache
   @Provides
-  public HashedDb taskResultHashedDb(@SmoothDir FileSystem fileSystem) {
+  public HashedDb provideTasksCache(@SmoothDir FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, TASK_DB_DIR);
     return new HashedDb(objectsFileSystem);
   }
 
   @Singleton
-  @HashedDbWithValues
+  @ValuesCache
   @Provides
-  public HashedDb valuesHashedDb(@SmoothDir FileSystem fileSystem) {
+  public HashedDb provideValuesCache(@SmoothDir FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, VALUE_DB_DIR);
     return new HashedDb(objectsFileSystem);
   }
