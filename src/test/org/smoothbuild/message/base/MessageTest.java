@@ -7,7 +7,6 @@ import static org.smoothbuild.message.base.MessageType.WARNING;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
-import org.smoothbuild.message.base.Message;
 
 public class MessageTest {
 

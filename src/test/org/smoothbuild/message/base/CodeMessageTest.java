@@ -5,9 +5,6 @@ import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 
 import org.junit.Test;
-import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.base.CodeMessage;
-import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class CodeMessageTest {

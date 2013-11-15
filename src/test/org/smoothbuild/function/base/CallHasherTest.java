@@ -11,10 +11,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.CallHasher;
-import org.smoothbuild.function.base.Param;
-import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.base.FakeResult;
