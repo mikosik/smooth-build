@@ -6,8 +6,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.common.Closure;

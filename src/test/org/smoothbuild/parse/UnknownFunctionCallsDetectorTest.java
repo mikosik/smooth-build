@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.function.base.Name.name;
+import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.UnknownFunctionCallsDetector.detectUndefinedFunctions;
 import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
 
@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.ImmutableModule;
-import org.smoothbuild.function.base.Module;
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.function.base.ImmutableModule;
+import org.smoothbuild.lang.function.base.Module;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.UnknownFunctionCallError;
 import org.smoothbuild.testing.message.FakeMessageGroup;

@@ -7,7 +7,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.task.base.Task;
 
 public class TaskContainerCreatorTest {

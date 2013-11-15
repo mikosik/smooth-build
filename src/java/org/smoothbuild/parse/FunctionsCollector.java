@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.function.base.Name.isLegalName;
+import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.util.Map;
@@ -11,8 +11,8 @@ import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.function.base.Module;
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Module;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.parse.err.DuplicateFunctionError;

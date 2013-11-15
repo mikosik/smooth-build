@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.command.CommandLineParserPhase;
-import org.smoothbuild.function.base.Module;
+import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.parse.ModuleParserPhase;
 import org.smoothbuild.task.exec.ExecutionData;

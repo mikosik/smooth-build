@@ -2,7 +2,7 @@ package org.smoothbuild.testing.parse;
 
 import java.util.Set;
 
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.Dependency;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 

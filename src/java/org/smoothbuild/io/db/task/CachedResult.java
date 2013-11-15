@@ -1,7 +1,7 @@
 package org.smoothbuild.io.db.task;
 
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.plugin.Value;
 
 import com.google.common.collect.ImmutableList;
 

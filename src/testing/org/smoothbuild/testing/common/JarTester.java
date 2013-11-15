@@ -10,7 +10,7 @@ import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.plugin.FakeFile;
+import org.smoothbuild.testing.lang.plugin.FakeFile;
 
 public class JarTester {
   public static FakeFile jaredFiles(String... fileNames) throws IOException {

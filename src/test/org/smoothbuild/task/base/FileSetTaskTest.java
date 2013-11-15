@@ -3,16 +3,16 @@ package org.smoothbuild.task.base;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.plugin.FileSetMatchers.containsFileContainingItsPath;
+import static org.smoothbuild.testing.lang.plugin.FileSetMatchers.containsFileContainingItsPath;
 
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.plugin.FileSet;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCodeLocation;

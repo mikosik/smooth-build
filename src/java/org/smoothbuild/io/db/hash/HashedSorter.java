@@ -2,7 +2,7 @@ package org.smoothbuild.io.db.hash;
 
 import java.util.List;
 
-import org.smoothbuild.plugin.Hashed;
+import org.smoothbuild.lang.plugin.Hashed;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;

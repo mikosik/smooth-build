@@ -2,10 +2,10 @@ package org.smoothbuild.task.base;
 
 import java.util.List;
 
+import org.smoothbuild.lang.plugin.StringSetBuilder;
+import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.plugin.StringSetBuilder;
-import org.smoothbuild.plugin.StringValue;
-import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableList;

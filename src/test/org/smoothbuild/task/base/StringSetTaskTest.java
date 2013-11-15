@@ -1,13 +1,13 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.testing.plugin.StringSetMatchers.containsOnly;
+import static org.smoothbuild.testing.lang.plugin.StringSetMatchers.containsOnly;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.plugin.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;

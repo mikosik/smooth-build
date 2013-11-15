@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import java.util.Set;
 
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Name;
 
 public class DependencyStackElem {
   private final Name name;

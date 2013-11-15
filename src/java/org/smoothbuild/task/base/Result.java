@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.lang.plugin.Value;
 
 public interface Result {
   public Value result();

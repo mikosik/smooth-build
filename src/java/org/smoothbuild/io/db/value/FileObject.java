@@ -4,11 +4,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.InputStream;
 
-import org.smoothbuild.function.base.Type;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.plugin.Blob;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.plugin.Blob;
+import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.plugin.Value;
 
 import com.google.common.hash.HashCode;
 

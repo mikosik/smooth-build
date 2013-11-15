@@ -2,7 +2,7 @@ package org.smoothbuild.command.err;
 
 import static org.smoothbuild.message.base.MessageType.WARNING;
 
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.Message;
 
 public class DuplicatedFunctionNameWarning extends Message {

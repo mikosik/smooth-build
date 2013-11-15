@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 

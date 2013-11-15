@@ -1,11 +1,11 @@
 package org.smoothbuild.command;
 
-import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.function.base.Name.name;
 
 import org.junit.Test;
-import org.smoothbuild.function.base.Name;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.base.Name;
 
 import com.google.common.collect.ImmutableList;
 
