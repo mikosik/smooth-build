@@ -1,20 +1,20 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.db.DbModule.RESULTS_DIR;
-import static org.smoothbuild.db.DbModule.VALUE_DB_DIR;
-import static org.smoothbuild.db.hash.HashCodes.toPath;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.db.DbModule.RESULTS_DIR;
+import static org.smoothbuild.io.db.DbModule.VALUE_DB_DIR;
+import static org.smoothbuild.io.db.hash.HashCodes.toPath;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.fs.SmoothDir;
-import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Name;
+import org.smoothbuild.io.fs.SmoothDir;
+import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;

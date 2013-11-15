@@ -6,7 +6,7 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.util.ForwardingOutputStream;

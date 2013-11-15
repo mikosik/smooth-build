@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Name;
+import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.collect.ImmutableList;
 

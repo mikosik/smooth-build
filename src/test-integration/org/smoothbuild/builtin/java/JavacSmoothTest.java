@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.java;
 
 import static com.google.common.io.ByteStreams.toByteArray;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 

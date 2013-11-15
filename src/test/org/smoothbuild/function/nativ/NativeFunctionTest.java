@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.testing.function.base.FakeSignature.fakeSignature;
 
 import org.junit.Test;
-import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.Signature;
+import org.smoothbuild.io.db.task.TaskDb;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;

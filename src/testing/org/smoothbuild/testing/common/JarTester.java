@@ -8,8 +8,8 @@ import java.io.OutputStreamWriter;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.plugin.FakeFile;
 
 public class JarTester {

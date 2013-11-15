@@ -1,10 +1,10 @@
 package org.smoothbuild.command;
 
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.nio.charset.Charset;
 
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.base.Charsets;
 

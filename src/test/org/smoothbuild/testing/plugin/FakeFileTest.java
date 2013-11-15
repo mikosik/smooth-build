@@ -2,15 +2,15 @@ package org.smoothbuild.testing.plugin;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.util.Streams;
 import org.testory.common.Closure;
 

@@ -1,14 +1,14 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 public class ZipTester {
 

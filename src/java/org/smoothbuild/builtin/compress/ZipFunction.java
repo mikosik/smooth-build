@@ -1,15 +1,15 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;

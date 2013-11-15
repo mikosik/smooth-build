@@ -2,8 +2,8 @@ package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.FileSystemModule.SMOOTH_DIR;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.plugin.FileSetMatchers.containsFileContainingItsPath;
 
 import org.junit.Test;
@@ -13,11 +13,11 @@ import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.StringValue;
-import org.smoothbuild.testing.fs.base.PathTesting;
+import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.plugin.FakeString;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 

@@ -6,7 +6,7 @@ import javax.tools.JavaFileObject;
 
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;

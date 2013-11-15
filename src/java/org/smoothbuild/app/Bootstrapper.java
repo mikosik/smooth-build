@@ -1,8 +1,8 @@
 package org.smoothbuild.app;
 
 import org.smoothbuild.builtin.BuiltinModule;
-import org.smoothbuild.db.DbModule;
-import org.smoothbuild.fs.FileSystemModule;
+import org.smoothbuild.io.db.DbModule;
+import org.smoothbuild.io.fs.FileSystemModule;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

@@ -3,8 +3,8 @@ package org.smoothbuild.function.def;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Type.FILE_SET;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.plugin.FileSetMatchers.containsFileContainingItsPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -12,7 +12,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;

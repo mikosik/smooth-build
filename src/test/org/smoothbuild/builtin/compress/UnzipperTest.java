@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 
@@ -10,12 +10,12 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.testing.common.ZipTester;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.plugin.FakeFile;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 

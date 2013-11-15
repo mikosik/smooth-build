@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file.err;
 
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 

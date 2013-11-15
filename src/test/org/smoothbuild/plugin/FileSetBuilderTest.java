@@ -12,9 +12,9 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.err.CannotAddDuplicatePathError;
-import org.smoothbuild.testing.db.value.FakeValueDb;
+import org.smoothbuild.testing.io.db.value.FakeValueDb;
 
 public class FileSetBuilderTest {
   String content = "content";

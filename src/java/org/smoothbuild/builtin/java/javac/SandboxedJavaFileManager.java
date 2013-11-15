@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.fs.base.Path.validationError;
+import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import java.io.IOException;
 import java.util.Set;

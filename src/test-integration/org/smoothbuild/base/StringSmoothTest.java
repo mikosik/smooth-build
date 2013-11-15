@@ -1,6 +1,6 @@
 package org.smoothbuild.base;
 
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 

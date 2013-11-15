@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.java.javac;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.InputStream;
 import java.net.URI;

@@ -8,8 +8,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
-import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.Required;

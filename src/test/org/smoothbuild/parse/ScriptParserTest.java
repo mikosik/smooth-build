@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.junit.Assert.fail;
 import static org.smoothbuild.command.SmoothContants.CHARSET;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.parse.ScriptBuilder.script;
 
 import java.io.ByteArrayInputStream;

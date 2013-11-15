@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.file.err;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.Message;
 
 public class DirParamSubdirIsAFileError extends Message {

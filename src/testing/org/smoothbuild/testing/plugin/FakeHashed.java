@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.plugin;
 
-import org.smoothbuild.db.hash.Hash;
+import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.plugin.Hashed;
 
 import com.google.common.hash.HashCode;

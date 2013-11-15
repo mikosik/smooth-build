@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file.err;
 
-import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
+import static org.smoothbuild.io.fs.FileSystemModule.SMOOTH_DIR;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import org.smoothbuild.message.base.Message;

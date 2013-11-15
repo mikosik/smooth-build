@@ -4,10 +4,10 @@ import static org.smoothbuild.command.SmoothContants.CHARSET;
 
 import java.io.InputStream;
 
-import org.smoothbuild.db.hash.Hash;
-import org.smoothbuild.db.hash.Marshaller;
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.io.db.hash.Hash;
+import org.smoothbuild.io.db.hash.Marshaller;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.Blob;
 import org.smoothbuild.plugin.File;
 

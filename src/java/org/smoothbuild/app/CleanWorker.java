@@ -1,11 +1,11 @@
 package org.smoothbuild.app;
 
-import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
+import static org.smoothbuild.io.fs.FileSystemModule.SMOOTH_DIR;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.fs.ProjectDir;
-import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.io.fs.ProjectDir;
+import org.smoothbuild.io.fs.base.FileSystem;
 
 public class CleanWorker {
   private final FileSystem fileSystem;

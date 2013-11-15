@@ -1,10 +1,10 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.DuplicateMergedPathError;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 

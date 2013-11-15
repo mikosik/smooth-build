@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;
