@@ -1,8 +1,8 @@
 package org.smoothbuild.command;
 
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
-import static org.smoothbuild.function.base.Name.isLegalName;
-import static org.smoothbuild.function.base.Name.name;
+import static org.smoothbuild.lang.function.base.Name.isLegalName;
+import static org.smoothbuild.lang.function.base.Name.name;
 
 import java.util.List;
 import java.util.Set;
@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import org.smoothbuild.command.err.DuplicatedFunctionNameWarning;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.command.err.NothingToDoError;
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
 

@@ -3,11 +3,11 @@ package org.smoothbuild.task.base;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.smoothbuild.function.base.Type;
-import org.smoothbuild.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;

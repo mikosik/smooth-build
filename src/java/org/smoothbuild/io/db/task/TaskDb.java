@@ -8,17 +8,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.function.base.Type;
 import org.smoothbuild.io.db.hash.HashedDb;
 import org.smoothbuild.io.db.hash.HashedDbWithTasks;
 import org.smoothbuild.io.db.hash.Marshaller;
 import org.smoothbuild.io.db.hash.Unmarshaller;
 import org.smoothbuild.io.db.value.ValueDb;
+import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.plugin.StringValue;
-import org.smoothbuild.plugin.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

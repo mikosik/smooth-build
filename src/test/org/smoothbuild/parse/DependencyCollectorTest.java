@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.function.base.Name.name;
+import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
 import static org.smoothbuild.testing.parse.FakeModuleContext.moduleCtx;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 import org.smoothbuild.testing.parse.FakeFunctionContext;
 import org.smoothbuild.testing.parse.FakeModuleContext;

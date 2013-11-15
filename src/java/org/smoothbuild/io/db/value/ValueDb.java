@@ -11,11 +11,11 @@ import org.smoothbuild.io.db.hash.HashedDbWithValues;
 import org.smoothbuild.io.db.hash.Marshaller;
 import org.smoothbuild.io.db.hash.Unmarshaller;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.plugin.File;
-import org.smoothbuild.plugin.FileSet;
-import org.smoothbuild.plugin.Hashed;
-import org.smoothbuild.plugin.StringSet;
-import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.plugin.FileSet;
+import org.smoothbuild.lang.plugin.Hashed;
+import org.smoothbuild.lang.plugin.StringSet;
+import org.smoothbuild.lang.plugin.StringValue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

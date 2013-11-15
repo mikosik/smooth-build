@@ -2,8 +2,8 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public abstract class Task {

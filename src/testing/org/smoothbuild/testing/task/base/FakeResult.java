@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.task.base;
 
-import org.smoothbuild.plugin.Value;
+import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.task.base.Result;
 
 public class FakeResult implements Result {

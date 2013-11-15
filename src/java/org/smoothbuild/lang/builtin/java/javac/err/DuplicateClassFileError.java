@@ -1,0 +1,13 @@
+package org.smoothbuild.lang.builtin.java.javac.err;
+
+import static org.smoothbuild.message.base.MessageType.ERROR;
+
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.message.base.Message;
+
+public class DuplicateClassFileError extends Message {
+  public DuplicateClassFileError(Path path, Path jar1, Path jar2) {
+    super(ERROR, "File " + path + " is contained by both library jar files: " + jar1 + " and "
+        + jar2 + ".");
+  }
+}

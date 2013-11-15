@@ -3,7 +3,7 @@ package org.smoothbuild.command;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
-import static org.smoothbuild.function.base.Name.name;
+import static org.smoothbuild.lang.function.base.Name.name;
 
 import org.junit.Test;
 import org.smoothbuild.command.err.IllegalFunctionNameError;

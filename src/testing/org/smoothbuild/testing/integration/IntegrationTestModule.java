@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.integration;
 
-import org.smoothbuild.builtin.BuiltinModule;
 import org.smoothbuild.io.db.DbModule;
+import org.smoothbuild.lang.builtin.BuiltinModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystemModule;
 import org.smoothbuild.testing.message.FakeUserConsoleModule;
 

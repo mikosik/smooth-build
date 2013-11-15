@@ -5,10 +5,10 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.plugin.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.plugin.StringValue;
+import org.smoothbuild.testing.lang.plugin.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;
-import org.smoothbuild.testing.plugin.FakeString;
 
 public class StringTaskTest {
   StringValue string = new FakeString("some string");

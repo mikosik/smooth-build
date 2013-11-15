@@ -3,9 +3,9 @@ package org.smoothbuild.task.exec;
 import javax.inject.Inject;
 
 import org.smoothbuild.command.CommandLineArguments;
-import org.smoothbuild.function.base.Function;
-import org.smoothbuild.function.base.Module;
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.function.base.Module;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.err.UnknownFunctionError;
 

@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.smoothbuild.function.base.Name;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 
