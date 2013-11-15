@@ -9,9 +9,9 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
-import org.smoothbuild.io.db.hash.Hash;
-import org.smoothbuild.io.db.task.CachedResult;
-import org.smoothbuild.io.db.task.TaskDb;
+import org.smoothbuild.io.cache.hash.Hash;
+import org.smoothbuild.io.cache.task.CachedResult;
+import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.message.base.CodeLocation;

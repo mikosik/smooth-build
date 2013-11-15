@@ -2,8 +2,8 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.io.db.task.CachedResult;
-import org.smoothbuild.io.db.task.TaskDb;
+import org.smoothbuild.io.cache.task.CachedResult;
+import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
 import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.base.Message;

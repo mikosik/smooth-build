@@ -1,6 +1,6 @@
 package org.smoothbuild.app;
 
-import org.smoothbuild.io.db.DbModule;
+import org.smoothbuild.io.cache.CacheModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.lang.builtin.BuiltinModule;
 
@@ -17,7 +17,7 @@ public class Bootstrapper {
   public static class MainModule extends AbstractModule {
     @Override
     protected void configure() {
-      install(new DbModule());
+      install(new CacheModule());
       install(new FileSystemModule());
       install(new BuiltinModule());
     }

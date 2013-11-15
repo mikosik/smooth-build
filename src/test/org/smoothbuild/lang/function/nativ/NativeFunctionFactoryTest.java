@@ -10,7 +10,7 @@ import static org.smoothbuild.lang.function.base.Type.STRING;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import org.junit.Test;
-import org.smoothbuild.io.db.task.TaskDb;
+import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;

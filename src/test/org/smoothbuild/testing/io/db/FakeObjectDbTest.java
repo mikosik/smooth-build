@@ -10,7 +10,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.testing.io.db.value.FakeValueDb;
+import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 
 public class FakeObjectDbTest {
   Path path = Path.path("my/file");

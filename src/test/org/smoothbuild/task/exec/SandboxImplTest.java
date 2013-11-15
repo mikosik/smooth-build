@@ -22,7 +22,7 @@ import org.smoothbuild.lang.plugin.StringSetBuilder;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.io.db.value.FakeValueDb;
+import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.function.value.FileSetMatchers;
 import org.smoothbuild.testing.message.FakeCodeLocation;

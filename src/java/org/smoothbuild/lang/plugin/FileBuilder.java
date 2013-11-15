@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.io.db.value.ValueDb;
+import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.value.File;
 

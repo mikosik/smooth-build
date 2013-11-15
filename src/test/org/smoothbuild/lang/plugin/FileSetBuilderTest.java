@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.plugin.err.CannotAddDuplicatePathError;
-import org.smoothbuild.testing.io.db.value.FakeValueDb;
+import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 
 public class FileSetBuilderTest {
   String content = "content";

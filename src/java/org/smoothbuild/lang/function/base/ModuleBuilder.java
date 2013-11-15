@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.io.db.task.TaskDb;
+import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 
 import com.google.common.collect.Maps;
