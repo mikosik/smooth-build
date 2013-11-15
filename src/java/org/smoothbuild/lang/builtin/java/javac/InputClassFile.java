@@ -11,7 +11,7 @@ import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.function.value.File;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final File file;

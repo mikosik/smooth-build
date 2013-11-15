@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 import org.smoothbuild.io.db.hash.HashedDb;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.Blob;
+import org.smoothbuild.lang.function.value.Blob;
 
 import com.google.common.hash.HashCode;
 

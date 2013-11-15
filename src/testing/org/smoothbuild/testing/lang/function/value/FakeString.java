@@ -1,10 +1,10 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.function.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.StringValue;
 
 import com.google.common.hash.HashCode;
 

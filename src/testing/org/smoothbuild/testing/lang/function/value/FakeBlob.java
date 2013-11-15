@@ -1,11 +1,11 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.function.value;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.Blob;
+import org.smoothbuild.lang.function.value.Blob;
 
 import com.google.common.hash.HashCode;
 

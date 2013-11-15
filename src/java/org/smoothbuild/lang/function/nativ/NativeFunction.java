@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.NativeCallTask;
 import org.smoothbuild.task.base.Result;

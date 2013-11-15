@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.builtin.file;
 
 import org.smoothbuild.lang.builtin.file.err.DuplicateMergedPathError;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.lang.plugin.FileSet;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;

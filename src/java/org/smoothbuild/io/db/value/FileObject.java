@@ -6,9 +6,9 @@ import java.io.InputStream;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.Blob;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.lang.plugin.Value;
+import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.Value;
 
 import com.google.common.hash.HashCode;
 

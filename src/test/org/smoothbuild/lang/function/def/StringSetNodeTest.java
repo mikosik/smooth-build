@@ -3,15 +3,15 @@ package org.smoothbuild.lang.function.def;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Type.STRING_SET;
-import static org.smoothbuild.testing.lang.plugin.StringSetMatchers.containsOnly;
+import static org.smoothbuild.testing.lang.function.value.StringSetMatchers.containsOnly;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.lang.plugin.StringSet;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.StringSet;
+import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;

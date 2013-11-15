@@ -8,7 +8,7 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.function.value.File;
 
 import com.google.common.io.CharStreams;
 

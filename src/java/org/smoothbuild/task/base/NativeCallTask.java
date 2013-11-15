@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.plugin.Value;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.base.err.NullResultError;

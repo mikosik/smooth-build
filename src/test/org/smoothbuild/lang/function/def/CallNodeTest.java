@@ -14,7 +14,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.lang.plugin.FakeString;
+import org.smoothbuild.testing.lang.function.value.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 

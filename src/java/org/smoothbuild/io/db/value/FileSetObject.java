@@ -5,9 +5,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Iterator;
 
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.lang.plugin.FileSet;
-import org.smoothbuild.lang.plugin.Value;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.FileSet;
+import org.smoothbuild.lang.function.value.Value;
 
 import com.google.common.hash.HashCode;
 

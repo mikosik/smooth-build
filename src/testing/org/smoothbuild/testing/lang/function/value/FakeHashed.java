@@ -1,7 +1,7 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.function.value;
 
 import org.smoothbuild.io.db.hash.Hash;
-import org.smoothbuild.lang.plugin.Hashed;
+import org.smoothbuild.lang.function.value.Hashed;
 
 import com.google.common.hash.HashCode;
 

@@ -17,11 +17,11 @@ import static org.smoothbuild.lang.function.base.Type.javaResultTypetoType;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Type.EmptySet;
-import org.smoothbuild.lang.plugin.Blob;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.lang.plugin.FileSet;
-import org.smoothbuild.lang.plugin.StringSet;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.FileSet;
+import org.smoothbuild.lang.function.value.StringSet;
+import org.smoothbuild.lang.function.value.StringValue;
 
 import com.google.inject.TypeLiteral;
 

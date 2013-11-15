@@ -9,8 +9,10 @@ import java.util.Iterator;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.StringSet;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.StringSet;
+import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.testing.lang.function.value.FakeString;
+import org.smoothbuild.testing.lang.function.value.StringSetMatchers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

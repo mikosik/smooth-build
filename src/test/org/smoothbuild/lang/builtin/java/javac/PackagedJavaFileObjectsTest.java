@@ -9,7 +9,7 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;

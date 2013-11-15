@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.def.CachingNode;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.StringNode;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.message.FakeCodeLocation;

@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.testing.lang.plugin.FakeFile;
-import org.smoothbuild.testing.lang.plugin.FileTester;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.testing.lang.function.value.FakeFile;
+import org.smoothbuild.testing.lang.function.value.FileTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 import com.google.common.collect.ImmutableList;

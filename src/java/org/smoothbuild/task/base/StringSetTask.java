@@ -2,9 +2,9 @@ package org.smoothbuild.task.base;
 
 import java.util.List;
 
+import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.lang.plugin.StringSetBuilder;
-import org.smoothbuild.lang.plugin.StringValue;
-import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
 

@@ -33,7 +33,7 @@ import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.lang.function.def.args.err.VoidArgError;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.plugin.Value;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;

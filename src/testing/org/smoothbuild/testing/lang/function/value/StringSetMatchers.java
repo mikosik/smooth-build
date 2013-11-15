@@ -1,12 +1,12 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.function.value;
 
 import java.util.Arrays;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.smoothbuild.lang.plugin.StringSet;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.StringSet;
+import org.smoothbuild.lang.function.value.StringValue;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;

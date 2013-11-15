@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 

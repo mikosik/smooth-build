@@ -43,7 +43,7 @@ import org.smoothbuild.lang.function.def.StringNode;
 import org.smoothbuild.lang.function.def.StringSetNode;
 import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.ArgumentNodesCreator;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;

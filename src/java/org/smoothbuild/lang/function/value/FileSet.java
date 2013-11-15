@@ -1,4 +1,5 @@
-package org.smoothbuild.lang.plugin;
+package org.smoothbuild.lang.function.value;
+
 
 
 public interface FileSet extends Iterable<File>, Value {}
