@@ -50,8 +50,8 @@ public class ValueDbTest {
   String string = "a string";
   String string2 = "a string 2";
 
-  BlobObject blob;
-  BlobObject blobRead;
+  CachedBlob blob;
+  CachedBlob blobRead;
 
   // file vs blob
 

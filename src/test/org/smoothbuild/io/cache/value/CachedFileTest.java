@@ -16,13 +16,13 @@ import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
 
-public class FileObjectTest {
+public class CachedFileTest {
   Path path = Path.path("my/file");
-  BlobObject content = mock(BlobObject.class);
+  CachedBlob content = mock(CachedBlob.class);
   HashCode hash = HashCode.fromInt(33);
   InputStream inputStream;
 
-  FileObject fileObject;
+  CachedFile cachedFile;
 
   @Test
   public void null_hash_is_forbidden() throws Exception {
@@ -44,22 +44,22 @@ public class FileObjectTest {
 
   @Test
   public void type() throws Exception {
-    given(fileObject = new FileObject(path, content, hash));
-    when(fileObject.type());
+    given(cachedFile = new CachedFile(path, content, hash));
+    when(cachedFile.type());
     thenReturned(Type.FILE);
   }
 
   @Test
   public void path() {
-    given(fileObject = new FileObject(path, content, hash));
-    when(fileObject.path());
+    given(cachedFile = new CachedFile(path, content, hash));
+    when(cachedFile.path());
     thenReturned(path);
   }
 
   @Test
   public void hash() throws Exception {
-    given(fileObject = new FileObject(path, content, hash));
-    when(fileObject.hash());
+    given(cachedFile = new CachedFile(path, content, hash));
+    when(cachedFile.hash());
     thenReturned(hash);
   }
 
@@ -67,16 +67,16 @@ public class FileObjectTest {
   public void openInputStream() throws Exception {
     given(inputStream = mock(InputStream.class));
     BDDMockito.given(content.openInputStream()).willReturn(inputStream);
-    given(fileObject = new FileObject(path, content, hash));
-    when(fileObject.openInputStream());
+    given(cachedFile = new CachedFile(path, content, hash));
+    when(cachedFile.openInputStream());
     thenReturned(inputStream);
   }
 
-  private static Closure fileObject(final Path path, final BlobObject content, final HashCode hash) {
+  private static Closure fileObject(final Path path, final CachedBlob content, final HashCode hash) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new FileObject(path, content, hash);
+        return new CachedFile(path, content, hash);
       }
     };
   }

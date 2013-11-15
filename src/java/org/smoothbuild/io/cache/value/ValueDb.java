@@ -32,11 +32,11 @@ public class ValueDb {
 
   public FileSet fileSet(List<File> elements) {
     HashCode hash = genericSet(elements);
-    return new FileSetObject(this, hash);
+    return new CachedFileSet(this, hash);
   }
 
   public FileSet fileSet(HashCode hash) {
-    return new FileSetObject(this, hash);
+    return new CachedFileSet(this, hash);
   }
 
   public Iterable<File> fileSetIterable(HashCode hash) {
@@ -51,11 +51,11 @@ public class ValueDb {
 
   public StringSet stringSet(List<StringValue> elements) {
     HashCode hash = genericSet(elements);
-    return new StringSetObject(this, hash);
+    return new CachedStringSet(this, hash);
   }
 
   public StringSet stringSet(HashCode hash) {
-    return new StringSetObject(this, hash);
+    return new CachedStringSet(this, hash);
   }
 
   public Iterable<StringValue> stringSetIterable(HashCode hash) {
@@ -83,7 +83,7 @@ public class ValueDb {
   // File
 
   public File file(Path path, byte[] bytes) {
-    BlobObject blob = blob(bytes);
+    CachedBlob blob = blob(bytes);
     HashCode contentHash = blob.hash();
 
     Marshaller marshaller = new Marshaller();
@@ -91,16 +91,16 @@ public class ValueDb {
     marshaller.write(path);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    return new FileObject(path, blob, hash);
+    return new CachedFile(path, blob, hash);
   }
 
   public File file(HashCode hash) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       HashCode blobHash = unmarshaller.readHash();
       Path path = unmarshaller.readPath();
-      BlobObject blob = blob(blobHash);
+      CachedBlob blob = blob(blobHash);
 
-      return new FileObject(path, blob, hash);
+      return new CachedFile(path, blob, hash);
     }
   }
 
@@ -108,21 +108,21 @@ public class ValueDb {
 
   public StringValue string(String string) {
     HashCode hash = hashedDb.store(string.getBytes(CHARSET));
-    return new StringObject(hashedDb, hash);
+    return new CachedString(hashedDb, hash);
   }
 
   public StringValue string(HashCode hash) {
-    return new StringObject(hashedDb, hash);
+    return new CachedString(hashedDb, hash);
   }
 
   // Blob
 
-  public BlobObject blob(byte[] objectBytes) {
+  public CachedBlob blob(byte[] objectBytes) {
     HashCode hash = hashedDb.store(objectBytes);
-    return new BlobObject(hashedDb, hash);
+    return new CachedBlob(hashedDb, hash);
   }
 
-  public BlobObject blob(HashCode hash) {
-    return new BlobObject(hashedDb, hash);
+  public CachedBlob blob(HashCode hash) {
+    return new CachedBlob(hashedDb, hash);
   }
 }

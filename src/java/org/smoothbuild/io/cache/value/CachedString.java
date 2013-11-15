@@ -13,11 +13,11 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.hash.HashCode;
 
-public class StringObject implements StringValue {
+public class CachedString implements StringValue {
   private final HashedDb hashedDb;
   private final HashCode hash;
 
-  public StringObject(HashedDb hashedDb, HashCode hash) {
+  public CachedString(HashedDb hashedDb, HashCode hash) {
     this.hashedDb = checkNotNull(hashedDb);
     this.hash = checkNotNull(hash);
   }

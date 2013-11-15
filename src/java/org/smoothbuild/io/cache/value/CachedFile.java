@@ -12,12 +12,12 @@ import org.smoothbuild.lang.function.value.Value;
 
 import com.google.common.hash.HashCode;
 
-public class FileObject implements File, Value {
+public class CachedFile implements File, Value {
   private final Path path;
-  private final BlobObject content;
+  private final CachedBlob content;
   private final HashCode hash;
 
-  public FileObject(Path path, BlobObject content, HashCode hash) {
+  public CachedFile(Path path, CachedBlob content, HashCode hash) {
     this.path = checkNotNull(path);
     this.content = checkNotNull(content);
     this.hash = checkNotNull(hash);

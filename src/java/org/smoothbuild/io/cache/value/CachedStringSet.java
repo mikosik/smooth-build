@@ -11,11 +11,11 @@ import org.smoothbuild.lang.function.value.Value;
 
 import com.google.common.hash.HashCode;
 
-public class StringSetObject implements StringSet, Value {
+public class CachedStringSet implements StringSet, Value {
   private final ValueDb valueDb;
   private final HashCode hash;
 
-  public StringSetObject(ValueDb valueDb, HashCode hash) {
+  public CachedStringSet(ValueDb valueDb, HashCode hash) {
     this.valueDb = checkNotNull(valueDb);
     this.hash = checkNotNull(hash);
   }

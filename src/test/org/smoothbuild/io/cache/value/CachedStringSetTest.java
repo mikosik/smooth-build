@@ -10,59 +10,60 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.StringValue;
 import org.testory.common.Closure;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class FileSetObjectTest {
+public class CachedStringSetTest {
   ValueDb valueDb = mock(ValueDb.class);
   HashCode hash = HashCode.fromInt(33);
-  File file = mock(File.class);
+  StringValue string = mock(StringValue.class);
 
-  FileSetObject fileSetObject;
+  CachedStringSet cachedStringSet;
 
   @Test
   public void null_object_db_is_forbidden() {
-    when(newFileSetObject(null, hash));
+    when(newStringSetObject(null, hash));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_hash_is_forbidden() {
-    when(newFileSetObject(valueDb, null));
+    when(newStringSetObject(valueDb, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void type() throws Exception {
-    given(fileSetObject = new FileSetObject(valueDb, hash));
-    when(fileSetObject.type());
-    thenReturned(Type.FILE_SET);
+    given(cachedStringSet = new CachedStringSet(valueDb, hash));
+    when(cachedStringSet.type());
+    thenReturned(Type.STRING_SET);
   }
 
   @Test
   public void hash_passed_to_constructor_is_returned_from_hash_method() throws Exception {
-    given(fileSetObject = new FileSetObject(valueDb, hash));
-    when(fileSetObject.hash());
+    given(cachedStringSet = new CachedStringSet(valueDb, hash));
+    when(cachedStringSet.hash());
     thenReturned(hash);
   }
 
   @Test
   public void iterator_is_taken_from_object_db() throws Exception {
-    BDDMockito.given(valueDb.fileSetIterable(hash)).willReturn(ImmutableList.of(file));
-    given(fileSetObject = new FileSetObject(valueDb, hash));
-    when(ImmutableList.copyOf(fileSetObject.iterator()));
-    thenReturned(contains(file));
+    BDDMockito.given(valueDb.stringSetIterable(hash)).willReturn(ImmutableList.of(string));
+    given(cachedStringSet = new CachedStringSet(valueDb, hash));
+    when(ImmutableList.copyOf(cachedStringSet.iterator()));
+    thenReturned(contains(string));
   }
 
-  private static Closure newFileSetObject(final ValueDb valueDb, final HashCode hash) {
+  private static Closure newStringSetObject(final ValueDb valueDb, final HashCode hash) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new FileSetObject(valueDb, hash);
+        return new CachedStringSet(valueDb, hash);
       }
     };
   }
+
 }
