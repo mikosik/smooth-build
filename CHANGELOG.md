@@ -5,6 +5,7 @@ Version 0.5.0 (??????????)
 --------------------------
 
  * allowed dots ('.') in function names
+ * artifacts returned by function passed to build command are stored in '.smooth/results' dir
 
 Version 0.4.0 (2013.11.08)
 --------------------------

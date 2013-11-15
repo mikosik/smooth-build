@@ -16,8 +16,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 public class DbModule extends AbstractModule {
-  private static final Path VALUE_DB_DIR = path("values");
-  private static final Path TASK_DB_DIR = path("tasks");
+  public static final Path VALUE_DB_DIR = path("values");
+  public static final Path TASK_DB_DIR = path("tasks");
+  public static final Path RESULTS_DIR = path("results");
 
   @Override
   protected void configure() {}
