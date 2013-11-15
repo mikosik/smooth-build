@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +11,8 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.smoothbuild.builtin.compress.Constants;
-import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;

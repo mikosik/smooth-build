@@ -1,14 +1,14 @@
 package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.fs.base.PathState.NOTHING;
+import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
 import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 import com.google.common.collect.ImmutableList;

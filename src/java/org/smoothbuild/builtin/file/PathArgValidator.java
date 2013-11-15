@@ -1,10 +1,10 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.fs.base.Path.validationError;
+import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import org.smoothbuild.builtin.file.err.IllegalPathError;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.StringValue;
 

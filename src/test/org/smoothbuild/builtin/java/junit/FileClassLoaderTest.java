@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.junit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 
 import java.io.InputStream;

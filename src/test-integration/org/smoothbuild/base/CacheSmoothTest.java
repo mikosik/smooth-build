@@ -3,11 +3,11 @@ package org.smoothbuild.base;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.fs.base.Path.path;
 import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.FILE;
 import static org.smoothbuild.function.base.Type.STRING;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.util.Map;
 
@@ -20,7 +20,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.smoothbuild.builtin.Builtin;
 import org.smoothbuild.builtin.BuiltinFunctions;
-import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.function.base.Module;
 import org.smoothbuild.function.base.ModuleBuilder;
 import org.smoothbuild.function.base.Param;
@@ -28,6 +27,7 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.function.nativ.NativeFunctionFactory;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;

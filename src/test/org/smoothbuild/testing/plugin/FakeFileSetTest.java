@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.plugin;
 
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;

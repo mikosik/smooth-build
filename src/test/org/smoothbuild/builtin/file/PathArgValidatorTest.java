@@ -6,7 +6,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.testing.fs.base.PathTesting;
+import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.plugin.FakeString;
 
 public class PathArgValidatorTest {

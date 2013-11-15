@@ -1,9 +1,9 @@
 package org.smoothbuild.builtin.java;
 
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.integration.IntegrationTestCase;

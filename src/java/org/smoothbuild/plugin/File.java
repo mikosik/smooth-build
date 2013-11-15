@@ -2,7 +2,7 @@ package org.smoothbuild.plugin;
 
 import java.io.InputStream;
 
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 
 public interface File extends Value {
   public Path path();

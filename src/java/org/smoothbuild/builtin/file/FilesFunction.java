@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
+import static org.smoothbuild.io.fs.FileSystemModule.SMOOTH_DIR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.copy;
 
@@ -9,8 +9,8 @@ import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.fs.base.FileSystem;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.FileBuilder;

@@ -3,8 +3,8 @@ package org.smoothbuild.testing.plugin;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.smoothbuild.db.hash.Hash;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.plugin.Blob;
 
 import com.google.common.hash.HashCode;

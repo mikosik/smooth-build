@@ -1,8 +1,8 @@
 package org.smoothbuild.testing.task.exec;
 
 import org.smoothbuild.task.exec.SandboxImpl;
-import org.smoothbuild.testing.db.value.FakeValueDb;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.io.db.value.FakeValueDb;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 
 public class FakeSandbox extends SandboxImpl {

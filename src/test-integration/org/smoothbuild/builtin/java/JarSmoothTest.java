@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.java;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.command.SmoothContants.CHARSET;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -10,7 +10,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 public class JarSmoothTest extends IntegrationTestCase {

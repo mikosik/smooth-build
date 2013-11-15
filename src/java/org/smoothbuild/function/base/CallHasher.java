@@ -2,7 +2,7 @@ package org.smoothbuild.function.base;
 
 import java.util.Map;
 
-import org.smoothbuild.db.hash.Hash;
+import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.task.base.Result;
 
 import com.google.common.hash.HashCode;

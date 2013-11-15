@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
-import org.smoothbuild.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemException;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;

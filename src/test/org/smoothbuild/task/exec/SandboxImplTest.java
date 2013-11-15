@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
@@ -22,8 +22,8 @@ import org.smoothbuild.plugin.StringSetBuilder;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.db.value.FakeValueDb;
-import org.smoothbuild.testing.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.io.db.value.FakeValueDb;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.plugin.FileSetMatchers;
 

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.builtin.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
-import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 

@@ -12,7 +12,7 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 
 public class FileSetMatchersTest {
   FakeFile file;

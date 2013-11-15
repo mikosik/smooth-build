@@ -2,9 +2,9 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.db.task.CachedResult;
-import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.CallHasher;
+import org.smoothbuild.io.db.task.CachedResult;
+import org.smoothbuild.io.db.task.TaskDb;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.exec.SandboxImpl;

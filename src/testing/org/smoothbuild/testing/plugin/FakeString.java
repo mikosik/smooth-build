@@ -2,8 +2,8 @@ package org.smoothbuild.testing.plugin;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.db.hash.Hash;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.plugin.StringValue;
 
 import com.google.common.hash.HashCode;

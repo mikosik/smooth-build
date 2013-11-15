@@ -3,8 +3,8 @@ package org.smoothbuild.testing.plugin;
 import java.util.Iterator;
 import java.util.List;
 
-import org.smoothbuild.db.hash.Hash;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 

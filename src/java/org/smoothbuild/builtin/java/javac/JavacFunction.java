@@ -18,7 +18,7 @@ import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsEr
 import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
-import org.smoothbuild.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.File;

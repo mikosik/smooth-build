@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 

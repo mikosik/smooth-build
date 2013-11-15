@@ -1,8 +1,8 @@
 package org.smoothbuild.testing.integration;
 
 import org.smoothbuild.builtin.BuiltinModule;
-import org.smoothbuild.db.DbModule;
-import org.smoothbuild.testing.fs.base.FakeFileSystemModule;
+import org.smoothbuild.io.db.DbModule;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystemModule;
 import org.smoothbuild.testing.message.FakeUserConsoleModule;
 
 import com.google.inject.AbstractModule;

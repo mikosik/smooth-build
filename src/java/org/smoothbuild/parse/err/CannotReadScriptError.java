@@ -4,7 +4,7 @@ import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.io.IOException;
 
-import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.Message;
 
 public class CannotReadScriptError extends Message {
