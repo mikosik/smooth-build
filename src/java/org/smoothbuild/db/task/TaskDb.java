@@ -1,8 +1,8 @@
 package org.smoothbuild.db.task;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.List;
 
@@ -14,9 +14,9 @@ import org.smoothbuild.db.hash.Marshaller;
 import org.smoothbuild.db.hash.Unmarshaller;
 import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.function.base.Type;
+import org.smoothbuild.message.base.Message;
+import org.smoothbuild.message.base.MessageType;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.MessageType;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 

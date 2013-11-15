@@ -1,6 +1,6 @@
 package org.smoothbuild.function.def.args.err;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.util.List;
 import java.util.Set;
@@ -9,7 +9,7 @@ import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.args.Argument;
 import org.smoothbuild.function.def.args.AssignmentList;
 import org.smoothbuild.function.def.args.TypedParamsPool;
-import org.smoothbuild.message.message.CodeMessage;
+import org.smoothbuild.message.base.CodeMessage;
 
 public class AmbiguousNamelessArgsError extends CodeMessage {
 

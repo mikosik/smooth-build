@@ -3,7 +3,7 @@ package org.smoothbuild.util;
 import org.smoothbuild.function.base.Function;
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.Node;
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Result;
 

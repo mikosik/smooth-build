@@ -1,10 +1,10 @@
 package org.smoothbuild.function.def.args.err;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import org.smoothbuild.function.base.Name;
 import org.smoothbuild.function.def.args.Argument;
-import org.smoothbuild.message.message.CodeMessage;
+import org.smoothbuild.message.base.CodeMessage;
 
 public class UnknownParamNameError extends CodeMessage {
   public UnknownParamNameError(Name name, Argument argument) {

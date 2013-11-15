@@ -1,14 +1,14 @@
 package org.smoothbuild.testing.message;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.MessageType.FATAL;
-import static org.smoothbuild.message.message.MessageType.INFO;
-import static org.smoothbuild.message.message.MessageType.SUGGESTION;
-import static org.smoothbuild.message.message.MessageType.WARNING;
+import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.INFO;
+import static org.smoothbuild.message.base.MessageType.SUGGESTION;
+import static org.smoothbuild.message.base.MessageType.WARNING;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.message.base.Message;
 
 public class FakeMessageGroupTest {
   FakeMessageGroup testingProblemListener = new FakeMessageGroup();

@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 
 public class Dependency {
   private final CodeLocation location;

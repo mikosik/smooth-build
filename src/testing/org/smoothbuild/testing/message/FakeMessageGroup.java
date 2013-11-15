@@ -1,13 +1,13 @@
 package org.smoothbuild.testing.message;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.List;
 
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.message.message.Message;
 
 import com.google.common.collect.Lists;
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.common;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.ByteArrayInputStream;
@@ -11,8 +11,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.Message;
 
 import com.google.common.io.ByteStreams;
 

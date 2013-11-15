@@ -5,7 +5,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.smoothbuild.function.base.Name.name;
 import static org.smoothbuild.function.base.Param.param;
 import static org.smoothbuild.function.base.Type.STRING;
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.util.Map;
 
@@ -25,7 +25,7 @@ import org.smoothbuild.function.base.Signature;
 import org.smoothbuild.function.nativ.Invoker;
 import org.smoothbuild.function.nativ.NativeFunction;
 import org.smoothbuild.function.nativ.NativeFunctionFactory;
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.plugin.Sandbox;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;

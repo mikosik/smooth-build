@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import java.util.List;
 
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.plugin.StringSetBuilder;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;

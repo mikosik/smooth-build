@@ -1,10 +1,11 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
+import org.smoothbuild.message.base.CodeLocation;
 
 public class CodeLocationTest {
 

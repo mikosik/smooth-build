@@ -6,7 +6,7 @@ import static org.smoothbuild.function.base.Type.FILE_SET;
 import static org.smoothbuild.function.base.Type.STRING;
 import static org.smoothbuild.function.base.Type.STRING_SET;
 import static org.smoothbuild.function.def.args.Assignment.assignment;
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.Collection;
 import java.util.Map;
@@ -25,10 +25,10 @@ import org.smoothbuild.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.function.def.args.err.VoidArgError;
+import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.message.message.Message;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;

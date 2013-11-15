@@ -5,7 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.function.base.Function;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.Taskable;

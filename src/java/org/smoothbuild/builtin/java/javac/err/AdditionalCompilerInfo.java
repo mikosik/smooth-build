@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import static org.smoothbuild.message.message.MessageType.WARNING;
+import static org.smoothbuild.message.base.MessageType.WARNING;
 
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 
 public class AdditionalCompilerInfo extends Message {
   public AdditionalCompilerInfo(String message) {

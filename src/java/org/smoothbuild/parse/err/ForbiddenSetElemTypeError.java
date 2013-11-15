@@ -1,10 +1,10 @@
 package org.smoothbuild.parse.err;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import org.smoothbuild.function.base.Type;
-import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.message.message.CodeMessage;
+import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.message.base.CodeMessage;
 
 public class ForbiddenSetElemTypeError extends CodeMessage {
   public ForbiddenSetElemTypeError(CodeLocation codeLocation, Type type) {

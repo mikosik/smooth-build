@@ -1,11 +1,11 @@
 package org.smoothbuild.testing.message;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.MessageType.WARNING;
+import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.WARNING;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.message.base.Message;
 
 public class FakeUserConsoleTest {
   FakeUserConsole fakeUserConsole = new FakeUserConsole();

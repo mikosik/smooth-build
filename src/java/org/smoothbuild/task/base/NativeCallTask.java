@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.nativ.NativeFunction;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;

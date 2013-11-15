@@ -3,7 +3,7 @@ package org.smoothbuild.task.exec;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.fs.base.Path.path;
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSet;

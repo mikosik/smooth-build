@@ -1,6 +1,6 @@
 package org.smoothbuild.plugin;
 
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 
 public interface Sandbox {
   public void report(Message message);

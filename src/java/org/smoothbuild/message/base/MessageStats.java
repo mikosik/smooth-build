@@ -1,7 +1,7 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.base;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

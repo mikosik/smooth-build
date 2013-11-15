@@ -2,9 +2,9 @@ package org.smoothbuild.task.exec;
 
 import org.smoothbuild.db.value.ValueDb;
 import org.smoothbuild.fs.base.FileSystem;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.FileBuilder;
 import org.smoothbuild.plugin.FileSetBuilder;
 import org.smoothbuild.plugin.Sandbox;

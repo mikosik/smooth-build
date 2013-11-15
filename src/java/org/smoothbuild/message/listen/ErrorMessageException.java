@@ -2,7 +2,7 @@ package org.smoothbuild.message.listen;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 
 @SuppressWarnings("serial")
 public class ErrorMessageException extends RuntimeException {

@@ -1,7 +1,7 @@
 package org.smoothbuild.message.listen;
 
-import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.MessageType;
+import org.smoothbuild.message.base.Message;
+import org.smoothbuild.message.base.MessageType;
 
 public class PhaseFailedWithoutErrorError extends Message {
   public PhaseFailedWithoutErrorError() {

@@ -18,7 +18,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.Node;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 import com.google.common.collect.ImmutableList;

@@ -13,7 +13,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.task.base.Result;
