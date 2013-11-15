@@ -2,8 +2,8 @@ package org.smoothbuild.testing.integration;
 
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
+import static org.smoothbuild.io.IoConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.db.DbModule.RESULTS_DIR;
-import static org.smoothbuild.io.fs.FileSystemModule.SMOOTH_DIR;
 
 import java.io.IOException;
 

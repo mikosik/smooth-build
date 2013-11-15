@@ -1,17 +1,14 @@
 package org.smoothbuild.io.fs;
 
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.IoConstants.SMOOTH_DIR;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 public class FileSystemModule extends AbstractModule {
-  public static final Path SMOOTH_DIR = path(".smooth");
-
   @Override
   protected void configure() {}
 
