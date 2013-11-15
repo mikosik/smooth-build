@@ -5,7 +5,6 @@ import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
-import org.smoothbuild.message.base.CodeLocation;
 
 public class CodeLocationTest {
 

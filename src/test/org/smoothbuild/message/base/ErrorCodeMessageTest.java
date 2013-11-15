@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import org.junit.Test;
-import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class ErrorCodeMessageTest {
