@@ -7,7 +7,6 @@ import org.smoothbuild.builtin.file.FilesFunction;
 import org.smoothbuild.builtin.file.FilterFunction;
 import org.smoothbuild.builtin.file.MergeFunction;
 import org.smoothbuild.builtin.file.NewFileFunction;
-import org.smoothbuild.builtin.file.SaveFunction;
 import org.smoothbuild.builtin.java.JarFunction;
 import org.smoothbuild.builtin.java.UnjarFunction;
 import org.smoothbuild.builtin.java.javac.JavacFunction;
@@ -27,7 +26,6 @@ public class BuiltinFunctions {
     builder.add(NewFileFunction.class);
     builder.add(FilterFunction.class);
     builder.add(MergeFunction.class);
-    builder.add(SaveFunction.class);
 
     // java related
     builder.add(JavacFunction.class);
