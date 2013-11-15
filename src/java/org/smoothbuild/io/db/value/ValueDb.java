@@ -7,7 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.io.db.hash.HashedDb;
-import org.smoothbuild.io.db.hash.HashedDbWithValues;
+import org.smoothbuild.io.db.hash.ValuesCache;
 import org.smoothbuild.io.db.hash.Marshaller;
 import org.smoothbuild.io.db.hash.Unmarshaller;
 import org.smoothbuild.io.fs.base.Path;
@@ -24,7 +24,7 @@ public class ValueDb {
   private final HashedDb hashedDb;
 
   @Inject
-  public ValueDb(@HashedDbWithValues HashedDb hashedDb) {
+  public ValueDb(@ValuesCache HashedDb hashedDb) {
     this.hashedDb = hashedDb;
   }
 
