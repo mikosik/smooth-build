@@ -16,6 +16,10 @@ public class CannotCreateFileException extends FileSystemException {
     super(buildMessage(path), e);
   }
 
+  public CannotCreateFileException(Path path) {
+    super(buildMessage(path));
+  }
+
   private static String buildMessage(Path path) {
     return "File " + path + " cannot be created.";
   }

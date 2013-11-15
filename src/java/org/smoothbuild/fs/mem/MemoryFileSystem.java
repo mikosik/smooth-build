@@ -13,6 +13,7 @@ import java.util.List;
 import org.smoothbuild.fs.base.FileSystem;
 import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.fs.base.PathState;
+import org.smoothbuild.fs.base.exc.CannotCreateFileException;
 import org.smoothbuild.fs.base.exc.FileSystemException;
 import org.smoothbuild.fs.base.exc.NoSuchDirException;
 import org.smoothbuild.fs.base.exc.NoSuchFileException;
@@ -73,7 +74,7 @@ public class MemoryFileSystem implements FileSystem {
   @Override
   public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
-      throw new FileSystemException("Cannot open file " + path + " as it is directory.");
+      throw new CannotCreateFileException(path);
     }
     MemoryDirectory dir = createDirectory(path.parent());
 
@@ -83,7 +84,7 @@ public class MemoryFileSystem implements FileSystem {
       if (child.isFile()) {
         return child.createOutputStream();
       } else {
-        throw new FileSystemException("Cannot open file " + path + " as it is directory.");
+        throw new CannotCreateFileException(path);
       }
     }
 

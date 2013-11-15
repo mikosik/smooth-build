@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
 public class JdkFileTester {
 
   public static File createDir(File root, String dirName) {
@@ -20,7 +19,10 @@ public class JdkFileTester {
 
   public static File createFileContent(File root, String fileName, String content)
       throws IOException {
-    File file = new File(root, fileName);
+    return createFileContent(new File(root, fileName), content);
+  }
+
+  public static File createFileContent(File file, String content) throws IOException {
     FileOutputStream outputStream = new FileOutputStream(file);
     StreamTester.writeAndClose(outputStream, content);
     return file;
