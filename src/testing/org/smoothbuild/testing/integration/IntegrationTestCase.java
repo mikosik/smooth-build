@@ -2,12 +2,15 @@ package org.smoothbuild.testing.integration;
 
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
+import static org.smoothbuild.db.DbModule.RESULTS_DIR;
+import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
 
 import java.io.IOException;
 
 import org.junit.Before;
 import org.smoothbuild.app.BuildWorker;
 import org.smoothbuild.fs.ProjectDir;
+import org.smoothbuild.fs.base.Path;
 import org.smoothbuild.testing.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.parse.ScriptBuilder;
@@ -20,6 +23,8 @@ import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
 public class IntegrationTestCase extends AbstractModule {
+  public static final Path RESULTS_PATH = SMOOTH_DIR.append(RESULTS_DIR);
+
   protected FakeFileSystem fileSystem;
   protected FakeUserConsole userConsole;
   private BuildWorker buildWorker;

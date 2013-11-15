@@ -23,9 +23,7 @@ public class JarSmoothTest extends IntegrationTestCase {
     fileSystem.createFileContainingItsPath(root, path1);
     fileSystem.createFileContainingItsPath(root, path2);
 
-    Path outDir = path("out");
-    Path outputPath = path("myOutput.jar");
-    script("run : files(" + root + ") | jar(" + outputPath + ") | save(" + outDir + ");");
+    script("run : files(" + root + ") | jar ;");
 
     // when
     build("run");
@@ -35,7 +33,8 @@ public class JarSmoothTest extends IntegrationTestCase {
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    InputStream inputStream = fileSystem.openInputStream(outDir.append(outputPath));
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    InputStream inputStream = fileSystem.openInputStream(artifactPath);
     try (JarInputStream jarInputStream = new JarInputStream(inputStream);) {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {

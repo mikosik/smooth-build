@@ -21,9 +21,7 @@ public class ZipSmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFile(path("dir/fileA.txt"), "fileA.txt");
     fileSystem.createFile(path("dir/fileB.txt"), "fileB.txt");
-    Path outDir = path("out");
-    Path outputPath = path("myOutput.zip");
-    script("run : files('dir') | zip(" + outputPath + ") | save(" + outDir + ");");
+    script("run : files('dir') | zip ;");
 
     // when
     build("run");
@@ -33,7 +31,8 @@ public class ZipSmoothTest extends IntegrationTestCase {
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    InputStream inputStream = fileSystem.openInputStream(outDir.append(outputPath));
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    InputStream inputStream = fileSystem.openInputStream(artifactPath);
     try (ZipInputStream zipInputStream = new ZipInputStream(inputStream);) {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {

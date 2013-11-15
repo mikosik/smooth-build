@@ -16,13 +16,11 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
   @Test
   public void setWithTrailingCommaIsAllowed() throws Exception {
-    Path dir = path("destination/dir");
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
     StringBuilder builder = new StringBuilder();
-    builder.append("myfiles : [ file(" + path1 + "), file(" + path2 + "), ];\n");
-    builder.append("run : myfiles | save(" + dir + ");\n");
+    builder.append("run : [ file(" + path1 + "), file(" + path2 + "), ];\n");
     script(builder.toString());
 
     // when
@@ -30,8 +28,9 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.assertNoProblems();
-    fileSystem.assertFileContainsItsPath(dir, path1);
-    fileSystem.assertFileContainsItsPath(dir, path2);
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    fileSystem.assertFileContainsItsPath(artifactPath, path1);
+    fileSystem.assertFileContainsItsPath(artifactPath, path2);
   }
 
   @Test
@@ -49,13 +48,11 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   @Test
   public void saveFileSetWithTwoFiles() throws IOException {
     // given
-    Path dir = path("destination/dir");
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
     StringBuilder builder = new StringBuilder();
-    builder.append("myfiles : [ file(" + path1 + "), file(" + path2 + ") ];\n");
-    builder.append("run : myfiles | save(" + dir + ");\n");
+    builder.append("run : [ file(" + path1 + "), file(" + path2 + ") ];\n");
     script(builder.toString());
 
     // when
@@ -63,20 +60,18 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.assertNoProblems();
-    fileSystem.assertFileContainsItsPath(dir, path1);
-    fileSystem.assertFileContainsItsPath(dir, path2);
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    fileSystem.assertFileContainsItsPath(artifactPath, path1);
+    fileSystem.assertFileContainsItsPath(artifactPath, path2);
   }
 
   @Test
   public void saveFileSetWithOneFile() throws IOException {
     // given
-    Path dir = path("destination/dir");
-
     fileSystem.createFileContainingItsPath(path1);
 
     StringBuilder builder = new StringBuilder();
-    builder.append("myfiles : [ file(" + path1 + ") ];\n");
-    builder.append("run : myfiles | save(" + dir + ");\n");
+    builder.append("run : [ file(" + path1 + ") ];\n");
     script(builder.toString());
 
     // when
@@ -84,17 +79,15 @@ public class FileSetSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.assertNoProblems();
-    fileSystem.assertFileContainsItsPath(dir, path1);
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    fileSystem.assertFileContainsItsPath(artifactPath, path1);
   }
 
   @Test
   public void saveEmptyFileSet() throws IOException {
     // given
-    Path dir = path("destination/dir");
-
     StringBuilder builder = new StringBuilder();
-    builder.append("myfiles : [ ];\n");
-    builder.append("run : myfiles | save(" + dir + ");\n");
+    builder.append("run : [ ];\n");
     script(builder.toString());
 
     // when

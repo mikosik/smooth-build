@@ -15,10 +15,9 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     // given
     Path path1 = path("a/fileA.txt");
     Path path2 = path("b/fileB.txt");
-    Path outDir = path("out");
     File jarFile = JarTester.jaredFiles(fileSystem, path1.value(), path2.value());
 
-    script("run : file(" + jarFile.path() + ") | unjar | save(" + outDir + ");");
+    script("run : file(" + jarFile.path() + ") | unjar ;");
 
     // when
     build("run");
@@ -26,7 +25,8 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     // then
     userConsole.assertNoProblems();
 
-    fileSystem.assertFileContainsItsPath(outDir, path1);
-    fileSystem.assertFileContainsItsPath(outDir, path2);
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    fileSystem.assertFileContainsItsPath(artifactPath, path1);
+    fileSystem.assertFileContainsItsPath(artifactPath, path2);
   }
 }

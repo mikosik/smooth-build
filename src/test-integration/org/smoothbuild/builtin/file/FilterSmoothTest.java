@@ -2,13 +2,13 @@ package org.smoothbuild.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.fs.base.Path.path;
+import static org.smoothbuild.fs.base.PathState.NOTHING;
 
 import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.fs.base.PathState;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 import com.google.common.collect.ImmutableList;
@@ -112,7 +112,6 @@ public class FilterSmoothTest extends IntegrationTestCase {
   private void doTestFiltering(String pattern, ImmutableList<String> included,
       ImmutableList<String> excluded) throws IOException {
     // given
-    Path outputPath = path("output");
     Path pathA = path("setA");
     for (String path : included) {
       fileSystem.createFileContainingItsPath(pathA, path(path));
@@ -120,18 +119,19 @@ public class FilterSmoothTest extends IntegrationTestCase {
     for (String path : excluded) {
       fileSystem.createFileContainingItsPath(pathA, path(path));
     }
-    script("run : files(" + pathA + ") | filter('" + pattern + "')  | save(" + outputPath + ");");
+    script("run : files(" + pathA + ") | filter('" + pattern + "') ;");
 
     // when
     build("run");
 
     // then
     userConsole.assertNoProblems();
+    Path artifactPath = RESULTS_PATH.append(path("run"));
     for (String path : excluded) {
-      assertThat(fileSystem.pathState(path(path))).isEqualTo(PathState.NOTHING);
+      assertThat(fileSystem.pathState(artifactPath.append(path(path)))).isEqualTo(NOTHING);
     }
     for (String path : included) {
-      fileSystem.assertFileContainsItsPath(outputPath, path(path));
+      fileSystem.assertFileContainsItsPath(artifactPath, path(path));
     }
   }
 }

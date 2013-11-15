@@ -13,7 +13,6 @@ public class MergeSmoothTest extends IntegrationTestCase {
   @Test
   public void mergingTwoSets() throws Exception {
     // given
-    Path outputPath = path("output");
     Path path1 = path("def/fileA.txt");
     Path path2 = path("def/fileB.txt");
     fileSystem.createFileContainingItsPath(path1);
@@ -22,7 +21,7 @@ public class MergeSmoothTest extends IntegrationTestCase {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("a : [ file(" + path1 + ") ];");
     builder.addLine("b : [ file(" + path2 + ") ];");
-    builder.addLine("run : merge(files=a, with=b) | save(" + outputPath + ");");
+    builder.addLine("run : merge(files=a, with=b) ;");
     script(builder.build());
 
     // when
@@ -30,8 +29,9 @@ public class MergeSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.assertNoProblems();
-    fileSystem.assertFileContainsItsPath(outputPath, path1);
-    fileSystem.assertFileContainsItsPath(outputPath, path2);
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    fileSystem.assertFileContainsItsPath(artifactPath, path1);
+    fileSystem.assertFileContainsItsPath(artifactPath, path2);
   }
 
   @Test
@@ -40,7 +40,6 @@ public class MergeSmoothTest extends IntegrationTestCase {
     Path dir1Path = path("dirA");
     Path dir2Path = path("dirB");
     Path filePath = path("def/fileA.txt");
-    Path outputPath = path("output");
 
     fileSystem.createFileContainingItsPath(dir1Path, filePath);
     fileSystem.createFileContainingItsPath(dir2Path, filePath);
@@ -48,7 +47,7 @@ public class MergeSmoothTest extends IntegrationTestCase {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("a : files(" + dir1Path + ") ;");
     builder.addLine("b : files(" + dir2Path + ") ;");
-    builder.addLine("run : merge(files=a, with=b) | save(" + outputPath + ");");
+    builder.addLine("run : merge(files=a, with=b) ;");
     script(builder.build());
 
     // when

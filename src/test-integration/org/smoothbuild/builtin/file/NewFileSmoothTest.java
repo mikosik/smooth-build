@@ -16,11 +16,12 @@ public class NewFileSmoothTest extends IntegrationTestCase {
     String content = "file content";
     fileSystem.createFile(path, content);
 
-    script("run : newFile(path=" + path + ", content='" + content + "') | save(dir='.');");
+    script("run : newFile(path=" + path + ", content='" + content + "');");
 
     build("run");
 
     userConsole.assertNoProblems();
-    fileSystem.assertFileContains(path, content);
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    fileSystem.assertFileContains(artifactPath, content);
   }
 }

@@ -12,12 +12,11 @@ public class UnzipSmoothTest extends IntegrationTestCase {
   @Test
   public void testUnzipping() throws Exception {
     // given
-    Path outPath = path("out");
-    Path fileA = path("a/fileA.txt");
-    Path fileB = path("b/fileB.txt");
-    Path zipFile = ZipTester.zippedFiles(fileSystem, fileA.value(), fileB.value());
+    Path path1 = path("a/fileA.txt");
+    Path path2 = path("b/fileB.txt");
+    Path zipFile = ZipTester.zippedFiles(fileSystem, path1.value(), path2.value());
 
-    script("run : file(" + zipFile + ") | unzip | save(" + outPath + ");");
+    script("run : file(" + zipFile + ") | unzip ;");
 
     // when
     build("run");
@@ -25,7 +24,8 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     // then
     userConsole.assertNoProblems();
 
-    fileSystem.assertFileContainsItsPath(outPath, fileA);
-    fileSystem.assertFileContainsItsPath(outPath, fileB);
+    Path dirPath = RESULTS_PATH.append(path("run"));
+    fileSystem.assertFileContainsItsPath(dirPath, path1);
+    fileSystem.assertFileContainsItsPath(dirPath, path2);
   }
 }
