@@ -1,13 +1,11 @@
 package org.smoothbuild.io.cache.value;
 
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -19,54 +17,53 @@ import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
 
-public class StringObjectTest {
+public class CachedBlobTest {
   String content = "content";
   InputStream inputStream = mock(InputStream.class);
   HashedDb hashedDb = mock(HashedDb.class);
   HashCode hash = HashCode.fromInt(1);
 
-  StringObject stringObject;
+  CachedBlob cachedBlob;
 
   @Test
   public void null_hash_is_forbidden() throws Exception {
-    when(stringObject(hashedDb, null));
+    when(blobObject(hashedDb, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_file_system_is_forbidden() throws Exception {
-    when(stringObject(null, hash));
+    when(blobObject(null, hash));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void type() throws Exception {
-    given(stringObject = new StringObject(hashedDb, hash));
-    when(stringObject.type());
-    thenReturned(Type.STRING);
+    given(cachedBlob = new CachedBlob(hashedDb, hash));
+    when(cachedBlob.type());
+    thenReturned(Type.BLOB);
   }
 
   @Test
   public void hash() {
-    given(stringObject = new StringObject(hashedDb, hash));
-    when(stringObject.hash());
+    given(cachedBlob = new CachedBlob(hashedDb, hash));
+    when(cachedBlob.hash());
     thenReturned(hash);
   }
 
   @Test
   public void open_input_stream_calls_hashed_db_open_input_stream() throws IOException {
-    BDDMockito.given(hashedDb.openInputStream(hash)).willReturn(
-        new ByteArrayInputStream(content.getBytes(CHARSET)));
-    given(stringObject = new StringObject(hashedDb, hash));
-    when(stringObject.value());
-    thenReturned(content);
+    BDDMockito.given(hashedDb.openInputStream(hash)).willReturn(inputStream);
+    given(cachedBlob = new CachedBlob(hashedDb, hash));
+    when(cachedBlob.openInputStream());
+    thenReturned(inputStream);
   }
 
-  private static Closure stringObject(final HashedDb hashedDb, final HashCode hash) {
+  private static Closure blobObject(final HashedDb hashedDb, final HashCode hash) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new StringObject(hashedDb, hash);
+        return new CachedBlob(hashedDb, hash);
       }
     };
   }

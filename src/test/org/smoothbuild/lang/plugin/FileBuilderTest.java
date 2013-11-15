@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import org.smoothbuild.io.cache.value.FileObject;
+import org.smoothbuild.io.cache.value.CachedFile;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
 
@@ -18,7 +18,7 @@ public class FileBuilderTest {
   FileBuilder fileBuilder = new FileBuilder(valueDb);
   Path path = Path.path("my/path");
   byte[] bytes = new byte[] { 1, 2, 3 };
-  FileObject file = Mockito.mock(FileObject.class);
+  CachedFile file = Mockito.mock(CachedFile.class);
 
   @Test
   public void setting_null_path_fails() throws Exception {

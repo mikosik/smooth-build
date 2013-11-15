@@ -11,11 +11,11 @@ import org.smoothbuild.lang.function.value.Value;
 
 import com.google.common.hash.HashCode;
 
-public class FileSetObject implements FileSet, Value {
+public class CachedFileSet implements FileSet, Value {
   private final ValueDb valueDb;
   private final HashCode hash;
 
-  public FileSetObject(ValueDb valueDb, HashCode hash) {
+  public CachedFileSet(ValueDb valueDb, HashCode hash) {
     this.valueDb = checkNotNull(valueDb);
     this.hash = checkNotNull(hash);
   }
