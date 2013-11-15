@@ -4,8 +4,8 @@ import static org.smoothbuild.command.SmoothContants.CHARSET;
 
 import java.io.InputStream;
 
-import org.smoothbuild.io.db.hash.Hash;
-import org.smoothbuild.io.db.hash.Marshaller;
+import org.smoothbuild.io.cache.hash.Hash;
+import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.value.Blob;

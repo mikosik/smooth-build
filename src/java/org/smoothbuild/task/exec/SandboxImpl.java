@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import org.smoothbuild.io.db.value.ValueDb;
+import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.FileBuilder;

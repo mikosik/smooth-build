@@ -1,8 +1,8 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.io.db.DbModule.RESULTS_DIR;
-import static org.smoothbuild.io.db.DbModule.VALUE_DB_DIR;
-import static org.smoothbuild.io.db.hash.HashCodes.toPath;
+import static org.smoothbuild.io.cache.CacheModule.RESULTS_DIR;
+import static org.smoothbuild.io.cache.CacheModule.VALUE_DB_DIR;
+import static org.smoothbuild.io.cache.hash.HashCodes.toPath;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.util.Map;
