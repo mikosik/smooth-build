@@ -44,14 +44,14 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, builder.toString());
 
-    script("run : [ file(path=" + path + ") ] | javac | save(dir='.');");
+    script("run : [ file(path=" + path + ") ] | javac ;");
     build("run");
 
     userConsole.assertNoProblems();
 
-    String classFile = "MyClass.class";
-    String method = "myMethod";
-    Object result = invoke(path(classFile), method);
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    Path classFile = artifactPath.append(path("MyClass.class"));
+    Object result = invoke(classFile, "myMethod");
     assertThat(result).isEqualTo(returnedString);
   }
 
@@ -59,12 +59,9 @@ public class JavacSmoothTest extends IntegrationTestCase {
   public void compileOneFileWithLibraryDependency() throws Exception {
     Path libSourceDir = path("src/lib");
     Path appSourceDir = path("src/app");
-    Path classDir = path("class");
 
     Path libraryJavaFile = libSourceDir.append(path("library/LibraryClass.java"));
     Path appJavaFile = appSourceDir.append(path("MyClass2.java"));
-    Path libClassFile = classDir.append(path("library/LibraryClass.class"));
-    Path appClassFile = classDir.append(path("MyClass2.class"));
 
     {
       StringBuilder builder = new StringBuilder();
@@ -93,10 +90,14 @@ public class JavacSmoothTest extends IntegrationTestCase {
     builder.addLine("libraryClasses : [ file(path=" + libraryJavaFile + ") ] | javac ;");
     builder.addLine("libraryJar: libraryClasses | jar ;");
     builder.addLine("appClasses: [ file(path=" + appJavaFile + ") ] | javac(libs=[libraryJar]) ;");
-    builder.addLine("run: libraryClasses | merge(with=appClasses) | save(" + classDir + ");");
+    builder.addLine("run: libraryClasses | merge(with=appClasses) ;");
     this.script(builder.build());
 
     build("run");
+
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    Path libClassFile = artifactPath.append(path("library/LibraryClass.class"));
+    Path appClassFile = artifactPath.append(path("MyClass2.class"));
 
     userConsole.assertNoProblems();
     loadClass(byteCode(libClassFile));

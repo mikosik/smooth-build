@@ -13,16 +13,17 @@ public class FileSmoothTest extends IntegrationTestCase {
   @Test
   public void saveFile() throws IOException {
     // given
-    Path dir = path("destination/dir");
     Path path = path("file/path/file.txt");
-    fileSystem.createFileContainingItsPath(path);
-    script("run : file(" + path + ") | save(" + dir + ");");
+    String content = "file content";
+    fileSystem.createFile(path, content);
+    script("run : file(" + path + ") ;");
 
     // when
     build("run");
 
     // then
     userConsole.assertNoProblems();
-    fileSystem.assertFileContainsItsPath(dir, path);
+    Path artifactPath = RESULTS_PATH.append(path("run"));
+    fileSystem.assertFileContains(artifactPath, content);
   }
 }
