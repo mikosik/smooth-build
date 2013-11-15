@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.io.fs.base;
 
-import static org.smoothbuild.io.fs.FileSystemModule.SMOOTH_DIR;
+import static org.smoothbuild.io.IoConstants.SMOOTH_DIR;
 
 import javax.inject.Singleton;
 
