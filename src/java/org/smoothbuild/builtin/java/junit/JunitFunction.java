@@ -14,6 +14,7 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.plugin.File;
 import org.smoothbuild.plugin.FileSet;
 import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 /*
@@ -28,8 +29,8 @@ public class JunitFunction {
   }
 
   @SmoothFunction(name = "junit")
-  public static void execute(SandboxImpl sandbox, Parameters params) {
-    new Worker(sandbox, params).execute();
+  public static StringValue execute(SandboxImpl sandbox, Parameters params) {
+    return new Worker(sandbox, params).execute();
   }
 
   private static class Worker {
@@ -41,7 +42,7 @@ public class JunitFunction {
       this.params = params;
     }
 
-    public void execute() {
+    public StringValue execute() {
       Map<String, File> binaryNameToClassFile = binaryNameToClassFile(sandbox,
           nullToEmpty(params.libs()));
       FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
@@ -55,10 +56,11 @@ public class JunitFunction {
             for (Failure failure : result.getFailures()) {
               sandbox.report(new JunitTestFailedError(failure));
             }
-            return;
+            return sandbox.string("FAILURE");
           }
         }
       }
+      return sandbox.string("SUCCESS");
     }
 
     private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {
