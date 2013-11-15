@@ -4,14 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.smoothbuild.message.message.MessageType.WARNING;
+import static org.smoothbuild.message.base.MessageType.WARNING;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;
 

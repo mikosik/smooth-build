@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.java.err;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 
 public class IllegalPathInJarError extends Message {
   public IllegalPathInJarError(String fileName) {

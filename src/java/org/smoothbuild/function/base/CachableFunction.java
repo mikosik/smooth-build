@@ -3,7 +3,7 @@ package org.smoothbuild.function.base;
 import java.util.Map;
 
 import org.smoothbuild.db.task.TaskDb;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.CachingTask;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;

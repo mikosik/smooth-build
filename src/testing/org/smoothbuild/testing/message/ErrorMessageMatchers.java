@@ -3,8 +3,8 @@ package org.smoothbuild.testing.message;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.Message;
 
 public class ErrorMessageMatchers {
 

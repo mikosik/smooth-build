@@ -1,13 +1,13 @@
 package org.smoothbuild.builtin.java.junit;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.io.IOException;
 import java.util.Map;
 
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.Message;
 import org.smoothbuild.plugin.File;
 
 import com.google.common.io.ByteStreams;

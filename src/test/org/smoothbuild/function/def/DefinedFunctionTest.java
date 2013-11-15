@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.function.base.FakeSignature.fakeSignature;
 
 import org.junit.Test;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;

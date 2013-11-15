@@ -1,10 +1,10 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.util.Set;
 
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 
 public class IllegalTargetParamError extends Message {
   public IllegalTargetParamError(String value, Set<String> allowed) {

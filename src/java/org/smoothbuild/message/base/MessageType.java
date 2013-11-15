@@ -1,4 +1,4 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.base;
 
 import com.google.common.base.Ascii;
 

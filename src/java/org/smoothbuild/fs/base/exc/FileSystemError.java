@@ -1,11 +1,11 @@
 package org.smoothbuild.fs.base.exc;
 
 import static org.smoothbuild.fs.FileSystemModule.SMOOTH_DIR;
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.io.IOException;
 
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 
 import com.google.common.base.Throwables;
 

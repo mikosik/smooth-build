@@ -2,14 +2,14 @@ package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.function.base.Name.name;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 
 import java.util.NoSuchElementException;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 
 import com.google.common.collect.ImmutableSet;

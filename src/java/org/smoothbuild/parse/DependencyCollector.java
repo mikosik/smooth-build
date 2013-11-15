@@ -13,8 +13,8 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.function.base.Name;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.message.message.CodeLocation;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 
 import com.google.common.collect.ImmutableMap;

@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.io.IOException;
@@ -23,10 +23,10 @@ import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.fs.base.Path;
+import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.message.message.CodeLocation;
-import org.smoothbuild.message.message.CodeMessage;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
 

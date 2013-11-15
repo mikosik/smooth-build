@@ -1,11 +1,11 @@
 package org.smoothbuild.fs.base;
 
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.Iterator;
 
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.Message;
 
 import com.google.common.collect.ImmutableList;
 

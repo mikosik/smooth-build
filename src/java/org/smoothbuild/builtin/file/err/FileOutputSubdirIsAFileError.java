@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.file.err;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.MessageType;
+import org.smoothbuild.message.base.Message;
+import org.smoothbuild.message.base.MessageType;
 
 public class FileOutputSubdirIsAFileError extends Message {
   public FileOutputSubdirIsAFileError(Path dirPath, Path filePath, Path path) {

@@ -1,9 +1,9 @@
 package org.smoothbuild.task.base.err;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import org.smoothbuild.fs.base.Path;
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 
 public class DuplicatePathError extends Message {
   public DuplicatePathError(Path path) {

@@ -1,12 +1,13 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.base;
 
 import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.MessageType.WARNING;
+import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.WARNING;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
+import org.smoothbuild.message.base.Message;
 
 public class MessageTest {
 

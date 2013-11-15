@@ -1,9 +1,9 @@
 package org.smoothbuild.builtin.java.junit;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import org.junit.runner.notification.Failure;
-import org.smoothbuild.message.message.Message;
+import org.smoothbuild.message.base.Message;
 
 public class JunitTestFailedError extends Message {
   public JunitTestFailedError(Failure failure) {

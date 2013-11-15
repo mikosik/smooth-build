@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.smoothbuild.function.base.Type;
 import org.smoothbuild.function.def.Node;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

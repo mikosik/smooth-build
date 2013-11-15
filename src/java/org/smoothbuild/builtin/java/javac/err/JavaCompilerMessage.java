@@ -1,13 +1,13 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
+import org.smoothbuild.message.base.Message;
+import org.smoothbuild.message.base.MessageType;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.MessageType;
 
 public class JavaCompilerMessage extends Message {
   public JavaCompilerMessage(Diagnostic<? extends JavaFileObject> diagnostic) {

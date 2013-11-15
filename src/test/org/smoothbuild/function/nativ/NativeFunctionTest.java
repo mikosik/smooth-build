@@ -9,7 +9,7 @@ import static org.smoothbuild.testing.function.base.FakeSignature.fakeSignature;
 import org.junit.Test;
 import org.smoothbuild.db.task.TaskDb;
 import org.smoothbuild.function.base.Signature;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.plugin.StringValue;
 import org.smoothbuild.plugin.Value;
 import org.smoothbuild.task.base.Task;

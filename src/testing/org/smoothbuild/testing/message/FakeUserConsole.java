@@ -4,8 +4,8 @@ import static com.google.common.io.ByteStreams.nullOutputStream;
 
 import java.io.PrintStream;
 
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.message.message.Message;
 
 public class FakeUserConsole extends UserConsole {
   private final FakeMessageGroup messageGroup;

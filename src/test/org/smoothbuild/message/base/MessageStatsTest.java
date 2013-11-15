@@ -1,16 +1,17 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.base;
 
-import static org.smoothbuild.message.message.MessageType.ERROR;
-import static org.smoothbuild.message.message.MessageType.FATAL;
-import static org.smoothbuild.message.message.MessageType.INFO;
-import static org.smoothbuild.message.message.MessageType.SUGGESTION;
-import static org.smoothbuild.message.message.MessageType.WARNING;
+import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.message.base.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.INFO;
+import static org.smoothbuild.message.base.MessageType.SUGGESTION;
+import static org.smoothbuild.message.base.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.message.base.MessageStats;
 
 public class MessageStatsTest {
   MessageStats messageStats;

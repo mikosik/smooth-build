@@ -1,4 +1,4 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

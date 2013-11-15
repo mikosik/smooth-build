@@ -16,7 +16,7 @@ import static org.smoothbuild.function.def.args.Argument.namedArg;
 import static org.smoothbuild.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.function.def.args.Assignment.assignment;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 
 import java.util.Set;
 

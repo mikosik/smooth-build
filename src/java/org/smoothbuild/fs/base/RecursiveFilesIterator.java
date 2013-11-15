@@ -2,13 +2,13 @@ package org.smoothbuild.fs.base;
 
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.fs.base.PathState.NOTHING;
-import static org.smoothbuild.message.message.MessageType.FATAL;
+import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
 
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.message.Message;
 
 public class RecursiveFilesIterator implements Iterator<Path> {
   private final FileSystem fileSystem;

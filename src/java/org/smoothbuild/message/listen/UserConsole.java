@@ -5,9 +5,9 @@ import java.util.Iterator;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.MessageStats;
-import org.smoothbuild.message.message.MessageType;
+import org.smoothbuild.message.base.Message;
+import org.smoothbuild.message.base.MessageStats;
+import org.smoothbuild.message.base.MessageType;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;

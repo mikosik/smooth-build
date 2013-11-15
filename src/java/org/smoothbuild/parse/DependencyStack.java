@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import org.smoothbuild.function.base.Name;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 
 public class DependencyStack {

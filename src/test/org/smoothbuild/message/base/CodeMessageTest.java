@@ -1,10 +1,13 @@
-package org.smoothbuild.message.message;
+package org.smoothbuild.message.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.message.message.CodeLocation.codeLocation;
-import static org.smoothbuild.message.message.MessageType.WARNING;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.message.base.MessageType.WARNING;
 
 import org.junit.Test;
+import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.message.base.CodeMessage;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class CodeMessageTest {

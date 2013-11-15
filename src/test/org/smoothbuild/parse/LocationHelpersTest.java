@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 
 public class LocationHelpersTest {
   Token startToken = mock(Token.class);

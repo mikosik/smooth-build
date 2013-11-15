@@ -9,7 +9,7 @@ import static org.smoothbuild.testing.function.base.ParamTester.params;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;

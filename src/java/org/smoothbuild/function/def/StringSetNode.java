@@ -2,7 +2,7 @@ package org.smoothbuild.function.def;
 
 import static org.smoothbuild.function.base.Type.STRING_SET;
 
-import org.smoothbuild.message.message.CodeLocation;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.StringSetTask;
 import org.smoothbuild.task.base.Task;

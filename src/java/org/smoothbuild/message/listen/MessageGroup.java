@@ -6,8 +6,8 @@ import static com.google.common.collect.Iterators.unmodifiableIterator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.smoothbuild.message.message.Message;
-import org.smoothbuild.message.message.MessageStats;
+import org.smoothbuild.message.base.Message;
+import org.smoothbuild.message.base.MessageStats;
 
 import com.google.common.collect.Lists;
 
