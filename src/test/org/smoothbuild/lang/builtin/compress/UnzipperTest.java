@@ -11,12 +11,12 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.lang.plugin.FileSet;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.plugin.FakeFile;
+import org.smoothbuild.testing.lang.function.value.FakeFile;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 import com.google.common.collect.Iterables;

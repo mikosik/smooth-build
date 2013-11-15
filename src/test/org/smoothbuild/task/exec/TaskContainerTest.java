@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.lang.plugin.Value;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.task.base.Task;
 
 public class TaskContainerTest {

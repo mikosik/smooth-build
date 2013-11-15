@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 import org.junit.Test;
-import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.function.value.File;
 
 public class InputClassFileTest {
 

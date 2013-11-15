@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.lang.plugin.FakeFile;
+import org.smoothbuild.testing.lang.function.value.FakeFile;
 
 public class InputSourceFileTest {
 

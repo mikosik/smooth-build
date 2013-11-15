@@ -9,13 +9,13 @@ import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSigna
 import org.junit.Test;
 import org.smoothbuild.io.db.task.TaskDb;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.plugin.StringValue;
-import org.smoothbuild.lang.plugin.Value;
+import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.SandboxImpl;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.lang.plugin.FakeString;
+import org.smoothbuild.testing.lang.function.value.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 import org.smoothbuild.util.Empty;

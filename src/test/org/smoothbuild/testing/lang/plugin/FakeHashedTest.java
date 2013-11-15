@@ -6,6 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.testing.lang.function.value.FakeHashed;
 
 public class FakeHashedTest {
   FakeHashed fakeHashed;

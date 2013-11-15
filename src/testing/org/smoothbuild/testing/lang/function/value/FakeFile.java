@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.function.value;
 
 import static org.smoothbuild.command.SmoothContants.CHARSET;
 
@@ -8,8 +8,8 @@ import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.io.db.hash.Marshaller;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.Blob;
-import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.function.value.File;
 
 import com.google.common.hash.HashCode;
 

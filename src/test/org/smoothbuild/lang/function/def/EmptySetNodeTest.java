@@ -8,8 +8,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.plugin.FileSet;
-import org.smoothbuild.lang.plugin.Value;
+import org.smoothbuild.lang.function.value.FileSet;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;

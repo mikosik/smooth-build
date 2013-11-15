@@ -8,6 +8,7 @@ import java.io.OutputStream;
 
 import org.smoothbuild.io.db.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.File;
 
 public class FileBuilder {
   private final ValueDb valueDb;

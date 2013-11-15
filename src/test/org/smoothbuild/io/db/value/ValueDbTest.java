@@ -17,10 +17,10 @@ import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.io.db.hash.HashedDb;
 import org.smoothbuild.io.db.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.lang.plugin.FileSet;
-import org.smoothbuild.lang.plugin.StringSet;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.FileSet;
+import org.smoothbuild.lang.function.value.StringSet;
+import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 import com.google.common.collect.ImmutableList;

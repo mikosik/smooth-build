@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.smoothbuild.io.db.hash.HashedDb;
 import org.smoothbuild.io.db.hash.err.ReadingHashedObjectFailedError;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.hash.HashCode;

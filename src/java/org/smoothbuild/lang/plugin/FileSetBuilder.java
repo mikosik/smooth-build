@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.smoothbuild.io.db.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.err.CannotAddDuplicatePathError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 

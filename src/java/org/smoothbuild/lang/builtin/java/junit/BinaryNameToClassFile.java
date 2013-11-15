@@ -8,8 +8,8 @@ import java.util.Map;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.lang.plugin.FileSet;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.message.listen.ErrorMessageException;
 

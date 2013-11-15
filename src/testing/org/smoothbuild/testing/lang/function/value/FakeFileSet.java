@@ -1,12 +1,12 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.function.value;
 
 import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.io.db.hash.Hash;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.File;
-import org.smoothbuild.lang.plugin.FileSet;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.FileSet;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;

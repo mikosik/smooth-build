@@ -9,6 +9,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.testing.lang.function.value.FakeFile;
+import org.smoothbuild.testing.lang.function.value.FakeFileSet;
 
 import com.google.common.collect.Iterables;
 

@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.plugin.StringValue;
+import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.StringTask;
 import org.smoothbuild.task.base.Task;

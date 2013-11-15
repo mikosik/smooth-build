@@ -9,6 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.testing.lang.function.value.FakeString;
 import org.testory.common.Closure;
 
 public class FakeStringTest {

@@ -2,9 +2,9 @@ package org.smoothbuild.task.base;
 
 import java.util.List;
 
-import org.smoothbuild.lang.plugin.File;
+import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
-import org.smoothbuild.lang.plugin.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.task.exec.SandboxImpl;

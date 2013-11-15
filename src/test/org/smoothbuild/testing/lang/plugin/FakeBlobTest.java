@@ -10,6 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.testing.lang.function.value.FakeBlob;
 import org.testory.common.Closure;
 
 public class FakeBlobTest {

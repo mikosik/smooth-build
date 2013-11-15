@@ -12,7 +12,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.task.base.Result;
-import org.smoothbuild.testing.lang.plugin.FakeString;
+import org.smoothbuild.testing.lang.function.value.FakeString;
 import org.smoothbuild.testing.task.base.FakeResult;
 
 import com.google.common.collect.ImmutableList;

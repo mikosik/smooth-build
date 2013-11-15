@@ -11,6 +11,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.testing.lang.function.value.FakeFile;
 import org.smoothbuild.util.Streams;
 import org.testory.common.Closure;
 

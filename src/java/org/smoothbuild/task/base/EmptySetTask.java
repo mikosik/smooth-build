@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import org.smoothbuild.lang.plugin.Value;
+import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
 
