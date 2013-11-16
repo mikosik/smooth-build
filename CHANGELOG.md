@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.5.0 (??????????)
+Version 0.5.0 (2013.11.16)
 --------------------------
 
  * allowed dots ('.') in function names
