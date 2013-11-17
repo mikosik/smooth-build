@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.function.base.Type.FILE;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 import static org.smoothbuild.lang.function.base.Type.STRING;
 import static org.smoothbuild.lang.function.base.Type.STRING_SET;
-import static org.smoothbuild.lang.function.base.Type.VOID;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 
@@ -30,7 +29,6 @@ import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
-import org.smoothbuild.lang.function.def.args.err.VoidArgError;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.value.Value;
@@ -191,48 +189,6 @@ public class ArgumentNodesCreatorTest {
 
     // then
     messages.assertOnlyProblem(TypeMismatchError.class);
-  }
-
-  @Test
-  public void voidTypeOfNamedArgument() throws Exception {
-    doTestVoidTypeOfNamedArgument(STRING);
-    doTestVoidTypeOfNamedArgument(STRING_SET);
-    doTestVoidTypeOfNamedArgument(FILE);
-    doTestVoidTypeOfNamedArgument(FILE_SET);
-  }
-
-  private void doTestVoidTypeOfNamedArgument(Type paramType) throws Exception {
-    // given
-    messages = new FakeMessageGroup();
-    Param p1 = param(paramType, "name1");
-    Argument a1 = argument(p1.name(), node(VOID));
-
-    // when
-    create(params(p1), list(a1));
-
-    // then
-    messages.assertOnlyProblem(VoidArgError.class);
-  }
-
-  @Test
-  public void voidTypeOfNamelessArgument() throws Exception {
-    doTestVoidTypeOfNamelessArgument(STRING);
-    doTestVoidTypeOfNamelessArgument(STRING_SET);
-    doTestVoidTypeOfNamelessArgument(FILE);
-    doTestVoidTypeOfNamelessArgument(FILE_SET);
-  }
-
-  private void doTestVoidTypeOfNamelessArgument(Type paramType) throws Exception {
-    // given
-    messages = new FakeMessageGroup();
-    Param p1 = param(paramType, "name1");
-    Argument a1 = argument(node(VOID));
-
-    // when
-    create(params(p1), list(a1));
-
-    // then
-    messages.assertOnlyProblem(VoidArgError.class);
   }
 
   @Test

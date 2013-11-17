@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.function.base.Type.PARAM_TYPES;
 import static org.smoothbuild.lang.function.base.Type.RESULT_TYPES;
 import static org.smoothbuild.lang.function.base.Type.STRING;
 import static org.smoothbuild.lang.function.base.Type.STRING_SET;
-import static org.smoothbuild.lang.function.base.Type.VOID;
 import static org.smoothbuild.lang.function.base.Type.javaParamTypetoType;
 import static org.smoothbuild.lang.function.base.Type.javaResultTypetoType;
 
@@ -34,7 +33,6 @@ public class TypeTest {
     assertThat(STRING.isAssignableFrom(BLOB)).isFalse();
     assertThat(STRING.isAssignableFrom(FILE)).isFalse();
     assertThat(STRING.isAssignableFrom(FILE_SET)).isFalse();
-    assertThat(STRING.isAssignableFrom(VOID)).isFalse();
     assertThat(STRING.isAssignableFrom(EMPTY_SET)).isFalse();
 
     assertThat(STRING_SET.isAssignableFrom(STRING)).isFalse();
@@ -42,7 +40,6 @@ public class TypeTest {
     assertThat(STRING_SET.isAssignableFrom(BLOB)).isFalse();
     assertThat(STRING_SET.isAssignableFrom(FILE)).isFalse();
     assertThat(STRING_SET.isAssignableFrom(FILE_SET)).isFalse();
-    assertThat(STRING_SET.isAssignableFrom(VOID)).isFalse();
     assertThat(STRING_SET.isAssignableFrom(EMPTY_SET)).isTrue();
 
     assertThat(BLOB.isAssignableFrom(STRING)).isFalse();
@@ -50,7 +47,6 @@ public class TypeTest {
     assertThat(BLOB.isAssignableFrom(BLOB)).isTrue();
     assertThat(BLOB.isAssignableFrom(FILE)).isFalse();
     assertThat(BLOB.isAssignableFrom(FILE_SET)).isFalse();
-    assertThat(BLOB.isAssignableFrom(VOID)).isFalse();
     assertThat(BLOB.isAssignableFrom(EMPTY_SET)).isFalse();
 
     assertThat(FILE.isAssignableFrom(STRING)).isFalse();
@@ -58,7 +54,6 @@ public class TypeTest {
     assertThat(FILE.isAssignableFrom(BLOB)).isFalse();
     assertThat(FILE.isAssignableFrom(FILE)).isTrue();
     assertThat(FILE.isAssignableFrom(FILE_SET)).isFalse();
-    assertThat(FILE.isAssignableFrom(VOID)).isFalse();
     assertThat(FILE.isAssignableFrom(EMPTY_SET)).isFalse();
 
     assertThat(FILE_SET.isAssignableFrom(STRING)).isFalse();
@@ -66,7 +61,6 @@ public class TypeTest {
     assertThat(FILE_SET.isAssignableFrom(BLOB)).isFalse();
     assertThat(FILE_SET.isAssignableFrom(FILE)).isFalse();
     assertThat(FILE_SET.isAssignableFrom(FILE_SET)).isTrue();
-    assertThat(FILE_SET.isAssignableFrom(VOID)).isFalse();
     assertThat(FILE_SET.isAssignableFrom(EMPTY_SET)).isTrue();
 
     assertThat(EMPTY_SET.isAssignableFrom(STRING)).isFalse();
@@ -74,16 +68,7 @@ public class TypeTest {
     assertThat(EMPTY_SET.isAssignableFrom(BLOB)).isFalse();
     assertThat(EMPTY_SET.isAssignableFrom(FILE)).isFalse();
     assertThat(EMPTY_SET.isAssignableFrom(FILE_SET)).isFalse();
-    assertThat(EMPTY_SET.isAssignableFrom(VOID)).isFalse();
     assertThat(EMPTY_SET.isAssignableFrom(EMPTY_SET)).isTrue();
-
-    assertThat(VOID.isAssignableFrom(STRING)).isFalse();
-    assertThat(VOID.isAssignableFrom(STRING_SET)).isFalse();
-    assertThat(VOID.isAssignableFrom(BLOB)).isFalse();
-    assertThat(VOID.isAssignableFrom(FILE)).isFalse();
-    assertThat(VOID.isAssignableFrom(FILE_SET)).isFalse();
-    assertThat(VOID.isAssignableFrom(VOID)).isTrue();
-    assertThat(VOID.isAssignableFrom(EMPTY_SET)).isFalse();
   }
 
   @Test
@@ -122,50 +107,37 @@ public class TypeTest {
     assertThat(STRING.hashCode()).isNotEqualTo(FILE.hashCode());
     assertThat(STRING.hashCode()).isNotEqualTo(BLOB.hashCode());
     assertThat(STRING.hashCode()).isNotEqualTo(FILE_SET.hashCode());
-    assertThat(STRING.hashCode()).isNotEqualTo(VOID.hashCode());
     assertThat(STRING.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
 
     assertThat(STRING_SET.hashCode()).isNotEqualTo(STRING.hashCode());
     assertThat(STRING_SET.hashCode()).isNotEqualTo(FILE.hashCode());
     assertThat(STRING_SET.hashCode()).isNotEqualTo(BLOB.hashCode());
     assertThat(STRING_SET.hashCode()).isNotEqualTo(FILE_SET.hashCode());
-    assertThat(STRING_SET.hashCode()).isNotEqualTo(VOID.hashCode());
     assertThat(STRING_SET.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
 
     assertThat(BLOB.hashCode()).isNotEqualTo(STRING.hashCode());
     assertThat(BLOB.hashCode()).isNotEqualTo(STRING_SET.hashCode());
     assertThat(BLOB.hashCode()).isNotEqualTo(FILE.hashCode());
     assertThat(BLOB.hashCode()).isNotEqualTo(FILE_SET.hashCode());
-    assertThat(BLOB.hashCode()).isNotEqualTo(VOID.hashCode());
     assertThat(BLOB.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
 
     assertThat(FILE.hashCode()).isNotEqualTo(STRING.hashCode());
     assertThat(FILE.hashCode()).isNotEqualTo(STRING_SET.hashCode());
     assertThat(FILE.hashCode()).isNotEqualTo(BLOB.hashCode());
     assertThat(FILE.hashCode()).isNotEqualTo(FILE_SET.hashCode());
-    assertThat(FILE.hashCode()).isNotEqualTo(VOID.hashCode());
     assertThat(FILE.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
 
     assertThat(FILE_SET.hashCode()).isNotEqualTo(STRING.hashCode());
     assertThat(FILE_SET.hashCode()).isNotEqualTo(STRING_SET.hashCode());
     assertThat(FILE_SET.hashCode()).isNotEqualTo(BLOB.hashCode());
     assertThat(FILE_SET.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(FILE_SET.hashCode()).isNotEqualTo(VOID.hashCode());
     assertThat(FILE_SET.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
-
-    assertThat(VOID.hashCode()).isNotEqualTo(STRING.hashCode());
-    assertThat(VOID.hashCode()).isNotEqualTo(STRING_SET.hashCode());
-    assertThat(VOID.hashCode()).isNotEqualTo(BLOB.hashCode());
-    assertThat(VOID.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(VOID.hashCode()).isNotEqualTo(FILE_SET.hashCode());
-    assertThat(VOID.hashCode()).isNotEqualTo(EMPTY_SET.hashCode());
 
     assertThat(EMPTY_SET.hashCode()).isNotEqualTo(STRING.hashCode());
     assertThat(EMPTY_SET.hashCode()).isNotEqualTo(STRING_SET.hashCode());
     assertThat(EMPTY_SET.hashCode()).isNotEqualTo(BLOB.hashCode());
     assertThat(EMPTY_SET.hashCode()).isNotEqualTo(FILE.hashCode());
     assertThat(EMPTY_SET.hashCode()).isNotEqualTo(FILE_SET.hashCode());
-    assertThat(EMPTY_SET.hashCode()).isNotEqualTo(VOID.hashCode());
   }
 
   @Test
@@ -202,7 +174,6 @@ public class TypeTest {
     assertThat(javaResultTypetoType(type(StringSet.class))).isEqualTo(STRING_SET);
     assertThat(javaResultTypetoType(type(File.class))).isEqualTo(FILE);
     assertThat(javaResultTypetoType(type(FileSet.class))).isEqualTo(FILE_SET);
-    assertThat(javaResultTypetoType(type(Void.TYPE))).isEqualTo(VOID);
   }
 
   @Test

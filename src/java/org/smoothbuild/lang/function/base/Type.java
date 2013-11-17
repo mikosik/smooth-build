@@ -16,15 +16,14 @@ public class Type {
   public static final Type BLOB = create("Blob", Blob.class);
   public static final Type FILE = create("File", File.class);
   public static final Type FILE_SET = create("File*", FileSet.class);
-  public static final Type VOID = create("Void", Void.TYPE);
   public static final Type EMPTY_SET = create("Any*", EmptySet.class);
 
   static final ImmutableSet<Type> SET_ELEM_TYPES = ImmutableSet.of(STRING, FILE);
-  static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE,
-      FILE_SET, VOID);
+  static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet
+      .of(STRING, STRING_SET, FILE, FILE_SET);
   static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET);
   static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB, FILE,
-      FILE_SET, VOID, EMPTY_SET);
+      FILE_SET, EMPTY_SET);
 
   static final ImmutableSet<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
   static final ImmutableSet<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);

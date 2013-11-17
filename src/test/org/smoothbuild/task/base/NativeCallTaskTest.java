@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.Type.STRING;
-import static org.smoothbuild.lang.function.base.Type.VOID;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
 
@@ -84,19 +83,6 @@ public class NativeCallTaskTest {
     nativeCallTask.execute(sandbox);
 
     sandbox.messages().assertOnlyProblem(NullResultError.class);
-  }
-
-  @Test
-  public void null_can_be_returned_by_function_with_void_result_type() throws Exception {
-    ImmutableList<Param> params = ImmutableList.of();
-    Signature signature = new Signature(VOID, name("name"), params);
-    function1 = new NativeFunction(signature, invoker, true);
-    nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
-    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
-
-    nativeCallTask.execute(sandbox);
-
-    sandbox.messages().assertNoProblems();
   }
 
   @Test

@@ -134,7 +134,9 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithAnnotatedParams {
     @SmoothFunction(name = "myFunction")
-    public static void execute(Sandbox sandbox, AnnotatedParameters params) {}
+    public static StringValue execute(Sandbox sandbox, AnnotatedParameters params) {
+      return null;
+    }
   }
 
   @Test
@@ -205,16 +207,6 @@ public class NativeFunctionFactoryTest {
   }
 
   @Test
-  public void voidResultTypeIsAccepted() throws Exception {
-    NativeFunctionFactory.create(MyFunctionWithVoidResult.class, false);
-  }
-
-  public static class MyFunctionWithVoidResult {
-    @SmoothFunction(name = "myFunction")
-    public static void execute(Sandbox sandbox, EmptyParameters params) {}
-  }
-
-  @Test
   public void illegalReturnTypeException() throws Exception {
     assertExceptionThrown(MyFunctionWithIllegalReturnType.class, IllegalReturnTypeException.class);
   }
@@ -236,7 +228,9 @@ public class NativeFunctionFactoryTest {
   public static class MyFunctionWithParamThatIsNotInterface {
 
     @SmoothFunction(name = "myFunction")
-    public static void execute(Sandbox sandbox, String string) {}
+    public static StringValue execute(Sandbox sandbox, String string) {
+      return null;
+    }
   }
 
   @Test
@@ -247,7 +241,9 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithIllegalFunctionName {
     @SmoothFunction(name = "my-package")
-    public static void execute(Sandbox sandbox, EmptyParameters params) {}
+    public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
+      return null;
+    }
   }
 
   @Test
@@ -261,7 +257,7 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithThrowingSmoothMethod {
     @SmoothFunction(name = "MyFunction")
-    public static void execute(Sandbox sandbox, EmptyParameters params) {
+    public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
       throw new RuntimeException();
     }
   }
@@ -310,7 +306,9 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithParamMethodThatHasParameters {
     @SmoothFunction(name = "MyFunction")
-    public static void execute(Sandbox sandbox, ParametersWithMethodWithParameters params) {}
+    public static StringValue execute(Sandbox sandbox, ParametersWithMethodWithParameters params) {
+      return null;
+    }
   }
 
   @Test
@@ -365,7 +363,9 @@ public class NativeFunctionFactoryTest {
 
   public static class MyFunctionWithSmoothMethodWithWrongSecondParam {
     @SmoothFunction(name = "MyFunction")
-    public static void execute(Sandbox sandbox, Integer wrong) {}
+    public static StringValue execute(Sandbox sandbox, Integer wrong) {
+      return null;
+    }
   }
 
   public static class FunctionForHash1 {

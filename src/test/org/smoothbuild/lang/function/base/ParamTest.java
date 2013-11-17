@@ -32,11 +32,6 @@ public class ParamTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void creatingVoidParamIsForbidden() throws Exception {
-    Param.param(Type.VOID, "name", true);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void creatingEmptySetParamIsForbidden() throws Exception {
     Param.param(Type.EMPTY_SET, "name", true);
   }
