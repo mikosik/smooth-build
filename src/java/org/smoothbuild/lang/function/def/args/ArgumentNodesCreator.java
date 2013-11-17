@@ -24,7 +24,6 @@ import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
-import org.smoothbuild.lang.function.def.args.err.VoidArgError;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
@@ -69,7 +68,6 @@ public class ArgumentNodesCreator {
         return null;
       }
 
-      detectVoidArguments();
       if (messages.containsProblems()) {
         return null;
       }
@@ -106,14 +104,6 @@ public class ArgumentNodesCreator {
           } else {
             names.add(name);
           }
-        }
-      }
-    }
-
-    private void detectVoidArguments() {
-      for (Argument argument : allArguments) {
-        if (argument.type() == Type.VOID) {
-          messages.report(new VoidArgError(argument));
         }
       }
     }

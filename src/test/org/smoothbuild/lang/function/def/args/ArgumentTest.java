@@ -8,7 +8,6 @@ import static org.smoothbuild.lang.function.base.Type.FILE;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 import static org.smoothbuild.lang.function.base.Type.STRING;
 import static org.smoothbuild.lang.function.base.Type.STRING_SET;
-import static org.smoothbuild.lang.function.base.Type.VOID;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
@@ -172,7 +171,6 @@ public class ArgumentTest {
     doTestFilterNameless(STRING_SET);
     doTestFilterNameless(FILE);
     doTestFilterNameless(FILE_SET);
-    doTestFilterNameless(VOID);
     doTestFilterNameless(EMPTY_SET);
   }
 

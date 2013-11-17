@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.function.base.Type.FILE;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 import static org.smoothbuild.lang.function.base.Type.STRING;
 import static org.smoothbuild.lang.function.base.Type.STRING_SET;
-import static org.smoothbuild.lang.function.base.Type.VOID;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
@@ -47,10 +46,8 @@ public class AmbiguousNamelessArgsErrorTest {
     assignmentList.add(assignment(p3, a3));
 
     Argument a4 = namedArg(3, "arg4", node(EMPTY_SET), codeLocation(7));
-    Argument a5 = namedArg(7, "arg5", node(VOID), codeLocation(17));
     Set<Argument> availableArgs = newHashSet();
     availableArgs.add(a4);
-    availableArgs.add(a5);
 
     TypedParamsPool availableParams = new TypedParamsPool();
     availableParams.add(param(FILE_SET, "param4"));
@@ -68,7 +65,6 @@ public class AmbiguousNamelessArgsErrorTest {
     builder.append("  File   : param3 <- File   : <nameless> #|  " + a3.codeLocation() + "\n");
     builder.append("List of nameless arguments that caused problems:\n");
     builder.append("  Any*: arg4 #3 " + a4.codeLocation() + "\n");
-    builder.append("  Void: arg5 #7 " + a5.codeLocation() + "\n");
     builder.append("List of unassigned parameters of desired type is following:\n");
     builder.append("  File*  : param4\n");
     builder.append("  String*: param6\n");

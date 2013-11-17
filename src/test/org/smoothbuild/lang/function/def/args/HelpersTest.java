@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.function.base.Type.FILE;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 import static org.smoothbuild.lang.function.base.Type.STRING;
 import static org.smoothbuild.lang.function.base.Type.STRING_SET;
-import static org.smoothbuild.lang.function.base.Type.VOID;
 
 import java.util.Set;
 
@@ -28,6 +27,5 @@ public class HelpersTest {
     assertThat(map).doesNotContainKey(FILE);
     assertThat(map).doesNotContainKey(FILE_SET);
     assertThat(map).doesNotContainKey(EMPTY_SET);
-    assertThat(map).doesNotContainKey(VOID);
   }
 }

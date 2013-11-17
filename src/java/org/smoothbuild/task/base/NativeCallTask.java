@@ -3,7 +3,6 @@ package org.smoothbuild.task.base;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
@@ -31,7 +30,7 @@ public class NativeCallTask extends Task {
   public Value execute(SandboxImpl sandbox) {
     try {
       Value result = function.invoke(sandbox, calculateArguments());
-      if (result == null && !isNullResultAllowed() && !sandbox.messageGroup().containsProblems()) {
+      if (result == null && !sandbox.messageGroup().containsProblems()) {
         sandbox.report(new NullResultError());
       } else {
         return result;
@@ -48,10 +47,6 @@ public class NativeCallTask extends Task {
       }
     }
     return null;
-  }
-
-  private boolean isNullResultAllowed() {
-    return function.type() == Type.VOID;
   }
 
   private ImmutableMap<String, Value> calculateArguments() {
