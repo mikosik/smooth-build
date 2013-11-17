@@ -36,12 +36,7 @@ public class CachingTask extends Task {
     }
 
     Value result = task.execute(sandbox);
-
-    // TODO Remove null checking once Void is no longer allowed return type for
-    // smooth functions. This will happen when save() function is removed.
-    if (result != null) {
-      taskDb.store(hash, new CachedResult(result, sandbox.messageGroup()));
-    }
+    taskDb.store(hash, new CachedResult(result, sandbox.messageGroup()));
     return result;
   }
 }
