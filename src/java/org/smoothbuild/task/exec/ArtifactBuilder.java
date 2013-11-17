@@ -75,11 +75,8 @@ public class ArtifactBuilder {
     } else if (value instanceof StringSet) {
       storeStringSet(artifactPath, (StringSet) value);
     } else {
-      // TODO remove null check once void functions are disallowed
-      if (value != null) {
-        throw new ErrorMessageException(new Message(MessageType.FATAL,
-            "Bug in smooth binary.\nUnknown value type " + value.getClass().getName()));
-      }
+      throw new ErrorMessageException(new Message(MessageType.FATAL,
+          "Bug in smooth binary.\nUnknown value type " + value.getClass().getName()));
     }
   }
 
