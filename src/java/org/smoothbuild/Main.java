@@ -15,8 +15,8 @@ public class Main {
     builder.withCommand(Help.class);
     builder.withCommand(BuildCommand.class);
     builder.withCommand(CleanCommand.class);
-    Cli<Runnable> gitParser = builder.build();
+    Cli<Runnable> cliParser = builder.build();
 
-    gitParser.parse(args).run();
+    cliParser.parse(args).run();
   }
 }
