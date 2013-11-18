@@ -7,12 +7,12 @@ import io.airlift.command.Command;
 import java.util.List;
 
 @Command(name = "build", description = "Runs build process by executing specified functions.")
-public class BuildCommand implements Runnable {
+public class BuildCommand implements RunnableCommand {
   @Arguments(description = "List of functions to be executed", required = true)
   public List<String> functions;
 
   @Override
-  public void run() {
-    bootstrap(BuildWorker.class).run(functions);
+  public boolean runCommand() {
+    return bootstrap(BuildWorker.class).run(functions);
   }
 }

@@ -4,9 +4,9 @@ import static org.smoothbuild.app.Bootstrapper.bootstrap;
 import io.airlift.command.Command;
 
 @Command(name = "clean", description = "Removes all cached results.")
-public class CleanCommand implements Runnable {
+public class CleanCommand implements RunnableCommand {
   @Override
-  public void run() {
-    bootstrap(CleanWorker.class).run();
+  public boolean runCommand() {
+    return bootstrap(CleanWorker.class).run();
   }
 }

@@ -15,7 +15,8 @@ public class CleanWorker {
     this.fileSystem = fileSystem;
   }
 
-  public void run() {
+  public boolean run() {
     fileSystem.delete(SMOOTH_DIR);
+    return true;
   }
 }
