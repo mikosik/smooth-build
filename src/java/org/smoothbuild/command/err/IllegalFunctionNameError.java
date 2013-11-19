@@ -1,7 +1,11 @@
 package org.smoothbuild.command.err;
 
-public class IllegalFunctionNameError extends CommandLineError {
+import static org.smoothbuild.message.base.MessageType.ERROR;
+
+import org.smoothbuild.message.base.Message;
+
+public class IllegalFunctionNameError extends Message {
   public IllegalFunctionNameError(String functionName) {
-    super("Illegal function name = '" + functionName + "'");
+    super(ERROR, "Illegal function name '" + functionName + "' passed in command line.");
   }
 }
