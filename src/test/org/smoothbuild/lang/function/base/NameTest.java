@@ -20,6 +20,8 @@ public class NameTest {
 
     doTestSimple("my_function");
     doTestSimple("MY_FUNCTION");
+    doTestSimple("my-function");
+    doTestSimple("MY-FUNCTION");
     doTestSimple("myFunction");
 
     doTestSimple("a.b");
@@ -35,6 +37,7 @@ public class NameTest {
 
     doTestSimple("_._._");
     doTestSimple("a_._b._c_");
+    doTestSimple("a-.-b.-c-");
   }
 
   private static void doTestSimple(String name) {
@@ -57,8 +60,7 @@ public class NameTest {
     assertIllegalSimpleName(".a.b");
     assertIllegalSimpleName(".a.b.c");
 
-    assertIllegalSimpleName("my-function");
-    assertIllegalSimpleName("a-package.myFunction");
+    assertIllegalSimpleName("-.-.-");
   }
 
   private static void assertIllegalSimpleName(String name) {
