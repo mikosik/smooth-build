@@ -43,7 +43,7 @@ public class FunctionsCollectorTest {
 
   @Test
   public void illegalFunctionNameIsReported() {
-    collectFunctions(moduleCtx(functionCtx("function-name")));
+    collectFunctions(moduleCtx(functionCtx("function^name")));
     messages.assertOnlyProblem(IllegalFunctionNameError.class);
   }
 
@@ -66,7 +66,8 @@ public class FunctionsCollectorTest {
     return collectFunctions(moduleContext, emptyBuiltinModule);
   }
 
-  private Map<Name, FunctionContext> collectFunctions(FakeModuleContext moduleContext, Module builtinModule) {
+  private Map<Name, FunctionContext> collectFunctions(FakeModuleContext moduleContext,
+      Module builtinModule) {
     try {
       return FunctionsCollector.collectFunctions(messages, builtinModule, moduleContext);
     } catch (PhaseFailedException e) {
