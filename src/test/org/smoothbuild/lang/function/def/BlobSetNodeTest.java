@@ -3,12 +3,9 @@ package org.smoothbuild.lang.function.def;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
-
-import java.util.Iterator;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -49,10 +46,8 @@ public class BlobSetNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    byte[] bytes1 = new byte[] { 1, 2, 3, 4 };
-    byte[] bytes2 = new byte[] { 1, 2, 3 };
-    Blob blob1 = sandbox.objectDb().blob(bytes1);
-    Blob blob2 = sandbox.objectDb().blob(bytes2);
+    Blob blob1 = sandbox.objectDb().blob(new byte[] { 1, 2, 3, 4 });
+    Blob blob2 = sandbox.objectDb().blob(new byte[] { 1, 2, 3 });
 
     Result result1 = new FakeResult(blob1);
     Result result2 = new FakeResult(blob2);
@@ -63,8 +58,6 @@ public class BlobSetNodeTest {
     Task task = fileSetNode.generateTask(taskGenerator);
     BlobSet result = (BlobSet) task.execute(sandbox);
 
-    Iterator<Blob> iterator = result.iterator();
-    assertThat(inputStreamToBytes(iterator.next().openInputStream())).isEqualTo(bytes1);
-    assertThat(inputStreamToBytes(iterator.next().openInputStream())).isEqualTo(bytes2);
+    assertThat(result).containsOnly(blob1, blob2);
   }
 }
