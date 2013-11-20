@@ -3,6 +3,8 @@ package org.smoothbuild.task.exec;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.plugin.BlobBuilder;
+import org.smoothbuild.lang.plugin.BlobSetBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
@@ -35,6 +37,11 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
+  public BlobSetBuilder blobSetBuilder() {
+    return new BlobSetBuilder(valueDb);
+  }
+
+  @Override
   public StringSetBuilder stringSetBuilder() {
     return new StringSetBuilder(valueDb);
   }
@@ -42,6 +49,11 @@ public class SandboxImpl implements Sandbox {
   @Override
   public FileBuilder fileBuilder() {
     return new FileBuilder(valueDb);
+  }
+
+  @Override
+  public BlobBuilder blobBuilder() {
+    return new BlobBuilder(valueDb);
   }
 
   @Override

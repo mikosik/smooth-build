@@ -8,9 +8,13 @@ public interface Sandbox {
 
   public FileSetBuilder fileSetBuilder();
 
+  public BlobSetBuilder blobSetBuilder();
+
   public StringSetBuilder stringSetBuilder();
 
   public FileBuilder fileBuilder();
+
+  public BlobBuilder blobBuilder();
 
   public StringValue string(String string);
 }
