@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.testing.lang.function.value.StringSetMatchers.containsOnly;
+import static org.hamcrest.Matchers.contains;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -29,6 +29,6 @@ public class StringSetTaskTest {
   public void execute() {
     given(stringSetTask = new StringSetTask(Lists.newArrayList(result1, result2), codeLocation));
     when(stringSetTask.execute(sandbox));
-    thenReturned(containsOnly(string1.value(), string2.value()));
+    thenReturned(contains(string1, string2));
   }
 }
