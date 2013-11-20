@@ -10,27 +10,16 @@ import org.smoothbuild.lang.function.value.Blob;
 
 import com.google.common.hash.HashCode;
 
-public class CachedBlob implements Blob {
+public class CachedBlob extends AbstractValue implements Blob {
   private final HashedDb hashedDb;
-  private final HashCode hash;
 
   public CachedBlob(HashedDb hashedDb, HashCode hash) {
+    super(Type.BLOB, hash);
     this.hashedDb = checkNotNull(hashedDb);
-    this.hash = checkNotNull(hash);
-  }
-
-  @Override
-  public Type type() {
-    return Type.BLOB;
-  }
-
-  @Override
-  public HashCode hash() {
-    return hash;
   }
 
   @Override
   public InputStream openInputStream() {
-    return hashedDb.openInputStream(hash);
+    return hashedDb.openInputStream(hash());
   }
 }
