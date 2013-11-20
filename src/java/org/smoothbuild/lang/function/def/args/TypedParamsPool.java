@@ -11,9 +11,16 @@ public class TypedParamsPool {
   private final Set<Param> optionalParams;
   private final Set<Param> requiredParams;
 
-  public TypedParamsPool(TypedParamsPool pool1, TypedParamsPool pool2) {
-    this.optionalParams = Sets.union(pool1.optionalParams, pool2.optionalParams);
-    this.requiredParams = Sets.union(pool1.requiredParams, pool2.requiredParams);
+  public TypedParamsPool(TypedParamsPool pool1, TypedParamsPool pool2, TypedParamsPool pool3) {
+    Set<Param> optional1 = pool1.optionalParams;
+    Set<Param> optional2 = pool2.optionalParams;
+    Set<Param> optional3 = pool3.optionalParams;
+    this.optionalParams = Sets.union(optional1, Sets.union(optional2, optional3));
+
+    Set<Param> required1 = pool1.requiredParams;
+    Set<Param> required2 = pool2.requiredParams;
+    Set<Param> required3 = pool3.requiredParams;
+    this.requiredParams = Sets.union(required1, Sets.union(required2, required3));
   }
 
   public TypedParamsPool() {

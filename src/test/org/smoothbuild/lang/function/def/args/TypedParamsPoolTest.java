@@ -11,33 +11,42 @@ import org.smoothbuild.lang.function.base.Param;
 public class TypedParamsPoolTest {
   Param string = param(STRING, "string1");
   Param string2 = param(STRING, "string2");
+  Param string3 = param(STRING, "string3");
+
   Param stringRequired = param(STRING, "stringRequired", true);
   Param stringRequired2 = param(STRING, "stringRequired2", true);
+  Param stringRequired3 = param(STRING, "stringRequired3", true);
 
   TypedParamsPool pool = new TypedParamsPool();
 
   TypedParamsPool pool1 = new TypedParamsPool();
   TypedParamsPool pool2 = new TypedParamsPool();
-  TypedParamsPool combined = new TypedParamsPool(pool1, pool2);
+  TypedParamsPool pool3 = new TypedParamsPool();
+  TypedParamsPool combined = new TypedParamsPool(pool1, pool2, pool3);
 
   @Test
   public void requiredParams() throws Exception {
     pool.add(string);
     pool.add(string2);
+    pool.add(string3);
     pool.add(stringRequired);
     pool.add(stringRequired2);
+    pool.add(stringRequired3);
 
-    assertThat(pool.requiredParams()).containsOnly(stringRequired, stringRequired2);
+    assertThat(pool.requiredParams())
+        .containsOnly(stringRequired, stringRequired2, stringRequired3);
   }
 
   @Test
   public void optionalParams() throws Exception {
     pool.add(string);
     pool.add(string2);
+    pool.add(string3);
     pool.add(stringRequired);
     pool.add(stringRequired2);
+    pool.add(stringRequired3);
 
-    assertThat(pool.optionalParams()).containsOnly(string, string2);
+    assertThat(pool.optionalParams()).containsOnly(string, string2, string3);
   }
 
   @Test
@@ -175,8 +184,11 @@ public class TypedParamsPoolTest {
     pool1.add(stringRequired);
     pool2.add(string2);
     pool2.add(stringRequired2);
+    pool3.add(string3);
+    pool3.add(stringRequired3);
 
-    assertThat(combined.requiredParams()).containsOnly(stringRequired, stringRequired2);
+    assertThat(combined.requiredParams()).containsOnly(stringRequired, stringRequired2,
+        stringRequired3);
   }
 
   @Test
@@ -210,6 +222,8 @@ public class TypedParamsPoolTest {
   public void doesNotHaveCandidateForOptionalParamInEachSubPool() throws Exception {
     pool1.add(stringRequired);
     pool2.add(stringRequired2);
+    pool3.add(stringRequired3);
+
     assertThat(combined.hasCandidate()).isFalse();
   }
 
@@ -217,6 +231,7 @@ public class TypedParamsPoolTest {
   public void doesNotHaveCandidateForOneNonRequiredParamInEachSubPool() throws Exception {
     pool1.add(string);
     pool2.add(string2);
+    pool3.add(string3);
     assertThat(combined.hasCandidate()).isFalse();
   }
 

@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
 import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 import static org.smoothbuild.lang.function.base.Type.STRING_SET;
@@ -63,7 +64,8 @@ public class ParamsPool {
     for (Type type : Type.allowedForParam()) {
       builder.put(type, new TypedParamsPool());
     }
-    builder.put(EMPTY_SET, new TypedParamsPool(builder.get(FILE_SET), builder.get(STRING_SET)));
+    builder.put(EMPTY_SET, new TypedParamsPool(builder.get(FILE_SET), builder.get(BLOB_SET),
+        builder.get(STRING_SET)));
 
     return ImmutableMap.copyOf(builder);
   }
