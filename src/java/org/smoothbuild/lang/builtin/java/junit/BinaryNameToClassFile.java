@@ -8,8 +8,8 @@ import java.util.Map;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
@@ -23,7 +23,7 @@ public class BinaryNameToClassFile {
     Map<String, File> binaryNameToClassFile = Maps.newHashMap();
 
     for (File jarFile : libraryJars) {
-      FileSet fileSet = unjarer.unjarFile(jarFile, isClassFilePredicate());
+      Array<File> fileSet = unjarer.unjarFile(jarFile, isClassFilePredicate());
 
       for (File classFile : fileSet) {
         Path path = classFile.path();

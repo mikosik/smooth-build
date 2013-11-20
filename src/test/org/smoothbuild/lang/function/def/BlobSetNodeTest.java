@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.Blob;
-import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -56,7 +56,8 @@ public class BlobSetNodeTest {
     Mockito.when(taskGenerator.generateTask(node2)).thenReturn(result2);
 
     Task task = fileSetNode.generateTask(taskGenerator);
-    BlobSet result = (BlobSet) task.execute(sandbox);
+    @SuppressWarnings("unchecked")
+    Array<Blob> result = (Array<Blob>) task.execute(sandbox);
 
     assertThat(result).containsOnly(blob1, blob2);
   }

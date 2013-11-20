@@ -9,8 +9,8 @@ import java.util.Map;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Message;
@@ -25,7 +25,7 @@ import org.smoothbuild.task.exec.SandboxImpl;
  */
 public class JunitFunction {
   public interface Parameters {
-    FileSet libs();
+    Array<File> libs();
   }
 
   @SmoothFunction(name = "junit")

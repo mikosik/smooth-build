@@ -5,12 +5,12 @@ import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
 
 import java.util.Iterator;
 
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.Blob;
-import org.smoothbuild.lang.function.value.BlobSet;
 
 import com.google.common.hash.HashCode;
 
-public class CachedBlobSet extends AbstractValue implements BlobSet {
+public class CachedBlobSet extends AbstractValue implements Array<Blob> {
   private final ValueDb valueDb;
 
   public CachedBlobSet(ValueDb valueDb, HashCode hash) {

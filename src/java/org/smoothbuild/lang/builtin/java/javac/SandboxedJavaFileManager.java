@@ -14,7 +14,8 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.lang.function.value.FileSet;
+import org.smoothbuild.lang.function.value.Array;
+import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.message.base.Message;
@@ -35,7 +36,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     this.resultClassFiles = sandbox.fileSetBuilder();
   }
 
-  public FileSet resultClassfiles() {
+  public Array<File> resultClassfiles() {
     return resultClassFiles.build();
   }
 

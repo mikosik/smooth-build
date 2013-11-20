@@ -16,8 +16,8 @@ import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
@@ -38,11 +38,11 @@ public class Unjarer {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public FileSet unjarFile(File jarFile) {
+  public Array<File> unjarFile(File jarFile) {
     return unjarFile(jarFile, Predicates.<String> alwaysTrue());
   }
 
-  public FileSet unjarFile(File jarFile, Predicate<String> nameFilter) {
+  public Array<File> unjarFile(File jarFile, Predicate<String> nameFilter) {
     FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {

@@ -19,8 +19,8 @@ import org.smoothbuild.lang.builtin.java.javac.err.CompilerFailedWithoutDiagnost
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.NoCompilerAvailableError;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -38,9 +38,9 @@ public class JavacFunction {
 
   public interface Parameters {
     @Required
-    FileSet sources();
+    Array<File> sources();
 
-    FileSet libs();
+    Array<File> libs();
 
     StringValue source();
 
@@ -48,7 +48,7 @@ public class JavacFunction {
   }
 
   @SmoothFunction(name = "javac")
-  public static FileSet execute(SandboxImpl sandbox, Parameters params) {
+  public static Array<File> execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -68,14 +68,14 @@ public class JavacFunction {
       this.params = params;
     }
 
-    public FileSet execute() {
+    public Array<File> execute() {
       if (compiler == null) {
         throw new ErrorMessageException(new NoCompilerAvailableError());
       }
       return compile(params.sources());
     }
 
-    public FileSet compile(Iterable<File> files) {
+    public Array<File> compile(Iterable<File> files) {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();

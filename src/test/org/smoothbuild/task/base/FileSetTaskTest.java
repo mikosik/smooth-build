@@ -8,8 +8,8 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
@@ -38,7 +38,8 @@ public class FileSetTaskTest {
   @Test
   public void execute() throws IOException {
     FileSetTask fileSetTask = new FileSetTask(newArrayList(result1, result2), codeLocation);
-    FileSet result = (FileSet) fileSetTask.execute(sandbox);
+    @SuppressWarnings("unchecked")
+    Array<File> result = (Array<File>) fileSetTask.execute(sandbox);
     assertThat(result).containsOnly(file1, file2);
   }
 

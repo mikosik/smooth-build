@@ -12,9 +12,8 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
-import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
@@ -53,7 +52,7 @@ public class SandboxImplTest {
     builder.add(file);
     HashCode hash = builder.build().hash();
 
-    FileSet fileSet = valueDb.fileSet(hash);
+    Array<File> fileSet = valueDb.fileSet(hash);
     MatcherAssert.assertThat(fileSet, FileSetMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileSet)).isEqualTo(1);
   }
@@ -69,9 +68,9 @@ public class SandboxImplTest {
     StringSetBuilder builder = sandbox.stringSetBuilder();
     builder.add(string1);
     builder.add(string2);
-    StringSet stringSet = builder.build();
+    Array<StringValue> stringSet = builder.build();
 
-    StringSet stringSetRead = valueDb.stringSet(stringSet.hash());
+    Array<StringValue> stringSetRead = valueDb.stringSet(stringSet.hash());
     List<String> strings = Lists.newArrayList();
     for (StringValue string : stringSetRead) {
       strings.add(string.value());

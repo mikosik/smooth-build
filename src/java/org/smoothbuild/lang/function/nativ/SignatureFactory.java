@@ -46,8 +46,7 @@ public class SignatureFactory {
   }
 
   private static Type getReturnType(Method method) throws NativeImplementationException {
-    Class<?> klass = method.getReturnType();
-    TypeLiteral<?> javaType = TypeLiteral.get(klass);
+    TypeLiteral<?> javaType = javaMethodReturnType(method);
     Type type = Type.javaResultTypetoType(javaType);
     if (type == null) {
       throw new IllegalReturnTypeException(method, javaType);
@@ -73,8 +72,8 @@ public class SignatureFactory {
     if (paramMethod.getParameterTypes().length != 0) {
       throw new ParamMethodHasArgumentsException(method, paramMethod);
     }
-    Class<?> klass = paramMethod.getReturnType();
-    TypeLiteral<?> javaType = TypeLiteral.get(klass);
+
+    TypeLiteral<?> javaType = javaMethodReturnType(paramMethod);
     Type type = Type.javaParamTypetoType(javaType);
     if (type == null) {
       throw new ForbiddenParamTypeException(method, paramMethod, javaType);
@@ -83,5 +82,10 @@ public class SignatureFactory {
     boolean isRequired = paramMethod.getAnnotation(Required.class) != null;
     String name = paramMethod.getName();
     return Param.param(type, name, isRequired);
+  }
+
+  private static TypeLiteral<?> javaMethodReturnType(Method paramMethod) {
+    Class<?> paramsClass = paramMethod.getDeclaringClass();
+    return TypeLiteral.get(paramsClass).getReturnType(paramMethod);
   }
 }

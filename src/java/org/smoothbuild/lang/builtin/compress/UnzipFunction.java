@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.builtin.compress;
 
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -13,7 +13,7 @@ public class UnzipFunction {
   }
 
   @SmoothFunction(name = "unzip")
-  public static FileSet execute(Sandbox sandbox, Parameters params) {
+  public static Array<File> execute(Sandbox sandbox, Parameters params) {
     return new Unzipper(sandbox).unzipFile(params.file());
   }
 }

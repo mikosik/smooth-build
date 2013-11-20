@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.builtin.file;
 
 import org.smoothbuild.lang.builtin.file.err.DuplicateMergedPathError;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
@@ -12,14 +12,14 @@ public class MergeFunction {
 
   public interface Parameters {
     @Required
-    public FileSet files();
+    public Array<File> files();
 
     @Required
-    public FileSet with();
+    public Array<File> with();
   }
 
   @SmoothFunction(name = "merge")
-  public static FileSet execute(Sandbox sandbox, Parameters params) {
+  public static Array<File> execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -32,7 +32,7 @@ public class MergeFunction {
       this.params = params;
     }
 
-    public FileSet execute() {
+    public Array<File> execute() {
       FileSetBuilder builder = sandbox.fileSetBuilder();
 
       for (File file : params.files()) {

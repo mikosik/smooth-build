@@ -5,12 +5,12 @@ import static org.smoothbuild.lang.function.base.Type.STRING_SET;
 
 import java.util.Iterator;
 
-import org.smoothbuild.lang.function.value.StringSet;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.StringValue;
 
 import com.google.common.hash.HashCode;
 
-public class CachedStringSet extends AbstractValue implements StringSet {
+public class CachedStringSet extends AbstractValue implements Array<StringValue> {
   private final ValueDb valueDb;
 
   public CachedStringSet(ValueDb valueDb, HashCode hash) {

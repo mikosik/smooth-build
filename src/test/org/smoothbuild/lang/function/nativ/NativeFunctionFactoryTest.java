@@ -26,9 +26,8 @@ import org.smoothbuild.lang.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.function.nativ.exc.WrongParamsInSmoothFunctionException;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
-import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
@@ -103,11 +102,11 @@ public class NativeFunctionFactoryTest {
   public interface AllowedParameters {
     public StringValue string();
 
-    public StringSet stringSet();
+    public Array<StringValue> stringSet();
 
     public File file();
 
-    public FileSet fileSet();
+    public Array<File> fileSet();
   }
 
   public static class MyFunctionWithAllowedParamTypes {
@@ -135,6 +134,23 @@ public class NativeFunctionFactoryTest {
   public static class MyFunctionWithAnnotatedParams {
     @SmoothFunction(name = "myFunction")
     public static StringValue execute(Sandbox sandbox, AnnotatedParameters params) {
+      return null;
+    }
+  }
+
+  @Test
+  public void array_of_array_is_forbidden_as_param_type() throws Exception {
+    assertExceptionThrown(MyFunctionWithArrayOfArrayParamType.class,
+        ForbiddenParamTypeException.class);
+  }
+
+  public interface ArrayOfArrayParams {
+    public Array<Array<StringValue>> runnable();
+  }
+
+  public static class MyFunctionWithArrayOfArrayParamType {
+    @SmoothFunction(name = "myFunction")
+    public static StringValue execute(Sandbox sandbox, ArrayOfArrayParams params) {
       return null;
     }
   }
@@ -194,14 +210,13 @@ public class NativeFunctionFactoryTest {
   }
 
   @Test
-  public void filesResultTypeIsAccepted() throws Exception {
-    NativeFunctionFactory.create(MyFunctionWithFilesResult.class, false);
+  public void file_array_result_type_is_accepted() throws Exception {
+    NativeFunctionFactory.create(MyFunctionWithFileArrayResult.class, false);
   }
 
-  public static class MyFunctionWithFilesResult {
-
+  public static class MyFunctionWithFileArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static FileSet execute(Sandbox sandbox, EmptyParameters params) {
+    public static Array<File> execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -212,9 +227,21 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class MyFunctionWithIllegalReturnType {
-
     @SmoothFunction(name = "MyFunction")
     public static Runnable execute(Sandbox sandbox, EmptyParameters params) {
+      return null;
+    }
+  }
+
+  @Test
+  public void array_of_array_result_type_is_not_allowed() throws Exception {
+    assertExceptionThrown(MyFunctionWithArrayOfArrayReturnType.class,
+        IllegalReturnTypeException.class);
+  }
+
+  public static class MyFunctionWithArrayOfArrayReturnType {
+    @SmoothFunction(name = "MyFunction")
+    public static Array<Array<File>> execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }

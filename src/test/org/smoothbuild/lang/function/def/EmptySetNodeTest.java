@@ -8,7 +8,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.value.FileSet;
+import org.smoothbuild.lang.function.value.Array;
+import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
@@ -34,9 +35,10 @@ public class EmptySetNodeTest {
     thenReturned(codeLocation);
   }
 
+  @SuppressWarnings("unchecked")
   public void generate_task() throws Exception {
     Task task = emptySetNode.generateTask(taskGenerator);
     Value result = task.execute(new FakeSandbox());
-    assertThat((FileSet) result).isEmpty();
+    assertThat((Array<File>) result).isEmpty();
   }
 }

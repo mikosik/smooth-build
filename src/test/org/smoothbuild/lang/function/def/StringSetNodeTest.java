@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.lang.function.value.StringSet;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
@@ -56,7 +56,8 @@ public class StringSetNodeTest {
     Mockito.when(taskGenerator.generateTask(node2)).thenReturn(result2);
 
     Task task = stringSetNode.generateTask(taskGenerator);
-    StringSet result = (StringSet) task.execute(sandbox);
+    @SuppressWarnings("unchecked")
+    Array<StringValue> result = (Array<StringValue>) task.execute(sandbox);
     assertThat(result).containsOnly(string1, string2);
   }
 }
