@@ -17,9 +17,8 @@ import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
-import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
@@ -39,8 +38,8 @@ public class TaskDbTest {
   Path path = path("file/path");
 
   Message message;
-  FileSet fileSet;
-  StringSet stringSet;
+  Array<File> fileSet;
+  Array<StringValue> stringSet;
   File file;
   StringValue stringValue;
   String string = "some string";
@@ -73,12 +72,13 @@ public class TaskDbTest {
     thenReturned(contains(message));
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void stored_file_set_can_be_read_back() throws Exception {
     given(file = valueDb.file(path, bytes));
     given(fileSet = valueDb.fileSet(newArrayList(file)));
     given(taskDb).store(hash, new CachedResult(fileSet, Empty.messageList()));
-    when(((FileSet) taskDb.read(hash).value()).iterator().next());
+    when(((Array<File>) taskDb.read(hash).value()).iterator().next());
     thenReturned(equalTo(file));
   }
 

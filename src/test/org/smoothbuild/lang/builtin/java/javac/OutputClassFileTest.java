@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.testing.common.StreamTester;
@@ -29,7 +29,7 @@ public class OutputClassFileTest {
 
     String content = "content";
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
-    FileSet fileSet = fileSetBuilder.build();
+    Array<File> fileSet = fileSetBuilder.build();
 
     assertThat(Iterables.size(fileSet)).isEqualTo(1);
     File file = fileSet.iterator().next();

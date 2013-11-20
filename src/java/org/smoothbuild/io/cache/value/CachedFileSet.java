@@ -5,12 +5,12 @@ import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 
 import java.util.Iterator;
 
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 
 import com.google.common.hash.HashCode;
 
-public class CachedFileSet extends AbstractValue implements FileSet {
+public class CachedFileSet extends AbstractValue implements Array<File> {
   private final ValueDb valueDb;
 
   public CachedFileSet(ValueDb valueDb, HashCode hash) {

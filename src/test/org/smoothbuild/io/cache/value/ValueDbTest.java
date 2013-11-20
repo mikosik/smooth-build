@@ -17,11 +17,9 @@ import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.Blob;
-import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
-import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
@@ -33,23 +31,23 @@ public class ValueDbTest {
   byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
 
-  FileSet fileSet;
-  FileSet fileSet2;
+  Array<File> fileSet;
+  Array<File> fileSet2;
 
   File file;
   File file2;
   Path path = path("my/path1");
   Path path2 = path("my/path2");
 
-  BlobSet blobSet;
-  BlobSet blobSet2;
+  Array<Blob> blobSet;
+  Array<Blob> blobSet2;
 
   Blob blob;
   Blob blob2;
   Blob blobRead;
 
-  StringSet stringSet;
-  StringSet stringSet2;
+  Array<StringValue> stringSet;
+  Array<StringValue> stringSet2;
 
   StringValue stringValue;
   StringValue stringValue2;

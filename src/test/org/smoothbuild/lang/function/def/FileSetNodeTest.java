@@ -10,8 +10,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -57,7 +57,8 @@ public class FileSetNodeTest {
     Mockito.when(taskGenerator.generateTask(node2)).thenReturn(result2);
 
     Task task = fileSetNode.generateTask(taskGenerator);
-    FileSet result = (FileSet) task.execute(sandbox);
+    @SuppressWarnings("unchecked")
+    Array<File> result = (Array<File>) task.execute(sandbox);
 
     assertThat(result).containsOnly(file1, file2);
   }

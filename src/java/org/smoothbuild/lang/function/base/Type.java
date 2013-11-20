@@ -1,10 +1,8 @@
 package org.smoothbuild.lang.function.base;
 
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.Blob;
-import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
-import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
 
 import com.google.common.collect.ImmutableMap;
@@ -12,13 +10,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class Type {
-  public static final Type STRING = create("String", StringValue.class);
-  public static final Type STRING_SET = create("String*", StringSet.class);
-  public static final Type BLOB = create("Blob", Blob.class);
-  public static final Type BLOB_SET = create("BLOB*", BlobSet.class);
-  public static final Type FILE = create("File", File.class);
-  public static final Type FILE_SET = create("File*", FileSet.class);
-  public static final Type EMPTY_SET = create("Any*", EmptySet.class);
+  public static final Type STRING = new Type("String", StringValue.class);
+  public static final Type STRING_SET = new Type("String*",
+      new TypeLiteral<Array<StringValue>>() {});
+  public static final Type BLOB = new Type("Blob", Blob.class);
+  public static final Type BLOB_SET = new Type("BLOB*", new TypeLiteral<Array<Blob>>() {});
+  public static final Type FILE = new Type("File", File.class);
+  public static final Type FILE_SET = new Type("File*", new TypeLiteral<Array<File>>() {});
+  public static final Type EMPTY_SET = new Type("Any*", EmptySet.class);
 
   static final ImmutableSet<Type> SET_ELEM_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
   static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB,
@@ -37,8 +36,8 @@ public class Type {
   private final String name;
   private final TypeLiteral<?> javaType;
 
-  private static Type create(String name, Class<?> javaType) {
-    return new Type(name, TypeLiteral.get(javaType));
+  private Type(String name, Class<?> javaType) {
+    this(name, TypeLiteral.get(javaType));
   }
 
   private Type(String name, TypeLiteral<?> javaType) {

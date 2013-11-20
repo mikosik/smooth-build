@@ -10,8 +10,8 @@ import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
@@ -22,7 +22,7 @@ public class ZipFunction {
 
   public interface Parameters {
     @Required
-    public FileSet files();
+    public Array<File> files();
 
     public StringValue output();
 

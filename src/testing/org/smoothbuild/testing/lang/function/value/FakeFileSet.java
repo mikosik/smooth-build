@@ -7,13 +7,13 @@ import java.util.List;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.AbstractValue;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class FakeFileSet extends AbstractValue implements FileSet {
+public class FakeFileSet extends AbstractValue implements Array<File> {
   private final List<File> files = Lists.newArrayList();
 
   public FakeFileSet() {

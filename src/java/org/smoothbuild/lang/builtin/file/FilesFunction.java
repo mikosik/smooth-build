@@ -11,7 +11,8 @@ import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.lang.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.lang.function.value.FileSet;
+import org.smoothbuild.lang.function.value.Array;
+import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
@@ -28,7 +29,7 @@ public class FilesFunction {
   }
 
   @SmoothFunction(name = "files", cacheable = false)
-  public static FileSet execute(SandboxImpl sandbox, Parameters params) {
+  public static Array<File> execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -41,11 +42,11 @@ public class FilesFunction {
       this.params = params;
     }
 
-    public FileSet execute() {
+    public Array<File> execute() {
       return createFiles(validatedPath("dir", params.dir()));
     }
 
-    private FileSet createFiles(Path dirPath) {
+    private Array<File> createFiles(Path dirPath) {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
       if (dirPath.isRoot()) {

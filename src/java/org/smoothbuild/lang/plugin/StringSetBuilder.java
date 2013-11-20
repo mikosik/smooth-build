@@ -3,7 +3,7 @@ package org.smoothbuild.lang.plugin;
 import java.util.List;
 
 import org.smoothbuild.io.cache.value.ValueDb;
-import org.smoothbuild.lang.function.value.StringSet;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.StringValue;
 
 import com.google.common.collect.Lists;
@@ -21,7 +21,7 @@ public class StringSetBuilder {
     result.add(string);
   }
 
-  public StringSet build() {
+  public Array<StringValue> build() {
     return valueDb.stringSet(result);
   }
 }

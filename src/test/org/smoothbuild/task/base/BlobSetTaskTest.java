@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.Blob;
-import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCodeLocation;
@@ -36,7 +36,8 @@ public class BlobSetTaskTest {
   @Test
   public void execute() throws IOException {
     BlobSetTask fileSetTask = new BlobSetTask(newArrayList(result1, result2), codeLocation);
-    BlobSet result = (BlobSet) fileSetTask.execute(sandbox);
+    @SuppressWarnings("unchecked")
+    Array<Blob> result = (Array<Blob>) fileSetTask.execute(sandbox);
     assertThat(result).containsOnly(blob1, blob2);
   }
 }

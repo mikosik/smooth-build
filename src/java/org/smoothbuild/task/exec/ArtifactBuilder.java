@@ -15,10 +15,10 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.Hashed;
-import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
@@ -66,14 +66,18 @@ public class ArtifactBuilder {
   private void store(Name name, Value value) {
     Path artifactPath = RESULTS_DIR.append(path(name.value()));
 
-    if (value instanceof File) {
+    if (value.type() == Type.FILE) {
       storeFile(artifactPath, (File) value);
-    } else if (value instanceof FileSet) {
-      storeFileSet(artifactPath, (FileSet) value);
-    } else if (value instanceof StringValue) {
+    } else if (value.type() == Type.FILE_SET) {
+      @SuppressWarnings("unchecked")
+      Array<File> fileArray = (Array<File>) value;
+      storeFileSet(artifactPath, fileArray);
+    } else if (value.type() == Type.STRING) {
       storeString(artifactPath, (StringValue) value);
-    } else if (value instanceof StringSet) {
-      storeStringSet(artifactPath, (StringSet) value);
+    } else if (value.type() == Type.STRING_SET) {
+      @SuppressWarnings("unchecked")
+      Array<StringValue> stringArray = (Array<StringValue>) value;
+      storeStringSet(artifactPath, stringArray);
     } else {
       throw new ErrorMessageException(new Message(MessageType.FATAL,
           "Bug in smooth binary.\nUnknown value type " + value.getClass().getName()));
@@ -86,7 +90,7 @@ public class ArtifactBuilder {
     smoothFileSystem.createLink(artifactPath, targetPath);
   }
 
-  private void storeFileSet(Path artifactPath, FileSet fileSet) {
+  private void storeFileSet(Path artifactPath, Array<File> fileSet) {
     smoothFileSystem.delete(artifactPath);
     for (File file : fileSet) {
       Path linkPath = artifactPath.append(file.path());
@@ -101,7 +105,7 @@ public class ArtifactBuilder {
     smoothFileSystem.createLink(artifactPath, targetPath);
   }
 
-  private void storeStringSet(Path artifactPath, StringSet stringSet) {
+  private void storeStringSet(Path artifactPath, Array<StringValue> stringSet) {
     smoothFileSystem.delete(artifactPath);
     int i = 0;
     for (StringValue string : stringSet) {

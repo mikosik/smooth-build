@@ -14,7 +14,8 @@ import org.smoothbuild.lang.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.lang.function.value.FileSet;
+import org.smoothbuild.lang.function.value.Array;
+import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
@@ -103,7 +104,7 @@ public class FilesFunctionTest {
     Path filePath = path("file/path/file.txt");
     sandbox.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
 
-    FileSet fileSet = runExecute(params(rootPath.value()));
+    Array<File> fileSet = runExecute(params(rootPath.value()));
 
     assertThat(containsFileContainingItsPath(filePath).matches(fileSet));
   }
@@ -117,7 +118,7 @@ public class FilesFunctionTest {
     };
   }
 
-  private FileSet runExecute(Parameters params) {
+  private Array<File> runExecute(Parameters params) {
     return FilesFunction.execute(sandbox, params);
   }
 }

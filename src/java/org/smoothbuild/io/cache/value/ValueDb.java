@@ -11,12 +11,10 @@ import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.hash.ValuesCache;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.Blob;
-import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.Hashed;
-import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
 
 import com.google.common.collect.ImmutableList;
@@ -32,12 +30,12 @@ public class ValueDb {
 
   // FileSet
 
-  public FileSet fileSet(List<File> elements) {
+  public Array<File> fileSet(List<File> elements) {
     HashCode hash = genericSet(elements);
     return new CachedFileSet(this, hash);
   }
 
-  public FileSet fileSet(HashCode hash) {
+  public Array<File> fileSet(HashCode hash) {
     return new CachedFileSet(this, hash);
   }
 
@@ -51,12 +49,12 @@ public class ValueDb {
 
   // BlobSet
 
-  public BlobSet blobSet(List<Blob> elements) {
+  public Array<Blob> blobSet(List<Blob> elements) {
     HashCode hash = genericSet(elements);
     return new CachedBlobSet(this, hash);
   }
 
-  public BlobSet blobSet(HashCode hash) {
+  public Array<Blob> blobSet(HashCode hash) {
     return new CachedBlobSet(this, hash);
   }
 
@@ -70,12 +68,12 @@ public class ValueDb {
 
   // StringSet
 
-  public StringSet stringSet(List<StringValue> elements) {
+  public Array<StringValue> stringSet(List<StringValue> elements) {
     HashCode hash = genericSet(elements);
     return new CachedStringSet(this, hash);
   }
 
-  public StringSet stringSet(HashCode hash) {
+  public Array<StringValue> stringSet(HashCode hash) {
     return new CachedStringSet(this, hash);
   }
 

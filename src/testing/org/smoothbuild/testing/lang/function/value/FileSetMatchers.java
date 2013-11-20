@@ -8,19 +8,19 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 
 public class FileSetMatchers {
 
-  public static Matcher<FileSet> containsFileContainingItsPath(Path path) throws IOException {
+  public static Matcher<Array<File>> containsFileContainingItsPath(Path path) throws IOException {
     return containsFileContaining(path, path.value());
   }
 
-  public static Matcher<FileSet> containsFileContaining(final Path path, final String content)
+  public static Matcher<Array<File>> containsFileContaining(final Path path, final String content)
       throws IOException {
 
-    return new TypeSafeMatcher<FileSet>() {
+    return new TypeSafeMatcher<Array<File>>() {
 
       @Override
       public void describeTo(Description description) {
@@ -28,7 +28,7 @@ public class FileSetMatchers {
       }
 
       @Override
-      protected boolean matchesSafely(FileSet fileSet) {
+      protected boolean matchesSafely(Array<File> fileSet) {
         for (File file : fileSet) {
           if (file.path().equals(path)) {
             try {
@@ -43,8 +43,8 @@ public class FileSetMatchers {
     };
   }
 
-  public static Matcher<FileSet> containsFile(final Path path) throws IOException {
-    return new TypeSafeMatcher<FileSet>() {
+  public static Matcher<Array<File>> containsFile(final Path path) throws IOException {
+    return new TypeSafeMatcher<Array<File>>() {
 
       @Override
       public void describeTo(Description description) {
@@ -52,7 +52,7 @@ public class FileSetMatchers {
       }
 
       @Override
-      protected boolean matchesSafely(FileSet fileSet) {
+      protected boolean matchesSafely(Array<File> fileSet) {
         for (File file : fileSet) {
           if (file.path().equals(path)) {
             return true;

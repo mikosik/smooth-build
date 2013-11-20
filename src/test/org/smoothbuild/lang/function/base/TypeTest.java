@@ -17,11 +17,9 @@ import static org.smoothbuild.lang.function.base.Type.javaResultTypetoType;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Type.EmptySet;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.Blob;
-import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
-import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
 
 import com.google.inject.TypeLiteral;
@@ -189,11 +187,12 @@ public class TypeTest {
   @Test
   public void testJavaParamTypetoType() {
     assertThat(javaParamTypetoType(type(StringValue.class))).isEqualTo(STRING);
-    assertThat(javaParamTypetoType(type(StringSet.class))).isEqualTo(STRING_SET);
     assertThat(javaParamTypetoType(type(Blob.class))).isEqualTo(BLOB);
-    assertThat(javaParamTypetoType(type(BlobSet.class))).isEqualTo(BLOB_SET);
     assertThat(javaParamTypetoType(type(File.class))).isEqualTo(FILE);
-    assertThat(javaParamTypetoType(type(FileSet.class))).isEqualTo(FILE_SET);
+
+    assertThat(javaParamTypetoType(new TypeLiteral<Array<StringValue>>() {})).isEqualTo(STRING_SET);
+    assertThat(javaParamTypetoType(new TypeLiteral<Array<Blob>>() {})).isEqualTo(BLOB_SET);
+    assertThat(javaParamTypetoType(new TypeLiteral<Array<File>>() {})).isEqualTo(FILE_SET);
   }
 
   @Test
@@ -204,11 +203,13 @@ public class TypeTest {
   @Test
   public void testJavaResultTypetoType() {
     assertThat(javaResultTypetoType(type(StringValue.class))).isEqualTo(STRING);
-    assertThat(javaResultTypetoType(type(StringSet.class))).isEqualTo(STRING_SET);
     assertThat(javaResultTypetoType(type(Blob.class))).isEqualTo(BLOB);
-    assertThat(javaResultTypetoType(type(BlobSet.class))).isEqualTo(BLOB_SET);
     assertThat(javaResultTypetoType(type(File.class))).isEqualTo(FILE);
-    assertThat(javaResultTypetoType(type(FileSet.class))).isEqualTo(FILE_SET);
+
+    assertThat(javaResultTypetoType(new TypeLiteral<Array<StringValue>>() {}))
+        .isEqualTo(STRING_SET);
+    assertThat(javaResultTypetoType(new TypeLiteral<Array<Blob>>() {})).isEqualTo(BLOB_SET);
+    assertThat(javaResultTypetoType(new TypeLiteral<Array<File>>() {})).isEqualTo(FILE_SET);
   }
 
   @Test

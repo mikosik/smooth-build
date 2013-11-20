@@ -5,8 +5,8 @@ import static org.smoothbuild.io.fs.match.PathMatcher.pathMatcher;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.match.IllegalPathPatternException;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathPatternError;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Required;
@@ -20,14 +20,14 @@ import com.google.common.base.Predicate;
 public class FilterFunction {
   public interface Parameters {
     @Required
-    public FileSet files();
+    public Array<File> files();
 
     @Required
     public StringValue include();
   }
 
   @SmoothFunction(name = "filter")
-  public static FileSet execute(SandboxImpl sandbox, Parameters params) {
+  public static Array<File> execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -40,7 +40,7 @@ public class FilterFunction {
       this.params = params;
     }
 
-    public FileSet execute() {
+    public Array<File> execute() {
       Predicate<Path> filter = createFilter();
       FileSetBuilder builder = sandbox.fileSetBuilder();
 

@@ -5,8 +5,8 @@ import java.util.Set;
 
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.err.CannotAddDuplicatePathError;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
@@ -38,7 +38,7 @@ public class FileSetBuilder {
     return alreadyAdded.contains(path);
   }
 
-  public FileSet build() {
+  public Array<File> build() {
     return valueDb.fileSet(result);
   }
 }

@@ -7,8 +7,8 @@ import javax.tools.JavaFileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
+import org.smoothbuild.lang.function.value.Array;
 import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
@@ -22,7 +22,7 @@ public class PackagedJavaFileObjects {
     Multimap<String, JavaFileObject> result = HashMultimap.create();
 
     for (File jarFile : libraryJars) {
-      FileSet files = unjarer.unjarFile(jarFile, isClassFilePredicate());
+      Array<File> files = unjarer.unjarFile(jarFile, isClassFilePredicate());
       for (File classFile : files) {
         InputClassFile inputClassFile = new InputClassFile(jarFile.path(), classFile);
         String aPackage = inputClassFile.aPackage();
