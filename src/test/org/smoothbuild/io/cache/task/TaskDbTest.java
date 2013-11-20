@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.testing.lang.function.value.FileMatchers.equalTo;
-import static org.smoothbuild.testing.lang.function.value.StringSetMatchers.containsOnly;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -89,7 +88,7 @@ public class TaskDbTest {
     given(stringSet = valueDb.stringSet(newArrayList(stringValue)));
     given(taskDb).store(hash, new CachedResult(stringSet, Empty.messageList()));
     when(taskDb.read(hash).value());
-    thenReturned(containsOnly(string));
+    thenReturned(contains(stringValue));
   }
 
   @Test

@@ -1,18 +1,15 @@
 package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
-import static org.smoothbuild.testing.lang.function.value.FileSetMatchers.containsFileContainingItsPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.message.base.CodeLocation;
@@ -29,8 +26,6 @@ public class FileSetNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
-  Path path1 = path("my/file1");
-  Path path2 = path("my/file2");
 
   Node node1 = mock(Node.class);
   Node node2 = mock(Node.class);
@@ -52,8 +47,8 @@ public class FileSetNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    File file1 = sandbox.objectDb().createFileContainingItsPath(path1);
-    File file2 = sandbox.objectDb().createFileContainingItsPath(path2);
+    File file1 = sandbox.objectDb().createFileContainingItsPath(path("my/file1"));
+    File file2 = sandbox.objectDb().createFileContainingItsPath(path("my/file2"));
 
     Result result1 = new FakeResult(file1);
     Result result2 = new FakeResult(file2);
@@ -64,7 +59,6 @@ public class FileSetNodeTest {
     Task task = fileSetNode.generateTask(taskGenerator);
     FileSet result = (FileSet) task.execute(sandbox);
 
-    assertThat(result, containsFileContainingItsPath(path1));
-    assertThat(result, containsFileContainingItsPath(path2));
+    assertThat(result).containsOnly(file1, file2);
   }
 }

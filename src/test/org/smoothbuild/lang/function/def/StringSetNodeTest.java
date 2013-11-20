@@ -1,9 +1,8 @@
 package org.smoothbuild.lang.function.def;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Type.STRING_SET;
-import static org.smoothbuild.testing.lang.function.value.StringSetMatchers.containsOnly;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -58,6 +57,6 @@ public class StringSetNodeTest {
 
     Task task = stringSetNode.generateTask(taskGenerator);
     StringSet result = (StringSet) task.execute(sandbox);
-    assertThat(result, containsOnly(string1.value(), string2.value()));
+    assertThat(result).containsOnly(string1, string2);
   }
 }
