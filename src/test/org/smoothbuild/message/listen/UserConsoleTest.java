@@ -128,7 +128,7 @@ public class UserConsoleTest {
     builder.append(" + GROUP NAME\n");
     builder.append("   + WARNING: message string\n");
     builder.append(" + SUCCESS :)\n");
-    builder.append("   + 1 warnings\n");
+    builder.append("   + 1 warning(s)\n");
 
     assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
@@ -145,7 +145,7 @@ public class UserConsoleTest {
     builder.append(" + GROUP NAME\n");
     builder.append("   + ERROR: message string\n");
     builder.append(" + FAILED :(\n");
-    builder.append("   + 1 errors\n");
+    builder.append("   + 1 error(s)\n");
 
     assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }
@@ -187,11 +187,11 @@ public class UserConsoleTest {
     }
 
     builder.append(" + FAILED :(\n");
-    builder.append("   + 5 fatals\n");
-    builder.append("   + 4 errors\n");
-    builder.append("   + 3 warnings\n");
-    builder.append("   + 2 suggestions\n");
-    builder.append("   + 1 infos\n");
+    builder.append("   + 5 fatal(s)\n");
+    builder.append("   + 4 error(s)\n");
+    builder.append("   + 3 warning(s)\n");
+    builder.append("   + 2 suggestion(s)\n");
+    builder.append("   + 1 info(s)\n");
 
     assertThat(outputStream.toString()).isEqualTo(builder.toString());
   }

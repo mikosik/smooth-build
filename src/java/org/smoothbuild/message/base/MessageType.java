@@ -16,6 +16,6 @@ public enum MessageType {
   }
 
   public String namePlural() {
-    return Ascii.toLowerCase(name()) + "s";
+    return Ascii.toLowerCase(name()) + "(s)";
   }
 }

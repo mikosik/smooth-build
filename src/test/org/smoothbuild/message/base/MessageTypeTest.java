@@ -49,30 +49,30 @@ public class MessageTypeTest {
   @Test
   public void name_plural_of_fatal() {
     when(FATAL.namePlural());
-    thenReturned("fatals");
+    thenReturned("fatal(s)");
   }
 
   @Test
   public void name_plural_of_error() {
     when(ERROR.namePlural());
-    thenReturned("errors");
+    thenReturned("error(s)");
   }
 
   @Test
   public void name_plural_of_warning() {
     when(WARNING.namePlural());
-    thenReturned("warnings");
+    thenReturned("warning(s)");
   }
 
   @Test
   public void name_plural_of_suggestion() {
     when(SUGGESTION.namePlural());
-    thenReturned("suggestions");
+    thenReturned("suggestion(s)");
   }
 
   @Test
   public void name_plural_of_info() {
     when(INFO.namePlural());
-    thenReturned("infos");
+    thenReturned("info(s)");
   }
 }
