@@ -1,37 +1,25 @@
 package org.smoothbuild.io.cache.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.lang.function.base.Type.STRING_SET;
 
 import java.util.Iterator;
 
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.value.StringSet;
 import org.smoothbuild.lang.function.value.StringValue;
-import org.smoothbuild.lang.function.value.Value;
 
 import com.google.common.hash.HashCode;
 
-public class CachedStringSet implements StringSet, Value {
+public class CachedStringSet extends AbstractValue implements StringSet {
   private final ValueDb valueDb;
-  private final HashCode hash;
 
   public CachedStringSet(ValueDb valueDb, HashCode hash) {
+    super(STRING_SET, hash);
     this.valueDb = checkNotNull(valueDb);
-    this.hash = checkNotNull(hash);
-  }
-
-  @Override
-  public Type type() {
-    return Type.STRING_SET;
-  }
-
-  @Override
-  public HashCode hash() {
-    return hash;
   }
 
   @Override
   public Iterator<StringValue> iterator() {
-    return valueDb.stringSetIterable(hash).iterator();
+    return valueDb.stringSetIterable(hash()).iterator();
   }
 }
