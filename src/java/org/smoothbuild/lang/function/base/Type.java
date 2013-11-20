@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.function.base;
 
 import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.StringSet;
@@ -14,16 +15,18 @@ public class Type {
   public static final Type STRING = create("String", StringValue.class);
   public static final Type STRING_SET = create("String*", StringSet.class);
   public static final Type BLOB = create("Blob", Blob.class);
+  public static final Type BLOB_SET = create("BLOB*", BlobSet.class);
   public static final Type FILE = create("File", File.class);
   public static final Type FILE_SET = create("File*", FileSet.class);
   public static final Type EMPTY_SET = create("Any*", EmptySet.class);
 
-  static final ImmutableSet<Type> SET_ELEM_TYPES = ImmutableSet.of(STRING, FILE);
-  static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet
-      .of(STRING, STRING_SET, FILE, FILE_SET);
-  static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_SET, FILE, FILE_SET);
-  static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB, FILE,
-      FILE_SET, EMPTY_SET);
+  static final ImmutableSet<Type> SET_ELEM_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB,
+      BLOB_SET, FILE, FILE_SET);
+  static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB, BLOB_SET,
+      FILE, FILE_SET);
+  static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB, BLOB_SET,
+      FILE, FILE_SET, EMPTY_SET);
 
   static final ImmutableSet<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
   static final ImmutableSet<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
@@ -49,7 +52,7 @@ public class Type {
 
   public boolean isAssignableFrom(Type type) {
     if (type == EMPTY_SET) {
-      return this == EMPTY_SET || this == STRING_SET || this == FILE_SET;
+      return this == EMPTY_SET || this == STRING_SET || this == BLOB_SET || this == FILE_SET;
     } else {
       return this == type;
     }
