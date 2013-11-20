@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.function.def.args;
 
+import static org.smoothbuild.lang.function.base.Type.BLOB;
+import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
 import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.lang.function.base.Type.FILE;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
@@ -15,6 +17,7 @@ import java.util.Set;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.function.def.BlobSetNode;
 import org.smoothbuild.lang.function.def.CachingNode;
 import org.smoothbuild.lang.function.def.FileSetNode;
 import org.smoothbuild.lang.function.def.Node;
@@ -140,8 +143,8 @@ public class ArgumentNodesCreator {
     // (of FILE_SET type). If we start with empty list argument we would not be
     // able to decide to which parameter it should be assigned to as both
     // (STRING_SET and FILE_SET) can be assigned from empty set.
-    private static final ImmutableList<Type> TYPES_ORDER = ImmutableList.of(STRING, FILE,
-        STRING_SET, FILE_SET, EMPTY_SET);
+    private static final ImmutableList<Type> TYPES_ORDER = ImmutableList.of(STRING, BLOB, FILE,
+        STRING_SET, BLOB_SET, FILE_SET, EMPTY_SET);
 
     private void processNamelessArguments(AssignmentList assignmentList) {
       ImmutableMap<Type, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
@@ -181,12 +184,15 @@ public class ArgumentNodesCreator {
     private Node argumentNode(Assignment assignment) {
       Type type = assignment.param().type();
       Argument argument = assignment.argument();
-      if (argument.type() == Type.EMPTY_SET) {
+      if (argument.type() == EMPTY_SET) {
         if (type == Type.STRING_SET) {
           StringSetNode node = new StringSetNode(Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
-        } else if (type == Type.FILE_SET) {
+        } else if (type == FILE_SET) {
           FileSetNode node = new FileSetNode(Empty.nodeList(), argument.codeLocation());
+          return new CachingNode(node);
+        } else if (type == BLOB_SET) {
+          BlobSetNode node = new BlobSetNode(Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
         } else {
           throw new ErrorMessageException(new Message(FATAL,
