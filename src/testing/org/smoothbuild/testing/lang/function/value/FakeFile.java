@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.Marshaller;
+import org.smoothbuild.io.cache.value.AbstractValue;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.value.Blob;
@@ -13,10 +14,9 @@ import org.smoothbuild.lang.function.value.File;
 
 import com.google.common.hash.HashCode;
 
-public class FakeFile implements File {
+public class FakeFile extends AbstractValue implements File {
   private final Path path;
   private final Blob content;
-  private final HashCode hash;
 
   public FakeFile(Path path) {
     this(path, path.value());
@@ -27,19 +27,14 @@ public class FakeFile implements File {
   }
 
   public FakeFile(Path path, byte[] bytes) {
+    this(path, new FakeBlob(bytes));
+
+  }
+
+  public FakeFile(Path path, FakeBlob content) {
+    super(Type.FILE, calculateHash(path, content));
     this.path = path;
-    this.content = new FakeBlob(bytes);
-    this.hash = calculateHash(path, content);
-  }
-
-  @Override
-  public Type type() {
-    return Type.FILE;
-  }
-
-  @Override
-  public HashCode hash() {
-    return hash;
+    this.content = content;
   }
 
   @Override
