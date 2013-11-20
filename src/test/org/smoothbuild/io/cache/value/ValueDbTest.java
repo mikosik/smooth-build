@@ -17,6 +17,8 @@ import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.StringSet;
@@ -28,8 +30,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
 
 public class ValueDbTest {
-  ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
-
   byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
 
@@ -41,6 +41,13 @@ public class ValueDbTest {
   Path path = path("my/path1");
   Path path2 = path("my/path2");
 
+  BlobSet blobSet;
+  BlobSet blobSet2;
+
+  Blob blob;
+  Blob blob2;
+  Blob blobRead;
+
   StringSet stringSet;
   StringSet stringSet2;
 
@@ -50,8 +57,7 @@ public class ValueDbTest {
   String string = "a string";
   String string2 = "a string 2";
 
-  CachedBlob blob;
-  CachedBlob blobRead;
+  ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
 
   // file vs blob
 
@@ -146,6 +152,70 @@ public class ValueDbTest {
     thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
+  // blob set object
+
+  @Test
+  public void created_blob_set_with_one_blob_added_contains_one_blob() throws Exception {
+    given(blob = valueDb.blob(bytes));
+    given(blobSet = valueDb.blobSet(ImmutableList.<Blob> of(blob)));
+    when(Iterables.size(blobSet));
+    thenReturned(1);
+  }
+
+  @Test
+  public void created_blob_set_contains_blob_with_content_of_blob_that_was_added_to_it()
+      throws Exception {
+    given(blob = valueDb.blob(bytes));
+    given(blobSet = valueDb.blobSet(ImmutableList.<Blob> of(blob)));
+    when(inputStreamToBytes(blobSet.iterator().next().openInputStream()));
+    thenReturned(bytes);
+  }
+
+  @Test
+  public void created_blob_set_with_one_blob_added_when_queried_by_hash_contains_one_blob()
+      throws Exception {
+    given(blob = valueDb.blob(bytes));
+    given(blobSet = valueDb.blobSet(ImmutableList.<Blob> of(blob)));
+    when(Iterables.size(valueDb.blobSet(blobSet.hash())));
+    thenReturned(1);
+  }
+
+  @Test
+  public void created_blob_set_when_queried_by_hash_contains_blob_with_content_of_blob_that_was_added_to_it()
+      throws Exception {
+    given(blob = valueDb.blob(bytes));
+    given(blobSet = valueDb.blobSet(ImmutableList.<Blob> of(blob)));
+    when(inputStreamToBytes(valueDb.blobSet(blobSet.hash()).iterator().next().openInputStream()));
+    thenReturned(bytes);
+  }
+
+  @Test
+  public void blob_set_with_one_element_has_different_hash_from_that_blob() throws Exception {
+    given(blob = valueDb.blob(bytes));
+    given(blobSet = valueDb.blobSet(ImmutableList.<Blob> of(blob)));
+    when(blob.hash());
+    thenReturned(not(equalTo(blobSet.hash())));
+  }
+
+  @Test
+  public void blob_set_with_one_element_has_different_hash_from_blob_set_with_two_elements()
+      throws Exception {
+    given(blob = valueDb.blob(bytes));
+    given(blob2 = valueDb.blob(bytes2));
+    given(blobSet = valueDb.blobSet(ImmutableList.<Blob> of(blob)));
+    given(blobSet2 = valueDb.blobSet(ImmutableList.<Blob> of(blob, blob2)));
+
+    when(blobSet.hash());
+    thenReturned(not(equalTo(blobSet2.hash())));
+  }
+
+  @Test
+  public void reading_elements_from_not_stored_blob_set_fails() throws Exception {
+    given(blobSet = valueDb.blobSet(HashCode.fromInt(33)));
+    when(blobSet).iterator();
+    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+  }
+
   // string set object
 
   @Test
@@ -197,8 +267,7 @@ public class ValueDbTest {
     given(stringValue = valueDb.string(string));
     given(stringValue2 = valueDb.string(string2));
     given(stringSet = valueDb.stringSet(ImmutableList.<StringValue> of(stringValue)));
-    given(stringSet2 = valueDb.stringSet(ImmutableList.<StringValue> of(stringValue,
-        stringValue2)));
+    given(stringSet2 = valueDb.stringSet(ImmutableList.<StringValue> of(stringValue, stringValue2)));
 
     when(stringSet.hash());
     thenReturned(not(equalTo(stringSet2.hash())));

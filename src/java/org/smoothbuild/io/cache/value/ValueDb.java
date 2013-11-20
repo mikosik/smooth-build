@@ -11,6 +11,8 @@ import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.hash.ValuesCache;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.function.value.BlobSet;
 import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.function.value.FileSet;
 import org.smoothbuild.lang.function.value.Hashed;
@@ -43,6 +45,25 @@ public class ValueDb {
     ImmutableList.Builder<File> builder = ImmutableList.builder();
     for (HashCode elemHash : readHashCodeList(hash)) {
       builder.add(file(elemHash));
+    }
+    return builder.build();
+  }
+
+  // BlobSet
+
+  public BlobSet blobSet(List<Blob> elements) {
+    HashCode hash = genericSet(elements);
+    return new CachedBlobSet(this, hash);
+  }
+
+  public BlobSet blobSet(HashCode hash) {
+    return new CachedBlobSet(this, hash);
+  }
+
+  public Iterable<Blob> blobSetIterable(HashCode hash) {
+    ImmutableList.Builder<Blob> builder = ImmutableList.builder();
+    for (HashCode elemHash : readHashCodeList(hash)) {
+      builder.add(blob(elemHash));
     }
     return builder.build();
   }
