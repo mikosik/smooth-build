@@ -6,6 +6,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Type.BLOB;
+import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
 import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.lang.function.base.Type.FILE;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
@@ -46,6 +48,8 @@ public class ArgumentNodesCreatorTest {
   public void convertingNamedArgument() {
     doTestConvertingNamedArgument(STRING);
     doTestConvertingNamedArgument(STRING_SET);
+    doTestConvertingNamedArgument(BLOB);
+    doTestConvertingNamedArgument(BLOB_SET);
     doTestConvertingNamedArgument(FILE);
     doTestConvertingNamedArgument(FILE_SET);
   }
@@ -70,6 +74,7 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void convertingNamedEmptySetArgument() {
     doTestConvertingNamedEmptySetArgument(STRING_SET);
+    doTestConvertingNamedEmptySetArgument(BLOB_SET);
     doTestConvertingNamedEmptySetArgument(FILE_SET);
   }
 
@@ -94,6 +99,8 @@ public class ArgumentNodesCreatorTest {
   public void duplicatedNames() {
     doTestDuplicatedNames(STRING);
     doTestDuplicatedNames(STRING_SET);
+    doTestDuplicatedNames(BLOB);
+    doTestDuplicatedNames(BLOB_SET);
     doTestDuplicatedNames(FILE);
     doTestDuplicatedNames(FILE_SET);
   }
@@ -116,6 +123,7 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void duplicatedNamedEmptySetNames() {
     doTestDuplicatedNamedEmptySetNames(STRING_SET);
+    doTestDuplicatedNamedEmptySetNames(BLOB_SET);
     doTestDuplicatedNamedEmptySetNames(FILE_SET);
   }
 
@@ -151,6 +159,8 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void typeMismatchForStringParam() throws Exception {
     doTestTypeMismatchForParamProblem(STRING, STRING_SET);
+    doTestTypeMismatchForParamProblem(STRING, BLOB);
+    doTestTypeMismatchForParamProblem(STRING, BLOB_SET);
     doTestTypeMismatchForParamProblem(STRING, FILE);
     doTestTypeMismatchForParamProblem(STRING, FILE_SET);
     doTestTypeMismatchForParamProblem(STRING, EMPTY_SET);
@@ -159,14 +169,37 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void typeMismatchForStringSetParam() throws Exception {
     doTestTypeMismatchForParamProblem(STRING_SET, STRING);
+    doTestTypeMismatchForParamProblem(STRING_SET, BLOB);
+    doTestTypeMismatchForParamProblem(STRING_SET, BLOB_SET);
     doTestTypeMismatchForParamProblem(STRING_SET, FILE);
     doTestTypeMismatchForParamProblem(STRING_SET, FILE_SET);
+  }
+
+  @Test
+  public void typeMismatchForBlobParam() throws Exception {
+    doTestTypeMismatchForParamProblem(BLOB, STRING);
+    doTestTypeMismatchForParamProblem(BLOB, STRING_SET);
+    doTestTypeMismatchForParamProblem(BLOB, BLOB_SET);
+    doTestTypeMismatchForParamProblem(BLOB, FILE);
+    doTestTypeMismatchForParamProblem(BLOB, FILE_SET);
+    doTestTypeMismatchForParamProblem(BLOB, EMPTY_SET);
+  }
+
+  @Test
+  public void typeMismatchForBlobSetParam() throws Exception {
+    doTestTypeMismatchForParamProblem(BLOB_SET, STRING);
+    doTestTypeMismatchForParamProblem(BLOB_SET, STRING_SET);
+    doTestTypeMismatchForParamProblem(BLOB_SET, BLOB);
+    doTestTypeMismatchForParamProblem(BLOB_SET, FILE);
+    doTestTypeMismatchForParamProblem(BLOB_SET, FILE_SET);
   }
 
   @Test
   public void typeMismatchForFileParam() throws Exception {
     doTestTypeMismatchForParamProblem(FILE, STRING);
     doTestTypeMismatchForParamProblem(FILE, STRING_SET);
+    doTestTypeMismatchForParamProblem(FILE, BLOB);
+    doTestTypeMismatchForParamProblem(FILE, BLOB_SET);
     doTestTypeMismatchForParamProblem(FILE, FILE_SET);
     doTestTypeMismatchForParamProblem(FILE, EMPTY_SET);
   }
@@ -175,6 +208,8 @@ public class ArgumentNodesCreatorTest {
   public void typeMismatchForFileSetParam() throws Exception {
     doTestTypeMismatchForParamProblem(FILE_SET, STRING);
     doTestTypeMismatchForParamProblem(FILE_SET, STRING_SET);
+    doTestTypeMismatchForParamProblem(FILE_SET, BLOB);
+    doTestTypeMismatchForParamProblem(FILE_SET, BLOB_SET);
     doTestTypeMismatchForParamProblem(FILE_SET, FILE);
   }
 
@@ -208,6 +243,8 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void convertingSingleNamelessStringArgument() {
     doTestConvertingSingleNamelessArgument(STRING, STRING_SET);
+    doTestConvertingSingleNamelessArgument(STRING, BLOB);
+    doTestConvertingSingleNamelessArgument(STRING, BLOB_SET);
     doTestConvertingSingleNamelessArgument(STRING, FILE);
     doTestConvertingSingleNamelessArgument(STRING, FILE_SET);
   }
@@ -215,6 +252,8 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void convertingSingleNamelessStringSetArgument() {
     doTestConvertingSingleNamelessArgument(STRING_SET, STRING);
+    doTestConvertingSingleNamelessArgument(STRING_SET, BLOB);
+    doTestConvertingSingleNamelessArgument(STRING_SET, BLOB_SET);
     doTestConvertingSingleNamelessArgument(STRING_SET, FILE);
     doTestConvertingSingleNamelessArgument(STRING_SET, FILE_SET);
   }
@@ -223,6 +262,8 @@ public class ArgumentNodesCreatorTest {
   public void convertingSingleNamelessFileArgument() {
     doTestConvertingSingleNamelessArgument(FILE, STRING);
     doTestConvertingSingleNamelessArgument(FILE, STRING_SET);
+    doTestConvertingSingleNamelessArgument(FILE, BLOB);
+    doTestConvertingSingleNamelessArgument(FILE, BLOB_SET);
     doTestConvertingSingleNamelessArgument(FILE, FILE_SET);
   }
 
@@ -230,6 +271,8 @@ public class ArgumentNodesCreatorTest {
   public void convertingSingleNamelessFileSetArgument() {
     doTestConvertingSingleNamelessArgument(FILE_SET, STRING);
     doTestConvertingSingleNamelessArgument(FILE_SET, STRING_SET);
+    doTestConvertingSingleNamelessArgument(FILE_SET, BLOB);
+    doTestConvertingSingleNamelessArgument(FILE_SET, BLOB_SET);
     doTestConvertingSingleNamelessArgument(FILE_SET, FILE);
   }
 
@@ -255,9 +298,15 @@ public class ArgumentNodesCreatorTest {
   public void convertingSingleNamelessEmptySetArgument() throws Exception {
     doTestConvertingSingleNamelessEmptySetArgument(STRING_SET, STRING);
     doTestConvertingSingleNamelessEmptySetArgument(STRING_SET, FILE);
+    doTestConvertingSingleNamelessEmptySetArgument(STRING_SET, BLOB);
+
+    doTestConvertingSingleNamelessEmptySetArgument(BLOB_SET, STRING);
+    doTestConvertingSingleNamelessEmptySetArgument(BLOB_SET, FILE);
+    doTestConvertingSingleNamelessEmptySetArgument(BLOB_SET, BLOB);
 
     doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, STRING);
     doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, FILE);
+    doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, BLOB);
   }
 
   private void doTestConvertingSingleNamelessEmptySetArgument(Type type, Type otherType) {
@@ -282,6 +331,8 @@ public class ArgumentNodesCreatorTest {
   public void convertingSingleNamelessArgumentWithOtherNamed() {
     doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING);
     doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING_SET);
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(BLOB);
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(BLOB_SET);
     doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE);
     doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE_SET);
   }
@@ -311,19 +362,39 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void convertingTwoNamelessArgumentsWithDifferentType() throws Exception {
     doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, BLOB);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, BLOB_SET);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE_SET);
 
     doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, BLOB);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, BLOB_SET);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, FILE);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, FILE_SET);
 
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, BLOB_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, FILE);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, FILE_SET);
+
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, BLOB);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, FILE);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, FILE_SET);
+
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, BLOB);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, BLOB_SET);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, FILE_SET);
 
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, STRING);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, BLOB);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, BLOB_SET);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, FILE);
   }
 
@@ -349,6 +420,7 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void convertingSingleNamelessSetArgumentWhitOtherNamed() throws Exception {
     doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(STRING_SET);
+    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(BLOB_SET);
     doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(FILE_SET);
   }
 
@@ -376,8 +448,14 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void convertingNamelessEmptySetArgWithOtherNamedSet() throws Exception {
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_SET, BLOB_SET);
     doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_SET, FILE_SET);
+
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(BLOB_SET, STRING_SET);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(BLOB_SET, FILE_SET);
+
     doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_SET, STRING_SET);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_SET, BLOB_SET);
   }
 
   private void doTestConvertingNamelessEmptySetArgWithOtherNamedSet(Type setType, Type otherSetType) {
@@ -403,9 +481,12 @@ public class ArgumentNodesCreatorTest {
   public void ambigiuousNamelessArgument() throws Exception {
     doTestAmbiguousNamelessArgument(STRING, STRING);
     doTestAmbiguousNamelessArgument(STRING_SET, STRING_SET);
+    doTestAmbiguousNamelessArgument(BLOB, BLOB);
+    doTestAmbiguousNamelessArgument(BLOB_SET, BLOB_SET);
     doTestAmbiguousNamelessArgument(FILE, FILE);
     doTestAmbiguousNamelessArgument(FILE_SET, FILE_SET);
 
+    doTestAmbiguousNamelessArgument(BLOB_SET, EMPTY_SET);
     doTestAmbiguousNamelessArgument(FILE_SET, EMPTY_SET);
     doTestAmbiguousNamelessArgument(STRING_SET, EMPTY_SET);
   }
@@ -444,6 +525,8 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void noParamWithProperTypeForNamelessStringArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(STRING, STRING_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING, BLOB);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING, BLOB_SET);
     doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE);
     doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE_SET);
   }
@@ -451,6 +534,8 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void noParamWithProperTypeForNamelessStringSetArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, BLOB);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, BLOB_SET);
     doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, FILE);
     doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, FILE_SET);
   }
@@ -459,6 +544,8 @@ public class ArgumentNodesCreatorTest {
   public void noParamWithProperTypeForNamelessFileArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING);
     doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE, BLOB);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE, BLOB_SET);
     doTestNoParamWithProperTypeForNamelessArgument(FILE, FILE_SET);
   }
 
@@ -466,12 +553,15 @@ public class ArgumentNodesCreatorTest {
   public void noParamWithProperTypeForNamelessFileSetArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, STRING);
     doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, STRING_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, BLOB);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, BLOB_SET);
     doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, FILE);
   }
 
   @Test
   public void noParamWithProperTypeForNamelessEmptySetArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(EMPTY_SET, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_SET, BLOB);
     doTestNoParamWithProperTypeForNamelessArgument(EMPTY_SET, FILE);
   }
 
