@@ -6,6 +6,7 @@ import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -22,11 +23,13 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
 
 public class Unzipper {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer;
   private final Sandbox sandbox;
+  private Set<Path> alreadyUnzipped;
 
   public Unzipper(Sandbox sandbox) {
     this.sandbox = sandbox;
@@ -34,6 +37,7 @@ public class Unzipper {
   }
 
   public Array<File> unzipFile(File zipFile) {
+    this.alreadyUnzipped = Sets.newHashSet();
     FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
@@ -58,9 +62,10 @@ public class Unzipper {
       throw new ErrorMessageException(new IllegalPathInZipError(fileName));
     }
     Path path = path(fileName);
-    if (fileSetBuilder.contains(path)) {
+    if (alreadyUnzipped.contains(path)) {
       throw new ErrorMessageException(new DuplicatePathInZipError(path));
     }
+    alreadyUnzipped.add(path);
     try {
       FileBuilder fileBuilder = sandbox.fileBuilder();
       fileBuilder.setPath(path);
