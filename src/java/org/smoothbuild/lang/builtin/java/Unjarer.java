@@ -8,6 +8,7 @@ import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -26,12 +27,14 @@ import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.Sets;
 
 public class Unjarer {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
 
   private final Sandbox sandbox;
   private final byte[] buffer;
+  private Set<Path> alreadyUnjared;
 
   public Unjarer(Sandbox sandbox) {
     this.sandbox = sandbox;
@@ -43,6 +46,7 @@ public class Unjarer {
   }
 
   public Array<File> unjarFile(File jarFile, Predicate<String> nameFilter) {
+    this.alreadyUnjared = Sets.newHashSet();
     FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
@@ -53,9 +57,10 @@ public class Unjarer {
           if (filter.apply(fileName)) {
             File file = unjarEntry(jarInputStream, fileName);
             Path path = file.path();
-            if (fileSetBuilder.contains(path)) {
+            if (alreadyUnjared.contains(path)) {
               throw new ErrorMessageException(new DuplicatePathInJarError(path));
             } else {
+              alreadyUnjared.add(path);
               fileSetBuilder.add(file);
             }
           }

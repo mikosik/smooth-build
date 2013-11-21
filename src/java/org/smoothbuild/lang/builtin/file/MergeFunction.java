@@ -1,5 +1,8 @@
 package org.smoothbuild.lang.builtin.file;
 
+import java.util.Set;
+
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.err.DuplicateMergedPathError;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Required;
@@ -7,6 +10,8 @@ import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
+
+import com.google.common.collect.Sets;
 
 public class MergeFunction {
 
@@ -33,20 +38,27 @@ public class MergeFunction {
     }
 
     public Array<File> execute() {
+      Set<Path> alreadyAdded = Sets.newHashSet();
       FileSetBuilder builder = sandbox.fileSetBuilder();
 
       for (File file : params.files()) {
-        builder.add(file);
+        addFile(file, builder, alreadyAdded);
       }
       for (File file : params.with()) {
-        if (builder.contains(file.path())) {
-          sandbox.report(new DuplicateMergedPathError(file.path()));
-        } else {
-          builder.add(file);
-        }
+        addFile(file, builder, alreadyAdded);
       }
 
       return builder.build();
+    }
+
+    private void addFile(File file, FileSetBuilder builder, Set<Path> alreadyAdded) {
+      Path path = file.path();
+      if (alreadyAdded.contains(path)) {
+        sandbox.report(new DuplicateMergedPathError(path));
+      } else {
+        alreadyAdded.add(path);
+        builder.add(file);
+      }
     }
   }
 }
