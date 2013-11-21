@@ -1,6 +1,9 @@
 package org.smoothbuild.io.cache.value;
 
 import static org.smoothbuild.command.SmoothContants.CHARSET;
+import static org.smoothbuild.lang.type.Type.BLOB_SET;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Hashed;
 import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -32,60 +36,44 @@ public class ValueDb {
 
   public Array<File> fileSet(List<File> elements) {
     HashCode hash = genericSet(elements);
-    return new CachedFileSet(this, hash);
+    return new CachedArray<File>(this, hash, FILE_SET, fileReader());
   }
 
   public Array<File> fileSet(HashCode hash) {
-    return new CachedFileSet(this, hash);
-  }
-
-  public Iterable<File> fileSetIterable(HashCode hash) {
-    ImmutableList.Builder<File> builder = ImmutableList.builder();
-    for (HashCode elemHash : readHashCodeList(hash)) {
-      builder.add(file(elemHash));
-    }
-    return builder.build();
+    return new CachedArray<File>(this, hash, FILE_SET, fileReader());
   }
 
   // BlobSet
 
   public Array<Blob> blobSet(List<Blob> elements) {
     HashCode hash = genericSet(elements);
-    return new CachedBlobSet(this, hash);
+    return new CachedArray<Blob>(this, hash, BLOB_SET, blobReader());
   }
 
   public Array<Blob> blobSet(HashCode hash) {
-    return new CachedBlobSet(this, hash);
-  }
-
-  public Iterable<Blob> blobSetIterable(HashCode hash) {
-    ImmutableList.Builder<Blob> builder = ImmutableList.builder();
-    for (HashCode elemHash : readHashCodeList(hash)) {
-      builder.add(blob(elemHash));
-    }
-    return builder.build();
+    return new CachedArray<Blob>(this, hash, BLOB_SET, blobReader());
   }
 
   // StringSet
 
   public Array<StringValue> stringSet(List<StringValue> elements) {
     HashCode hash = genericSet(elements);
-    return new CachedStringSet(this, hash);
+    return new CachedArray<StringValue>(this, hash, STRING_SET, stringReader());
   }
 
   public Array<StringValue> stringSet(HashCode hash) {
-    return new CachedStringSet(this, hash);
-  }
-
-  public Iterable<StringValue> stringSetIterable(HashCode hash) {
-    ImmutableList.Builder<StringValue> builder = ImmutableList.builder();
-    for (HashCode elemHash : readHashCodeList(hash)) {
-      builder.add(string(elemHash));
-    }
-    return builder.build();
+    return new CachedArray<StringValue>(this, hash, STRING_SET, stringReader());
   }
 
   // generic set
+
+  public <T extends Value> Iterable<T> array(HashCode hash, ValueReader<T> valueReader) {
+    ImmutableList.Builder<T> builder = ImmutableList.builder();
+    for (HashCode elemHash : readHashCodeList(hash)) {
+      builder.add(valueReader.read(elemHash));
+    }
+    return builder.build();
+  }
 
   private HashCode genericSet(List<? extends Hashed> elements) {
     Marshaller marshaller = new Marshaller();
@@ -113,6 +101,15 @@ public class ValueDb {
     return new CachedFile(path, blob, hash);
   }
 
+  protected ValueReader<File> fileReader() {
+    return new ValueReader<File>() {
+      @Override
+      public File read(HashCode hash) {
+        return file(hash);
+      }
+    };
+  }
+
   public File file(HashCode hash) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       HashCode blobHash = unmarshaller.readHash();
@@ -130,6 +127,15 @@ public class ValueDb {
     return new CachedString(hashedDb, hash);
   }
 
+  private ValueReader<StringValue> stringReader() {
+    return new ValueReader<StringValue>() {
+      @Override
+      public StringValue read(HashCode hash) {
+        return string(hash);
+      }
+    };
+  }
+
   public StringValue string(HashCode hash) {
     return new CachedString(hashedDb, hash);
   }
@@ -139,6 +145,15 @@ public class ValueDb {
   public CachedBlob blob(byte[] objectBytes) {
     HashCode hash = hashedDb.store(objectBytes);
     return new CachedBlob(hashedDb, hash);
+  }
+
+  private ValueReader<Blob> blobReader() {
+    return new ValueReader<Blob>() {
+      @Override
+      public Blob read(HashCode hash) {
+        return blob(hash);
+      }
+    };
   }
 
   public CachedBlob blob(HashCode hash) {
