@@ -8,7 +8,6 @@ import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 import com.google.common.collect.ImmutableList;
@@ -27,11 +26,7 @@ public class FileSetTask extends Task {
 
     for (Result task : elements) {
       File from = (File) task.result();
-      if (builder.contains(from.path())) {
-        sandbox.report(new DuplicatePathError(from.path()));
-      } else {
-        builder.add(from);
-      }
+      builder.add(from);
     }
     return builder.build();
   }
