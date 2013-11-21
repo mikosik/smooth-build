@@ -24,16 +24,28 @@ public class Type {
   private static final TypeLiteral<?> EMPTY_A_T = TypeLiteral.get(EmptySet.class);
 
   /*
+   * Names of smooth types.
+   */
+
+  private static final String STRING_N = "String";
+  private static final String BLOB_N = "Blob";
+  private static final String FILE_N = "File";
+  private static final String STRING_SET_N = "String*";
+  private static final String BLOB_SET_N = "Blob*";
+  private static final String FILE_SET_N = "File*";
+  private static final String EMPTY_SET_N = "Any*";
+
+  /*
    * Smooth types. Used by smooth-build code to represent smooth types.
    */
 
-  public static final Type STRING = new Type("String", STRING_T);
-  public static final Type STRING_SET = new Type("String*", STRING_A_T);
-  public static final Type BLOB = new Type("Blob", BLOB_T);
-  public static final Type BLOB_SET = new Type("BLOB*", BLOB_A_T);
-  public static final Type FILE = new Type("File", FILE_T);
-  public static final Type FILE_SET = new Type("File*", FILE_A_T);
-  public static final Type EMPTY_SET = new Type("Any*", EMPTY_A_T);
+  public static final Type STRING = new Type(STRING_N, STRING_T);
+  public static final Type BLOB = new Type(BLOB_N, BLOB_T);
+  public static final Type FILE = new Type(FILE_N, FILE_T);
+  public static final Type STRING_SET = new Type(STRING_SET_N, STRING_A_T);
+  public static final Type BLOB_SET = new Type(BLOB_SET_N, BLOB_A_T);
+  public static final Type FILE_SET = new Type(FILE_SET_N, FILE_A_T);
+  public static final Type EMPTY_SET = new Type(EMPTY_SET_N, EMPTY_A_T);
 
   /*
    * Not each type can be used in every place. Each set below represent one
