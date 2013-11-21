@@ -5,11 +5,13 @@ import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.lang.builtin.compress.err.CannotAddDuplicatePathError;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
@@ -17,6 +19,9 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.message.listen.ErrorMessageException;
+
+import com.google.common.collect.Sets;
 
 public class ZipFunction {
 
@@ -40,10 +45,12 @@ public class ZipFunction {
     private final Parameters params;
 
     private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
+    private final Set<Path> alreadyAdded;
 
     public Worker(Sandbox sandbox, Parameters params) {
       this.sandbox = sandbox;
       this.params = params;
+      this.alreadyAdded = Sets.newHashSet();
     }
 
     public File execute() {
@@ -70,7 +77,12 @@ public class ZipFunction {
     }
 
     private void addEntry(ZipOutputStream zipOutputStream, File file) throws IOException {
-      ZipEntry entry = new ZipEntry(file.path().value());
+      Path path = file.path();
+      if (alreadyAdded.contains(path)) {
+        throw new ErrorMessageException(new CannotAddDuplicatePathError(path));
+      }
+      alreadyAdded.add(path);
+      ZipEntry entry = new ZipEntry(path.value());
       zipOutputStream.putNextEntry(entry);
 
       try (InputStream inputStream = file.openInputStream();) {
