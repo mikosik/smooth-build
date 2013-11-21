@@ -48,7 +48,7 @@ public class TypeTest {
     assertThat(BLOB.isAssignableFrom(STRING_SET)).isFalse();
     assertThat(BLOB.isAssignableFrom(BLOB)).isTrue();
     assertThat(BLOB.isAssignableFrom(BLOB_SET)).isFalse();
-    assertThat(BLOB.isAssignableFrom(FILE)).isFalse();
+    assertThat(BLOB.isAssignableFrom(FILE)).isTrue();
     assertThat(BLOB.isAssignableFrom(FILE_SET)).isFalse();
     assertThat(BLOB.isAssignableFrom(EMPTY_SET)).isFalse();
 
@@ -57,7 +57,7 @@ public class TypeTest {
     assertThat(BLOB_SET.isAssignableFrom(BLOB)).isFalse();
     assertThat(BLOB_SET.isAssignableFrom(BLOB_SET)).isTrue();
     assertThat(BLOB_SET.isAssignableFrom(FILE)).isFalse();
-    assertThat(BLOB_SET.isAssignableFrom(FILE_SET)).isFalse();
+    assertThat(BLOB_SET.isAssignableFrom(FILE_SET)).isTrue();
     assertThat(BLOB_SET.isAssignableFrom(EMPTY_SET)).isTrue();
 
     assertThat(FILE.isAssignableFrom(STRING)).isFalse();

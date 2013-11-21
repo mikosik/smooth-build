@@ -44,23 +44,29 @@ import org.smoothbuild.testing.task.exec.FakeSandbox;
 public class ArgumentNodesCreatorTest {
   FakeMessageGroup messages;
 
+  // converting named arguments
+
   @Test
-  public void convertingNamedArgument() {
-    doTestConvertingNamedArgument(STRING);
-    doTestConvertingNamedArgument(STRING_SET);
-    doTestConvertingNamedArgument(BLOB);
-    doTestConvertingNamedArgument(BLOB_SET);
-    doTestConvertingNamedArgument(FILE);
-    doTestConvertingNamedArgument(FILE_SET);
+  public void converting_named_argument() {
+    do_test_converting_named_argument(STRING, STRING);
+    do_test_converting_named_argument(BLOB, BLOB);
+    do_test_converting_named_argument(FILE, FILE);
+
+    do_test_converting_named_argument(STRING_SET, STRING_SET);
+    do_test_converting_named_argument(BLOB_SET, BLOB_SET);
+    do_test_converting_named_argument(FILE_SET, FILE_SET);
+
+    do_test_converting_named_argument(BLOB, FILE);
+    do_test_converting_named_argument(BLOB_SET, FILE_SET);
   }
 
-  private void doTestConvertingNamedArgument(Type type) {
+  private void do_test_converting_named_argument(Type paramType, Type argType) {
     // given
     messages = new FakeMessageGroup();
-    Param p1 = param(type, "name1");
-    Param p2 = param(type, "name2");
+    Param p1 = param(paramType, "name1");
+    Param p2 = param(paramType, "name2");
 
-    Argument a1 = argument(p1.name(), node(type));
+    Argument a1 = argument(p1.name(), node(argType));
 
     // when
     Map<String, Node> result = create(params(p1, p2), list(a1));
@@ -69,6 +75,31 @@ public class ArgumentNodesCreatorTest {
     messages.assertNoProblems();
     assertThat(result.get(p1.name())).isSameAs(a1.node());
     assertThat(result.size()).isEqualTo(1);
+  }
+
+  @Test
+  public void converting_named_empty_set_argument() throws Exception {
+    do_test_converting_named_empty_set_argument(STRING_SET);
+    do_test_converting_named_empty_set_argument(BLOB_SET);
+    do_test_converting_named_empty_set_argument(FILE_SET);
+  }
+
+  private void do_test_converting_named_empty_set_argument(Type paramType) {
+    // given
+    messages = new FakeMessageGroup();
+    Param p1 = param(paramType, "name1");
+    Param p2 = param(paramType, "name2");
+
+    Argument a1 = argument(p1.name(), node(EMPTY_SET));
+
+    // when
+    Map<String, Node> result = create(params(p1, p2), list(a1));
+
+    // then
+    messages.assertNoProblems();
+    Node node = result.get(p1.name());
+    assertThat(result.size()).isEqualTo(1);
+    assertThat(node.type()).isEqualTo(paramType);
   }
 
   @Test
@@ -180,7 +211,6 @@ public class ArgumentNodesCreatorTest {
     doTestTypeMismatchForParamProblem(BLOB, STRING);
     doTestTypeMismatchForParamProblem(BLOB, STRING_SET);
     doTestTypeMismatchForParamProblem(BLOB, BLOB_SET);
-    doTestTypeMismatchForParamProblem(BLOB, FILE);
     doTestTypeMismatchForParamProblem(BLOB, FILE_SET);
     doTestTypeMismatchForParamProblem(BLOB, EMPTY_SET);
   }
@@ -191,7 +221,6 @@ public class ArgumentNodesCreatorTest {
     doTestTypeMismatchForParamProblem(BLOB_SET, STRING_SET);
     doTestTypeMismatchForParamProblem(BLOB_SET, BLOB);
     doTestTypeMismatchForParamProblem(BLOB_SET, FILE);
-    doTestTypeMismatchForParamProblem(BLOB_SET, FILE_SET);
   }
 
   @Test

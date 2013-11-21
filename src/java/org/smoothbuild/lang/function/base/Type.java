@@ -100,11 +100,15 @@ public class Type {
   }
 
   public boolean isAssignableFrom(Type type) {
-    if (type == EMPTY_SET) {
-      return this == EMPTY_SET || this == STRING_SET || this == BLOB_SET || this == FILE_SET;
-    } else {
-      return this == type;
+    if (this == type) {
+      return true;
     }
+    for (Type superType : type.superTypes) {
+      if (this.isAssignableFrom(superType)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
