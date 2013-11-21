@@ -86,6 +86,18 @@ public class TypeTest {
   }
 
   @Test
+  public void superTypes() throws Exception {
+    assertThat(STRING.superTypes()).isEmpty();
+    assertThat(BLOB.superTypes()).isEmpty();
+    assertThat(FILE.superTypes()).containsOnly(BLOB);
+
+    assertThat(STRING_SET.superTypes()).isEmpty();
+    assertThat(BLOB_SET.superTypes()).isEmpty();
+    assertThat(FILE_SET.superTypes()).containsOnly(BLOB_SET);
+    assertThat(EMPTY_SET.superTypes()).containsOnly(STRING_SET, BLOB_SET, FILE_SET);
+  }
+
+  @Test
   public void equalsAndHashCode() throws Exception {
     assertThat(STRING).isEqualTo(STRING);
     assertThat(STRING).isNotEqualTo(STRING_SET);

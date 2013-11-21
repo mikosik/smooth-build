@@ -5,6 +5,7 @@ import org.smoothbuild.lang.function.value.Blob;
 import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.function.value.StringValue;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
@@ -41,11 +42,12 @@ public class Type {
 
   public static final Type STRING = new Type(STRING_N, STRING_T);
   public static final Type BLOB = new Type(BLOB_N, BLOB_T);
-  public static final Type FILE = new Type(FILE_N, FILE_T);
+  public static final Type FILE = new Type(FILE_N, FILE_T, BLOB);
   public static final Type STRING_SET = new Type(STRING_SET_N, STRING_A_T);
   public static final Type BLOB_SET = new Type(BLOB_SET_N, BLOB_A_T);
-  public static final Type FILE_SET = new Type(FILE_SET_N, FILE_A_T);
-  public static final Type EMPTY_SET = new Type(EMPTY_SET_N, EMPTY_A_T);
+  public static final Type FILE_SET = new Type(FILE_SET_N, FILE_A_T, BLOB_SET);
+  public static final Type EMPTY_SET = new Type(EMPTY_SET_N, EMPTY_A_T, STRING_SET, BLOB_SET,
+      FILE_SET);
 
   /*
    * Not each type can be used in every place. Each set below represent one
@@ -81,14 +83,20 @@ public class Type {
 
   private final String name;
   private final TypeLiteral<?> javaType;
+  private final ImmutableList<Type> superTypes;
 
-  private Type(String name, TypeLiteral<?> javaType) {
+  private Type(String name, TypeLiteral<?> javaType, Type... superTypes) {
     this.name = name;
     this.javaType = javaType;
+    this.superTypes = ImmutableList.copyOf(superTypes);
   }
 
   public String name() {
     return name;
+  }
+
+  public ImmutableList<Type> superTypes() {
+    return superTypes;
   }
 
   public boolean isAssignableFrom(Type type) {
