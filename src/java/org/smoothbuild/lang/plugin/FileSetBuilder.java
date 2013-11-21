@@ -6,22 +6,13 @@ import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
 
-import com.google.common.collect.Lists;
-
-public class FileSetBuilder {
-  private final ValueDb valueDb;
-  private final List<File> result;
-
+public class FileSetBuilder extends ArrayBuilder<File> {
   public FileSetBuilder(ValueDb valueDb) {
-    this.valueDb = valueDb;
-    this.result = Lists.newArrayList();
+    super(valueDb);
   }
 
-  public void add(File file) {
-    result.add(file);
-  }
-
-  public Array<File> build() {
-    return valueDb.fileSet(result);
+  @Override
+  protected Array<File> buildImpl(ValueDb valueDb, List<File> elements) {
+    return valueDb.fileSet(elements);
   }
 }
