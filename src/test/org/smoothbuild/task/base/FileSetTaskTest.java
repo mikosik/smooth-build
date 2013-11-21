@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
@@ -40,13 +39,18 @@ public class FileSetTaskTest {
     FileSetTask fileSetTask = new FileSetTask(newArrayList(result1, result2), codeLocation);
     @SuppressWarnings("unchecked")
     Array<File> result = (Array<File>) fileSetTask.execute(sandbox);
+
+    sandbox.messages().assertNoProblems();
     assertThat(result).containsOnly(file1, file2);
   }
 
   @Test
-  public void duplicatedFileCausesError() throws IOException {
+  public void duplicated_files_are_allowed() throws IOException {
     FileSetTask fileSetTask = new FileSetTask(newArrayList(result1, result1), codeLocation);
-    fileSetTask.execute(sandbox);
-    sandbox.messages().assertOnlyProblem(DuplicatePathError.class);
+    @SuppressWarnings("unchecked")
+    Array<File> result = (Array<File>) fileSetTask.execute(sandbox);
+
+    sandbox.messages().assertNoProblems();
+    assertThat(result).containsOnly(file1, file1);
   }
 }

@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 public class FileSetSmoothTest extends IntegrationTestCase {
@@ -98,16 +97,16 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void fileSetWithDuplicatedFiles() throws Exception {
+  public void file_set_can_contain_duplicate_values() throws Exception {
     // given
     fileSystem.createFileContainingItsPath(path1);
 
-    script("run : [ file(" + path1 + "), file(" + path1 + ") ];\n");
+    script("run : [ file(" + path1 + "), file(" + path1 + ") ] | filter('nothing');\n");
 
     // when
     build("run");
 
     // then
-    userConsole.assertOnlyProblem(DuplicatePathError.class);
+    userConsole.assertNoProblems();
   }
 }
