@@ -31,6 +31,7 @@
   <property name="lib.assertj-core" value="${dir.lib}/assertj-core-1.4.0-SNAPSHOT.jar" />
   <property name="lib.guava" value="${dir.lib}/guava-15.0.jar" />
   <property name="lib.guava.license" value="${dir.lib}/guava.LICENSE" />
+  <property name="lib.guava-testlib" value="${dir.lib}/guava-testlib-15.0.jar" />
   <property name="lib.guice" value="${dir.lib}/guice-3.0.jar" />
   <property name="lib.guice.license" value="${dir.lib}/guice.LICENSE" />
   <property name="lib.hamcrest" value="${dir.lib}/hamcrest-core-1.3.jar" />
@@ -136,6 +137,7 @@
     <pathelement location="${lib.cglib}" />
     <pathelement location="${lib.equalsverifier}" />
     <pathelement location="${lib.assertj-core}" />
+    <pathelement location="${lib.guava-testlib}" />
     <pathelement location="${lib.hamcrest-library}" />
     <pathelement location="${lib.junit}" />
     <pathelement location="${lib.objenesis}" />
