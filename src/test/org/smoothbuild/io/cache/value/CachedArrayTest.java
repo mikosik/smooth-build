@@ -1,27 +1,25 @@
 package org.smoothbuild.io.cache.value;
 
-import static org.hamcrest.Matchers.contains;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.lang.type.Type.FILE;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
 import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.File;
 import org.testory.common.Closure;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class CachedBlobSetTest {
+public class CachedArrayTest {
   ValueDb valueDb = mock(ValueDb.class);
   HashCode hash = HashCode.fromInt(33);
   Blob blob = mock(Blob.class);
 
-  CachedBlobSet cachedBlobSet;
+  CachedArray<File> cachedFileArray;
 
   @Test
   public void null_object_db_is_forbidden() {
@@ -37,32 +35,28 @@ public class CachedBlobSetTest {
 
   @Test
   public void type() throws Exception {
-    given(cachedBlobSet = new CachedBlobSet(valueDb, hash));
-    when(cachedBlobSet.type());
-    thenReturned(Type.BLOB_SET);
+    given(cachedFileArray = cachedArray(valueDb, hash));
+    when(cachedFileArray.type());
+    thenReturned(FILE);
   }
 
   @Test
   public void hash_passed_to_constructor_is_returned_from_hash_method() throws Exception {
-    given(cachedBlobSet = new CachedBlobSet(valueDb, hash));
-    when(cachedBlobSet.hash());
+    given(cachedFileArray = cachedArray(valueDb, hash));
+    when(cachedFileArray.hash());
     thenReturned(hash);
-  }
-
-  @Test
-  public void iterator_is_taken_from_object_db() throws Exception {
-    BDDMockito.given(valueDb.blobSetIterable(hash)).willReturn(ImmutableList.of(blob));
-    given(cachedBlobSet = new CachedBlobSet(valueDb, hash));
-    when(ImmutableList.copyOf(cachedBlobSet.iterator()));
-    thenReturned(contains(blob));
   }
 
   private static Closure newBlobSetObject(final ValueDb valueDb, final HashCode hash) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new CachedBlobSet(valueDb, hash);
+        return cachedArray(valueDb, hash);
       }
     };
+  }
+
+  private static CachedArray<File> cachedArray(ValueDb valueDb, HashCode hash) {
+    return new CachedArray<File>(valueDb, hash, FILE, valueDb.fileReader());
   }
 }
