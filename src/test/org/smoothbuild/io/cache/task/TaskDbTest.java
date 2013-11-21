@@ -4,7 +4,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.testing.lang.type.FileMatchers.equalTo;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -18,6 +17,7 @@ import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.base.Message;
@@ -39,8 +39,10 @@ public class TaskDbTest {
 
   Message message;
   Array<File> fileSet;
+  Array<Blob> blobSet;
   Array<StringValue> stringSet;
   File file;
+  Blob blob;
   StringValue stringValue;
   String string = "some string";
 
@@ -79,16 +81,27 @@ public class TaskDbTest {
     given(fileSet = valueDb.fileSet(newArrayList(file)));
     given(taskDb).store(hash, new CachedResult(fileSet, Empty.messageList()));
     when(((Array<File>) taskDb.read(hash).value()).iterator().next());
-    thenReturned(equalTo(file));
+    thenReturned(file);
   }
 
+  @SuppressWarnings("unchecked")
+  @Test
+  public void stored_blob_set_can_be_read_back() throws Exception {
+    given(blob = valueDb.blob(bytes));
+    given(blobSet = valueDb.blobSet(newArrayList(blob)));
+    given(taskDb).store(hash, new CachedResult(blobSet, Empty.messageList()));
+    when(((Array<Blob>) taskDb.read(hash).value()).iterator().next());
+    thenReturned(blob);
+  }
+
+  @SuppressWarnings("unchecked")
   @Test
   public void stored_string_set_can_be_read_back() throws Exception {
     given(stringValue = valueDb.string(string));
     given(stringSet = valueDb.stringSet(newArrayList(stringValue)));
     given(taskDb).store(hash, new CachedResult(stringSet, Empty.messageList()));
-    when(taskDb.read(hash).value());
-    thenReturned(contains(stringValue));
+    when(((Array<StringValue>) taskDb.read(hash).value()).iterator().next());
+    thenReturned(stringValue);
   }
 
   @Test
@@ -96,11 +109,19 @@ public class TaskDbTest {
     given(file = valueDb.file(path, bytes));
     given(taskDb).store(hash, new CachedResult(file, Empty.messageList()));
     when(taskDb.read(hash).value());
-    thenReturned(equalTo(file));
+    thenReturned(file);
   }
 
   @Test
-  public void stored_string_object_can_be_read_back() throws Exception {
+  public void stored_blob_can_be_read_back() throws Exception {
+    given(blob = valueDb.blob(bytes));
+    given(taskDb).store(hash, new CachedResult(blob, Empty.messageList()));
+    when(taskDb.read(hash).value());
+    thenReturned(blob);
+  }
+
+  @Test
+  public void stored_string_can_be_read_back() throws Exception {
     given(stringValue = valueDb.string(string));
     given(taskDb).store(hash, new CachedResult(stringValue, Empty.messageList()));
     when(((StringValue) taskDb.read(hash).value()).value());
