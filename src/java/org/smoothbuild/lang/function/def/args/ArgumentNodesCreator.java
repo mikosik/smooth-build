@@ -4,6 +4,7 @@ import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
 import static org.smoothbuild.lang.type.Type.BLOB_SET;
 import static org.smoothbuild.lang.type.Type.EMPTY_SET;
 import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.Collection;
@@ -12,11 +13,9 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.def.BlobSetNode;
+import org.smoothbuild.lang.function.def.ArrayNode;
 import org.smoothbuild.lang.function.def.CachingNode;
-import org.smoothbuild.lang.function.def.FileSetNode;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.function.def.StringSetNode;
 import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.args.err.MissingRequiredArgsError;
@@ -162,13 +161,13 @@ public class ArgumentNodesCreator {
       Argument argument = assignment.argument();
       if (argument.type() == EMPTY_SET) {
         if (type == Type.STRING_SET) {
-          StringSetNode node = new StringSetNode(Empty.nodeList(), argument.codeLocation());
+          ArrayNode node = new ArrayNode(STRING_SET, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
         } else if (type == FILE_SET) {
-          FileSetNode node = new FileSetNode(Empty.nodeList(), argument.codeLocation());
+          ArrayNode node = new ArrayNode(FILE_SET, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
         } else if (type == BLOB_SET) {
-          BlobSetNode node = new BlobSetNode(Empty.nodeList(), argument.codeLocation());
+          ArrayNode node = new ArrayNode(BLOB_SET, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
         } else {
           throw new ErrorMessageException(new Message(FATAL,

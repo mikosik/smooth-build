@@ -4,7 +4,9 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
 import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -31,15 +33,14 @@ import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.lang.function.def.ArrayNode;
 import org.smoothbuild.lang.function.def.CachingNode;
 import org.smoothbuild.lang.function.def.CallNode;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.def.EmptySetNode;
-import org.smoothbuild.lang.function.def.FileSetNode;
 import org.smoothbuild.lang.function.def.InvalidNode;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.StringNode;
-import org.smoothbuild.lang.function.def.StringSetNode;
 import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.ArgumentNodesCreator;
 import org.smoothbuild.lang.type.StringValue;
@@ -160,10 +161,10 @@ public class DefinedFunctionsCreator {
 
       Type elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
-        return new CachingNode(new StringSetNode(elemNodes, locationOf(list)));
+        return new CachingNode(new ArrayNode(STRING_SET, elemNodes, locationOf(list)));
       }
       if (elemsType == Type.FILE) {
-        return new CachingNode(new FileSetNode(elemNodes, locationOf(list)));
+        return new CachingNode(new ArrayNode(FILE_SET, elemNodes, locationOf(list)));
       }
 
       throw new ErrorMessageException(new Message(FATAL,

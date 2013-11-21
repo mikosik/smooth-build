@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.type.Type.BLOB_SET;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.Blob;
+import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -21,44 +21,43 @@ import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 import com.google.common.collect.ImmutableList;
 
-public class BlobSetNodeTest {
+public class ArrayNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
+  StringValue string1 = sandbox.objectDb().string("string1");
+  StringValue string2 = sandbox.objectDb().string("string2");
 
   Node node1 = mock(Node.class);
   Node node2 = mock(Node.class);
 
+  Result result1 = new FakeResult(string1);
+  Result result2 = new FakeResult(string2);
+
   ImmutableList<Node> elemNodes = ImmutableList.of(node1, node2);
-  BlobSetNode fileSetNode = new BlobSetNode(elemNodes, codeLocation);
+  ArrayNode arrayNode = new ArrayNode(STRING_SET, elemNodes, codeLocation);
 
   @Test
   public void type() {
-    assertThat(fileSetNode.type()).isEqualTo(BLOB_SET);
+    when(arrayNode.type());
+    thenReturned(STRING_SET);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(fileSetNode = new BlobSetNode(elemNodes, codeLocation));
-    when(fileSetNode.codeLocation());
+    given(arrayNode = new ArrayNode(STRING_SET, elemNodes, codeLocation));
+    when(arrayNode.codeLocation());
     thenReturned(codeLocation);
   }
 
   @Test
   public void generateTask() throws Exception {
-    Blob blob1 = sandbox.objectDb().blob(new byte[] { 1, 2, 3, 4 });
-    Blob blob2 = sandbox.objectDb().blob(new byte[] { 1, 2, 3 });
-
-    Result result1 = new FakeResult(blob1);
-    Result result2 = new FakeResult(blob2);
-
     Mockito.when(taskGenerator.generateTask(node1)).thenReturn(result1);
     Mockito.when(taskGenerator.generateTask(node2)).thenReturn(result2);
 
-    Task task = fileSetNode.generateTask(taskGenerator);
+    Task task = arrayNode.generateTask(taskGenerator);
     @SuppressWarnings("unchecked")
-    Array<Blob> result = (Array<Blob>) task.execute(sandbox);
-
-    assertThat(result).containsOnly(blob1, blob2);
+    Array<StringValue> result = (Array<StringValue>) task.execute(sandbox);
+    assertThat(result).containsOnly(string1, string2);
   }
 }
