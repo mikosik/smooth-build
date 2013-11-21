@@ -14,8 +14,8 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
-import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
@@ -38,7 +38,7 @@ public class Unzipper {
 
   public Array<File> unzipFile(File zipFile) {
     this.alreadyUnzipped = Sets.newHashSet();
-    FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
         ZipEntry entry = null;
@@ -55,7 +55,7 @@ public class Unzipper {
   }
 
   private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry,
-      FileSetBuilder fileSetBuilder) {
+      ArrayBuilder<File> fileSetBuilder) {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
