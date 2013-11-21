@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.type.Type.BLOB_SET;
 
 import java.util.List;
 
-import org.smoothbuild.lang.plugin.BlobSetBuilder;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
@@ -22,7 +22,7 @@ public class BlobSetTask extends Task {
 
   @Override
   public Value execute(SandboxImpl sandbox) {
-    BlobSetBuilder blobSetBuilder = sandbox.blobSetBuilder();
+    ArrayBuilder<Blob> blobSetBuilder = sandbox.blobSetBuilder();
 
     for (Result task : elements) {
       blobSetBuilder.add((Blob) task.result());

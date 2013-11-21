@@ -5,7 +5,7 @@ import static org.smoothbuild.io.fs.match.PathMatcher.pathMatcher;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.match.IllegalPathPatternException;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathPatternError;
-import org.smoothbuild.lang.plugin.FileSetBuilder;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -42,7 +42,7 @@ public class FilterFunction {
 
     public Array<File> execute() {
       Predicate<Path> filter = createFilter();
-      FileSetBuilder builder = sandbox.fileSetBuilder();
+      ArrayBuilder<File> builder = sandbox.fileSetBuilder();
 
       for (File file : params.files()) {
         if (filter.apply(file.path())) {

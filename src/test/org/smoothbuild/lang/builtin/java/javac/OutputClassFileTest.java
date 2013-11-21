@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
-import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.testing.common.StreamTester;
@@ -22,7 +22,7 @@ public class OutputClassFileTest {
   @Test
   public void openOutputStream() throws IOException {
     Path path = Path.path("my/path");
-    FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileSetBuilder, path, fileBuilder);
@@ -40,7 +40,7 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     Path path = Path.path("my/path");
-    FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileSetBuilder, path, fileBuilder);

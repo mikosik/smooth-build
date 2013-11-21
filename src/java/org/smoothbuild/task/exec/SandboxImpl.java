@@ -2,12 +2,15 @@ package org.smoothbuild.task.exec;
 
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.BlobBuilder;
 import org.smoothbuild.lang.plugin.BlobSetBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.StringSetBuilder;
+import org.smoothbuild.lang.type.Blob;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
@@ -32,17 +35,17 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
-  public FileSetBuilder fileSetBuilder() {
+  public ArrayBuilder<File> fileSetBuilder() {
     return new FileSetBuilder(valueDb);
   }
 
   @Override
-  public BlobSetBuilder blobSetBuilder() {
+  public ArrayBuilder<Blob> blobSetBuilder() {
     return new BlobSetBuilder(valueDb);
   }
 
   @Override
-  public StringSetBuilder stringSetBuilder() {
+  public ArrayBuilder<StringValue> stringSetBuilder() {
     return new StringSetBuilder(valueDb);
   }
 

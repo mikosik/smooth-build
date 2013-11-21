@@ -12,9 +12,8 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
-import org.smoothbuild.lang.plugin.FileSetBuilder;
-import org.smoothbuild.lang.plugin.StringSetBuilder;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.StringValue;
@@ -48,7 +47,7 @@ public class SandboxImplTest {
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
     File file = fileBuilder.build();
 
-    FileSetBuilder builder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> builder = sandbox.fileSetBuilder();
     builder.add(file);
     HashCode hash = builder.build().hash();
 
@@ -65,7 +64,7 @@ public class SandboxImplTest {
     StringValue string1 = sandbox.string(jdkString1);
     StringValue string2 = sandbox.string(jdkString2);
 
-    StringSetBuilder builder = sandbox.stringSetBuilder();
+    ArrayBuilder<StringValue> builder = sandbox.stringSetBuilder();
     builder.add(string1);
     builder.add(string2);
     Array<StringValue> stringSet = builder.build();

@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.err.DuplicateMergedPathError;
-import org.smoothbuild.lang.plugin.FileSetBuilder;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -39,7 +39,7 @@ public class MergeFunction {
 
     public Array<File> execute() {
       Set<Path> alreadyAdded = Sets.newHashSet();
-      FileSetBuilder builder = sandbox.fileSetBuilder();
+      ArrayBuilder<File> builder = sandbox.fileSetBuilder();
 
       for (File file : params.files()) {
         addFile(file, builder, alreadyAdded);
@@ -51,7 +51,7 @@ public class MergeFunction {
       return builder.build();
     }
 
-    private void addFile(File file, FileSetBuilder builder, Set<Path> alreadyAdded) {
+    private void addFile(File file, ArrayBuilder<File> builder, Set<Path> alreadyAdded) {
       Path path = file.path();
       if (alreadyAdded.contains(path)) {
         sandbox.report(new DuplicateMergedPathError(path));

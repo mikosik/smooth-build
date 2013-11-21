@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.type.Type.STRING_SET;
 
 import java.util.List;
 
-import org.smoothbuild.lang.plugin.StringSetBuilder;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
@@ -22,7 +22,7 @@ public class StringSetTask extends Task {
 
   @Override
   public Value execute(SandboxImpl sandbox) {
-    StringSetBuilder stringSetBuilder = sandbox.stringSetBuilder();
+    ArrayBuilder<StringValue> stringSetBuilder = sandbox.stringSetBuilder();
 
     for (Result task : elements) {
       stringSetBuilder.add((StringValue) task.result());

@@ -11,8 +11,8 @@ import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.lang.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
-import org.smoothbuild.lang.plugin.FileSetBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.Array;
@@ -61,7 +61,7 @@ public class FilesFunction {
         case FILE:
           throw new ErrorMessageException(new DirParamIsAFileError("dir", dirPath));
         case DIR:
-          FileSetBuilder fileSetBuilder = sandbox.fileSetBuilder();
+          ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
           for (Path filePath : fileSystem.filesFrom(dirPath)) {
             FileBuilder fileBuilder = sandbox.fileBuilder();
             fileBuilder.setPath(filePath);
