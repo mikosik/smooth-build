@@ -8,7 +8,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.testory.common.Closure;
 

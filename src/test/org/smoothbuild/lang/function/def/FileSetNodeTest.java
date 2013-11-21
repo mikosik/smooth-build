@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

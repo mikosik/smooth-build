@@ -2,8 +2,8 @@ package org.smoothbuild.lang.function.def.args.err;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.def.args.Argument;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeMessage;
 
 public class TypeMismatchError extends CodeMessage {

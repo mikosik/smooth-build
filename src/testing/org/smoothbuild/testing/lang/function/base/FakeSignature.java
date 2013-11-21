@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.ImmutableList;
 

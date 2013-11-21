@@ -1,7 +1,7 @@
 package org.smoothbuild.io.cache.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.lang.function.base.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.IOException;

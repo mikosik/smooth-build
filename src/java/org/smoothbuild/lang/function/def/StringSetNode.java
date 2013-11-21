@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
-import static org.smoothbuild.lang.function.base.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;

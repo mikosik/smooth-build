@@ -1,14 +1,14 @@
 package org.smoothbuild.io.cache.value;
 
-import static org.smoothbuild.lang.function.base.Type.BLOB;
-import static org.smoothbuild.lang.function.base.Type.STRING;
+import static org.smoothbuild.lang.type.Type.BLOB;
+import static org.smoothbuild.lang.type.Type.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;

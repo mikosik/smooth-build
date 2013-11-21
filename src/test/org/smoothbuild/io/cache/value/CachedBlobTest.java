@@ -12,7 +12,7 @@ import java.io.InputStream;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.io.cache.hash.HashedDb;
-import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;

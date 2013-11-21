@@ -1,26 +1,27 @@
-package org.smoothbuild.lang.function.base;
+package org.smoothbuild.lang.type;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.function.base.Type.BLOB;
-import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
-import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
-import static org.smoothbuild.lang.function.base.Type.FILE;
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
-import static org.smoothbuild.lang.function.base.Type.JAVA_PARAM_TO_SMOOTH;
-import static org.smoothbuild.lang.function.base.Type.JAVA_RESULT_TO_SMOOTH;
-import static org.smoothbuild.lang.function.base.Type.PARAM_TYPES;
-import static org.smoothbuild.lang.function.base.Type.RESULT_TYPES;
-import static org.smoothbuild.lang.function.base.Type.STRING;
-import static org.smoothbuild.lang.function.base.Type.STRING_SET;
-import static org.smoothbuild.lang.function.base.Type.javaParamTypetoType;
-import static org.smoothbuild.lang.function.base.Type.javaResultTypetoType;
+import static org.smoothbuild.lang.type.Type.BLOB;
+import static org.smoothbuild.lang.type.Type.BLOB_SET;
+import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.JAVA_PARAM_TO_SMOOTH;
+import static org.smoothbuild.lang.type.Type.JAVA_RESULT_TO_SMOOTH;
+import static org.smoothbuild.lang.type.Type.PARAM_TYPES;
+import static org.smoothbuild.lang.type.Type.RESULT_TYPES;
+import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.javaParamTypetoType;
+import static org.smoothbuild.lang.type.Type.javaResultTypetoType;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Type.EmptySet;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.Type.EmptySet;
 
 import com.google.inject.TypeLiteral;
 

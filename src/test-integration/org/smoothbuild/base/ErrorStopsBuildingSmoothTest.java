@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.base.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.util.Map;

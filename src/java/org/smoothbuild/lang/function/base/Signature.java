@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Set;
 
+import org.smoothbuild.lang.type.Type;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 

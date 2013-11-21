@@ -2,6 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import java.util.Map;
 
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;

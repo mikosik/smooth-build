@@ -1,16 +1,16 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
-import static org.smoothbuild.lang.function.base.Type.FILE;
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
-import static org.smoothbuild.lang.function.base.Type.STRING;
-import static org.smoothbuild.lang.function.base.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

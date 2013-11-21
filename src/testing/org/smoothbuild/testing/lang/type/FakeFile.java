@@ -8,9 +8,9 @@ import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.value.AbstractValue;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
 

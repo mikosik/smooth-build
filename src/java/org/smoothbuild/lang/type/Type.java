@@ -1,9 +1,4 @@
-package org.smoothbuild.lang.function.base;
-
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+package org.smoothbuild.lang.type;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

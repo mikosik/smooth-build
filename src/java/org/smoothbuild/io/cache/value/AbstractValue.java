@@ -2,7 +2,7 @@ package org.smoothbuild.io.cache.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.function.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 
 import com.google.common.hash.HashCode;

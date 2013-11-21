@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
-import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
+import static org.smoothbuild.lang.type.Type.BLOB_SET;
+import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.Collection;
@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.def.BlobSetNode;
 import org.smoothbuild.lang.function.def.CachingNode;
 import org.smoothbuild.lang.function.def.FileSetNode;
@@ -23,6 +22,7 @@ import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;

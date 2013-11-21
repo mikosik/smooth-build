@@ -3,9 +3,11 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
-import static org.smoothbuild.lang.function.base.Type.allowedForParam;
+import static org.smoothbuild.lang.type.Type.allowedForParam;
 
 import java.util.Set;
+
+import org.smoothbuild.lang.type.Type;
 
 public class Param {
   private final Type type;

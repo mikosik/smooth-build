@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.InputStream;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.type.Blob;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
 

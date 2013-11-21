@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.ParamOrdering.PARAM_ORDERING;
-import static org.smoothbuild.lang.function.base.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING;
 
 import java.util.List;
 
