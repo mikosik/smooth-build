@@ -1,5 +1,7 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.function.base.Type.FILE_SET;
+
 import java.util.List;
 
 import org.smoothbuild.lang.function.value.File;
@@ -15,7 +17,7 @@ public class FileSetTask extends Task {
   private final ImmutableList<Result> elements;
 
   public FileSetTask(List<Result> elements, CodeLocation codeLocation) {
-    super("File*", true, codeLocation);
+    super(FILE_SET.name(), true, codeLocation);
     this.elements = ImmutableList.copyOf(elements);
   }
 

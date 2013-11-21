@@ -1,5 +1,7 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.function.base.Type.STRING_SET;
+
 import java.util.List;
 
 import org.smoothbuild.lang.function.value.StringValue;
@@ -14,7 +16,7 @@ public class StringSetTask extends Task {
   private final ImmutableList<Result> elements;
 
   public StringSetTask(List<Result> elements, CodeLocation codeLocation) {
-    super("String*", true, codeLocation);
+    super(STRING_SET.name(), true, codeLocation);
     this.elements = ImmutableList.copyOf(elements);
   }
 
