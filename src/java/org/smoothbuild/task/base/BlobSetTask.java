@@ -1,5 +1,7 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
+
 import java.util.List;
 
 import org.smoothbuild.lang.function.value.Blob;
@@ -14,7 +16,7 @@ public class BlobSetTask extends Task {
   private final ImmutableList<Result> elements;
 
   public BlobSetTask(List<Result> elements, CodeLocation codeLocation) {
-    super("Blob*", true, codeLocation);
+    super(BLOB_SET.name(), true, codeLocation);
     this.elements = ImmutableList.copyOf(elements);
   }
 
