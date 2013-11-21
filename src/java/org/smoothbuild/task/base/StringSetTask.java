@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.lang.function.base.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 
 import java.util.List;
 

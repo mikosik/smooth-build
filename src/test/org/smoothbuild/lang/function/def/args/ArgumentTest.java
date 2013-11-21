@@ -3,20 +3,20 @@ package org.smoothbuild.lang.function.def.args;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
-import static org.smoothbuild.lang.function.base.Type.FILE;
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
-import static org.smoothbuild.lang.function.base.Type.STRING;
-import static org.smoothbuild.lang.function.base.Type.STRING_SET;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 

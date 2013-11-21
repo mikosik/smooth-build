@@ -8,7 +8,6 @@ import java.util.List;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.nativ.exc.ForbiddenParamTypeException;
 import org.smoothbuild.lang.function.nativ.exc.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.exc.IllegalReturnTypeException;
@@ -18,6 +17,7 @@ import org.smoothbuild.lang.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Lists;
 import com.google.inject.TypeLiteral;

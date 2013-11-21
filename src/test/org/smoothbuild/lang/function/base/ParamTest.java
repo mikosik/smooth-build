@@ -6,14 +6,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.Param.paramsToString;
-import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
-import static org.smoothbuild.lang.function.base.Type.STRING;
+import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.STRING;
 
 import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.testing.EqualsTester;
 
@@ -55,7 +56,7 @@ public class ParamTest {
 
     tester.addEqualityGroup(param(STRING, "equal", false), param(STRING, "equal", false));
 
-    for (Type type : Type.PARAM_TYPES) {
+    for (Type type : Type.allowedForParam()) {
       tester.addEqualityGroup(param(type, "name", false));
       tester.addEqualityGroup(param(type, "name", true));
       tester.addEqualityGroup(param(type, "name2", false));

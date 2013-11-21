@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
 
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.FileSetTask;

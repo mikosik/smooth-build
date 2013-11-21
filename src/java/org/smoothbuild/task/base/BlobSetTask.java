@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
+import static org.smoothbuild.lang.type.Type.BLOB_SET;
 
 import java.util.List;
 

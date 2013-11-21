@@ -5,15 +5,15 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.base.Type.FILE;
-import static org.smoothbuild.lang.function.base.Type.STRING;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
+import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.Type.STRING;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class AssignmentListTest {

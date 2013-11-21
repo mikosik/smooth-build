@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.lang.type;
 
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
 
 import java.util.Iterator;
 import java.util.List;

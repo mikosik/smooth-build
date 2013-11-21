@@ -1,9 +1,9 @@
 package org.smoothbuild.io.cache.task;
 
-import static org.smoothbuild.lang.function.base.Type.FILE;
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
-import static org.smoothbuild.lang.function.base.Type.STRING;
-import static org.smoothbuild.lang.function.base.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 

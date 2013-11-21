@@ -7,8 +7,8 @@ import static com.google.common.base.Strings.padEnd;
 import java.util.Collection;
 import java.util.Set;
 
-import org.smoothbuild.lang.function.base.Type;
 import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;

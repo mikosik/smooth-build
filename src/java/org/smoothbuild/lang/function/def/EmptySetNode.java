@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
-import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.EMPTY_SET;
 
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.EmptySetTask;
