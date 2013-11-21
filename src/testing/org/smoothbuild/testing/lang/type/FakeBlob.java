@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.function.value;
+package org.smoothbuild.testing.lang.type;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -6,7 +6,7 @@ import java.io.InputStream;
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.AbstractValue;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.type.Blob;
 
 public class FakeBlob extends AbstractValue implements Blob {
   private final byte[] data;

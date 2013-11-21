@@ -6,8 +6,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.value.Value;
-import org.smoothbuild.testing.lang.function.value.FakeHashed;
+import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.testing.lang.type.FakeHashed;
 
 import com.google.common.collect.Lists;
 

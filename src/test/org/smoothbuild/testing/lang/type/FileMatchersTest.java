@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.type;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -6,9 +6,9 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.testing.lang.function.value.FakeFile;
-import org.smoothbuild.testing.lang.function.value.FileMatchers;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.testing.lang.type.FakeFile;
+import org.smoothbuild.testing.lang.type.FileMatchers;
 
 public class FileMatchersTest {
   byte[] bytes1 = new byte[] { 1, 2, 3 };

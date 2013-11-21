@@ -1,9 +1,9 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.testing.lang.function.value.FileSetMatchers.containsFile;
-import static org.smoothbuild.testing.lang.function.value.FileSetMatchers.containsFileContaining;
-import static org.smoothbuild.testing.lang.function.value.FileSetMatchers.containsFileContainingItsPath;
+import static org.smoothbuild.testing.lang.type.FileSetMatchers.containsFile;
+import static org.smoothbuild.testing.lang.type.FileSetMatchers.containsFileContaining;
+import static org.smoothbuild.testing.lang.type.FileSetMatchers.containsFileContainingItsPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
@@ -13,8 +13,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.lang.function.value.FakeFile;
-import org.smoothbuild.testing.lang.function.value.FakeFileSet;
+import org.smoothbuild.testing.lang.type.FakeFile;
+import org.smoothbuild.testing.lang.type.FakeFileSet;
 
 public class FileSetMatchersTest {
   FakeFile file;

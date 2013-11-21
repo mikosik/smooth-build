@@ -5,8 +5,8 @@ import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
 
 import java.util.Iterator;
 
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.Blob;
 
 import com.google.common.hash.HashCode;
 

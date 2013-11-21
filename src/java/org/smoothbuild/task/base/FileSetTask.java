@@ -4,9 +4,9 @@ import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 
 import java.util.List;
 
-import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.task.exec.SandboxImpl;

@@ -18,10 +18,10 @@ import org.smoothbuild.io.cache.hash.err.IllegalPathInObjectError;
 import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.cache.hash.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.Hashed;
+import org.smoothbuild.lang.type.Hashed;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.function.value.FakeHashed;
+import org.smoothbuild.testing.lang.type.FakeHashed;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

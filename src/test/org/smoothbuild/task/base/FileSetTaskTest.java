@@ -8,8 +8,8 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.err.DuplicatePathError;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;

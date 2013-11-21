@@ -12,12 +12,12 @@ import org.smoothbuild.lang.builtin.file.err.FileParamIsADirError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
-import org.smoothbuild.testing.lang.function.value.FakeString;
-import org.smoothbuild.testing.lang.function.value.FileTester;
+import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.testing.lang.type.FileTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class FileFunctionTest {

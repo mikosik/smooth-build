@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeCodeLocation;

@@ -8,8 +8,8 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.Hashed;
-import org.smoothbuild.testing.lang.function.value.FakeHashed;
+import org.smoothbuild.lang.type.Hashed;
+import org.smoothbuild.testing.lang.type.FakeHashed;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

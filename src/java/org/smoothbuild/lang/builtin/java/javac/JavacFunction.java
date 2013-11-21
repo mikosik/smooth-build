@@ -19,11 +19,11 @@ import org.smoothbuild.lang.builtin.java.javac.err.CompilerFailedWithoutDiagnost
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.NoCompilerAvailableError;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.SandboxImpl;

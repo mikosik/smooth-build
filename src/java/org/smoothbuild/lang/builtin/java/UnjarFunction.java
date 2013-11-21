@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.builtin.java;
 
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
 
 public class UnjarFunction {
   public interface Parameters {

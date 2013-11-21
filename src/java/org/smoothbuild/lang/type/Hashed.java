@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.value;
+package org.smoothbuild.lang.type;
 
 import com.google.common.hash.HashCode;
 

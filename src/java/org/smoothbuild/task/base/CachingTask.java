@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.io.cache.task.CachedResult;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
-import org.smoothbuild.lang.function.value.Value;
+import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.SandboxImpl;
 

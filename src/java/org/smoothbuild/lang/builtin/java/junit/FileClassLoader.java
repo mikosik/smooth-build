@@ -6,7 +6,7 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 

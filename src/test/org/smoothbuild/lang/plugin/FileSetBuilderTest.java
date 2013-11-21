@@ -2,7 +2,7 @@ package org.smoothbuild.lang.plugin;
 
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.smoothbuild.command.SmoothContants.CHARSET;
-import static org.smoothbuild.testing.lang.function.value.FileSetMatchers.containsFileContaining;
+import static org.smoothbuild.testing.lang.type.FileSetMatchers.containsFileContaining;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -13,8 +13,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.plugin.err.CannotAddDuplicatePathError;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 
 public class FileSetBuilderTest {

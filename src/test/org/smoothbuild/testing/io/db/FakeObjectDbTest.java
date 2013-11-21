@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 
 public class FakeObjectDbTest {

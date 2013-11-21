@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.function.value;
+package org.smoothbuild.testing.lang.type;
 
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 
@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.AbstractValue;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;

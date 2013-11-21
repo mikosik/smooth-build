@@ -1,6 +1,6 @@
 package org.smoothbuild.io.cache.task;
 
-import org.smoothbuild.lang.function.value.Value;
+import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableList;

@@ -13,13 +13,13 @@ import java.util.jar.Manifest;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.Constants;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.StringValue;
 
 public class JarFunction {
 

@@ -6,12 +6,12 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.FileSetBuilder;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.lang.function.value.FileTester;
+import org.smoothbuild.testing.lang.type.FileTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 import com.google.common.collect.Iterables;

@@ -10,12 +10,12 @@ import java.nio.charset.Charset;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
-import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.StringValue;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class NewFileFunction {
