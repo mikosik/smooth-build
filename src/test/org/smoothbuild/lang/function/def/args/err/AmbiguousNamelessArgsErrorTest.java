@@ -27,6 +27,8 @@ import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.AssignmentList;
 import org.smoothbuild.lang.function.def.args.TypedParamsPool;
 
+import com.google.common.collect.Sets;
+
 public class AmbiguousNamelessArgsErrorTest {
 
   @Test
@@ -49,9 +51,10 @@ public class AmbiguousNamelessArgsErrorTest {
     Set<Argument> availableArgs = newHashSet();
     availableArgs.add(a4);
 
-    TypedParamsPool availableParams = new TypedParamsPool();
-    availableParams.add(param(FILE_SET, "param4"));
-    availableParams.add(param(STRING_SET, "param6"));
+    Param p4 = param(FILE_SET, "param4");
+    Param p5 = param(STRING_SET, "param5");
+    TypedParamsPool availableParams = new TypedParamsPool(newHashSet(p4, p5),
+        Sets.<Param> newHashSet());
 
     AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(name("func"), assignmentList,
         availableArgs, availableParams);
@@ -66,8 +69,8 @@ public class AmbiguousNamelessArgsErrorTest {
     builder.append("List of nameless arguments that caused problems:\n");
     builder.append("  Any*: arg4 #3 " + a4.codeLocation() + "\n");
     builder.append("List of unassigned parameters of desired type is following:\n");
+    builder.append("  String*: param5\n");
     builder.append("  File*  : param4\n");
-    builder.append("  String*: param6\n");
 
     assertThat(error.toString()).isEqualTo(builder.toString());
   }
