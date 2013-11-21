@@ -271,48 +271,63 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void convertingSingleNamelessStringArgument() {
-    doTestConvertingSingleNamelessArgument(STRING, STRING_SET);
-    doTestConvertingSingleNamelessArgument(STRING, BLOB);
-    doTestConvertingSingleNamelessArgument(STRING, BLOB_SET);
-    doTestConvertingSingleNamelessArgument(STRING, FILE);
-    doTestConvertingSingleNamelessArgument(STRING, FILE_SET);
+    doTestConvertingSingleNamelessArgument(STRING, STRING, STRING_SET);
+    doTestConvertingSingleNamelessArgument(STRING, STRING, BLOB);
+    doTestConvertingSingleNamelessArgument(STRING, STRING, BLOB_SET);
+    doTestConvertingSingleNamelessArgument(STRING, STRING, FILE);
+    doTestConvertingSingleNamelessArgument(STRING, STRING, FILE_SET);
   }
 
   @Test
   public void convertingSingleNamelessStringSetArgument() {
-    doTestConvertingSingleNamelessArgument(STRING_SET, STRING);
-    doTestConvertingSingleNamelessArgument(STRING_SET, BLOB);
-    doTestConvertingSingleNamelessArgument(STRING_SET, BLOB_SET);
-    doTestConvertingSingleNamelessArgument(STRING_SET, FILE);
-    doTestConvertingSingleNamelessArgument(STRING_SET, FILE_SET);
+    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, STRING);
+    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, BLOB);
+    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, BLOB_SET);
+    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, FILE);
+    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, FILE_SET);
   }
 
   @Test
   public void convertingSingleNamelessFileArgument() {
-    doTestConvertingSingleNamelessArgument(FILE, STRING);
-    doTestConvertingSingleNamelessArgument(FILE, STRING_SET);
-    doTestConvertingSingleNamelessArgument(FILE, BLOB);
-    doTestConvertingSingleNamelessArgument(FILE, BLOB_SET);
-    doTestConvertingSingleNamelessArgument(FILE, FILE_SET);
+    doTestConvertingSingleNamelessArgument(FILE, FILE, STRING);
+    doTestConvertingSingleNamelessArgument(FILE, FILE, STRING_SET);
+    doTestConvertingSingleNamelessArgument(FILE, FILE, BLOB_SET);
+    doTestConvertingSingleNamelessArgument(FILE, FILE, FILE_SET);
   }
 
   @Test
   public void convertingSingleNamelessFileSetArgument() {
-    doTestConvertingSingleNamelessArgument(FILE_SET, STRING);
-    doTestConvertingSingleNamelessArgument(FILE_SET, STRING_SET);
-    doTestConvertingSingleNamelessArgument(FILE_SET, BLOB);
-    doTestConvertingSingleNamelessArgument(FILE_SET, BLOB_SET);
-    doTestConvertingSingleNamelessArgument(FILE_SET, FILE);
+    doTestConvertingSingleNamelessArgument(FILE_SET, FILE_SET, STRING);
+    doTestConvertingSingleNamelessArgument(FILE_SET, FILE_SET, STRING_SET);
+    doTestConvertingSingleNamelessArgument(FILE_SET, FILE_SET, BLOB);
+    doTestConvertingSingleNamelessArgument(FILE_SET, FILE_SET, FILE);
   }
 
-  private void doTestConvertingSingleNamelessArgument(Type type, Type otherType) {
+  @Test
+  public void convertingSingleNamelessFileArgumentToBlob() throws Exception {
+    doTestConvertingSingleNamelessArgument(BLOB, FILE, STRING);
+    doTestConvertingSingleNamelessArgument(BLOB, FILE, STRING_SET);
+    doTestConvertingSingleNamelessArgument(BLOB, FILE, BLOB_SET);
+    doTestConvertingSingleNamelessArgument(BLOB, FILE, FILE_SET);
+  }
+
+  @Test
+  public void convertingSingleNamelessFileSetArgumentToBlobSet() throws Exception {
+    doTestConvertingSingleNamelessArgument(BLOB_SET, FILE_SET, BLOB);
+    doTestConvertingSingleNamelessArgument(BLOB_SET, FILE_SET, FILE);
+    doTestConvertingSingleNamelessArgument(BLOB_SET, FILE_SET, STRING);
+    doTestConvertingSingleNamelessArgument(BLOB_SET, FILE_SET, STRING_SET);
+  }
+
+  private void doTestConvertingSingleNamelessArgument(Type paramType, Type argType,
+      Type otherParamsType) {
     // given
     messages = new FakeMessageGroup();
-    Param p1 = param(otherType, "name1");
-    Param p2 = param(type, "name2");
-    Param p3 = param(otherType, "name3");
+    Param p1 = param(otherParamsType, "name1");
+    Param p2 = param(paramType, "name2");
+    Param p3 = param(otherParamsType, "name3");
 
-    Argument a1 = argument(node(type));
+    Argument a1 = argument(node(argType));
 
     // when
     Map<String, Node> result = create(params(p1, p2, p3), list(a1));
@@ -338,12 +353,12 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, BLOB);
   }
 
-  private void doTestConvertingSingleNamelessEmptySetArgument(Type type, Type otherType) {
+  private void doTestConvertingSingleNamelessEmptySetArgument(Type paramType, Type otherParamType) {
     // given
     messages = new FakeMessageGroup();
-    Param p1 = param(otherType, "name1");
-    Param p2 = param(type, "name2");
-    Param p3 = param(otherType, "name3");
+    Param p1 = param(otherParamType, "name1");
+    Param p2 = param(paramType, "name2");
+    Param p3 = param(otherParamType, "name3");
 
     Argument a1 = argument(node(EMPTY_SET));
 
@@ -573,7 +588,6 @@ public class ArgumentNodesCreatorTest {
   public void noParamWithProperTypeForNamelessFileArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING);
     doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING_SET);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE, BLOB);
     doTestNoParamWithProperTypeForNamelessArgument(FILE, BLOB_SET);
     doTestNoParamWithProperTypeForNamelessArgument(FILE, FILE_SET);
   }
@@ -583,7 +597,6 @@ public class ArgumentNodesCreatorTest {
     doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, STRING);
     doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, STRING_SET);
     doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, BLOB_SET);
     doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, FILE);
   }
 

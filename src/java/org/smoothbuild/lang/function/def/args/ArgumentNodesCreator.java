@@ -1,12 +1,8 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static org.smoothbuild.lang.function.base.Type.BLOB;
 import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
 import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
-import static org.smoothbuild.lang.function.base.Type.FILE;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
-import static org.smoothbuild.lang.function.base.Type.STRING;
-import static org.smoothbuild.lang.function.base.Type.STRING_SET;
 import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
@@ -126,30 +122,10 @@ public class ArgumentNodesCreator {
       }
     }
 
-    // EMPTY_SET has to be handled after STRING_SET and FILE_SET.
-    // This way assignment algorithm is more powerful. Consider smooth function
-    // named 'myFunction' that has exactly two parameters:
-    //
-    // - 'files' parameter of type FILE_SET
-    // - 'strings' parameter of type STRING_SET
-    //
-    // arguments in the following call:
-    //
-    // myFunction([], [ "stringA", "stringB" ])
-    //
-    // can be correctly assigned to proper parameters only when we handle second
-    // argument (of type STRING_SET) first (assigning it to 'files' parameter)
-    // and then assigning empty list to the only left parameter which is 'files'
-    // (of FILE_SET type). If we start with empty list argument we would not be
-    // able to decide to which parameter it should be assigned to as both
-    // (STRING_SET and FILE_SET) can be assigned from empty set.
-    private static final ImmutableList<Type> TYPES_ORDER = ImmutableList.of(STRING, BLOB, FILE,
-        STRING_SET, BLOB_SET, FILE_SET, EMPTY_SET);
-
     private void processNamelessArguments(AssignmentList assignmentList) {
       ImmutableMap<Type, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
 
-      for (Type type : TYPES_ORDER) {
+      for (Type type : Type.allTypes()) {
         Set<Argument> availableArgs = namelessArgs.get(type);
         int argsSize = availableArgs.size();
         if (0 < argsSize) {

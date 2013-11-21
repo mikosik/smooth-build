@@ -1,11 +1,8 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
-import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
-import static org.smoothbuild.lang.function.base.Type.FILE_SET;
-import static org.smoothbuild.lang.function.base.Type.STRING_SET;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +10,7 @@ import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Type;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -20,10 +18,14 @@ import com.google.common.collect.Sets;
 public class ParamsPool {
   private final ImmutableMap<String, Param> params;
   private final ImmutableMap<Type, TypedParamsPool> typePools;
+  private final Map<Type, Set<Param>> optionalParamsMap;
+  private final Map<Type, Set<Param>> requiredParamsMap;
 
   public ParamsPool(ImmutableMap<String, Param> params) {
     this.params = params;
-    this.typePools = createTypePools(params);
+    this.optionalParamsMap = createParamsMap(params, false);
+    this.requiredParamsMap = createParamsMap(params, true);
+    this.typePools = createTypePools(optionalParamsMap, requiredParamsMap);
   }
 
   public Param takeByName(String name) {
@@ -33,9 +35,17 @@ public class ParamsPool {
   }
 
   public Param take(Param param) {
-    boolean hasBeenRemoved = typePools.get(param.type()).remove(param);
+    boolean hasBeenRemoved = remove(param);
     checkArgument(hasBeenRemoved);
     return param;
+  }
+
+  private boolean remove(Param param) {
+    if (param.isRequired()) {
+      return requiredParamsMap.get(param.type()).remove(param);
+    } else {
+      return optionalParamsMap.get(param.type()).remove(param);
+    }
   }
 
   public TypedParamsPool availableForType(Type type) {
@@ -51,22 +61,36 @@ public class ParamsPool {
   }
 
   private static ImmutableMap<Type, TypedParamsPool> createTypePools(
-      ImmutableMap<String, Param> allParams) {
-    ImmutableMap<Type, TypedParamsPool> result = createMap();
-    for (Param param : allParams.values()) {
-      result.get(param.type()).add(param);
+      Map<Type, Set<Param>> optionalParamsMap, Map<Type, Set<Param>> requiredParamsMap) {
+
+    Builder<Type, TypedParamsPool> builder = ImmutableMap.builder();
+    for (Type type : Type.allTypes()) {
+      Set<Param> optional = optionalParamsMap.get(type);
+      Set<Param> required = requiredParamsMap.get(type);
+
+      for (Type superType : type.superTypes()) {
+        optional = Sets.union(optional, optionalParamsMap.get(superType));
+        required = Sets.union(required, requiredParamsMap.get(superType));
+      }
+
+      builder.put(type, new TypedParamsPool(optional, required));
     }
-    return result;
+
+    return builder.build();
   }
 
-  public static <T> ImmutableMap<Type, TypedParamsPool> createMap() {
-    Map<Type, TypedParamsPool> builder = Maps.newHashMap();
-    for (Type type : Type.allowedForParam()) {
-      builder.put(type, new TypedParamsPool());
+  private static Map<Type, Set<Param>> createParamsMap(ImmutableMap<String, Param> allParams,
+      boolean requiredParams) {
+    Map<Type, Set<Param>> map = Maps.newHashMap();
+    for (Type type : Type.allTypes()) {
+      HashSet<Param> set = Sets.<Param> newHashSet();
+      for (Param param : allParams.values()) {
+        if (param.isRequired() == requiredParams && param.type() == type) {
+          set.add(param);
+        }
+      }
+      map.put(type, set);
     }
-    builder.put(EMPTY_SET, new TypedParamsPool(builder.get(FILE_SET), builder.get(BLOB_SET),
-        builder.get(STRING_SET)));
-
-    return ImmutableMap.copyOf(builder);
+    return map;
   }
 }
