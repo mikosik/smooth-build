@@ -1,5 +1,9 @@
 package org.smoothbuild.task.exec;
 
+import static org.smoothbuild.lang.type.Type.BLOB_SET;
+import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
+
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
@@ -9,6 +13,7 @@ import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
@@ -29,6 +34,19 @@ public class SandboxImpl implements Sandbox {
     this.projectFileSystem = fileSystem;
     this.valueDb = valueDb;
     this.messageGroup = messageGroup;
+  }
+
+  public ArrayBuilder<?> arrayBuilder(Type arrayType) {
+    if (arrayType == FILE_SET) {
+      return fileArrayBuilder();
+    }
+    if (arrayType == BLOB_SET) {
+      return blobArrayBuilder();
+    }
+    if (arrayType == STRING_SET) {
+      return stringArrayBuilder();
+    }
+    throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
   }
 
   @Override

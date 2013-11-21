@@ -1,6 +1,8 @@
 package org.smoothbuild.task.base;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.contains;
+import static org.smoothbuild.lang.type.Type.STRING_SET;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -12,9 +14,7 @@ import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
-import com.google.common.collect.Lists;
-
-public class StringSetTaskTest {
+public class ArrayTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
   StringValue string1 = sandbox.objectDb().string("string1");
@@ -23,12 +23,12 @@ public class StringSetTaskTest {
   Result result1 = new FakeResult(string1);
   Result result2 = new FakeResult(string2);
 
-  StringSetTask stringSetTask;
+  ArrayTask arrayTask;
 
   @Test
   public void execute() {
-    given(stringSetTask = new StringSetTask(Lists.newArrayList(result1, result2), codeLocation));
-    when(stringSetTask.execute(sandbox));
+    given(arrayTask = new ArrayTask(STRING_SET, newArrayList(result1, result2), codeLocation));
+    when(arrayTask.execute(sandbox));
     thenReturned(contains(string1, string2));
   }
 }
