@@ -38,7 +38,7 @@ public class Unzipper {
 
   public Array<File> unzipFile(File zipFile) {
     this.alreadyUnzipped = Sets.newHashSet();
-    ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
         ZipEntry entry = null;

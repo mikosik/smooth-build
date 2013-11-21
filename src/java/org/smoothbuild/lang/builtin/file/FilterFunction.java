@@ -42,7 +42,7 @@ public class FilterFunction {
 
     public Array<File> execute() {
       Predicate<Path> filter = createFilter();
-      ArrayBuilder<File> builder = sandbox.fileSetBuilder();
+      ArrayBuilder<File> builder = sandbox.fileArrayBuilder();
 
       for (File file : params.files()) {
         if (filter.apply(file.path())) {

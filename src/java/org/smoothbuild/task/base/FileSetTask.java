@@ -22,7 +22,7 @@ public class FileSetTask extends Task {
 
   @Override
   public Value execute(SandboxImpl sandbox) {
-    ArrayBuilder<File> builder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> builder = sandbox.fileArrayBuilder();
 
     for (Result task : elements) {
       File from = (File) task.result();

@@ -22,7 +22,7 @@ public class OutputClassFileTest {
   @Test
   public void openOutputStream() throws IOException {
     Path path = Path.path("my/path");
-    ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileSetBuilder, path, fileBuilder);
@@ -40,7 +40,7 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     Path path = Path.path("my/path");
-    ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileSetBuilder, path, fileBuilder);

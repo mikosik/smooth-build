@@ -61,7 +61,7 @@ public class FilesFunction {
         case FILE:
           throw new ErrorMessageException(new DirParamIsAFileError("dir", dirPath));
         case DIR:
-          ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
+          ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
           for (Path filePath : fileSystem.filesFrom(dirPath)) {
             FileBuilder fileBuilder = sandbox.fileBuilder();
             fileBuilder.setPath(filePath);

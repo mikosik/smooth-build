@@ -47,7 +47,7 @@ public class SandboxImplTest {
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
     File file = fileBuilder.build();
 
-    ArrayBuilder<File> builder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> builder = sandbox.fileArrayBuilder();
     builder.add(file);
     HashCode hash = builder.build().hash();
 
@@ -64,7 +64,7 @@ public class SandboxImplTest {
     StringValue string1 = sandbox.string(jdkString1);
     StringValue string2 = sandbox.string(jdkString2);
 
-    ArrayBuilder<StringValue> builder = sandbox.stringSetBuilder();
+    ArrayBuilder<StringValue> builder = sandbox.stringArrayBuilder();
     builder.add(string1);
     builder.add(string2);
     Array<StringValue> stringSet = builder.build();

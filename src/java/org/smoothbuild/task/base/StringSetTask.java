@@ -22,7 +22,7 @@ public class StringSetTask extends Task {
 
   @Override
   public Value execute(SandboxImpl sandbox) {
-    ArrayBuilder<StringValue> stringSetBuilder = sandbox.stringSetBuilder();
+    ArrayBuilder<StringValue> stringSetBuilder = sandbox.stringArrayBuilder();
 
     for (Result task : elements) {
       stringSetBuilder.add((StringValue) task.result());
