@@ -39,7 +39,7 @@ public class MergeFunction {
 
     public Array<File> execute() {
       Set<Path> alreadyAdded = Sets.newHashSet();
-      ArrayBuilder<File> builder = sandbox.fileSetBuilder();
+      ArrayBuilder<File> builder = sandbox.fileArrayBuilder();
 
       for (File file : params.files()) {
         addFile(file, builder, alreadyAdded);

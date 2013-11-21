@@ -29,6 +29,6 @@ public class EmptySetTask extends Task {
      * ArgumentNodesCreator won't kick in.
      */
 
-    return sandbox.fileSetBuilder().build();
+    return sandbox.fileArrayBuilder().build();
   }
 }

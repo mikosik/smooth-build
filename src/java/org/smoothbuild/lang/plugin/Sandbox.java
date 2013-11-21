@@ -8,11 +8,11 @@ import org.smoothbuild.message.base.Message;
 public interface Sandbox {
   public void report(Message message);
 
-  public ArrayBuilder<File> fileSetBuilder();
+  public ArrayBuilder<File> fileArrayBuilder();
 
-  public ArrayBuilder<Blob> blobSetBuilder();
+  public ArrayBuilder<Blob> blobArrayBuilder();
 
-  public ArrayBuilder<StringValue> stringSetBuilder();
+  public ArrayBuilder<StringValue> stringArrayBuilder();
 
   public FileBuilder fileBuilder();
 

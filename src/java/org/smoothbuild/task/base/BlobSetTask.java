@@ -22,7 +22,7 @@ public class BlobSetTask extends Task {
 
   @Override
   public Value execute(SandboxImpl sandbox) {
-    ArrayBuilder<Blob> blobSetBuilder = sandbox.blobSetBuilder();
+    ArrayBuilder<Blob> blobSetBuilder = sandbox.blobArrayBuilder();
 
     for (Result task : elements) {
       blobSetBuilder.add((Blob) task.result());

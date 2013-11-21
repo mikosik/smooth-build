@@ -32,17 +32,17 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
-  public ArrayBuilder<File> fileSetBuilder() {
+  public ArrayBuilder<File> fileArrayBuilder() {
     return valueDb.fileArrayBuilder();
   }
 
   @Override
-  public ArrayBuilder<Blob> blobSetBuilder() {
+  public ArrayBuilder<Blob> blobArrayBuilder() {
     return valueDb.blobArrayBuilder();
   }
 
   @Override
-  public ArrayBuilder<StringValue> stringSetBuilder() {
+  public ArrayBuilder<StringValue> stringArrayBuilder() {
     return valueDb.stringArrayBuilder();
   }
 

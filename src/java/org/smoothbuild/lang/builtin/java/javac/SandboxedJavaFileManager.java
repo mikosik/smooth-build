@@ -33,7 +33,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     super(fileManager);
     this.sandbox = sandbox;
     this.packageToJavaFileObjects = packageToJavaFileObjects;
-    this.resultClassFiles = sandbox.fileSetBuilder();
+    this.resultClassFiles = sandbox.fileArrayBuilder();
   }
 
   public Array<File> resultClassfiles() {

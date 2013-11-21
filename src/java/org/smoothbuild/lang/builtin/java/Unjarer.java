@@ -47,7 +47,7 @@ public class Unjarer {
 
   public Array<File> unjarFile(File jarFile, Predicate<String> nameFilter) {
     this.alreadyUnjared = Sets.newHashSet();
-    ArrayBuilder<File> fileSetBuilder = sandbox.fileSetBuilder();
+    ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
