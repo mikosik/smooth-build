@@ -1,14 +1,11 @@
 package org.smoothbuild.io.fs.base;
 
-import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
 
 import java.util.List;
-
-import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,6 +14,7 @@ import org.smoothbuild.testing.io.fs.base.PathTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
+import com.google.common.testing.EqualsTester;
 
 public class PathTest {
 
@@ -208,8 +206,14 @@ public class PathTest {
 
   @Test
   public void testEqualsAndHashCode() {
-    EqualsVerifier.forExamples(path("a"), path("b"), listOfCorrectNonEqualPaths().toArray())
-        .suppress(NULL_FIELDS).verify();
+    EqualsTester tester = new EqualsTester();
+
+    tester.addEqualityGroup(path("equal/path"), path("equal/path"));
+    for (Path path : listOfCorrectNonEqualPaths()) {
+      tester.addEqualityGroup(path);
+    }
+
+    tester.testEquals();
   }
 
   @Test

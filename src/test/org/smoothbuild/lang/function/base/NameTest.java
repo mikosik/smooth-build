@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.function.base;
 
-import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
-import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.google.common.testing.EqualsTester;
 
 public class NameTest {
 
@@ -80,6 +80,14 @@ public class NameTest {
 
   @Test
   public void testEquals() throws Exception {
-    EqualsVerifier.forExamples(name("a"), name("b"), name("c")).suppress(NULL_FIELDS).verify();
+    EqualsTester tester = new EqualsTester();
+
+    tester.addEqualityGroup(name("a"), name("a"));
+    tester.addEqualityGroup(name("b"));
+    tester.addEqualityGroup(name("c"));
+    tester.addEqualityGroup(name("ab"));
+    tester.addEqualityGroup(name("abc"));
+
+    tester.testEquals();
   }
 }

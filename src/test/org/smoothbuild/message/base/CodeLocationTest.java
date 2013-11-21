@@ -2,9 +2,10 @@ package org.smoothbuild.message.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
+
+import com.google.common.testing.EqualsTester;
 
 public class CodeLocationTest {
 
@@ -26,7 +27,13 @@ public class CodeLocationTest {
 
   @Test
   public void equalsAndHashCode() throws Exception {
-    EqualsVerifier.forClass(CodeLocation.class).verify();
+    EqualsTester tester = new EqualsTester();
+
+    tester.addEqualityGroup(codeLocation(1));
+    tester.addEqualityGroup(codeLocation(7));
+    tester.addEqualityGroup(codeLocation(11), codeLocation(11));
+
+    tester.testEquals();
   }
 
   @Test

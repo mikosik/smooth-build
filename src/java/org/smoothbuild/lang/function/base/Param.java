@@ -50,7 +50,8 @@ public class Param {
       return false;
     }
     Param that = (Param) object;
-    return this.type.equals(that.type) && this.name.equals(that.name);
+    return this.type.equals(that.type) && this.name.equals(that.name)
+        && this.isRequired == that.isRequired;
   }
 
   @Override
