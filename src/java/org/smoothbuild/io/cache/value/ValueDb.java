@@ -14,11 +14,13 @@ import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.hash.ValuesCache;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.lang.type.File;
 import org.smoothbuild.lang.type.Hashed;
 import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 
 import com.google.common.collect.ImmutableList;
@@ -34,9 +36,8 @@ public class ValueDb {
 
   // FileSet
 
-  public Array<File> fileSet(List<File> elements) {
-    HashCode hash = genericSet(elements);
-    return new CachedArray<File>(this, hash, FILE_SET, fileReader());
+  public ArrayBuilder<File> fileArrayBuilder() {
+    return new ArrayBuilder<File>(this, Type.FILE_SET, fileReader());
   }
 
   public Array<File> fileSet(HashCode hash) {
@@ -45,9 +46,8 @@ public class ValueDb {
 
   // BlobSet
 
-  public Array<Blob> blobSet(List<Blob> elements) {
-    HashCode hash = genericSet(elements);
-    return new CachedArray<Blob>(this, hash, BLOB_SET, blobReader());
+  public ArrayBuilder<Blob> blobArrayBuilder() {
+    return new ArrayBuilder<Blob>(this, Type.BLOB_SET, blobReader());
   }
 
   public Array<Blob> blobSet(HashCode hash) {
@@ -56,9 +56,8 @@ public class ValueDb {
 
   // StringSet
 
-  public Array<StringValue> stringSet(List<StringValue> elements) {
-    HashCode hash = genericSet(elements);
-    return new CachedArray<StringValue>(this, hash, STRING_SET, stringReader());
+  public ArrayBuilder<StringValue> stringArrayBuilder() {
+    return new ArrayBuilder<StringValue>(this, Type.STRING_SET, stringReader());
   }
 
   public Array<StringValue> stringSet(HashCode hash) {
@@ -75,16 +74,21 @@ public class ValueDb {
     return builder.build();
   }
 
-  private HashCode genericSet(List<? extends Hashed> elements) {
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(elements);
-    return hashedDb.store(marshaller.getBytes());
-  }
-
   private List<HashCode> readHashCodeList(HashCode hash) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       return unmarshaller.readHashCodeList();
     }
+  }
+
+  public <T extends Value> Array<T> array(List<T> elements, Type type, ValueReader<T> valueReader) {
+    HashCode hash = genericSet(elements);
+    return new CachedArray<T>(this, hash, type, valueReader);
+  }
+
+  private HashCode genericSet(List<? extends Hashed> elements) {
+    Marshaller marshaller = new Marshaller();
+    marshaller.write(elements);
+    return hashedDb.store(marshaller.getBytes());
   }
 
   // File
