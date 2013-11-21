@@ -98,6 +98,12 @@ public class TaskDb {
     if (type == Type.FILE_SET) {
       return valueDb.fileSet(resultObjectHash);
     }
+    if (type == Type.BLOB) {
+      return valueDb.blob(resultObjectHash);
+    }
+    if (type == Type.BLOB_SET) {
+      return valueDb.blobSet(resultObjectHash);
+    }
     throw new ErrorMessageException(new Message(FATAL,
         "Bug in smooth binary: Unexpected value type " + type));
   }
