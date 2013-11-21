@@ -1,6 +1,5 @@
 package org.smoothbuild.io.cache.task;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.message.base.MessageType.ERROR;
@@ -78,7 +77,7 @@ public class TaskDbTest {
   @Test
   public void stored_file_set_can_be_read_back() throws Exception {
     given(file = valueDb.file(path, bytes));
-    given(fileSet = valueDb.fileSet(newArrayList(file)));
+    given(fileSet = valueDb.fileArrayBuilder().add(file).build());
     given(taskDb).store(hash, new CachedResult(fileSet, Empty.messageList()));
     when(((Array<File>) taskDb.read(hash).value()).iterator().next());
     thenReturned(file);
@@ -88,7 +87,7 @@ public class TaskDbTest {
   @Test
   public void stored_blob_set_can_be_read_back() throws Exception {
     given(blob = valueDb.blob(bytes));
-    given(blobSet = valueDb.blobSet(newArrayList(blob)));
+    given(blobSet = valueDb.blobArrayBuilder().add(blob).build());
     given(taskDb).store(hash, new CachedResult(blobSet, Empty.messageList()));
     when(((Array<Blob>) taskDb.read(hash).value()).iterator().next());
     thenReturned(blob);
@@ -98,7 +97,7 @@ public class TaskDbTest {
   @Test
   public void stored_string_set_can_be_read_back() throws Exception {
     given(stringValue = valueDb.string(string));
-    given(stringSet = valueDb.stringSet(newArrayList(stringValue)));
+    given(stringSet = valueDb.stringArrayBuilder().add(stringValue).build());
     given(taskDb).store(hash, new CachedResult(stringSet, Empty.messageList()));
     when(((Array<StringValue>) taskDb.read(hash).value()).iterator().next());
     thenReturned(stringValue);
