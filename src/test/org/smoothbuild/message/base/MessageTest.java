@@ -1,12 +1,12 @@
 package org.smoothbuild.message.base;
 
-import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.WARNING;
-import nl.jqno.equalsverifier.EqualsVerifier;
 
 import org.junit.Test;
+
+import com.google.common.testing.EqualsTester;
 
 public class MessageTest {
 
@@ -42,6 +42,16 @@ public class MessageTest {
 
   @Test
   public void equalsAndHashCode() throws Exception {
-    EqualsVerifier.forClass(Message.class).suppress(NULL_FIELDS).verify();
+    EqualsTester tester = new EqualsTester();
+
+    tester.addEqualityGroup(new Message(WARNING, "equal"), new Message(WARNING, "equal"));
+    for (MessageType type : MessageType.values()) {
+      tester.addEqualityGroup(new Message(type, "message A"));
+    }
+    for (MessageType type : MessageType.values()) {
+      tester.addEqualityGroup(new Message(type, "message B"));
+    }
+
+    tester.testEquals();
   }
 }

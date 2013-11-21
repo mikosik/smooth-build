@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static nl.jqno.equalsverifier.Warning.NULL_FIELDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -12,12 +11,10 @@ import static org.smoothbuild.lang.function.base.Type.STRING;
 
 import java.util.Set;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
-
 import org.junit.Test;
 import org.smoothbuild.lang.function.def.Node;
 
-import com.google.common.hash.HashCode;
+import com.google.common.testing.EqualsTester;
 
 public class ParamTest {
 
@@ -53,9 +50,18 @@ public class ParamTest {
 
   @Test
   public void equalsAndHashCode() throws Exception {
-    EqualsVerifier.forClass(Param.class)
-        .withPrefabValues(HashCode.class, HashCode.fromInt(1), HashCode.fromInt(2))
-        .suppress(NULL_FIELDS).verify();
+    EqualsTester tester = new EqualsTester();
+
+    tester.addEqualityGroup(param(STRING, "equal", false), param(STRING, "equal", false));
+
+    for (Type type : Type.PARAM_TYPES) {
+      tester.addEqualityGroup(param(type, "name", false));
+      tester.addEqualityGroup(param(type, "name", true));
+      tester.addEqualityGroup(param(type, "name2", false));
+      tester.addEqualityGroup(param(type, "name2", true));
+    }
+
+    tester.testEquals();
   }
 
   @Test
