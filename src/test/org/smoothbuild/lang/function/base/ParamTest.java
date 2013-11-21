@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.Param.paramsToString;
+import static org.smoothbuild.lang.function.base.Type.EMPTY_SET;
 import static org.smoothbuild.lang.function.base.Type.FILE_SET;
 import static org.smoothbuild.lang.function.base.Type.STRING;
 
@@ -20,32 +21,32 @@ public class ParamTest {
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() throws Exception {
-    Param.param(null, "name", true);
+    param(null, "name", true);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbidden() throws Exception {
-    Param.param(Type.STRING, null, true);
+    param(STRING, null, true);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void creatingEmptySetParamIsForbidden() throws Exception {
-    Param.param(Type.EMPTY_SET, "name", true);
+    param(EMPTY_SET, "name", true);
   }
 
   @Test
   public void type() throws Exception {
-    assertThat(param(Type.STRING, "name", true).type()).isEqualTo(Type.STRING);
+    assertThat(param(STRING, "name", true).type()).isEqualTo(STRING);
   }
 
   @Test
   public void name() throws Exception {
-    assertThat(param(Type.STRING, "name", true).name()).isEqualTo("name");
+    assertThat(param(STRING, "name", true).name()).isEqualTo("name");
   }
 
   @Test
   public void isRequired() throws Exception {
-    assertThat(param(Type.STRING, "name", true).isRequired()).isTrue();
+    assertThat(param(STRING, "name", true).isRequired()).isTrue();
   }
 
   @Test
@@ -88,7 +89,7 @@ public class ParamTest {
 
   @Test
   public void testToString() throws Exception {
-    assertThat(param(Type.STRING, "name", false).toString()).isEqualTo("Param(String: name)");
+    assertThat(param(STRING, "name", false).toString()).isEqualTo("Param(String: name)");
   }
 
   @Test
