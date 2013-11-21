@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.IoConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.lang.function.value.FileSetMatchers.containsFileContainingItsPath;
+import static org.smoothbuild.testing.lang.type.FileSetMatchers.containsFileContainingItsPath;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
@@ -14,12 +14,12 @@ import org.smoothbuild.lang.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
-import org.smoothbuild.testing.lang.function.value.FakeString;
+import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
 public class FilesFunctionTest {

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.function.value;
+package org.smoothbuild.testing.lang.type;
 
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
@@ -8,8 +8,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
 
 public class FileSetMatchers {
 

@@ -3,9 +3,9 @@ package org.smoothbuild.lang.function.nativ;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.value.StringValue;
-import org.smoothbuild.lang.function.value.Value;
-import org.smoothbuild.testing.lang.function.value.FakeString;
+import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.testing.lang.type.FakeString;
 
 import com.google.common.collect.ImmutableMap;
 

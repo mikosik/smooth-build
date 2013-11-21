@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.function.value.Value;
+import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;

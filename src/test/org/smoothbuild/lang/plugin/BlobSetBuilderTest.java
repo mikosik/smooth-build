@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.value.Blob;
+import org.smoothbuild.lang.type.Blob;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 
 public class BlobSetBuilderTest {

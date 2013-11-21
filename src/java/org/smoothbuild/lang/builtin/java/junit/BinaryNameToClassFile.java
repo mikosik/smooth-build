@@ -8,9 +8,9 @@ import java.util.Map;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.File;
 import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.Maps;

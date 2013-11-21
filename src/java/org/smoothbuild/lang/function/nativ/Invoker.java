@@ -6,8 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.type.Value;
 
 public class Invoker {
   private final Method method;

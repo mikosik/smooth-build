@@ -3,8 +3,8 @@ package org.smoothbuild.lang.plugin;
 import java.util.List;
 
 import org.smoothbuild.io.cache.value.ValueDb;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.StringValue;
 
 import com.google.common.collect.Lists;
 

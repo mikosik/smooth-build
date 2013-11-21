@@ -6,7 +6,7 @@ import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.type.File;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 public class FakeValueDb extends ValueDb {

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.not;
 import static org.testory.Testory.given;
@@ -6,7 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.testing.lang.function.value.FakeHashed;
+import org.smoothbuild.testing.lang.type.FakeHashed;
 
 public class FakeHashedTest {
   FakeHashed fakeHashed;

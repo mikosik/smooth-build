@@ -13,7 +13,7 @@ import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.task.CachedResult;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
-import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;

@@ -1,10 +1,10 @@
-package org.smoothbuild.testing.lang.function.value;
+package org.smoothbuild.testing.lang.type;
 
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import java.io.IOException;
 
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.type.File;
 
 public class FileTester {
 

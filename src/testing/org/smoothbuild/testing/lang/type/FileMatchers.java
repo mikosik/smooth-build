@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.function.value;
+package org.smoothbuild.testing.lang.type;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import java.util.Arrays;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.smoothbuild.lang.function.value.File;
+import org.smoothbuild.lang.type.File;
 
 import com.google.common.io.ByteStreams;
 

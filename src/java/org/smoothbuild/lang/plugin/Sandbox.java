@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.plugin;
 
-import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.base.Message;
 
 public interface Sandbox {

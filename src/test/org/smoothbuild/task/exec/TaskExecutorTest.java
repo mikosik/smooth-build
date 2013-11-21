@@ -9,7 +9,7 @@ import static org.smoothbuild.message.base.MessageType.WARNING;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.lang.function.value.Value;
+import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.type;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -11,8 +11,8 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.value.File;
-import org.smoothbuild.testing.lang.function.value.FileTester;
+import org.smoothbuild.lang.type.File;
+import org.smoothbuild.testing.lang.type.FileTester;
 
 public class FileTesterTest {
   String content = "some content";

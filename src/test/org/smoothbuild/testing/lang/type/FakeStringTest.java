@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.testing.lang.function.value.FakeString;
+import org.smoothbuild.testing.lang.type.FakeString;
 import org.testory.common.Closure;
 
 public class FakeStringTest {

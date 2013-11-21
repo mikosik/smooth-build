@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.value;
+package org.smoothbuild.lang.type;
 
 import org.smoothbuild.lang.function.base.Type;
 

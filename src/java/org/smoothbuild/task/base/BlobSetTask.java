@@ -4,9 +4,9 @@ import static org.smoothbuild.lang.function.base.Type.BLOB_SET;
 
 import java.util.List;
 
-import org.smoothbuild.lang.function.value.Blob;
-import org.smoothbuild.lang.function.value.Value;
 import org.smoothbuild.lang.plugin.BlobSetBuilder;
+import org.smoothbuild.lang.type.Blob;
+import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.lang.plugin;
+package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
@@ -11,7 +11,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Type;
-import org.smoothbuild.testing.lang.function.value.FakeFile;
+import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.util.Streams;
 import org.testory.common.Closure;
 

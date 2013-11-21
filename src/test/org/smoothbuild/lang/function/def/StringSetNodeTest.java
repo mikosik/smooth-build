@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.lang.function.value.Array;
-import org.smoothbuild.lang.function.value.StringValue;
+import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.StringValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
