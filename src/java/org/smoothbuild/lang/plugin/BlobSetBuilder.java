@@ -6,22 +6,13 @@ import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.Blob;
 
-import com.google.common.collect.Lists;
-
-public class BlobSetBuilder {
-  private final ValueDb valueDb;
-  private final List<Blob> result;
-
+public class BlobSetBuilder extends ArrayBuilder<Blob> {
   public BlobSetBuilder(ValueDb valueDb) {
-    this.valueDb = valueDb;
-    this.result = Lists.newArrayList();
+    super(valueDb);
   }
 
-  public void add(Blob blob) {
-    result.add(blob);
-  }
-
-  public Array<Blob> build() {
-    return valueDb.blobSet(result);
+  @Override
+  protected Array<Blob> buildImpl(ValueDb valueDb, List<Blob> elements) {
+    return valueDb.blobSet(elements);
   }
 }
