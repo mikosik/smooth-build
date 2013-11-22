@@ -6,8 +6,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.Param.paramsToString;
-import static org.smoothbuild.lang.type.Type.EMPTY_SET;
-import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Type.STRING;
 
 import java.util.Set;
@@ -32,7 +32,7 @@ public class ParamTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void creatingEmptySetParamIsForbidden() throws Exception {
-    param(EMPTY_SET, "name", true);
+    param(EMPTY_ARRAY, "name", true);
   }
 
   @Test
@@ -98,7 +98,7 @@ public class ParamTest {
     Set<Param> params = newHashSet();
     params.add(param(STRING, "param1", false));
     params.add(param(STRING, "param2-with-very-long", false));
-    params.add(param(FILE_SET, "param3", true));
+    params.add(param(FILE_ARRAY, "param3", true));
 
     String actual = paramsToString(params);
 

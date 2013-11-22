@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.lang.type;
 
-import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
 
 import java.util.Iterator;
 import java.util.List;
@@ -17,7 +17,7 @@ public class FakeFileSet extends AbstractValue implements Array<File> {
   private final List<File> files = Lists.newArrayList();
 
   public FakeFileSet() {
-    super(FILE_SET, HashCode.fromInt(0));
+    super(FILE_ARRAY, HashCode.fromInt(0));
   }
 
   public void add(File file) {

@@ -4,9 +4,9 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
-import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Type.STRING;
-import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -161,10 +161,10 @@ public class DefinedFunctionsCreator {
 
       Type elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
-        return new CachingNode(new ArrayNode(STRING_SET, elemNodes, locationOf(list)));
+        return new CachingNode(new ArrayNode(STRING_ARRAY, elemNodes, locationOf(list)));
       }
       if (elemsType == Type.FILE) {
-        return new CachingNode(new ArrayNode(FILE_SET, elemNodes, locationOf(list)));
+        return new CachingNode(new ArrayNode(FILE_ARRAY, elemNodes, locationOf(list)));
       }
 
       throw new ErrorMessageException(new Message(FATAL,
@@ -175,7 +175,7 @@ public class DefinedFunctionsCreator {
       Builder<Node> builder = ImmutableList.builder();
       for (SetElemContext elem : elems) {
         Node node = build(elem);
-        if (!Type.allowedForSetElem().contains(node.type())) {
+        if (!Type.allowedForArrayElem().contains(node.type())) {
           messages.report(new ForbiddenSetElemTypeError(locationOf(elem), node.type()));
         } else {
           builder.add(node);
