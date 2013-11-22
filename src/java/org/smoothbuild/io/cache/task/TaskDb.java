@@ -13,7 +13,7 @@ import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.hash.TasksCache;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.value.ValueDb;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.Message;
@@ -42,7 +42,7 @@ public class TaskDb {
     ImmutableList<Message> messages = cachedResult.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
-      StringValue messageString = valueDb.string(message.message());
+      SString messageString = valueDb.string(message.message());
 
       marshaller.write(AllMessageTypes.INSTANCE.valueToByte(message.type()));
       marshaller.write(messageString.hash());

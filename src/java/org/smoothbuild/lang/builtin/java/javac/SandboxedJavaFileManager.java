@@ -16,8 +16,8 @@ import javax.tools.StandardLocation;
 import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
@@ -26,7 +26,7 @@ import com.google.common.collect.Multimap;
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final Sandbox sandbox;
   private final Multimap<String, JavaFileObject> packageToJavaFileObjects;
-  private final ArrayBuilder<File> resultClassFiles;
+  private final ArrayBuilder<SFile> resultClassFiles;
 
   SandboxedJavaFileManager(StandardJavaFileManager fileManager, Sandbox sandbox,
       Multimap<String, JavaFileObject> packageToJavaFileObjects) {
@@ -36,7 +36,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     this.resultClassFiles = sandbox.fileArrayBuilder();
   }
 
-  public Array<File> resultClassfiles() {
+  public SArray<SFile> resultClassfiles() {
     return resultClassFiles.build();
   }
 

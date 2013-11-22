@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 
 public class SignatureFactoryTest {
 
@@ -28,11 +28,11 @@ public class SignatureFactoryTest {
   }
 
   public interface Params {
-    public File param1();
+    public SFile param1();
   }
 
   @SmoothFunction(name = "function")
-  public static File smoothMethod(Sandbox sandbox, Params params) {
+  public static SFile smoothMethod(Sandbox sandbox, Params params) {
     return null;
   }
 }

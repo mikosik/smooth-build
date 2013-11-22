@@ -9,7 +9,7 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
@@ -23,7 +23,7 @@ public class PackagedJavaFileObjectsTest {
   public void test() throws Exception {
     String fileName1 = "my/package/MyKlass.class";
     String fileName2 = "my/package2/MyKlass2.class";
-    File file = jaredFiles(fileName1, fileName2);
+    SFile file = jaredFiles(fileName1, fileName2);
 
     Multimap<String, JavaFileObject> packageToJavaFileObjects = packagedJavaFileObjects(
         new FakeSandbox(), ImmutableList.of(file));
@@ -36,8 +36,8 @@ public class PackagedJavaFileObjectsTest {
   @Test
   public void duplicateClassFileException() throws Exception {
     String fileName = "my/package/MyKlass.class";
-    File file1 = jaredFiles(fileName);
-    File file2 = jaredFiles(fileName);
+    SFile file1 = jaredFiles(fileName);
+    SFile file2 = jaredFiles(fileName);
 
     try {
       packagedJavaFileObjects(new FakeSandbox(), ImmutableList.of(file1, file2));

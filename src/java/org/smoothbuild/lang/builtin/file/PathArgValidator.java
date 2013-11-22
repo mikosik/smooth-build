@@ -5,11 +5,11 @@ import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
 public class PathArgValidator {
-  public static Path validatedPath(String name, StringValue stringValue) {
+  public static Path validatedPath(String name, SString stringValue) {
     String value = stringValue.value();
     String message = validationError(value);
     if (message != null) {

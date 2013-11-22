@@ -8,14 +8,14 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 
 import com.google.common.io.CharStreams;
 
 public class InputSourceFile extends SimpleJavaFileObject {
-  private final File file;
+  private final SFile file;
 
-  public InputSourceFile(File file) {
+  public InputSourceFile(SFile file) {
     super(URI.create("string:///" + file.path().value()), Kind.SOURCE);
     this.file = file;
   }

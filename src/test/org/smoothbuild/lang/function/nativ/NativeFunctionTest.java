@@ -9,7 +9,7 @@ import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSigna
 import org.junit.Test;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
@@ -54,14 +54,14 @@ public class NativeFunctionTest {
 
   @Test
   public void generatedTaskUsesInvokerForCalculatingResult() throws Exception {
-    StringValue result = new FakeString("result");
+    SString result = new FakeString("result");
 
     // given
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(result);
 
     // when
     Task task = function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation);
-    StringValue actual = (StringValue) task.execute(sandbox);
+    SString actual = (SString) task.execute(sandbox);
 
     // then
     assertThat(actual).isSameAs(result);

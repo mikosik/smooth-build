@@ -15,10 +15,10 @@ import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeString;
@@ -37,12 +37,12 @@ public class TaskDbTest {
   Path path = path("file/path");
 
   Message message;
-  Array<File> fileArray;
-  Array<Blob> blobArray;
-  Array<StringValue> stringArray;
-  File file;
-  Blob blob;
-  StringValue stringValue;
+  SArray<SFile> fileArray;
+  SArray<SBlob> blobArray;
+  SArray<SString> stringArray;
+  SFile file;
+  SBlob blob;
+  SString stringValue;
   String string = "some string";
 
   @Test
@@ -79,7 +79,7 @@ public class TaskDbTest {
     given(file = valueDb.file(path, bytes));
     given(fileArray = valueDb.fileArrayBuilder().add(file).build());
     given(taskDb).store(hash, new CachedResult(fileArray, Empty.messageList()));
-    when(((Array<File>) taskDb.read(hash).value()).iterator().next());
+    when(((SArray<SFile>) taskDb.read(hash).value()).iterator().next());
     thenReturned(file);
   }
 
@@ -89,7 +89,7 @@ public class TaskDbTest {
     given(blob = valueDb.blob(bytes));
     given(blobArray = valueDb.blobArrayBuilder().add(blob).build());
     given(taskDb).store(hash, new CachedResult(blobArray, Empty.messageList()));
-    when(((Array<Blob>) taskDb.read(hash).value()).iterator().next());
+    when(((SArray<SBlob>) taskDb.read(hash).value()).iterator().next());
     thenReturned(blob);
   }
 
@@ -99,7 +99,7 @@ public class TaskDbTest {
     given(stringValue = valueDb.string(string));
     given(stringArray = valueDb.stringArrayBuilder().add(stringValue).build());
     given(taskDb).store(hash, new CachedResult(stringArray, Empty.messageList()));
-    when(((Array<StringValue>) taskDb.read(hash).value()).iterator().next());
+    when(((SArray<SString>) taskDb.read(hash).value()).iterator().next());
     thenReturned(stringValue);
   }
 
@@ -123,7 +123,7 @@ public class TaskDbTest {
   public void stored_string_can_be_read_back() throws Exception {
     given(stringValue = valueDb.string(string));
     given(taskDb).store(hash, new CachedResult(stringValue, Empty.messageList()));
-    when(((StringValue) taskDb.read(hash).value()).value());
+    when(((SString) taskDb.read(hash).value()).value());
     thenReturned(string);
   }
 }

@@ -14,9 +14,9 @@ import org.smoothbuild.lang.builtin.file.err.DirParamIsAFileError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.lang.type.FakeString;
@@ -104,7 +104,7 @@ public class FilesFunctionTest {
     Path filePath = path("file/path/file.txt");
     sandbox.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
 
-    Array<File> fileArray = runExecute(params(rootPath.value()));
+    SArray<SFile> fileArray = runExecute(params(rootPath.value()));
 
     assertThat(containsFileContainingItsPath(filePath).matches(fileArray));
   }
@@ -112,13 +112,13 @@ public class FilesFunctionTest {
   private static FilesFunction.Parameters params(final String dir) {
     return new FilesFunction.Parameters() {
       @Override
-      public StringValue dir() {
+      public SString dir() {
         return new FakeString(dir);
       }
     };
   }
 
-  private Array<File> runExecute(Parameters params) {
+  private SArray<SFile> runExecute(Parameters params) {
     return FilesFunction.execute(sandbox, params);
   }
 }

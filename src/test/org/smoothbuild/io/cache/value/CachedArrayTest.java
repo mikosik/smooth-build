@@ -8,8 +8,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SFile;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
@@ -17,9 +17,9 @@ import com.google.common.hash.HashCode;
 public class CachedArrayTest {
   ValueDb valueDb = mock(ValueDb.class);
   HashCode hash = HashCode.fromInt(33);
-  Blob blob = mock(Blob.class);
+  SBlob blob = mock(SBlob.class);
 
-  CachedArray<File> cachedFileArray;
+  CachedArray<SFile> cachedFileArray;
 
   @Test
   public void null_object_db_is_forbidden() {
@@ -56,7 +56,7 @@ public class CachedArrayTest {
     };
   }
 
-  private static CachedArray<File> cachedArray(ValueDb valueDb, HashCode hash) {
-    return new CachedArray<File>(valueDb, hash, FILE, valueDb.fileReader());
+  private static CachedArray<SFile> cachedArray(ValueDb valueDb, HashCode hash) {
+    return new CachedArray<SFile>(valueDb, hash, FILE, valueDb.fileReader());
   }
 }

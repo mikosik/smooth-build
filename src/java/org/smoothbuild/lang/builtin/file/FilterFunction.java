@@ -9,9 +9,9 @@ import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.SandboxImpl;
 
@@ -20,14 +20,14 @@ import com.google.common.base.Predicate;
 public class FilterFunction {
   public interface Parameters {
     @Required
-    public Array<File> files();
+    public SArray<SFile> files();
 
     @Required
-    public StringValue include();
+    public SString include();
   }
 
   @SmoothFunction(name = "filter")
-  public static Array<File> execute(SandboxImpl sandbox, Parameters params) {
+  public static SArray<SFile> execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -40,11 +40,11 @@ public class FilterFunction {
       this.params = params;
     }
 
-    public Array<File> execute() {
+    public SArray<SFile> execute() {
       Predicate<Path> filter = createFilter();
-      ArrayBuilder<File> builder = sandbox.fileArrayBuilder();
+      ArrayBuilder<SFile> builder = sandbox.fileArrayBuilder();
 
-      for (File file : params.files()) {
+      for (SFile file : params.files()) {
         if (filter.apply(file.path())) {
           builder.add(file);
         }

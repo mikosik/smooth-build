@@ -10,9 +10,9 @@ import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.BlobBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
@@ -50,17 +50,17 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
-  public ArrayBuilder<File> fileArrayBuilder() {
+  public ArrayBuilder<SFile> fileArrayBuilder() {
     return valueDb.fileArrayBuilder();
   }
 
   @Override
-  public ArrayBuilder<Blob> blobArrayBuilder() {
+  public ArrayBuilder<SBlob> blobArrayBuilder() {
     return valueDb.blobArrayBuilder();
   }
 
   @Override
-  public ArrayBuilder<StringValue> stringArrayBuilder() {
+  public ArrayBuilder<SString> stringArrayBuilder() {
     return valueDb.stringArrayBuilder();
   }
 
@@ -75,7 +75,7 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
-  public StringValue string(String string) {
+  public SString string(String string) {
     return valueDb.string(string);
   }
 

@@ -17,8 +17,8 @@ import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.EndsWithPredicate;
 
@@ -36,9 +36,9 @@ public class Unzipper {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public Array<File> unzipFile(File zipFile) {
+  public SArray<SFile> unzipFile(SFile zipFile) {
     this.alreadyUnzipped = Sets.newHashSet();
-    ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
         ZipEntry entry = null;
@@ -54,8 +54,8 @@ public class Unzipper {
     }
   }
 
-  private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry,
-      ArrayBuilder<File> fileArrayBuilder) {
+  private SFile unzipEntry(ZipInputStream zipInputStream, ZipEntry entry,
+      ArrayBuilder<SFile> fileArrayBuilder) {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {

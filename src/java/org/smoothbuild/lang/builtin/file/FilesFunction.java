@@ -15,9 +15,9 @@ import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.SandboxImpl;
@@ -25,11 +25,11 @@ import org.smoothbuild.task.exec.SandboxImpl;
 public class FilesFunction {
   public interface Parameters {
     @Required
-    public StringValue dir();
+    public SString dir();
   }
 
   @SmoothFunction(name = "files", cacheable = false)
-  public static Array<File> execute(SandboxImpl sandbox, Parameters params) {
+  public static SArray<SFile> execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -42,11 +42,11 @@ public class FilesFunction {
       this.params = params;
     }
 
-    public Array<File> execute() {
+    public SArray<SFile> execute() {
       return createFiles(validatedPath("dir", params.dir()));
     }
 
-    private Array<File> createFiles(Path dirPath) {
+    private SArray<SFile> createFiles(Path dirPath) {
       FileSystem fileSystem = sandbox.projectFileSystem();
 
       if (dirPath.isRoot()) {
@@ -61,7 +61,7 @@ public class FilesFunction {
         case FILE:
           throw new ErrorMessageException(new DirParamIsAFileError("dir", dirPath));
         case DIR:
-          ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
+          ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
           for (Path filePath : fileSystem.filesFrom(dirPath)) {
             FileBuilder fileBuilder = sandbox.fileBuilder();
             fileBuilder.setPath(filePath);

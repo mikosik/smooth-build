@@ -19,9 +19,9 @@ import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.Sets;
@@ -30,15 +30,15 @@ public class JarFunction {
 
   public interface Parameters {
     @Required
-    public Array<File> files();
+    public SArray<SFile> files();
 
-    public StringValue output();
+    public SString output();
 
-    public File manifest();
+    public SFile manifest();
   }
 
   @SmoothFunction(name = "jar")
-  public static File execute(Sandbox sandbox, Parameters params) {
+  public static SFile execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -56,11 +56,11 @@ public class JarFunction {
       this.alreadyAdded = Sets.newHashSet();
     }
 
-    public File execute() {
+    public SFile execute() {
       FileBuilder fileBuilder = sandbox.fileBuilder();
       fileBuilder.setPath(outputPath());
       try (JarOutputStream jarOutputStream = createOutputStream(fileBuilder);) {
-        for (File file : params.files()) {
+        for (SFile file : params.files()) {
           addEntry(jarOutputStream, file);
         }
       } catch (IOException e) {
@@ -88,7 +88,7 @@ public class JarFunction {
       }
     }
 
-    private void addEntry(JarOutputStream jarOutputStream, File file) throws IOException {
+    private void addEntry(JarOutputStream jarOutputStream, SFile file) throws IOException {
       Path path = file.path();
       if (alreadyAdded.contains(path)) {
         throw new ErrorMessageException(new CannotAddDuplicatePathError(path));

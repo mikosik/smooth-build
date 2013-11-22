@@ -10,9 +10,9 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.SandboxImpl;
@@ -25,11 +25,11 @@ import org.smoothbuild.task.exec.SandboxImpl;
  */
 public class JunitFunction {
   public interface Parameters {
-    Array<File> libs();
+    SArray<SFile> libs();
   }
 
   @SmoothFunction(name = "junit")
-  public static StringValue execute(SandboxImpl sandbox, Parameters params) {
+  public static SString execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -42,8 +42,8 @@ public class JunitFunction {
       this.params = params;
     }
 
-    public StringValue execute() {
-      Map<String, File> binaryNameToClassFile = binaryNameToClassFile(sandbox,
+    public SString execute() {
+      Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(sandbox,
           nullToEmpty(params.libs()));
       FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
       JUnitCore jUnitCore = new JUnitCore();

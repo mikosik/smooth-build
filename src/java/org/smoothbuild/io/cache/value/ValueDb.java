@@ -15,11 +15,11 @@ import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.hash.ValuesCache;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.Hashed;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 
@@ -36,32 +36,32 @@ public class ValueDb {
 
   // FileArray
 
-  public ArrayBuilder<File> fileArrayBuilder() {
-    return new ArrayBuilder<File>(this, Type.FILE_ARRAY, fileReader());
+  public ArrayBuilder<SFile> fileArrayBuilder() {
+    return new ArrayBuilder<SFile>(this, Type.FILE_ARRAY, fileReader());
   }
 
-  public Array<File> fileArray(HashCode hash) {
-    return new CachedArray<File>(this, hash, FILE_ARRAY, fileReader());
+  public SArray<SFile> fileArray(HashCode hash) {
+    return new CachedArray<SFile>(this, hash, FILE_ARRAY, fileReader());
   }
 
   // BlobArray
 
-  public ArrayBuilder<Blob> blobArrayBuilder() {
-    return new ArrayBuilder<Blob>(this, Type.BLOB_ARRAY, blobReader());
+  public ArrayBuilder<SBlob> blobArrayBuilder() {
+    return new ArrayBuilder<SBlob>(this, Type.BLOB_ARRAY, blobReader());
   }
 
-  public Array<Blob> blobArray(HashCode hash) {
-    return new CachedArray<Blob>(this, hash, BLOB_ARRAY, blobReader());
+  public SArray<SBlob> blobArray(HashCode hash) {
+    return new CachedArray<SBlob>(this, hash, BLOB_ARRAY, blobReader());
   }
 
   // StringArray
 
-  public ArrayBuilder<StringValue> stringArrayBuilder() {
-    return new ArrayBuilder<StringValue>(this, Type.STRING_ARRAY, stringReader());
+  public ArrayBuilder<SString> stringArrayBuilder() {
+    return new ArrayBuilder<SString>(this, Type.STRING_ARRAY, stringReader());
   }
 
-  public Array<StringValue> stringArray(HashCode hash) {
-    return new CachedArray<StringValue>(this, hash, STRING_ARRAY, stringReader());
+  public SArray<SString> stringArray(HashCode hash) {
+    return new CachedArray<SString>(this, hash, STRING_ARRAY, stringReader());
   }
 
   // generic array
@@ -80,7 +80,7 @@ public class ValueDb {
     }
   }
 
-  public <T extends Value> Array<T> array(List<T> elements, Type type, ValueReader<T> valueReader) {
+  public <T extends Value> SArray<T> array(List<T> elements, Type type, ValueReader<T> valueReader) {
     HashCode hash = genericArray(elements);
     return new CachedArray<T>(this, hash, type, valueReader);
   }
@@ -93,7 +93,7 @@ public class ValueDb {
 
   // File
 
-  public File file(Path path, byte[] bytes) {
+  public SFile file(Path path, byte[] bytes) {
     CachedBlob blob = blob(bytes);
     HashCode contentHash = blob.hash();
 
@@ -105,16 +105,16 @@ public class ValueDb {
     return new CachedFile(path, blob, hash);
   }
 
-  protected ValueReader<File> fileReader() {
-    return new ValueReader<File>() {
+  protected ValueReader<SFile> fileReader() {
+    return new ValueReader<SFile>() {
       @Override
-      public File read(HashCode hash) {
+      public SFile read(HashCode hash) {
         return file(hash);
       }
     };
   }
 
-  public File file(HashCode hash) {
+  public SFile file(HashCode hash) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       HashCode blobHash = unmarshaller.readHash();
       Path path = unmarshaller.readPath();
@@ -126,21 +126,21 @@ public class ValueDb {
 
   // String
 
-  public StringValue string(String string) {
+  public SString string(String string) {
     HashCode hash = hashedDb.store(string.getBytes(CHARSET));
     return new CachedString(hashedDb, hash);
   }
 
-  private ValueReader<StringValue> stringReader() {
-    return new ValueReader<StringValue>() {
+  private ValueReader<SString> stringReader() {
+    return new ValueReader<SString>() {
       @Override
-      public StringValue read(HashCode hash) {
+      public SString read(HashCode hash) {
         return string(hash);
       }
     };
   }
 
-  public StringValue string(HashCode hash) {
+  public SString string(HashCode hash) {
     return new CachedString(hashedDb, hash);
   }
 
@@ -151,10 +151,10 @@ public class ValueDb {
     return new CachedBlob(hashedDb, hash);
   }
 
-  private ValueReader<Blob> blobReader() {
-    return new ValueReader<Blob>() {
+  private ValueReader<SBlob> blobReader() {
+    return new ValueReader<SBlob>() {
       @Override
-      public Blob read(HashCode hash) {
+      public SBlob read(HashCode hash) {
         return blob(hash);
       }
     };

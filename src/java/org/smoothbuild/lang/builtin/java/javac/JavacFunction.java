@@ -21,9 +21,9 @@ import org.smoothbuild.lang.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.SandboxImpl;
@@ -38,17 +38,17 @@ public class JavacFunction {
 
   public interface Parameters {
     @Required
-    Array<File> sources();
+    SArray<SFile> sources();
 
-    Array<File> libs();
+    SArray<SFile> libs();
 
-    StringValue source();
+    SString source();
 
-    StringValue target();
+    SString target();
   }
 
   @SmoothFunction(name = "javac")
-  public static Array<File> execute(SandboxImpl sandbox, Parameters params) {
+  public static SArray<SFile> execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -68,14 +68,14 @@ public class JavacFunction {
       this.params = params;
     }
 
-    public Array<File> execute() {
+    public SArray<SFile> execute() {
       if (compiler == null) {
         throw new ErrorMessageException(new NoCompilerAvailableError());
       }
       return compile(params.sources());
     }
 
-    public Array<File> compile(Iterable<File> files) {
+    public SArray<SFile> compile(Iterable<SFile> files) {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
@@ -143,10 +143,10 @@ public class JavacFunction {
       return new SandboxedJavaFileManager(fileManager, sandbox, libsClasses);
     }
 
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<File> sourceFiles) {
-      return FluentIterable.from(sourceFiles).transform(new Function<File, InputSourceFile>() {
+    private static Iterable<InputSourceFile> toJavaFiles(Iterable<SFile> sourceFiles) {
+      return FluentIterable.from(sourceFiles).transform(new Function<SFile, InputSourceFile>() {
         @Override
-        public InputSourceFile apply(File file) {
+        public InputSourceFile apply(SFile file) {
           return new InputSourceFile(file);
         }
       });

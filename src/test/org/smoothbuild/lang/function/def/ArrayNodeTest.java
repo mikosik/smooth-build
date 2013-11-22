@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -25,8 +25,8 @@ public class ArrayNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
-  StringValue string1 = sandbox.objectDb().string("string1");
-  StringValue string2 = sandbox.objectDb().string("string2");
+  SString string1 = sandbox.objectDb().string("string1");
+  SString string2 = sandbox.objectDb().string("string2");
 
   Node node1 = mock(Node.class);
   Node node2 = mock(Node.class);
@@ -57,7 +57,7 @@ public class ArrayNodeTest {
 
     Task task = arrayNode.generateTask(taskGenerator);
     @SuppressWarnings("unchecked")
-    Array<StringValue> result = (Array<StringValue>) task.execute(sandbox);
+    SArray<SString> result = (SArray<SString>) task.execute(sandbox);
     assertThat(result).containsOnly(string1, string2);
   }
 }

@@ -14,9 +14,9 @@ import org.mockito.Mockito;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
@@ -45,13 +45,13 @@ public class SandboxImplTest {
     FileBuilder fileBuilder = sandbox.fileBuilder();
     fileBuilder.setPath(path1);
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
-    File file = fileBuilder.build();
+    SFile file = fileBuilder.build();
 
-    ArrayBuilder<File> builder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> builder = sandbox.fileArrayBuilder();
     builder.add(file);
     HashCode hash = builder.build().hash();
 
-    Array<File> fileArray = valueDb.fileArray(hash);
+    SArray<SFile> fileArray = valueDb.fileArray(hash);
     MatcherAssert.assertThat(fileArray, FileArrayMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
   }
@@ -61,17 +61,17 @@ public class SandboxImplTest {
     String jdkString1 = "my string 1";
     String jdkString2 = "my string 2";
 
-    StringValue string1 = sandbox.string(jdkString1);
-    StringValue string2 = sandbox.string(jdkString2);
+    SString string1 = sandbox.string(jdkString1);
+    SString string2 = sandbox.string(jdkString2);
 
-    ArrayBuilder<StringValue> builder = sandbox.stringArrayBuilder();
+    ArrayBuilder<SString> builder = sandbox.stringArrayBuilder();
     builder.add(string1);
     builder.add(string2);
-    Array<StringValue> stringArray = builder.build();
+    SArray<SString> stringArray = builder.build();
 
-    Array<StringValue> stringArrayRead = valueDb.stringArray(stringArray.hash());
+    SArray<SString> stringArrayRead = valueDb.stringArray(stringArray.hash());
     List<String> strings = Lists.newArrayList();
-    for (StringValue string : stringArrayRead) {
+    for (SString string : stringArrayRead) {
       strings.add(string.value());
     }
 
@@ -85,7 +85,7 @@ public class SandboxImplTest {
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
     HashCode hash = fileBuilder.build().hash();
 
-    File file = valueDb.file(hash);
+    SFile file = valueDb.file(hash);
     assertThat(file.path()).isEqualTo(path1);
     assertThat(inputStreamToString(file.openInputStream())).isEqualTo(content);
   }
@@ -93,9 +93,9 @@ public class SandboxImplTest {
   @Test
   public void string_stores_its_content_in_value_db() throws Exception {
     String jdkString = "my string";
-    StringValue string = sandbox.string(jdkString);
+    SString string = sandbox.string(jdkString);
 
-    StringValue stringRead = valueDb.string(string.hash());
+    SString stringRead = valueDb.string(string.hash());
 
     assertThat(stringRead.value()).isEqualTo(jdkString);
   }

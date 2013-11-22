@@ -5,26 +5,26 @@ import java.util.List;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.AbstractValue;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class FakeArray extends AbstractValue implements Array<File> {
-  private final List<File> files = Lists.newArrayList();
+public class FakeArray extends AbstractValue implements SArray<SFile> {
+  private final List<SFile> files = Lists.newArrayList();
 
   public FakeArray(Type type) {
     super(type, HashCode.fromInt(0));
   }
 
-  public void add(File file) {
+  public void add(SFile file) {
     files.add(file);
   }
 
   @Override
-  public Iterator<File> iterator() {
+  public Iterator<SFile> iterator() {
     return files.iterator();
   }
 

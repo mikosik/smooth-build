@@ -8,8 +8,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
@@ -39,6 +39,6 @@ public class EmptyArrayNodeTest {
   public void generate_task() throws Exception {
     Task task = emptyArrayNode.generateTask(taskGenerator);
     Value result = task.execute(new FakeSandbox());
-    assertThat((Array<File>) result).isEmpty();
+    assertThat((SArray<SFile>) result).isEmpty();
   }
 }

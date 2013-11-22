@@ -6,7 +6,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.lang.type.FileMatchers;
 
@@ -15,8 +15,8 @@ public class FileMatchersTest {
   byte[] bytes2 = new byte[] { 1, 2, 3, 4 };
   Path path1 = Path.path("my/file1");
   Path path2 = Path.path("my/file2");
-  File file1;
-  File file2;
+  SFile file1;
+  SFile file2;
 
   @Test
   public void file_is_equal_to_itself() {

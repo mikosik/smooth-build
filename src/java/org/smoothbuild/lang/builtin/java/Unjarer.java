@@ -20,8 +20,8 @@ import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.EndsWithPredicate;
 
@@ -41,13 +41,13 @@ public class Unjarer {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public Array<File> unjarFile(File jarFile) {
+  public SArray<SFile> unjarFile(SFile jarFile) {
     return unjarFile(jarFile, Predicates.<String> alwaysTrue());
   }
 
-  public Array<File> unjarFile(File jarFile, Predicate<String> nameFilter) {
+  public SArray<SFile> unjarFile(SFile jarFile, Predicate<String> nameFilter) {
     this.alreadyUnjared = Sets.newHashSet();
-    ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
@@ -55,7 +55,7 @@ public class Unjarer {
         while ((entry = jarInputStream.getNextJarEntry()) != null) {
           String fileName = entry.getName();
           if (filter.apply(fileName)) {
-            File file = unjarEntry(jarInputStream, fileName);
+            SFile file = unjarEntry(jarInputStream, fileName);
             Path path = file.path();
             if (alreadyUnjared.contains(path)) {
               throw new ErrorMessageException(new DuplicatePathInJarError(path));
@@ -72,7 +72,7 @@ public class Unjarer {
     return fileArrayBuilder.build();
   }
 
-  private File unjarEntry(JarInputStream jarInputStream, String fileName) {
+  private SFile unjarEntry(JarInputStream jarInputStream, String fileName) {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
       throw new ErrorMessageException(new IllegalPathInJarError(fileName));

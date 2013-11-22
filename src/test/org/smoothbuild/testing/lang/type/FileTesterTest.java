@@ -11,13 +11,13 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.lang.type.FileTester;
 
 public class FileTesterTest {
   String content = "some content";
   Path path = path("my/path");
-  File file = mock(File.class);
+  SFile file = mock(SFile.class);
 
   @Test
   public void assertFileContainsSucceedsWhenContentIsEqualToExpected() throws IOException {

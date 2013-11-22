@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.lang.type.FakeFile;
 
 import com.google.common.collect.ImmutableMap;
@@ -28,7 +28,7 @@ public class FileClassLoaderTest {
     FakeFile file = new FakeFile(path("this/path/is/ignored/anyway"),
         inputStreamToBytes(classByteCode));
 
-    Map<String, File> binaryNameToFile = ImmutableMap.<String, File> of(klassBinaryName, file);
+    Map<String, SFile> binaryNameToFile = ImmutableMap.<String, SFile> of(klassBinaryName, file);
     FileClassLoader fileClassLoader = new FileClassLoader(binaryNameToFile);
 
     Class<?> klass = fileClassLoader.findClass(klassBinaryName);

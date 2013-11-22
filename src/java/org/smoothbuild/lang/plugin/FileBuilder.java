@@ -8,7 +8,7 @@ import java.io.OutputStream;
 
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 
 public class FileBuilder {
   private final ValueDb valueDb;
@@ -31,7 +31,7 @@ public class FileBuilder {
     return outputStream;
   }
 
-  public File build() {
+  public SFile build() {
     checkState(outputStream != null, "No file content available. Create one via openOutputStream()");
     checkState(path != null, "No path set");
 

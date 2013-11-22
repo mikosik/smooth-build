@@ -21,8 +21,8 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
@@ -62,14 +62,14 @@ public class NativeCallTaskTest {
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
-    StringValue argValue = new FakeString("subTaskResult");
+    SString argValue = new FakeString("subTaskResult");
     Result subTask = new FakeResult(argValue);
 
     String name = "param";
     NativeCallTask nativeCallTask = new NativeCallTask(function1, ImmutableMap.of(name, subTask),
         codeLocation);
 
-    StringValue result = new FakeString("result");
+    SString result = new FakeString("result");
     when(invoker.invoke(sandbox, ImmutableMap.<String, Value> of(name, argValue))).thenReturn(
         result);
 
@@ -91,9 +91,9 @@ public class NativeCallTaskTest {
     Signature signature = new Signature(Type.FILE, name("name"), params);
     function1 = new NativeFunction(signature, invoker, true);
     nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
-    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenAnswer(new Answer<File>() {
+    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenAnswer(new Answer<SFile>() {
       @Override
-      public File answer(InvocationOnMock invocation) throws Throwable {
+      public SFile answer(InvocationOnMock invocation) throws Throwable {
         Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
         sandbox.report(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
         return null;

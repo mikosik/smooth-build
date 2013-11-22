@@ -11,12 +11,12 @@ public class Type {
    * function implementations in plugins code.
    */
 
-  private static final TypeLiteral<?> STRING_T = TypeLiteral.get(StringValue.class);
-  private static final TypeLiteral<?> BLOB_T = TypeLiteral.get(Blob.class);
-  private static final TypeLiteral<?> FILE_T = TypeLiteral.get(File.class);
-  private static final TypeLiteral<?> STRING_A_T = new TypeLiteral<Array<StringValue>>() {};
-  private static final TypeLiteral<?> BLOB_A_T = new TypeLiteral<Array<Blob>>() {};
-  private static final TypeLiteral<?> FILE_A_T = new TypeLiteral<Array<File>>() {};
+  private static final TypeLiteral<?> STRING_T = TypeLiteral.get(SString.class);
+  private static final TypeLiteral<?> BLOB_T = TypeLiteral.get(SBlob.class);
+  private static final TypeLiteral<?> FILE_T = TypeLiteral.get(SFile.class);
+  private static final TypeLiteral<?> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
+  private static final TypeLiteral<?> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
+  private static final TypeLiteral<?> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
   private static final TypeLiteral<?> EMPTY_A_T = TypeLiteral.get(EmptyArray.class);
 
   /*

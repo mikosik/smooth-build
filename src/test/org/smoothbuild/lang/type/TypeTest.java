@@ -16,10 +16,10 @@ import static org.smoothbuild.lang.type.Type.javaParamTypetoType;
 import static org.smoothbuild.lang.type.Type.javaResultTypetoType;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Type.EmptyArray;
 
@@ -199,13 +199,13 @@ public class TypeTest {
 
   @Test
   public void testJavaParamTypetoType() {
-    assertThat(javaParamTypetoType(type(StringValue.class))).isEqualTo(STRING);
-    assertThat(javaParamTypetoType(type(Blob.class))).isEqualTo(BLOB);
-    assertThat(javaParamTypetoType(type(File.class))).isEqualTo(FILE);
+    assertThat(javaParamTypetoType(type(SString.class))).isEqualTo(STRING);
+    assertThat(javaParamTypetoType(type(SBlob.class))).isEqualTo(BLOB);
+    assertThat(javaParamTypetoType(type(SFile.class))).isEqualTo(FILE);
 
-    assertThat(javaParamTypetoType(new TypeLiteral<Array<StringValue>>() {})).isEqualTo(STRING_ARRAY);
-    assertThat(javaParamTypetoType(new TypeLiteral<Array<Blob>>() {})).isEqualTo(BLOB_ARRAY);
-    assertThat(javaParamTypetoType(new TypeLiteral<Array<File>>() {})).isEqualTo(FILE_ARRAY);
+    assertThat(javaParamTypetoType(new TypeLiteral<SArray<SString>>() {})).isEqualTo(STRING_ARRAY);
+    assertThat(javaParamTypetoType(new TypeLiteral<SArray<SBlob>>() {})).isEqualTo(BLOB_ARRAY);
+    assertThat(javaParamTypetoType(new TypeLiteral<SArray<SFile>>() {})).isEqualTo(FILE_ARRAY);
   }
 
   @Test
@@ -215,14 +215,14 @@ public class TypeTest {
 
   @Test
   public void testJavaResultTypetoType() {
-    assertThat(javaResultTypetoType(type(StringValue.class))).isEqualTo(STRING);
-    assertThat(javaResultTypetoType(type(Blob.class))).isEqualTo(BLOB);
-    assertThat(javaResultTypetoType(type(File.class))).isEqualTo(FILE);
+    assertThat(javaResultTypetoType(type(SString.class))).isEqualTo(STRING);
+    assertThat(javaResultTypetoType(type(SBlob.class))).isEqualTo(BLOB);
+    assertThat(javaResultTypetoType(type(SFile.class))).isEqualTo(FILE);
 
-    assertThat(javaResultTypetoType(new TypeLiteral<Array<StringValue>>() {}))
+    assertThat(javaResultTypetoType(new TypeLiteral<SArray<SString>>() {}))
         .isEqualTo(STRING_ARRAY);
-    assertThat(javaResultTypetoType(new TypeLiteral<Array<Blob>>() {})).isEqualTo(BLOB_ARRAY);
-    assertThat(javaResultTypetoType(new TypeLiteral<Array<File>>() {})).isEqualTo(FILE_ARRAY);
+    assertThat(javaResultTypetoType(new TypeLiteral<SArray<SBlob>>() {})).isEqualTo(BLOB_ARRAY);
+    assertThat(javaResultTypetoType(new TypeLiteral<SArray<SFile>>() {})).isEqualTo(FILE_ARRAY);
   }
 
   @Test

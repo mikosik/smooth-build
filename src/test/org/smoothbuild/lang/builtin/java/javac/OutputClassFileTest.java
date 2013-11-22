@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.lang.type.FileTester;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
@@ -22,17 +22,17 @@ public class OutputClassFileTest {
   @Test
   public void openOutputStream() throws IOException {
     Path path = Path.path("my/path");
-    ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);
 
     String content = "content";
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
-    Array<File> fileArray = fileArrayBuilder.build();
+    SArray<SFile> fileArray = fileArrayBuilder.build();
 
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
-    File file = fileArray.iterator().next();
+    SFile file = fileArray.iterator().next();
     assertThat(file.path()).isEqualTo(path);
     FileTester.assertContentContains(file, content);
   }
@@ -40,7 +40,7 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     Path path = Path.path("my/path");
-    ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);

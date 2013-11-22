@@ -8,8 +8,8 @@ import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 
 import com.google.common.collect.Sets;
 
@@ -17,14 +17,14 @@ public class MergeFunction {
 
   public interface Parameters {
     @Required
-    public Array<File> files();
+    public SArray<SFile> files();
 
     @Required
-    public Array<File> with();
+    public SArray<SFile> with();
   }
 
   @SmoothFunction(name = "merge")
-  public static Array<File> execute(Sandbox sandbox, Parameters params) {
+  public static SArray<SFile> execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -37,21 +37,21 @@ public class MergeFunction {
       this.params = params;
     }
 
-    public Array<File> execute() {
+    public SArray<SFile> execute() {
       Set<Path> alreadyAdded = Sets.newHashSet();
-      ArrayBuilder<File> builder = sandbox.fileArrayBuilder();
+      ArrayBuilder<SFile> builder = sandbox.fileArrayBuilder();
 
-      for (File file : params.files()) {
+      for (SFile file : params.files()) {
         addFile(file, builder, alreadyAdded);
       }
-      for (File file : params.with()) {
+      for (SFile file : params.with()) {
         addFile(file, builder, alreadyAdded);
       }
 
       return builder.build();
     }
 
-    private void addFile(File file, ArrayBuilder<File> builder, Set<Path> alreadyAdded) {
+    private void addFile(SFile file, ArrayBuilder<SFile> builder, Set<Path> alreadyAdded) {
       Path path = file.path();
       if (alreadyAdded.contains(path)) {
         sandbox.report(new DuplicateMergedPathError(path));

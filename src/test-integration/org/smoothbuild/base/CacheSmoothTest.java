@@ -29,7 +29,7 @@ import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
@@ -45,9 +45,9 @@ public class CacheSmoothTest extends IntegrationTestCase {
   @Builtin
   public Module provideBuiltinModule(ModuleBuilder builder) throws Exception {
     Mockito.when(invoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Value>> any()))
-        .thenAnswer(new Answer<StringValue>() {
+        .thenAnswer(new Answer<SString>() {
           @Override
-          public StringValue answer(InvocationOnMock invocation) throws Throwable {
+          public SString answer(InvocationOnMock invocation) throws Throwable {
             Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
             return sandbox.string("abc");
           }

@@ -6,12 +6,12 @@ import static org.smoothbuild.lang.type.Type.FILE;
 import java.io.InputStream;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SFile;
 
 import com.google.common.hash.HashCode;
 
-public class CachedFile extends AbstractValue implements File {
+public class CachedFile extends AbstractValue implements SFile {
   private final Path path;
   private final CachedBlob content;
 
@@ -27,7 +27,7 @@ public class CachedFile extends AbstractValue implements File {
   }
 
   @Override
-  public Blob content() {
+  public SBlob content() {
     return content;
   }
 

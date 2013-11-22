@@ -8,7 +8,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
@@ -17,8 +17,8 @@ import org.smoothbuild.testing.task.exec.FakeSandbox;
 public class ArrayTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
-  StringValue string1 = sandbox.objectDb().string("string1");
-  StringValue string2 = sandbox.objectDb().string("string2");
+  SString string1 = sandbox.objectDb().string("string1");
+  SString string2 = sandbox.objectDb().string("string2");
 
   Result result1 = new FakeResult(string1);
   Result result2 = new FakeResult(string2);

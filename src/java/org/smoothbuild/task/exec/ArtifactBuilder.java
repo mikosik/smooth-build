@@ -15,10 +15,10 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.Hashed;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
@@ -67,16 +67,16 @@ public class ArtifactBuilder {
     Path artifactPath = RESULTS_DIR.append(path(name.value()));
 
     if (value.type() == Type.FILE) {
-      storeFile(artifactPath, (File) value);
+      storeFile(artifactPath, (SFile) value);
     } else if (value.type() == Type.FILE_ARRAY) {
       @SuppressWarnings("unchecked")
-      Array<File> fileArray = (Array<File>) value;
+      SArray<SFile> fileArray = (SArray<SFile>) value;
       storeFileArray(artifactPath, fileArray);
     } else if (value.type() == Type.STRING) {
-      storeString(artifactPath, (StringValue) value);
+      storeString(artifactPath, (SString) value);
     } else if (value.type() == Type.STRING_ARRAY) {
       @SuppressWarnings("unchecked")
-      Array<StringValue> stringArray = (Array<StringValue>) value;
+      SArray<SString> stringArray = (SArray<SString>) value;
       storeStringArray(artifactPath, stringArray);
     } else {
       throw new ErrorMessageException(new Message(MessageType.FATAL,
@@ -84,31 +84,31 @@ public class ArtifactBuilder {
     }
   }
 
-  private void storeFile(Path artifactPath, File file) {
+  private void storeFile(Path artifactPath, SFile file) {
     Path targetPath = targetPath(file.content());
     smoothFileSystem.delete(artifactPath);
     smoothFileSystem.createLink(artifactPath, targetPath);
   }
 
-  private void storeFileArray(Path artifactPath, Array<File> fileArray) {
+  private void storeFileArray(Path artifactPath, SArray<SFile> fileArray) {
     smoothFileSystem.delete(artifactPath);
-    for (File file : fileArray) {
+    for (SFile file : fileArray) {
       Path linkPath = artifactPath.append(file.path());
       Path targetPath = targetPath(file.content());
       smoothFileSystem.createLink(linkPath, targetPath);
     }
   }
 
-  private void storeString(Path artifactPath, StringValue string) {
+  private void storeString(Path artifactPath, SString string) {
     Path targetPath = targetPath(string);
     smoothFileSystem.delete(artifactPath);
     smoothFileSystem.createLink(artifactPath, targetPath);
   }
 
-  private void storeStringArray(Path artifactPath, Array<StringValue> stringArray) {
+  private void storeStringArray(Path artifactPath, SArray<SString> stringArray) {
     smoothFileSystem.delete(artifactPath);
     int i = 0;
-    for (StringValue string : stringArray) {
+    for (SString string : stringArray) {
       Path filePath = path(Integer.valueOf(i).toString());
       Path linkPath = artifactPath.append(filePath);
       Path targetPath = targetPath(string);
