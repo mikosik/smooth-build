@@ -20,13 +20,13 @@ import javax.inject.Inject;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
+import org.smoothbuild.antlr.SmoothParser.ArrayContext;
+import org.smoothbuild.antlr.SmoothParser.ArrayElemContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
-import org.smoothbuild.antlr.SmoothParser.SetContext;
-import org.smoothbuild.antlr.SmoothParser.SetElemContext;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Module;
@@ -133,8 +133,8 @@ public class DefinedFunctionsCreator {
     }
 
     private Node build(ExpressionContext expression) {
-      if (expression.set() != null) {
-        return build(expression.set());
+      if (expression.array() != null) {
+        return build(expression.array());
       }
       if (expression.call() != null) {
         return build(expression.call());
@@ -147,8 +147,8 @@ public class DefinedFunctionsCreator {
               + " without children."));
     }
 
-    private Node build(SetContext list) {
-      List<SetElemContext> elems = list.setElem();
+    private Node build(ArrayContext list) {
+      List<ArrayElemContext> elems = list.arrayElem();
       ImmutableList<Node> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
@@ -171,9 +171,9 @@ public class DefinedFunctionsCreator {
           "Bug in smooth binary: Unexpected list element type = " + elemsType));
     }
 
-    private ImmutableList<Node> build(List<SetElemContext> elems) {
+    private ImmutableList<Node> build(List<ArrayElemContext> elems) {
       Builder<Node> builder = ImmutableList.builder();
-      for (SetElemContext elem : elems) {
+      for (ArrayElemContext elem : elems) {
         Node node = build(elem);
         if (!Type.allowedForArrayElem().contains(node.type())) {
           messages.report(new ForbiddenArrayElemTypeError(locationOf(elem), node.type()));
@@ -184,7 +184,7 @@ public class DefinedFunctionsCreator {
       return builder.build();
     }
 
-    private Node build(SetElemContext elem) {
+    private Node build(ArrayElemContext elem) {
       if (elem.STRING() != null) {
         return buildStringNode(elem.STRING());
       }
@@ -193,11 +193,11 @@ public class DefinedFunctionsCreator {
       }
 
       throw new ErrorMessageException(new Message(FATAL,
-          "Bug in smooth binary: Illegal parse tree: " + SetElemContext.class.getSimpleName()
+          "Bug in smooth binary: Illegal parse tree: " + ArrayElemContext.class.getSimpleName()
               + " without children."));
     }
 
-    private boolean areAllElemTypesEqual(List<SetElemContext> elems, List<Node> elemNodes) {
+    private boolean areAllElemTypesEqual(List<ArrayElemContext> elems, List<Node> elemNodes) {
       boolean success = true;
       Type firstType = elemNodes.get(0).type();
       for (int i = 0; i < elemNodes.size(); i++) {
