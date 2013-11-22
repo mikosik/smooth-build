@@ -10,19 +10,20 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
 
 public class CachedArrayTest {
-  ValueDb valueDb = mock(ValueDb.class);
+  ValueDb valueDb = new FakeValueDb();
   HashCode hash = HashCode.fromInt(33);
   SBlob blob = mock(SBlob.class);
 
   CachedArray<SFile> cachedFileArray;
 
   @Test
-  public void null_object_db_is_forbidden() {
+  public void null_value_db_is_forbidden() {
     when(newCachedArray(null, hash));
     thenThrown(NullPointerException.class);
   }
