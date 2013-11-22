@@ -89,19 +89,19 @@ public class TaskDb {
     if (type == Type.STRING) {
       return valueDb.string(resultObjectHash);
     }
-    if (type == Type.STRING_SET) {
+    if (type == Type.STRING_ARRAY) {
       return valueDb.stringArray(resultObjectHash);
     }
     if (type == Type.FILE) {
       return valueDb.file(resultObjectHash);
     }
-    if (type == Type.FILE_SET) {
+    if (type == Type.FILE_ARRAY) {
       return valueDb.fileArray(resultObjectHash);
     }
     if (type == Type.BLOB) {
       return valueDb.blob(resultObjectHash);
     }
-    if (type == Type.BLOB_SET) {
+    if (type == Type.BLOB_ARRAY) {
       return valueDb.blobArray(resultObjectHash);
     }
     throw new ErrorMessageException(new Message(FATAL,

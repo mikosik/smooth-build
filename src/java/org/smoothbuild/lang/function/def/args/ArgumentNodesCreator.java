@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
-import static org.smoothbuild.lang.type.Type.BLOB_SET;
-import static org.smoothbuild.lang.type.Type.EMPTY_SET;
-import static org.smoothbuild.lang.type.Type.FILE_SET;
-import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.Collection;
@@ -159,15 +159,15 @@ public class ArgumentNodesCreator {
     private Node argumentNode(Assignment assignment) {
       Type type = assignment.param().type();
       Argument argument = assignment.argument();
-      if (argument.type() == EMPTY_SET) {
-        if (type == Type.STRING_SET) {
-          ArrayNode node = new ArrayNode(STRING_SET, Empty.nodeList(), argument.codeLocation());
+      if (argument.type() == EMPTY_ARRAY) {
+        if (type == Type.STRING_ARRAY) {
+          ArrayNode node = new ArrayNode(STRING_ARRAY, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
-        } else if (type == FILE_SET) {
-          ArrayNode node = new ArrayNode(FILE_SET, Empty.nodeList(), argument.codeLocation());
+        } else if (type == FILE_ARRAY) {
+          ArrayNode node = new ArrayNode(FILE_ARRAY, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
-        } else if (type == BLOB_SET) {
-          ArrayNode node = new ArrayNode(BLOB_SET, Empty.nodeList(), argument.codeLocation());
+        } else if (type == BLOB_ARRAY) {
+          ArrayNode node = new ArrayNode(BLOB_ARRAY, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
         } else {
           throw new ErrorMessageException(new Message(FATAL,

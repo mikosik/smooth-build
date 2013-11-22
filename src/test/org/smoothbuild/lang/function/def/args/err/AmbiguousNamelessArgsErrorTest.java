@@ -10,11 +10,11 @@ import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
-import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.Type.FILE;
-import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Type.STRING;
-import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 
 import java.util.Set;
@@ -39,20 +39,20 @@ public class AmbiguousNamelessArgsErrorTest {
     Argument a1 = namedArg(12, "arg1", node(STRING), codeLocation(2));
     assignmentList.add(assignment(p1, a1));
 
-    Param p2 = param(STRING_SET, "param2");
-    Argument a2 = namelessArg(7, node(STRING_SET), codeLocation(12));
+    Param p2 = param(STRING_ARRAY, "param2");
+    Argument a2 = namelessArg(7, node(STRING_ARRAY), codeLocation(12));
     assignmentList.add(assignment(p2, a2));
 
     Param p3 = param(FILE, "param3");
     Argument a3 = pipedArg(node(FILE), codeLocation(14));
     assignmentList.add(assignment(p3, a3));
 
-    Argument a4 = namedArg(3, "arg4", node(EMPTY_SET), codeLocation(7));
+    Argument a4 = namedArg(3, "arg4", node(EMPTY_ARRAY), codeLocation(7));
     Set<Argument> availableArgs = newHashSet();
     availableArgs.add(a4);
 
-    Param p4 = param(FILE_SET, "param4");
-    Param p5 = param(STRING_SET, "param5");
+    Param p4 = param(FILE_ARRAY, "param4");
+    Param p5 = param(STRING_ARRAY, "param5");
     TypedParamsPool availableParams = new TypedParamsPool(newHashSet(p4, p5),
         Sets.<Param> newHashSet());
 

@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -35,17 +35,17 @@ public class ArrayNodeTest {
   Result result2 = new FakeResult(string2);
 
   ImmutableList<Node> elemNodes = ImmutableList.of(node1, node2);
-  ArrayNode arrayNode = new ArrayNode(STRING_SET, elemNodes, codeLocation);
+  ArrayNode arrayNode = new ArrayNode(STRING_ARRAY, elemNodes, codeLocation);
 
   @Test
   public void type() {
     when(arrayNode.type());
-    thenReturned(STRING_SET);
+    thenReturned(STRING_ARRAY);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(arrayNode = new ArrayNode(STRING_SET, elemNodes, codeLocation));
+    given(arrayNode = new ArrayNode(STRING_ARRAY, elemNodes, codeLocation));
     when(arrayNode.codeLocation());
     thenReturned(codeLocation);
   }

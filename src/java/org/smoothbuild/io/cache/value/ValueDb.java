@@ -1,9 +1,9 @@
 package org.smoothbuild.io.cache.value;
 
 import static org.smoothbuild.command.SmoothContants.CHARSET;
-import static org.smoothbuild.lang.type.Type.BLOB_SET;
-import static org.smoothbuild.lang.type.Type.FILE_SET;
-import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 
 import java.util.List;
 
@@ -37,31 +37,31 @@ public class ValueDb {
   // FileArray
 
   public ArrayBuilder<File> fileArrayBuilder() {
-    return new ArrayBuilder<File>(this, Type.FILE_SET, fileReader());
+    return new ArrayBuilder<File>(this, Type.FILE_ARRAY, fileReader());
   }
 
   public Array<File> fileArray(HashCode hash) {
-    return new CachedArray<File>(this, hash, FILE_SET, fileReader());
+    return new CachedArray<File>(this, hash, FILE_ARRAY, fileReader());
   }
 
   // BlobArray
 
   public ArrayBuilder<Blob> blobArrayBuilder() {
-    return new ArrayBuilder<Blob>(this, Type.BLOB_SET, blobReader());
+    return new ArrayBuilder<Blob>(this, Type.BLOB_ARRAY, blobReader());
   }
 
   public Array<Blob> blobArray(HashCode hash) {
-    return new CachedArray<Blob>(this, hash, BLOB_SET, blobReader());
+    return new CachedArray<Blob>(this, hash, BLOB_ARRAY, blobReader());
   }
 
   // StringArray
 
   public ArrayBuilder<StringValue> stringArrayBuilder() {
-    return new ArrayBuilder<StringValue>(this, Type.STRING_SET, stringReader());
+    return new ArrayBuilder<StringValue>(this, Type.STRING_ARRAY, stringReader());
   }
 
   public Array<StringValue> stringArray(HashCode hash) {
-    return new CachedArray<StringValue>(this, hash, STRING_SET, stringReader());
+    return new CachedArray<StringValue>(this, hash, STRING_ARRAY, stringReader());
   }
 
   // generic array

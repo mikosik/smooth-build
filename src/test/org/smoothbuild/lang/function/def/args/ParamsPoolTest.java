@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.type.Type.BLOB;
-import static org.smoothbuild.lang.type.Type.BLOB_SET;
-import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.Type.FILE;
-import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Type.STRING;
-import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import org.junit.Test;
@@ -22,17 +22,17 @@ public class ParamsPoolTest {
   Param blob = param(BLOB, "blob");
   Param file = param(FILE, "file1");
 
-  Param stringSet = param(STRING_SET, "stringSet");
-  Param blobSet = param(BLOB_SET, "blobSet");
-  Param fileSet = param(FILE_SET, "fileSet");
+  Param stringSet = param(STRING_ARRAY, "stringSet");
+  Param blobSet = param(BLOB_ARRAY, "blobSet");
+  Param fileSet = param(FILE_ARRAY, "fileSet");
 
   Param stringRequired = param(STRING, "stringRequired", true);
   Param blobRequired = param(BLOB, "blobRequired", true);
   Param fileRequired = param(FILE, "fileRequired", true);
 
-  Param stringSetRequired = param(STRING_SET, "stringSetRequired", true);
-  Param blobSetRequired = param(BLOB_SET, "blobSetRequired", true);
-  Param fileSetRequired = param(FILE_SET, "fileSetRequired", true);
+  Param stringSetRequired = param(STRING_ARRAY, "stringSetRequired", true);
+  Param blobSetRequired = param(BLOB_ARRAY, "blobSetRequired", true);
+  Param fileSetRequired = param(FILE_ARRAY, "fileSetRequired", true);
 
   ImmutableMap<String, Param> params = params(string, stringRequired, blob, blobRequired, file,
       fileRequired, stringSet, stringSetRequired, blobSet, blobSetRequired, fileSet,
@@ -122,8 +122,8 @@ public class ParamsPoolTest {
   public void string_set_param_is_available_for_string_set_argument() throws Exception {
     paramsPool = new ParamsPool(params);
 
-    assertThat(paramsPool.availableForType(STRING_SET).optionalParams()).containsOnly(stringSet);
-    assertThat(paramsPool.availableForType(STRING_SET).requiredParams()).containsOnly(
+    assertThat(paramsPool.availableForType(STRING_ARRAY).optionalParams()).containsOnly(stringSet);
+    assertThat(paramsPool.availableForType(STRING_ARRAY).requiredParams()).containsOnly(
         stringSetRequired);
   }
 
@@ -131,8 +131,8 @@ public class ParamsPoolTest {
   public void blob_set_param_is_available_for_blob_set_argument() throws Exception {
     paramsPool = new ParamsPool(params);
 
-    assertThat(paramsPool.availableForType(BLOB_SET).optionalParams()).containsOnly(blobSet);
-    assertThat(paramsPool.availableForType(BLOB_SET).requiredParams())
+    assertThat(paramsPool.availableForType(BLOB_ARRAY).optionalParams()).containsOnly(blobSet);
+    assertThat(paramsPool.availableForType(BLOB_ARRAY).requiredParams())
         .containsOnly(blobSetRequired);
   }
 
@@ -140,9 +140,9 @@ public class ParamsPoolTest {
   public void blob_set_and_file_set_params_are_available_for_file_set_argument() throws Exception {
     paramsPool = new ParamsPool(params);
 
-    assertThat(paramsPool.availableForType(FILE_SET).optionalParams()).containsOnly(blobSet,
+    assertThat(paramsPool.availableForType(FILE_ARRAY).optionalParams()).containsOnly(blobSet,
         fileSet);
-    assertThat(paramsPool.availableForType(FILE_SET).requiredParams()).containsOnly(
+    assertThat(paramsPool.availableForType(FILE_ARRAY).requiredParams()).containsOnly(
         blobSetRequired, fileSetRequired);
   }
 
@@ -150,9 +150,9 @@ public class ParamsPoolTest {
   public void set_params_are_available_for_empty_set_argument() throws Exception {
     paramsPool = new ParamsPool(params);
 
-    assertThat(paramsPool.availableForType(EMPTY_SET).optionalParams()).containsOnly(stringSet,
+    assertThat(paramsPool.availableForType(EMPTY_ARRAY).optionalParams()).containsOnly(stringSet,
         blobSet, fileSet);
-    assertThat(paramsPool.availableForType(EMPTY_SET).requiredParams()).containsOnly(
+    assertThat(paramsPool.availableForType(EMPTY_ARRAY).requiredParams()).containsOnly(
         stringSetRequired, blobSetRequired, fileSetRequired);
   }
 

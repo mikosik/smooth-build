@@ -68,13 +68,13 @@ public class ArtifactBuilder {
 
     if (value.type() == Type.FILE) {
       storeFile(artifactPath, (File) value);
-    } else if (value.type() == Type.FILE_SET) {
+    } else if (value.type() == Type.FILE_ARRAY) {
       @SuppressWarnings("unchecked")
       Array<File> fileArray = (Array<File>) value;
       storeFileSet(artifactPath, fileArray);
     } else if (value.type() == Type.STRING) {
       storeString(artifactPath, (StringValue) value);
-    } else if (value.type() == Type.STRING_SET) {
+    } else if (value.type() == Type.STRING_ARRAY) {
       @SuppressWarnings("unchecked")
       Array<StringValue> stringArray = (Array<StringValue>) value;
       storeStringSet(artifactPath, stringArray);

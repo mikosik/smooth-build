@@ -17,7 +17,7 @@ public class Type {
   private static final TypeLiteral<?> STRING_A_T = new TypeLiteral<Array<StringValue>>() {};
   private static final TypeLiteral<?> BLOB_A_T = new TypeLiteral<Array<Blob>>() {};
   private static final TypeLiteral<?> FILE_A_T = new TypeLiteral<Array<File>>() {};
-  private static final TypeLiteral<?> EMPTY_A_T = TypeLiteral.get(EmptySet.class);
+  private static final TypeLiteral<?> EMPTY_A_T = TypeLiteral.get(EmptyArray.class);
 
   /*
    * Names of smooth types.
@@ -38,11 +38,11 @@ public class Type {
   public static final Type STRING = new Type(STRING_N, STRING_T);
   public static final Type BLOB = new Type(BLOB_N, BLOB_T);
   public static final Type FILE = new Type(FILE_N, FILE_T, BLOB);
-  public static final Type STRING_SET = new Type(STRING_A_N, STRING_A_T);
-  public static final Type BLOB_SET = new Type(BLOB_A_N, BLOB_A_T);
-  public static final Type FILE_SET = new Type(FILE_A_N, FILE_A_T, BLOB_SET);
-  public static final Type EMPTY_SET = new Type(EMPTY_A_N, EMPTY_A_T, STRING_SET, BLOB_SET,
-      FILE_SET);
+  public static final Type STRING_ARRAY = new Type(STRING_A_N, STRING_A_T);
+  public static final Type BLOB_ARRAY = new Type(BLOB_A_N, BLOB_A_T);
+  public static final Type FILE_ARRAY = new Type(FILE_A_N, FILE_A_T, BLOB_ARRAY);
+  public static final Type EMPTY_ARRAY = new Type(EMPTY_A_N, EMPTY_A_T, STRING_ARRAY, BLOB_ARRAY,
+      FILE_ARRAY);
 
   /*
    * Not each type can be used in every place. Each set below represent one
@@ -50,16 +50,16 @@ public class Type {
    * be used there.
    */
 
-  static final ImmutableSet<Type> SET_ELEM_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
-  static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB,
-      BLOB_SET, FILE, FILE_SET);
-  static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB, BLOB_SET,
-      FILE, FILE_SET);
-  static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_SET, BLOB, BLOB_SET,
-      FILE, FILE_SET, EMPTY_SET);
+  static final ImmutableSet<Type> ARRAY_ELEM_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+      BLOB_ARRAY, FILE, FILE_ARRAY);
+  static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+      BLOB_ARRAY, FILE, FILE_ARRAY);
+  static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+      BLOB_ARRAY, FILE, FILE_ARRAY, EMPTY_ARRAY);
 
   /*
-   * Some of the sets above converted to java types.
+   * Some of the set above converted to java types.
    */
 
   static final ImmutableSet<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
@@ -121,8 +121,8 @@ public class Type {
     return "'" + name + "'";
   }
 
-  public static ImmutableSet<Type> allowedForSetElem() {
-    return SET_ELEM_TYPES;
+  public static ImmutableSet<Type> allowedForArrayElem() {
+    return ARRAY_ELEM_TYPES;
   }
 
   public static ImmutableSet<Type> allowedForParam() {
@@ -169,7 +169,7 @@ public class Type {
     return builder.build();
   }
 
-  public static class EmptySet {
-    private EmptySet() {}
+  public static class EmptyArray {
+    private EmptyArray() {}
   }
 }

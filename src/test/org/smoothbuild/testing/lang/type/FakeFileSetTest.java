@@ -21,7 +21,7 @@ public class FakeFileSetTest {
   @Test
   public void type() throws Exception {
     when(fileSet.type());
-    thenReturned(Type.FILE_SET);
+    thenReturned(Type.FILE_ARRAY);
   }
 
   @Test

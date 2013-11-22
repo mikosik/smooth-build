@@ -9,12 +9,12 @@ import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.type.Type.BLOB;
-import static org.smoothbuild.lang.type.Type.BLOB_SET;
-import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.Type.FILE;
-import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Type.STRING;
-import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,12 +52,12 @@ public class ArgumentNodesCreatorTest {
     do_test_converting_named_argument(BLOB, BLOB);
     do_test_converting_named_argument(FILE, FILE);
 
-    do_test_converting_named_argument(STRING_SET, STRING_SET);
-    do_test_converting_named_argument(BLOB_SET, BLOB_SET);
-    do_test_converting_named_argument(FILE_SET, FILE_SET);
+    do_test_converting_named_argument(STRING_ARRAY, STRING_ARRAY);
+    do_test_converting_named_argument(BLOB_ARRAY, BLOB_ARRAY);
+    do_test_converting_named_argument(FILE_ARRAY, FILE_ARRAY);
 
     do_test_converting_named_argument(BLOB, FILE);
-    do_test_converting_named_argument(BLOB_SET, FILE_SET);
+    do_test_converting_named_argument(BLOB_ARRAY, FILE_ARRAY);
   }
 
   private void do_test_converting_named_argument(Type paramType, Type argType) {
@@ -79,9 +79,9 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void converting_named_empty_set_argument() throws Exception {
-    do_test_converting_named_empty_set_argument(STRING_SET);
-    do_test_converting_named_empty_set_argument(BLOB_SET);
-    do_test_converting_named_empty_set_argument(FILE_SET);
+    do_test_converting_named_empty_set_argument(STRING_ARRAY);
+    do_test_converting_named_empty_set_argument(BLOB_ARRAY);
+    do_test_converting_named_empty_set_argument(FILE_ARRAY);
   }
 
   private void do_test_converting_named_empty_set_argument(Type paramType) {
@@ -90,7 +90,7 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType, "name2");
 
-    Argument a1 = argument(p1.name(), node(EMPTY_SET));
+    Argument a1 = argument(p1.name(), node(EMPTY_ARRAY));
 
     // when
     Map<String, Node> result = create(params(p1, p2), list(a1));
@@ -104,9 +104,9 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void convertingNamedEmptySetArgument() {
-    doTestConvertingNamedEmptySetArgument(STRING_SET);
-    doTestConvertingNamedEmptySetArgument(BLOB_SET);
-    doTestConvertingNamedEmptySetArgument(FILE_SET);
+    doTestConvertingNamedEmptySetArgument(STRING_ARRAY);
+    doTestConvertingNamedEmptySetArgument(BLOB_ARRAY);
+    doTestConvertingNamedEmptySetArgument(FILE_ARRAY);
   }
 
   private void doTestConvertingNamedEmptySetArgument(Type type) {
@@ -129,11 +129,11 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void duplicatedNames() {
     doTestDuplicatedNames(STRING);
-    doTestDuplicatedNames(STRING_SET);
+    doTestDuplicatedNames(STRING_ARRAY);
     doTestDuplicatedNames(BLOB);
-    doTestDuplicatedNames(BLOB_SET);
+    doTestDuplicatedNames(BLOB_ARRAY);
     doTestDuplicatedNames(FILE);
-    doTestDuplicatedNames(FILE_SET);
+    doTestDuplicatedNames(FILE_ARRAY);
   }
 
   private void doTestDuplicatedNames(Type type) {
@@ -153,9 +153,9 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void duplicatedNamedEmptySetNames() {
-    doTestDuplicatedNamedEmptySetNames(STRING_SET);
-    doTestDuplicatedNamedEmptySetNames(BLOB_SET);
-    doTestDuplicatedNamedEmptySetNames(FILE_SET);
+    doTestDuplicatedNamedEmptySetNames(STRING_ARRAY);
+    doTestDuplicatedNamedEmptySetNames(BLOB_ARRAY);
+    doTestDuplicatedNamedEmptySetNames(FILE_ARRAY);
   }
 
   private void doTestDuplicatedNamedEmptySetNames(Type type) {
@@ -163,8 +163,8 @@ public class ArgumentNodesCreatorTest {
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
 
-    Argument a1 = argument(p1.name(), node(EMPTY_SET));
-    Argument a2 = argument(p1.name(), node(EMPTY_SET));
+    Argument a1 = argument(p1.name(), node(EMPTY_ARRAY));
+    Argument a2 = argument(p1.name(), node(EMPTY_ARRAY));
 
     // when
     create(params(p1), list(a1, a2));
@@ -189,57 +189,57 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void typeMismatchForStringParam() throws Exception {
-    doTestTypeMismatchForParamProblem(STRING, STRING_SET);
+    doTestTypeMismatchForParamProblem(STRING, STRING_ARRAY);
     doTestTypeMismatchForParamProblem(STRING, BLOB);
-    doTestTypeMismatchForParamProblem(STRING, BLOB_SET);
+    doTestTypeMismatchForParamProblem(STRING, BLOB_ARRAY);
     doTestTypeMismatchForParamProblem(STRING, FILE);
-    doTestTypeMismatchForParamProblem(STRING, FILE_SET);
-    doTestTypeMismatchForParamProblem(STRING, EMPTY_SET);
+    doTestTypeMismatchForParamProblem(STRING, FILE_ARRAY);
+    doTestTypeMismatchForParamProblem(STRING, EMPTY_ARRAY);
   }
 
   @Test
   public void typeMismatchForStringSetParam() throws Exception {
-    doTestTypeMismatchForParamProblem(STRING_SET, STRING);
-    doTestTypeMismatchForParamProblem(STRING_SET, BLOB);
-    doTestTypeMismatchForParamProblem(STRING_SET, BLOB_SET);
-    doTestTypeMismatchForParamProblem(STRING_SET, FILE);
-    doTestTypeMismatchForParamProblem(STRING_SET, FILE_SET);
+    doTestTypeMismatchForParamProblem(STRING_ARRAY, STRING);
+    doTestTypeMismatchForParamProblem(STRING_ARRAY, BLOB);
+    doTestTypeMismatchForParamProblem(STRING_ARRAY, BLOB_ARRAY);
+    doTestTypeMismatchForParamProblem(STRING_ARRAY, FILE);
+    doTestTypeMismatchForParamProblem(STRING_ARRAY, FILE_ARRAY);
   }
 
   @Test
   public void typeMismatchForBlobParam() throws Exception {
     doTestTypeMismatchForParamProblem(BLOB, STRING);
-    doTestTypeMismatchForParamProblem(BLOB, STRING_SET);
-    doTestTypeMismatchForParamProblem(BLOB, BLOB_SET);
-    doTestTypeMismatchForParamProblem(BLOB, FILE_SET);
-    doTestTypeMismatchForParamProblem(BLOB, EMPTY_SET);
+    doTestTypeMismatchForParamProblem(BLOB, STRING_ARRAY);
+    doTestTypeMismatchForParamProblem(BLOB, BLOB_ARRAY);
+    doTestTypeMismatchForParamProblem(BLOB, FILE_ARRAY);
+    doTestTypeMismatchForParamProblem(BLOB, EMPTY_ARRAY);
   }
 
   @Test
   public void typeMismatchForBlobSetParam() throws Exception {
-    doTestTypeMismatchForParamProblem(BLOB_SET, STRING);
-    doTestTypeMismatchForParamProblem(BLOB_SET, STRING_SET);
-    doTestTypeMismatchForParamProblem(BLOB_SET, BLOB);
-    doTestTypeMismatchForParamProblem(BLOB_SET, FILE);
+    doTestTypeMismatchForParamProblem(BLOB_ARRAY, STRING);
+    doTestTypeMismatchForParamProblem(BLOB_ARRAY, STRING_ARRAY);
+    doTestTypeMismatchForParamProblem(BLOB_ARRAY, BLOB);
+    doTestTypeMismatchForParamProblem(BLOB_ARRAY, FILE);
   }
 
   @Test
   public void typeMismatchForFileParam() throws Exception {
     doTestTypeMismatchForParamProblem(FILE, STRING);
-    doTestTypeMismatchForParamProblem(FILE, STRING_SET);
+    doTestTypeMismatchForParamProblem(FILE, STRING_ARRAY);
     doTestTypeMismatchForParamProblem(FILE, BLOB);
-    doTestTypeMismatchForParamProblem(FILE, BLOB_SET);
-    doTestTypeMismatchForParamProblem(FILE, FILE_SET);
-    doTestTypeMismatchForParamProblem(FILE, EMPTY_SET);
+    doTestTypeMismatchForParamProblem(FILE, BLOB_ARRAY);
+    doTestTypeMismatchForParamProblem(FILE, FILE_ARRAY);
+    doTestTypeMismatchForParamProblem(FILE, EMPTY_ARRAY);
   }
 
   @Test
   public void typeMismatchForFileSetParam() throws Exception {
-    doTestTypeMismatchForParamProblem(FILE_SET, STRING);
-    doTestTypeMismatchForParamProblem(FILE_SET, STRING_SET);
-    doTestTypeMismatchForParamProblem(FILE_SET, BLOB);
-    doTestTypeMismatchForParamProblem(FILE_SET, BLOB_SET);
-    doTestTypeMismatchForParamProblem(FILE_SET, FILE);
+    doTestTypeMismatchForParamProblem(FILE_ARRAY, STRING);
+    doTestTypeMismatchForParamProblem(FILE_ARRAY, STRING_ARRAY);
+    doTestTypeMismatchForParamProblem(FILE_ARRAY, BLOB);
+    doTestTypeMismatchForParamProblem(FILE_ARRAY, BLOB_ARRAY);
+    doTestTypeMismatchForParamProblem(FILE_ARRAY, FILE);
   }
 
   private void doTestTypeMismatchForParamProblem(Type paramType, Type argType) throws Exception {
@@ -271,52 +271,52 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void convertingSingleNamelessStringArgument() {
-    doTestConvertingSingleNamelessArgument(STRING, STRING, STRING_SET);
+    doTestConvertingSingleNamelessArgument(STRING, STRING, STRING_ARRAY);
     doTestConvertingSingleNamelessArgument(STRING, STRING, BLOB);
-    doTestConvertingSingleNamelessArgument(STRING, STRING, BLOB_SET);
+    doTestConvertingSingleNamelessArgument(STRING, STRING, BLOB_ARRAY);
     doTestConvertingSingleNamelessArgument(STRING, STRING, FILE);
-    doTestConvertingSingleNamelessArgument(STRING, STRING, FILE_SET);
+    doTestConvertingSingleNamelessArgument(STRING, STRING, FILE_ARRAY);
   }
 
   @Test
   public void convertingSingleNamelessStringSetArgument() {
-    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, STRING);
-    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, BLOB);
-    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, BLOB_SET);
-    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, FILE);
-    doTestConvertingSingleNamelessArgument(STRING_SET, STRING_SET, FILE_SET);
+    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, STRING);
+    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, BLOB);
+    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, BLOB_ARRAY);
+    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, FILE);
+    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, FILE_ARRAY);
   }
 
   @Test
   public void convertingSingleNamelessFileArgument() {
     doTestConvertingSingleNamelessArgument(FILE, FILE, STRING);
-    doTestConvertingSingleNamelessArgument(FILE, FILE, STRING_SET);
-    doTestConvertingSingleNamelessArgument(FILE, FILE, BLOB_SET);
-    doTestConvertingSingleNamelessArgument(FILE, FILE, FILE_SET);
+    doTestConvertingSingleNamelessArgument(FILE, FILE, STRING_ARRAY);
+    doTestConvertingSingleNamelessArgument(FILE, FILE, BLOB_ARRAY);
+    doTestConvertingSingleNamelessArgument(FILE, FILE, FILE_ARRAY);
   }
 
   @Test
   public void convertingSingleNamelessFileSetArgument() {
-    doTestConvertingSingleNamelessArgument(FILE_SET, FILE_SET, STRING);
-    doTestConvertingSingleNamelessArgument(FILE_SET, FILE_SET, STRING_SET);
-    doTestConvertingSingleNamelessArgument(FILE_SET, FILE_SET, BLOB);
-    doTestConvertingSingleNamelessArgument(FILE_SET, FILE_SET, FILE);
+    doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, STRING);
+    doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, STRING_ARRAY);
+    doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, BLOB);
+    doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, FILE);
   }
 
   @Test
   public void convertingSingleNamelessFileArgumentToBlob() throws Exception {
     doTestConvertingSingleNamelessArgument(BLOB, FILE, STRING);
-    doTestConvertingSingleNamelessArgument(BLOB, FILE, STRING_SET);
-    doTestConvertingSingleNamelessArgument(BLOB, FILE, BLOB_SET);
-    doTestConvertingSingleNamelessArgument(BLOB, FILE, FILE_SET);
+    doTestConvertingSingleNamelessArgument(BLOB, FILE, STRING_ARRAY);
+    doTestConvertingSingleNamelessArgument(BLOB, FILE, BLOB_ARRAY);
+    doTestConvertingSingleNamelessArgument(BLOB, FILE, FILE_ARRAY);
   }
 
   @Test
   public void convertingSingleNamelessFileSetArgumentToBlobSet() throws Exception {
-    doTestConvertingSingleNamelessArgument(BLOB_SET, FILE_SET, BLOB);
-    doTestConvertingSingleNamelessArgument(BLOB_SET, FILE_SET, FILE);
-    doTestConvertingSingleNamelessArgument(BLOB_SET, FILE_SET, STRING);
-    doTestConvertingSingleNamelessArgument(BLOB_SET, FILE_SET, STRING_SET);
+    doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, BLOB);
+    doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, FILE);
+    doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, STRING);
+    doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, STRING_ARRAY);
   }
 
   private void doTestConvertingSingleNamelessArgument(Type paramType, Type argType,
@@ -340,17 +340,17 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void convertingSingleNamelessEmptySetArgument() throws Exception {
-    doTestConvertingSingleNamelessEmptySetArgument(STRING_SET, STRING);
-    doTestConvertingSingleNamelessEmptySetArgument(STRING_SET, FILE);
-    doTestConvertingSingleNamelessEmptySetArgument(STRING_SET, BLOB);
+    doTestConvertingSingleNamelessEmptySetArgument(STRING_ARRAY, STRING);
+    doTestConvertingSingleNamelessEmptySetArgument(STRING_ARRAY, FILE);
+    doTestConvertingSingleNamelessEmptySetArgument(STRING_ARRAY, BLOB);
 
-    doTestConvertingSingleNamelessEmptySetArgument(BLOB_SET, STRING);
-    doTestConvertingSingleNamelessEmptySetArgument(BLOB_SET, FILE);
-    doTestConvertingSingleNamelessEmptySetArgument(BLOB_SET, BLOB);
+    doTestConvertingSingleNamelessEmptySetArgument(BLOB_ARRAY, STRING);
+    doTestConvertingSingleNamelessEmptySetArgument(BLOB_ARRAY, FILE);
+    doTestConvertingSingleNamelessEmptySetArgument(BLOB_ARRAY, BLOB);
 
-    doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, STRING);
-    doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, FILE);
-    doTestConvertingSingleNamelessEmptySetArgument(FILE_SET, BLOB);
+    doTestConvertingSingleNamelessEmptySetArgument(FILE_ARRAY, STRING);
+    doTestConvertingSingleNamelessEmptySetArgument(FILE_ARRAY, FILE);
+    doTestConvertingSingleNamelessEmptySetArgument(FILE_ARRAY, BLOB);
   }
 
   private void doTestConvertingSingleNamelessEmptySetArgument(Type paramType, Type otherParamType) {
@@ -360,7 +360,7 @@ public class ArgumentNodesCreatorTest {
     Param p2 = param(paramType, "name2");
     Param p3 = param(otherParamType, "name3");
 
-    Argument a1 = argument(node(EMPTY_SET));
+    Argument a1 = argument(node(EMPTY_ARRAY));
 
     // when
     Map<String, Node> result = create(params(p1, p2, p3), list(a1));
@@ -374,11 +374,11 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void convertingSingleNamelessArgumentWithOtherNamed() {
     doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING);
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING_SET);
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING_ARRAY);
     doTestConvertingSingleNamelessArgumentWhitOthersNamed(BLOB);
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(BLOB_SET);
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(BLOB_ARRAY);
     doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE);
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE_SET);
+    doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE_ARRAY);
   }
 
   private void doTestConvertingSingleNamelessArgumentWhitOthersNamed(Type type) {
@@ -405,41 +405,41 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void convertingTwoNamelessArgumentsWithDifferentType() throws Exception {
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, STRING_ARRAY);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, BLOB_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, BLOB_ARRAY);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE_ARRAY);
 
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, BLOB_SET);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, FILE);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_SET, FILE_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, BLOB);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, BLOB_ARRAY);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, FILE);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, FILE_ARRAY);
 
     doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, STRING_SET);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, BLOB_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, STRING_ARRAY);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, BLOB_ARRAY);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, FILE);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, FILE_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, FILE_ARRAY);
 
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, STRING_SET);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, FILE);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_SET, FILE_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, STRING_ARRAY);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, BLOB);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, FILE);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, FILE_ARRAY);
 
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING_ARRAY);
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, BLOB_SET);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, FILE_SET);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, BLOB_ARRAY);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, FILE_ARRAY);
 
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, STRING_SET);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, BLOB_SET);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_SET, FILE);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, STRING);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, STRING_ARRAY);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, BLOB);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, BLOB_ARRAY);
+    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, FILE);
   }
 
   private void doTestConvertingTwoNamelessArgumentsWithDifferentType(Type type1, Type type2) {
@@ -463,9 +463,9 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void convertingSingleNamelessSetArgumentWhitOtherNamed() throws Exception {
-    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(STRING_SET);
-    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(BLOB_SET);
-    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(FILE_SET);
+    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(STRING_ARRAY);
+    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(BLOB_ARRAY);
+    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(FILE_ARRAY);
   }
 
   private void doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(Type type) {
@@ -476,7 +476,7 @@ public class ArgumentNodesCreatorTest {
     Param p3 = param(type, "name3");
 
     Argument a1 = argument(p1.name(), node(type));
-    Argument a2 = argument(node(EMPTY_SET));
+    Argument a2 = argument(node(EMPTY_ARRAY));
     Argument a3 = argument(p3.name(), node(type));
 
     // when
@@ -492,14 +492,14 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void convertingNamelessEmptySetArgWithOtherNamedSet() throws Exception {
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_SET, BLOB_SET);
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_SET, FILE_SET);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_ARRAY, BLOB_ARRAY);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_ARRAY, FILE_ARRAY);
 
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(BLOB_SET, STRING_SET);
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(BLOB_SET, FILE_SET);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(BLOB_ARRAY, STRING_ARRAY);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(BLOB_ARRAY, FILE_ARRAY);
 
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_SET, STRING_SET);
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_SET, BLOB_SET);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_ARRAY, STRING_ARRAY);
+    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_ARRAY, BLOB_ARRAY);
   }
 
   private void doTestConvertingNamelessEmptySetArgWithOtherNamedSet(Type setType, Type otherSetType) {
@@ -509,7 +509,7 @@ public class ArgumentNodesCreatorTest {
     Param p2 = param(otherSetType, "name2");
 
     Argument a1 = argument(p1.name(), node(setType));
-    Argument a2 = argument(node(EMPTY_SET));
+    Argument a2 = argument(node(EMPTY_ARRAY));
 
     // when
     Map<String, Node> result = create(params(p1, p2), list(a1, a2));
@@ -524,15 +524,15 @@ public class ArgumentNodesCreatorTest {
   @Test
   public void ambigiuousNamelessArgument() throws Exception {
     doTestAmbiguousNamelessArgument(STRING, STRING);
-    doTestAmbiguousNamelessArgument(STRING_SET, STRING_SET);
+    doTestAmbiguousNamelessArgument(STRING_ARRAY, STRING_ARRAY);
     doTestAmbiguousNamelessArgument(BLOB, BLOB);
-    doTestAmbiguousNamelessArgument(BLOB_SET, BLOB_SET);
+    doTestAmbiguousNamelessArgument(BLOB_ARRAY, BLOB_ARRAY);
     doTestAmbiguousNamelessArgument(FILE, FILE);
-    doTestAmbiguousNamelessArgument(FILE_SET, FILE_SET);
+    doTestAmbiguousNamelessArgument(FILE_ARRAY, FILE_ARRAY);
 
-    doTestAmbiguousNamelessArgument(BLOB_SET, EMPTY_SET);
-    doTestAmbiguousNamelessArgument(FILE_SET, EMPTY_SET);
-    doTestAmbiguousNamelessArgument(STRING_SET, EMPTY_SET);
+    doTestAmbiguousNamelessArgument(BLOB_ARRAY, EMPTY_ARRAY);
+    doTestAmbiguousNamelessArgument(FILE_ARRAY, EMPTY_ARRAY);
+    doTestAmbiguousNamelessArgument(STRING_ARRAY, EMPTY_ARRAY);
   }
 
   private void doTestAmbiguousNamelessArgument(Type paramType, Type argType) {
@@ -554,10 +554,10 @@ public class ArgumentNodesCreatorTest {
   public void ambiguousNamelessEmptySetArgument() {
     // given
     messages = new FakeMessageGroup();
-    Param p1 = param(STRING_SET, "name1");
-    Param p2 = param(FILE_SET, "name2");
+    Param p1 = param(STRING_ARRAY, "name1");
+    Param p2 = param(FILE_ARRAY, "name2");
 
-    Argument a1 = argument(node(EMPTY_SET));
+    Argument a1 = argument(node(EMPTY_ARRAY));
 
     // when
     create(params(p1, p2), list(a1));
@@ -568,43 +568,43 @@ public class ArgumentNodesCreatorTest {
 
   @Test
   public void noParamWithProperTypeForNamelessStringArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(STRING, STRING_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING, STRING_ARRAY);
     doTestNoParamWithProperTypeForNamelessArgument(STRING, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING, BLOB_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING, BLOB_ARRAY);
     doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE_ARRAY);
   }
 
   @Test
   public void noParamWithProperTypeForNamelessStringSetArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, STRING);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, BLOB_SET);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, FILE);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_SET, FILE_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, BLOB);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, BLOB_ARRAY);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, FILE);
+    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, FILE_ARRAY);
   }
 
   @Test
   public void noParamWithProperTypeForNamelessFileArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING_SET);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE, BLOB_SET);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE, FILE_SET);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING_ARRAY);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE, BLOB_ARRAY);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE, FILE_ARRAY);
   }
 
   @Test
   public void noParamWithProperTypeForNamelessFileSetArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, STRING);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, STRING_SET);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_SET, FILE);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, STRING_ARRAY);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, BLOB);
+    doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, FILE);
   }
 
   @Test
   public void noParamWithProperTypeForNamelessEmptySetArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_SET, STRING);
-    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_SET, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_SET, FILE);
+    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, STRING);
+    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, BLOB);
+    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, FILE);
   }
 
   private void doTestNoParamWithProperTypeForNamelessArgument(Type type, Type otherType) {
@@ -661,7 +661,7 @@ public class ArgumentNodesCreatorTest {
 
   private static Node emptySetNode() {
     Node node = mock(Node.class);
-    when(node.type()).thenReturn(EMPTY_SET);
+    when(node.type()).thenReturn(EMPTY_ARRAY);
     return node;
   }
 

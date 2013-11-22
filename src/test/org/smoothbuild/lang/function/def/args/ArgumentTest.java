@@ -6,11 +6,11 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
-import static org.smoothbuild.lang.type.Type.EMPTY_SET;
+import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.Type.FILE;
-import static org.smoothbuild.lang.type.Type.FILE_SET;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Type.STRING;
-import static org.smoothbuild.lang.type.Type.STRING_SET;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 
 import java.util.Set;
 
@@ -168,10 +168,10 @@ public class ArgumentTest {
   @Test
   public void filterNameless() throws Exception {
     doTestFilterNameless(STRING);
-    doTestFilterNameless(STRING_SET);
+    doTestFilterNameless(STRING_ARRAY);
     doTestFilterNameless(FILE);
-    doTestFilterNameless(FILE_SET);
-    doTestFilterNameless(EMPTY_SET);
+    doTestFilterNameless(FILE_ARRAY);
+    doTestFilterNameless(EMPTY_ARRAY);
   }
 
   private void doTestFilterNameless(Type type) {
