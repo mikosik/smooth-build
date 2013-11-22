@@ -3,12 +3,12 @@ grammar Smooth;
 module: function* EOF;
 function: functionName ':' pipe ';' ;
 pipe: expression ( p+='|' call )* ;
-expression : call | STRING | set;
+expression : call | STRING | array;
 call: functionName ( '(' argList? ')' )? ;
 argList: arg ( ',' arg )* ','? ;
 arg: ( paramName '=' )? expression ; 
-set: '[' ( setElem (',' setElem)* (',')? )?  ']' ;
-setElem: call | STRING ;
+array: '[' ( arrayElem (',' arrayElem)* (',')? )?  ']' ;
+arrayElem: call | STRING ;
 
 
 functionName: IDENTIFIER ;
