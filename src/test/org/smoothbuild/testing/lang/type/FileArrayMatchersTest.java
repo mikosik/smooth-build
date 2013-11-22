@@ -1,6 +1,7 @@
 package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFile;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContaining;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContainingItsPath;
@@ -16,7 +17,7 @@ import org.smoothbuild.io.fs.base.Path;
 
 public class FileArrayMatchersTest {
   FakeFile file;
-  FakeFileArray fileArray = new FakeFileArray();
+  FakeArray fileArray = new FakeArray(FILE_ARRAY);
   Path path = Path.path("my/path1");
   Path path2 = Path.path("my/path2");
   String content = "content";
