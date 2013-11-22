@@ -1,7 +1,5 @@
 package org.smoothbuild.testing.lang.type;
 
-import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,15 +7,16 @@ import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.AbstractValue;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class FakeFileArray extends AbstractValue implements Array<File> {
+public class FakeArray extends AbstractValue implements Array<File> {
   private final List<File> files = Lists.newArrayList();
 
-  public FakeFileArray() {
-    super(FILE_ARRAY, HashCode.fromInt(0));
+  public FakeArray(Type type) {
+    super(type, HashCode.fromInt(0));
   }
 
   public void add(File file) {
