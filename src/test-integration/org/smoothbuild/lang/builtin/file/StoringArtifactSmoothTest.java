@@ -35,7 +35,7 @@ public class StoringArtifactSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void storing_file_set_artifact() throws Exception {
+  public void storing_file_array_artifact() throws Exception {
     // given
     fileSystem.createFile(path1, content1);
     fileSystem.createFile(path2, content2);
@@ -73,7 +73,7 @@ public class StoringArtifactSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void storing_string_set_artifact() throws Exception {
+  public void storing_string_array_artifact() throws Exception {
     // given
     String functionName = "myFunction";
 

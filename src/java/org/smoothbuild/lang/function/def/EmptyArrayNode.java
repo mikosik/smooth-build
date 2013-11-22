@@ -7,9 +7,9 @@ import org.smoothbuild.task.base.EmptyArrayTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class EmptySetNode extends Node {
+public class EmptyArrayNode extends Node {
 
-  public EmptySetNode(CodeLocation codeLocation) {
+  public EmptyArrayNode(CodeLocation codeLocation) {
     super(EMPTY_ARRAY, codeLocation);
   }
 
