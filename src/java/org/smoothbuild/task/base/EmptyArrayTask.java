@@ -4,19 +4,20 @@ import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
 
-public class EmptySetTask extends Task {
+public class EmptyArrayTask extends Task {
 
-  public EmptySetTask(CodeLocation codeLocation) {
+  public EmptyArrayTask(CodeLocation codeLocation) {
     super("Empty*", true, codeLocation);
   }
 
   @Override
   public Value execute(SandboxImpl sandbox) {
     /*
-     * We cheat here and return empty fileSet. Nobody will ever use this object
+     * We cheat here and return empty fileArray. Nobody will ever use this
+     * object.
      * 
      * Anyway as ArgumentNodesCreator detects nodes which type is equal to
-     * EMPTY_SET and replaces them either with StringSetNode or FileSetNode
+     * EMPTY_ARRAY and replaces them either with ArrayNode with type element
      * depending on the type of parameter to which argument is assigned.
      * 
      * The only way this code could be execute is when you define smooth

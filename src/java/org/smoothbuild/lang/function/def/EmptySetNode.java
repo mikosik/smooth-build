@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def;
 import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
 
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.EmptySetTask;
+import org.smoothbuild.task.base.EmptyArrayTask;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
@@ -15,6 +15,6 @@ public class EmptySetNode extends Node {
 
   @Override
   public Task generateTask(TaskGenerator taskGenerator) {
-    return new EmptySetTask(codeLocation());
+    return new EmptyArrayTask(codeLocation());
   }
 }
