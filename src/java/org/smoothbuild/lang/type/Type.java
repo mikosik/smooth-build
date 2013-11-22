@@ -26,10 +26,10 @@ public class Type {
   private static final String STRING_N = "String";
   private static final String BLOB_N = "Blob";
   private static final String FILE_N = "File";
-  private static final String STRING_SET_N = "String*";
-  private static final String BLOB_SET_N = "Blob*";
-  private static final String FILE_SET_N = "File*";
-  private static final String EMPTY_SET_N = "Any*";
+  private static final String STRING_A_N = "String*";
+  private static final String BLOB_A_N = "Blob*";
+  private static final String FILE_A_N = "File*";
+  private static final String EMPTY_A_N = "Any*";
 
   /*
    * Smooth types. Used by smooth-build code to represent smooth types.
@@ -38,10 +38,10 @@ public class Type {
   public static final Type STRING = new Type(STRING_N, STRING_T);
   public static final Type BLOB = new Type(BLOB_N, BLOB_T);
   public static final Type FILE = new Type(FILE_N, FILE_T, BLOB);
-  public static final Type STRING_SET = new Type(STRING_SET_N, STRING_A_T);
-  public static final Type BLOB_SET = new Type(BLOB_SET_N, BLOB_A_T);
-  public static final Type FILE_SET = new Type(FILE_SET_N, FILE_A_T, BLOB_SET);
-  public static final Type EMPTY_SET = new Type(EMPTY_SET_N, EMPTY_A_T, STRING_SET, BLOB_SET,
+  public static final Type STRING_SET = new Type(STRING_A_N, STRING_A_T);
+  public static final Type BLOB_SET = new Type(BLOB_A_N, BLOB_A_T);
+  public static final Type FILE_SET = new Type(FILE_A_N, FILE_A_T, BLOB_SET);
+  public static final Type EMPTY_SET = new Type(EMPTY_A_N, EMPTY_A_T, STRING_SET, BLOB_SET,
       FILE_SET);
 
   /*
