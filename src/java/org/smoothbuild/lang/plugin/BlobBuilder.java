@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.io.cache.value.ValueDb;
-import org.smoothbuild.lang.type.Blob;
+import org.smoothbuild.lang.type.SBlob;
 
 public class BlobBuilder {
   private final ValueDb valueDb;
@@ -23,7 +23,7 @@ public class BlobBuilder {
     return outputStream;
   }
 
-  public Blob build() {
+  public SBlob build() {
     checkState(outputStream != null, "No content available. Create one via openOutputStream()");
     return valueDb.blob(outputStream.toByteArray());
   }

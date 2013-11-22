@@ -8,8 +8,8 @@ import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
@@ -29,10 +29,10 @@ public class UnjarerTest {
   public void unjaringTwoFiles() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
-    Array<File> fileArray = unjarer.unjarFile(jarFile);
+    SArray<SFile> fileArray = unjarer.unjarFile(jarFile);
 
     int fileCount = 0;
-    for (File file : fileArray) {
+    for (SFile file : fileArray) {
       fileCount++;
       assertContent(file.openInputStream(), file.path().value());
     }
@@ -43,7 +43,7 @@ public class UnjarerTest {
   public void unjaringIgnoresDirectories() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, directoryName);
 
-    Array<File> fileArray = unjarer.unjarFile(jarFile);
+    SArray<SFile> fileArray = unjarer.unjarFile(jarFile);
 
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
     assertThat(fileArray.iterator().next().path()).isEqualTo(path(fileName1));
@@ -53,7 +53,7 @@ public class UnjarerTest {
   public void unjaringWithFilter() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
-    Array<File> fileArray = unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2));
+    SArray<SFile> fileArray = unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2));
 
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
     assertThat(fileArray.iterator().next().path().value()).isEqualTo(fileName2);

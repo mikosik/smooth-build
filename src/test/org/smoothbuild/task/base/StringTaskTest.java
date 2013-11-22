@@ -5,13 +5,13 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class StringTaskTest {
-  StringValue string = new FakeString("some string");
+  SString string = new FakeString("some string");
   CodeLocation codeLocation = new FakeCodeLocation();
   StringTask task = new StringTask(string, codeLocation);
 

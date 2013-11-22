@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.def.CachingNode;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.StringNode;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.message.FakeCodeLocation;
@@ -19,7 +19,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class TaskGeneratorTest {
-  StringValue string = mock(StringValue.class);
+  SString string = mock(SString.class);
   Result result;
   Node node;
 

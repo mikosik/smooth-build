@@ -16,9 +16,9 @@ import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.Sets;
@@ -27,15 +27,15 @@ public class ZipFunction {
 
   public interface Parameters {
     @Required
-    public Array<File> files();
+    public SArray<SFile> files();
 
-    public StringValue output();
+    public SString output();
 
     // add missing parameters: level, comment, method
   }
 
   @SmoothFunction(name = "zip")
-  public static File execute(Sandbox sandbox, Parameters params) {
+  public static SFile execute(Sandbox sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -53,12 +53,12 @@ public class ZipFunction {
       this.alreadyAdded = Sets.newHashSet();
     }
 
-    public File execute() {
+    public SFile execute() {
       FileBuilder fileBuilder = sandbox.fileBuilder();
       fileBuilder.setPath(outputPath());
 
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileBuilder.openOutputStream());) {
-        for (File file : params.files()) {
+        for (SFile file : params.files()) {
           addEntry(zipOutputStream, file);
         }
       } catch (IOException e) {
@@ -76,7 +76,7 @@ public class ZipFunction {
       }
     }
 
-    private void addEntry(ZipOutputStream zipOutputStream, File file) throws IOException {
+    private void addEntry(ZipOutputStream zipOutputStream, SFile file) throws IOException {
       Path path = file.path();
       if (alreadyAdded.contains(path)) {
         throw new ErrorMessageException(new CannotAddDuplicatePathError(path));

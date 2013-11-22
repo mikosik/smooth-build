@@ -14,8 +14,8 @@ import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.task.exec.SandboxImpl;
 
 public class NewFileFunction {
@@ -23,14 +23,14 @@ public class NewFileFunction {
 
   public interface Parameters {
     @Required
-    public StringValue path();
+    public SString path();
 
     @Required
-    public StringValue content();
+    public SString content();
   }
 
   @SmoothFunction(name = "newFile")
-  public static File execute(SandboxImpl sandbox, Parameters params) {
+  public static SFile execute(SandboxImpl sandbox, Parameters params) {
     return new Worker(sandbox, params).execute();
   }
 
@@ -43,11 +43,11 @@ public class NewFileFunction {
       this.params = params;
     }
 
-    public File execute() {
+    public SFile execute() {
       return createFile(validatedPath("path", params.path()));
     }
 
-    private File createFile(Path filePath) {
+    private SFile createFile(Path filePath) {
       FileBuilder fileBuilder = sandbox.fileBuilder();
       fileBuilder.setPath(filePath);
 

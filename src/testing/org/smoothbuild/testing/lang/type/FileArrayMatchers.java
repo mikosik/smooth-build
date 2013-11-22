@@ -8,19 +8,19 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 
 public class FileArrayMatchers {
 
-  public static Matcher<Array<File>> containsFileContainingItsPath(Path path) throws IOException {
+  public static Matcher<SArray<SFile>> containsFileContainingItsPath(Path path) throws IOException {
     return containsFileContaining(path, path.value());
   }
 
-  public static Matcher<Array<File>> containsFileContaining(final Path path, final String content)
+  public static Matcher<SArray<SFile>> containsFileContaining(final Path path, final String content)
       throws IOException {
 
-    return new TypeSafeMatcher<Array<File>>() {
+    return new TypeSafeMatcher<SArray<SFile>>() {
 
       @Override
       public void describeTo(Description description) {
@@ -29,8 +29,8 @@ public class FileArrayMatchers {
       }
 
       @Override
-      protected boolean matchesSafely(Array<File> fileArray) {
-        for (File file : fileArray) {
+      protected boolean matchesSafely(SArray<SFile> fileArray) {
+        for (SFile file : fileArray) {
           if (file.path().equals(path)) {
             try {
               return inputStreamToString(file.openInputStream()).equals(content);
@@ -44,8 +44,8 @@ public class FileArrayMatchers {
     };
   }
 
-  public static Matcher<Array<File>> containsFile(final Path path) throws IOException {
-    return new TypeSafeMatcher<Array<File>>() {
+  public static Matcher<SArray<SFile>> containsFile(final Path path) throws IOException {
+    return new TypeSafeMatcher<SArray<SFile>>() {
 
       @Override
       public void describeTo(Description description) {
@@ -53,8 +53,8 @@ public class FileArrayMatchers {
       }
 
       @Override
-      protected boolean matchesSafely(Array<File> fileArray) {
-        for (File file : fileArray) {
+      protected boolean matchesSafely(SArray<SFile> fileArray) {
+        for (SFile file : fileArray) {
           if (file.path().equals(path)) {
             return true;
           }

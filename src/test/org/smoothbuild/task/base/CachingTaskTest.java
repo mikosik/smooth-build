@@ -13,7 +13,7 @@ import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.task.CachedResult;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
@@ -24,8 +24,8 @@ import com.google.common.hash.HashCode;
 
 public class CachingTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
-  StringValue stringValue = mock(StringValue.class);
-  StringValue stringValue2 = mock(StringValue.class);
+  SString stringValue = mock(SString.class);
+  SString stringValue2 = mock(SString.class);
   HashCode hash = Hash.string("abc");
   CodeLocation codeLocation = new FakeCodeLocation();
 

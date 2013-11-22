@@ -11,15 +11,15 @@ import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 
 public class InputClassFile extends SimpleJavaFileObject {
-  private final File file;
+  private final SFile file;
   private final Path jarFilePath;
   private final String binaryName;
   private final String aPackage;
 
-  public InputClassFile(Path jarFilePath, File file) {
+  public InputClassFile(Path jarFilePath, SFile file) {
     super(URI.create("jar:///" + jarFilePath.value() + ":" + file.path().value()), Kind.CLASS);
 
     checkArgument(file.path().value().endsWith(Kind.CLASS.extension));

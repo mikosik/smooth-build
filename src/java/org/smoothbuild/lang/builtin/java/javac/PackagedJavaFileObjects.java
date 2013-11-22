@@ -8,8 +8,8 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.HashMultimap;
@@ -17,13 +17,13 @@ import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjects {
   public static Multimap<String, JavaFileObject> packagedJavaFileObjects(Sandbox sandbox,
-      Iterable<File> libraryJars) {
+      Iterable<SFile> libraryJars) {
     Unjarer unjarer = new Unjarer(sandbox);
     Multimap<String, JavaFileObject> result = HashMultimap.create();
 
-    for (File jarFile : libraryJars) {
-      Array<File> files = unjarer.unjarFile(jarFile, isClassFilePredicate());
-      for (File classFile : files) {
+    for (SFile jarFile : libraryJars) {
+      SArray<SFile> files = unjarer.unjarFile(jarFile, isClassFilePredicate());
+      for (SFile classFile : files) {
         InputClassFile inputClassFile = new InputClassFile(jarFile.path(), classFile);
         String aPackage = inputClassFile.aPackage();
         if (result.containsEntry(aPackage, inputClassFile)) {

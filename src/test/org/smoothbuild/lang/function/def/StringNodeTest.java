@@ -7,7 +7,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
@@ -18,7 +18,7 @@ import org.testory.common.Closure;
 
 public class StringNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  StringValue string = mock(StringValue.class);
+  SString string = mock(SString.class);
   CodeLocation codeLocation = new FakeCodeLocation();
   StringNode stringNode = new StringNode(string, codeLocation);
   Task task;
@@ -48,7 +48,7 @@ public class StringNodeTest {
     thenReturned(string);
   }
 
-  private static Closure $stringNode(final StringValue string, final CodeLocation codeLocation) {
+  private static Closure $stringNode(final SString string, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {

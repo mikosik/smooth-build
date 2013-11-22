@@ -9,14 +9,14 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 
 public class FakeObjectDbTest {
   Path path = Path.path("my/file");
   FakeValueDb fakeValueDb = new FakeValueDb();
 
-  File file;
+  SFile file;
 
   @Test
   public void created_file_containing_its_path_can_be_read_from_db() {

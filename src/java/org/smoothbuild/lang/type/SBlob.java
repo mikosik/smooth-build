@@ -2,6 +2,9 @@ package org.smoothbuild.lang.type;
 
 import java.io.InputStream;
 
-public interface Blob extends Value {
+/**
+ * Smooth Blob. Blob value in smooth language.
+ */
+public interface SBlob extends Value {
   public InputStream openInputStream();
 }

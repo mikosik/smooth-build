@@ -17,10 +17,10 @@ import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 import com.google.common.collect.Iterables;
@@ -30,27 +30,27 @@ public class ValueDbTest {
   byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
 
-  Array<File> fileArray;
-  Array<File> fileArray2;
+  SArray<SFile> fileArray;
+  SArray<SFile> fileArray2;
 
-  File file;
-  File file2;
+  SFile file;
+  SFile file2;
   Path path = path("my/path1");
   Path path2 = path("my/path2");
 
-  Array<Blob> blobArray;
-  Array<Blob> blobArray2;
+  SArray<SBlob> blobArray;
+  SArray<SBlob> blobArray2;
 
-  Blob blob;
-  Blob blob2;
-  Blob blobRead;
+  SBlob blob;
+  SBlob blob2;
+  SBlob blobRead;
 
-  Array<StringValue> stringArray;
-  Array<StringValue> stringArray2;
+  SArray<SString> stringArray;
+  SArray<SString> stringArray2;
 
-  StringValue stringValue;
-  StringValue stringValue2;
-  StringValue stringValueRead;
+  SString stringValue;
+  SString stringValue2;
+  SString stringValueRead;
   String string = "a string";
   String string2 = "a string 2";
 

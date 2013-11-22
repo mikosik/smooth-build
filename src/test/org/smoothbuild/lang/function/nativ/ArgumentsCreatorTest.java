@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.nativ;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.testing.lang.type.FakeString;
 
@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableMap;
 public class ArgumentsCreatorTest {
   ArgumentsCreator argumentsCreator = new ArgumentsCreator(MyParametersInterface.class);
   String name = "string";
-  StringValue value = new FakeString("value");
+  SString value = new FakeString("value");
 
   @Test
   public void stringArgumentIsPassed() {
@@ -34,9 +34,9 @@ public class ArgumentsCreatorTest {
   }
 
   public interface MyParametersInterface {
-    public StringValue string();
+    public SString string();
 
-    public StringValue string2();
+    public SString string2();
 
     public Integer integer();
   }

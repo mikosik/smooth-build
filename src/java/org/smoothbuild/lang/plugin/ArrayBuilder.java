@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.cache.value.ValueReader;
-import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 
@@ -28,7 +28,7 @@ public class ArrayBuilder<T extends Value> {
     return this;
   }
 
-  public Array<T> build() {
+  public SArray<T> build() {
     return valueDb.array(result, arrayType, valueReader);
   }
 }

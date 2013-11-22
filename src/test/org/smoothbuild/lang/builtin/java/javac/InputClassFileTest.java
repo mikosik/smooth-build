@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 
 public class InputClassFileTest {
 
@@ -52,7 +52,7 @@ public class InputClassFileTest {
   @Test
   public void openInputStream() throws Exception {
     InputStream inputStream = mock(InputStream.class);
-    File file = file("my/package/Klass.class");
+    SFile file = file("my/package/Klass.class");
     when(file.openInputStream()).thenReturn(inputStream);
 
     assertThat(new InputClassFile(path("my.jar"), file).openInputStream()).isSameAs(inputStream);
@@ -62,8 +62,8 @@ public class InputClassFileTest {
     return new InputClassFile(path("my.jar"), file(path));
   }
 
-  private File file(String path) {
-    File file = mock(File.class);
+  private SFile file(String path) {
+    SFile file = mock(SFile.class);
     when(file.path()).thenReturn(path(path));
     return file;
   }

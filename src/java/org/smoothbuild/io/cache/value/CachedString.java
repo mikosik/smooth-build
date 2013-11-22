@@ -8,12 +8,12 @@ import java.io.IOException;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.err.ReadingHashedObjectFailedError;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.hash.HashCode;
 
-public class CachedString extends AbstractValue implements StringValue {
+public class CachedString extends AbstractValue implements SString {
   private final HashedDb hashedDb;
 
   public CachedString(HashedDb hashedDb, HashCode hash) {

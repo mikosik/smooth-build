@@ -4,10 +4,13 @@ import java.io.InputStream;
 
 import org.smoothbuild.io.fs.base.Path;
 
-public interface File extends Value {
+/**
+ * Smooth File. File value in smooth language.
+ */
+public interface SFile extends Value {
   public Path path();
 
-  public Blob content();
+  public SBlob content();
 
   public InputStream openInputStream();
 }

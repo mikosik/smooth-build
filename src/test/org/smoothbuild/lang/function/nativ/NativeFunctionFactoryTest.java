@@ -28,10 +28,10 @@ import org.smoothbuild.lang.function.nativ.exc.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Array;
-import org.smoothbuild.lang.type.Blob;
-import org.smoothbuild.lang.type.File;
-import org.smoothbuild.lang.type.StringValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
@@ -81,20 +81,20 @@ public class NativeFunctionFactoryTest {
         result1, "stringB", result2);
 
     Task task = function.generateTask(taskGenerator, dependencies, codeLocation);
-    StringValue result = (StringValue) task.execute(sandbox);
+    SString result = (SString) task.execute(sandbox);
     sandbox.messages().assertNoProblems();
     assertThat(result.value()).isEqualTo("abcdef");
   }
 
   public interface Parameters {
-    public StringValue stringA();
+    public SString stringA();
 
-    public StringValue stringB();
+    public SString stringB();
   }
 
   public static class Func {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, Parameters params) {
+    public static SString execute(Sandbox sandbox, Parameters params) {
       return new FakeString(params.stringA().value() + params.stringB().value());
     }
   }
@@ -107,22 +107,22 @@ public class NativeFunctionFactoryTest {
   }
 
   public interface AllowedParameters {
-    public StringValue string();
+    public SString string();
 
-    public Array<StringValue> stringArray();
+    public SArray<SString> stringArray();
 
-    public File file();
+    public SFile file();
 
-    public Array<File> fileArray();
+    public SArray<SFile> fileArray();
 
-    public Blob blob();
+    public SBlob blob();
 
-    public Array<Blob> blobArray();
+    public SArray<SBlob> blobArray();
   }
 
   public static class FuncWithAllowedParamTypes {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, AllowedParameters params) {
+    public static SString execute(Sandbox sandbox, AllowedParameters params) {
       return new FakeString("string");
     }
   }
@@ -139,14 +139,14 @@ public class NativeFunctionFactoryTest {
 
   public interface AnnotatedParameters {
     @Required
-    public StringValue string1();
+    public SString string1();
 
-    public StringValue string2();
+    public SString string2();
   }
 
   public static class FuncWithAnnotatedParams {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, AnnotatedParameters params) {
+    public static SString execute(Sandbox sandbox, AnnotatedParameters params) {
       return null;
     }
   }
@@ -159,12 +159,12 @@ public class NativeFunctionFactoryTest {
   }
 
   public interface ArrayOfArrayParams {
-    public Array<Array<StringValue>> runnable();
+    public SArray<SArray<SString>> runnable();
   }
 
   public static class FuncWithArrayOfArrayParamType {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, ArrayOfArrayParams params) {
+    public static SString execute(Sandbox sandbox, ArrayOfArrayParams params) {
       return null;
     }
   }
@@ -182,7 +182,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithForbiddenParamType {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, ForbiddenParams params) {
+    public static SString execute(Sandbox sandbox, ForbiddenParams params) {
       return null;
     }
   }
@@ -198,7 +198,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithEmptyParameters {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
+    public static SString execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -212,7 +212,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithStringResult {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
+    public static SString execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -226,7 +226,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobResult {
     @SmoothFunction(name = "myFunction")
-    public static Blob execute(Sandbox sandbox, EmptyParameters params) {
+    public static SBlob execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -240,7 +240,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithFileResult {
     @SmoothFunction(name = "myFunction")
-    public static File execute(Sandbox sandbox, EmptyParameters params) {
+    public static SFile execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -254,7 +254,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithStringArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static Array<StringValue> execute(Sandbox sandbox, EmptyParameters params) {
+    public static SArray<SString> execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -268,7 +268,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static Array<Blob> execute(Sandbox sandbox, EmptyParameters params) {
+    public static SArray<SBlob> execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -282,7 +282,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithFileArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static Array<File> execute(Sandbox sandbox, EmptyParameters params) {
+    public static SArray<SFile> execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -310,7 +310,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithArrayOfArrayReturnType {
     @SmoothFunction(name = "myFunction")
-    public static Array<Array<File>> execute(Sandbox sandbox, EmptyParameters params) {
+    public static SArray<SArray<SFile>> execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -325,7 +325,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithParamThatIsNotInterface {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, String string) {
+    public static SString execute(Sandbox sandbox, String string) {
       return null;
     }
   }
@@ -339,7 +339,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithIllegalFunctionName {
     @SmoothFunction(name = "my^package")
-    public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
+    public static SString execute(Sandbox sandbox, EmptyParameters params) {
       return null;
     }
   }
@@ -356,7 +356,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithThrowingSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, EmptyParameters params) {
+    public static SString execute(Sandbox sandbox, EmptyParameters params) {
       throw new RuntimeException();
     }
   }
@@ -409,7 +409,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithParamMethodThatHasParameters {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, ParametersWithMethodWithParameters params) {
+    public static SString execute(Sandbox sandbox, ParametersWithMethodWithParameters params) {
       return null;
     }
   }
@@ -476,7 +476,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithSmoothMethodWithWrongSecondParam {
     @SmoothFunction(name = "myFunction")
-    public static StringValue execute(Sandbox sandbox, Integer wrong) {
+    public static SString execute(Sandbox sandbox, Integer wrong) {
       return null;
     }
   }

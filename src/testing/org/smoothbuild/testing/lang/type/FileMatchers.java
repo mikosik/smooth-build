@@ -7,20 +7,20 @@ import java.util.Arrays;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.smoothbuild.lang.type.File;
+import org.smoothbuild.lang.type.SFile;
 
 import com.google.common.io.ByteStreams;
 
 public class FileMatchers {
-  public static Matcher<File> equalTo(final File expected) {
-    return new TypeSafeMatcher<File>() {
+  public static Matcher<SFile> equalTo(final SFile expected) {
+    return new TypeSafeMatcher<SFile>() {
       @Override
       public void describeTo(Description description) {
         description.appendText("File with path " + expected.path() + " and some specific bytes.");
       }
 
       @Override
-      protected boolean matchesSafely(File actual) {
+      protected boolean matchesSafely(SFile actual) {
         if (!expected.path().equals(actual.path())) {
           return false;
         }

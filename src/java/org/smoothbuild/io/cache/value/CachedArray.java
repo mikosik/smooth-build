@@ -4,13 +4,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Iterator;
 
-import org.smoothbuild.lang.type.Array;
+import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 
 import com.google.common.hash.HashCode;
 
-public class CachedArray<T extends Value> extends AbstractValue implements Array<T> {
+public class CachedArray<T extends Value> extends AbstractValue implements SArray<T> {
   private final ValueDb valueDb;
   private final ValueReader<T> valueReader;
 
