@@ -71,13 +71,13 @@ public class ArtifactBuilder {
     } else if (value.type() == Type.FILE_ARRAY) {
       @SuppressWarnings("unchecked")
       Array<File> fileArray = (Array<File>) value;
-      storeFileSet(artifactPath, fileArray);
+      storeFileArray(artifactPath, fileArray);
     } else if (value.type() == Type.STRING) {
       storeString(artifactPath, (StringValue) value);
     } else if (value.type() == Type.STRING_ARRAY) {
       @SuppressWarnings("unchecked")
       Array<StringValue> stringArray = (Array<StringValue>) value;
-      storeStringSet(artifactPath, stringArray);
+      storeStringArray(artifactPath, stringArray);
     } else {
       throw new ErrorMessageException(new Message(MessageType.FATAL,
           "Bug in smooth binary.\nUnknown value type " + value.getClass().getName()));
@@ -90,9 +90,9 @@ public class ArtifactBuilder {
     smoothFileSystem.createLink(artifactPath, targetPath);
   }
 
-  private void storeFileSet(Path artifactPath, Array<File> fileSet) {
+  private void storeFileArray(Path artifactPath, Array<File> fileArray) {
     smoothFileSystem.delete(artifactPath);
-    for (File file : fileSet) {
+    for (File file : fileArray) {
       Path linkPath = artifactPath.append(file.path());
       Path targetPath = targetPath(file.content());
       smoothFileSystem.createLink(linkPath, targetPath);
@@ -105,10 +105,10 @@ public class ArtifactBuilder {
     smoothFileSystem.createLink(artifactPath, targetPath);
   }
 
-  private void storeStringSet(Path artifactPath, Array<StringValue> stringSet) {
+  private void storeStringArray(Path artifactPath, Array<StringValue> stringArray) {
     smoothFileSystem.delete(artifactPath);
     int i = 0;
-    for (StringValue string : stringSet) {
+    for (StringValue string : stringArray) {
       Path filePath = path(Integer.valueOf(i).toString());
       Path linkPath = artifactPath.append(filePath);
       Path targetPath = targetPath(string);
