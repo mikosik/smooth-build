@@ -9,32 +9,30 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.testing.lang.type.FakeFile;
-import org.smoothbuild.testing.lang.type.FakeFileSet;
 
 import com.google.common.collect.Iterables;
 
-public class FakeFileSetTest {
+public class FakeFileArrayTest {
   FakeFile file;
-  FakeFileSet fileSet = new FakeFileSet();
+  FakeFileArray fileArray = new FakeFileArray();
 
   @Test
   public void type() throws Exception {
-    when(fileSet.type());
+    when(fileArray.type());
     thenReturned(Type.FILE_ARRAY);
   }
 
   @Test
-  public void initially_file_set_is_empty() throws Exception {
-    given(fileSet = new FakeFileSet());
-    when(Iterables.size(fileSet));
+  public void initially_file_array_is_empty() throws Exception {
+    given(fileArray = new FakeFileArray());
+    when(Iterables.size(fileArray));
     thenReturned(0);
   }
 
   @Test
-  public void fake_file_set_contains_added_file() throws Exception {
+  public void fake_file_array_contains_added_file() throws Exception {
     given(file = new FakeFile(path("my/file")));
-    when(fileSet).add(file);
-    then(fileSet, contains(file));
+    when(fileArray).add(file);
+    then(fileArray, contains(file));
   }
 }

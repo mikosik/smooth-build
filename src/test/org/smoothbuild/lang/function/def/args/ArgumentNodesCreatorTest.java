@@ -78,13 +78,13 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void converting_named_empty_set_argument() throws Exception {
-    do_test_converting_named_empty_set_argument(STRING_ARRAY);
-    do_test_converting_named_empty_set_argument(BLOB_ARRAY);
-    do_test_converting_named_empty_set_argument(FILE_ARRAY);
+  public void converting_named_empty_array_argument() throws Exception {
+    do_test_converting_named_empty_array_argument(STRING_ARRAY);
+    do_test_converting_named_empty_array_argument(BLOB_ARRAY);
+    do_test_converting_named_empty_array_argument(FILE_ARRAY);
   }
 
-  private void do_test_converting_named_empty_set_argument(Type paramType) {
+  private void do_test_converting_named_empty_array_argument(Type paramType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
@@ -103,19 +103,19 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingNamedEmptySetArgument() {
-    doTestConvertingNamedEmptySetArgument(STRING_ARRAY);
-    doTestConvertingNamedEmptySetArgument(BLOB_ARRAY);
-    doTestConvertingNamedEmptySetArgument(FILE_ARRAY);
+  public void convertingNamedEmptyArrayArgument() {
+    doTestConvertingNamedEmptyArrayArgument(STRING_ARRAY);
+    doTestConvertingNamedEmptyArrayArgument(BLOB_ARRAY);
+    doTestConvertingNamedEmptyArrayArgument(FILE_ARRAY);
   }
 
-  private void doTestConvertingNamedEmptySetArgument(Type type) {
+  private void doTestConvertingNamedEmptyArrayArgument(Type type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
-    Argument a1 = argument(p1.name(), emptySetNode());
+    Argument a1 = argument(p1.name(), emptyArrayNode());
 
     // when
     Map<String, Node> result = create(params(p1, p2), list(a1));
@@ -123,7 +123,7 @@ public class ArgumentNodesCreatorTest {
     // then
     messages.assertNoProblems();
     assertThat(result.size()).isEqualTo(1);
-    assertThatNodeHasEmptySet(result.get(p1.name()));
+    assertThatNodeHasEmptyArray(result.get(p1.name()));
   }
 
   @Test
@@ -152,13 +152,13 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void duplicatedNamedEmptySetNames() {
-    doTestDuplicatedNamedEmptySetNames(STRING_ARRAY);
-    doTestDuplicatedNamedEmptySetNames(BLOB_ARRAY);
-    doTestDuplicatedNamedEmptySetNames(FILE_ARRAY);
+  public void duplicatedNamedEmptyArrayNames() {
+    doTestDuplicatedNamedEmptyArrayNames(STRING_ARRAY);
+    doTestDuplicatedNamedEmptyArrayNames(BLOB_ARRAY);
+    doTestDuplicatedNamedEmptyArrayNames(FILE_ARRAY);
   }
 
-  private void doTestDuplicatedNamedEmptySetNames(Type type) {
+  private void doTestDuplicatedNamedEmptyArrayNames(Type type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -198,7 +198,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void typeMismatchForStringSetParam() throws Exception {
+  public void typeMismatchForStringArrayParam() throws Exception {
     doTestTypeMismatchForParamProblem(STRING_ARRAY, STRING);
     doTestTypeMismatchForParamProblem(STRING_ARRAY, BLOB);
     doTestTypeMismatchForParamProblem(STRING_ARRAY, BLOB_ARRAY);
@@ -216,7 +216,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void typeMismatchForBlobSetParam() throws Exception {
+  public void typeMismatchForBlobArrayParam() throws Exception {
     doTestTypeMismatchForParamProblem(BLOB_ARRAY, STRING);
     doTestTypeMismatchForParamProblem(BLOB_ARRAY, STRING_ARRAY);
     doTestTypeMismatchForParamProblem(BLOB_ARRAY, BLOB);
@@ -234,7 +234,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void typeMismatchForFileSetParam() throws Exception {
+  public void typeMismatchForFileArrayParam() throws Exception {
     doTestTypeMismatchForParamProblem(FILE_ARRAY, STRING);
     doTestTypeMismatchForParamProblem(FILE_ARRAY, STRING_ARRAY);
     doTestTypeMismatchForParamProblem(FILE_ARRAY, BLOB);
@@ -279,7 +279,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleNamelessStringSetArgument() {
+  public void convertingSingleNamelessStringArrayArgument() {
     doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, STRING);
     doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, BLOB);
     doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, BLOB_ARRAY);
@@ -296,7 +296,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleNamelessFileSetArgument() {
+  public void convertingSingleNamelessFileArrayArgument() {
     doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, STRING);
     doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, STRING_ARRAY);
     doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, BLOB);
@@ -312,7 +312,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleNamelessFileSetArgumentToBlobSet() throws Exception {
+  public void convertingSingleNamelessFileArrayArgumentToBlobArray() throws Exception {
     doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, BLOB);
     doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, FILE);
     doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, STRING);
@@ -339,21 +339,21 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleNamelessEmptySetArgument() throws Exception {
-    doTestConvertingSingleNamelessEmptySetArgument(STRING_ARRAY, STRING);
-    doTestConvertingSingleNamelessEmptySetArgument(STRING_ARRAY, FILE);
-    doTestConvertingSingleNamelessEmptySetArgument(STRING_ARRAY, BLOB);
+  public void convertingSingleNamelessEmptyArrayArgument() throws Exception {
+    doTestConvertingSingleNamelessEmptyArrayArgument(STRING_ARRAY, STRING);
+    doTestConvertingSingleNamelessEmptyArrayArgument(STRING_ARRAY, FILE);
+    doTestConvertingSingleNamelessEmptyArrayArgument(STRING_ARRAY, BLOB);
 
-    doTestConvertingSingleNamelessEmptySetArgument(BLOB_ARRAY, STRING);
-    doTestConvertingSingleNamelessEmptySetArgument(BLOB_ARRAY, FILE);
-    doTestConvertingSingleNamelessEmptySetArgument(BLOB_ARRAY, BLOB);
+    doTestConvertingSingleNamelessEmptyArrayArgument(BLOB_ARRAY, STRING);
+    doTestConvertingSingleNamelessEmptyArrayArgument(BLOB_ARRAY, FILE);
+    doTestConvertingSingleNamelessEmptyArrayArgument(BLOB_ARRAY, BLOB);
 
-    doTestConvertingSingleNamelessEmptySetArgument(FILE_ARRAY, STRING);
-    doTestConvertingSingleNamelessEmptySetArgument(FILE_ARRAY, FILE);
-    doTestConvertingSingleNamelessEmptySetArgument(FILE_ARRAY, BLOB);
+    doTestConvertingSingleNamelessEmptyArrayArgument(FILE_ARRAY, STRING);
+    doTestConvertingSingleNamelessEmptyArrayArgument(FILE_ARRAY, FILE);
+    doTestConvertingSingleNamelessEmptyArrayArgument(FILE_ARRAY, BLOB);
   }
 
-  private void doTestConvertingSingleNamelessEmptySetArgument(Type paramType, Type otherParamType) {
+  private void doTestConvertingSingleNamelessEmptyArrayArgument(Type paramType, Type otherParamType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(otherParamType, "name1");
@@ -368,7 +368,7 @@ public class ArgumentNodesCreatorTest {
     // then
     messages.assertNoProblems();
     assertThat(result.size()).isEqualTo(1);
-    assertThatNodeHasEmptySet(result.get(p2.name()));
+    assertThatNodeHasEmptyArray(result.get(p2.name()));
   }
 
   @Test
@@ -462,13 +462,13 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void convertingSingleNamelessSetArgumentWhitOtherNamed() throws Exception {
-    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(STRING_ARRAY);
-    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(BLOB_ARRAY);
-    doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(FILE_ARRAY);
+  public void convertingSingleNamelessArrayArgumentWhitOtherNamed() throws Exception {
+    doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(STRING_ARRAY);
+    doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(BLOB_ARRAY);
+    doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(FILE_ARRAY);
   }
 
-  private void doTestConvertingSingleNamelessSetArgumentWhitOtherNamed(Type type) {
+  private void doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(Type type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -485,30 +485,31 @@ public class ArgumentNodesCreatorTest {
     // then
     messages.assertNoProblems();
     assertThat(result.get(p1.name())).isSameAs(a1.node());
-    assertThatNodeHasEmptySet(result.get(p2.name()));
+    assertThatNodeHasEmptyArray(result.get(p2.name()));
     assertThat(result.get(p3.name())).isSameAs(a3.node());
     assertThat(result.size()).isEqualTo(3);
   }
 
   @Test
-  public void convertingNamelessEmptySetArgWithOtherNamedSet() throws Exception {
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_ARRAY, BLOB_ARRAY);
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(STRING_ARRAY, FILE_ARRAY);
+  public void convertingNamelessEmptyArrayArgWithOtherNamedArray() throws Exception {
+    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(STRING_ARRAY, BLOB_ARRAY);
+    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(STRING_ARRAY, FILE_ARRAY);
 
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(BLOB_ARRAY, STRING_ARRAY);
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(BLOB_ARRAY, FILE_ARRAY);
+    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(BLOB_ARRAY, STRING_ARRAY);
+    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(BLOB_ARRAY, FILE_ARRAY);
 
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_ARRAY, STRING_ARRAY);
-    doTestConvertingNamelessEmptySetArgWithOtherNamedSet(FILE_ARRAY, BLOB_ARRAY);
+    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(FILE_ARRAY, STRING_ARRAY);
+    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void doTestConvertingNamelessEmptySetArgWithOtherNamedSet(Type setType, Type otherSetType) {
+  private void doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(Type arrayType,
+      Type otherArrayType) {
     // given
     messages = new FakeMessageGroup();
-    Param p1 = param(setType, "name1");
-    Param p2 = param(otherSetType, "name2");
+    Param p1 = param(arrayType, "name1");
+    Param p2 = param(otherArrayType, "name2");
 
-    Argument a1 = argument(p1.name(), node(setType));
+    Argument a1 = argument(p1.name(), node(arrayType));
     Argument a2 = argument(node(EMPTY_ARRAY));
 
     // when
@@ -517,7 +518,7 @@ public class ArgumentNodesCreatorTest {
     // then
     messages.assertNoProblems();
     assertThat(result.get(p1.name())).isSameAs(a1.node());
-    assertThatNodeHasEmptySet(result.get(p2.name()));
+    assertThatNodeHasEmptyArray(result.get(p2.name()));
     assertThat(result.size()).isEqualTo(2);
   }
 
@@ -551,7 +552,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void ambiguousNamelessEmptySetArgument() {
+  public void ambiguousNamelessEmptyArrayArgument() {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(STRING_ARRAY, "name1");
@@ -576,7 +577,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void noParamWithProperTypeForNamelessStringSetArgument() throws Exception {
+  public void noParamWithProperTypeForNamelessStringArrayArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, STRING);
     doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, BLOB);
     doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, BLOB_ARRAY);
@@ -593,7 +594,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void noParamWithProperTypeForNamelessFileSetArgument() throws Exception {
+  public void noParamWithProperTypeForNamelessFileArrayArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, STRING);
     doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, STRING_ARRAY);
     doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, BLOB);
@@ -601,7 +602,7 @@ public class ArgumentNodesCreatorTest {
   }
 
   @Test
-  public void noParamWithProperTypeForNamelessEmptySetArgument() throws Exception {
+  public void noParamWithProperTypeForNamelessEmptyArrayArgument() throws Exception {
     doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, STRING);
     doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, BLOB);
     doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, FILE);
@@ -652,14 +653,14 @@ public class ArgumentNodesCreatorTest {
     return newArrayList(args);
   }
 
-  private static void assertThatNodeHasEmptySet(Node abstractNode) {
+  private static void assertThatNodeHasEmptyArray(Node abstractNode) {
     TaskGenerator taskGenerator = mock(TaskGenerator.class);
     Task task = abstractNode.generateTask(taskGenerator);
     Value result = task.execute(new FakeSandbox());
     assertThat((Iterable<?>) result).isEmpty();
   }
 
-  private static Node emptySetNode() {
+  private static Node emptyArrayNode() {
     Node node = mock(Node.class);
     when(node.type()).thenReturn(EMPTY_ARRAY);
     return node;

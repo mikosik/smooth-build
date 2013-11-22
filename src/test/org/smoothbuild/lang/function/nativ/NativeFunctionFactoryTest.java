@@ -109,15 +109,15 @@ public class NativeFunctionFactoryTest {
   public interface AllowedParameters {
     public StringValue string();
 
-    public Array<StringValue> stringSet();
+    public Array<StringValue> stringArray();
 
     public File file();
 
-    public Array<File> fileSet();
+    public Array<File> fileArray();
 
     public Blob blob();
 
-    public Array<Blob> blobSet();
+    public Array<Blob> blobArray();
   }
 
   public static class FuncWithAllowedParamTypes {

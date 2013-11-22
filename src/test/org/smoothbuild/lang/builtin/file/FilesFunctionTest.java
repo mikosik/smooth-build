@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.IoConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.lang.type.FileSetMatchers.containsFileContainingItsPath;
+import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContainingItsPath;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
@@ -104,9 +104,9 @@ public class FilesFunctionTest {
     Path filePath = path("file/path/file.txt");
     sandbox.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
 
-    Array<File> fileSet = runExecute(params(rootPath.value()));
+    Array<File> fileArray = runExecute(params(rootPath.value()));
 
-    assertThat(containsFileContainingItsPath(filePath).matches(fileSet));
+    assertThat(containsFileContainingItsPath(filePath).matches(fileArray));
   }
 
   private static FilesFunction.Parameters params(final String dir) {

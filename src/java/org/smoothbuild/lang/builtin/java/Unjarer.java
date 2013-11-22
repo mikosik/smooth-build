@@ -47,7 +47,7 @@ public class Unjarer {
 
   public Array<File> unjarFile(File jarFile, Predicate<String> nameFilter) {
     this.alreadyUnjared = Sets.newHashSet();
-    ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
@@ -61,7 +61,7 @@ public class Unjarer {
               throw new ErrorMessageException(new DuplicatePathInJarError(path));
             } else {
               alreadyUnjared.add(path);
-              fileSetBuilder.add(file);
+              fileArrayBuilder.add(file);
             }
           }
         }
@@ -69,7 +69,7 @@ public class Unjarer {
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
-    return fileSetBuilder.build();
+    return fileArrayBuilder.build();
   }
 
   private File unjarEntry(JarInputStream jarInputStream, String fileName) {

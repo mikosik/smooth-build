@@ -38,24 +38,24 @@ public class Unzipper {
 
   public Array<File> unzipFile(File zipFile) {
     this.alreadyUnzipped = Sets.newHashSet();
-    ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
           if (!IS_DIRECTORY.apply(entry.getName())) {
-            fileSetBuilder.add(unzipEntry(zipInputStream, entry, fileSetBuilder));
+            fileArrayBuilder.add(unzipEntry(zipInputStream, entry, fileArrayBuilder));
           }
         }
       }
-      return fileSetBuilder.build();
+      return fileArrayBuilder.build();
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
   }
 
   private File unzipEntry(ZipInputStream zipInputStream, ZipEntry entry,
-      ArrayBuilder<File> fileSetBuilder) {
+      ArrayBuilder<File> fileArrayBuilder) {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {

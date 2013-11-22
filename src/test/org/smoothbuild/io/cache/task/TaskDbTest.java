@@ -37,9 +37,9 @@ public class TaskDbTest {
   Path path = path("file/path");
 
   Message message;
-  Array<File> fileSet;
-  Array<Blob> blobSet;
-  Array<StringValue> stringSet;
+  Array<File> fileArray;
+  Array<Blob> blobArray;
+  Array<StringValue> stringArray;
   File file;
   Blob blob;
   StringValue stringValue;
@@ -75,30 +75,30 @@ public class TaskDbTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void stored_file_set_can_be_read_back() throws Exception {
+  public void stored_file_array_can_be_read_back() throws Exception {
     given(file = valueDb.file(path, bytes));
-    given(fileSet = valueDb.fileArrayBuilder().add(file).build());
-    given(taskDb).store(hash, new CachedResult(fileSet, Empty.messageList()));
+    given(fileArray = valueDb.fileArrayBuilder().add(file).build());
+    given(taskDb).store(hash, new CachedResult(fileArray, Empty.messageList()));
     when(((Array<File>) taskDb.read(hash).value()).iterator().next());
     thenReturned(file);
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void stored_blob_set_can_be_read_back() throws Exception {
+  public void stored_blob_array_can_be_read_back() throws Exception {
     given(blob = valueDb.blob(bytes));
-    given(blobSet = valueDb.blobArrayBuilder().add(blob).build());
-    given(taskDb).store(hash, new CachedResult(blobSet, Empty.messageList()));
+    given(blobArray = valueDb.blobArrayBuilder().add(blob).build());
+    given(taskDb).store(hash, new CachedResult(blobArray, Empty.messageList()));
     when(((Array<Blob>) taskDb.read(hash).value()).iterator().next());
     thenReturned(blob);
   }
 
   @SuppressWarnings("unchecked")
   @Test
-  public void stored_string_set_can_be_read_back() throws Exception {
+  public void stored_string_array_can_be_read_back() throws Exception {
     given(stringValue = valueDb.string(string));
-    given(stringSet = valueDb.stringArrayBuilder().add(stringValue).build());
-    given(taskDb).store(hash, new CachedResult(stringSet, Empty.messageList()));
+    given(stringArray = valueDb.stringArrayBuilder().add(stringValue).build());
+    given(taskDb).store(hash, new CachedResult(stringArray, Empty.messageList()));
     when(((Array<StringValue>) taskDb.read(hash).value()).iterator().next());
     thenReturned(stringValue);
   }

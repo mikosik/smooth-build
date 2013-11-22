@@ -9,12 +9,12 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
-public class FileSetSmoothTest extends IntegrationTestCase {
+public class FileArraySmoothTest extends IntegrationTestCase {
   Path path1 = path("file/path/file1.txt");
   Path path2 = path("file/path/file2.txt");
 
   @Test
-  public void setWithTrailingCommaIsAllowed() throws Exception {
+  public void arrayWithTrailingCommaIsAllowed() throws Exception {
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
@@ -33,7 +33,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void setWithOnlyCommaIsForbidden() throws Exception {
+  public void arrayWithOnlyCommaIsForbidden() throws Exception {
     // given
     script("run : [ , ];");
 
@@ -45,7 +45,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void saveFileSetWithTwoFiles() throws IOException {
+  public void saveFileArrayWithTwoFiles() throws IOException {
     // given
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
@@ -65,7 +65,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void saveFileSetWithOneFile() throws IOException {
+  public void saveFileArrayWithOneFile() throws IOException {
     // given
     fileSystem.createFileContainingItsPath(path1);
 
@@ -83,7 +83,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void saveEmptyFileSet() throws IOException {
+  public void saveEmptyFileArray() throws IOException {
     // given
     StringBuilder builder = new StringBuilder();
     builder.append("run : [ ];\n");
@@ -97,7 +97,7 @@ public class FileSetSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void file_set_can_contain_duplicate_values() throws Exception {
+  public void file_array_can_contain_duplicate_values() throws Exception {
     // given
     fileSystem.createFileContainingItsPath(path1);
 

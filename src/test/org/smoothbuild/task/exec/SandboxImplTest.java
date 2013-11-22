@@ -22,7 +22,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.type.FileSetMatchers;
+import org.smoothbuild.testing.lang.type.FileArrayMatchers;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 import com.google.common.collect.Iterables;
@@ -41,7 +41,7 @@ public class SandboxImplTest {
   SandboxImpl sandbox = new SandboxImpl(fileSystem, valueDb, task);
 
   @Test
-  public void file_set_builder_stores_files_in_value_db() throws Exception {
+  public void file_array_builder_stores_files_in_value_db() throws Exception {
     FileBuilder fileBuilder = sandbox.fileBuilder();
     fileBuilder.setPath(path1);
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
@@ -51,13 +51,13 @@ public class SandboxImplTest {
     builder.add(file);
     HashCode hash = builder.build().hash();
 
-    Array<File> fileSet = valueDb.fileArray(hash);
-    MatcherAssert.assertThat(fileSet, FileSetMatchers.containsFileContaining(path1, content));
-    assertThat(Iterables.size(fileSet)).isEqualTo(1);
+    Array<File> fileArray = valueDb.fileArray(hash);
+    MatcherAssert.assertThat(fileArray, FileArrayMatchers.containsFileContaining(path1, content));
+    assertThat(Iterables.size(fileArray)).isEqualTo(1);
   }
 
   @Test
-  public void string_set_builder_stores_files_in_value_db() throws Exception {
+  public void string_array_builder_stores_files_in_value_db() throws Exception {
     String jdkString1 = "my string 1";
     String jdkString2 = "my string 2";
 
@@ -67,11 +67,11 @@ public class SandboxImplTest {
     ArrayBuilder<StringValue> builder = sandbox.stringArrayBuilder();
     builder.add(string1);
     builder.add(string2);
-    Array<StringValue> stringSet = builder.build();
+    Array<StringValue> stringArray = builder.build();
 
-    Array<StringValue> stringSetRead = valueDb.stringArray(stringSet.hash());
+    Array<StringValue> stringArrayRead = valueDb.stringArray(stringArray.hash());
     List<String> strings = Lists.newArrayList();
-    for (StringValue string : stringSetRead) {
+    for (StringValue string : stringArrayRead) {
       strings.add(string.value());
     }
 

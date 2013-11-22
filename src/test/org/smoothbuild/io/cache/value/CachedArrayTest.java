@@ -23,13 +23,13 @@ public class CachedArrayTest {
 
   @Test
   public void null_object_db_is_forbidden() {
-    when(newBlobSetObject(null, hash));
+    when(newCachedArray(null, hash));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_hash_is_forbidden() {
-    when(newBlobSetObject(valueDb, null));
+    when(newCachedArray(valueDb, null));
     thenThrown(NullPointerException.class);
   }
 
@@ -47,7 +47,7 @@ public class CachedArrayTest {
     thenReturned(hash);
   }
 
-  private static Closure newBlobSetObject(final ValueDb valueDb, final HashCode hash) {
+  private static Closure newCachedArray(final ValueDb valueDb, final HashCode hash) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
