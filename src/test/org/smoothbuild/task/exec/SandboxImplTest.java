@@ -51,7 +51,7 @@ public class SandboxImplTest {
     builder.add(file);
     HashCode hash = builder.build().hash();
 
-    Array<File> fileSet = valueDb.fileSet(hash);
+    Array<File> fileSet = valueDb.fileArray(hash);
     MatcherAssert.assertThat(fileSet, FileSetMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileSet)).isEqualTo(1);
   }
@@ -69,7 +69,7 @@ public class SandboxImplTest {
     builder.add(string2);
     Array<StringValue> stringSet = builder.build();
 
-    Array<StringValue> stringSetRead = valueDb.stringSet(stringSet.hash());
+    Array<StringValue> stringSetRead = valueDb.stringArray(stringSet.hash());
     List<String> strings = Lists.newArrayList();
     for (StringValue string : stringSetRead) {
       strings.add(string.value());

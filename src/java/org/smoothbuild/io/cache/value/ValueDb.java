@@ -34,37 +34,37 @@ public class ValueDb {
     this.hashedDb = hashedDb;
   }
 
-  // FileSet
+  // FileArray
 
   public ArrayBuilder<File> fileArrayBuilder() {
     return new ArrayBuilder<File>(this, Type.FILE_SET, fileReader());
   }
 
-  public Array<File> fileSet(HashCode hash) {
+  public Array<File> fileArray(HashCode hash) {
     return new CachedArray<File>(this, hash, FILE_SET, fileReader());
   }
 
-  // BlobSet
+  // BlobArray
 
   public ArrayBuilder<Blob> blobArrayBuilder() {
     return new ArrayBuilder<Blob>(this, Type.BLOB_SET, blobReader());
   }
 
-  public Array<Blob> blobSet(HashCode hash) {
+  public Array<Blob> blobArray(HashCode hash) {
     return new CachedArray<Blob>(this, hash, BLOB_SET, blobReader());
   }
 
-  // StringSet
+  // StringArray
 
   public ArrayBuilder<StringValue> stringArrayBuilder() {
     return new ArrayBuilder<StringValue>(this, Type.STRING_SET, stringReader());
   }
 
-  public Array<StringValue> stringSet(HashCode hash) {
+  public Array<StringValue> stringArray(HashCode hash) {
     return new CachedArray<StringValue>(this, hash, STRING_SET, stringReader());
   }
 
-  // generic set
+  // generic array
 
   public <T extends Value> Iterable<T> array(HashCode hash, ValueReader<T> valueReader) {
     ImmutableList.Builder<T> builder = ImmutableList.builder();
@@ -81,11 +81,11 @@ public class ValueDb {
   }
 
   public <T extends Value> Array<T> array(List<T> elements, Type type, ValueReader<T> valueReader) {
-    HashCode hash = genericSet(elements);
+    HashCode hash = genericArray(elements);
     return new CachedArray<T>(this, hash, type, valueReader);
   }
 
-  private HashCode genericSet(List<? extends Hashed> elements) {
+  private HashCode genericArray(List<? extends Hashed> elements) {
     Marshaller marshaller = new Marshaller();
     marshaller.write(elements);
     return hashedDb.store(marshaller.getBytes());

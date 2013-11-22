@@ -90,19 +90,19 @@ public class TaskDb {
       return valueDb.string(resultObjectHash);
     }
     if (type == Type.STRING_SET) {
-      return valueDb.stringSet(resultObjectHash);
+      return valueDb.stringArray(resultObjectHash);
     }
     if (type == Type.FILE) {
       return valueDb.file(resultObjectHash);
     }
     if (type == Type.FILE_SET) {
-      return valueDb.fileSet(resultObjectHash);
+      return valueDb.fileArray(resultObjectHash);
     }
     if (type == Type.BLOB) {
       return valueDb.blob(resultObjectHash);
     }
     if (type == Type.BLOB_SET) {
-      return valueDb.blobSet(resultObjectHash);
+      return valueDb.blobArray(resultObjectHash);
     }
     throw new ErrorMessageException(new Message(FATAL,
         "Bug in smooth binary: Unexpected value type " + type));
