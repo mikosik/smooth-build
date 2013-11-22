@@ -31,7 +31,7 @@ public class ParamTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void creatingEmptySetParamIsForbidden() throws Exception {
+  public void creatingEmptyArrayParamIsForbidden() throws Exception {
     param(EMPTY_ARRAY, "name", true);
   }
 

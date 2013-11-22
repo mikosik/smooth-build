@@ -17,27 +17,27 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeSandbox;
 
-public class EmptySetNodeTest {
+public class EmptyArrayNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   CodeLocation codeLocation = new FakeCodeLocation();
-  EmptySetNode emptySetNode = new EmptySetNode(codeLocation);
+  EmptyArrayNode emptyArrayNode = new EmptyArrayNode(codeLocation);
 
   @Test
   public void type() {
-    when(emptySetNode.type());
+    when(emptyArrayNode.type());
     thenReturned(EMPTY_ARRAY);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(emptySetNode = new EmptySetNode(codeLocation));
-    when(emptySetNode.codeLocation());
+    given(emptyArrayNode = new EmptyArrayNode(codeLocation));
+    when(emptyArrayNode.codeLocation());
     thenReturned(codeLocation);
   }
 
   @SuppressWarnings("unchecked")
   public void generate_task() throws Exception {
-    Task task = emptySetNode.generateTask(taskGenerator);
+    Task task = emptyArrayNode.generateTask(taskGenerator);
     Value result = task.execute(new FakeSandbox());
     assertThat((Array<File>) result).isEmpty();
   }

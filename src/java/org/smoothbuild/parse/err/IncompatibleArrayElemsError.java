@@ -6,10 +6,10 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 
-public class IncompatibleSetElemsError extends CodeMessage {
-  public IncompatibleSetElemsError(CodeLocation location, Type firstElemType, int index,
+public class IncompatibleArrayElemsError extends CodeMessage {
+  public IncompatibleArrayElemsError(CodeLocation location, Type firstElemType, int index,
       Type indexElemType) {
-    super(ERROR, location, "Set cannot contain elements of different types.\n"
+    super(ERROR, location, "Array cannot contain elements of incompatible types.\n"
         + "First element has type " + firstElemType + " while element at index " + index
         + " has type " + indexElemType + ".");
   }

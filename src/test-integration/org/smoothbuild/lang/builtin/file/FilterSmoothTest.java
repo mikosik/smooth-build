@@ -112,7 +112,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
   private void doTestFiltering(String pattern, ImmutableList<String> included,
       ImmutableList<String> excluded) throws IOException {
     // given
-    Path pathA = path("setA");
+    Path pathA = path("arrayA");
     for (String path : included) {
       fileSystem.createFileContainingItsPath(pathA, path(path));
     }

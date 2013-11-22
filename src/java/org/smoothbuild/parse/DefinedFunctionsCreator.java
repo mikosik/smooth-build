@@ -37,7 +37,7 @@ import org.smoothbuild.lang.function.def.ArrayNode;
 import org.smoothbuild.lang.function.def.CachingNode;
 import org.smoothbuild.lang.function.def.CallNode;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.function.def.EmptySetNode;
+import org.smoothbuild.lang.function.def.EmptyArrayNode;
 import org.smoothbuild.lang.function.def.InvalidNode;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.StringNode;
@@ -50,8 +50,8 @@ import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.parse.err.ForbiddenSetElemTypeError;
-import org.smoothbuild.parse.err.IncompatibleSetElemsError;
+import org.smoothbuild.parse.err.ForbiddenArrayElemTypeError;
+import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
@@ -152,11 +152,11 @@ public class DefinedFunctionsCreator {
       ImmutableList<Node> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return new CachingNode(new EmptySetNode(locationOf(list)));
+        return new CachingNode(new EmptyArrayNode(locationOf(list)));
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return new CachingNode(new EmptySetNode(locationOf(list)));
+        return new CachingNode(new EmptyArrayNode(locationOf(list)));
       }
 
       Type elemsType = elemNodes.get(0).type();
@@ -176,7 +176,7 @@ public class DefinedFunctionsCreator {
       for (SetElemContext elem : elems) {
         Node node = build(elem);
         if (!Type.allowedForArrayElem().contains(node.type())) {
-          messages.report(new ForbiddenSetElemTypeError(locationOf(elem), node.type()));
+          messages.report(new ForbiddenArrayElemTypeError(locationOf(elem), node.type()));
         } else {
           builder.add(node);
         }
@@ -204,7 +204,7 @@ public class DefinedFunctionsCreator {
         Node elemNode = elemNodes.get(i);
         if (elemNode.type() != firstType) {
           CodeLocation location = locationOf(elems.get(i));
-          messages.report(new IncompatibleSetElemsError(location, firstType, i, elemNode.type()));
+          messages.report(new IncompatibleArrayElemsError(location, firstType, i, elemNode.type()));
           success = false;
         }
       }

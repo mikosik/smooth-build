@@ -22,7 +22,7 @@ public class ArgumentsCreatorTest {
   }
 
   @Test
-  public void nullReturnedForNotSetArguments() {
+  public void nullReturnedForNotArrayArguments() {
     MyParametersInterface args = createArgs(ImmutableMap.<String, Value> of(name, value));
 
     assertThat(args.integer()).isNull();

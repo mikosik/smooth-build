@@ -11,7 +11,7 @@ import org.smoothbuild.testing.parse.ScriptBuilder;
 public class MergeSmoothTest extends IntegrationTestCase {
 
   @Test
-  public void mergingTwoSets() throws Exception {
+  public void mergingTwoArrays() throws Exception {
     // given
     Path path1 = path("def/fileA.txt");
     Path path2 = path("def/fileB.txt");
@@ -35,7 +35,7 @@ public class MergeSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void mergingFailsWhenSetsContainFileWithTheSamePath() throws Exception {
+  public void mergingFailsWhenArraysContainFileWithTheSamePath() throws Exception {
     // given
     Path dir1Path = path("dirA");
     Path dir2Path = path("dirB");
