@@ -23,9 +23,9 @@ public class BinaryNameToClassFile {
     Map<String, File> binaryNameToClassFile = Maps.newHashMap();
 
     for (File jarFile : libraryJars) {
-      Array<File> fileSet = unjarer.unjarFile(jarFile, isClassFilePredicate());
+      Array<File> fileArray = unjarer.unjarFile(jarFile, isClassFilePredicate());
 
-      for (File classFile : fileSet) {
+      for (File classFile : fileArray) {
         Path path = classFile.path();
         String binaryName = toBinaryName(path);
         if (binaryNameToJar.containsKey(binaryName)) {

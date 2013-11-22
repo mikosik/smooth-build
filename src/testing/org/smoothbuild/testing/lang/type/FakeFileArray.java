@@ -13,10 +13,10 @@ import org.smoothbuild.lang.type.File;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class FakeFileSet extends AbstractValue implements Array<File> {
+public class FakeFileArray extends AbstractValue implements Array<File> {
   private final List<File> files = Lists.newArrayList();
 
-  public FakeFileSet() {
+  public FakeFileArray() {
     super(FILE_ARRAY, HashCode.fromInt(0));
   }
 

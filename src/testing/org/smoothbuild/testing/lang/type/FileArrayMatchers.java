@@ -11,7 +11,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.Array;
 import org.smoothbuild.lang.type.File;
 
-public class FileSetMatchers {
+public class FileArrayMatchers {
 
   public static Matcher<Array<File>> containsFileContainingItsPath(Path path) throws IOException {
     return containsFileContaining(path, path.value());
@@ -24,12 +24,13 @@ public class FileSetMatchers {
 
       @Override
       public void describeTo(Description description) {
-        description.appendText("FileSet containing file " + path + " with content = " + content);
+        description
+            .appendText("Array<File> containing file " + path + " with content = " + content);
       }
 
       @Override
-      protected boolean matchesSafely(Array<File> fileSet) {
-        for (File file : fileSet) {
+      protected boolean matchesSafely(Array<File> fileArray) {
+        for (File file : fileArray) {
           if (file.path().equals(path)) {
             try {
               return inputStreamToString(file.openInputStream()).equals(content);
@@ -48,12 +49,12 @@ public class FileSetMatchers {
 
       @Override
       public void describeTo(Description description) {
-        description.appendText("FileSet containing file " + path);
+        description.appendText("Array<File> containing file " + path);
       }
 
       @Override
-      protected boolean matchesSafely(Array<File> fileSet) {
-        for (File file : fileSet) {
+      protected boolean matchesSafely(Array<File> fileArray) {
+        for (File file : fileArray) {
           if (file.path().equals(path)) {
             return true;
           }

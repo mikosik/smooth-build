@@ -13,12 +13,12 @@ import org.smoothbuild.lang.type.File;
 import org.smoothbuild.util.ForwardingOutputStream;
 
 public class OutputClassFile extends SimpleJavaFileObject {
-  private final ArrayBuilder<File> fileSetBuilder;
+  private final ArrayBuilder<File> fileArrayBuilder;
   private final FileBuilder fileBuilder;
 
-  public OutputClassFile(ArrayBuilder<File> fileSetBuilder, Path path, FileBuilder fileBuilder) {
+  public OutputClassFile(ArrayBuilder<File> fileArrayBuilder, Path path, FileBuilder fileBuilder) {
     super(URI.create("class:///" + path.value()), Kind.CLASS);
-    this.fileSetBuilder = fileSetBuilder;
+    this.fileArrayBuilder = fileArrayBuilder;
     this.fileBuilder = fileBuilder;
     fileBuilder.setPath(path);
   }
@@ -30,7 +30,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         outputStream.close();
-        fileSetBuilder.add(fileBuilder.build());
+        fileArrayBuilder.add(fileBuilder.build());
       }
     };
   }

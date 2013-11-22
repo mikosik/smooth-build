@@ -61,15 +61,15 @@ public class FilesFunction {
         case FILE:
           throw new ErrorMessageException(new DirParamIsAFileError("dir", dirPath));
         case DIR:
-          ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
+          ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
           for (Path filePath : fileSystem.filesFrom(dirPath)) {
             FileBuilder fileBuilder = sandbox.fileBuilder();
             fileBuilder.setPath(filePath);
             Path fullPath = dirPath.append(filePath);
             copy(fileSystem.openInputStream(fullPath), fileBuilder.openOutputStream());
-            fileSetBuilder.add(fileBuilder.build());
+            fileArrayBuilder.add(fileBuilder.build());
           }
-          return fileSetBuilder.build();
+          return fileArrayBuilder.build();
         case NOTHING:
           throw new ErrorMessageException(new NoSuchPathError("dir", dirPath));
         default:

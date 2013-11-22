@@ -29,10 +29,10 @@ public class UnjarerTest {
   public void unjaringTwoFiles() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
-    Array<File> fileSet = unjarer.unjarFile(jarFile);
+    Array<File> fileArray = unjarer.unjarFile(jarFile);
 
     int fileCount = 0;
-    for (File file : fileSet) {
+    for (File file : fileArray) {
       fileCount++;
       assertContent(file.openInputStream(), file.path().value());
     }
@@ -43,20 +43,20 @@ public class UnjarerTest {
   public void unjaringIgnoresDirectories() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, directoryName);
 
-    Array<File> fileSet = unjarer.unjarFile(jarFile);
+    Array<File> fileArray = unjarer.unjarFile(jarFile);
 
-    assertThat(Iterables.size(fileSet)).isEqualTo(1);
-    assertThat(fileSet.iterator().next().path()).isEqualTo(path(fileName1));
+    assertThat(Iterables.size(fileArray)).isEqualTo(1);
+    assertThat(fileArray.iterator().next().path()).isEqualTo(path(fileName1));
   }
 
   @Test
   public void unjaringWithFilter() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
-    Array<File> fileSet = unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2));
+    Array<File> fileArray = unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2));
 
-    assertThat(Iterables.size(fileSet)).isEqualTo(1);
-    assertThat(fileSet.iterator().next().path().value()).isEqualTo(fileName2);
+    assertThat(Iterables.size(fileArray)).isEqualTo(1);
+    assertThat(fileArray.iterator().next().path().value()).isEqualTo(fileName2);
   }
 
   @Test

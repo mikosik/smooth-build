@@ -33,10 +33,10 @@ public class UnzipperTest {
   public void unzipping() throws Exception {
     FakeFile zipFile = zipped(fileName1, fileName2);
 
-    Array<File> resultFileSet = unzipper.unzipFile(zipFile);
+    Array<File> resultFileArray = unzipper.unzipFile(zipFile);
 
     int fileCount = 0;
-    for (File file : resultFileSet) {
+    for (File file : resultFileArray) {
       fileCount++;
       assertContent(file.openInputStream(), file.path().value());
     }
@@ -47,10 +47,10 @@ public class UnzipperTest {
   public void unzipperIgnoresDirectories() throws Exception {
     FakeFile zipFile = zipped(fileName1, directoryName);
 
-    Array<File> resultFileSet = unzipper.unzipFile(zipFile);
+    Array<File> resultFileArray = unzipper.unzipFile(zipFile);
 
-    assertThat(Iterables.size(resultFileSet)).isEqualTo(1);
-    assertThat(resultFileSet.iterator().next().path()).isEqualTo(path(fileName1));
+    assertThat(Iterables.size(resultFileArray)).isEqualTo(1);
+    assertThat(resultFileArray.iterator().next().path()).isEqualTo(path(fileName1));
   }
 
   @Test

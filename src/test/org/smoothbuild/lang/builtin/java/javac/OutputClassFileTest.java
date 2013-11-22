@@ -22,17 +22,17 @@ public class OutputClassFileTest {
   @Test
   public void openOutputStream() throws IOException {
     Path path = Path.path("my/path");
-    ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
-    OutputClassFile outputClassFile = new OutputClassFile(fileSetBuilder, path, fileBuilder);
+    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);
 
     String content = "content";
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
-    Array<File> fileSet = fileSetBuilder.build();
+    Array<File> fileArray = fileArrayBuilder.build();
 
-    assertThat(Iterables.size(fileSet)).isEqualTo(1);
-    File file = fileSet.iterator().next();
+    assertThat(Iterables.size(fileArray)).isEqualTo(1);
+    File file = fileArray.iterator().next();
     assertThat(file.path()).isEqualTo(path);
     FileTester.assertContentContains(file, content);
   }
@@ -40,10 +40,10 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     Path path = Path.path("my/path");
-    ArrayBuilder<File> fileSetBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<File> fileArrayBuilder = sandbox.fileArrayBuilder();
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
-    OutputClassFile outputClassFile = new OutputClassFile(fileSetBuilder, path, fileBuilder);
+    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);
 
     assertThat(outputClassFile.getName()).isEqualTo("/" + path.value());
   }
