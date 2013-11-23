@@ -13,9 +13,9 @@ import com.google.common.hash.HashCode;
 
 public class CachedFile extends AbstractValue implements SFile {
   private final Path path;
-  private final CachedBlob content;
+  private final SBlob content;
 
-  public CachedFile(Path path, CachedBlob content, HashCode hash) {
+  public CachedFile(Path path, SBlob content, HashCode hash) {
     super(FILE, hash);
     this.path = checkNotNull(path);
     this.content = checkNotNull(content);
