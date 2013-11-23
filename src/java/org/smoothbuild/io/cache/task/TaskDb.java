@@ -1,7 +1,7 @@
 package org.smoothbuild.io.cache.task;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.smoothbuild.lang.type.Type.STRING_T;
+import static org.smoothbuild.lang.type.Type.STRING;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.util.List;
@@ -68,7 +68,7 @@ public class TaskDb {
       for (int i = 0; i < size; i++) {
         MessageType type = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();
-        String messageString = valueDb.read(STRING_T, messageStringHash).value();
+        String messageString = valueDb.read(STRING, messageStringHash).value();
         messages.add(new Message(type, messageString));
         hasErrors = hasErrors || type == ERROR;
       }
@@ -78,7 +78,7 @@ public class TaskDb {
       } else {
         Type<?> type = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
         HashCode resultObjectHash = unmarshaller.readHash();
-        Value value = valueDb.read(type.javaTypeLiteral(), resultObjectHash);
+        Value value = valueDb.read(type, resultObjectHash);
         return new CachedResult(value, messages);
       }
     }

@@ -3,10 +3,10 @@ package org.smoothbuild.task.exec;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.type.Type.FILE_A_T;
-import static org.smoothbuild.lang.type.Type.FILE_T;
-import static org.smoothbuild.lang.type.Type.STRING_A_T;
-import static org.smoothbuild.lang.type.Type.STRING_T;
+import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
@@ -55,7 +55,7 @@ public class SandboxImplTest {
     builder.add(file);
     HashCode hash = builder.build().hash();
 
-    SArray<SFile> fileArray = valueDb.read(FILE_A_T, hash);
+    SArray<SFile> fileArray = valueDb.read(FILE_ARRAY, hash);
     MatcherAssert.assertThat(fileArray, FileArrayMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
   }
@@ -73,7 +73,7 @@ public class SandboxImplTest {
     builder.add(string2);
     SArray<SString> stringArray = builder.build();
 
-    SArray<SString> stringArrayRead = valueDb.read(STRING_A_T, stringArray.hash());
+    SArray<SString> stringArrayRead = valueDb.read(STRING_ARRAY, stringArray.hash());
     List<String> strings = Lists.newArrayList();
     for (SString string : stringArrayRead) {
       strings.add(string.value());
@@ -89,7 +89,7 @@ public class SandboxImplTest {
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
     HashCode hash = fileBuilder.build().hash();
 
-    SFile file = valueDb.read(FILE_T, hash);
+    SFile file = valueDb.read(FILE, hash);
     assertThat(file.path()).isEqualTo(path1);
     assertThat(inputStreamToString(file.openInputStream())).isEqualTo(content);
   }
@@ -99,7 +99,7 @@ public class SandboxImplTest {
     String jdkString = "my string";
     SString string = sandbox.string(jdkString);
 
-    SString stringRead = valueDb.read(STRING_T, string.hash());
+    SString stringRead = valueDb.read(STRING, string.hash());
 
     assertThat(stringRead.value()).isEqualTo(jdkString);
   }

@@ -11,13 +11,13 @@ public class Type<T extends Value> {
    * function implementations in plugins code.
    */
 
-  public static final TypeLiteral<SString> STRING_T = TypeLiteral.get(SString.class);
-  public static final TypeLiteral<SBlob> BLOB_T = TypeLiteral.get(SBlob.class);
-  public static final TypeLiteral<SFile> FILE_T = TypeLiteral.get(SFile.class);
-  public static final TypeLiteral<SArray<SString>> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
-  public static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
-  public static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
-  public static final TypeLiteral<EmptyArray> EMPTY_A_T = TypeLiteral.get(EmptyArray.class);
+  private static final TypeLiteral<SString> STRING_T = TypeLiteral.get(SString.class);
+  private static final TypeLiteral<SBlob> BLOB_T = TypeLiteral.get(SBlob.class);
+  private static final TypeLiteral<SFile> FILE_T = TypeLiteral.get(SFile.class);
+  private static final TypeLiteral<SArray<SString>> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
+  private static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
+  private static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
+  private static final TypeLiteral<EmptyArray> EMPTY_A_T = TypeLiteral.get(EmptyArray.class);
 
   /*
    * Names of smooth types.
@@ -93,10 +93,6 @@ public class Type<T extends Value> {
 
   public String name() {
     return name;
-  }
-
-  public TypeLiteral<? extends Value> javaTypeLiteral() {
-    return javaType;
   }
 
   public ImmutableList<Type<?>> superTypes() {
