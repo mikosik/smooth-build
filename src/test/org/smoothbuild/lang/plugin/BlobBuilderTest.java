@@ -33,7 +33,7 @@ public class BlobBuilderTest {
 
   @Test
   public void build_returns_blob_stored_in_object_db_with_empty_content() throws Exception {
-    BDDMockito.given(valueDb.blob(new byte[] {})).willReturn(blob);
+    BDDMockito.given(valueDb.writeBlob(new byte[] {})).willReturn(blob);
     given(blobBuilder).openOutputStream();
     when(blobBuilder).build();
     thenReturned(blob);
@@ -41,7 +41,7 @@ public class BlobBuilderTest {
 
   @Test
   public void build_returns_blob_stored_in_object_db() throws Exception {
-    BDDMockito.given(valueDb.blob(bytes)).willReturn(blob);
+    BDDMockito.given(valueDb.writeBlob(bytes)).willReturn(blob);
     given(blobBuilder.openOutputStream()).write(bytes);
     when(blobBuilder).build();
     thenReturned(blob);

@@ -76,7 +76,7 @@ public class SandboxImpl implements Sandbox {
 
   @Override
   public SString string(String string) {
-    return valueDb.string(string);
+    return valueDb.writeString(string);
   }
 
   public FileSystem projectFileSystem() {

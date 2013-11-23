@@ -25,8 +25,8 @@ public class ArrayNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
-  SString string1 = sandbox.objectDb().string("string1");
-  SString string2 = sandbox.objectDb().string("string2");
+  SString string1 = sandbox.objectDb().writeString("string1");
+  SString string2 = sandbox.objectDb().writeString("string2");
 
   Node node1 = mock(Node.class);
   Node node2 = mock(Node.class);

@@ -66,7 +66,7 @@ public class TaskDbTest {
 
   @Test
   public void stored_messages_can_be_read_back() throws Exception {
-    given(file = valueDb.file(path, bytes));
+    given(file = valueDb.writeFile(path, bytes));
     given(message = new Message(ERROR, "message string"));
     given(taskDb).store(hash, new CachedResult(file, ImmutableList.of(message)));
     when(taskDb.read(hash).messages());
@@ -76,7 +76,7 @@ public class TaskDbTest {
   @SuppressWarnings("unchecked")
   @Test
   public void stored_file_array_can_be_read_back() throws Exception {
-    given(file = valueDb.file(path, bytes));
+    given(file = valueDb.writeFile(path, bytes));
     given(fileArray = valueDb.fileArrayBuilder().add(file).build());
     given(taskDb).store(hash, new CachedResult(fileArray, Empty.messageList()));
     when(((SArray<SFile>) taskDb.read(hash).value()).iterator().next());
@@ -86,7 +86,7 @@ public class TaskDbTest {
   @SuppressWarnings("unchecked")
   @Test
   public void stored_blob_array_can_be_read_back() throws Exception {
-    given(blob = valueDb.blob(bytes));
+    given(blob = valueDb.writeBlob(bytes));
     given(blobArray = valueDb.blobArrayBuilder().add(blob).build());
     given(taskDb).store(hash, new CachedResult(blobArray, Empty.messageList()));
     when(((SArray<SBlob>) taskDb.read(hash).value()).iterator().next());
@@ -96,7 +96,7 @@ public class TaskDbTest {
   @SuppressWarnings("unchecked")
   @Test
   public void stored_string_array_can_be_read_back() throws Exception {
-    given(stringValue = valueDb.string(string));
+    given(stringValue = valueDb.writeString(string));
     given(stringArray = valueDb.stringArrayBuilder().add(stringValue).build());
     given(taskDb).store(hash, new CachedResult(stringArray, Empty.messageList()));
     when(((SArray<SString>) taskDb.read(hash).value()).iterator().next());
@@ -105,7 +105,7 @@ public class TaskDbTest {
 
   @Test
   public void stored_file_can_be_read_back() throws Exception {
-    given(file = valueDb.file(path, bytes));
+    given(file = valueDb.writeFile(path, bytes));
     given(taskDb).store(hash, new CachedResult(file, Empty.messageList()));
     when(taskDb.read(hash).value());
     thenReturned(file);
@@ -113,7 +113,7 @@ public class TaskDbTest {
 
   @Test
   public void stored_blob_can_be_read_back() throws Exception {
-    given(blob = valueDb.blob(bytes));
+    given(blob = valueDb.writeBlob(bytes));
     given(taskDb).store(hash, new CachedResult(blob, Empty.messageList()));
     when(taskDb.read(hash).value());
     thenReturned(blob);
@@ -121,7 +121,7 @@ public class TaskDbTest {
 
   @Test
   public void stored_string_can_be_read_back() throws Exception {
-    given(stringValue = valueDb.string(string));
+    given(stringValue = valueDb.writeString(string));
     given(taskDb).store(hash, new CachedResult(stringValue, Empty.messageList()));
     when(((SString) taskDb.read(hash).value()).value());
     thenReturned(string);

@@ -1,8 +1,8 @@
 package org.smoothbuild.io.cache.task;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.smoothbuild.lang.type.Type.STRING_T;
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.List;
 
@@ -18,7 +18,6 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -42,7 +41,7 @@ public class TaskDb {
     ImmutableList<Message> messages = cachedResult.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
-      SString messageString = valueDb.string(message.message());
+      SString messageString = valueDb.writeString(message.message());
 
       marshaller.write(AllMessageTypes.INSTANCE.valueToByte(message.type()));
       marshaller.write(messageString.hash());
@@ -69,7 +68,7 @@ public class TaskDb {
       for (int i = 0; i < size; i++) {
         MessageType type = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();
-        String messageString = valueDb.string(messageStringHash).value();
+        String messageString = valueDb.read(STRING_T, messageStringHash).value();
         messages.add(new Message(type, messageString));
         hasErrors = hasErrors || type == ERROR;
       }
@@ -79,32 +78,9 @@ public class TaskDb {
       } else {
         Type type = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
         HashCode resultObjectHash = unmarshaller.readHash();
-        Value value = readValue(type, resultObjectHash);
+        Value value = valueDb.read(type.javaTypeLiteral(), resultObjectHash);
         return new CachedResult(value, messages);
       }
     }
-  }
-
-  private Value readValue(Type type, HashCode resultObjectHash) {
-    if (type == Type.STRING) {
-      return valueDb.string(resultObjectHash);
-    }
-    if (type == Type.STRING_ARRAY) {
-      return valueDb.stringArray(resultObjectHash);
-    }
-    if (type == Type.FILE) {
-      return valueDb.file(resultObjectHash);
-    }
-    if (type == Type.FILE_ARRAY) {
-      return valueDb.fileArray(resultObjectHash);
-    }
-    if (type == Type.BLOB) {
-      return valueDb.blob(resultObjectHash);
-    }
-    if (type == Type.BLOB_ARRAY) {
-      return valueDb.blobArray(resultObjectHash);
-    }
-    throw new ErrorMessageException(new Message(FATAL,
-        "Bug in smooth binary: Unexpected value type " + type));
   }
 }

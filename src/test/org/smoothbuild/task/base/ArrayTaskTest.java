@@ -17,8 +17,8 @@ import org.smoothbuild.testing.task.exec.FakeSandbox;
 public class ArrayTaskTest {
   FakeSandbox sandbox = new FakeSandbox();
   CodeLocation codeLocation = new FakeCodeLocation();
-  SString string1 = sandbox.objectDb().string("string1");
-  SString string2 = sandbox.objectDb().string("string2");
+  SString string1 = sandbox.objectDb().writeString("string1");
+  SString string2 = sandbox.objectDb().writeString("string2");
 
   Result result1 = new FakeResult(string1);
   Result result2 = new FakeResult(string2);
