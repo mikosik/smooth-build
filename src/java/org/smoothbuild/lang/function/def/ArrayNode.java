@@ -13,7 +13,8 @@ import com.google.common.collect.ImmutableList.Builder;
 public class ArrayNode extends Node {
   private final ImmutableList<? extends Node> elements;
 
-  public ArrayNode(Type arrayType, ImmutableList<? extends Node> elements, CodeLocation codeLocation) {
+  public ArrayNode(Type<?> arrayType, ImmutableList<? extends Node> elements,
+      CodeLocation codeLocation) {
     super(arrayType, codeLocation);
     this.elements = elements;
   }

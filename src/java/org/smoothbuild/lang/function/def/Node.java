@@ -9,15 +9,15 @@ import org.smoothbuild.task.base.Taskable;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 public abstract class Node implements Taskable {
-  private final Type type;
+  private final Type<?> type;
   private final CodeLocation codeLocation;
 
-  public Node(Type type, CodeLocation codeLocation) {
+  public Node(Type<?> type, CodeLocation codeLocation) {
     this.type = checkNotNull(type);
     this.codeLocation = checkNotNull(codeLocation);
   }
 
-  public Type type() {
+  public Type<?> type() {
     return type;
   }
 

@@ -110,7 +110,7 @@ public class DefinedFunctionsCreator {
     public DefinedFunction build(FunctionContext function) {
       Node node = build(function.pipe());
 
-      Type type = node.type();
+      Type<?> type = node.type();
       String name = function.functionName().getText();
       ImmutableList<Param> params = ImmutableList.of();
       Signature signature = new Signature(type, name(name), params);
@@ -159,7 +159,7 @@ public class DefinedFunctionsCreator {
         return new CachingNode(new EmptyArrayNode(locationOf(list)));
       }
 
-      Type elemsType = elemNodes.get(0).type();
+      Type<?> elemsType = elemNodes.get(0).type();
       if (elemsType == Type.STRING) {
         return new CachingNode(new ArrayNode(STRING_ARRAY, elemNodes, locationOf(list)));
       }
@@ -199,7 +199,7 @@ public class DefinedFunctionsCreator {
 
     private boolean areAllElemTypesEqual(List<ArrayElemContext> elems, List<Node> elemNodes) {
       boolean success = true;
-      Type firstType = elemNodes.get(0).type();
+      Type<?> firstType = elemNodes.get(0).type();
       for (int i = 0; i < elemNodes.size(); i++) {
         Node elemNode = elemNodes.get(i);
         if (elemNode.type() != firstType) {

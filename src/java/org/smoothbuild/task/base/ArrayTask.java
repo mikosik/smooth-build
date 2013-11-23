@@ -11,10 +11,10 @@ import org.smoothbuild.task.exec.SandboxImpl;
 import com.google.common.collect.ImmutableList;
 
 public class ArrayTask extends Task {
-  private final Type arrayType;
+  private final Type<?> arrayType;
   private final ImmutableList<Result> elements;
 
-  public ArrayTask(Type arrayType, List<Result> elements, CodeLocation codeLocation) {
+  public ArrayTask(Type<?> arrayType, List<Result> elements, CodeLocation codeLocation) {
     super(arrayType.name(), true, codeLocation);
     this.arrayType = arrayType;
     this.elements = ImmutableList.copyOf(elements);

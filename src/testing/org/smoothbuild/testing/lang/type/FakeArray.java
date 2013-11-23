@@ -15,7 +15,7 @@ import com.google.common.hash.HashCode;
 public class FakeArray extends AbstractValue implements SArray<SFile> {
   private final List<SFile> files = Lists.newArrayList();
 
-  public FakeArray(Type type) {
+  public FakeArray(Type<?> type) {
     super(type, HashCode.fromInt(0));
   }
 

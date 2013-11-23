@@ -7,7 +7,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 
 public class ForbiddenArrayElemTypeError extends CodeMessage {
-  public ForbiddenArrayElemTypeError(CodeLocation codeLocation, Type type) {
+  public ForbiddenArrayElemTypeError(CodeLocation codeLocation, Type<?> type) {
     super(ERROR, codeLocation, "Array cannot contain element of type " + type
         + ". Only following types are allowed: " + Type.allowedForArrayElem());
   }

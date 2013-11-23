@@ -17,9 +17,9 @@ import com.google.common.collect.Sets;
 
 public class ParamsPool {
   private final ImmutableMap<String, Param> params;
-  private final ImmutableMap<Type, TypedParamsPool> typePools;
-  private final Map<Type, Set<Param>> optionalParamsMap;
-  private final Map<Type, Set<Param>> requiredParamsMap;
+  private final ImmutableMap<Type<?>, TypedParamsPool> typePools;
+  private final Map<Type<?>, Set<Param>> optionalParamsMap;
+  private final Map<Type<?>, Set<Param>> requiredParamsMap;
 
   public ParamsPool(ImmutableMap<String, Param> params) {
     this.params = params;
@@ -48,7 +48,7 @@ public class ParamsPool {
     }
   }
 
-  public TypedParamsPool availableForType(Type type) {
+  public TypedParamsPool availableForType(Type<?> type) {
     return typePools.get(type);
   }
 
@@ -60,15 +60,15 @@ public class ParamsPool {
     return result;
   }
 
-  private static ImmutableMap<Type, TypedParamsPool> createTypePools(
-      Map<Type, Set<Param>> optionalParamsMap, Map<Type, Set<Param>> requiredParamsMap) {
+  private static ImmutableMap<Type<?>, TypedParamsPool> createTypePools(
+      Map<Type<?>, Set<Param>> optionalParamsMap, Map<Type<?>, Set<Param>> requiredParamsMap) {
 
-    Builder<Type, TypedParamsPool> builder = ImmutableMap.builder();
-    for (Type type : Type.allTypes()) {
+    Builder<Type<?>, TypedParamsPool> builder = ImmutableMap.builder();
+    for (Type<?> type : Type.allTypes()) {
       Set<Param> optional = optionalParamsMap.get(type);
       Set<Param> required = requiredParamsMap.get(type);
 
-      for (Type superType : type.superTypes()) {
+      for (Type<?> superType : type.superTypes()) {
         optional = Sets.union(optional, optionalParamsMap.get(superType));
         required = Sets.union(required, requiredParamsMap.get(superType));
       }
@@ -79,10 +79,10 @@ public class ParamsPool {
     return builder.build();
   }
 
-  private static Map<Type, Set<Param>> createParamsMap(ImmutableMap<String, Param> allParams,
+  private static Map<Type<?>, Set<Param>> createParamsMap(ImmutableMap<String, Param> allParams,
       boolean requiredParams) {
-    Map<Type, Set<Param>> map = Maps.newHashMap();
-    for (Type type : Type.allTypes()) {
+    Map<Type<?>, Set<Param>> map = Maps.newHashMap();
+    for (Type<?> type : Type.allTypes()) {
       HashSet<Param> set = Sets.<Param> newHashSet();
       for (Param param : allParams.values()) {
         if (param.isRequired() == requiredParams && param.type() == type) {

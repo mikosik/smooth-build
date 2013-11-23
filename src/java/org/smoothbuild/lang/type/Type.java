@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
-public class Type {
+public class Type<T extends Value> {
   /*
    * Java types representing smooth types. These types are used by native
    * function implementations in plugins code.
@@ -35,14 +35,16 @@ public class Type {
    * Smooth types. Used by smooth-build code to represent smooth types.
    */
 
-  public static final Type STRING = new Type(STRING_N, STRING_T);
-  public static final Type BLOB = new Type(BLOB_N, BLOB_T);
-  public static final Type FILE = new Type(FILE_N, FILE_T, BLOB);
-  public static final Type STRING_ARRAY = new Type(STRING_A_N, STRING_A_T);
-  public static final Type BLOB_ARRAY = new Type(BLOB_A_N, BLOB_A_T);
-  public static final Type FILE_ARRAY = new Type(FILE_A_N, FILE_A_T, BLOB_ARRAY);
-  public static final Type EMPTY_ARRAY = new Type(EMPTY_A_N, EMPTY_A_T, STRING_ARRAY, BLOB_ARRAY,
-      FILE_ARRAY);
+  public static final Type<SString> STRING = new Type<SString>(STRING_N, STRING_T);
+  public static final Type<SBlob> BLOB = new Type<SBlob>(BLOB_N, BLOB_T);
+  public static final Type<SFile> FILE = new Type<SFile>(FILE_N, FILE_T, BLOB);
+  public static final Type<SArray<SString>> STRING_ARRAY = new Type<SArray<SString>>(STRING_A_N,
+      STRING_A_T);
+  public static final Type<SArray<SBlob>> BLOB_ARRAY = new Type<SArray<SBlob>>(BLOB_A_N, BLOB_A_T);
+  public static final Type<SArray<SFile>> FILE_ARRAY = new Type<SArray<SFile>>(FILE_A_N, FILE_A_T,
+      BLOB_ARRAY);
+  public static final Type<EmptyArray> EMPTY_ARRAY = new Type<EmptyArray>(EMPTY_A_N, EMPTY_A_T,
+      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
 
   /*
    * Not each type can be used in every place. Each set below represent one
@@ -50,12 +52,15 @@ public class Type {
    * be used there.
    */
 
-  static final ImmutableSet<Type> ARRAY_ELEM_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
-  static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+  static final ImmutableSet<Type<?>> ARRAY_ELEM_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  @SuppressWarnings("unchecked")
+  static final ImmutableSet<Type<?>> RESULT_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
       BLOB_ARRAY, FILE, FILE_ARRAY);
-  static final ImmutableSet<Type> PARAM_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+  @SuppressWarnings("unchecked")
+  static final ImmutableSet<Type<?>> PARAM_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
       BLOB_ARRAY, FILE, FILE_ARRAY);
-  static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+  @SuppressWarnings("unchecked")
+  static final ImmutableSet<Type<?>> ALL_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
       BLOB_ARRAY, FILE, FILE_ARRAY, EMPTY_ARRAY);
 
   /*
@@ -69,8 +74,8 @@ public class Type {
    * A few handy mappings.
    */
 
-  static final ImmutableMap<TypeLiteral<?>, Type> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
-  static final ImmutableMap<TypeLiteral<?>, Type> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
+  static final ImmutableMap<TypeLiteral<?>, Type<?>> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
+  static final ImmutableMap<TypeLiteral<?>, Type<?>> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
 
   /*
    * Instance fields.
@@ -78,9 +83,9 @@ public class Type {
 
   private final String name;
   private final TypeLiteral<? extends Value> javaType;
-  private final ImmutableList<Type> superTypes;
+  private final ImmutableList<Type<?>> superTypes;
 
-  private Type(String name, TypeLiteral<? extends Value> javaType, Type... superTypes) {
+  private Type(String name, TypeLiteral<T> javaType, Type<?>... superTypes) {
     this.name = name;
     this.javaType = javaType;
     this.superTypes = ImmutableList.copyOf(superTypes);
@@ -94,15 +99,15 @@ public class Type {
     return javaType;
   }
 
-  public ImmutableList<Type> superTypes() {
+  public ImmutableList<Type<?>> superTypes() {
     return superTypes;
   }
 
-  public boolean isAssignableFrom(Type type) {
+  public boolean isAssignableFrom(Type<?> type) {
     if (this == type) {
       return true;
     }
-    for (Type superType : type.superTypes) {
+    for (Type<?> superType : type.superTypes) {
       if (this.isAssignableFrom(superType)) {
         return true;
       }
@@ -125,15 +130,15 @@ public class Type {
     return "'" + name + "'";
   }
 
-  public static ImmutableSet<Type> allowedForArrayElem() {
+  public static ImmutableSet<Type<?>> allowedForArrayElem() {
     return ARRAY_ELEM_TYPES;
   }
 
-  public static ImmutableSet<Type> allowedForParam() {
+  public static ImmutableSet<Type<?>> allowedForParam() {
     return PARAM_TYPES;
   }
 
-  public static ImmutableSet<Type> allTypes() {
+  public static ImmutableSet<Type<?>> allTypes() {
     return ALL_TYPES;
   }
 
@@ -145,28 +150,28 @@ public class Type {
     return PARAM_JAVA_TYPES;
   }
 
-  public static Type javaParamTypetoType(TypeLiteral<?> javaType) {
+  public static Type<?> javaParamTypetoType(TypeLiteral<?> javaType) {
     return JAVA_PARAM_TO_SMOOTH.get(javaType);
   }
 
-  public static Type javaResultTypetoType(TypeLiteral<?> javaType) {
+  public static Type<?> javaResultTypetoType(TypeLiteral<?> javaType) {
     return JAVA_RESULT_TO_SMOOTH.get(javaType);
   }
 
-  private static ImmutableSet<TypeLiteral<?>> toJavaTypes(Iterable<Type> types) {
+  private static ImmutableSet<TypeLiteral<?>> toJavaTypes(Iterable<Type<?>> types) {
     ImmutableSet.Builder<TypeLiteral<?>> builder = ImmutableSet.builder();
 
-    for (Type type : types) {
+    for (Type<?> type : types) {
       builder.add(type.javaType);
     }
 
     return builder.build();
   }
 
-  private static ImmutableMap<TypeLiteral<?>, Type> javaToTypeMap(Iterable<Type> types) {
-    ImmutableMap.Builder<TypeLiteral<?>, Type> builder = ImmutableMap.builder();
+  private static ImmutableMap<TypeLiteral<?>, Type<?>> javaToTypeMap(Iterable<Type<?>> types) {
+    ImmutableMap.Builder<TypeLiteral<?>, Type<?>> builder = ImmutableMap.builder();
 
-    for (Type type : types) {
+    for (Type<?> type : types) {
       builder.put(type.javaType, type);
     }
 

@@ -142,9 +142,9 @@ public class ValueDb {
 
   private class ArrayReader<T extends Value> implements ValueReader<SArray<T>> {
     private final ValueReader<T> valueReader;
-    private final Type arrayType;
+    private final Type<?> arrayType;
 
-    public ArrayReader(Type arrayType, ValueReader<T> valueReader) {
+    public ArrayReader(Type<?> arrayType, ValueReader<T> valueReader) {
       this.arrayType = checkNotNull(arrayType);
       this.valueReader = checkNotNull(valueReader);
     }

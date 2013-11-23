@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Name.name;
@@ -9,6 +10,7 @@ import static org.smoothbuild.lang.type.Type.STRING;
 import java.util.Map;
 
 import org.junit.Test;
+import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
@@ -27,7 +29,7 @@ public class CallNodeTest {
 
   @Test
   public void type() throws Exception {
-    when(function.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(function).type();
     when(function.name()).thenReturn(name("function"));
 
     ImmutableMap<String, Node> empty = ImmutableMap.<String, Node> of();
@@ -41,7 +43,7 @@ public class CallNodeTest {
     Node node = mock(Node.class);
     Task task = mock(Task.class);
     when(function.name()).thenReturn(name("function"));
-    when(function.type()).thenReturn(STRING);
+    willReturn(STRING).given(function).type();
 
     Result result = new FakeResult(new FakeString("arg"));
 

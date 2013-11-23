@@ -19,7 +19,8 @@ public class HelpersTest {
 
   @Test
   public void createMap() {
-    ImmutableMap<Type, Set<Object>> map = Helpers.createMap(ImmutableSet.of(STRING, STRING_ARRAY));
+    ImmutableSet<Type<?>> set = ImmutableSet.of(STRING, STRING_ARRAY);
+    ImmutableMap<Type<?>, Set<Object>> map = Helpers.createMap(set);
 
     assertThat(map.get(STRING)).isEmpty();
     assertThat(map.get(STRING_ARRAY)).isEmpty();

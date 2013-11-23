@@ -4,11 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.type.Type.STRING;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import java.util.Map;
 
 import org.junit.Test;
+import org.mockito.BDDMockito;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
@@ -28,8 +30,8 @@ public class AbstractFunctionTest {
 
   @Test
   public void type() {
-    when(signature.type()).thenReturn(Type.STRING);
-    assertThat(function.type()).isEqualTo(Type.STRING);
+    BDDMockito.willReturn(STRING).given(signature).type();
+    assertThat(function.type()).isEqualTo(STRING);
   }
 
   @Test

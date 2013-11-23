@@ -13,17 +13,17 @@ import com.google.common.collect.Sets;
  * Function's signature.
  */
 public class Signature {
-  private final Type type;
+  private final Type<?> type;
   private final Name name;
   private final ImmutableMap<String, Param> params;
 
-  public Signature(Type type, Name name, Iterable<Param> params) {
+  public Signature(Type<?> type, Name name, Iterable<Param> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.params = createParamsMap(params);
   }
 
-  public Type type() {
+  public Type<?> type() {
     return type;
   }
 

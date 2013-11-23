@@ -36,7 +36,7 @@ public class SandboxImpl implements Sandbox {
     this.messageGroup = messageGroup;
   }
 
-  public ArrayBuilder<?> arrayBuilder(Type arrayType) {
+  public ArrayBuilder<?> arrayBuilder(Type<?> arrayType) {
     if (arrayType == FILE_ARRAY) {
       return fileArrayBuilder();
     }
