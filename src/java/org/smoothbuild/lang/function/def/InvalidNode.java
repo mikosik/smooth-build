@@ -11,15 +11,15 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 public class InvalidNode extends Node {
-  private final Type type;
+  private final Type<?> type;
 
-  public InvalidNode(Type type, CodeLocation codeLocation) {
+  public InvalidNode(Type<?> type, CodeLocation codeLocation) {
     super(type, codeLocation);
     this.type = checkNotNull(type);
   }
 
   @Override
-  public Type type() {
+  public Type<?> type() {
     return type;
   }
 

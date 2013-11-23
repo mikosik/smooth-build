@@ -19,7 +19,7 @@ public abstract class AbstractFunction implements Function {
   }
 
   @Override
-  public Type type() {
+  public Type<?> type() {
     return signature.type();
   }
 

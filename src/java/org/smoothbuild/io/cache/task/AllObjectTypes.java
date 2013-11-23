@@ -10,7 +10,7 @@ import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 import org.smoothbuild.io.cache.hash.EnumValues;
 import org.smoothbuild.lang.type.Type;
 
-public class AllObjectTypes extends EnumValues<Type> {
+public class AllObjectTypes extends EnumValues<Type<?>> {
   public static final AllObjectTypes INSTANCE = new AllObjectTypes();
 
   private AllObjectTypes() {

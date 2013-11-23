@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableMap;
 public interface Function {
   public Signature signature();
 
-  public Type type();
+  public Type<?> type();
 
   public Name name();
 

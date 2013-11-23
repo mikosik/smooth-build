@@ -72,7 +72,7 @@ public class AbstractValueTest {
   }
 
   private static class MyAbstractValue extends AbstractValue {
-    public MyAbstractValue(Type type, HashCode hash) {
+    public MyAbstractValue(Type<?> type, HashCode hash) {
       super(type, hash);
     }
   }

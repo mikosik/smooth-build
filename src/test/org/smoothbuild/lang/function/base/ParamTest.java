@@ -3,7 +3,6 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.Param.paramsToString;
 import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
@@ -13,6 +12,7 @@ import static org.smoothbuild.lang.type.Type.STRING;
 import java.util.Set;
 
 import org.junit.Test;
+import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.Type;
 
@@ -56,7 +56,7 @@ public class ParamTest {
 
     tester.addEqualityGroup(param(STRING, "equal", false), param(STRING, "equal", false));
 
-    for (Type type : Type.allowedForParam()) {
+    for (Type<?> type : Type.allowedForParam()) {
       tester.addEqualityGroup(param(type, "name", false));
       tester.addEqualityGroup(param(type, "name", true));
       tester.addEqualityGroup(param(type, "name2", false));
@@ -69,7 +69,7 @@ public class ParamTest {
   @Test
   public void toPaddedString() throws Exception {
     Node abstractNode = mock(Node.class);
-    when(abstractNode.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(abstractNode).type();
 
     Param param = param(STRING, "myName", false);
     String actual = param.toPaddedString(10, 13);
@@ -80,7 +80,7 @@ public class ParamTest {
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
     Node abstractNode = mock(Node.class);
-    when(abstractNode.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(abstractNode).type();
 
     Param param = param(STRING, "myName", false);
     String actual = param.toPaddedString(1, 1);

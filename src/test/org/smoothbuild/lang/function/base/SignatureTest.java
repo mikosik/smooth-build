@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class SignatureTest {
-  Type type = Type.STRING;
+  Type<?> type = Type.STRING;
   Name name = name("name");
   ImmutableList<Param> params = ImmutableList.of();
 

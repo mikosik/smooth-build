@@ -26,7 +26,7 @@ public class SignatureFactory {
 
   public static Signature create(Method method, Class<?> paramsInterface)
       throws NativeImplementationException {
-    Type type = getReturnType(method);
+    Type<?> type = getReturnType(method);
     Name name = getFunctionName(method);
     Iterable<Param> params = getParams(method, paramsInterface);
 
@@ -45,9 +45,9 @@ public class SignatureFactory {
     }
   }
 
-  private static Type getReturnType(Method method) throws NativeImplementationException {
+  private static Type<?> getReturnType(Method method) throws NativeImplementationException {
     TypeLiteral<?> javaType = javaMethodReturnType(method);
-    Type type = Type.javaResultTypetoType(javaType);
+    Type<?> type = Type.javaResultTypetoType(javaType);
     if (type == null) {
       throw new IllegalReturnTypeException(method, javaType);
     }
@@ -74,7 +74,7 @@ public class SignatureFactory {
     }
 
     TypeLiteral<?> javaType = javaMethodReturnType(paramMethod);
-    Type type = Type.javaParamTypetoType(javaType);
+    Type<?> type = Type.javaParamTypetoType(javaType);
     if (type == null) {
       throw new ForbiddenParamTypeException(method, paramMethod, javaType);
     }

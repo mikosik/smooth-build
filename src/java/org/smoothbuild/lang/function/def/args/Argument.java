@@ -62,7 +62,7 @@ public class Argument {
     return name == null ? "<nameless>" : name;
   }
 
-  public Type type() {
+  public Type<?> type() {
     return node.type();
   }
 
@@ -105,11 +105,11 @@ public class Argument {
     return builder.build();
   }
 
-  public static ImmutableMap<Type, Set<Argument>> filterNameless(Collection<Argument> arguments) {
-    ImmutableMap<Type, Set<Argument>> result = Helpers.createMap(Type.allTypes());
+  public static ImmutableMap<Type<?>, Set<Argument>> filterNameless(Collection<Argument> arguments) {
+    ImmutableMap<Type<?>, Set<Argument>> result = Helpers.createMap(Type.allTypes());
     for (Argument argument : arguments) {
       if (!argument.hasName()) {
-        Type type = argument.node().type();
+        Type<?> type = argument.node().type();
         result.get(type).add(argument);
       }
     }

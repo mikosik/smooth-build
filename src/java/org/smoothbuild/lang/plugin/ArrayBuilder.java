@@ -16,11 +16,11 @@ import com.google.common.hash.HashCode;
 
 public class ArrayBuilder<T extends Value> {
   private final HashedDb hashedDb;
-  private final Type arrayType;
+  private final Type<?> arrayType;
   private final ValueReader<T> valueReader;
   private final List<T> result;
 
-  public ArrayBuilder(HashedDb hashedDb, Type arrayType, ValueReader<T> valueReader) {
+  public ArrayBuilder(HashedDb hashedDb, Type<?> arrayType, ValueReader<T> valueReader) {
     this.hashedDb = hashedDb;
     this.arrayType = arrayType;
     this.valueReader = valueReader;
@@ -36,7 +36,7 @@ public class ArrayBuilder<T extends Value> {
     return array(result, arrayType, valueReader);
   }
 
-  private SArray<T> array(List<T> elements, Type type, ValueReader<T> valueReader) {
+  private SArray<T> array(List<T> elements, Type<?> type, ValueReader<T> valueReader) {
     HashCode hash = genericArray(elements);
     return new CachedArray<T>(hashedDb, hash, type, valueReader);
   }

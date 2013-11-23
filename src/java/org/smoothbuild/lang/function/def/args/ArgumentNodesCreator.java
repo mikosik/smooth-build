@@ -111,7 +111,7 @@ public class ArgumentNodesCreator {
         if (argument.hasName()) {
           String name = argument.name();
           Param param = paramsPool.takeByName(name);
-          Type paramType = param.type();
+          Type<?> paramType = param.type();
           if (!paramType.isAssignableFrom(argument.type())) {
             messages.report(new TypeMismatchError(argument, paramType));
           } else {
@@ -122,9 +122,9 @@ public class ArgumentNodesCreator {
     }
 
     private void processNamelessArguments(AssignmentList assignmentList) {
-      ImmutableMap<Type, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
+      ImmutableMap<Type<?>, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
 
-      for (Type type : Type.allTypes()) {
+      for (Type<?> type : Type.allTypes()) {
         Set<Argument> availableArgs = namelessArgs.get(type);
         int argsSize = availableArgs.size();
         if (0 < argsSize) {
@@ -157,7 +157,7 @@ public class ArgumentNodesCreator {
     }
 
     private Node argumentNode(Assignment assignment) {
-      Type type = assignment.param().type();
+      Type<?> type = assignment.param().type();
       Argument argument = assignment.argument();
       if (argument.type() == EMPTY_ARRAY) {
         if (type == Type.STRING_ARRAY) {

@@ -18,7 +18,7 @@ public class CachedArray<T extends Value> extends AbstractValue implements SArra
   private final HashedDb hashedDb;
   private final ValueReader<T> valueReader;
 
-  public CachedArray(HashedDb hashedDb, HashCode hash, Type type, ValueReader<T> valueReader) {
+  public CachedArray(HashedDb hashedDb, HashCode hash, Type<?> type, ValueReader<T> valueReader) {
     super(type, hash);
     this.valueReader = checkNotNull(valueReader);
     this.hashedDb = checkNotNull(hashedDb);

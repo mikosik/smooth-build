@@ -3,7 +3,6 @@ package org.smoothbuild.lang.function.def.args;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
@@ -11,6 +10,7 @@ import static org.smoothbuild.lang.type.Type.FILE;
 import static org.smoothbuild.lang.type.Type.STRING;
 
 import org.junit.Test;
+import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.Type;
@@ -101,17 +101,17 @@ public class AssignmentListTest {
     assertThat(actual).isEqualTo(expected.toString());
   }
 
-  private static Argument arg(Type type) {
+  private static Argument arg(Type<?> type) {
     return arg(type, "name");
   }
 
-  private static Argument arg(Type type, String name) {
+  private static Argument arg(Type<?> type, String name) {
     return arg(1, type, name);
   }
 
-  private static Argument arg(int number, Type type, String name) {
+  private static Argument arg(int number, Type<?> type, String name) {
     Node node = mock(Node.class);
-    when(node.type()).thenReturn(type);
+    BDDMockito.willReturn(type).given(node).type();
 
     return namedArg(number, name, node, new FakeCodeLocation());
   }

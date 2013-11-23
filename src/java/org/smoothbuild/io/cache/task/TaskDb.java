@@ -76,7 +76,7 @@ public class TaskDb {
       if (hasErrors) {
         return new CachedResult(null, messages);
       } else {
-        Type type = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
+        Type<?> type = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
         HashCode resultObjectHash = unmarshaller.readHash();
         Value value = valueDb.read(type.javaTypeLiteral(), resultObjectHash);
         return new CachedResult(value, messages);

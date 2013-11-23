@@ -2,8 +2,8 @@ package org.smoothbuild.lang.function.def.args.err;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
@@ -75,10 +75,9 @@ public class AmbiguousNamelessArgsErrorTest {
     assertThat(error.toString()).isEqualTo(builder.toString());
   }
 
-  private Node node(Type type) {
+  private Node node(Type<?> type) {
     Node result = mock(Node.class);
-    when(result.type()).thenReturn(type);
+    willReturn(type).given(result).type();
     return result;
   }
-
 }

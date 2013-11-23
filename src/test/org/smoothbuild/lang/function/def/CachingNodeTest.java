@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.smoothbuild.lang.type.Type.STRING;
 
 import org.junit.Test;
+import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
@@ -38,7 +39,7 @@ public class CachingNodeTest {
   private static Node node() {
     Node node = mock(Node.class);
     Mockito.when(node.codeLocation()).thenReturn(new FakeCodeLocation());
-    Mockito.when(node.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(node).type();
     return node;
   }
 }

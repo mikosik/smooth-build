@@ -10,31 +10,31 @@ import java.util.Set;
 import org.smoothbuild.lang.type.Type;
 
 public class Param {
-  private final Type type;
+  private final Type<?> type;
   private final String name;
   private final boolean isRequired;
 
-  public static Param param(Type type, String name) {
+  public static Param param(Type<?> type, String name) {
     return param(type, name, false);
   }
 
-  public static Param param(Type type, String name, boolean isRequired) {
+  public static Param param(Type<?> type, String name, boolean isRequired) {
     return new Param(type, name, isRequired);
   }
 
-  protected Param(Type type, String name, boolean isRequired) {
+  protected Param(Type<?> type, String name, boolean isRequired) {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
   }
 
-  private Type checkAllowedType(Type type) {
+  private Type<?> checkAllowedType(Type<?> type) {
     checkNotNull(type);
     checkArgument(allowedForParam().contains(type));
     return type;
   }
 
-  public Type type() {
+  public Type<?> type() {
     return type;
   }
 

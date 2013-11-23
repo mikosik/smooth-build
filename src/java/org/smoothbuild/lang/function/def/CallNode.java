@@ -23,7 +23,7 @@ public class CallNode extends Node {
   }
 
   @Override
-  public Type type() {
+  public Type<?> type() {
     return function.type();
   }
 

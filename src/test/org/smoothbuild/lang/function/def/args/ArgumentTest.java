@@ -2,7 +2,6 @@ package org.smoothbuild.lang.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
@@ -15,6 +14,7 @@ import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
 import java.util.Set;
 
 import org.junit.Test;
+import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
@@ -85,8 +85,8 @@ public class ArgumentTest {
 
   @Test
   public void typeReturnsTypeOfNode() throws Exception {
-    when(node.type()).thenReturn(FILE);
-    Type arg = namedArg(1, name, node, codeLocation).type();
+    BDDMockito.willReturn(FILE).given(node).type();
+    Type<?> arg = namedArg(1, name, node, codeLocation).type();
     assertThat(arg).isEqualTo(FILE);
   }
 
@@ -122,19 +122,19 @@ public class ArgumentTest {
 
   @Test
   public void namedArgToString() throws Exception {
-    when(node.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(node).type();
     assertThat(namedArg(1, name, node, codeLocation).toString()).isEqualTo("String:" + name);
   }
 
   @Test
   public void namelessArgToString() throws Exception {
-    when(node.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(node).type();
     assertThat(namelessArg(1, node, codeLocation).toString()).isEqualTo("String:<nameless>");
   }
 
   @Test
   public void toPaddedString() throws Exception {
-    when(node.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(node).type();
 
     Argument arg = namedArg(1, "myName", node, codeLocation);
     String actual = arg.toPaddedString(10, 13, 7);
@@ -144,7 +144,7 @@ public class ArgumentTest {
 
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
-    when(node.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(node).type();
 
     Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
     String actual = arg.toPaddedString(1, 1, 1);
@@ -174,12 +174,12 @@ public class ArgumentTest {
     doTestFilterNameless(EMPTY_ARRAY);
   }
 
-  private void doTestFilterNameless(Type type) {
+  private void doTestFilterNameless(Type<?> type) {
     Argument named1 = named("name1");
     Argument named2 = named("name2");
     Argument nameless = nameless(type);
 
-    ImmutableMap<Type, Set<Argument>> actual = Argument.filterNameless(ImmutableList.of(named1,
+    ImmutableMap<Type<?>, Set<Argument>> actual = Argument.filterNameless(ImmutableList.of(named1,
         named2, nameless));
 
     assertThat(actual.get(type)).containsOnly(nameless);
@@ -193,9 +193,9 @@ public class ArgumentTest {
     return nameless(Type.STRING);
   }
 
-  private static Argument nameless(Type type) {
+  private static Argument nameless(Type<?> type) {
     Node node = mock(Node.class);
-    when(node.type()).thenReturn(type);
+    BDDMockito.willReturn(type).given(node).type();
     return Argument.namelessArg(1, node, new FakeCodeLocation());
   }
 }

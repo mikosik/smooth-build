@@ -15,7 +15,7 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import org.testory.common.Closure;
 
 public class NodeTest {
-  Type type;
+  Type<?> type;
   CodeLocation codeLocation;
 
   MyNode node;
@@ -51,7 +51,7 @@ public class NodeTest {
     thenReturned(codeLocation);
   }
 
-  private static Closure $myNode(final Type type, final CodeLocation codeLocation) {
+  private static Closure $myNode(final Type<?> type, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
@@ -61,7 +61,7 @@ public class NodeTest {
   }
 
   public static class MyNode extends Node {
-    public MyNode(Type type, CodeLocation codeLocation) {
+    public MyNode(Type<?> type, CodeLocation codeLocation) {
       super(type, codeLocation);
     }
 

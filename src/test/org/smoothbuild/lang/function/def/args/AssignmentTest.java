@@ -14,7 +14,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.testing.message.FakeCodeLocation;
@@ -44,7 +44,7 @@ public class AssignmentTest {
   @Test
   public void incompatible_param_and_argument_throws_exception() throws Exception {
     Node argNode = mock(Node.class);
-    Mockito.when(argNode.type()).thenReturn(FILE);
+    BDDMockito.willReturn(FILE).given(argNode).type();
     argument = pipedArg(argNode, new FakeCodeLocation());
     try {
       assignment(param(STRING, "name"), argument);
@@ -57,7 +57,7 @@ public class AssignmentTest {
   @Test
   public void param_and_argument_are_returned() throws Exception {
     Node argNode = mock(Node.class);
-    Mockito.when(argNode.type()).thenReturn(STRING);
+    BDDMockito.willReturn(STRING).given(argNode).type();
     String name = "name";
     param = param(STRING, name);
     argument = pipedArg(argNode, new FakeCodeLocation());
