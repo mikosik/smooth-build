@@ -10,15 +10,20 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 public class FakeValueDb extends ValueDb {
+
   public FakeValueDb() {
     this(new FakeFileSystem());
   }
 
   public FakeValueDb(FileSystem fakeFileSystem) {
-    super(new HashedDb(fakeFileSystem));
+    this(new HashedDb(fakeFileSystem));
+  }
+
+  public FakeValueDb(HashedDb hashedDb) {
+    super(hashedDb);
   }
 
   public SFile createFileContainingItsPath(Path path) {
-    return file(path, path.value().getBytes(CHARSET));
+    return writeFile(path, path.value().getBytes(CHARSET));
   }
 }

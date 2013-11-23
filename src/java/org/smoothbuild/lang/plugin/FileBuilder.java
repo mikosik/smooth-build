@@ -35,6 +35,6 @@ public class FileBuilder {
     checkState(outputStream != null, "No file content available. Create one via openOutputStream()");
     checkState(path != null, "No path set");
 
-    return valueDb.file(path, outputStream.toByteArray());
+    return valueDb.writeFile(path, outputStream.toByteArray());
   }
 }

@@ -11,13 +11,13 @@ public class Type {
    * function implementations in plugins code.
    */
 
-  private static final TypeLiteral<?> STRING_T = TypeLiteral.get(SString.class);
-  private static final TypeLiteral<?> BLOB_T = TypeLiteral.get(SBlob.class);
-  private static final TypeLiteral<?> FILE_T = TypeLiteral.get(SFile.class);
-  private static final TypeLiteral<?> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
-  private static final TypeLiteral<?> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
-  private static final TypeLiteral<?> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
-  private static final TypeLiteral<?> EMPTY_A_T = TypeLiteral.get(EmptyArray.class);
+  public static final TypeLiteral<SString> STRING_T = TypeLiteral.get(SString.class);
+  public static final TypeLiteral<SBlob> BLOB_T = TypeLiteral.get(SBlob.class);
+  public static final TypeLiteral<SFile> FILE_T = TypeLiteral.get(SFile.class);
+  public static final TypeLiteral<SArray<SString>> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
+  public static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
+  public static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
+  public static final TypeLiteral<EmptyArray> EMPTY_A_T = TypeLiteral.get(EmptyArray.class);
 
   /*
    * Names of smooth types.
@@ -77,10 +77,10 @@ public class Type {
    */
 
   private final String name;
-  private final TypeLiteral<?> javaType;
+  private final TypeLiteral<? extends Value> javaType;
   private final ImmutableList<Type> superTypes;
 
-  private Type(String name, TypeLiteral<?> javaType, Type... superTypes) {
+  private Type(String name, TypeLiteral<? extends Value> javaType, Type... superTypes) {
     this.name = name;
     this.javaType = javaType;
     this.superTypes = ImmutableList.copyOf(superTypes);
@@ -88,6 +88,10 @@ public class Type {
 
   public String name() {
     return name;
+  }
+
+  public TypeLiteral<? extends Value> javaTypeLiteral() {
+    return javaType;
   }
 
   public ImmutableList<Type> superTypes() {
@@ -169,7 +173,5 @@ public class Type {
     return builder.build();
   }
 
-  public static class EmptyArray {
-    private EmptyArray() {}
-  }
+  public static interface EmptyArray extends Value {}
 }

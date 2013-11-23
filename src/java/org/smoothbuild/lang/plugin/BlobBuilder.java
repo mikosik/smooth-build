@@ -25,6 +25,6 @@ public class BlobBuilder {
 
   public SBlob build() {
     checkState(outputStream != null, "No content available. Create one via openOutputStream()");
-    return valueDb.blob(outputStream.toByteArray());
+    return valueDb.writeBlob(outputStream.toByteArray());
   }
 }

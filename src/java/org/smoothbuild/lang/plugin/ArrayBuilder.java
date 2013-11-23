@@ -2,22 +2,26 @@ package org.smoothbuild.lang.plugin;
 
 import java.util.List;
 
-import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.hash.HashedDb;
+import org.smoothbuild.io.cache.hash.Marshaller;
+import org.smoothbuild.io.cache.value.CachedArray;
 import org.smoothbuild.io.cache.value.ValueReader;
+import org.smoothbuild.lang.type.Hashed;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 
 import com.google.common.collect.Lists;
+import com.google.common.hash.HashCode;
 
 public class ArrayBuilder<T extends Value> {
-  private final ValueDb valueDb;
+  private final HashedDb hashedDb;
   private final Type arrayType;
   private final ValueReader<T> valueReader;
   private final List<T> result;
 
-  public ArrayBuilder(ValueDb valueDb, Type arrayType, ValueReader<T> valueReader) {
-    this.valueDb = valueDb;
+  public ArrayBuilder(HashedDb hashedDb, Type arrayType, ValueReader<T> valueReader) {
+    this.hashedDb = hashedDb;
     this.arrayType = arrayType;
     this.valueReader = valueReader;
     this.result = Lists.newArrayList();
@@ -29,6 +33,17 @@ public class ArrayBuilder<T extends Value> {
   }
 
   public SArray<T> build() {
-    return valueDb.array(result, arrayType, valueReader);
+    return array(result, arrayType, valueReader);
+  }
+
+  private SArray<T> array(List<T> elements, Type type, ValueReader<T> valueReader) {
+    HashCode hash = genericArray(elements);
+    return new CachedArray<T>(hashedDb, hash, type, valueReader);
+  }
+
+  private HashCode genericArray(List<? extends Hashed> elements) {
+    Marshaller marshaller = new Marshaller();
+    marshaller.write(elements);
+    return hashedDb.store(marshaller.getBytes());
   }
 }

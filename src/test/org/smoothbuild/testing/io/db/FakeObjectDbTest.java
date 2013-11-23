@@ -1,5 +1,6 @@
 package org.smoothbuild.testing.io.db;
 
+import static org.smoothbuild.lang.type.Type.FILE_T;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -21,14 +22,14 @@ public class FakeObjectDbTest {
   @Test
   public void created_file_containing_its_path_can_be_read_from_db() {
     given(file = fakeValueDb.createFileContainingItsPath(path));
-    when(fakeValueDb.file(file.hash()).path());
+    when(fakeValueDb.read(FILE_T, file.hash()).path());
     thenReturned(path);
   }
 
   @Test
   public void created_file_containing_its_path_can_be_read_from_db2() throws IOException {
     given(file = fakeValueDb.createFileContainingItsPath(path));
-    when(inputStreamToString(fakeValueDb.file(file.hash()).openInputStream()));
+    when(inputStreamToString(fakeValueDb.read(FILE_T, file.hash()).openInputStream()));
     thenReturned(path.value());
   }
 }

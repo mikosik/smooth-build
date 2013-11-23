@@ -56,7 +56,7 @@ public class FileBuilderTest {
 
   @Test
   public void build_returns_file_stored_in_object_db_with_empty_content() throws Exception {
-    BDDMockito.given(valueDb.file(path, new byte[] {})).willReturn(file);
+    BDDMockito.given(valueDb.writeFile(path, new byte[] {})).willReturn(file);
     given(fileBuilder).openOutputStream();
     given(fileBuilder).setPath(path);
     when(fileBuilder).build();
@@ -65,7 +65,7 @@ public class FileBuilderTest {
 
   @Test
   public void build_returns_file_stored_in_object_db() throws Exception {
-    BDDMockito.given(valueDb.file(path, bytes)).willReturn(file);
+    BDDMockito.given(valueDb.writeFile(path, bytes)).willReturn(file);
     given(fileBuilder.openOutputStream()).write(bytes);
     given(fileBuilder).setPath(path);
     when(fileBuilder).build();
