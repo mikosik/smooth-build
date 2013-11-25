@@ -60,7 +60,7 @@ public class CachedArrayTest {
 
   private static CachedArray<SFile> cachedArray(HashedDb hashedDb, HashCode hash) {
     @SuppressWarnings("unchecked")
-    ValueReader<SFile> valueReader = mock(ValueReader.class);
+    ReadValue<SFile> valueReader = mock(ReadValue.class);
     return new CachedArray<SFile>(hashedDb, hash, FILE, valueReader);
   }
 }

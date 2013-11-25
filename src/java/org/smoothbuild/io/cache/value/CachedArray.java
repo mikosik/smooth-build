@@ -16,11 +16,11 @@ import com.google.common.hash.HashCode;
 
 public class CachedArray<T extends Value> extends AbstractValue implements SArray<T> {
   private final HashedDb hashedDb;
-  private final ValueReader<T> valueReader;
+  private final ReadValue<T> readValue;
 
-  public CachedArray(HashedDb hashedDb, HashCode hash, Type<?> type, ValueReader<T> valueReader) {
+  public CachedArray(HashedDb hashedDb, HashCode hash, Type<?> type, ReadValue<T> valueReader) {
     super(type, hash);
-    this.valueReader = checkNotNull(valueReader);
+    this.readValue = checkNotNull(valueReader);
     this.hashedDb = checkNotNull(hashedDb);
   }
 
@@ -28,7 +28,7 @@ public class CachedArray<T extends Value> extends AbstractValue implements SArra
   public Iterator<T> iterator() {
     ImmutableList.Builder<T> builder = ImmutableList.builder();
     for (HashCode elemHash : readHashCodeList(hash())) {
-      builder.add(valueReader.read(elemHash));
+      builder.add(readValue.read(elemHash));
     }
     return builder.build().iterator();
   }
