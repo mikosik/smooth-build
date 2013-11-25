@@ -1,4 +1,4 @@
-package org.smoothbuild.io.cache.value;
+package org.smoothbuild.io.cache.value.instance;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.type.STypes.FILE;

@@ -1,4 +1,4 @@
-package org.smoothbuild.io.cache.value;
+package org.smoothbuild.io.cache.value.instance;
 
 import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.STRING;
@@ -8,6 +8,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.io.cache.value.instance.CachedValue;
 import org.smoothbuild.lang.type.SType;
 import org.testory.common.Closure;
 

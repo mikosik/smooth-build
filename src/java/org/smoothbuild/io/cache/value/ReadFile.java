@@ -2,6 +2,8 @@ package org.smoothbuild.io.cache.value;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
+import org.smoothbuild.io.cache.value.instance.CachedBlob;
+import org.smoothbuild.io.cache.value.instance.CachedFile;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SFile;
 

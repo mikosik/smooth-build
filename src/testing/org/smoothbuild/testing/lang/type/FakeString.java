@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.type.STypes.STRING;
 
 import org.smoothbuild.io.cache.hash.Hash;
-import org.smoothbuild.io.cache.value.CachedValue;
+import org.smoothbuild.io.cache.value.instance.CachedValue;
 import org.smoothbuild.lang.type.SString;
 
 public class FakeString extends CachedValue implements SString {
