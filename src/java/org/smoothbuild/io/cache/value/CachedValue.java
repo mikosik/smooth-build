@@ -7,11 +7,11 @@ import org.smoothbuild.lang.type.SValue;
 
 import com.google.common.hash.HashCode;
 
-public abstract class AbstractValue implements SValue {
+public abstract class CachedValue implements SValue {
   private final SType<?> type;
   private final HashCode hash;
 
-  public AbstractValue(SType<?> type, HashCode hash) {
+  public CachedValue(SType<?> type, HashCode hash) {
     this.type = checkNotNull(type);
     this.hash = checkNotNull(hash);
   }

@@ -14,7 +14,7 @@ import org.smoothbuild.lang.type.SValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class CachedArray<T extends SValue> extends AbstractValue implements SArray<T> {
+public class CachedArray<T extends SValue> extends CachedValue implements SArray<T> {
   private final HashedDb hashedDb;
   private final ReadValue<T> readValue;
 

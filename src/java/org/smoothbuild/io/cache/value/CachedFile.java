@@ -11,7 +11,7 @@ import org.smoothbuild.lang.type.SFile;
 
 import com.google.common.hash.HashCode;
 
-public class CachedFile extends AbstractValue implements SFile {
+public class CachedFile extends CachedValue implements SFile {
   private final Path path;
   private final SBlob content;
 

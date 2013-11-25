@@ -7,14 +7,14 @@ import java.io.InputStream;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.Marshaller;
-import org.smoothbuild.io.cache.value.AbstractValue;
+import org.smoothbuild.io.cache.value.CachedValue;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 
 import com.google.common.hash.HashCode;
 
-public class FakeFile extends AbstractValue implements SFile {
+public class FakeFile extends CachedValue implements SFile {
   private final Path path;
   private final SBlob content;
 
