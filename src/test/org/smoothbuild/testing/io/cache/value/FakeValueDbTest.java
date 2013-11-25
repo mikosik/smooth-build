@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.io.db;
+package org.smoothbuild.testing.io.cache.value;
 
 import static org.smoothbuild.lang.type.Type.FILE;
 import static org.smoothbuild.util.Streams.inputStreamToString;
@@ -13,7 +13,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 
-public class FakeObjectDbTest {
+public class FakeValueDbTest {
   Path path = Path.path("my/file");
   FakeValueDb fakeValueDb = new FakeValueDb();
 
