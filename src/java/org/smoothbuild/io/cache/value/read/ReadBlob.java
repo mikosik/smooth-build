@@ -1,4 +1,4 @@
-package org.smoothbuild.io.cache.value;
+package org.smoothbuild.io.cache.value.read;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.value.instance.CachedBlob;

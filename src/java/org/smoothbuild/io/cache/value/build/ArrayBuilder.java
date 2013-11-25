@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.Marshaller;
-import org.smoothbuild.io.cache.value.ReadValue;
 import org.smoothbuild.io.cache.value.instance.CachedArray;
+import org.smoothbuild.io.cache.value.read.ReadValue;
 import org.smoothbuild.lang.type.Hashed;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SType;

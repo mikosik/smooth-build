@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.cache.hash.HashedDb;
-import org.smoothbuild.io.cache.value.ReadValue;
 import org.smoothbuild.io.cache.value.instance.CachedArray;
+import org.smoothbuild.io.cache.value.read.ReadValue;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;

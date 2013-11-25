@@ -1,4 +1,4 @@
-package org.smoothbuild.io.cache.value;
+package org.smoothbuild.io.cache.value.read;
 
 import org.smoothbuild.lang.type.SValue;
 
