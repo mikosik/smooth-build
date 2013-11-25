@@ -1,6 +1,5 @@
 package org.smoothbuild.io.cache.value;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.lang.type.Type.BLOB;
 import static org.smoothbuild.lang.type.Type.BLOB_ARRAY;
@@ -14,11 +13,9 @@ import javax.inject.Inject;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.Marshaller;
-import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.hash.ValuesCache;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
-import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
@@ -33,40 +30,48 @@ import com.google.common.hash.HashCode;
 
 public class ValueDb {
   private final HashedDb hashedDb;
-  private final StringReader stringReader = new StringReader();
-  private final BlobReader blobReader = new BlobReader();
-  private final FileReader fileReader = new FileReader();
-  private final ArrayReader<SString> stringArrayReader = new ArrayReader<SString>(STRING_ARRAY,
-      stringReader);
-  private final ArrayReader<SBlob> blobArrayReader = new ArrayReader<SBlob>(BLOB_ARRAY, blobReader);
-  private final ArrayReader<SFile> fileArrayReader = new ArrayReader<SFile>(FILE_ARRAY, fileReader);
-  private final ImmutableMap<Type<?>, ValueReader<?>> readersMap;
+
+  private final ReadString readString;
+  private final ReadBlob readBlob;
+  private final ReadFile readFile;
+  private final ReadArray<SString> readStringArray;
+  private final ReadArray<SBlob> readBlobArray;
+  private final ReadArray<SFile> readFileArray;
+
+  private final ImmutableMap<Type<?>, ReadValue<?>> readersMap;
 
   @Inject
   public ValueDb(@ValuesCache HashedDb hashedDb) {
     this.hashedDb = hashedDb;
 
-    Builder<Type<?>, ValueReader<?>> builder = ImmutableMap.builder();
-    builder.put(STRING, stringReader);
-    builder.put(BLOB, blobReader);
-    builder.put(FILE, fileReader);
-    builder.put(STRING_ARRAY, stringArrayReader);
-    builder.put(BLOB_ARRAY, blobArrayReader);
-    builder.put(FILE_ARRAY, fileArrayReader);
+    this.readString = new ReadString(hashedDb);
+    this.readBlob = new ReadBlob(hashedDb);
+    this.readFile = new ReadFile(hashedDb);
+    this.readStringArray = new ReadArray<SString>(hashedDb, STRING_ARRAY, readString);
+    this.readBlobArray = new ReadArray<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
+    this.readFileArray = new ReadArray<SFile>(hashedDb, FILE_ARRAY, readFile);
+
+    Builder<Type<?>, ReadValue<?>> builder = ImmutableMap.builder();
+    builder.put(STRING, readString);
+    builder.put(BLOB, readBlob);
+    builder.put(FILE, readFile);
+    builder.put(STRING_ARRAY, readStringArray);
+    builder.put(BLOB_ARRAY, readBlobArray);
+    builder.put(FILE_ARRAY, readFileArray);
 
     this.readersMap = builder.build();
   }
 
   public ArrayBuilder<SFile> fileArrayBuilder() {
-    return new ArrayBuilder<SFile>(hashedDb, FILE_ARRAY, fileReader);
+    return new ArrayBuilder<SFile>(hashedDb, FILE_ARRAY, readFile);
   }
 
   public ArrayBuilder<SBlob> blobArrayBuilder() {
-    return new ArrayBuilder<SBlob>(hashedDb, BLOB_ARRAY, blobReader);
+    return new ArrayBuilder<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
   }
 
   public ArrayBuilder<SString> stringArrayBuilder() {
-    return new ArrayBuilder<SString>(hashedDb, STRING_ARRAY, stringReader);
+    return new ArrayBuilder<SString>(hashedDb, STRING_ARRAY, readString);
   }
 
   // writers
@@ -100,54 +105,11 @@ public class ValueDb {
      * Cast is safe as readersMap is immutable and constructed in proper way.
      */
     @SuppressWarnings("unchecked")
-    ValueReader<T> reader = (ValueReader<T>) readersMap.get(typeLiteral);
+    ReadValue<T> reader = (ReadValue<T>) readersMap.get(typeLiteral);
     if (reader == null) {
       throw new ErrorMessageException(new Message(FATAL,
           "Bug in smooth binary: Unexpected value type " + typeLiteral));
     }
     return reader.read(hash);
-  }
-
-  private final class FileReader implements ValueReader<SFile> {
-    @Override
-    public SFile read(HashCode hash) {
-      try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-        HashCode blobHash = unmarshaller.readHash();
-        Path path = unmarshaller.readPath();
-        // TODO copy pasted from BlobReader
-        CachedBlob blob = new CachedBlob(hashedDb, blobHash);
-
-        return new CachedFile(path, blob, hash);
-      }
-    }
-  }
-
-  private class StringReader implements ValueReader<SString> {
-    @Override
-    public SString read(HashCode hash) {
-      return new CachedString(hashedDb, hash);
-    }
-  }
-
-  private class BlobReader implements ValueReader<SBlob> {
-    @Override
-    public SBlob read(HashCode hash) {
-      return new CachedBlob(hashedDb, hash);
-    }
-  }
-
-  private class ArrayReader<T extends Value> implements ValueReader<SArray<T>> {
-    private final ValueReader<T> valueReader;
-    private final Type<?> arrayType;
-
-    public ArrayReader(Type<?> arrayType, ValueReader<T> valueReader) {
-      this.arrayType = checkNotNull(arrayType);
-      this.valueReader = checkNotNull(valueReader);
-    }
-
-    @Override
-    public SArray<T> read(HashCode hash) {
-      return new CachedArray<T>(hashedDb, hash, arrayType, valueReader);
-    }
   }
 }
