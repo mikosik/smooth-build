@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.plugin;
+package org.smoothbuild.io.cache.value.build;
 
 import static org.mockito.Mockito.mock;
 import static org.testory.Testory.given;
@@ -11,6 +11,7 @@ import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.smoothbuild.io.cache.value.CachedFile;
 import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 
 public class FileBuilderTest {

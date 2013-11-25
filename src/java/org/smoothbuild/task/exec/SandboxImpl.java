@@ -1,10 +1,10 @@
 package org.smoothbuild.task.exec;
 
 import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
+import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.lang.plugin.ArrayBuilder;
-import org.smoothbuild.lang.plugin.BlobBuilder;
-import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SString;

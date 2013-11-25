@@ -6,9 +6,9 @@ import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.ArrayBuilder;
-import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.StreamTester;

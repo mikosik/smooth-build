@@ -4,9 +4,9 @@ import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
 import java.util.Set;
 
+import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.err.DuplicateMergedPathError;
-import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;
