@@ -12,13 +12,13 @@ import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.JavaCompilerMessage;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 
 public class ReportingDiagnosticListenerTest {
   @SuppressWarnings("unchecked")
   Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
-  Sandbox sandbox = mock(Sandbox.class);
-  ReportingDiagnosticListener listener = new ReportingDiagnosticListener(sandbox);
+  PluginApi pluginApi = mock(PluginApi.class);
+  ReportingDiagnosticListener listener = new ReportingDiagnosticListener(pluginApi);
 
   @Before
   public void before() {
@@ -29,7 +29,7 @@ public class ReportingDiagnosticListenerTest {
   @Test
   public void diagnosticIsReportedAsError() {
     listener.report(diagnostic);
-    verify(sandbox).report(isA(JavaCompilerMessage.class));
+    verify(pluginApi).report(isA(JavaCompilerMessage.class));
   }
 
   @Test

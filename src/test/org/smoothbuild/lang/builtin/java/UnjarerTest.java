@@ -12,7 +12,7 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.lang.type.FakeFile;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -22,8 +22,8 @@ public class UnjarerTest {
   String fileName2 = "file/path/file2.txt";
   String directoryName = "my/directory/";
 
-  FakeSandbox sandbox = new FakeSandbox();
-  Unjarer unjarer = new Unjarer(sandbox);
+  FakePluginApi pluginApi = new FakePluginApi();
+  Unjarer unjarer = new Unjarer(pluginApi);
 
   @Test
   public void unjaringTwoFiles() throws Exception {

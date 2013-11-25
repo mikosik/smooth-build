@@ -12,7 +12,7 @@ import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
@@ -26,7 +26,7 @@ public class PackagedJavaFileObjectsTest {
     SFile file = jaredFiles(fileName1, fileName2);
 
     Multimap<String, JavaFileObject> packageToJavaFileObjects = packagedJavaFileObjects(
-        new FakeSandbox(), ImmutableList.of(file));
+        new FakePluginApi(), ImmutableList.of(file));
 
     JavaFileObject fileObject = packageToJavaFileObjects.get("my.package").iterator().next();
     StreamTester.assertContent(fileObject.openInputStream(), fileName1);
@@ -40,7 +40,7 @@ public class PackagedJavaFileObjectsTest {
     SFile file2 = jaredFiles(fileName);
 
     try {
-      packagedJavaFileObjects(new FakeSandbox(), ImmutableList.of(file1, file2));
+      packagedJavaFileObjects(new FakePluginApi(), ImmutableList.of(file1, file2));
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected

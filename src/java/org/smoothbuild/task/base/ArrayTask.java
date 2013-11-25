@@ -6,7 +6,7 @@ import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 import com.google.common.collect.ImmutableList;
 
@@ -21,13 +21,13 @@ public class ArrayTask extends Task {
   }
 
   @Override
-  public SValue execute(SandboxImpl sandbox) {
+  public SValue execute(PluginApiImpl pluginApi) {
     /*
      * TODO Remove unchecked cast once Sandbox.arrayBuilder() has Class<?> as
      * its parameter.
      */
     @SuppressWarnings("unchecked")
-    ArrayBuilder<SValue> builder = (ArrayBuilder<SValue>) sandbox.arrayBuilder(arrayType);
+    ArrayBuilder<SValue> builder = (ArrayBuilder<SValue>) pluginApi.arrayBuilder(arrayType);
 
     for (Result task : elements) {
       builder.add(task.result());

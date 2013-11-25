@@ -17,7 +17,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
@@ -29,17 +29,17 @@ import com.google.common.collect.Sets;
 public class Unzipper {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer;
-  private final Sandbox sandbox;
+  private final PluginApi pluginApi;
   private Set<Path> alreadyUnzipped;
 
-  public Unzipper(Sandbox sandbox) {
-    this.sandbox = sandbox;
+  public Unzipper(PluginApi pluginApi) {
+    this.pluginApi = pluginApi;
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
   public SArray<SFile> unzipFile(SFile zipFile) {
     this.alreadyUnzipped = Sets.newHashSet();
-    ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
         ZipEntry entry = null;
@@ -68,7 +68,7 @@ public class Unzipper {
     }
     alreadyUnzipped.add(path);
     try {
-      FileBuilder fileBuilder = sandbox.fileBuilder();
+      FileBuilder fileBuilder = pluginApi.fileBuilder();
       fileBuilder.setPath(path);
 
       try (OutputStream outputStream = fileBuilder.openOutputStream()) {

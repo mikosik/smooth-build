@@ -5,7 +5,7 @@ import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
@@ -16,16 +16,16 @@ import org.smoothbuild.task.base.Task;
 
 import com.google.common.base.Strings;
 
-public class SandboxImpl implements Sandbox {
+public class PluginApiImpl implements PluginApi {
   private final FileSystem projectFileSystem;
   private final MessageGroup messageGroup;
   private final ValueDb valueDb;
 
-  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, Task task) {
+  public PluginApiImpl(FileSystem fileSystem, ValueDb valueDb, Task task) {
     this(fileSystem, valueDb, createMessages(task));
   }
 
-  public SandboxImpl(FileSystem fileSystem, ValueDb valueDb, MessageGroup messageGroup) {
+  public PluginApiImpl(FileSystem fileSystem, ValueDb valueDb, MessageGroup messageGroup) {
     this.projectFileSystem = fileSystem;
     this.valueDb = valueDb;
     this.messageGroup = messageGroup;

@@ -17,7 +17,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class FileFunction {
 
@@ -27,16 +27,16 @@ public class FileFunction {
   }
 
   @SmoothFunction(name = "file", cacheable = false)
-  public static SFile execute(SandboxImpl sandbox, Parameters params) {
-    return new Worker(sandbox, params).execute();
+  public static SFile execute(PluginApiImpl pluginApi, Parameters params) {
+    return new Worker(pluginApi, params).execute();
   }
 
   private static class Worker {
-    private final SandboxImpl sandbox;
+    private final PluginApiImpl pluginApi;
     private final Parameters params;
 
-    public Worker(SandboxImpl sandbox, Parameters params) {
-      this.sandbox = sandbox;
+    public Worker(PluginApiImpl pluginApi, Parameters params) {
+      this.pluginApi = pluginApi;
       this.params = params;
     }
 
@@ -49,10 +49,10 @@ public class FileFunction {
         throw new ErrorMessageException(new ReadFromSmoothDirError(path));
       }
 
-      FileSystem fileSystem = sandbox.projectFileSystem();
+      FileSystem fileSystem = pluginApi.projectFileSystem();
       switch (fileSystem.pathState(path)) {
         case FILE:
-          FileBuilder fileBuilder = sandbox.fileBuilder();
+          FileBuilder fileBuilder = pluginApi.fileBuilder();
           fileBuilder.setPath(path);
           copy(fileSystem.openInputStream(path), fileBuilder.openOutputStream());
           return fileBuilder.build();

@@ -15,7 +15,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 public class EmptyArrayNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
@@ -38,7 +38,7 @@ public class EmptyArrayNodeTest {
   @SuppressWarnings("unchecked")
   public void generate_task() throws Exception {
     Task task = emptyArrayNode.generateTask(taskGenerator);
-    SValue result = task.execute(new FakeSandbox());
+    SValue result = task.execute(new FakePluginApi());
     assertThat((SArray<SFile>) result).isEmpty();
   }
 }

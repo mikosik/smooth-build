@@ -14,7 +14,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.err.CannotAddDuplicatePathError;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
@@ -35,26 +35,26 @@ public class ZipFunction {
   }
 
   @SmoothFunction(name = "zip")
-  public static SFile execute(Sandbox sandbox, Parameters params) {
-    return new Worker(sandbox, params).execute();
+  public static SFile execute(PluginApi pluginApi, Parameters params) {
+    return new Worker(pluginApi, params).execute();
   }
 
   private static class Worker {
     private static final Path DEFAULT_OUTPUT = path("output.zip");
-    private final Sandbox sandbox;
+    private final PluginApi pluginApi;
     private final Parameters params;
 
     private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
     private final Set<Path> alreadyAdded;
 
-    public Worker(Sandbox sandbox, Parameters params) {
-      this.sandbox = sandbox;
+    public Worker(PluginApi pluginApi, Parameters params) {
+      this.pluginApi = pluginApi;
       this.params = params;
       this.alreadyAdded = Sets.newHashSet();
     }
 
     public SFile execute() {
-      FileBuilder fileBuilder = sandbox.fileBuilder();
+      FileBuilder fileBuilder = pluginApi.fileBuilder();
       fileBuilder.setPath(outputPath());
 
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileBuilder.openOutputStream());) {

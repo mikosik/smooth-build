@@ -12,11 +12,11 @@ import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class NewFileFunction {
   public static final Charset US_ASCII = Charset.forName("US-ASCII");
@@ -30,16 +30,16 @@ public class NewFileFunction {
   }
 
   @SmoothFunction(name = "newFile")
-  public static SFile execute(SandboxImpl sandbox, Parameters params) {
-    return new Worker(sandbox, params).execute();
+  public static SFile execute(PluginApiImpl pluginApi, Parameters params) {
+    return new Worker(pluginApi, params).execute();
   }
 
   private static class Worker {
-    private final Sandbox sandbox;
+    private final PluginApi pluginApi;
     private final Parameters params;
 
-    public Worker(Sandbox sandbox, Parameters params) {
-      this.sandbox = sandbox;
+    public Worker(PluginApi pluginApi, Parameters params) {
+      this.pluginApi = pluginApi;
       this.params = params;
     }
 
@@ -48,7 +48,7 @@ public class NewFileFunction {
     }
 
     private SFile createFile(Path filePath) {
-      FileBuilder fileBuilder = sandbox.fileBuilder();
+      FileBuilder fileBuilder = pluginApi.fileBuilder();
       fileBuilder.setPath(filePath);
 
       OutputStream outputStream = fileBuilder.openOutputStream();

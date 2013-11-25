@@ -20,10 +20,10 @@ import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.lang.type.FakeString;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 public class FilesFunctionTest {
-  FakeSandbox sandbox = new FakeSandbox();
+  FakePluginApi pluginApi = new FakePluginApi();
 
   @Test
   public void listingFilesFromRootDirIsForbidden() throws Exception {
@@ -61,7 +61,7 @@ public class FilesFunctionTest {
   @Test
   public void illegalPathsAreReported() {
     for (String path : PathTesting.listOfInvalidPaths()) {
-      sandbox = new FakeSandbox();
+      pluginApi = new FakePluginApi();
       try {
         runExecute(params(path));
         fail("exception should be thrown");
@@ -86,7 +86,7 @@ public class FilesFunctionTest {
   @Test
   public void nonDirPathIsReported() throws Exception {
     Path filePath = path("some/path/file.txt");
-    sandbox.projectFileSystem().createFileContainingItsPath(filePath);
+    pluginApi.projectFileSystem().createFileContainingItsPath(filePath);
 
     try {
       runExecute(params(filePath.value()));
@@ -102,7 +102,7 @@ public class FilesFunctionTest {
   public void execute() throws Exception {
     Path rootPath = path("root/path");
     Path filePath = path("file/path/file.txt");
-    sandbox.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
+    pluginApi.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
 
     SArray<SFile> fileArray = runExecute(params(rootPath.value()));
 
@@ -119,6 +119,6 @@ public class FilesFunctionTest {
   }
 
   private SArray<SFile> runExecute(Parameters params) {
-    return FilesFunction.execute(sandbox, params);
+    return FilesFunction.execute(pluginApi, params);
   }
 }

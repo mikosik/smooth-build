@@ -8,20 +8,20 @@ import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
 
 public class TaskExecutor {
-  private final SandboxFactory sandboxFactory;
+  private final PluginApiFactory pluginApiFactory;
   private final UserConsole userConsole;
 
   @Inject
-  public TaskExecutor(SandboxFactory sandboxFactory, UserConsole userConsole) {
-    this.sandboxFactory = sandboxFactory;
+  public TaskExecutor(PluginApiFactory pluginApiFactory, UserConsole userConsole) {
+    this.pluginApiFactory = pluginApiFactory;
     this.userConsole = userConsole;
   }
 
   public SValue execute(Task task) {
-    SandboxImpl sandbox = sandboxFactory.createSandbox(task);
-    SValue result = task.execute(sandbox);
+    PluginApiImpl pluginApi = pluginApiFactory.createPluginApi(task);
+    SValue result = task.execute(pluginApi);
 
-    MessageGroup messageGroup = sandbox.messageGroup();
+    MessageGroup messageGroup = pluginApi.messageGroup();
     if (!task.isInternal() || messageGroup.containsMessages()) {
       userConsole.report(messageGroup);
     }

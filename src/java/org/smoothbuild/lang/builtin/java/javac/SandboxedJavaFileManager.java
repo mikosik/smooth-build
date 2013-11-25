@@ -16,7 +16,7 @@ import javax.tools.StandardLocation;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.base.Message;
@@ -25,16 +25,16 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-  private final Sandbox sandbox;
+  private final PluginApi pluginApi;
   private final Multimap<String, JavaFileObject> packageToJavaFileObjects;
   private final ArrayBuilder<SFile> resultClassFiles;
 
-  SandboxedJavaFileManager(StandardJavaFileManager fileManager, Sandbox sandbox,
+  SandboxedJavaFileManager(StandardJavaFileManager fileManager, PluginApi pluginApi,
       Multimap<String, JavaFileObject> packageToJavaFileObjects) {
     super(fileManager);
-    this.sandbox = sandbox;
+    this.pluginApi = pluginApi;
     this.packageToJavaFileObjects = packageToJavaFileObjects;
-    this.resultClassFiles = sandbox.arrayBuilder(FILE_ARRAY);
+    this.resultClassFiles = pluginApi.arrayBuilder(FILE_ARRAY);
   }
 
   public SArray<SFile> resultClassfiles() {
@@ -48,7 +48,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       String classFilePath = className.replace('.', '/') + ".class";
       String message = validationError(classFilePath);
       if (message == null) {
-        return new OutputClassFile(resultClassFiles, path(classFilePath), sandbox.fileBuilder());
+        return new OutputClassFile(resultClassFiles, path(classFilePath), pluginApi.fileBuilder());
       } else {
         Message errorMessage = new IncorrectClassNameGivenByJavaCompilerError(className);
         throw new ErrorMessageException(errorMessage);

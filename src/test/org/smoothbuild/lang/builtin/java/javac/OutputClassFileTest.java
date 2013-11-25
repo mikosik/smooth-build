@@ -13,18 +13,18 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.lang.type.FileTester;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 import com.google.common.collect.Iterables;
 
 public class OutputClassFileTest {
-  FakeSandbox sandbox = new FakeSandbox();
+  FakePluginApi pluginApi = new FakePluginApi();
 
   @Test
   public void openOutputStream() throws IOException {
     Path path = Path.path("my/path");
-    ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
-    FileBuilder fileBuilder = sandbox.fileBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
+    FileBuilder fileBuilder = pluginApi.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);
 
@@ -41,8 +41,8 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     Path path = Path.path("my/path");
-    ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
-    FileBuilder fileBuilder = sandbox.fileBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
+    FileBuilder fileBuilder = pluginApi.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);
 

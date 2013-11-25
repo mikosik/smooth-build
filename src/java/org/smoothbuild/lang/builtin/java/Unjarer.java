@@ -20,7 +20,7 @@ import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
@@ -33,12 +33,12 @@ import com.google.common.collect.Sets;
 public class Unjarer {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
 
-  private final Sandbox sandbox;
+  private final PluginApi pluginApi;
   private final byte[] buffer;
   private Set<Path> alreadyUnjared;
 
-  public Unjarer(Sandbox sandbox) {
-    this.sandbox = sandbox;
+  public Unjarer(PluginApi pluginApi) {
+    this.pluginApi = pluginApi;
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
@@ -48,7 +48,7 @@ public class Unjarer {
 
   public SArray<SFile> unjarFile(SFile jarFile, Predicate<String> nameFilter) {
     this.alreadyUnjared = Sets.newHashSet();
-    ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
@@ -79,7 +79,7 @@ public class Unjarer {
       throw new ErrorMessageException(new IllegalPathInJarError(fileName));
     }
     Path path = path(fileName);
-    FileBuilder fileBuilder = sandbox.fileBuilder();
+    FileBuilder fileBuilder = pluginApi.fileBuilder();
     fileBuilder.setPath(path);
     try {
       try (OutputStream outputStream = fileBuilder.openOutputStream()) {

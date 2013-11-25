@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 public abstract class Task {
   private final String name;
@@ -29,5 +29,5 @@ public abstract class Task {
     return codeLocation;
   }
 
-  public abstract SValue execute(SandboxImpl sandbox);
+  public abstract SValue execute(PluginApiImpl pluginApi);
 }

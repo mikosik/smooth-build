@@ -15,7 +15,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 /*
  * TODO
@@ -29,21 +29,21 @@ public class JunitFunction {
   }
 
   @SmoothFunction(name = "junit")
-  public static SString execute(SandboxImpl sandbox, Parameters params) {
-    return new Worker(sandbox, params).execute();
+  public static SString execute(PluginApiImpl pluginApi, Parameters params) {
+    return new Worker(pluginApi, params).execute();
   }
 
   private static class Worker {
-    private final SandboxImpl sandbox;
+    private final PluginApiImpl pluginApi;
     private final Parameters params;
 
-    public Worker(SandboxImpl sandbox, Parameters params) {
-      this.sandbox = sandbox;
+    public Worker(PluginApiImpl pluginApi, Parameters params) {
+      this.pluginApi = pluginApi;
       this.params = params;
     }
 
     public SString execute() {
-      Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(sandbox,
+      Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(pluginApi,
           nullToEmpty(params.libs()));
       FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
       JUnitCore jUnitCore = new JUnitCore();
@@ -54,13 +54,13 @@ public class JunitFunction {
           Result result = jUnitCore.run(testClass);
           if (!result.wasSuccessful()) {
             for (Failure failure : result.getFailures()) {
-              sandbox.report(new JunitTestFailedError(failure));
+              pluginApi.report(new JunitTestFailedError(failure));
             }
-            return sandbox.string("FAILURE");
+            return pluginApi.string("FAILURE");
           }
         }
       }
-      return sandbox.string("SUCCESS");
+      return pluginApi.string("SUCCESS");
     }
 
     private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {

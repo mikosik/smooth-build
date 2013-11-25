@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SValue;
 
 public class Invoker {
@@ -18,9 +18,9 @@ public class Invoker {
     this.argumentsCreator = checkNotNull(argumentsCreator);
   }
 
-  public SValue invoke(Sandbox sandbox, Map<String, SValue> args) throws IllegalAccessException,
+  public SValue invoke(PluginApi pluginApi, Map<String, SValue> args) throws IllegalAccessException,
       InvocationTargetException {
     Object arguments = argumentsCreator.create(args);
-    return (SValue) method.invoke(null, new Object[] { sandbox, arguments });
+    return (SValue) method.invoke(null, new Object[] { pluginApi, arguments });
   }
 }

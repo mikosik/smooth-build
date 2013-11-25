@@ -8,7 +8,7 @@ import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.err.DuplicateMergedPathError;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
@@ -26,22 +26,22 @@ public class MergeFunction {
   }
 
   @SmoothFunction(name = "merge")
-  public static SArray<SFile> execute(Sandbox sandbox, Parameters params) {
-    return new Worker(sandbox, params).execute();
+  public static SArray<SFile> execute(PluginApi pluginApi, Parameters params) {
+    return new Worker(pluginApi, params).execute();
   }
 
   public static class Worker {
-    private final Sandbox sandbox;
+    private final PluginApi pluginApi;
     private final Parameters params;
 
-    public Worker(Sandbox sandbox, Parameters params) {
-      this.sandbox = sandbox;
+    public Worker(PluginApi pluginApi, Parameters params) {
+      this.pluginApi = pluginApi;
       this.params = params;
     }
 
     public SArray<SFile> execute() {
       Set<Path> alreadyAdded = Sets.newHashSet();
-      ArrayBuilder<SFile> builder = sandbox.arrayBuilder(FILE_ARRAY);
+      ArrayBuilder<SFile> builder = pluginApi.arrayBuilder(FILE_ARRAY);
 
       for (SFile file : params.files()) {
         addFile(file, builder, alreadyAdded);
@@ -56,7 +56,7 @@ public class MergeFunction {
     private void addFile(SFile file, ArrayBuilder<SFile> builder, Set<Path> alreadyAdded) {
       Path path = file.path();
       if (alreadyAdded.contains(path)) {
-        sandbox.report(new DuplicateMergedPathError(path));
+        pluginApi.report(new DuplicateMergedPathError(path));
       } else {
         alreadyAdded.add(path);
         builder.add(file);

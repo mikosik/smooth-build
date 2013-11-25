@@ -25,7 +25,7 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
@@ -45,23 +45,23 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
   @Builtin
   public Module provideBuiltinModule(ModuleBuilder builder) throws Exception {
     Mockito.when(
-        normalInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, SValue>> any()))
+        normalInvoker.invoke(Matchers.<PluginApi> any(), Matchers.<Map<String, SValue>> any()))
         .thenAnswer(new Answer<SString>() {
           @Override
           public SString answer(InvocationOnMock invocation) throws Throwable {
-            Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
-            return sandbox.string("abc");
+            PluginApi pluginApi = (PluginApi) invocation.getArguments()[0];
+            return pluginApi.string("abc");
           }
         });
     builder.addFunction(function(normalFunction, normalInvoker));
 
     Mockito.when(
-        erroneousInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, SValue>> any()))
+        erroneousInvoker.invoke(Matchers.<PluginApi> any(), Matchers.<Map<String, SValue>> any()))
         .thenAnswer(new Answer<SString>() {
           @Override
           public SString answer(InvocationOnMock invocation) throws Throwable {
-            Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
-            sandbox.report(new Message(ERROR, "message"));
+            PluginApi pluginApi = (PluginApi) invocation.getArguments()[0];
+            pluginApi.report(new Message(ERROR, "message"));
             return null;
           }
         });
