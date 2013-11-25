@@ -1,5 +1,7 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
@@ -13,7 +15,7 @@ public class EmptyArrayTask extends Task {
   @Override
   public Value execute(SandboxImpl sandbox) {
     /*
-     * We cheat here and return empty fileArray. Nobody will ever use this
+     * We cheat here and return empty stringArray. Nobody will ever use this
      * object.
      * 
      * Anyway as ArgumentNodesCreator detects nodes which type is equal to
@@ -30,6 +32,6 @@ public class EmptyArrayTask extends Task {
      * ArgumentNodesCreator won't kick in.
      */
 
-    return sandbox.fileArrayBuilder().build();
+    return sandbox.arrayBuilder(STRING_ARRAY).build();
   }
 }

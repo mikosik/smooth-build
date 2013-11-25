@@ -2,6 +2,7 @@ package org.smoothbuild.lang.builtin.java.javac;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     super(fileManager);
     this.sandbox = sandbox;
     this.packageToJavaFileObjects = packageToJavaFileObjects;
-    this.resultClassFiles = sandbox.fileArrayBuilder();
+    this.resultClassFiles = sandbox.arrayBuilder(FILE_ARRAY);
   }
 
   public SArray<SFile> resultClassfiles() {

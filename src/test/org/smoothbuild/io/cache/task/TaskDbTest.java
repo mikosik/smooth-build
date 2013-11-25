@@ -2,6 +2,9 @@ package org.smoothbuild.io.cache.task;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.testory.Testory.given;
@@ -77,7 +80,7 @@ public class TaskDbTest {
   @Test
   public void stored_file_array_can_be_read_back() throws Exception {
     given(file = valueDb.writeFile(path, bytes));
-    given(fileArray = valueDb.fileArrayBuilder().add(file).build());
+    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(taskDb).store(hash, new CachedResult(fileArray, Empty.messageList()));
     when(((SArray<SFile>) taskDb.read(hash).value()).iterator().next());
     thenReturned(file);
@@ -87,7 +90,7 @@ public class TaskDbTest {
   @Test
   public void stored_blob_array_can_be_read_back() throws Exception {
     given(blob = valueDb.writeBlob(bytes));
-    given(blobArray = valueDb.blobArrayBuilder().add(blob).build());
+    given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     given(taskDb).store(hash, new CachedResult(blobArray, Empty.messageList()));
     when(((SArray<SBlob>) taskDb.read(hash).value()).iterator().next());
     thenReturned(blob);
@@ -97,7 +100,7 @@ public class TaskDbTest {
   @Test
   public void stored_string_array_can_be_read_back() throws Exception {
     given(stringValue = valueDb.writeString(string));
-    given(stringArray = valueDb.stringArrayBuilder().add(stringValue).build());
+    given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     given(taskDb).store(hash, new CachedResult(stringArray, Empty.messageList()));
     when(((SArray<SString>) taskDb.read(hash).value()).iterator().next());
     thenReturned(stringValue);
