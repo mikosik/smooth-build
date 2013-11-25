@@ -1,4 +1,4 @@
-package org.smoothbuild.io.cache.value;
+package org.smoothbuild.io.cache.value.instance;
 
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.type.STypes.FILE;
@@ -11,6 +11,8 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
+import org.smoothbuild.io.cache.value.instance.CachedBlob;
+import org.smoothbuild.io.cache.value.instance.CachedFile;
 import org.smoothbuild.io.fs.base.Path;
 import org.testory.common.Closure;
 
