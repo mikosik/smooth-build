@@ -7,11 +7,11 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.base.Task;
 
 public class TaskContainerCreatorTest {
-  Value value = mock(Value.class);
+  SValue value = mock(SValue.class);
   Task task = mock(Task.class);
   TaskExecutor taskExecutor = mock(TaskExecutor.class);
 

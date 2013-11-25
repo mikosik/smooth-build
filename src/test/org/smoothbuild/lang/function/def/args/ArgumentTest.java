@@ -16,7 +16,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
@@ -86,7 +86,7 @@ public class ArgumentTest {
   @Test
   public void typeReturnsTypeOfNode() throws Exception {
     BDDMockito.willReturn(FILE).given(node).type();
-    Type<?> arg = namedArg(1, name, node, codeLocation).type();
+    SType<?> arg = namedArg(1, name, node, codeLocation).type();
     assertThat(arg).isEqualTo(FILE);
   }
 
@@ -174,12 +174,12 @@ public class ArgumentTest {
     doTestFilterNameless(EMPTY_ARRAY);
   }
 
-  private void doTestFilterNameless(Type<?> type) {
+  private void doTestFilterNameless(SType<?> type) {
     Argument named1 = named("name1");
     Argument named2 = named("name2");
     Argument nameless = nameless(type);
 
-    ImmutableMap<Type<?>, Set<Argument>> actual = Argument.filterNameless(ImmutableList.of(named1,
+    ImmutableMap<SType<?>, Set<Argument>> actual = Argument.filterNameless(ImmutableList.of(named1,
         named2, nameless));
 
     assertThat(actual.get(type)).containsOnly(nameless);
@@ -193,7 +193,7 @@ public class ArgumentTest {
     return nameless(STRING);
   }
 
-  private static Argument nameless(Type<?> type) {
+  private static Argument nameless(SType<?> type) {
     Node node = mock(Node.class);
     BDDMockito.willReturn(type).given(node).type();
     return Argument.namelessArg(1, node, new FakeCodeLocation());

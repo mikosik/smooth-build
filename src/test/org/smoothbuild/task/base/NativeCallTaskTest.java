@@ -24,7 +24,7 @@ import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
@@ -70,7 +70,7 @@ public class NativeCallTaskTest {
         codeLocation);
 
     SString result = new FakeString("result");
-    when(invoker.invoke(sandbox, ImmutableMap.<String, Value> of(name, argValue))).thenReturn(
+    when(invoker.invoke(sandbox, ImmutableMap.<String, SValue> of(name, argValue))).thenReturn(
         result);
 
     assertThat(nativeCallTask.execute(sandbox)).isSameAs(result);

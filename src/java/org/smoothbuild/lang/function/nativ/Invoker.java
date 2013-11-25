@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 
 public class Invoker {
   private final Method method;
@@ -18,9 +18,9 @@ public class Invoker {
     this.argumentsCreator = checkNotNull(argumentsCreator);
   }
 
-  public Value invoke(Sandbox sandbox, Map<String, Value> args) throws IllegalAccessException,
+  public SValue invoke(Sandbox sandbox, Map<String, SValue> args) throws IllegalAccessException,
       InvocationTargetException {
     Object arguments = argumentsCreator.create(args);
-    return (Value) method.invoke(null, new Object[] { sandbox, arguments });
+    return (SValue) method.invoke(null, new Object[] { sandbox, arguments });
   }
 }

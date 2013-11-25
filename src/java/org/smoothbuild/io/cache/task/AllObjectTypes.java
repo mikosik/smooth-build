@@ -8,9 +8,9 @@ import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 
 import org.smoothbuild.io.cache.hash.EnumValues;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 
-public class AllObjectTypes extends EnumValues<Type<?>> {
+public class AllObjectTypes extends EnumValues<SType<?>> {
   public static final AllObjectTypes INSTANCE = new AllObjectTypes();
 
   private AllObjectTypes() {

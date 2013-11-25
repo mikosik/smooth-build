@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
@@ -63,7 +63,7 @@ public class Argument {
     return name == null ? "<nameless>" : name;
   }
 
-  public Type<?> type() {
+  public SType<?> type() {
     return node.type();
   }
 
@@ -106,11 +106,11 @@ public class Argument {
     return builder.build();
   }
 
-  public static ImmutableMap<Type<?>, Set<Argument>> filterNameless(Collection<Argument> arguments) {
-    ImmutableMap<Type<?>, Set<Argument>> result = Helpers.createMap(allTypes());
+  public static ImmutableMap<SType<?>, Set<Argument>> filterNameless(Collection<Argument> arguments) {
+    ImmutableMap<SType<?>, Set<Argument>> result = Helpers.createMap(allTypes());
     for (Argument argument : arguments) {
       if (!argument.hasName()) {
-        Type<?> type = argument.node().type();
+        SType<?> type = argument.node().type();
         result.get(type).add(argument);
       }
     }

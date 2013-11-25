@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
@@ -38,7 +38,7 @@ public class EmptyArrayNodeTest {
   @SuppressWarnings("unchecked")
   public void generate_task() throws Exception {
     Task task = emptyArrayNode.generateTask(taskGenerator);
-    Value result = task.execute(new FakeSandbox());
+    SValue result = task.execute(new FakeSandbox());
     assertThat((SArray<SFile>) result).isEmpty();
   }
 }

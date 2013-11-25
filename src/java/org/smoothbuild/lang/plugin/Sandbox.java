@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.plugin;
 
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 
 public interface Sandbox {
   public void report(Message message);
 
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType);
+  public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType);
 
   public FileBuilder fileBuilder();
 

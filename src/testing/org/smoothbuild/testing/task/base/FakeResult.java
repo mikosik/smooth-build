@@ -1,17 +1,17 @@
 package org.smoothbuild.testing.task.base;
 
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.base.Result;
 
 public class FakeResult implements Result {
-  private final Value value;
+  private final SValue value;
 
-  public FakeResult(Value value) {
+  public FakeResult(SValue value) {
     this.value = value;
   }
 
   @Override
-  public Value result() {
+  public SValue result() {
     return value;
   }
 }

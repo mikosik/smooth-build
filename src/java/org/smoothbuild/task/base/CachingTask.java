@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.io.cache.task.CachedResult;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.SandboxImpl;
 
@@ -24,7 +24,7 @@ public class CachingTask extends Task {
   }
 
   @Override
-  public Value execute(SandboxImpl sandbox) {
+  public SValue execute(SandboxImpl sandbox) {
     HashCode hash = callHasher.hash();
     if (taskDb.contains(hash)) {
       sandbox.messageGroup().setResultIsFromCache();
@@ -35,7 +35,7 @@ public class CachingTask extends Task {
       return cachedResult.value();
     }
 
-    Value result = task.execute(sandbox);
+    SValue result = task.execute(sandbox);
     taskDb.store(hash, new CachedResult(result, sandbox.messageGroup()));
     return result;
   }

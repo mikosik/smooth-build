@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
 
@@ -13,7 +13,7 @@ public class EmptyArrayTask extends Task {
   }
 
   @Override
-  public Value execute(SandboxImpl sandbox) {
+  public SValue execute(SandboxImpl sandbox) {
     /*
      * We cheat here and return empty stringArray. Nobody will ever use this
      * object.

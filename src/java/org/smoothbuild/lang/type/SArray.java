@@ -1,3 +1,6 @@
 package org.smoothbuild.lang.type;
 
-public interface SArray<T extends Value> extends Iterable<T>, Value {}
+/**
+ * Smooth Array. Array Value in smooth language.
+ */
+public interface SArray<T extends SValue> extends Iterable<T>, SValue {}

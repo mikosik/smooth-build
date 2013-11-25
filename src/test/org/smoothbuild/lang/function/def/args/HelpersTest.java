@@ -10,7 +10,7 @@ import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -19,8 +19,8 @@ public class HelpersTest {
 
   @Test
   public void createMap() {
-    ImmutableSet<Type<?>> set = ImmutableSet.of(STRING, STRING_ARRAY);
-    ImmutableMap<Type<?>, Set<Object>> map = Helpers.createMap(set);
+    ImmutableSet<SType<?>> set = ImmutableSet.of(STRING, STRING_ARRAY);
+    ImmutableMap<SType<?>, Set<Object>> map = Helpers.createMap(set);
 
     assertThat(map.get(STRING)).isEmpty();
     assertThat(map.get(STRING_ARRAY)).isEmpty();

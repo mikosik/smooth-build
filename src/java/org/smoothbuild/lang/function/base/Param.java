@@ -7,34 +7,34 @@ import static org.smoothbuild.lang.type.STypes.allowedForParam;
 
 import java.util.Set;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 
 public class Param {
-  private final Type<?> type;
+  private final SType<?> type;
   private final String name;
   private final boolean isRequired;
 
-  public static Param param(Type<?> type, String name) {
+  public static Param param(SType<?> type, String name) {
     return param(type, name, false);
   }
 
-  public static Param param(Type<?> type, String name, boolean isRequired) {
+  public static Param param(SType<?> type, String name, boolean isRequired) {
     return new Param(type, name, isRequired);
   }
 
-  protected Param(Type<?> type, String name, boolean isRequired) {
+  protected Param(SType<?> type, String name, boolean isRequired) {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
   }
 
-  private Type<?> checkAllowedType(Type<?> type) {
+  private SType<?> checkAllowedType(SType<?> type) {
     checkNotNull(type);
     checkArgument(allowedForParam().contains(type));
     return type;
   }
 
-  public Type<?> type() {
+  public SType<?> type() {
     return type;
   }
 

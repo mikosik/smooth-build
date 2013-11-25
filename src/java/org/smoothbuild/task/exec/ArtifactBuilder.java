@@ -23,7 +23,7 @@ import org.smoothbuild.lang.type.Hashed;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
@@ -57,7 +57,7 @@ public class ArtifactBuilder {
     try {
       for (Entry<Name, Result> artifact : artifacts.entrySet()) {
         Name name = artifact.getKey();
-        Value value = artifact.getValue().result();
+        SValue value = artifact.getValue().result();
 
         store(name, value);
       }
@@ -66,7 +66,7 @@ public class ArtifactBuilder {
     }
   }
 
-  private void store(Name name, Value value) {
+  private void store(Name name, SValue value) {
     Path artifactPath = RESULTS_DIR.append(path(name.value()));
 
     if (value.type() == FILE) {

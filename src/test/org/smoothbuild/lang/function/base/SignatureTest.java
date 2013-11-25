@@ -6,13 +6,13 @@ import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.type.STypes.STRING;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class SignatureTest {
-  Type<?> type = STRING;
+  SType<?> type = STRING;
   Name name = name("name");
   ImmutableList<Param> params = ImmutableList.of();
 

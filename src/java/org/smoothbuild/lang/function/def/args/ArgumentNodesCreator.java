@@ -22,7 +22,7 @@ import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
@@ -112,7 +112,7 @@ public class ArgumentNodesCreator {
         if (argument.hasName()) {
           String name = argument.name();
           Param param = paramsPool.takeByName(name);
-          Type<?> paramType = param.type();
+          SType<?> paramType = param.type();
           if (!paramType.isAssignableFrom(argument.type())) {
             messages.report(new TypeMismatchError(argument, paramType));
           } else {
@@ -123,9 +123,9 @@ public class ArgumentNodesCreator {
     }
 
     private void processNamelessArguments(AssignmentList assignmentList) {
-      ImmutableMap<Type<?>, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
+      ImmutableMap<SType<?>, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
 
-      for (Type<?> type : allTypes()) {
+      for (SType<?> type : allTypes()) {
         Set<Argument> availableArgs = namelessArgs.get(type);
         int argsSize = availableArgs.size();
         if (0 < argsSize) {
@@ -158,7 +158,7 @@ public class ArgumentNodesCreator {
     }
 
     private Node argumentNode(Assignment assignment) {
-      Type<?> type = assignment.param().type();
+      SType<?> type = assignment.param().type();
       Argument argument = assignment.argument();
       if (argument.type() == EMPTY_ARRAY) {
         if (type == STRING_ARRAY) {

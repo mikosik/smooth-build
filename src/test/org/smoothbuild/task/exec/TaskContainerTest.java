@@ -7,13 +7,13 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.base.Task;
 
 public class TaskContainerTest {
   TaskExecutor taskExecutor = mock(TaskExecutor.class);
   Task task = mock(Task.class);
-  Value value = mock(Value.class);
+  SValue value = mock(SValue.class);
 
   TaskContainer taskContainer = new TaskContainer(taskExecutor, task);
 

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.testing.lang.type.FakeString;
 
 import com.google.common.collect.ImmutableMap;
@@ -16,20 +16,20 @@ public class ArgumentsCreatorTest {
 
   @Test
   public void stringArgumentIsPassed() {
-    MyParametersInterface args = createArgs(ImmutableMap.<String, Value> of(name, value));
+    MyParametersInterface args = createArgs(ImmutableMap.<String, SValue> of(name, value));
 
     assertThat(args.string()).isEqualTo(value);
   }
 
   @Test
   public void nullReturnedForNotArrayArguments() {
-    MyParametersInterface args = createArgs(ImmutableMap.<String, Value> of(name, value));
+    MyParametersInterface args = createArgs(ImmutableMap.<String, SValue> of(name, value));
 
     assertThat(args.integer()).isNull();
     assertThat(args.string2()).isNull();
   }
 
-  private MyParametersInterface createArgs(ImmutableMap<String, Value> map) {
+  private MyParametersInterface createArgs(ImmutableMap<String, SValue> map) {
     return (MyParametersInterface) argumentsCreator.create(map);
   }
 

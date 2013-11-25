@@ -19,7 +19,7 @@ import org.smoothbuild.lang.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 
 import com.google.common.collect.Lists;
 import com.google.inject.TypeLiteral;
@@ -28,7 +28,7 @@ public class SignatureFactory {
 
   public static Signature create(Method method, Class<?> paramsInterface)
       throws NativeImplementationException {
-    Type<?> type = getReturnType(method);
+    SType<?> type = getReturnType(method);
     Name name = getFunctionName(method);
     Iterable<Param> params = getParams(method, paramsInterface);
 
@@ -47,9 +47,9 @@ public class SignatureFactory {
     }
   }
 
-  private static Type<?> getReturnType(Method method) throws NativeImplementationException {
+  private static SType<?> getReturnType(Method method) throws NativeImplementationException {
     TypeLiteral<?> javaType = javaMethodReturnType(method);
-    Type<?> type = javaResultTypetoType(javaType);
+    SType<?> type = javaResultTypetoType(javaType);
     if (type == null) {
       throw new IllegalReturnTypeException(method, javaType);
     }
@@ -76,7 +76,7 @@ public class SignatureFactory {
     }
 
     TypeLiteral<?> javaType = javaMethodReturnType(paramMethod);
-    Type<?> type = javaParamTypetoType(javaType);
+    SType<?> type = javaParamTypetoType(javaType);
     if (type == null) {
       throw new ForbiddenParamTypeException(method, paramMethod, javaType);
     }

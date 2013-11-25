@@ -27,7 +27,7 @@ import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
@@ -45,7 +45,7 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
   @Builtin
   public Module provideBuiltinModule(ModuleBuilder builder) throws Exception {
     Mockito.when(
-        normalInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Value>> any()))
+        normalInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, SValue>> any()))
         .thenAnswer(new Answer<SString>() {
           @Override
           public SString answer(InvocationOnMock invocation) throws Throwable {
@@ -56,7 +56,7 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
     builder.addFunction(function(normalFunction, normalInvoker));
 
     Mockito.when(
-        erroneousInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Value>> any()))
+        erroneousInvoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, SValue>> any()))
         .thenAnswer(new Answer<SString>() {
           @Override
           public SString answer(InvocationOnMock invocation) throws Throwable {

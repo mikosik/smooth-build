@@ -8,7 +8,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
@@ -72,7 +72,7 @@ public class AbstractValueTest {
   }
 
   private static class MyAbstractValue extends AbstractValue {
-    public MyAbstractValue(Type<?> type, HashCode hash) {
+    public MyAbstractValue(SType<?> type, HashCode hash) {
       super(type, hash);
     }
   }

@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
 
@@ -29,5 +29,5 @@ public abstract class Task {
     return codeLocation;
   }
 
-  public abstract Value execute(SandboxImpl sandbox);
+  public abstract SValue execute(SandboxImpl sandbox);
 }

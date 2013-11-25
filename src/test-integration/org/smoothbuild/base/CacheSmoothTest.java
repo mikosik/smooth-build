@@ -30,7 +30,7 @@ import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 import com.google.common.collect.ImmutableList;
@@ -44,7 +44,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
   @Singleton
   @Builtin
   public Module provideBuiltinModule(ModuleBuilder builder) throws Exception {
-    Mockito.when(invoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Value>> any()))
+    Mockito.when(invoker.invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, SValue>> any()))
         .thenAnswer(new Answer<SString>() {
           @Override
           public SString answer(InvocationOnMock invocation) throws Throwable {
@@ -71,7 +71,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.assertNoProblems();
-    verify(invoker, times(1)).invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Value>> any());
+    verify(invoker, times(1)).invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, SValue>> any());
   }
 
   @Test
@@ -88,7 +88,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.assertNoProblems();
-    verify(invoker, times(2)).invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, Value>> any());
+    verify(invoker, times(2)).invoke(Matchers.<Sandbox> any(), Matchers.<Map<String, SValue>> any());
   }
 
   private static NativeFunction function(String name, Invoker invoker) {
