@@ -3,6 +3,7 @@ package org.smoothbuild.lang.builtin.compress;
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,7 +39,7 @@ public class Unzipper {
 
   public SArray<SFile> unzipFile(SFile zipFile) {
     this.alreadyUnzipped = Sets.newHashSet();
-    ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
         ZipEntry entry = null;

@@ -11,11 +11,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class ArrayNode extends Node {
+  private final ArrayType<?> arrayType;
   private final ImmutableList<? extends Node> elements;
 
   public ArrayNode(ArrayType<?> arrayType, ImmutableList<? extends Node> elements,
       CodeLocation codeLocation) {
     super(arrayType, codeLocation);
+    this.arrayType = arrayType;
     this.elements = elements;
   }
 
@@ -26,6 +28,6 @@ public class ArrayNode extends Node {
       builder.add(taskGenerator.generateTask(node));
     }
     ImmutableList<Result> dependencies = builder.build();
-    return new ArrayTask(type(), dependencies, codeLocation());
+    return new ArrayTask(arrayType, dependencies, codeLocation());
   }
 }

@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.builtin.file;
 
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+
 import java.util.Set;
 
 import org.smoothbuild.io.fs.base.Path;
@@ -39,7 +41,7 @@ public class MergeFunction {
 
     public SArray<SFile> execute() {
       Set<Path> alreadyAdded = Sets.newHashSet();
-      ArrayBuilder<SFile> builder = sandbox.fileArrayBuilder();
+      ArrayBuilder<SFile> builder = sandbox.arrayBuilder(FILE_ARRAY);
 
       for (SFile file : params.files()) {
         addFile(file, builder, alreadyAdded);

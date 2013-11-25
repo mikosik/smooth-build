@@ -1,19 +1,14 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
-
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.BlobBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
@@ -36,32 +31,9 @@ public class SandboxImpl implements Sandbox {
     this.messageGroup = messageGroup;
   }
 
-  public ArrayBuilder<?> arrayBuilder(Type<?> arrayType) {
-    if (arrayType == FILE_ARRAY) {
-      return fileArrayBuilder();
-    }
-    if (arrayType == BLOB_ARRAY) {
-      return blobArrayBuilder();
-    }
-    if (arrayType == STRING_ARRAY) {
-      return stringArrayBuilder();
-    }
-    throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
-  }
-
   @Override
-  public ArrayBuilder<SFile> fileArrayBuilder() {
-    return valueDb.fileArrayBuilder();
-  }
-
-  @Override
-  public ArrayBuilder<SBlob> blobArrayBuilder() {
-    return valueDb.blobArrayBuilder();
-  }
-
-  @Override
-  public ArrayBuilder<SString> stringArrayBuilder() {
-    return valueDb.stringArrayBuilder();
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
+    return valueDb.arrayBuilder(arrayType);
   }
 
   @Override

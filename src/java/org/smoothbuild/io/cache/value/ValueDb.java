@@ -16,6 +16,7 @@ import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.hash.ValuesCache;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
@@ -62,15 +63,36 @@ public class ValueDb {
     this.readersMap = builder.build();
   }
 
-  public ArrayBuilder<SFile> fileArrayBuilder() {
+  // array builders
+
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
+    if (arrayType == FILE_ARRAY) {
+      @SuppressWarnings("unchecked")
+      ArrayBuilder<T> result = (ArrayBuilder<T>) fileArrayBuilder();
+      return result;
+    }
+    if (arrayType == BLOB_ARRAY) {
+      @SuppressWarnings("unchecked")
+      ArrayBuilder<T> result = (ArrayBuilder<T>) blobArrayBuilder();
+      return result;
+    }
+    if (arrayType == STRING_ARRAY) {
+      @SuppressWarnings("unchecked")
+      ArrayBuilder<T> result = (ArrayBuilder<T>) stringArrayBuilder();
+      return result;
+    }
+    throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
+  }
+
+  private ArrayBuilder<SFile> fileArrayBuilder() {
     return new ArrayBuilder<SFile>(hashedDb, FILE_ARRAY, readFile);
   }
 
-  public ArrayBuilder<SBlob> blobArrayBuilder() {
+  private ArrayBuilder<SBlob> blobArrayBuilder() {
     return new ArrayBuilder<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
   }
 
-  public ArrayBuilder<SString> stringArrayBuilder() {
+  private ArrayBuilder<SString> stringArrayBuilder() {
     return new ArrayBuilder<SString>(hashedDb, STRING_ARRAY, readString);
   }
 

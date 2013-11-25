@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.builtin.java.javac;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public class OutputClassFileTest {
   @Test
   public void openOutputStream() throws IOException {
     Path path = Path.path("my/path");
-    ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);
@@ -40,7 +41,7 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     Path path = Path.path("my/path");
-    ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
     FileBuilder fileBuilder = sandbox.fileBuilder();
 
     OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);

@@ -5,6 +5,7 @@ import static com.google.common.base.Predicates.not;
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -47,7 +48,7 @@ public class Unjarer {
 
   public SArray<SFile> unjarFile(SFile jarFile, Predicate<String> nameFilter) {
     this.alreadyUnjared = Sets.newHashSet();
-    ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
+    ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {

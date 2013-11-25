@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import java.util.List;
 
 import org.smoothbuild.lang.plugin.ArrayBuilder;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.SandboxImpl;
@@ -11,10 +11,10 @@ import org.smoothbuild.task.exec.SandboxImpl;
 import com.google.common.collect.ImmutableList;
 
 public class ArrayTask extends Task {
-  private final Type<?> arrayType;
+  private final ArrayType<?> arrayType;
   private final ImmutableList<Result> elements;
 
-  public ArrayTask(Type<?> arrayType, List<Result> elements, CodeLocation codeLocation) {
+  public ArrayTask(ArrayType<?> arrayType, List<Result> elements, CodeLocation codeLocation) {
     super(arrayType.name(), true, codeLocation);
     this.arrayType = arrayType;
     this.elements = ImmutableList.copyOf(elements);
