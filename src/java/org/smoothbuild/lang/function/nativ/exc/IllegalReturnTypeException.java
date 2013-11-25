@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.function.nativ.exc;
 
-import java.lang.reflect.Method;
+import static org.smoothbuild.lang.type.STypes.javaTypesAllowedForResult;
 
-import org.smoothbuild.lang.type.Type;
+import java.lang.reflect.Method;
 
 import com.google.inject.TypeLiteral;
 
@@ -10,6 +10,6 @@ import com.google.inject.TypeLiteral;
 public class IllegalReturnTypeException extends FunctionImplementationException {
   public IllegalReturnTypeException(Method method, TypeLiteral<?> returnType) {
     super(method, "It has is illegal return type '" + returnType
-        + "'.\n Only following types are allowed: " + Type.javaTypesAllowedForResult() + ".");
+        + "'.\n Only following types are allowed: " + javaTypesAllowedForResult() + ".");
   }
 }

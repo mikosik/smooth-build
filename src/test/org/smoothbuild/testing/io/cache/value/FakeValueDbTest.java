@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.io.cache.value;
 
-import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -11,7 +11,6 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 
 public class FakeValueDbTest {
   Path path = Path.path("my/file");

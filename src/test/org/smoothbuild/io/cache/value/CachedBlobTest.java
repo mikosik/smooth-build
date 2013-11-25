@@ -1,6 +1,7 @@
 package org.smoothbuild.io.cache.value;
 
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -12,7 +13,6 @@ import java.io.InputStream;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.io.cache.hash.HashedDb;
-import org.smoothbuild.lang.type.Type;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
@@ -41,7 +41,7 @@ public class CachedBlobTest {
   public void type() throws Exception {
     given(cachedBlob = new CachedBlob(hashedDb, hash));
     when(cachedBlob.type());
-    thenReturned(Type.BLOB);
+    thenReturned(BLOB);
   }
 
   @Test

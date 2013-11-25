@@ -5,7 +5,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
 
@@ -23,7 +24,6 @@ import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
@@ -88,7 +88,7 @@ public class NativeCallTaskTest {
   @Test
   public void null_can_be_returned_when_function_reported_errors() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
-    Signature signature = new Signature(Type.FILE, name("name"), params);
+    Signature signature = new Signature(FILE, name("name"), params);
     function1 = new NativeFunction(signature, invoker, true);
     nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
     when(invoker.invoke(sandbox, Empty.stringValueMap())).thenAnswer(new Answer<SFile>() {

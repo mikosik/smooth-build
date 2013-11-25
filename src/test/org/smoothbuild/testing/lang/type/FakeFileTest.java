@@ -3,6 +3,7 @@ package org.smoothbuild.testing.lang.type;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -10,8 +11,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.util.Streams;
 import org.testory.common.Closure;
 
@@ -41,7 +40,7 @@ public class FakeFileTest {
   public void type() throws Exception {
     given(file = new FakeFile(path));
     when(file.type());
-    thenReturned(Type.FILE);
+    thenReturned(FILE);
   }
 
   @Test

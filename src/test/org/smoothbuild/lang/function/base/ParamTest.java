@@ -5,9 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.Param.paramsToString;
-import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
-import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.type.STypes.allowedForParam;
 
 import java.util.Set;
 
@@ -56,7 +57,7 @@ public class ParamTest {
 
     tester.addEqualityGroup(param(STRING, "equal", false), param(STRING, "equal", false));
 
-    for (Type<?> type : Type.allowedForParam()) {
+    for (Type<?> type : allowedForParam()) {
       tester.addEqualityGroup(param(type, "name", false));
       tester.addEqualityGroup(param(type, "name", true));
       tester.addEqualityGroup(param(type, "name2", false));

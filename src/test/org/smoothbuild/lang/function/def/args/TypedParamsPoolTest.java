@@ -2,8 +2,8 @@ package org.smoothbuild.lang.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.Type.BLOB;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.type.STypes.STRING;
 
 import java.util.Set;
 

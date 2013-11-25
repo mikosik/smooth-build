@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.nativ;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import java.lang.reflect.Method;

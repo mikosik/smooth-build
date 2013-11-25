@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
-import static org.smoothbuild.lang.type.Type.BLOB_ARRAY;
-import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
-import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.allTypes;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.Collection;
@@ -124,7 +125,7 @@ public class ArgumentNodesCreator {
     private void processNamelessArguments(AssignmentList assignmentList) {
       ImmutableMap<Type<?>, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
 
-      for (Type<?> type : Type.allTypes()) {
+      for (Type<?> type : allTypes()) {
         Set<Argument> availableArgs = namelessArgs.get(type);
         int argsSize = availableArgs.size();
         if (0 < argsSize) {
@@ -160,7 +161,7 @@ public class ArgumentNodesCreator {
       Type<?> type = assignment.param().type();
       Argument argument = assignment.argument();
       if (argument.type() == EMPTY_ARRAY) {
-        if (type == Type.STRING_ARRAY) {
+        if (type == STRING_ARRAY) {
           ArrayNode node = new ArrayNode(STRING_ARRAY, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
         } else if (type == FILE_ARRAY) {

@@ -2,14 +2,13 @@ package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.testing.lang.type.FakeString;
 import org.testory.common.Closure;
 
 public class FakeStringTest {
@@ -35,7 +34,7 @@ public class FakeStringTest {
   public void type() throws Exception {
     given(fakeString = new FakeString(value));
     when(fakeString.type());
-    thenReturned(Type.STRING);
+    thenReturned(STRING);
   }
 
   @Test

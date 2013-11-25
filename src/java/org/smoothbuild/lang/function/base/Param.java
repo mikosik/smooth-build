@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
-import static org.smoothbuild.lang.type.Type.allowedForParam;
+import static org.smoothbuild.lang.type.STypes.allowedForParam;
 
 import java.util.Set;
 

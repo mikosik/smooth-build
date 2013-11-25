@@ -1,7 +1,7 @@
 package org.smoothbuild.io.cache.value;
 
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.type.Type.FILE;
+import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;

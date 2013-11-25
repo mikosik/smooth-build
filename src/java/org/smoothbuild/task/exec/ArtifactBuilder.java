@@ -4,6 +4,10 @@ import static org.smoothbuild.io.cache.CacheModule.RESULTS_DIR;
 import static org.smoothbuild.io.cache.CacheModule.VALUE_DB_DIR;
 import static org.smoothbuild.io.cache.hash.HashCodes.toPath;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,11 +19,10 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.type.Hashed;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.Hashed;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
@@ -66,15 +69,15 @@ public class ArtifactBuilder {
   private void store(Name name, Value value) {
     Path artifactPath = RESULTS_DIR.append(path(name.value()));
 
-    if (value.type() == Type.FILE) {
+    if (value.type() == FILE) {
       storeFile(artifactPath, (SFile) value);
-    } else if (value.type() == Type.FILE_ARRAY) {
+    } else if (value.type() == FILE_ARRAY) {
       @SuppressWarnings("unchecked")
       SArray<SFile> fileArray = (SArray<SFile>) value;
       storeFileArray(artifactPath, fileArray);
-    } else if (value.type() == Type.STRING) {
+    } else if (value.type() == STRING) {
       storeString(artifactPath, (SString) value);
-    } else if (value.type() == Type.STRING_ARRAY) {
+    } else if (value.type() == STRING_ARRAY) {
       @SuppressWarnings("unchecked")
       SArray<SString> stringArray = (SArray<SString>) value;
       storeStringArray(artifactPath, stringArray);

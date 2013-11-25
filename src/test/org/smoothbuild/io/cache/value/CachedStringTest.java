@@ -2,6 +2,7 @@ package org.smoothbuild.io.cache.value;
 
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.command.SmoothContants.CHARSET;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -14,7 +15,6 @@ import java.io.InputStream;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.io.cache.hash.HashedDb;
-import org.smoothbuild.lang.type.Type;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
@@ -43,7 +43,7 @@ public class CachedStringTest {
   public void type() throws Exception {
     given(cachedString = new CachedString(hashedDb, hash));
     when(cachedString.type());
-    thenReturned(Type.STRING);
+    thenReturned(STRING);
   }
 
   @Test

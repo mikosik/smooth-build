@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.ArrayTask;
 import org.smoothbuild.task.base.Result;
@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList.Builder;
 public class ArrayNode extends Node {
   private final ImmutableList<? extends Node> elements;
 
-  public ArrayNode(Type<?> arrayType, ImmutableList<? extends Node> elements,
+  public ArrayNode(ArrayType<?> arrayType, ImmutableList<? extends Node> elements,
       CodeLocation codeLocation) {
     super(arrayType, codeLocation);
     this.elements = elements;

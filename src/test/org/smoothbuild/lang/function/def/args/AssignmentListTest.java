@@ -6,8 +6,8 @@ import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
-import static org.smoothbuild.lang.type.Type.FILE;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.type.STypes.STRING;
 
 import org.junit.Test;
 import org.mockito.BDDMockito;

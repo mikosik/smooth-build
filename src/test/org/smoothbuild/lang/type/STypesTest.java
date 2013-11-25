@@ -1,26 +1,25 @@
 package org.smoothbuild.lang.type;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.Type.BLOB;
-import static org.smoothbuild.lang.type.Type.BLOB_ARRAY;
-import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
-import static org.smoothbuild.lang.type.Type.FILE;
-import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Type.JAVA_PARAM_TO_SMOOTH;
-import static org.smoothbuild.lang.type.Type.JAVA_RESULT_TO_SMOOTH;
-import static org.smoothbuild.lang.type.Type.PARAM_TYPES;
-import static org.smoothbuild.lang.type.Type.RESULT_TYPES;
-import static org.smoothbuild.lang.type.Type.STRING;
-import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
-import static org.smoothbuild.lang.type.Type.javaParamTypetoType;
-import static org.smoothbuild.lang.type.Type.javaResultTypetoType;
+import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.JAVA_PARAM_TO_SMOOTH;
+import static org.smoothbuild.lang.type.STypes.JAVA_RESULT_TO_SMOOTH;
+import static org.smoothbuild.lang.type.STypes.PARAM_TYPES;
+import static org.smoothbuild.lang.type.STypes.RESULT_TYPES;
+import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.javaParamTypetoType;
+import static org.smoothbuild.lang.type.STypes.javaResultTypetoType;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Type.EmptyArray;
 
 import com.google.inject.TypeLiteral;
 
-public class TypeTest {
+public class STypesTest {
 
   @Test
   public void isAssignableFrom() throws Exception {
@@ -201,11 +200,6 @@ public class TypeTest {
     assertThat(javaParamTypetoType(new TypeLiteral<SArray<SString>>() {})).isEqualTo(STRING_ARRAY);
     assertThat(javaParamTypetoType(new TypeLiteral<SArray<SBlob>>() {})).isEqualTo(BLOB_ARRAY);
     assertThat(javaParamTypetoType(new TypeLiteral<SArray<SFile>>() {})).isEqualTo(FILE_ARRAY);
-  }
-
-  @Test
-  public void emptyArrayIsNotValidParamType() throws Exception {
-    assertThat(javaParamTypetoType(type(EmptyArray.class))).isNull();
   }
 
   @Test

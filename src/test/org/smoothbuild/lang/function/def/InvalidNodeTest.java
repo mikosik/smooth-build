@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.def;
 
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
