@@ -6,10 +6,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.smoothbuild.io.cache.hash.Hash;
-import org.smoothbuild.io.cache.value.AbstractValue;
+import org.smoothbuild.io.cache.value.CachedValue;
 import org.smoothbuild.lang.type.SBlob;
 
-public class FakeBlob extends AbstractValue implements SBlob {
+public class FakeBlob extends CachedValue implements SBlob {
   private final byte[] data;
 
   public FakeBlob(byte[] data) {

@@ -10,7 +10,7 @@ import org.smoothbuild.lang.type.SBlob;
 
 import com.google.common.hash.HashCode;
 
-public class CachedBlob extends AbstractValue implements SBlob {
+public class CachedBlob extends CachedValue implements SBlob {
   private final HashedDb hashedDb;
 
   public CachedBlob(HashedDb hashedDb, HashCode hash) {

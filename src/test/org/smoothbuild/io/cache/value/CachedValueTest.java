@@ -13,12 +13,12 @@ import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
 
-public class AbstractValueTest {
+public class CachedValueTest {
   HashCode hash = HashCode.fromInt(123);
   HashCode hash2 = HashCode.fromInt(124);
 
-  AbstractValue abstractValue;
-  AbstractValue abstractValue2;
+  CachedValue abstractValue;
+  CachedValue abstractValue2;
 
   @Test
   public void null_type_is_forbidden() {
@@ -71,7 +71,7 @@ public class AbstractValueTest {
     };
   }
 
-  private static class MyAbstractValue extends AbstractValue {
+  private static class MyAbstractValue extends CachedValue {
     public MyAbstractValue(SType<?> type, HashCode hash) {
       super(type, hash);
     }

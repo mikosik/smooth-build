@@ -13,7 +13,7 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.hash.HashCode;
 
-public class CachedString extends AbstractValue implements SString {
+public class CachedString extends CachedValue implements SString {
   private final HashedDb hashedDb;
 
   public CachedString(HashedDb hashedDb, HashCode hash) {
