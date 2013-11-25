@@ -3,6 +3,7 @@ package org.smoothbuild.lang.function.def.args;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
+import static org.smoothbuild.lang.type.STypes.allTypes;
 
 import java.util.Collection;
 import java.util.Set;
@@ -106,7 +107,7 @@ public class Argument {
   }
 
   public static ImmutableMap<Type<?>, Set<Argument>> filterNameless(Collection<Argument> arguments) {
-    ImmutableMap<Type<?>, Set<Argument>> result = Helpers.createMap(Type.allTypes());
+    ImmutableMap<Type<?>, Set<Argument>> result = Helpers.createMap(allTypes());
     for (Argument argument : arguments) {
       if (!argument.hasName()) {
         Type<?> type = argument.node().type();

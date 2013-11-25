@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFile;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContaining;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContainingItsPath;

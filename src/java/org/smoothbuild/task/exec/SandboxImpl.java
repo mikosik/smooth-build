@@ -1,8 +1,8 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.lang.type.Type.BLOB_ARRAY;
-import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.FileSystem;

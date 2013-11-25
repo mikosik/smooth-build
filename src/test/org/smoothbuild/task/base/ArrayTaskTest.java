@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

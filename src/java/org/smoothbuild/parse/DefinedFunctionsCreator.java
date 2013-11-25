@@ -4,9 +4,10 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
-import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Type.STRING;
-import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -44,6 +45,7 @@ import org.smoothbuild.lang.function.def.StringNode;
 import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.ArgumentNodesCreator;
 import org.smoothbuild.lang.type.SString;
+import org.smoothbuild.lang.type.STypes;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
@@ -160,10 +162,10 @@ public class DefinedFunctionsCreator {
       }
 
       Type<?> elemsType = elemNodes.get(0).type();
-      if (elemsType == Type.STRING) {
+      if (elemsType == STRING) {
         return new CachingNode(new ArrayNode(STRING_ARRAY, elemNodes, locationOf(list)));
       }
-      if (elemsType == Type.FILE) {
+      if (elemsType == FILE) {
         return new CachingNode(new ArrayNode(FILE_ARRAY, elemNodes, locationOf(list)));
       }
 
@@ -175,7 +177,7 @@ public class DefinedFunctionsCreator {
       Builder<Node> builder = ImmutableList.builder();
       for (ArrayElemContext elem : elems) {
         Node node = build(elem);
-        if (!Type.allowedForArrayElem().contains(node.type())) {
+        if (!STypes.allowedForArrayElem().contains(node.type())) {
           messages.report(new ForbiddenArrayElemTypeError(locationOf(elem), node.type()));
         } else {
           builder.add(node);
@@ -279,7 +281,7 @@ public class DefinedFunctionsCreator {
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.report(new CodeMessage(ERROR, location, e.getMessage()));
-        return new CachingNode(new InvalidNode(STRING, locationOf(stringToken.getSymbol())));
+        return new CachingNode(new InvalidNode(STypes.STRING, locationOf(stringToken.getSymbol())));
       }
     }
   }

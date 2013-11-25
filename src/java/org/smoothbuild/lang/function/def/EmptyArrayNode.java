@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
-import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.EmptyArrayTask;

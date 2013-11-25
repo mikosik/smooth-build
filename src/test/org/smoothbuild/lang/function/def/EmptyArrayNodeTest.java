@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

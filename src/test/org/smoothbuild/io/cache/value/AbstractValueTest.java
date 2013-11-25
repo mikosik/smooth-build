@@ -1,7 +1,7 @@
 package org.smoothbuild.io.cache.value;
 
-import static org.smoothbuild.lang.type.Type.BLOB;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;

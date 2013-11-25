@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import org.junit.Test;
@@ -32,7 +32,6 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -62,7 +61,7 @@ public class NativeFunctionFactoryTest {
     assertThat(function.name()).isEqualTo(name("myFunction"));
     Signature signature = function.signature();
     assertThat(signature.name()).isEqualTo(name("myFunction"));
-    assertThat(signature.type()).isEqualTo(Type.STRING);
+    assertThat(signature.type()).isEqualTo(STRING);
 
     Param paramA = param(STRING, "stringA");
     Param paramB = param(STRING, "stringB");

@@ -6,8 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.Type.FILE;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.type.STypes.STRING;
 
 import java.util.Map;
 

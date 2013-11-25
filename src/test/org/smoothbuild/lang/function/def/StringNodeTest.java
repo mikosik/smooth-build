@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.function.def;
 
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -8,7 +9,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
@@ -38,7 +38,7 @@ public class StringNodeTest {
   @Test
   public void type() throws Exception {
     when(stringNode.type());
-    thenReturned(Type.STRING);
+    thenReturned(STRING);
   }
 
   @Test

@@ -5,11 +5,11 @@ import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
-import static org.smoothbuild.lang.type.Type.EMPTY_ARRAY;
-import static org.smoothbuild.lang.type.Type.FILE;
-import static org.smoothbuild.lang.type.Type.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Type.STRING;
-import static org.smoothbuild.lang.type.Type.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 
 import java.util.Set;
 
@@ -190,7 +190,7 @@ public class ArgumentTest {
   }
 
   private static Argument nameless() {
-    return nameless(Type.STRING);
+    return nameless(STRING);
   }
 
   private static Argument nameless(Type<?> type) {

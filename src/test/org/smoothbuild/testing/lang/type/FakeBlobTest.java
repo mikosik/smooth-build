@@ -2,7 +2,7 @@ package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.type.Type.BLOB;
+import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -10,7 +10,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.testory.common.Closure;
 
 public class FakeBlobTest {

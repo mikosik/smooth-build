@@ -5,7 +5,7 @@ import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.type.Type.STRING;
+import static org.smoothbuild.lang.type.STypes.STRING;
 
 import java.util.Map;
 

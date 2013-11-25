@@ -1,6 +1,7 @@
 package org.smoothbuild.testing.lang.type;
 
 import static org.smoothbuild.command.SmoothContants.CHARSET;
+import static org.smoothbuild.lang.type.STypes.FILE;
 
 import java.io.InputStream;
 
@@ -10,7 +11,6 @@ import org.smoothbuild.io.cache.value.AbstractValue;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
 
@@ -32,7 +32,7 @@ public class FakeFile extends AbstractValue implements SFile {
   }
 
   public FakeFile(Path path, FakeBlob content) {
-    super(Type.FILE, calculateHash(path, content));
+    super(FILE, calculateHash(path, content));
     this.path = path;
     this.content = content;
   }

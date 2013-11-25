@@ -1,6 +1,7 @@
 package org.smoothbuild.io.cache.value;
 
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -11,7 +12,6 @@ import java.io.InputStream;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.Type;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
@@ -46,7 +46,7 @@ public class CachedFileTest {
   public void type() throws Exception {
     given(cachedFile = new CachedFile(path, content, hash));
     when(cachedFile.type());
-    thenReturned(Type.FILE);
+    thenReturned(FILE);
   }
 
   @Test
