@@ -3,10 +3,10 @@ package org.smoothbuild.lang.builtin.file;
 import static org.smoothbuild.io.fs.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
+import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.match.IllegalPathPatternException;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathPatternError;
-import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;

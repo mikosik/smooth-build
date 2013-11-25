@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.plugin;
+package org.smoothbuild.io.cache.value.build;
 
 import static com.google.common.base.Preconditions.checkState;
 

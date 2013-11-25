@@ -6,14 +6,14 @@ import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.copy;
 
+import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchDirButFileError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchDirError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.lang.plugin.ArrayBuilder;
-import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;

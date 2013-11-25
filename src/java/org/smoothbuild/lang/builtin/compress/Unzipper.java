@@ -11,12 +11,12 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.lang.plugin.ArrayBuilder;
-import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;

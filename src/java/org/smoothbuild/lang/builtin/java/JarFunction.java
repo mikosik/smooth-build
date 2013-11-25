@@ -11,11 +11,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
+import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.CannotAddDuplicatePathError;
-import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.plugin.SmoothFunction;

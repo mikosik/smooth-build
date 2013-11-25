@@ -14,8 +14,8 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
+import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
