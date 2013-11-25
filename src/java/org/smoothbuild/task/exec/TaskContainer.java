@@ -1,13 +1,13 @@
 package org.smoothbuild.task.exec;
 
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 
 public class TaskContainer implements Result {
   private final TaskExecutor taskExecutor;
   private final Task task;
-  private Value result;
+  private SValue result;
 
   public TaskContainer(TaskExecutor taskExecutor, Task task) {
     this.taskExecutor = taskExecutor;
@@ -16,7 +16,7 @@ public class TaskContainer implements Result {
   }
 
   @Override
-  public Value result() {
+  public SValue result() {
     if (result == null) {
       result = taskExecutor.execute(task);
     }

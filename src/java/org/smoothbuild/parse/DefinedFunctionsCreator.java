@@ -46,7 +46,7 @@ import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.ArgumentNodesCreator;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.STypes;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
@@ -112,7 +112,7 @@ public class DefinedFunctionsCreator {
     public DefinedFunction build(FunctionContext function) {
       Node node = build(function.pipe());
 
-      Type<?> type = node.type();
+      SType<?> type = node.type();
       String name = function.functionName().getText();
       ImmutableList<Param> params = ImmutableList.of();
       Signature signature = new Signature(type, name(name), params);
@@ -161,7 +161,7 @@ public class DefinedFunctionsCreator {
         return new CachingNode(new EmptyArrayNode(locationOf(list)));
       }
 
-      Type<?> elemsType = elemNodes.get(0).type();
+      SType<?> elemsType = elemNodes.get(0).type();
       if (elemsType == STRING) {
         return new CachingNode(new ArrayNode(STRING_ARRAY, elemNodes, locationOf(list)));
       }
@@ -201,7 +201,7 @@ public class DefinedFunctionsCreator {
 
     private boolean areAllElemTypesEqual(List<ArrayElemContext> elems, List<Node> elemNodes) {
       boolean success = true;
-      Type<?> firstType = elemNodes.get(0).type();
+      SType<?> firstType = elemNodes.get(0).type();
       for (int i = 0; i < elemNodes.size(); i++) {
         Node elemNode = elemNodes.get(i);
         if (elemNode.type() != firstType) {

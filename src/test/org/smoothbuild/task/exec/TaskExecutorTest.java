@@ -9,7 +9,7 @@ import static org.smoothbuild.message.base.MessageType.WARNING;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
@@ -17,7 +17,7 @@ import org.smoothbuild.task.base.Task;
 
 public class TaskExecutorTest {
   Task task = mock(Task.class);
-  Value value = mock(Value.class);
+  SValue value = mock(SValue.class);
   UserConsole userConsole = mock(UserConsole.class);
   MessageGroup messageGroup = new MessageGroup("name");
   SandboxImpl sandbox = mock(SandboxImpl.class);

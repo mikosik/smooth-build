@@ -215,13 +215,13 @@ public class STypesTest {
 
   @Test
   public void javaResultToSmoothContainsAllResultTypes() throws Exception {
-    Type<?>[] array = new Type<?>[] {};
+    SType<?>[] array = new SType<?>[] {};
     assertThat(JAVA_RESULT_TO_SMOOTH.values()).containsOnly(RESULT_TYPES.toArray(array));
   }
 
   @Test
   public void javaParamToSmoothContainsAllResultTypes() throws Exception {
-    Type<?>[] array = new Type<?>[] {};
+    SType<?>[] array = new SType<?>[] {};
     assertThat(JAVA_PARAM_TO_SMOOTH.values()).containsOnly(PARAM_TYPES.toArray(array));
   }
 

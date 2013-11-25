@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
@@ -17,9 +17,9 @@ public class TaskExecutor {
     this.userConsole = userConsole;
   }
 
-  public Value execute(Task task) {
+  public SValue execute(Task task) {
     SandboxImpl sandbox = sandboxFactory.createSandbox(task);
-    Value result = task.execute(sandbox);
+    SValue result = task.execute(sandbox);
 
     MessageGroup messageGroup = sandbox.messageGroup();
     if (!task.isInternal() || messageGroup.containsMessages()) {

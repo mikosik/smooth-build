@@ -6,9 +6,9 @@ import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.BlobBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Sandbox;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
@@ -32,7 +32,7 @@ public class SandboxImpl implements Sandbox {
   }
 
   @Override
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
+  public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
     return valueDb.arrayBuilder(arrayType);
   }
 

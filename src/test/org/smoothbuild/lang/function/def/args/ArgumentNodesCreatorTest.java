@@ -32,8 +32,8 @@ import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
@@ -60,7 +60,7 @@ public class ArgumentNodesCreatorTest {
     do_test_converting_named_argument(BLOB_ARRAY, FILE_ARRAY);
   }
 
-  private void do_test_converting_named_argument(Type<?> paramType, Type<?> argType) {
+  private void do_test_converting_named_argument(SType<?> paramType, SType<?> argType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
@@ -84,7 +84,7 @@ public class ArgumentNodesCreatorTest {
     do_test_converting_named_empty_array_argument(FILE_ARRAY);
   }
 
-  private void do_test_converting_named_empty_array_argument(Type<?> paramType) {
+  private void do_test_converting_named_empty_array_argument(SType<?> paramType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
@@ -109,7 +109,7 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingNamedEmptyArrayArgument(FILE_ARRAY);
   }
 
-  private void doTestConvertingNamedEmptyArrayArgument(Type<?> type) {
+  private void doTestConvertingNamedEmptyArrayArgument(SType<?> type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -136,7 +136,7 @@ public class ArgumentNodesCreatorTest {
     doTestDuplicatedNames(FILE_ARRAY);
   }
 
-  private void doTestDuplicatedNames(Type<?> type) {
+  private void doTestDuplicatedNames(SType<?> type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -158,7 +158,7 @@ public class ArgumentNodesCreatorTest {
     doTestDuplicatedNamedEmptyArrayNames(FILE_ARRAY);
   }
 
-  private void doTestDuplicatedNamedEmptyArrayNames(Type<?> type) {
+  private void doTestDuplicatedNamedEmptyArrayNames(SType<?> type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -242,7 +242,7 @@ public class ArgumentNodesCreatorTest {
     doTestTypeMismatchForParamProblem(FILE_ARRAY, FILE);
   }
 
-  private void doTestTypeMismatchForParamProblem(Type<?> paramType, Type<?> argType)
+  private void doTestTypeMismatchForParamProblem(SType<?> paramType, SType<?> argType)
       throws Exception {
     // given
     messages = new FakeMessageGroup();
@@ -320,8 +320,8 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, STRING_ARRAY);
   }
 
-  private void doTestConvertingSingleNamelessArgument(Type<?> paramType, Type<?> argType,
-      Type<?> otherParamsType) {
+  private void doTestConvertingSingleNamelessArgument(SType<?> paramType, SType<?> argType,
+      SType<?> otherParamsType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(otherParamsType, "name1");
@@ -354,8 +354,8 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingSingleNamelessEmptyArrayArgument(FILE_ARRAY, BLOB);
   }
 
-  private void doTestConvertingSingleNamelessEmptyArrayArgument(Type<?> paramType,
-      Type<?> otherParamType) {
+  private void doTestConvertingSingleNamelessEmptyArrayArgument(SType<?> paramType,
+      SType<?> otherParamType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(otherParamType, "name1");
@@ -383,7 +383,7 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE_ARRAY);
   }
 
-  private void doTestConvertingSingleNamelessArgumentWhitOthersNamed(Type<?> type) {
+  private void doTestConvertingSingleNamelessArgumentWhitOthersNamed(SType<?> type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -444,7 +444,7 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, FILE);
   }
 
-  private void doTestConvertingTwoNamelessArgumentsWithDifferentType(Type<?> type1, Type<?> type2) {
+  private void doTestConvertingTwoNamelessArgumentsWithDifferentType(SType<?> type1, SType<?> type2) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type1, "name1");
@@ -470,7 +470,7 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(FILE_ARRAY);
   }
 
-  private void doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(Type<?> type) {
+  private void doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(SType<?> type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -504,8 +504,8 @@ public class ArgumentNodesCreatorTest {
     doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(Type<?> arrayType,
-      Type<?> otherArrayType) {
+  private void doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(SType<?> arrayType,
+      SType<?> otherArrayType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(arrayType, "name1");
@@ -538,7 +538,7 @@ public class ArgumentNodesCreatorTest {
     doTestAmbiguousNamelessArgument(STRING_ARRAY, EMPTY_ARRAY);
   }
 
-  private void doTestAmbiguousNamelessArgument(Type<?> paramType, Type<?> argType) {
+  private void doTestAmbiguousNamelessArgument(SType<?> paramType, SType<?> argType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
@@ -610,7 +610,7 @@ public class ArgumentNodesCreatorTest {
     doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, FILE);
   }
 
-  private void doTestNoParamWithProperTypeForNamelessArgument(Type<?> type, Type<?> otherType) {
+  private void doTestNoParamWithProperTypeForNamelessArgument(SType<?> type, SType<?> otherType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(otherType, "name1");
@@ -631,7 +631,7 @@ public class ArgumentNodesCreatorTest {
     return namedArg(1, name, node, new FakeCodeLocation());
   }
 
-  private static Node node(Type<?> type) {
+  private static Node node(SType<?> type) {
     Node node = mock(Node.class);
     BDDMockito.willReturn(type).given(node).type();
     return node;
@@ -658,7 +658,7 @@ public class ArgumentNodesCreatorTest {
   private static void assertThatNodeHasEmptyArray(Node abstractNode) {
     TaskGenerator taskGenerator = mock(TaskGenerator.class);
     Task task = abstractNode.generateTask(taskGenerator);
-    Value result = task.execute(new FakeSandbox());
+    SValue result = task.execute(new FakeSandbox());
     assertThat((Iterable<?>) result).isEmpty();
   }
 

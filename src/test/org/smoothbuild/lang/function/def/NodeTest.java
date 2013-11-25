@@ -8,14 +8,14 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.testory.common.Closure;
 
 public class NodeTest {
-  Type<?> type;
+  SType<?> type;
   CodeLocation codeLocation;
 
   MyNode node;
@@ -51,7 +51,7 @@ public class NodeTest {
     thenReturned(codeLocation);
   }
 
-  private static Closure $myNode(final Type<?> type, final CodeLocation codeLocation) {
+  private static Closure $myNode(final SType<?> type, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
@@ -61,7 +61,7 @@ public class NodeTest {
   }
 
   public static class MyNode extends Node {
-    public MyNode(Type<?> type, CodeLocation codeLocation) {
+    public MyNode(SType<?> type, CodeLocation codeLocation) {
       super(type, codeLocation);
     }
 

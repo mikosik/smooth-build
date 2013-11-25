@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class AssignmentListTest {
@@ -101,15 +101,15 @@ public class AssignmentListTest {
     assertThat(actual).isEqualTo(expected.toString());
   }
 
-  private static Argument arg(Type<?> type) {
+  private static Argument arg(SType<?> type) {
     return arg(type, "name");
   }
 
-  private static Argument arg(Type<?> type, String name) {
+  private static Argument arg(SType<?> type, String name) {
     return arg(1, type, name);
   }
 
-  private static Argument arg(int number, Type<?> type, String name) {
+  private static Argument arg(int number, SType<?> type, String name) {
     Node node = mock(Node.class);
     BDDMockito.willReturn(type).given(node).type();
 

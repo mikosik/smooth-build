@@ -3,7 +3,7 @@ package org.smoothbuild.util;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Result;
 
@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class Empty {
 
-  public static ImmutableMap<String, Value> stringValueMap() {
+  public static ImmutableMap<String, SValue> stringValueMap() {
     return ImmutableMap.of();
   }
 

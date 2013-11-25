@@ -3,12 +3,15 @@ package org.smoothbuild.lang.type;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.TypeLiteral;
 
-public class Type<T extends Value> {
+/**
+ * Smooth type. Type in smooth language.
+ */
+public class SType<T extends SValue> {
   private final String name;
-  private final TypeLiteral<? extends Value> javaType;
-  private final ImmutableList<Type<?>> superTypes;
+  private final TypeLiteral<? extends SValue> javaType;
+  private final ImmutableList<SType<?>> superTypes;
 
-  protected Type(String name, TypeLiteral<T> javaType, Type<?>... superTypes) {
+  protected SType(String name, TypeLiteral<T> javaType, SType<?>... superTypes) {
     this.name = name;
     this.javaType = javaType;
     this.superTypes = ImmutableList.copyOf(superTypes);
@@ -18,19 +21,19 @@ public class Type<T extends Value> {
     return name;
   }
 
-  public TypeLiteral<? extends Value> javaType() {
+  public TypeLiteral<? extends SValue> javaType() {
     return javaType;
   }
 
-  public ImmutableList<Type<?>> superTypes() {
+  public ImmutableList<SType<?>> superTypes() {
     return superTypes;
   }
 
-  public boolean isAssignableFrom(Type<?> type) {
+  public boolean isAssignableFrom(SType<?> type) {
     if (this == type) {
       return true;
     }
-    for (Type<?> superType : type.superTypes) {
+    for (SType<?> superType : type.superTypes) {
       if (this.isAssignableFrom(superType)) {
         return true;
       }

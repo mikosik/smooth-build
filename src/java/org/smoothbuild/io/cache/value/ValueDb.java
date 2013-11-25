@@ -16,12 +16,12 @@ import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.hash.ValuesCache;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 
@@ -39,7 +39,7 @@ public class ValueDb {
   private final ReadArray<SBlob> readBlobArray;
   private final ReadArray<SFile> readFileArray;
 
-  private final ImmutableMap<Type<?>, ReadValue<?>> readersMap;
+  private final ImmutableMap<SType<?>, ReadValue<?>> readersMap;
 
   @Inject
   public ValueDb(@ValuesCache HashedDb hashedDb) {
@@ -52,7 +52,7 @@ public class ValueDb {
     this.readBlobArray = new ReadArray<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
     this.readFileArray = new ReadArray<SFile>(hashedDb, FILE_ARRAY, readFile);
 
-    Builder<Type<?>, ReadValue<?>> builder = ImmutableMap.builder();
+    Builder<SType<?>, ReadValue<?>> builder = ImmutableMap.builder();
     builder.put(STRING, readString);
     builder.put(BLOB, readBlob);
     builder.put(FILE, readFile);
@@ -65,7 +65,7 @@ public class ValueDb {
 
   // array builders
 
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
+  public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
     if (arrayType == FILE_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result = (ArrayBuilder<T>) fileArrayBuilder();
@@ -122,7 +122,7 @@ public class ValueDb {
 
   // readers
 
-  public <T extends Value> T read(Type<T> typeLiteral, HashCode hash) {
+  public <T extends SValue> T read(SType<T> typeLiteral, HashCode hash) {
     /*
      * Cast is safe as readersMap is immutable and constructed in proper way.
      */

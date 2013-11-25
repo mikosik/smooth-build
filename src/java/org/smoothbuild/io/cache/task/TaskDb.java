@@ -14,8 +14,8 @@ import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.STypes;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 
@@ -35,7 +35,7 @@ public class TaskDb {
   public void store(HashCode taskHash, CachedResult cachedResult) {
     Marshaller marshaller = new Marshaller();
 
-    Value value = cachedResult.value();
+    SValue value = cachedResult.value();
 
     boolean hasErrors = false;
     ImmutableList<Message> messages = cachedResult.messages();
@@ -76,9 +76,9 @@ public class TaskDb {
       if (hasErrors) {
         return new CachedResult(null, messages);
       } else {
-        Type<?> type = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
+        SType<?> type = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
         HashCode resultObjectHash = unmarshaller.readHash();
-        Value value = valueDb.read(type, resultObjectHash);
+        SValue value = valueDb.read(type, resultObjectHash);
         return new CachedResult(value, messages);
       }
     }

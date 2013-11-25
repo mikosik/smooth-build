@@ -7,7 +7,7 @@ import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.AbstractValue;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
@@ -15,7 +15,7 @@ import com.google.common.hash.HashCode;
 public class FakeArray extends AbstractValue implements SArray<SFile> {
   private final List<SFile> files = Lists.newArrayList();
 
-  public FakeArray(Type<?> type) {
+  public FakeArray(SType<?> type) {
     super(type, HashCode.fromInt(0));
   }
 

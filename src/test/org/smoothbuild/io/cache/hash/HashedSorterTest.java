@@ -6,7 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.testing.lang.type.FakeHashed;
 
 import com.google.common.collect.Lists;
@@ -29,7 +29,7 @@ public class HashedSorterTest {
 
   @Test
   public void sorting_empty_list_returns_empty_list() throws Exception {
-    when(HashedSorter.sort(Lists.<Value> newArrayList()));
-    thenReturned(Lists.<Value> newArrayList());
+    when(HashedSorter.sort(Lists.<SValue> newArrayList()));
+    thenReturned(Lists.<SValue> newArrayList());
   }
 }

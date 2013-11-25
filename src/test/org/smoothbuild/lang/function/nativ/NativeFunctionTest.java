@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.SandboxImpl;
@@ -47,7 +47,7 @@ public class NativeFunctionTest {
   @Test
   public void invokeIsForwardedToInvoker() throws Exception {
     @SuppressWarnings("unchecked")
-    ImmutableMap<String, Value> args = mock(ImmutableMap.class);
+    ImmutableMap<String, SValue> args = mock(ImmutableMap.class);
     function.invoke(sandbox, args);
     verify(invoker).invoke(sandbox, args);
   }

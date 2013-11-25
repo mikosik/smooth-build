@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def;
 import java.util.Map;
 
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -23,7 +23,7 @@ public class CallNode extends Node {
   }
 
   @Override
-  public Type<?> type() {
+  public SType<?> type() {
     return function.type();
   }
 

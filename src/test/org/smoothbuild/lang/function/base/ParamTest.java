@@ -15,7 +15,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 
 import com.google.common.testing.EqualsTester;
 
@@ -57,7 +57,7 @@ public class ParamTest {
 
     tester.addEqualityGroup(param(STRING, "equal", false), param(STRING, "equal", false));
 
-    for (Type<?> type : allowedForParam()) {
+    for (SType<?> type : allowedForParam()) {
       tester.addEqualityGroup(param(type, "name", false));
       tester.addEqualityGroup(param(type, "name", true));
       tester.addEqualityGroup(param(type, "name2", false));

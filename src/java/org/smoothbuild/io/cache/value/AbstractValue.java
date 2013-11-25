@@ -2,16 +2,16 @@ package org.smoothbuild.io.cache.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.type.SValue;
 
 import com.google.common.hash.HashCode;
 
-public abstract class AbstractValue implements Value {
-  private final Type<?> type;
+public abstract class AbstractValue implements SValue {
+  private final SType<?> type;
   private final HashCode hash;
 
-  public AbstractValue(Type<?> type, HashCode hash) {
+  public AbstractValue(SType<?> type, HashCode hash) {
     this.type = checkNotNull(type);
     this.hash = checkNotNull(hash);
   }
@@ -22,7 +22,7 @@ public abstract class AbstractValue implements Value {
   }
 
   @Override
-  public Type<?> type() {
+  public SType<?> type() {
     return type;
   }
 
@@ -33,8 +33,8 @@ public abstract class AbstractValue implements Value {
 
   @Override
   public boolean equals(Object object) {
-    if (object instanceof Value) {
-      Value that = (Value) object;
+    if (object instanceof SValue) {
+      SValue that = (SValue) object;
       return this.hash.equals(that.hash());
     }
     return false;

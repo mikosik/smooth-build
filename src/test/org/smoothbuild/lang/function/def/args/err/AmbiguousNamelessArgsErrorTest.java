@@ -25,7 +25,7 @@ import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.AssignmentList;
 import org.smoothbuild.lang.function.def.args.TypedParamsPool;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 
 import com.google.common.collect.Sets;
 
@@ -75,7 +75,7 @@ public class AmbiguousNamelessArgsErrorTest {
     assertThat(error.toString()).isEqualTo(builder.toString());
   }
 
-  private Node node(Type<?> type) {
+  private Node node(SType<?> type) {
     Node result = mock(Node.class);
     willReturn(type).given(result).type();
     return result;

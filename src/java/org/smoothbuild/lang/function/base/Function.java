@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import java.util.Map;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableMap;
 public interface Function {
   public Signature signature();
 
-  public Type<?> type();
+  public SType<?> type();
 
   public Name name();
 

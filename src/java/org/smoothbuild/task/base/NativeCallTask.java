@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.type.Value;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.base.err.NullResultError;
@@ -27,9 +27,9 @@ public class NativeCallTask extends Task {
   }
 
   @Override
-  public Value execute(SandboxImpl sandbox) {
+  public SValue execute(SandboxImpl sandbox) {
     try {
-      Value result = function.invoke(sandbox, calculateArguments());
+      SValue result = function.invoke(sandbox, calculateArguments());
       if (result == null && !sandbox.messageGroup().containsProblems()) {
         sandbox.report(new NullResultError());
       } else {
@@ -49,11 +49,11 @@ public class NativeCallTask extends Task {
     return null;
   }
 
-  private ImmutableMap<String, Value> calculateArguments() {
-    Builder<String, Value> builder = ImmutableMap.builder();
+  private ImmutableMap<String, SValue> calculateArguments() {
+    Builder<String, SValue> builder = ImmutableMap.builder();
     for (Map.Entry<String, Result> entry : dependencies.entrySet()) {
       String paramName = entry.getKey();
-      Value result = entry.getValue().result();
+      SValue result = entry.getValue().result();
       builder.put(paramName, result);
     }
     return builder.build();

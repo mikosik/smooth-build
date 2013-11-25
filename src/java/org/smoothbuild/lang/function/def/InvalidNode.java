@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
@@ -11,15 +11,15 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
 public class InvalidNode extends Node {
-  private final Type<?> type;
+  private final SType<?> type;
 
-  public InvalidNode(Type<?> type, CodeLocation codeLocation) {
+  public InvalidNode(SType<?> type, CodeLocation codeLocation) {
     super(type, codeLocation);
     this.type = checkNotNull(type);
   }
 
   @Override
-  public Type<?> type() {
+  public SType<?> type() {
     return type;
   }
 
