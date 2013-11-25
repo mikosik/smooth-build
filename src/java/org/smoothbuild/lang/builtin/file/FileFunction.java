@@ -7,8 +7,8 @@ import static org.smoothbuild.util.Streams.copy;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.builtin.file.err.FileParamIsADirError;
-import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
+import org.smoothbuild.lang.builtin.file.err.NoSuchFileButDirError;
+import org.smoothbuild.lang.builtin.file.err.NoSuchFileError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.plugin.FileBuilder;
 import org.smoothbuild.lang.plugin.Required;
@@ -57,9 +57,9 @@ public class FileFunction {
           copy(fileSystem.openInputStream(path), fileBuilder.openOutputStream());
           return fileBuilder.build();
         case DIR:
-          throw new ErrorMessageException(new FileParamIsADirError("path", path));
+          throw new ErrorMessageException(new NoSuchFileButDirError(path));
         case NOTHING:
-          throw new ErrorMessageException(new NoSuchPathError("path", path));
+          throw new ErrorMessageException(new NoSuchFileError(path));
         default:
           throw new ErrorMessageException(new Message(FATAL,
               "Broken 'file' function implementation: unreachable case"));

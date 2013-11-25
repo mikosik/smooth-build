@@ -8,8 +8,8 @@ import static org.smoothbuild.util.Streams.copy;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
-import org.smoothbuild.lang.builtin.file.err.DirParamIsAFileError;
-import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
+import org.smoothbuild.lang.builtin.file.err.NoSuchDirButFileError;
+import org.smoothbuild.lang.builtin.file.err.NoSuchDirError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.plugin.ArrayBuilder;
 import org.smoothbuild.lang.plugin.FileBuilder;
@@ -58,8 +58,6 @@ public class FilesFunction {
       }
 
       switch (fileSystem.pathState(dirPath)) {
-        case FILE:
-          throw new ErrorMessageException(new DirParamIsAFileError("dir", dirPath));
         case DIR:
           ArrayBuilder<SFile> fileArrayBuilder = sandbox.fileArrayBuilder();
           for (Path filePath : fileSystem.filesFrom(dirPath)) {
@@ -70,8 +68,10 @@ public class FilesFunction {
             fileArrayBuilder.add(fileBuilder.build());
           }
           return fileArrayBuilder.build();
+        case FILE:
+          throw new ErrorMessageException(new NoSuchDirButFileError(dirPath));
         case NOTHING:
-          throw new ErrorMessageException(new NoSuchPathError("dir", dirPath));
+          throw new ErrorMessageException(new NoSuchDirError(dirPath));
         default:
           throw new ErrorMessageException(new Message(FATAL,
               "Broken 'files' function implementation: unreachable case"));

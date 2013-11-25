@@ -10,9 +10,9 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.FilesFunction.Parameters;
 import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
-import org.smoothbuild.lang.builtin.file.err.DirParamIsAFileError;
+import org.smoothbuild.lang.builtin.file.err.NoSuchDirButFileError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
-import org.smoothbuild.lang.builtin.file.err.NoSuchPathError;
+import org.smoothbuild.lang.builtin.file.err.NoSuchDirError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
@@ -79,7 +79,7 @@ public class FilesFunctionTest {
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(NoSuchPathError.class);
+      assertThat(e.errorMessage()).isInstanceOf(NoSuchDirError.class);
     }
   }
 
@@ -94,7 +94,7 @@ public class FilesFunctionTest {
 
     } catch (ErrorMessageException e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(DirParamIsAFileError.class);
+      assertThat(e.errorMessage()).isInstanceOf(NoSuchDirButFileError.class);
     }
   }
 
