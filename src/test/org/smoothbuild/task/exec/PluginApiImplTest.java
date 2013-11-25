@@ -33,7 +33,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class SandboxImplTest {
+public class PluginApiImplTest {
   String content = "content";
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
@@ -42,16 +42,16 @@ public class SandboxImplTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeValueDb valueDb = new FakeValueDb(fileSystem);
 
-  SandboxImpl sandbox = new SandboxImpl(fileSystem, valueDb, task);
+  PluginApiImpl pluginApi = new PluginApiImpl(fileSystem, valueDb, task);
 
   @Test
   public void file_array_builder_stores_files_in_value_db() throws Exception {
-    FileBuilder fileBuilder = sandbox.fileBuilder();
+    FileBuilder fileBuilder = pluginApi.fileBuilder();
     fileBuilder.setPath(path1);
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
     SFile file = fileBuilder.build();
 
-    ArrayBuilder<SFile> builder = sandbox.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> builder = pluginApi.arrayBuilder(FILE_ARRAY);
     builder.add(file);
     HashCode hash = builder.build().hash();
 
@@ -65,10 +65,10 @@ public class SandboxImplTest {
     String jdkString1 = "my string 1";
     String jdkString2 = "my string 2";
 
-    SString string1 = sandbox.string(jdkString1);
-    SString string2 = sandbox.string(jdkString2);
+    SString string1 = pluginApi.string(jdkString1);
+    SString string2 = pluginApi.string(jdkString2);
 
-    ArrayBuilder<SString> builder = sandbox.arrayBuilder(STRING_ARRAY);
+    ArrayBuilder<SString> builder = pluginApi.arrayBuilder(STRING_ARRAY);
     builder.add(string1);
     builder.add(string2);
     SArray<SString> stringArray = builder.build();
@@ -84,7 +84,7 @@ public class SandboxImplTest {
 
   @Test
   public void file_builder_stores_file_in_value_db() throws Exception {
-    FileBuilder fileBuilder = sandbox.fileBuilder();
+    FileBuilder fileBuilder = pluginApi.fileBuilder();
     fileBuilder.setPath(path1);
     StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
     HashCode hash = fileBuilder.build().hash();
@@ -97,7 +97,7 @@ public class SandboxImplTest {
   @Test
   public void string_stores_its_content_in_value_db() throws Exception {
     String jdkString = "my string";
-    SString string = sandbox.string(jdkString);
+    SString string = pluginApi.string(jdkString);
 
     SString stringRead = valueDb.read(STRING, string.hash());
 
@@ -106,14 +106,14 @@ public class SandboxImplTest {
 
   @Test
   public void fileSystem() throws Exception {
-    assertThat(sandbox.projectFileSystem()).isSameAs(fileSystem);
+    assertThat(pluginApi.projectFileSystem()).isSameAs(fileSystem);
   }
 
   @Test
   public void reportedErrors() throws Exception {
     Message errorMessage = new Message(ERROR, "message");
-    sandbox.report(errorMessage);
-    assertThat(sandbox.messageGroup()).containsOnly(errorMessage);
+    pluginApi.report(errorMessage);
+    assertThat(pluginApi.messageGroup()).containsOnly(errorMessage);
   }
 
   private static Task task() {

@@ -39,7 +39,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 public class ArgumentNodesCreatorTest {
   FakeMessageGroup messages;
@@ -658,7 +658,7 @@ public class ArgumentNodesCreatorTest {
   private static void assertThatNodeHasEmptyArray(Node abstractNode) {
     TaskGenerator taskGenerator = mock(TaskGenerator.class);
     Task task = abstractNode.generateTask(taskGenerator);
-    SValue result = task.execute(new FakeSandbox());
+    SValue result = task.execute(new FakePluginApi());
     assertThat((Iterable<?>) result).isEmpty();
   }
 

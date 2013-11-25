@@ -21,7 +21,7 @@ import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
@@ -35,7 +35,7 @@ import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
@@ -44,7 +44,7 @@ import com.google.common.hash.HashCode;
 
 public class NativeCallTaskTest {
   Invoker invoker = mock(Invoker.class);
-  FakeSandbox sandbox = new FakeSandbox();
+  FakePluginApi pluginApi = new FakePluginApi();
   CodeLocation codeLocation = new FakeCodeLocation();
   HashCode hash = HashCode.fromInt(33);
   NativeFunction function1 = new NativeFunction(fakeSignature(), invoker, true);
@@ -70,19 +70,19 @@ public class NativeCallTaskTest {
         codeLocation);
 
     SString result = new FakeString("result");
-    when(invoker.invoke(sandbox, ImmutableMap.<String, SValue> of(name, argValue))).thenReturn(
+    when(invoker.invoke(pluginApi, ImmutableMap.<String, SValue> of(name, argValue))).thenReturn(
         result);
 
-    assertThat(nativeCallTask.execute(sandbox)).isSameAs(result);
+    assertThat(nativeCallTask.execute(pluginApi)).isSameAs(result);
   }
 
   @Test
   public void null_result_is_reported_when_functio_has_non_void_return_type() throws Exception {
-    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenReturn(null);
+    when(invoker.invoke(pluginApi, Empty.stringValueMap())).thenReturn(null);
 
-    nativeCallTask.execute(sandbox);
+    nativeCallTask.execute(pluginApi);
 
-    sandbox.messages().assertOnlyProblem(NullResultError.class);
+    pluginApi.messages().assertOnlyProblem(NullResultError.class);
   }
 
   @Test
@@ -91,18 +91,18 @@ public class NativeCallTaskTest {
     Signature signature = new Signature(FILE, name("name"), params);
     function1 = new NativeFunction(signature, invoker, true);
     nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
-    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenAnswer(new Answer<SFile>() {
+    when(invoker.invoke(pluginApi, Empty.stringValueMap())).thenAnswer(new Answer<SFile>() {
       @Override
       public SFile answer(InvocationOnMock invocation) throws Throwable {
-        Sandbox sandbox = (Sandbox) invocation.getArguments()[0];
-        sandbox.report(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
+        PluginApi pluginApi = (PluginApi) invocation.getArguments()[0];
+        pluginApi.report(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
         return null;
       }
     });
 
-    nativeCallTask.execute(sandbox);
+    nativeCallTask.execute(pluginApi);
 
-    sandbox.messages().assertOnlyProblem(CodeMessage.class);
+    pluginApi.messages().assertOnlyProblem(CodeMessage.class);
   }
 
   @Test
@@ -137,10 +137,10 @@ public class NativeCallTaskTest {
 
   private void assertExceptionIsReportedAsProblem(Throwable thrown,
       Class<? extends Message> expected) throws Exception {
-    when(invoker.invoke(sandbox, Empty.stringValueMap())).thenThrow(thrown);
+    when(invoker.invoke(pluginApi, Empty.stringValueMap())).thenThrow(thrown);
 
-    nativeCallTask.execute(sandbox);
+    nativeCallTask.execute(pluginApi);
 
-    sandbox.messages().assertOnlyProblem(expected);
+    pluginApi.messages().assertOnlyProblem(expected);
   }
 }

@@ -12,13 +12,13 @@ import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 public class ArrayTaskTest {
-  FakeSandbox sandbox = new FakeSandbox();
+  FakePluginApi pluginApi = new FakePluginApi();
   CodeLocation codeLocation = new FakeCodeLocation();
-  SString string1 = sandbox.objectDb().writeString("string1");
-  SString string2 = sandbox.objectDb().writeString("string2");
+  SString string1 = pluginApi.objectDb().writeString("string1");
+  SString string2 = pluginApi.objectDb().writeString("string2");
 
   Result result1 = new FakeResult(string1);
   Result result2 = new FakeResult(string2);
@@ -28,7 +28,7 @@ public class ArrayTaskTest {
   @Test
   public void execute() {
     given(arrayTask = new ArrayTask(STRING_ARRAY, newArrayList(result1, result2), codeLocation));
-    when(arrayTask.execute(sandbox));
+    when(arrayTask.execute(pluginApi));
     thenReturned(contains(string1, string2));
   }
 }

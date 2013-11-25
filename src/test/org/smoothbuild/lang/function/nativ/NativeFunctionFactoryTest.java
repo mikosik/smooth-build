@@ -26,7 +26,7 @@ import org.smoothbuild.lang.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
@@ -40,14 +40,14 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionFactoryTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  FakeSandbox sandbox = new FakeSandbox();
+  FakePluginApi pluginApi = new FakePluginApi();
   Path tempDir = path("tem/dir");
   TaskDb taskDb = mock(TaskDb.class);
   CodeLocation codeLocation = new FakeCodeLocation();
@@ -80,8 +80,8 @@ public class NativeFunctionFactoryTest {
         result1, "stringB", result2);
 
     Task task = function.generateTask(taskGenerator, dependencies, codeLocation);
-    SString result = (SString) task.execute(sandbox);
-    sandbox.messages().assertNoProblems();
+    SString result = (SString) task.execute(pluginApi);
+    pluginApi.messages().assertNoProblems();
     assertThat(result.value()).isEqualTo("abcdef");
   }
 
@@ -93,7 +93,7 @@ public class NativeFunctionFactoryTest {
 
   public static class Func {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, Parameters params) {
+    public static SString execute(PluginApi pluginApi, Parameters params) {
       return new FakeString(params.stringA().value() + params.stringB().value());
     }
   }
@@ -121,7 +121,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithAllowedParamTypes {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, AllowedParameters params) {
+    public static SString execute(PluginApi pluginApi, AllowedParameters params) {
       return new FakeString("string");
     }
   }
@@ -145,7 +145,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithAnnotatedParams {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, AnnotatedParameters params) {
+    public static SString execute(PluginApi pluginApi, AnnotatedParameters params) {
       return null;
     }
   }
@@ -163,7 +163,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithArrayOfArrayParamType {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, ArrayOfArrayParams params) {
+    public static SString execute(PluginApi pluginApi, ArrayOfArrayParams params) {
       return null;
     }
   }
@@ -181,7 +181,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithForbiddenParamType {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, ForbiddenParams params) {
+    public static SString execute(PluginApi pluginApi, ForbiddenParams params) {
       return null;
     }
   }
@@ -197,7 +197,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithEmptyParameters {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, EmptyParameters params) {
+    public static SString execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -211,7 +211,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithStringResult {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, EmptyParameters params) {
+    public static SString execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -225,7 +225,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobResult {
     @SmoothFunction(name = "myFunction")
-    public static SBlob execute(Sandbox sandbox, EmptyParameters params) {
+    public static SBlob execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -239,7 +239,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithFileResult {
     @SmoothFunction(name = "myFunction")
-    public static SFile execute(Sandbox sandbox, EmptyParameters params) {
+    public static SFile execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -253,7 +253,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithStringArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static SArray<SString> execute(Sandbox sandbox, EmptyParameters params) {
+    public static SArray<SString> execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -267,7 +267,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static SArray<SBlob> execute(Sandbox sandbox, EmptyParameters params) {
+    public static SArray<SBlob> execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -281,7 +281,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithFileArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static SArray<SFile> execute(Sandbox sandbox, EmptyParameters params) {
+    public static SArray<SFile> execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -295,7 +295,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithIllegalReturnType {
     @SmoothFunction(name = "myFunction")
-    public static Runnable execute(Sandbox sandbox, EmptyParameters params) {
+    public static Runnable execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -309,7 +309,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithArrayOfArrayReturnType {
     @SmoothFunction(name = "myFunction")
-    public static SArray<SArray<SFile>> execute(Sandbox sandbox, EmptyParameters params) {
+    public static SArray<SArray<SFile>> execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -324,7 +324,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithParamThatIsNotInterface {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, String string) {
+    public static SString execute(PluginApi pluginApi, String string) {
       return null;
     }
   }
@@ -338,7 +338,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithIllegalFunctionName {
     @SmoothFunction(name = "my^package")
-    public static SString execute(Sandbox sandbox, EmptyParameters params) {
+    public static SString execute(PluginApi pluginApi, EmptyParameters params) {
       return null;
     }
   }
@@ -349,13 +349,13 @@ public class NativeFunctionFactoryTest {
   public void runtime_exception_thrown_from_native_function_is_reported() throws Exception {
     Function function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
     function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation)
-        .execute(sandbox);
-    sandbox.messages().assertOnlyProblem(UnexpectedError.class);
+        .execute(pluginApi);
+    pluginApi.messages().assertOnlyProblem(UnexpectedError.class);
   }
 
   public static class FuncWithThrowingSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, EmptyParameters params) {
+    public static SString execute(PluginApi pluginApi, EmptyParameters params) {
       throw new RuntimeException();
     }
   }
@@ -369,10 +369,10 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithTwoSmoothMethods {
     @SmoothFunction(name = "myFunction")
-    public static void execute(Sandbox sandbox, EmptyParameters params) {}
+    public static void execute(PluginApi pluginApi, EmptyParameters params) {}
 
     @SmoothFunction(name = "myFunction2")
-    public static void execute2(Sandbox sandbox, EmptyParameters params) {}
+    public static void execute2(PluginApi pluginApi, EmptyParameters params) {}
   }
 
   @Test
@@ -391,7 +391,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithPrivateSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    private static void execute(Sandbox sandbox, EmptyParameters params) {}
+    private static void execute(PluginApi pluginApi, EmptyParameters params) {}
   }
 
   // method_in_params_interface_cannot_have_parameters
@@ -408,7 +408,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithParamMethodThatHasParameters {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, ParametersWithMethodWithParameters params) {
+    public static SString execute(PluginApi pluginApi, ParametersWithMethodWithParameters params) {
       return null;
     }
   }
@@ -423,7 +423,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithNonStaticSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    public void execute(Sandbox sandbox, EmptyParameters params) {}
+    public void execute(PluginApi pluginApi, EmptyParameters params) {}
   }
 
   // native_smooth_method_cannot_have_zero_parameters
@@ -475,7 +475,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithSmoothMethodWithWrongSecondParam {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(Sandbox sandbox, Integer wrong) {
+    public static SString execute(PluginApi pluginApi, Integer wrong) {
       return null;
     }
   }

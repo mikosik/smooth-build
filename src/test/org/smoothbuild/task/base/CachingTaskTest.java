@@ -16,14 +16,14 @@ import org.smoothbuild.lang.function.base.CallHasher;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 import org.smoothbuild.util.Empty;
 import org.testory.common.Closure;
 
 import com.google.common.hash.HashCode;
 
 public class CachingTaskTest {
-  FakeSandbox sandbox = new FakeSandbox();
+  FakePluginApi pluginApi = new FakePluginApi();
   SString stringValue = mock(SString.class);
   SString stringValue2 = mock(SString.class);
   HashCode hash = Hash.string("abc");
@@ -85,7 +85,7 @@ public class CachingTaskTest {
     BDDMockito.given(taskDb.contains(hash)).willReturn(false);
 
     given(cachingTask = new CachingTask(taskDb, callHasher, task));
-    when(cachingTask.execute(sandbox));
+    when(cachingTask.execute(pluginApi));
     thenReturned(stringValue);
   }
 
@@ -97,7 +97,7 @@ public class CachingTaskTest {
         new CachedResult(stringValue2, Empty.messageList()));
 
     cachingTask = new CachingTask(taskDb, callHasher, task);
-    assertThat(cachingTask.execute(sandbox)).isEqualTo(stringValue2);
+    assertThat(cachingTask.execute(pluginApi)).isEqualTo(stringValue2);
   }
 
   private static Closure $cachingTask(final TaskDb taskDb, final CallHasher callHasher,

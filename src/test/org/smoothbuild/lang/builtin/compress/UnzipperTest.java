@@ -17,7 +17,7 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeFile;
-import org.smoothbuild.testing.task.exec.FakeSandbox;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 import com.google.common.collect.Iterables;
 
@@ -26,8 +26,8 @@ public class UnzipperTest {
   String fileName2 = "file/path/file2.txt";
   String directoryName = "my/directory/";
 
-  FakeSandbox sandbox = new FakeSandbox();
-  Unzipper unzipper = new Unzipper(sandbox);
+  FakePluginApi pluginApi = new FakePluginApi();
+  Unzipper unzipper = new Unzipper(pluginApi);
 
   @Test
   public void unzipping() throws Exception {

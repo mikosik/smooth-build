@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class EmptyArrayTask extends Task {
 
@@ -13,7 +13,7 @@ public class EmptyArrayTask extends Task {
   }
 
   @Override
-  public SValue execute(SandboxImpl sandbox) {
+  public SValue execute(PluginApiImpl pluginApi) {
     /*
      * We cheat here and return empty stringArray. Nobody will ever use this
      * object.
@@ -32,6 +32,6 @@ public class EmptyArrayTask extends Task {
      * ArgumentNodesCreator won't kick in.
      */
 
-    return sandbox.arrayBuilder(STRING_ARRAY).build();
+    return pluginApi.arrayBuilder(STRING_ARRAY).build();
   }
 }

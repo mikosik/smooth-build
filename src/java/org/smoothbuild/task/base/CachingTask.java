@@ -7,7 +7,7 @@ import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 import com.google.common.hash.HashCode;
 
@@ -24,19 +24,19 @@ public class CachingTask extends Task {
   }
 
   @Override
-  public SValue execute(SandboxImpl sandbox) {
+  public SValue execute(PluginApiImpl pluginApi) {
     HashCode hash = callHasher.hash();
     if (taskDb.contains(hash)) {
-      sandbox.messageGroup().setResultIsFromCache();
+      pluginApi.messageGroup().setResultIsFromCache();
       CachedResult cachedResult = taskDb.read(hash);
       for (Message message : cachedResult.messages()) {
-        sandbox.report(message);
+        pluginApi.report(message);
       }
       return cachedResult.value();
     }
 
-    SValue result = task.execute(sandbox);
-    taskDb.store(hash, new CachedResult(result, sandbox.messageGroup()));
+    SValue result = task.execute(pluginApi);
+    taskDb.store(hash, new CachedResult(result, pluginApi.messageGroup()));
     return result;
   }
 }

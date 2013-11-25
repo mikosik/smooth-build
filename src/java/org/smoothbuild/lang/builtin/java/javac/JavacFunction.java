@@ -26,7 +26,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
@@ -48,8 +48,8 @@ public class JavacFunction {
   }
 
   @SmoothFunction(name = "javac")
-  public static SArray<SFile> execute(SandboxImpl sandbox, Parameters params) {
-    return new Worker(sandbox, params).execute();
+  public static SArray<SFile> execute(PluginApiImpl pluginApi, Parameters params) {
+    return new Worker(pluginApi, params).execute();
   }
 
   private static class Worker {
@@ -59,12 +59,12 @@ public class JavacFunction {
         "1.4", "1.5", "5", "1.6", "6", "1.7", "7");
 
     private final JavaCompiler compiler;
-    private final SandboxImpl sandbox;
+    private final PluginApiImpl pluginApi;
     private final Parameters params;
 
-    public Worker(SandboxImpl sandbox, Parameters params) {
+    public Worker(PluginApiImpl pluginApi, Parameters params) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
-      this.sandbox = sandbox;
+      this.pluginApi = pluginApi;
       this.params = params;
     }
 
@@ -79,7 +79,7 @@ public class JavacFunction {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
-      ReportingDiagnosticListener diagnostic = new ReportingDiagnosticListener(sandbox);
+      ReportingDiagnosticListener diagnostic = new ReportingDiagnosticListener(pluginApi);
       Iterable<String> options = options();
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
@@ -93,18 +93,18 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          sandbox.report(new CompilerFailedWithoutDiagnosticsError());
+          pluginApi.report(new CompilerFailedWithoutDiagnosticsError());
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
-          sandbox.report(new AdditionalCompilerInfo(additionalInfo));
+          pluginApi.report(new AdditionalCompilerInfo(additionalInfo));
         }
         return fileManager.resultClassfiles();
       } finally {
         try {
           fileManager.close();
         } catch (IOException e) {
-          sandbox.report(new FileSystemError(e));
+          pluginApi.report(new FileSystemError(e));
         }
       }
     }
@@ -139,8 +139,8 @@ public class JavacFunction {
       StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostic, null,
           defaultCharset());
       Multimap<String, JavaFileObject> libsClasses = PackagedJavaFileObjects
-          .packagedJavaFileObjects(sandbox, nullToEmpty(params.libs()));
-      return new SandboxedJavaFileManager(fileManager, sandbox, libsClasses);
+          .packagedJavaFileObjects(pluginApi, nullToEmpty(params.libs()));
+      return new SandboxedJavaFileManager(fileManager, pluginApi, libsClasses);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<SFile> sourceFiles) {

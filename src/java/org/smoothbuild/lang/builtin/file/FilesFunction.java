@@ -21,7 +21,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class FilesFunction {
   public interface Parameters {
@@ -30,16 +30,16 @@ public class FilesFunction {
   }
 
   @SmoothFunction(name = "files", cacheable = false)
-  public static SArray<SFile> execute(SandboxImpl sandbox, Parameters params) {
-    return new Worker(sandbox, params).execute();
+  public static SArray<SFile> execute(PluginApiImpl pluginApi, Parameters params) {
+    return new Worker(pluginApi, params).execute();
   }
 
   private static class Worker {
-    private final SandboxImpl sandbox;
+    private final PluginApiImpl pluginApi;
     private final Parameters params;
 
-    public Worker(SandboxImpl sandbox, Parameters params) {
-      this.sandbox = sandbox;
+    public Worker(PluginApiImpl pluginApi, Parameters params) {
+      this.pluginApi = pluginApi;
       this.params = params;
     }
 
@@ -48,7 +48,7 @@ public class FilesFunction {
     }
 
     private SArray<SFile> createFiles(Path dirPath) {
-      FileSystem fileSystem = sandbox.projectFileSystem();
+      FileSystem fileSystem = pluginApi.projectFileSystem();
 
       if (dirPath.isRoot()) {
         throw new ErrorMessageException(new CannotListRootDirError());
@@ -60,9 +60,9 @@ public class FilesFunction {
 
       switch (fileSystem.pathState(dirPath)) {
         case DIR:
-          ArrayBuilder<SFile> fileArrayBuilder = sandbox.arrayBuilder(FILE_ARRAY);
+          ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
           for (Path filePath : fileSystem.filesFrom(dirPath)) {
-            FileBuilder fileBuilder = sandbox.fileBuilder();
+            FileBuilder fileBuilder = pluginApi.fileBuilder();
             fileBuilder.setPath(filePath);
             Path fullPath = dirPath.append(filePath);
             copy(fileSystem.openInputStream(fullPath), fileBuilder.openOutputStream());

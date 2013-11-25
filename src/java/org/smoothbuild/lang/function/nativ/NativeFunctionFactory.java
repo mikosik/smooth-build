@@ -13,9 +13,9 @@ import org.smoothbuild.lang.function.nativ.exc.NoSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.lang.plugin.Sandbox;
+import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class NativeFunctionFactory {
   public static NativeFunction create(Class<?> klass, boolean builtin)
@@ -53,7 +53,7 @@ public class NativeFunctionFactory {
           throw new WrongParamsInSmoothFunctionException(method);
         }
         Class<?> first = paramTypes[0];
-        if (!(first.equals(Sandbox.class) || (builtin && first.equals(SandboxImpl.class)))) {
+        if (!(first.equals(PluginApi.class) || (builtin && first.equals(PluginApiImpl.class)))) {
           throw new WrongParamsInSmoothFunctionException(method);
         }
 

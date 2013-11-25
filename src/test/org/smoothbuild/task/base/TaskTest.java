@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.SandboxImpl;
+import org.smoothbuild.task.exec.PluginApiImpl;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.common.Closure;
 
@@ -74,7 +74,7 @@ public class TaskTest {
     }
 
     @Override
-    public SValue execute(SandboxImpl sandbox) {
+    public SValue execute(PluginApiImpl pluginApi) {
       return null;
     }
   }

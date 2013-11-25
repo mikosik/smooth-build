@@ -20,16 +20,16 @@ public class TaskExecutorTest {
   SValue value = mock(SValue.class);
   UserConsole userConsole = mock(UserConsole.class);
   MessageGroup messageGroup = new MessageGroup("name");
-  SandboxImpl sandbox = mock(SandboxImpl.class);
-  SandboxFactory sandboxFactory = mock(SandboxFactory.class);
+  PluginApiImpl pluginApi = mock(PluginApiImpl.class);
+  PluginApiFactory pluginApiFactory = mock(PluginApiFactory.class);
 
-  TaskExecutor taskExecutor = new TaskExecutor(sandboxFactory, userConsole);
+  TaskExecutor taskExecutor = new TaskExecutor(pluginApiFactory, userConsole);
 
   @Before
   public void before() {
-    Mockito.when(sandboxFactory.createSandbox(task)).thenReturn(sandbox);
-    Mockito.when(sandbox.messageGroup()).thenReturn(messageGroup);
-    Mockito.when(task.execute(sandbox)).thenReturn(value);
+    Mockito.when(pluginApiFactory.createPluginApi(task)).thenReturn(pluginApi);
+    Mockito.when(pluginApi.messageGroup()).thenReturn(messageGroup);
+    Mockito.when(task.execute(pluginApi)).thenReturn(value);
   }
 
   @Test
