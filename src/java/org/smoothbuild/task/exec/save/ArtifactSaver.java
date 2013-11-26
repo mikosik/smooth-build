@@ -25,8 +25,8 @@ public class ArtifactSaver {
   private final StringSaver stringSaver;
   private final BlobSaver blobSaver;
   private final FileSaver fileSaver;
-  private final StringArraySaver stringArraySaver;
-  private final BlobArraySaver blobArraySaver;
+  private final HashedArraySaver<SString> stringArraySaver;
+  private final HashedArraySaver<SBlob> blobArraySaver;
   private final FileArraySaver fileArraySaver;
 
   @Inject
@@ -34,8 +34,8 @@ public class ArtifactSaver {
     this.stringSaver = new StringSaver(smoothFileSystem);
     this.blobSaver = new BlobSaver(smoothFileSystem);
     this.fileSaver = new FileSaver(smoothFileSystem);
-    this.stringArraySaver = new StringArraySaver(smoothFileSystem);
-    this.blobArraySaver = new BlobArraySaver(smoothFileSystem);
+    this.stringArraySaver = new HashedArraySaver<SString>(smoothFileSystem);
+    this.blobArraySaver = new HashedArraySaver<SBlob>(smoothFileSystem);
     this.fileArraySaver = new FileArraySaver(smoothFileSystem);
   }
 
