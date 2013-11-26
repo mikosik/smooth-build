@@ -52,18 +52,16 @@ public class STypes {
    * be used there.
    */
 
-  static final ImmutableSet<SType<?>> ARRAY_ELEM_TYPES = ImmutableSet.of(STypes.STRING, STypes.BLOB,
-      STypes.FILE);
+  static final ImmutableSet<SType<?>> ARRAY_ELEM_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STypes.STRING,
-      STypes.STRING_ARRAY, STypes.BLOB, STypes.BLOB_ARRAY, STypes.FILE, STypes.FILE_ARRAY);
+  static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+      BLOB_ARRAY, FILE, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> PARAM_TYPES = ImmutableSet.of(STypes.STRING,
-      STypes.STRING_ARRAY, STypes.BLOB, STypes.BLOB_ARRAY, STypes.FILE, STypes.FILE_ARRAY);
+  static final ImmutableSet<SType<?>> PARAM_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+      BLOB_ARRAY, FILE, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(STypes.STRING,
-      STypes.STRING_ARRAY, STypes.BLOB, STypes.BLOB_ARRAY, STypes.FILE, STypes.FILE_ARRAY,
-      STypes.EMPTY_ARRAY);
+  static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+      BLOB_ARRAY, FILE, FILE_ARRAY, EMPTY_ARRAY);
 
   /*
    * Some of the set above converted to java types.
