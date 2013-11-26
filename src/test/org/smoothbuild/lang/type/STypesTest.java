@@ -12,6 +12,8 @@ import static org.smoothbuild.lang.type.STypes.PARAM_TYPES;
 import static org.smoothbuild.lang.type.STypes.RESULT_TYPES;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.arrayTypes;
+import static org.smoothbuild.lang.type.STypes.basicTypes;
 import static org.smoothbuild.lang.type.STypes.javaParamTypetoType;
 import static org.smoothbuild.lang.type.STypes.javaResultTypetoType;
 
@@ -184,6 +186,16 @@ public class STypesTest {
     assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(BLOB_ARRAY.hashCode());
     assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(FILE.hashCode());
     assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(FILE_ARRAY.hashCode());
+  }
+
+  @Test
+  public void testBasicTypes() throws Exception {
+    assertThat(basicTypes()).containsExactly(STRING, BLOB, FILE);
+  }
+
+  @Test
+  public void testArrayTypes() throws Exception {
+    assertThat(arrayTypes()).containsExactly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   }
 
   @Test
