@@ -10,18 +10,20 @@ public class STypes {
    * function implementations in plugins code.
    */
 
+  private static final TypeLiteral<SAny> ANY_T = TypeLiteral.get(SAny.class);
   private static final TypeLiteral<SString> STRING_T = TypeLiteral.get(SString.class);
   private static final TypeLiteral<SBlob> BLOB_T = TypeLiteral.get(SBlob.class);
   private static final TypeLiteral<SFile> FILE_T = TypeLiteral.get(SFile.class);
   private static final TypeLiteral<SArray<SString>> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
   private static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
   private static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
-  private static final TypeLiteral<SArray<Any>> EMPTY_A_T = new TypeLiteral<SArray<Any>>() {};
+  private static final TypeLiteral<SArray<SAny>> EMPTY_A_T = new TypeLiteral<SArray<SAny>>() {};
 
   /*
    * Names of smooth types.
    */
 
+  private static final String ANY_N = "Any";
   private static final String STRING_N = "String";
   private static final String BLOB_N = "Blob";
   private static final String FILE_N = "File";
@@ -34,17 +36,19 @@ public class STypes {
    * Smooth types. Used by smooth-build code to represent smooth types.
    */
 
-  public static final SType<SString> STRING = new SType<SString>(STRING_N, STRING_T);
-  public static final SType<SBlob> BLOB = new SType<SBlob>(BLOB_N, BLOB_T);
+  public static final SType<SAny> ANY = new SType<SAny>(ANY_N, ANY_T);
+  public static final SType<SString> STRING = new SType<SString>(STRING_N, STRING_T, ANY);
+  public static final SType<SBlob> BLOB = new SType<SBlob>(BLOB_N, BLOB_T, ANY);
   public static final SType<SFile> FILE = new SType<SFile>(FILE_N, FILE_T, BLOB);
 
   public static final SArrayType<SString> STRING_ARRAY = new SArrayType<SString>(STRING_A_N,
-      STRING_A_T);
-  public static final SArrayType<SBlob> BLOB_ARRAY = new SArrayType<SBlob>(BLOB_A_N, BLOB_A_T);
+      STRING_A_T, STRING, ANY);
+  public static final SArrayType<SBlob> BLOB_ARRAY = new SArrayType<SBlob>(BLOB_A_N, BLOB_A_T,
+      BLOB, ANY);
   public static final SArrayType<SFile> FILE_ARRAY = new SArrayType<SFile>(FILE_A_N, FILE_A_T,
-      BLOB_ARRAY);
-  public static final SArrayType<Any> EMPTY_ARRAY = new SArrayType<Any>(EMPTY_A_N, EMPTY_A_T,
-      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
+      FILE, BLOB_ARRAY);
+  public static final SArrayType<SAny> EMPTY_ARRAY = new SArrayType<SAny>(EMPTY_A_N, EMPTY_A_T,
+      ANY, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
 
   /*
    * Not each type can be used in every place. Each set below represent one
@@ -63,7 +67,7 @@ public class STypes {
   static final ImmutableSet<SType<?>> PARAM_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
       BLOB_ARRAY, FILE, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
+  static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(ANY, STRING, STRING_ARRAY, BLOB,
       BLOB_ARRAY, FILE, FILE_ARRAY, EMPTY_ARRAY);
 
   /*
@@ -131,6 +135,4 @@ public class STypes {
 
     return builder.build();
   }
-
-  private static interface Any extends SValue {}
 }
