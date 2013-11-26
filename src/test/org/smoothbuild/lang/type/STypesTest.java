@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.type;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.type.STypes.ANY;
 import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
@@ -19,12 +20,23 @@ import static org.smoothbuild.lang.type.STypes.javaResultTypetoType;
 
 import org.junit.Test;
 
+import com.google.common.testing.EqualsTester;
 import com.google.inject.TypeLiteral;
 
 public class STypesTest {
 
   @Test
   public void isAssignableFrom() throws Exception {
+    assertThat(ANY.isAssignableFrom(ANY)).isTrue();
+    assertThat(ANY.isAssignableFrom(STRING)).isTrue();
+    assertThat(ANY.isAssignableFrom(STRING_ARRAY)).isTrue();
+    assertThat(ANY.isAssignableFrom(BLOB)).isTrue();
+    assertThat(ANY.isAssignableFrom(BLOB_ARRAY)).isTrue();
+    assertThat(ANY.isAssignableFrom(FILE)).isTrue();
+    assertThat(ANY.isAssignableFrom(FILE_ARRAY)).isTrue();
+    assertThat(ANY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
+
+    assertThat(STRING.isAssignableFrom(ANY)).isFalse();
     assertThat(STRING.isAssignableFrom(STRING)).isTrue();
     assertThat(STRING.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(STRING.isAssignableFrom(BLOB)).isFalse();
@@ -33,6 +45,7 @@ public class STypesTest {
     assertThat(STRING.isAssignableFrom(FILE_ARRAY)).isFalse();
     assertThat(STRING.isAssignableFrom(EMPTY_ARRAY)).isFalse();
 
+    assertThat(STRING_ARRAY.isAssignableFrom(ANY)).isFalse();
     assertThat(STRING_ARRAY.isAssignableFrom(STRING)).isFalse();
     assertThat(STRING_ARRAY.isAssignableFrom(STRING_ARRAY)).isTrue();
     assertThat(STRING_ARRAY.isAssignableFrom(BLOB)).isFalse();
@@ -41,6 +54,7 @@ public class STypesTest {
     assertThat(STRING_ARRAY.isAssignableFrom(FILE_ARRAY)).isFalse();
     assertThat(STRING_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
 
+    assertThat(BLOB.isAssignableFrom(ANY)).isFalse();
     assertThat(BLOB.isAssignableFrom(STRING)).isFalse();
     assertThat(BLOB.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(BLOB.isAssignableFrom(BLOB)).isTrue();
@@ -49,6 +63,7 @@ public class STypesTest {
     assertThat(BLOB.isAssignableFrom(FILE_ARRAY)).isFalse();
     assertThat(BLOB.isAssignableFrom(EMPTY_ARRAY)).isFalse();
 
+    assertThat(BLOB_ARRAY.isAssignableFrom(ANY)).isFalse();
     assertThat(BLOB_ARRAY.isAssignableFrom(STRING)).isFalse();
     assertThat(BLOB_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(BLOB_ARRAY.isAssignableFrom(BLOB)).isFalse();
@@ -57,6 +72,7 @@ public class STypesTest {
     assertThat(BLOB_ARRAY.isAssignableFrom(FILE_ARRAY)).isTrue();
     assertThat(BLOB_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
 
+    assertThat(FILE.isAssignableFrom(ANY)).isFalse();
     assertThat(FILE.isAssignableFrom(STRING)).isFalse();
     assertThat(FILE.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(FILE.isAssignableFrom(BLOB)).isFalse();
@@ -65,6 +81,7 @@ public class STypesTest {
     assertThat(FILE.isAssignableFrom(FILE_ARRAY)).isFalse();
     assertThat(FILE.isAssignableFrom(EMPTY_ARRAY)).isFalse();
 
+    assertThat(FILE_ARRAY.isAssignableFrom(ANY)).isFalse();
     assertThat(FILE_ARRAY.isAssignableFrom(STRING)).isFalse();
     assertThat(FILE_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(FILE_ARRAY.isAssignableFrom(BLOB)).isFalse();
@@ -73,6 +90,7 @@ public class STypesTest {
     assertThat(FILE_ARRAY.isAssignableFrom(FILE_ARRAY)).isTrue();
     assertThat(FILE_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
 
+    assertThat(EMPTY_ARRAY.isAssignableFrom(ANY)).isFalse();
     assertThat(EMPTY_ARRAY.isAssignableFrom(STRING)).isFalse();
     assertThat(EMPTY_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(EMPTY_ARRAY.isAssignableFrom(BLOB)).isFalse();
@@ -84,108 +102,38 @@ public class STypesTest {
 
   @Test
   public void superTypes() throws Exception {
-    assertThat(STRING.superTypes()).isEmpty();
-    assertThat(BLOB.superTypes()).isEmpty();
+    assertThat(STRING.superTypes()).containsOnly(ANY);
+    assertThat(BLOB.superTypes()).containsOnly(ANY);
     assertThat(FILE.superTypes()).containsOnly(BLOB);
 
-    assertThat(STRING_ARRAY.superTypes()).isEmpty();
-    assertThat(BLOB_ARRAY.superTypes()).isEmpty();
+    assertThat(STRING_ARRAY.superTypes()).containsOnly(ANY);
+    assertThat(BLOB_ARRAY.superTypes()).containsOnly(ANY);
     assertThat(FILE_ARRAY.superTypes()).containsOnly(BLOB_ARRAY);
     assertThat(EMPTY_ARRAY.superTypes()).containsOnly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   }
 
   @Test
+  public void arrayElemTypes() throws Exception {
+    assertThat(STRING_ARRAY.elemType()).isEqualTo(STRING);
+    assertThat(BLOB_ARRAY.elemType()).isEqualTo(BLOB);
+    assertThat(FILE_ARRAY.elemType()).isEqualTo(FILE);
+    assertThat(EMPTY_ARRAY.elemType()).isEqualTo(ANY);
+  }
+
+  @Test
   public void equalsAndHashCode() throws Exception {
-    assertThat(STRING).isEqualTo(STRING);
-    assertThat(STRING).isNotEqualTo(STRING_ARRAY);
-    assertThat(STRING).isNotEqualTo(BLOB);
-    assertThat(STRING).isNotEqualTo(BLOB_ARRAY);
-    assertThat(STRING).isNotEqualTo(FILE);
-    assertThat(STRING).isNotEqualTo(FILE_ARRAY);
+    EqualsTester tester = new EqualsTester();
 
-    assertThat(STRING_ARRAY).isNotEqualTo(STRING);
-    assertThat(STRING_ARRAY).isEqualTo(STRING_ARRAY);
-    assertThat(STRING_ARRAY).isNotEqualTo(BLOB);
-    assertThat(STRING_ARRAY).isNotEqualTo(BLOB_ARRAY);
-    assertThat(STRING_ARRAY).isNotEqualTo(FILE);
-    assertThat(STRING_ARRAY).isNotEqualTo(FILE_ARRAY);
+    tester.addEqualityGroup(ANY);
+    tester.addEqualityGroup(STRING);
+    tester.addEqualityGroup(BLOB);
+    tester.addEqualityGroup(FILE);
+    tester.addEqualityGroup(STRING_ARRAY);
+    tester.addEqualityGroup(BLOB_ARRAY);
+    tester.addEqualityGroup(FILE_ARRAY);
+    tester.addEqualityGroup(EMPTY_ARRAY);
 
-    assertThat(BLOB).isNotEqualTo(STRING);
-    assertThat(BLOB).isNotEqualTo(STRING_ARRAY);
-    assertThat(BLOB).isEqualTo(BLOB);
-    assertThat(BLOB).isNotEqualTo(BLOB_ARRAY);
-    assertThat(BLOB).isNotEqualTo(FILE);
-    assertThat(BLOB).isNotEqualTo(FILE_ARRAY);
-
-    assertThat(BLOB_ARRAY).isNotEqualTo(STRING);
-    assertThat(BLOB_ARRAY).isNotEqualTo(STRING_ARRAY);
-    assertThat(BLOB_ARRAY).isNotEqualTo(BLOB);
-    assertThat(BLOB_ARRAY).isEqualTo(BLOB_ARRAY);
-    assertThat(BLOB_ARRAY).isNotEqualTo(FILE);
-    assertThat(BLOB_ARRAY).isNotEqualTo(FILE_ARRAY);
-
-    assertThat(FILE).isNotEqualTo(STRING);
-    assertThat(FILE).isNotEqualTo(STRING_ARRAY);
-    assertThat(FILE).isNotEqualTo(BLOB);
-    assertThat(FILE).isNotEqualTo(BLOB_ARRAY);
-    assertThat(FILE).isEqualTo(FILE);
-    assertThat(FILE).isNotEqualTo(FILE_ARRAY);
-
-    assertThat(FILE_ARRAY).isNotEqualTo(STRING);
-    assertThat(FILE_ARRAY).isNotEqualTo(STRING_ARRAY);
-    assertThat(FILE_ARRAY).isNotEqualTo(BLOB);
-    assertThat(FILE_ARRAY).isNotEqualTo(BLOB_ARRAY);
-    assertThat(FILE_ARRAY).isNotEqualTo(FILE);
-    assertThat(FILE_ARRAY).isEqualTo(FILE_ARRAY);
-
-    assertThat(STRING.hashCode()).isNotEqualTo(STRING_ARRAY.hashCode());
-    assertThat(STRING.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(STRING.hashCode()).isNotEqualTo(BLOB.hashCode());
-    assertThat(STRING.hashCode()).isNotEqualTo(BLOB_ARRAY.hashCode());
-    assertThat(STRING.hashCode()).isNotEqualTo(FILE_ARRAY.hashCode());
-    assertThat(STRING.hashCode()).isNotEqualTo(EMPTY_ARRAY.hashCode());
-
-    assertThat(STRING_ARRAY.hashCode()).isNotEqualTo(STRING.hashCode());
-    assertThat(STRING_ARRAY.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(STRING_ARRAY.hashCode()).isNotEqualTo(BLOB.hashCode());
-    assertThat(STRING_ARRAY.hashCode()).isNotEqualTo(BLOB_ARRAY.hashCode());
-    assertThat(STRING_ARRAY.hashCode()).isNotEqualTo(FILE_ARRAY.hashCode());
-    assertThat(STRING_ARRAY.hashCode()).isNotEqualTo(EMPTY_ARRAY.hashCode());
-
-    assertThat(BLOB.hashCode()).isNotEqualTo(STRING.hashCode());
-    assertThat(BLOB.hashCode()).isNotEqualTo(STRING_ARRAY.hashCode());
-    assertThat(BLOB.hashCode()).isNotEqualTo(BLOB_ARRAY.hashCode());
-    assertThat(BLOB.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(BLOB.hashCode()).isNotEqualTo(FILE_ARRAY.hashCode());
-    assertThat(BLOB.hashCode()).isNotEqualTo(EMPTY_ARRAY.hashCode());
-
-    assertThat(BLOB_ARRAY.hashCode()).isNotEqualTo(STRING.hashCode());
-    assertThat(BLOB_ARRAY.hashCode()).isNotEqualTo(STRING_ARRAY.hashCode());
-    assertThat(BLOB_ARRAY.hashCode()).isNotEqualTo(BLOB.hashCode());
-    assertThat(BLOB_ARRAY.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(BLOB_ARRAY.hashCode()).isNotEqualTo(FILE_ARRAY.hashCode());
-    assertThat(BLOB_ARRAY.hashCode()).isNotEqualTo(EMPTY_ARRAY.hashCode());
-
-    assertThat(FILE.hashCode()).isNotEqualTo(STRING.hashCode());
-    assertThat(FILE.hashCode()).isNotEqualTo(STRING_ARRAY.hashCode());
-    assertThat(FILE.hashCode()).isNotEqualTo(BLOB.hashCode());
-    assertThat(FILE.hashCode()).isNotEqualTo(BLOB_ARRAY.hashCode());
-    assertThat(FILE.hashCode()).isNotEqualTo(FILE_ARRAY.hashCode());
-    assertThat(FILE.hashCode()).isNotEqualTo(EMPTY_ARRAY.hashCode());
-
-    assertThat(FILE_ARRAY.hashCode()).isNotEqualTo(STRING.hashCode());
-    assertThat(FILE_ARRAY.hashCode()).isNotEqualTo(STRING_ARRAY.hashCode());
-    assertThat(FILE_ARRAY.hashCode()).isNotEqualTo(BLOB.hashCode());
-    assertThat(FILE_ARRAY.hashCode()).isNotEqualTo(BLOB_ARRAY.hashCode());
-    assertThat(FILE_ARRAY.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(FILE_ARRAY.hashCode()).isNotEqualTo(EMPTY_ARRAY.hashCode());
-
-    assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(STRING.hashCode());
-    assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(STRING_ARRAY.hashCode());
-    assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(BLOB.hashCode());
-    assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(BLOB_ARRAY.hashCode());
-    assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(FILE.hashCode());
-    assertThat(EMPTY_ARRAY.hashCode()).isNotEqualTo(FILE_ARRAY.hashCode());
+    tester.testEquals();
   }
 
   @Test
