@@ -14,10 +14,12 @@ public class STypes {
   private static final TypeLiteral<SString> STRING_T = TypeLiteral.get(SString.class);
   private static final TypeLiteral<SBlob> BLOB_T = TypeLiteral.get(SBlob.class);
   private static final TypeLiteral<SFile> FILE_T = TypeLiteral.get(SFile.class);
+  private static final TypeLiteral<SNothing> NOTHING_T = TypeLiteral.get(SNothing.class);
+
   private static final TypeLiteral<SArray<SString>> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
   private static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
   private static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
-  private static final TypeLiteral<SArray<SAny>> EMPTY_A_T = new TypeLiteral<SArray<SAny>>() {};
+  private static final TypeLiteral<SArray<SNothing>> EMPTY_A_T = new TypeLiteral<SArray<SNothing>>() {};
 
   /*
    * Names of smooth types.
@@ -27,6 +29,7 @@ public class STypes {
   private static final String STRING_N = "String";
   private static final String BLOB_N = "Blob";
   private static final String FILE_N = "File";
+  private static final String NOTHING_N = "Nothing";
   private static final String STRING_A_N = "String*";
   private static final String BLOB_A_N = "Blob*";
   private static final String FILE_A_N = "File*";
@@ -40,6 +43,8 @@ public class STypes {
   public static final SType<SString> STRING = new SType<SString>(STRING_N, STRING_T, ANY);
   public static final SType<SBlob> BLOB = new SType<SBlob>(BLOB_N, BLOB_T, ANY);
   public static final SType<SFile> FILE = new SType<SFile>(FILE_N, FILE_T, BLOB);
+  public static final SType<SNothing> NOTHING = new SType<SNothing>(NOTHING_N, NOTHING_T, STRING,
+      BLOB, FILE);
 
   public static final SArrayType<SString> STRING_ARRAY = new SArrayType<SString>(STRING_A_N,
       STRING_A_T, STRING, ANY);
@@ -47,8 +52,8 @@ public class STypes {
       BLOB, ANY);
   public static final SArrayType<SFile> FILE_ARRAY = new SArrayType<SFile>(FILE_A_N, FILE_A_T,
       FILE, BLOB_ARRAY);
-  public static final SArrayType<SAny> EMPTY_ARRAY = new SArrayType<SAny>(EMPTY_A_N, EMPTY_A_T,
-      ANY, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
+  public static final SArrayType<SNothing> EMPTY_ARRAY = new SArrayType<SNothing>(EMPTY_A_N,
+      EMPTY_A_T, NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
 
   /*
    * Not each type can be used in every place. Each set below represent one
