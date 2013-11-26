@@ -53,6 +53,9 @@ public class STypes {
    */
 
   static final ImmutableSet<SType<?>> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  static final ImmutableSet<SArrayType<?>> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY, BLOB_ARRAY,
+      FILE_ARRAY);
+
   @SuppressWarnings("unchecked")
   static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
       BLOB_ARRAY, FILE, FILE_ARRAY);
@@ -79,6 +82,10 @@ public class STypes {
 
   public static ImmutableSet<SType<?>> basicTypes() {
     return BASIC_TYPES;
+  }
+
+  public static ImmutableSet<SArrayType<?>> arrayTypes() {
+    return ARRAY_TYPES;
   }
 
   public static ImmutableSet<SType<?>> allowedForParam() {
