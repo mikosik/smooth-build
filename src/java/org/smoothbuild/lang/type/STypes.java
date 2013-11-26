@@ -52,7 +52,7 @@ public class STypes {
    * be used there.
    */
 
-  static final ImmutableSet<SType<?>> ARRAY_ELEM_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  static final ImmutableSet<SType<?>> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
   @SuppressWarnings("unchecked")
   static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
       BLOB_ARRAY, FILE, FILE_ARRAY);
@@ -77,8 +77,8 @@ public class STypes {
   static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
   static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
 
-  public static ImmutableSet<SType<?>> allowedForArrayElem() {
-    return ARRAY_ELEM_TYPES;
+  public static ImmutableSet<SType<?>> basicTypes() {
+    return BASIC_TYPES;
   }
 
   public static ImmutableSet<SType<?>> allowedForParam() {

@@ -10,6 +10,7 @@ import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.basicTypes;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -182,7 +183,7 @@ public class DefinedFunctionsCreator {
       Builder<Node> builder = ImmutableList.builder();
       for (ArrayElemContext elem : elems) {
         Node node = build(elem);
-        if (!STypes.allowedForArrayElem().contains(node.type())) {
+        if (!basicTypes().contains(node.type())) {
           messages.report(new ForbiddenArrayElemTypeError(locationOf(elem), node.type()));
         } else {
           builder.add(node);
