@@ -75,8 +75,6 @@ public class StoringArtifactSmoothTest extends IntegrationTestCase {
   @Test
   public void storing_string_array_artifact() throws Exception {
     // given
-    String functionName = "myFunction";
-
     script(functionName + " : [ '" + content1 + "', '" + content2 + "' ]  ;");
 
     // when
