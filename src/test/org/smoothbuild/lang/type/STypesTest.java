@@ -9,6 +9,7 @@ import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.JAVA_PARAM_TO_SMOOTH;
 import static org.smoothbuild.lang.type.STypes.JAVA_RESULT_TO_SMOOTH;
+import static org.smoothbuild.lang.type.STypes.NOTHING;
 import static org.smoothbuild.lang.type.STypes.PARAM_TYPES;
 import static org.smoothbuild.lang.type.STypes.RESULT_TYPES;
 import static org.smoothbuild.lang.type.STypes.STRING;
@@ -118,7 +119,7 @@ public class STypesTest {
     assertThat(STRING_ARRAY.elemType()).isEqualTo(STRING);
     assertThat(BLOB_ARRAY.elemType()).isEqualTo(BLOB);
     assertThat(FILE_ARRAY.elemType()).isEqualTo(FILE);
-    assertThat(EMPTY_ARRAY.elemType()).isEqualTo(ANY);
+    assertThat(EMPTY_ARRAY.elemType()).isEqualTo(NOTHING);
   }
 
   @Test
