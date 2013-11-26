@@ -4,6 +4,8 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
@@ -45,8 +47,8 @@ import org.smoothbuild.lang.function.def.StringNode;
 import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.ArgumentNodesCreator;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.STypes;
 import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.type.STypes;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
@@ -164,6 +166,9 @@ public class DefinedFunctionsCreator {
       SType<?> elemsType = elemNodes.get(0).type();
       if (elemsType == STRING) {
         return new CachingNode(new ArrayNode(STRING_ARRAY, elemNodes, locationOf(list)));
+      }
+      if (elemsType == BLOB) {
+        return new CachingNode(new ArrayNode(BLOB_ARRAY, elemNodes, locationOf(list)));
       }
       if (elemsType == FILE) {
         return new CachingNode(new ArrayNode(FILE_ARRAY, elemNodes, locationOf(list)));
