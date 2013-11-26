@@ -18,12 +18,12 @@ public class StringArraySaver implements Saver<SArray<SString>> {
   }
 
   @Override
-  public void save(Name name, SArray<SString> value) {
+  public void save(Name name, SArray<SString> stringArray) {
     Path artifactPath = artifactPath(name);
 
     smoothFileSystem.delete(artifactPath);
     int i = 0;
-    for (SString string : value) {
+    for (SString string : stringArray) {
       Path filePath = path(Integer.valueOf(i).toString());
       Path sourcePath = artifactPath.append(filePath);
       Path targetPath = targetPath(string);
