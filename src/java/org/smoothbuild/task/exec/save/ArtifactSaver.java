@@ -1,6 +1,7 @@
 package org.smoothbuild.task.exec.save;
 
 import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
@@ -25,6 +26,7 @@ public class ArtifactSaver {
   private final BlobSaver blobSaver;
   private final FileSaver fileSaver;
   private final StringArraySaver stringArraySaver;
+  private final BlobArraySaver blobArraySaver;
   private final FileArraySaver fileArraySaver;
 
   @Inject
@@ -33,12 +35,17 @@ public class ArtifactSaver {
     this.blobSaver = new BlobSaver(smoothFileSystem);
     this.fileSaver = new FileSaver(smoothFileSystem);
     this.stringArraySaver = new StringArraySaver(smoothFileSystem);
+    this.blobArraySaver = new BlobArraySaver(smoothFileSystem);
     this.fileArraySaver = new FileArraySaver(smoothFileSystem);
   }
 
   public void save(Name name, SValue value) {
     if (value.type() == BLOB) {
       blobSaver.save(name, (SBlob) value);
+    } else if (value.type() == BLOB_ARRAY) {
+      @SuppressWarnings("unchecked")
+      SArray<SBlob> blobArray = (SArray<SBlob>) value;
+      blobArraySaver.save(name, blobArray);
     } else if (value.type() == FILE) {
       fileSaver.save(name, (SFile) value);
     } else if (value.type() == FILE_ARRAY) {
