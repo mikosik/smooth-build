@@ -13,6 +13,7 @@ import static org.smoothbuild.lang.type.STypes.PARAM_TYPES;
 import static org.smoothbuild.lang.type.STypes.RESULT_TYPES;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.type.STypes.arrayTypeContaining;
 import static org.smoothbuild.lang.type.STypes.arrayTypes;
 import static org.smoothbuild.lang.type.STypes.basicTypes;
 import static org.smoothbuild.lang.type.STypes.javaParamTypetoType;
@@ -183,6 +184,13 @@ public class STypesTest {
   public void javaParamToSmoothContainsAllResultTypes() throws Exception {
     SType<?>[] array = new SType<?>[] {};
     assertThat(JAVA_PARAM_TO_SMOOTH.values()).containsOnly(PARAM_TYPES.toArray(array));
+  }
+
+  @Test
+  public void testArrayTypeContaining() throws Exception {
+    assertThat(arrayTypeContaining(STRING)).isEqualTo(STRING_ARRAY);
+    assertThat(arrayTypeContaining(BLOB)).isEqualTo(BLOB_ARRAY);
+    assertThat(arrayTypeContaining(FILE)).isEqualTo(FILE_ARRAY);
   }
 
   private static TypeLiteral<?> type(Class<?> klass) {
