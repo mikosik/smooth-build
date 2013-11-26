@@ -1,7 +1,7 @@
 package org.smoothbuild.task.exec.save;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.task.exec.save.Savers.sourcePath;
+import static org.smoothbuild.task.exec.save.Savers.artifactPath;
 import static org.smoothbuild.task.exec.save.Savers.targetPath;
 
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -19,15 +19,15 @@ public class StringArraySaver implements Saver<SArray<SString>> {
 
   @Override
   public void save(Name name, SArray<SString> value) {
-    Path sourcePath = sourcePath(path(name.value()));
+    Path artifactPath = artifactPath(name);
 
-    smoothFileSystem.delete(sourcePath);
+    smoothFileSystem.delete(artifactPath);
     int i = 0;
     for (SString string : value) {
       Path filePath = path(Integer.valueOf(i).toString());
-      Path linkPath = sourcePath.append(filePath);
+      Path sourcePath = artifactPath.append(filePath);
       Path targetPath = targetPath(string);
-      smoothFileSystem.createLink(linkPath, targetPath);
+      smoothFileSystem.createLink(sourcePath, targetPath);
       i++;
     }
   }
