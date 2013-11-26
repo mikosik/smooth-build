@@ -83,6 +83,7 @@ public class STypes {
 
   static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
   static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
+  static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_TYPE_TO_ARRAY_TYPE = createElemTypeToArrayType(ARRAY_TYPES);
 
   public static ImmutableSet<SType<?>> basicTypes() {
     return BASIC_TYPES;
@@ -116,6 +117,16 @@ public class STypes {
     return JAVA_RESULT_TO_SMOOTH.get(javaType);
   }
 
+  public static <T extends SValue> SArrayType<T> arrayTypeContaining(SType<T> elemType) {
+    /*
+     * Cast is safe as ELEM_TYPE_TO_ARRAY_TYPE is immutable and it is
+     * initialized with proper mappings.
+     */
+    @SuppressWarnings("unchecked")
+    SArrayType<T> result = (SArrayType<T>) ELEM_TYPE_TO_ARRAY_TYPE.get(elemType);
+    return result;
+  }
+
   private static ImmutableSet<TypeLiteral<?>> toJavaTypes(Iterable<SType<?>> types) {
     ImmutableSet.Builder<TypeLiteral<?>> builder = ImmutableSet.builder();
 
@@ -131,6 +142,18 @@ public class STypes {
 
     for (SType<?> type : types) {
       builder.put(type.javaType(), type);
+    }
+
+    return builder.build();
+  }
+
+  private static ImmutableMap<SType<?>, SArrayType<?>> createElemTypeToArrayType(
+      ImmutableSet<SArrayType<?>> arrayTypes) {
+
+    ImmutableMap.Builder<SType<?>, SArrayType<?>> builder = ImmutableMap.builder();
+
+    for (SArrayType<?> type : arrayTypes) {
+      builder.put(type.elemType(), type);
     }
 
     return builder.build();
