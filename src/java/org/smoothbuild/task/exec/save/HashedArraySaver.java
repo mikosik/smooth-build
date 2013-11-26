@@ -8,25 +8,25 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SValue;
 
-public class BlobArraySaver implements Saver<SArray<SBlob>> {
+public class HashedArraySaver<T extends SValue> implements Saver<SArray<T>> {
   private final FileSystem smoothFileSystem;
 
-  public BlobArraySaver(FileSystem smoothFileSystem) {
+  public HashedArraySaver(FileSystem smoothFileSystem) {
     this.smoothFileSystem = smoothFileSystem;
   }
 
   @Override
-  public void save(Name name, SArray<SBlob> blobArray) {
+  public void save(Name name, SArray<T> array) {
     Path artifactPath = artifactPath(name);
 
     smoothFileSystem.delete(artifactPath);
     int i = 0;
-    for (SBlob blob : blobArray) {
+    for (T value : array) {
       Path filePath = path(Integer.valueOf(i).toString());
       Path sourcePath = artifactPath.append(filePath);
-      Path targetPath = targetPath(blob);
+      Path targetPath = targetPath(value);
       smoothFileSystem.createLink(sourcePath, targetPath);
       i++;
     }
