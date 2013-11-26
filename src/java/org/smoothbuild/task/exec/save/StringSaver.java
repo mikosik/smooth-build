@@ -16,9 +16,9 @@ public class StringSaver implements Saver<SString> {
   }
 
   @Override
-  public void save(Name name, SString value) {
+  public void save(Name name, SString string) {
     Path artifactPath = artifactPath(name);
-    Path targetPath = targetPath(value);
+    Path targetPath = targetPath(string);
 
     smoothFileSystem.delete(artifactPath);
     smoothFileSystem.createLink(artifactPath, targetPath);
