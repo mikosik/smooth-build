@@ -27,18 +27,20 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 public class ArtifactSaver {
   private final FileSystem smoothFileSystem;
   private final StringSaver stringSaver;
+  private final FileSaver fileSaver;
 
   @Inject
   public ArtifactSaver(@SmoothDir FileSystem smoothFileSystem) {
     this.smoothFileSystem = smoothFileSystem;
     this.stringSaver = new StringSaver(smoothFileSystem);
+    this.fileSaver = new FileSaver(smoothFileSystem);
   }
 
   public void save(Name name, SValue value) {
     Path artifactPath = RESULTS_DIR.append(path(name.value()));
 
     if (value.type() == FILE) {
-      storeFile(artifactPath, (SFile) value);
+      fileSaver.save(name, (SFile) value);
     } else if (value.type() == FILE_ARRAY) {
       @SuppressWarnings("unchecked")
       SArray<SFile> fileArray = (SArray<SFile>) value;
@@ -53,12 +55,6 @@ public class ArtifactSaver {
       throw new ErrorMessageException(new Message(MessageType.FATAL,
           "Bug in smooth binary.\nUnknown value type " + value.getClass().getName()));
     }
-  }
-
-  private void storeFile(Path artifactPath, SFile file) {
-    Path targetPath = targetPath(file.content());
-    smoothFileSystem.delete(artifactPath);
-    smoothFileSystem.createLink(artifactPath, targetPath);
   }
 
   private void storeFileArray(Path artifactPath, SArray<SFile> fileArray) {
