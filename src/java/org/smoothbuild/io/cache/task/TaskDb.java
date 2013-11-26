@@ -1,6 +1,7 @@
 package org.smoothbuild.io.cache.task;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.util.List;
@@ -13,7 +14,6 @@ import org.smoothbuild.io.cache.hash.TasksCache;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.STypes;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
@@ -68,7 +68,7 @@ public class TaskDb {
       for (int i = 0; i < size; i++) {
         MessageType type = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();
-        String messageString = valueDb.read(STypes.STRING, messageStringHash).value();
+        String messageString = valueDb.read(STRING, messageStringHash).value();
         messages.add(new Message(type, messageString));
         hasErrors = hasErrors || type == ERROR;
       }
