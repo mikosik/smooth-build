@@ -26,10 +26,12 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 
 public class ArtifactSaver {
   private final FileSystem smoothFileSystem;
+  private final StringSaver stringSaver;
 
   @Inject
   public ArtifactSaver(@SmoothDir FileSystem smoothFileSystem) {
     this.smoothFileSystem = smoothFileSystem;
+    this.stringSaver = new StringSaver(smoothFileSystem);
   }
 
   public void save(Name name, SValue value) {
@@ -42,7 +44,7 @@ public class ArtifactSaver {
       SArray<SFile> fileArray = (SArray<SFile>) value;
       storeFileArray(artifactPath, fileArray);
     } else if (value.type() == STRING) {
-      storeString(artifactPath, (SString) value);
+      stringSaver.save(name, (SString) value);
     } else if (value.type() == STRING_ARRAY) {
       @SuppressWarnings("unchecked")
       SArray<SString> stringArray = (SArray<SString>) value;
@@ -66,12 +68,6 @@ public class ArtifactSaver {
       Path targetPath = targetPath(file.content());
       smoothFileSystem.createLink(linkPath, targetPath);
     }
-  }
-
-  private void storeString(Path artifactPath, SString string) {
-    Path targetPath = targetPath(string);
-    smoothFileSystem.delete(artifactPath);
-    smoothFileSystem.createLink(artifactPath, targetPath);
   }
 
   private void storeStringArray(Path artifactPath, SArray<SString> stringArray) {
