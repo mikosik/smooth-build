@@ -129,7 +129,7 @@ public class ValueDbTest {
   }
 
   @Test
-  public void file_array_with_one_element_has_different_hash_from_that_file() throws Exception {
+  public void file_array_with_one_file_has_different_hash_from_that_file() throws Exception {
     given(file = valueDb.writeFile(path, bytes));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
 
@@ -195,7 +195,7 @@ public class ValueDbTest {
   }
 
   @Test
-  public void blob_array_with_one_element_has_different_hash_from_that_blob() throws Exception {
+  public void blob_array_with_one_blob_has_different_hash_from_that_blob() throws Exception {
     given(blob = valueDb.writeBlob(bytes));
     given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     when(blob.hash());
@@ -258,7 +258,7 @@ public class ValueDbTest {
   }
 
   @Test
-  public void string_array_with_one_element_has_different_hash_from_that_string() throws Exception {
+  public void string_array_with_one_string_has_different_hash_from_that_string() throws Exception {
     given(stringValue = valueDb.writeString(string));
     given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
 
@@ -348,45 +348,6 @@ public class ValueDbTest {
     thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 
-  // string object
-
-  @Test
-  public void created_string_object_contains_stored_string() throws IOException {
-    given(stringValue = valueDb.writeString(string));
-    when(stringValue.value());
-    thenReturned(string);
-  }
-
-  @Test
-  public void created_string_contains_correct_hash() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    when(stringValue.hash());
-    thenReturned(Hash.string(string));
-  }
-
-  @Test
-  public void string_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringValueRead = valueDb.read(STRING, stringValue.hash()));
-    when(stringValueRead.value());
-    thenReturned(string);
-  }
-
-  @Test
-  public void string_object_retrieved_via_hash_contains_string_that_was_stored() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringValueRead = valueDb.read(STRING, stringValue.hash()));
-    when(stringValueRead.value());
-    thenReturned(string);
-  }
-
-  @Test
-  public void reading_not_stored_string_object_fails() throws Exception {
-    given(stringValue = valueDb.read(STRING, HashCode.fromInt(33)));
-    when(stringValue).value();
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
-  }
-
   // blob object
 
   @Test
@@ -423,6 +384,45 @@ public class ValueDbTest {
   public void reading_not_stored_blob_fails() throws Exception {
     given(blob = valueDb.read(BLOB, HashCode.fromInt(33)));
     when(blob).openInputStream();
+    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+  }
+
+  // string object
+
+  @Test
+  public void created_string_object_contains_stored_string() throws IOException {
+    given(stringValue = valueDb.writeString(string));
+    when(stringValue.value());
+    thenReturned(string);
+  }
+
+  @Test
+  public void created_string_contains_correct_hash() throws Exception {
+    given(stringValue = valueDb.writeString(string));
+    when(stringValue.hash());
+    thenReturned(Hash.string(string));
+  }
+
+  @Test
+  public void string_retrieved_via_hash_contains_this_hash() throws Exception {
+    given(stringValue = valueDb.writeString(string));
+    given(stringValueRead = valueDb.read(STRING, stringValue.hash()));
+    when(stringValueRead.value());
+    thenReturned(string);
+  }
+
+  @Test
+  public void string_object_retrieved_via_hash_contains_string_that_was_stored() throws Exception {
+    given(stringValue = valueDb.writeString(string));
+    given(stringValueRead = valueDb.read(STRING, stringValue.hash()));
+    when(stringValueRead.value());
+    thenReturned(string);
+  }
+
+  @Test
+  public void reading_not_stored_string_object_fails() throws Exception {
+    given(stringValue = valueDb.read(STRING, HashCode.fromInt(33)));
+    when(stringValue).value();
     thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
   }
 }
