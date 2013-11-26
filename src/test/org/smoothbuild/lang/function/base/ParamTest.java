@@ -105,7 +105,7 @@ public class ParamTest {
 
     StringBuilder builder = new StringBuilder();
     builder.append("  String: param1               \n");
-    builder.append("  File* : param3               \n");
+    builder.append("  File[]: param3               \n");
     builder.append("  String: param2-with-very-long\n");
     assertThat(actual).isEqualTo(builder.toString());
   }

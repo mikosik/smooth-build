@@ -63,14 +63,14 @@ public class AmbiguousNamelessArgsErrorTest {
     builder
         .append("ERROR [ line 7 ]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:\n");
     builder.append("List of assignments that were successfully detected is following:\n");
-    builder.append("  String : param1 <- String : arg1       #12 " + a1.codeLocation() + "\n");
-    builder.append("  String*: param2 <- String*: <nameless> #7  " + a2.codeLocation() + "\n");
-    builder.append("  File   : param3 <- File   : <nameless> #|  " + a3.codeLocation() + "\n");
+    builder.append("  String  : param1 <- String  : arg1       #12 " + a1.codeLocation() + "\n");
+    builder.append("  String[]: param2 <- String[]: <nameless> #7  " + a2.codeLocation() + "\n");
+    builder.append("  File    : param3 <- File    : <nameless> #|  " + a3.codeLocation() + "\n");
     builder.append("List of nameless arguments that caused problems:\n");
-    builder.append("  Any*: arg4 #3 " + a4.codeLocation() + "\n");
+    builder.append("  Any[]: arg4 #3 " + a4.codeLocation() + "\n");
     builder.append("List of unassigned parameters of desired type is following:\n");
-    builder.append("  String*: param5\n");
-    builder.append("  File*  : param4\n");
+    builder.append("  String[]: param5\n");
+    builder.append("  File[]  : param4\n");
 
     assertThat(error.toString()).isEqualTo(builder.toString());
   }
