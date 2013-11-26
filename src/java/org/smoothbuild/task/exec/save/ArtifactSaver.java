@@ -28,12 +28,14 @@ public class ArtifactSaver {
   private final FileSystem smoothFileSystem;
   private final StringSaver stringSaver;
   private final FileSaver fileSaver;
+  private final StringArraySaver stringArraySaver;
 
   @Inject
   public ArtifactSaver(@SmoothDir FileSystem smoothFileSystem) {
     this.smoothFileSystem = smoothFileSystem;
     this.stringSaver = new StringSaver(smoothFileSystem);
     this.fileSaver = new FileSaver(smoothFileSystem);
+    this.stringArraySaver = new StringArraySaver(smoothFileSystem);
   }
 
   public void save(Name name, SValue value) {
@@ -50,7 +52,7 @@ public class ArtifactSaver {
     } else if (value.type() == STRING_ARRAY) {
       @SuppressWarnings("unchecked")
       SArray<SString> stringArray = (SArray<SString>) value;
-      storeStringArray(artifactPath, stringArray);
+      stringArraySaver.save(name, stringArray);
     } else {
       throw new ErrorMessageException(new Message(MessageType.FATAL,
           "Bug in smooth binary.\nUnknown value type " + value.getClass().getName()));
@@ -63,18 +65,6 @@ public class ArtifactSaver {
       Path linkPath = artifactPath.append(file.path());
       Path targetPath = targetPath(file.content());
       smoothFileSystem.createLink(linkPath, targetPath);
-    }
-  }
-
-  private void storeStringArray(Path artifactPath, SArray<SString> stringArray) {
-    smoothFileSystem.delete(artifactPath);
-    int i = 0;
-    for (SString string : stringArray) {
-      Path filePath = path(Integer.valueOf(i).toString());
-      Path linkPath = artifactPath.append(filePath);
-      Path targetPath = targetPath(string);
-      smoothFileSystem.createLink(linkPath, targetPath);
-      i++;
     }
   }
 
