@@ -15,6 +15,15 @@ import com.google.common.hash.HashCode;
 public class FakeArray<T extends SValue> extends CachedValue implements SArray<T> {
   private final List<T> files = Lists.newArrayList();
 
+  @SuppressWarnings("unchecked")
+  public static <T extends SValue> FakeArray<T> fakeArray(SType<SArray<T>> type, T... elements) {
+    FakeArray<T> array = new FakeArray<T>(type);
+    for (T elem : elements) {
+      array.add(elem);
+    }
+    return array;
+  }
+
   public FakeArray(SType<?> type) {
     super(type, HashCode.fromInt(0));
   }

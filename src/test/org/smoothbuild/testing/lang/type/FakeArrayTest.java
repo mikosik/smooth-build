@@ -15,6 +15,7 @@ import com.google.common.collect.Iterables;
 
 public class FakeArrayTest {
   FakeFile file;
+  FakeFile file2;
   FakeArray<SFile> fileArray;
 
   @Test
@@ -37,5 +38,13 @@ public class FakeArrayTest {
     given(file = new FakeFile(path("my/file")));
     when(fileArray).add(file);
     then(fileArray, contains(file));
+  }
+
+  @Test
+  public void fake_array_contains_files_passed_to_creation_method() throws Exception {
+    given(file = new FakeFile(path("my/file")));
+    given(file2 = new FakeFile(path("my/file2")));
+    when(FakeArray.fakeArray(FILE_ARRAY, file, file2));
+    thenReturned(contains(file, file2));
   }
 }
