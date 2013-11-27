@@ -9,7 +9,6 @@ import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -24,18 +23,18 @@ import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Sets;
 
 public class Unjarer {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
 
   private final PluginApi pluginApi;
   private final byte[] buffer;
-  private Set<Path> alreadyUnjared;
+  private DuplicatesDetector<Path> duplicatesDetector;
 
   public Unjarer(PluginApi pluginApi) {
     this.pluginApi = pluginApi;
@@ -47,7 +46,7 @@ public class Unjarer {
   }
 
   public SArray<SFile> unjarFile(SFile jarFile, Predicate<String> nameFilter) {
-    this.alreadyUnjared = Sets.newHashSet();
+    this.duplicatesDetector = new DuplicatesDetector<Path>();
     ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
@@ -58,10 +57,9 @@ public class Unjarer {
           if (filter.apply(fileName)) {
             SFile file = unjarEntry(jarInputStream, fileName);
             Path path = file.path();
-            if (alreadyUnjared.contains(path)) {
+            if (duplicatesDetector.add(path)) {
               throw new ErrorMessageException(new DuplicatePathInJarError(path));
             } else {
-              alreadyUnjared.add(path);
               fileArrayBuilder.add(file);
             }
           }
