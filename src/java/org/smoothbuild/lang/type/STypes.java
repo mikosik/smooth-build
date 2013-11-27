@@ -67,14 +67,14 @@ public class STypes {
       FILE_ARRAY);
 
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
-      BLOB_ARRAY, FILE, FILE_ARRAY);
+  static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> PARAM_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
-      BLOB_ARRAY, FILE, FILE_ARRAY);
+  static final ImmutableSet<SType<?>> PARAM_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  private static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(ANY, STRING,
-      STRING_ARRAY, BLOB, BLOB_ARRAY, FILE, FILE_ARRAY, EMPTY_ARRAY);
+  private static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(ANY, STRING, BLOB, FILE,
+      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
 
   /*
    * Some of the set above converted to java types.
