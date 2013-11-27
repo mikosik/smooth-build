@@ -1,21 +1,8 @@
 package org.smoothbuild.lang.plugin;
 
-import org.smoothbuild.io.cache.value.build.ArrayBuilder;
-import org.smoothbuild.io.cache.value.build.BlobBuilder;
-import org.smoothbuild.io.cache.value.build.FileBuilder;
-import org.smoothbuild.lang.type.SArrayType;
-import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 
-public interface PluginApi {
+public interface PluginApi extends SValueBuilders {
   public void report(Message message);
-
-  public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType);
-
-  public FileBuilder fileBuilder();
-
-  public BlobBuilder blobBuilder();
-
-  public SString string(String string);
 }
