@@ -18,6 +18,7 @@ import static org.testory.Testory.when;
 
 import java.io.IOException;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.HashedDb;
@@ -70,6 +71,14 @@ public class ValueDbTest {
     given(blob = valueDb.writeBlob(bytes));
     when(file.hash());
     thenReturned(not(blob.hash()));
+  }
+
+  // empty array
+
+  @Test
+  public void empty_array_is_empty() throws Exception {
+    when(valueDb).emptyArray();
+    thenReturned(Matchers.emptyIterable());
   }
 
   // file array
