@@ -14,10 +14,11 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.type.SFile;
 
 public class FileArrayMatchersTest {
   FakeFile file;
-  FakeArray fileArray = new FakeArray(FILE_ARRAY);
+  FakeArray<SFile> fileArray = new FakeArray<SFile>(FILE_ARRAY);
   Path path = Path.path("my/path1");
   Path path2 = Path.path("my/path2");
   String content = "content";
