@@ -10,15 +10,15 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.task.exec.SmoothExecutorMessages;
+import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class FileArraySaver implements Saver<SArray<SFile>> {
   private final FileSystem smoothFileSystem;
-  private final SmoothExecutorMessages messages;
+  private final MessageGroup messages;
 
-  public FileArraySaver(FileSystem smoothFileSystem, SmoothExecutorMessages messages) {
+  public FileArraySaver(FileSystem smoothFileSystem, MessageGroup messages) {
     this.smoothFileSystem = smoothFileSystem;
     this.messages = messages;
   }
