@@ -3,6 +3,7 @@ package org.smoothbuild.io.cache.value;
 import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
@@ -21,12 +22,15 @@ import org.smoothbuild.io.cache.value.instance.CachedString;
 import org.smoothbuild.io.cache.value.read.ReadArray;
 import org.smoothbuild.io.cache.value.read.ReadBlob;
 import org.smoothbuild.io.cache.value.read.ReadFile;
+import org.smoothbuild.io.cache.value.read.ReadNothing;
 import org.smoothbuild.io.cache.value.read.ReadString;
 import org.smoothbuild.io.cache.value.read.ReadValue;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.type.SNothing;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
@@ -46,6 +50,7 @@ public class ValueDb {
   private final ReadArray<SString> readStringArray;
   private final ReadArray<SBlob> readBlobArray;
   private final ReadArray<SFile> readFileArray;
+  private final ReadNothing readNothing;
 
   private final ImmutableMap<SType<?>, ReadValue<?>> readersMap;
 
@@ -59,6 +64,7 @@ public class ValueDb {
     this.readStringArray = new ReadArray<SString>(hashedDb, STRING_ARRAY, readString);
     this.readBlobArray = new ReadArray<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
     this.readFileArray = new ReadArray<SFile>(hashedDb, FILE_ARRAY, readFile);
+    this.readNothing = new ReadNothing();
 
     Builder<SType<?>, ReadValue<?>> builder = ImmutableMap.builder();
     builder.put(STRING, readString);
@@ -90,6 +96,10 @@ public class ValueDb {
       return result;
     }
     throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
+  }
+
+  public SArray<SNothing> emptyArray() {
+    return new ArrayBuilder<SNothing>(hashedDb, EMPTY_ARRAY, readNothing).build();
   }
 
   private ArrayBuilder<SFile> fileArrayBuilder() {
