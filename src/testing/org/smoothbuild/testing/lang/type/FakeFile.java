@@ -28,7 +28,6 @@ public class FakeFile extends CachedValue implements SFile {
 
   public FakeFile(Path path, byte[] bytes) {
     this(path, new FakeBlob(bytes));
-
   }
 
   public FakeFile(Path path, FakeBlob content) {
