@@ -2,6 +2,7 @@ package org.smoothbuild.task.exec.save;
 
 import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
@@ -14,6 +15,7 @@ import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.type.SNothing;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
@@ -37,6 +39,7 @@ public class ArtifactSaver {
     builder.put(STRING_ARRAY, new HashedArraySaver<SString>(smoothFileSystem));
     builder.put(BLOB_ARRAY, new HashedArraySaver<SBlob>(smoothFileSystem));
     builder.put(FILE_ARRAY, new FileArraySaver(smoothFileSystem, messages));
+    builder.put(EMPTY_ARRAY, new HashedArraySaver<SNothing>(smoothFileSystem));
 
     this.saversMap = builder.build();
   }
