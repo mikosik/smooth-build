@@ -73,8 +73,8 @@ public class STypes {
   static final ImmutableSet<SType<?>> PARAM_TYPES = ImmutableSet.of(STRING, STRING_ARRAY, BLOB,
       BLOB_ARRAY, FILE, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(ANY, STRING, STRING_ARRAY, BLOB,
-      BLOB_ARRAY, FILE, FILE_ARRAY, EMPTY_ARRAY);
+  private static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(ANY, STRING,
+      STRING_ARRAY, BLOB, BLOB_ARRAY, FILE, FILE_ARRAY, EMPTY_ARRAY);
 
   /*
    * Some of the set above converted to java types.
@@ -103,6 +103,11 @@ public class STypes {
     return PARAM_TYPES;
   }
 
+  /**
+   * All smooth types available in smooth language. Returned list is sorted
+   * using type - subtype relationship. Each type comes before all of its
+   * subtypes.
+   */
   public static ImmutableSet<SType<?>> allTypes() {
     return ALL_TYPES;
   }

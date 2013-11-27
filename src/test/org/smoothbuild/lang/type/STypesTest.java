@@ -20,8 +20,11 @@ import static org.smoothbuild.lang.type.STypes.basicTypes;
 import static org.smoothbuild.lang.type.STypes.javaParamTypetoType;
 import static org.smoothbuild.lang.type.STypes.javaResultTypetoType;
 
+import java.util.Set;
+
 import org.junit.Test;
 
+import com.google.common.collect.Sets;
 import com.google.common.testing.EqualsTester;
 import com.google.inject.TypeLiteral;
 
@@ -151,6 +154,17 @@ public class STypesTest {
   @Test
   public void testToString() throws Exception {
     assertThat(STRING.toString()).isEqualTo("'String'");
+  }
+
+  @Test
+  public void testAllTypes() throws Exception {
+    Set<SType<?>> visited = Sets.newHashSet();
+    for (SType<?> type : STypes.allTypes()) {
+      for (SType<?> superType : type.superTypes()) {
+        assertThat(visited).contains(superType);
+      }
+      visited.add(type);
+    }
   }
 
   @Test
