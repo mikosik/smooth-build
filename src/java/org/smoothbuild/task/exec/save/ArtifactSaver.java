@@ -19,6 +19,7 @@ import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.task.exec.SmoothExecutorMessages;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -27,7 +28,7 @@ public class ArtifactSaver {
   private final ImmutableMap<SType<?>, Saver<?>> saversMap;
 
   @Inject
-  public ArtifactSaver(@SmoothDir FileSystem smoothFileSystem) {
+  public ArtifactSaver(@SmoothDir FileSystem smoothFileSystem, SmoothExecutorMessages messages) {
     Builder<SType<?>, Saver<?>> builder = ImmutableMap.builder();
 
     builder.put(STRING, new StringSaver(smoothFileSystem));
@@ -35,7 +36,7 @@ public class ArtifactSaver {
     builder.put(FILE, new FileSaver(smoothFileSystem));
     builder.put(STRING_ARRAY, new HashedArraySaver<SString>(smoothFileSystem));
     builder.put(BLOB_ARRAY, new HashedArraySaver<SBlob>(smoothFileSystem));
-    builder.put(FILE_ARRAY, new FileArraySaver(smoothFileSystem));
+    builder.put(FILE_ARRAY, new FileArraySaver(smoothFileSystem, messages));
 
     this.saversMap = builder.build();
   }
