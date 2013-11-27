@@ -7,7 +7,6 @@ import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -21,16 +20,16 @@ import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
 
 public class Unzipper {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer;
   private final PluginApi pluginApi;
-  private Set<Path> alreadyUnzipped;
+  private DuplicatesDetector<Path> duplicatesDetector;
 
   public Unzipper(PluginApi pluginApi) {
     this.pluginApi = pluginApi;
@@ -38,7 +37,7 @@ public class Unzipper {
   }
 
   public SArray<SFile> unzipFile(SFile zipFile) {
-    this.alreadyUnzipped = Sets.newHashSet();
+    this.duplicatesDetector = new DuplicatesDetector<Path>();
     ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
@@ -63,10 +62,9 @@ public class Unzipper {
       throw new ErrorMessageException(new IllegalPathInZipError(fileName));
     }
     Path path = path(fileName);
-    if (alreadyUnzipped.contains(path)) {
+    if (duplicatesDetector.add(path)) {
       throw new ErrorMessageException(new DuplicatePathInZipError(path));
     }
-    alreadyUnzipped.add(path);
     try {
       FileBuilder fileBuilder = pluginApi.fileBuilder();
       fileBuilder.setPath(path);

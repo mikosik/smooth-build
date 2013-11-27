@@ -2,18 +2,15 @@ package org.smoothbuild.lang.builtin.file;
 
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 
-import java.util.Set;
-
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.file.err.DuplicateMergedPathError;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
-
-import com.google.common.collect.Sets;
+import org.smoothbuild.util.DuplicatesDetector;
 
 public class MergeFunction {
 
@@ -40,25 +37,25 @@ public class MergeFunction {
     }
 
     public SArray<SFile> execute() {
-      Set<Path> alreadyAdded = Sets.newHashSet();
+      DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<Path>();
       ArrayBuilder<SFile> builder = pluginApi.arrayBuilder(FILE_ARRAY);
 
       for (SFile file : params.files()) {
-        addFile(file, builder, alreadyAdded);
+        addFile(file, builder, duplicatesDetector);
       }
       for (SFile file : params.with()) {
-        addFile(file, builder, alreadyAdded);
+        addFile(file, builder, duplicatesDetector);
       }
 
       return builder.build();
     }
 
-    private void addFile(SFile file, ArrayBuilder<SFile> builder, Set<Path> alreadyAdded) {
+    private void addFile(SFile file, ArrayBuilder<SFile> builder,
+        DuplicatesDetector<Path> alreadyAdded) {
       Path path = file.path();
-      if (alreadyAdded.contains(path)) {
+      if (alreadyAdded.add(path)) {
         pluginApi.report(new DuplicateMergedPathError(path));
       } else {
-        alreadyAdded.add(path);
         builder.add(file);
       }
     }
