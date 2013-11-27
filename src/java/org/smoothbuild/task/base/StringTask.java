@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.lang.type.STypes.STRING;
 
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
@@ -11,7 +12,7 @@ public class StringTask extends Task {
   private final SString string;
 
   public StringTask(SString string, CodeLocation codeLocation) {
-    super("String", true, codeLocation);
+    super(STRING.name(), true, codeLocation);
     this.string = checkNotNull(string);
   }
 
