@@ -34,7 +34,7 @@ public class STypes {
   private static final String STRING_A_N = "String[]";
   private static final String BLOB_A_N = "Blob[]";
   private static final String FILE_A_N = "File[]";
-  private static final String EMPTY_A_N = "Any[]";
+  private static final String EMPTY_A_N = "Nothing[]";
 
   /*
    * Smooth types. Used by smooth-build code to represent smooth types.
