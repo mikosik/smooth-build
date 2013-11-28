@@ -33,12 +33,8 @@ public class SType<T extends SValue> {
     if (this == type) {
       return true;
     }
-    for (SType<?> superType : type.superTypes) {
-      if (this.isAssignableFrom(superType)) {
-        return true;
-      }
-    }
-    return false;
+
+    return type.superTypes.contains(this);
   }
 
   @Override
