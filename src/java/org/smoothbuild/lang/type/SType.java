@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.TypeLiteral;
 
 /**
@@ -9,12 +8,10 @@ import com.google.inject.TypeLiteral;
 public class SType<T extends SValue> {
   private final String name;
   private final TypeLiteral<? extends SValue> javaType;
-  private final ImmutableList<SType<?>> superTypes;
 
-  protected SType(String name, TypeLiteral<T> javaType, SType<?>... superTypes) {
+  protected SType(String name, TypeLiteral<T> javaType) {
     this.name = name;
     this.javaType = javaType;
-    this.superTypes = ImmutableList.copyOf(superTypes);
   }
 
   public String name() {
@@ -23,14 +20,6 @@ public class SType<T extends SValue> {
 
   public TypeLiteral<? extends SValue> javaType() {
     return javaType;
-  }
-
-  public boolean isAssignableFrom(SType<?> type) {
-    if (this == type) {
-      return true;
-    }
-
-    return type.superTypes.contains(this);
   }
 
   @Override

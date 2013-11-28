@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.lang.convert.Conversions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.ArrayNode;
@@ -113,7 +114,7 @@ public class ArgumentNodesCreator {
           String name = argument.name();
           Param param = paramsPool.takeByName(name);
           SType<?> paramType = param.type();
-          if (!paramType.isAssignableFrom(argument.type())) {
+          if (!Conversions.canAssign(argument.type(), paramType)) {
             messages.report(new TypeMismatchError(argument, paramType));
           } else {
             assignmentList.add(assignment(param, argument));
@@ -137,8 +138,9 @@ public class ArgumentNodesCreator {
             assignmentList.add(assignment(candidateParam, onlyArg));
             paramsPool.take(candidateParam);
           } else {
-            AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
-                assignmentList, availableArgs, availableTypedParams);
+            AmbiguousNamelessArgsError error =
+                new AmbiguousNamelessArgsError(function.name(), assignmentList, availableArgs,
+                    availableTypedParams);
             messages.report(error);
             return;
           }
