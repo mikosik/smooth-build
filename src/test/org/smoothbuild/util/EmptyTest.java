@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
+import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Result;
@@ -118,5 +120,23 @@ public class EmptyTest {
     @SuppressWarnings("unchecked")
     Iterable<String> iterable = mock(Iterable.class);
     assertThat(Empty.nullToEmpty(iterable)).isSameAs(iterable);
+  }
+
+  // typeToConverterMap()
+
+  @Test
+  public void typeToConverterMapIsEmpty() {
+    assertThat(Empty.typeToConverterMap()).isEmpty();
+  }
+
+  @Test
+  public void typeToConverterMapIsImmutable() {
+    @SuppressWarnings("unused")
+    ImmutableMap<SType<?>, Converter<?>> map = Empty.typeToConverterMap();
+  }
+
+  @Test
+  public void typeToConverterMapAlwaysReturnsTheSameObject() {
+    assertThat(Empty.typeToConverterMap()).isSameAs(Empty.typeToConverterMap());
   }
 }
