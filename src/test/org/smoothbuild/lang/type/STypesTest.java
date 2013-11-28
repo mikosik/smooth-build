@@ -31,65 +31,6 @@ import com.google.inject.TypeLiteral;
 public class STypesTest {
 
   @Test
-  public void isAssignableFrom() throws Exception {
-    assertThat(STRING.isAssignableFrom(STRING)).isTrue();
-    assertThat(STRING.isAssignableFrom(STRING_ARRAY)).isFalse();
-    assertThat(STRING.isAssignableFrom(BLOB)).isFalse();
-    assertThat(STRING.isAssignableFrom(BLOB_ARRAY)).isFalse();
-    assertThat(STRING.isAssignableFrom(FILE)).isFalse();
-    assertThat(STRING.isAssignableFrom(FILE_ARRAY)).isFalse();
-    assertThat(STRING.isAssignableFrom(EMPTY_ARRAY)).isFalse();
-
-    assertThat(STRING_ARRAY.isAssignableFrom(STRING)).isFalse();
-    assertThat(STRING_ARRAY.isAssignableFrom(STRING_ARRAY)).isTrue();
-    assertThat(STRING_ARRAY.isAssignableFrom(BLOB)).isFalse();
-    assertThat(STRING_ARRAY.isAssignableFrom(BLOB_ARRAY)).isFalse();
-    assertThat(STRING_ARRAY.isAssignableFrom(FILE)).isFalse();
-    assertThat(STRING_ARRAY.isAssignableFrom(FILE_ARRAY)).isFalse();
-    assertThat(STRING_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
-
-    assertThat(BLOB.isAssignableFrom(STRING)).isFalse();
-    assertThat(BLOB.isAssignableFrom(STRING_ARRAY)).isFalse();
-    assertThat(BLOB.isAssignableFrom(BLOB)).isTrue();
-    assertThat(BLOB.isAssignableFrom(BLOB_ARRAY)).isFalse();
-    assertThat(BLOB.isAssignableFrom(FILE)).isTrue();
-    assertThat(BLOB.isAssignableFrom(FILE_ARRAY)).isFalse();
-    assertThat(BLOB.isAssignableFrom(EMPTY_ARRAY)).isFalse();
-
-    assertThat(BLOB_ARRAY.isAssignableFrom(STRING)).isFalse();
-    assertThat(BLOB_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
-    assertThat(BLOB_ARRAY.isAssignableFrom(BLOB)).isFalse();
-    assertThat(BLOB_ARRAY.isAssignableFrom(BLOB_ARRAY)).isTrue();
-    assertThat(BLOB_ARRAY.isAssignableFrom(FILE)).isFalse();
-    assertThat(BLOB_ARRAY.isAssignableFrom(FILE_ARRAY)).isTrue();
-    assertThat(BLOB_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
-
-    assertThat(FILE.isAssignableFrom(STRING)).isFalse();
-    assertThat(FILE.isAssignableFrom(STRING_ARRAY)).isFalse();
-    assertThat(FILE.isAssignableFrom(BLOB)).isFalse();
-    assertThat(FILE.isAssignableFrom(BLOB_ARRAY)).isFalse();
-    assertThat(FILE.isAssignableFrom(FILE)).isTrue();
-    assertThat(FILE.isAssignableFrom(FILE_ARRAY)).isFalse();
-    assertThat(FILE.isAssignableFrom(EMPTY_ARRAY)).isFalse();
-
-    assertThat(FILE_ARRAY.isAssignableFrom(STRING)).isFalse();
-    assertThat(FILE_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
-    assertThat(FILE_ARRAY.isAssignableFrom(BLOB)).isFalse();
-    assertThat(FILE_ARRAY.isAssignableFrom(BLOB_ARRAY)).isFalse();
-    assertThat(FILE_ARRAY.isAssignableFrom(FILE)).isFalse();
-    assertThat(FILE_ARRAY.isAssignableFrom(FILE_ARRAY)).isTrue();
-    assertThat(FILE_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
-
-    assertThat(EMPTY_ARRAY.isAssignableFrom(STRING)).isFalse();
-    assertThat(EMPTY_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
-    assertThat(EMPTY_ARRAY.isAssignableFrom(BLOB)).isFalse();
-    assertThat(EMPTY_ARRAY.isAssignableFrom(BLOB_ARRAY)).isFalse();
-    assertThat(EMPTY_ARRAY.isAssignableFrom(FILE)).isFalse();
-    assertThat(EMPTY_ARRAY.isAssignableFrom(FILE_ARRAY)).isFalse();
-    assertThat(EMPTY_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
-  }
-
-  @Test
   public void arrayElemTypes() throws Exception {
     assertThat(STRING_ARRAY.elemType()).isEqualTo(STRING);
     assertThat(BLOB_ARRAY.elemType()).isEqualTo(BLOB);

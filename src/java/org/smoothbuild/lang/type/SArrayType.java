@@ -5,8 +5,8 @@ import com.google.inject.TypeLiteral;
 public class SArrayType<T extends SValue> extends SType<SArray<T>> {
   private final SType<T> elemType;
 
-  protected SArrayType(TypeLiteral<SArray<T>> javaType, SType<T> elemType, SType<?>... superTypes) {
-    super(elemType.name() + "[]", javaType, superTypes);
+  protected SArrayType(TypeLiteral<SArray<T>> javaType, SType<T> elemType) {
+    super(elemType.name() + "[]", javaType);
     this.elemType = elemType;
   }
 

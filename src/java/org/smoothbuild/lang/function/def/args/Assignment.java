@@ -2,6 +2,7 @@ package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.smoothbuild.lang.convert.Conversions;
 import org.smoothbuild.lang.function.base.Param;
 
 public class Assignment {
@@ -13,7 +14,7 @@ public class Assignment {
   }
 
   private Assignment(Param param, Argument argument) {
-    boolean isAssignable = param.type().isAssignableFrom(argument.type());
+    boolean isAssignable = Conversions.canAssign(argument.type(), param.type());
     if (!isAssignable) {
       throw new IllegalArgumentException("Param " + param + " cannot be assigned from " + argument
           + " argument.");
