@@ -22,6 +22,7 @@ import static org.smoothbuild.lang.type.STypes.javaResultTypetoType;
 import java.util.Set;
 
 import org.junit.Test;
+import org.smoothbuild.lang.convert.Conversions;
 
 import com.google.common.collect.Sets;
 import com.google.common.testing.EqualsTester;
@@ -89,18 +90,6 @@ public class STypesTest {
   }
 
   @Test
-  public void superTypes() throws Exception {
-    assertThat(STRING.superTypes()).containsOnly();
-    assertThat(BLOB.superTypes()).containsOnly();
-    assertThat(FILE.superTypes()).containsOnly(BLOB);
-
-    assertThat(STRING_ARRAY.superTypes()).containsOnly();
-    assertThat(BLOB_ARRAY.superTypes()).containsOnly();
-    assertThat(FILE_ARRAY.superTypes()).containsOnly(BLOB_ARRAY);
-    assertThat(EMPTY_ARRAY.superTypes()).containsOnly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
-  }
-
-  @Test
   public void arrayElemTypes() throws Exception {
     assertThat(STRING_ARRAY.elemType()).isEqualTo(STRING);
     assertThat(BLOB_ARRAY.elemType()).isEqualTo(BLOB);
@@ -142,7 +131,7 @@ public class STypesTest {
   public void testAllTypes() throws Exception {
     Set<SType<?>> visited = Sets.newHashSet();
     for (SType<?> type : STypes.allTypes()) {
-      for (SType<?> superType : type.superTypes()) {
+      for (SType<?> superType : Conversions.superTypesOf(type)) {
         assertThat(visited).contains(superType);
       }
       visited.add(type);
