@@ -6,6 +6,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 public class StoringArtifactSmoothTest extends IntegrationTestCase {
@@ -56,6 +57,23 @@ public class StoringArtifactSmoothTest extends IntegrationTestCase {
 
     fileSystem.assertFileContains(artifact1Path, content1);
     fileSystem.assertFileContains(artifact2Path, content2);
+  }
+
+  @Test
+  public void storing_file_array_artifact_reports_problem_whe_files_have_duplicated_paths()
+      throws Exception {
+    // given
+    fileSystem.createFile(path1, content1);
+
+    String functionName = "myFunction";
+
+    script(functionName + " : [ file(" + path1 + ") , file(" + path1 + ") ]  ;");
+
+    // when
+    build(functionName);
+
+    // then
+    userConsole.assertOnlyProblem(DuplicatePathsInFileArrayArtifactError.class);
   }
 
   @Test
