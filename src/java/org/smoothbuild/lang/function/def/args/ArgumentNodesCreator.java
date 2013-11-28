@@ -114,7 +114,7 @@ public class ArgumentNodesCreator {
           String name = argument.name();
           Param param = paramsPool.takeByName(name);
           SType<?> paramType = param.type();
-          if (!Conversions.canAssign(argument.type(), paramType)) {
+          if (!Conversions.canConvert(argument.type(), paramType)) {
             messages.report(new TypeMismatchError(argument, paramType));
           } else {
             assignmentList.add(assignment(param, argument));
