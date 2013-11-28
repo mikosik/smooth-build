@@ -160,21 +160,21 @@ public class ArgumentNodesCreator {
     }
 
     private Node argumentNode(Assignment assignment) {
-      SType<?> type = assignment.param().type();
+      SType<?> paramType = assignment.param().type();
       Argument argument = assignment.argument();
       if (argument.type() == EMPTY_ARRAY) {
-        if (type == STRING_ARRAY) {
+        if (paramType == STRING_ARRAY) {
           ArrayNode node = new ArrayNode(STRING_ARRAY, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
-        } else if (type == FILE_ARRAY) {
+        } else if (paramType == FILE_ARRAY) {
           ArrayNode node = new ArrayNode(FILE_ARRAY, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
-        } else if (type == BLOB_ARRAY) {
+        } else if (paramType == BLOB_ARRAY) {
           ArrayNode node = new ArrayNode(BLOB_ARRAY, Empty.nodeList(), argument.codeLocation());
           return new CachingNode(node);
         } else {
           throw new ErrorMessageException(new Message(FATAL,
-              "Bug in smooth binary: Cannot convert from " + argument.type() + " to " + type + "."));
+              "Bug in smooth binary: Cannot convert from " + argument.type() + " to " + paramType + "."));
         }
       } else {
         return argument.node();
