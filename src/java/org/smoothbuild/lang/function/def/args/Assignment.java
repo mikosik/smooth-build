@@ -14,7 +14,7 @@ public class Assignment {
   }
 
   private Assignment(Param param, Argument argument) {
-    boolean isAssignable = Conversions.canAssign(argument.type(), param.type());
+    boolean isAssignable = Conversions.canConvert(argument.type(), param.type());
     if (!isAssignable) {
       throw new IllegalArgumentException("Param " + param + " cannot be assigned from " + argument
           + " argument.");

@@ -23,62 +23,62 @@ import org.smoothbuild.testing.task.exec.FakePluginApi;
 public class ConversionsTest {
 
   @Test
-  public void isAssignableFrom() throws Exception {
-    assertThat(Conversions.canAssign(STRING, STRING)).isTrue();
-    assertThat(Conversions.canAssign(STRING, STRING_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(STRING, BLOB)).isFalse();
-    assertThat(Conversions.canAssign(STRING, BLOB_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(STRING, FILE)).isFalse();
-    assertThat(Conversions.canAssign(STRING, FILE_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(STRING, EMPTY_ARRAY)).isFalse();
+  public void testCanConvert() throws Exception {
+    assertThat(Conversions.canConvert(STRING, STRING)).isTrue();
+    assertThat(Conversions.canConvert(STRING, STRING_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(STRING, BLOB)).isFalse();
+    assertThat(Conversions.canConvert(STRING, BLOB_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(STRING, FILE)).isFalse();
+    assertThat(Conversions.canConvert(STRING, FILE_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(STRING, EMPTY_ARRAY)).isFalse();
 
-    assertThat(Conversions.canAssign(BLOB, STRING)).isFalse();
-    assertThat(Conversions.canAssign(BLOB, BLOB)).isTrue();
-    assertThat(Conversions.canAssign(BLOB, FILE)).isFalse();
-    assertThat(Conversions.canAssign(BLOB, STRING_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(BLOB, BLOB_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(BLOB, FILE_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(BLOB, EMPTY_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(BLOB, STRING)).isFalse();
+    assertThat(Conversions.canConvert(BLOB, BLOB)).isTrue();
+    assertThat(Conversions.canConvert(BLOB, FILE)).isFalse();
+    assertThat(Conversions.canConvert(BLOB, STRING_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(BLOB, BLOB_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(BLOB, FILE_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(BLOB, EMPTY_ARRAY)).isFalse();
 
-    assertThat(Conversions.canAssign(FILE, STRING)).isFalse();
-    assertThat(Conversions.canAssign(FILE, BLOB)).isTrue();
-    assertThat(Conversions.canAssign(FILE, FILE)).isTrue();
-    assertThat(Conversions.canAssign(FILE, STRING_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(FILE, BLOB_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(FILE, FILE_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(FILE, EMPTY_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(FILE, STRING)).isFalse();
+    assertThat(Conversions.canConvert(FILE, BLOB)).isTrue();
+    assertThat(Conversions.canConvert(FILE, FILE)).isTrue();
+    assertThat(Conversions.canConvert(FILE, STRING_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(FILE, BLOB_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(FILE, FILE_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(FILE, EMPTY_ARRAY)).isFalse();
 
-    assertThat(Conversions.canAssign(STRING_ARRAY, STRING)).isFalse();
-    assertThat(Conversions.canAssign(STRING_ARRAY, BLOB)).isFalse();
-    assertThat(Conversions.canAssign(STRING_ARRAY, FILE)).isFalse();
-    assertThat(Conversions.canAssign(STRING_ARRAY, STRING_ARRAY)).isTrue();
-    assertThat(Conversions.canAssign(STRING_ARRAY, BLOB_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(STRING_ARRAY, FILE_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(STRING_ARRAY, EMPTY_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(STRING_ARRAY, STRING)).isFalse();
+    assertThat(Conversions.canConvert(STRING_ARRAY, BLOB)).isFalse();
+    assertThat(Conversions.canConvert(STRING_ARRAY, FILE)).isFalse();
+    assertThat(Conversions.canConvert(STRING_ARRAY, STRING_ARRAY)).isTrue();
+    assertThat(Conversions.canConvert(STRING_ARRAY, BLOB_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(STRING_ARRAY, FILE_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(STRING_ARRAY, EMPTY_ARRAY)).isFalse();
 
-    assertThat(Conversions.canAssign(BLOB_ARRAY, STRING)).isFalse();
-    assertThat(Conversions.canAssign(BLOB_ARRAY, BLOB)).isFalse();
-    assertThat(Conversions.canAssign(BLOB_ARRAY, FILE)).isFalse();
-    assertThat(Conversions.canAssign(BLOB_ARRAY, STRING_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(BLOB_ARRAY, BLOB_ARRAY)).isTrue();
-    assertThat(Conversions.canAssign(BLOB_ARRAY, FILE_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(BLOB_ARRAY, EMPTY_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(BLOB_ARRAY, STRING)).isFalse();
+    assertThat(Conversions.canConvert(BLOB_ARRAY, BLOB)).isFalse();
+    assertThat(Conversions.canConvert(BLOB_ARRAY, FILE)).isFalse();
+    assertThat(Conversions.canConvert(BLOB_ARRAY, STRING_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(BLOB_ARRAY, BLOB_ARRAY)).isTrue();
+    assertThat(Conversions.canConvert(BLOB_ARRAY, FILE_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(BLOB_ARRAY, EMPTY_ARRAY)).isFalse();
 
-    assertThat(Conversions.canAssign(FILE_ARRAY, STRING)).isFalse();
-    assertThat(Conversions.canAssign(FILE_ARRAY, BLOB)).isFalse();
-    assertThat(Conversions.canAssign(FILE_ARRAY, FILE)).isFalse();
-    assertThat(Conversions.canAssign(FILE_ARRAY, STRING_ARRAY)).isFalse();
-    assertThat(Conversions.canAssign(FILE_ARRAY, BLOB_ARRAY)).isTrue();
-    assertThat(Conversions.canAssign(FILE_ARRAY, FILE_ARRAY)).isTrue();
-    assertThat(Conversions.canAssign(FILE_ARRAY, EMPTY_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(FILE_ARRAY, STRING)).isFalse();
+    assertThat(Conversions.canConvert(FILE_ARRAY, BLOB)).isFalse();
+    assertThat(Conversions.canConvert(FILE_ARRAY, FILE)).isFalse();
+    assertThat(Conversions.canConvert(FILE_ARRAY, STRING_ARRAY)).isFalse();
+    assertThat(Conversions.canConvert(FILE_ARRAY, BLOB_ARRAY)).isTrue();
+    assertThat(Conversions.canConvert(FILE_ARRAY, FILE_ARRAY)).isTrue();
+    assertThat(Conversions.canConvert(FILE_ARRAY, EMPTY_ARRAY)).isFalse();
 
-    assertThat(Conversions.canAssign(EMPTY_ARRAY, STRING)).isFalse();
-    assertThat(Conversions.canAssign(EMPTY_ARRAY, BLOB)).isFalse();
-    assertThat(Conversions.canAssign(EMPTY_ARRAY, FILE)).isFalse();
-    assertThat(Conversions.canAssign(EMPTY_ARRAY, STRING_ARRAY)).isTrue();
-    assertThat(Conversions.canAssign(EMPTY_ARRAY, BLOB_ARRAY)).isTrue();
-    assertThat(Conversions.canAssign(EMPTY_ARRAY, FILE_ARRAY)).isTrue();
-    assertThat(Conversions.canAssign(EMPTY_ARRAY, EMPTY_ARRAY)).isTrue();
+    assertThat(Conversions.canConvert(EMPTY_ARRAY, STRING)).isFalse();
+    assertThat(Conversions.canConvert(EMPTY_ARRAY, BLOB)).isFalse();
+    assertThat(Conversions.canConvert(EMPTY_ARRAY, FILE)).isFalse();
+    assertThat(Conversions.canConvert(EMPTY_ARRAY, STRING_ARRAY)).isTrue();
+    assertThat(Conversions.canConvert(EMPTY_ARRAY, BLOB_ARRAY)).isTrue();
+    assertThat(Conversions.canConvert(EMPTY_ARRAY, FILE_ARRAY)).isTrue();
+    assertThat(Conversions.canConvert(EMPTY_ARRAY, EMPTY_ARRAY)).isTrue();
   }
 
   @Test

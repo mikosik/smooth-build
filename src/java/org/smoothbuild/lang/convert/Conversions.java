@@ -31,7 +31,7 @@ public class Conversions {
     return map.get(type).keySet();
   }
 
-  public static boolean canAssign(SType<?> from, SType<?> to) {
+  public static boolean canConvert(SType<?> from, SType<?> to) {
     if (from == to) {
       return true;
     }
