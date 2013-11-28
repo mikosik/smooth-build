@@ -29,11 +29,6 @@ public class STypes {
   private static final String FILE_N = "File";
   private static final String NOTHING_N = "Nothing";
 
-  private static final String STRING_A_N = "String[]";
-  private static final String BLOB_A_N = "Blob[]";
-  private static final String FILE_A_N = "File[]";
-  private static final String EMPTY_A_N = "Nothing[]";
-
   /*
    * Smooth types. Used by smooth-build code to represent smooth types.
    */
@@ -44,13 +39,12 @@ public class STypes {
   public static final SType<SNothing> NOTHING = new SType<SNothing>(NOTHING_N, NOTHING_T, STRING,
       BLOB, FILE);
 
-  public static final SArrayType<SString> STRING_ARRAY = new SArrayType<SString>(STRING_A_N,
-      STRING_A_T, STRING);
-  public static final SArrayType<SBlob> BLOB_ARRAY = new SArrayType<SBlob>(BLOB_A_N, BLOB_A_T, BLOB);
-  public static final SArrayType<SFile> FILE_ARRAY = new SArrayType<SFile>(FILE_A_N, FILE_A_T,
-      FILE, BLOB_ARRAY);
-  public static final SArrayType<SNothing> EMPTY_ARRAY = new SArrayType<SNothing>(EMPTY_A_N,
-      EMPTY_A_T, NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
+  public static final SArrayType<SString> STRING_ARRAY = new SArrayType<SString>(STRING_A_T, STRING);
+  public static final SArrayType<SBlob> BLOB_ARRAY = new SArrayType<SBlob>(BLOB_A_T, BLOB);
+  public static final SArrayType<SFile> FILE_ARRAY = new SArrayType<SFile>(FILE_A_T, FILE,
+      BLOB_ARRAY);
+  public static final SArrayType<SNothing> EMPTY_ARRAY = new SArrayType<SNothing>(EMPTY_A_T,
+      NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
 
   /*
    * Not each type can be used in every place. Each set below represent one
