@@ -67,7 +67,7 @@ public class AmbiguousNamelessArgsErrorTest {
     builder.append("  String[]: param2 <- String[]: <nameless> #7  " + a2.codeLocation() + "\n");
     builder.append("  File    : param3 <- File    : <nameless> #|  " + a3.codeLocation() + "\n");
     builder.append("List of nameless arguments that caused problems:\n");
-    builder.append("  Any[]: arg4 #3 " + a4.codeLocation() + "\n");
+    builder.append("  Nothing[]: arg4 #3 " + a4.codeLocation() + "\n");
     builder.append("List of unassigned parameters of desired type is following:\n");
     builder.append("  String[]: param5\n");
     builder.append("  File[]  : param4\n");
