@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.lang.convert.Conversions;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.type.SType;
 
@@ -69,7 +70,7 @@ public class ParamsPool {
       Set<Param> optional = optionalParamsMap.get(type);
       Set<Param> required = requiredParamsMap.get(type);
 
-      for (SType<?> superType : type.superTypes()) {
+      for (SType<?> superType : Conversions.superTypesOf(type)) {
         optional = Sets.union(optional, optionalParamsMap.get(superType));
         required = Sets.union(required, requiredParamsMap.get(superType));
       }

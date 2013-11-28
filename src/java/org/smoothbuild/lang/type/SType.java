@@ -25,10 +25,6 @@ public class SType<T extends SValue> {
     return javaType;
   }
 
-  public ImmutableList<SType<?>> superTypes() {
-    return superTypes;
-  }
-
   public boolean isAssignableFrom(SType<?> type) {
     if (this == type) {
       return true;
