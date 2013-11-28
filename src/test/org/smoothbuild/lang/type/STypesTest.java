@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.STypes.ANY;
 import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
@@ -32,16 +31,6 @@ public class STypesTest {
 
   @Test
   public void isAssignableFrom() throws Exception {
-    assertThat(ANY.isAssignableFrom(ANY)).isTrue();
-    assertThat(ANY.isAssignableFrom(STRING)).isTrue();
-    assertThat(ANY.isAssignableFrom(STRING_ARRAY)).isTrue();
-    assertThat(ANY.isAssignableFrom(BLOB)).isTrue();
-    assertThat(ANY.isAssignableFrom(BLOB_ARRAY)).isTrue();
-    assertThat(ANY.isAssignableFrom(FILE)).isTrue();
-    assertThat(ANY.isAssignableFrom(FILE_ARRAY)).isTrue();
-    assertThat(ANY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
-
-    assertThat(STRING.isAssignableFrom(ANY)).isFalse();
     assertThat(STRING.isAssignableFrom(STRING)).isTrue();
     assertThat(STRING.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(STRING.isAssignableFrom(BLOB)).isFalse();
@@ -50,7 +39,6 @@ public class STypesTest {
     assertThat(STRING.isAssignableFrom(FILE_ARRAY)).isFalse();
     assertThat(STRING.isAssignableFrom(EMPTY_ARRAY)).isFalse();
 
-    assertThat(STRING_ARRAY.isAssignableFrom(ANY)).isFalse();
     assertThat(STRING_ARRAY.isAssignableFrom(STRING)).isFalse();
     assertThat(STRING_ARRAY.isAssignableFrom(STRING_ARRAY)).isTrue();
     assertThat(STRING_ARRAY.isAssignableFrom(BLOB)).isFalse();
@@ -59,7 +47,6 @@ public class STypesTest {
     assertThat(STRING_ARRAY.isAssignableFrom(FILE_ARRAY)).isFalse();
     assertThat(STRING_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
 
-    assertThat(BLOB.isAssignableFrom(ANY)).isFalse();
     assertThat(BLOB.isAssignableFrom(STRING)).isFalse();
     assertThat(BLOB.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(BLOB.isAssignableFrom(BLOB)).isTrue();
@@ -68,7 +55,6 @@ public class STypesTest {
     assertThat(BLOB.isAssignableFrom(FILE_ARRAY)).isFalse();
     assertThat(BLOB.isAssignableFrom(EMPTY_ARRAY)).isFalse();
 
-    assertThat(BLOB_ARRAY.isAssignableFrom(ANY)).isFalse();
     assertThat(BLOB_ARRAY.isAssignableFrom(STRING)).isFalse();
     assertThat(BLOB_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(BLOB_ARRAY.isAssignableFrom(BLOB)).isFalse();
@@ -77,7 +63,6 @@ public class STypesTest {
     assertThat(BLOB_ARRAY.isAssignableFrom(FILE_ARRAY)).isTrue();
     assertThat(BLOB_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
 
-    assertThat(FILE.isAssignableFrom(ANY)).isFalse();
     assertThat(FILE.isAssignableFrom(STRING)).isFalse();
     assertThat(FILE.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(FILE.isAssignableFrom(BLOB)).isFalse();
@@ -86,7 +71,6 @@ public class STypesTest {
     assertThat(FILE.isAssignableFrom(FILE_ARRAY)).isFalse();
     assertThat(FILE.isAssignableFrom(EMPTY_ARRAY)).isFalse();
 
-    assertThat(FILE_ARRAY.isAssignableFrom(ANY)).isFalse();
     assertThat(FILE_ARRAY.isAssignableFrom(STRING)).isFalse();
     assertThat(FILE_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(FILE_ARRAY.isAssignableFrom(BLOB)).isFalse();
@@ -95,7 +79,6 @@ public class STypesTest {
     assertThat(FILE_ARRAY.isAssignableFrom(FILE_ARRAY)).isTrue();
     assertThat(FILE_ARRAY.isAssignableFrom(EMPTY_ARRAY)).isTrue();
 
-    assertThat(EMPTY_ARRAY.isAssignableFrom(ANY)).isFalse();
     assertThat(EMPTY_ARRAY.isAssignableFrom(STRING)).isFalse();
     assertThat(EMPTY_ARRAY.isAssignableFrom(STRING_ARRAY)).isFalse();
     assertThat(EMPTY_ARRAY.isAssignableFrom(BLOB)).isFalse();
@@ -107,12 +90,12 @@ public class STypesTest {
 
   @Test
   public void superTypes() throws Exception {
-    assertThat(STRING.superTypes()).containsOnly(ANY);
-    assertThat(BLOB.superTypes()).containsOnly(ANY);
+    assertThat(STRING.superTypes()).containsOnly();
+    assertThat(BLOB.superTypes()).containsOnly();
     assertThat(FILE.superTypes()).containsOnly(BLOB);
 
-    assertThat(STRING_ARRAY.superTypes()).containsOnly(ANY);
-    assertThat(BLOB_ARRAY.superTypes()).containsOnly(ANY);
+    assertThat(STRING_ARRAY.superTypes()).containsOnly();
+    assertThat(BLOB_ARRAY.superTypes()).containsOnly();
     assertThat(FILE_ARRAY.superTypes()).containsOnly(BLOB_ARRAY);
     assertThat(EMPTY_ARRAY.superTypes()).containsOnly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   }
@@ -129,7 +112,6 @@ public class STypesTest {
   public void equalsAndHashCode() throws Exception {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(ANY);
     tester.addEqualityGroup(STRING);
     tester.addEqualityGroup(BLOB);
     tester.addEqualityGroup(FILE);
