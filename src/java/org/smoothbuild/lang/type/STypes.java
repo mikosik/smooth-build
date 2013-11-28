@@ -15,10 +15,12 @@ public class STypes {
   private static final TypeLiteral<SFile> FILE_T = TypeLiteral.get(SFile.class);
   private static final TypeLiteral<SNothing> NOTHING_T = TypeLiteral.get(SNothing.class);
 
-  private static final TypeLiteral<SArray<SString>> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
+  private static final TypeLiteral<SArray<SString>> STRING_A_T =
+      new TypeLiteral<SArray<SString>>() {};
   private static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
   private static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
-  private static final TypeLiteral<SArray<SNothing>> EMPTY_A_T = new TypeLiteral<SArray<SNothing>>() {};
+  private static final TypeLiteral<SArray<SNothing>> EMPTY_A_T =
+      new TypeLiteral<SArray<SNothing>>() {};
 
   /*
    * Names of smooth types.
@@ -39,7 +41,8 @@ public class STypes {
   public static final SType<SNothing> NOTHING = new SType<SNothing>(NOTHING_N, NOTHING_T, STRING,
       BLOB, FILE);
 
-  public static final SArrayType<SString> STRING_ARRAY = new SArrayType<SString>(STRING_A_T, STRING);
+  public static final SArrayType<SString> STRING_ARRAY =
+      new SArrayType<SString>(STRING_A_T, STRING);
   public static final SArrayType<SBlob> BLOB_ARRAY = new SArrayType<SBlob>(BLOB_A_T, BLOB);
   public static final SArrayType<SFile> FILE_ARRAY = new SArrayType<SFile>(FILE_A_T, FILE,
       BLOB_ARRAY);
@@ -77,9 +80,12 @@ public class STypes {
    * A few handy mappings.
    */
 
-  static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_PARAM_TO_SMOOTH = javaToTypeMap(PARAM_TYPES);
-  static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_RESULT_TO_SMOOTH = javaToTypeMap(RESULT_TYPES);
-  static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_TYPE_TO_ARRAY_TYPE = createElemTypeToArrayType(ARRAY_TYPES);
+  static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_PARAM_TO_SMOOTH =
+      javaToTypeMap(PARAM_TYPES);
+  static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_RESULT_TO_SMOOTH =
+      javaToTypeMap(RESULT_TYPES);
+  static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_TYPE_TO_ARRAY_TYPE =
+      createElemTypeToArrayType(ARRAY_TYPES);
 
   public static ImmutableSet<SType<?>> basicTypes() {
     return BASIC_TYPES;
