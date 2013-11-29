@@ -2,6 +2,7 @@ package org.smoothbuild.lang.builtin;
 
 import org.smoothbuild.lang.builtin.compress.UnzipFunction;
 import org.smoothbuild.lang.builtin.compress.ZipFunction;
+import org.smoothbuild.lang.builtin.file.ContentOfFunction;
 import org.smoothbuild.lang.builtin.file.FileFunction;
 import org.smoothbuild.lang.builtin.file.FilesFunction;
 import org.smoothbuild.lang.builtin.file.FilterFunction;
@@ -24,6 +25,7 @@ public class BuiltinFunctions {
     builder.add(FileFunction.class);
     builder.add(FilesFunction.class);
     builder.add(NewFileFunction.class);
+    builder.add(ContentOfFunction.class);
     builder.add(FilterFunction.class);
     builder.add(MergeFunction.class);
 
