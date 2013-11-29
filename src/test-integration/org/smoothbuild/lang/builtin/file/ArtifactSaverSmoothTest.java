@@ -19,6 +19,22 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
 
   String functionName = "myFunction";
 
+  // basic types
+
+  @Test
+  public void storing_string_artifact() throws Exception {
+    // given
+    script(functionName + " : '" + content1 + "' ;");
+
+    // when
+    build(functionName);
+
+    // then
+    userConsole.assertNoProblems();
+    Path artifactPath = RESULTS_PATH.append(path(functionName));
+    fileSystem.assertFileContains(artifactPath, content1);
+  }
+
   @Test
   public void storing_file_artifact() throws Exception {
     // given
@@ -33,6 +49,27 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     userConsole.assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path(functionName));
     fileSystem.assertFileContains(artifactPath, content1);
+  }
+
+  // array types
+
+  @Test
+  public void storing_string_array_artifact() throws Exception {
+    // given
+    script(functionName + " : [ '" + content1 + "', '" + content2 + "' ]  ;");
+
+    // when
+    build(functionName);
+
+    // then
+    userConsole.assertNoProblems();
+
+    Path dirPath = RESULTS_PATH.append(path(functionName));
+    Path artifact1Path = dirPath.append(path("0"));
+    Path artifact2Path = dirPath.append(path("1"));
+
+    fileSystem.assertFileContains(artifact1Path, content1);
+    fileSystem.assertFileContains(artifact2Path, content2);
   }
 
   @Test
@@ -74,38 +111,5 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.assertOnlyProblem(DuplicatePathsInFileArrayArtifactError.class);
-  }
-
-  @Test
-  public void storing_string_artifact() throws Exception {
-    // given
-    script(functionName + " : '" + content1 + "' ;");
-
-    // when
-    build(functionName);
-
-    // then
-    userConsole.assertNoProblems();
-    Path artifactPath = RESULTS_PATH.append(path(functionName));
-    fileSystem.assertFileContains(artifactPath, content1);
-  }
-
-  @Test
-  public void storing_string_array_artifact() throws Exception {
-    // given
-    script(functionName + " : [ '" + content1 + "', '" + content2 + "' ]  ;");
-
-    // when
-    build(functionName);
-
-    // then
-    userConsole.assertNoProblems();
-
-    Path dirPath = RESULTS_PATH.append(path(functionName));
-    Path artifact1Path = dirPath.append(path("0"));
-    Path artifact2Path = dirPath.append(path("1"));
-
-    fileSystem.assertFileContains(artifact1Path, content1);
-    fileSystem.assertFileContains(artifact2Path, content2);
   }
 }
