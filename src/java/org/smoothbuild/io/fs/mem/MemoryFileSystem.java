@@ -76,7 +76,7 @@ public class MemoryFileSystem implements FileSystem {
     if (path.isRoot()) {
       throw new CannotCreateFileException(path);
     }
-    MemoryDirectory dir = createDirectory(path.parent());
+    MemoryDirectory dir = createDirImpl(path.parent());
 
     String name = path.lastPart().value();
     if (dir.hasChild(name)) {
@@ -101,14 +101,19 @@ public class MemoryFileSystem implements FileSystem {
     }
 
     String name = link.lastPart().value();
-    MemoryDirectory dir = createDirectory(link.parent());
+    MemoryDirectory dir = createDirImpl(link.parent());
     if (dir.hasChild(name)) {
       throw new FileSystemException("Cannot create link as path " + link + " exists.");
     }
     dir.addChild(new MemoryLink(dir, name, targetElement));
   }
 
-  private MemoryDirectory createDirectory(Path directory) {
+  @Override
+  public void createDir(Path path) {
+    createDirImpl(path);
+  }
+
+  private MemoryDirectory createDirImpl(Path directory) {
     Iterator<Path> it = directory.parts().iterator();
     MemoryDirectory currentDir = root;
     while (it.hasNext()) {

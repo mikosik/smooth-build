@@ -26,8 +26,9 @@ import com.google.common.io.LineReader;
 
 public abstract class GenericFileSystemTestCase {
   protected FileSystem fileSystem;
-  protected String content;
-  protected Path path;
+
+  protected String content = "file content";
+  protected Path path = path("my/dir/myFile");
 
   @Test
   public void root() throws Exception {
@@ -312,6 +313,31 @@ public abstract class GenericFileSystemTestCase {
 
     assertThat(fileSystem.pathState(dirLink)).isEqualTo(NOTHING);
     assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
+  }
+
+  // createDir()
+
+  @Test
+  public void created_dir_exists() throws Exception {
+    fileSystem.createDir(path);
+    assertThat(fileSystem.pathState(path)).isEqualTo(DIR);
+  }
+
+  @Test
+  public void creating_existing_dir_does_not_cause_errors() throws Exception {
+    fileSystem.createDir(path);
+    fileSystem.createDir(path);
+  }
+
+  @Test
+  public void cannot_create_dir_if_such_file_already_exists() throws Exception {
+    createEmptyFile(path);
+    try {
+      fileSystem.createDir(path);
+      fail("exception should be thrown");
+    } catch (FileSystemException e) {
+      // expected
+    }
   }
 
   // helpers

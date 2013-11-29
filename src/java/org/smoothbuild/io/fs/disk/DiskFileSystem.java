@@ -95,7 +95,7 @@ public class DiskFileSystem implements FileSystem {
     if (path.isRoot()) {
       throw new FileSystemException("Cannot open file " + path + " as it is directory.");
     }
-    createDirectory(path.parent());
+    createDir(path.parent());
 
     try {
       return new BufferedOutputStream(java.nio.file.Files.newOutputStream(jdkPath(path)));
@@ -104,7 +104,8 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
-  private void createDirectory(Path path) {
+  @Override
+  public void createDir(Path path) {
     try {
       Files.createDirectories(jdkPath(path));
     } catch (FileAlreadyExistsException e) {
@@ -134,7 +135,7 @@ public class DiskFileSystem implements FileSystem {
     if (link.isRoot()) {
       throw new FileSystemException("Cannot create link " + link + " as it is directory.");
     }
-    createDirectory(link.parent());
+    createDir(link.parent());
 
     try {
       String escape = escapeString(link.parts().size());

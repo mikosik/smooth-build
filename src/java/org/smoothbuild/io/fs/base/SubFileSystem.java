@@ -55,4 +55,9 @@ public class SubFileSystem implements FileSystem {
   public void createLink(Path link, Path target) {
     fileSystem.createLink(absolutePath(link), absolutePath(target));
   }
+
+  @Override
+  public void createDir(Path path) {
+    fileSystem.createDir(absolutePath(path));
+  }
 }
