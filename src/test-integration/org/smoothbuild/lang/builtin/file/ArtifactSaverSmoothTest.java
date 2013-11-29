@@ -36,6 +36,22 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
   }
 
   @Test
+  public void storing_blob_artifact() throws Exception {
+    // given
+    fileSystem.createFile(path1, content1);
+
+    script(functionName + " : file(" + path1 + ") | contentOf ;");
+
+    // when
+    build(functionName);
+
+    // then
+    userConsole.assertNoProblems();
+    Path artifactPath = RESULTS_PATH.append(path(functionName));
+    fileSystem.assertFileContains(artifactPath, content1);
+  }
+
+  @Test
   public void storing_file_artifact() throws Exception {
     // given
     fileSystem.createFile(path1, content1);
@@ -57,6 +73,31 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
   public void storing_string_array_artifact() throws Exception {
     // given
     script(functionName + " : [ '" + content1 + "', '" + content2 + "' ]  ;");
+
+    // when
+    build(functionName);
+
+    // then
+    userConsole.assertNoProblems();
+
+    Path dirPath = RESULTS_PATH.append(path(functionName));
+    Path artifact1Path = dirPath.append(path("0"));
+    Path artifact2Path = dirPath.append(path("1"));
+
+    fileSystem.assertFileContains(artifact1Path, content1);
+    fileSystem.assertFileContains(artifact2Path, content2);
+  }
+
+  @Test
+  public void storing_blob_array_artifact() throws Exception {
+    // given
+    fileSystem.createFile(path1, content1);
+    fileSystem.createFile(path2, content2);
+
+    String functionName = "myFunction";
+
+    script(functionName + " : [ contentOf(file(" + path1 + ")) , contentOf(file(" + path2
+        + ")) ] ;");
 
     // when
     build(functionName);
