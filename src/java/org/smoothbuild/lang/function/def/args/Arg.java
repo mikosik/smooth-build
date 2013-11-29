@@ -16,27 +16,27 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
 
-public class Argument {
+public class Arg {
   private final int number;
   private final String name;
   private final Node node;
   private final CodeLocation codeLocation;
 
-  public static Argument namedArg(int number, String name, Node node, CodeLocation codeLocation) {
+  public static Arg namedArg(int number, String name, Node node, CodeLocation codeLocation) {
     checkArgument(0 < number);
-    return new Argument(number, checkNotNull(name), node, codeLocation);
+    return new Arg(number, checkNotNull(name), node, codeLocation);
   }
 
-  public static Argument namelessArg(int number, Node node, CodeLocation codeLocation) {
+  public static Arg namelessArg(int number, Node node, CodeLocation codeLocation) {
     checkArgument(0 < number);
-    return new Argument(number, null, node, codeLocation);
+    return new Arg(number, null, node, codeLocation);
   }
 
-  public static Argument pipedArg(Node node, CodeLocation codeLocation) {
-    return new Argument(0, null, node, codeLocation);
+  public static Arg pipedArg(Node node, CodeLocation codeLocation) {
+    return new Arg(0, null, node, codeLocation);
   }
 
-  private Argument(int number, String name, Node node, CodeLocation codeLocation) {
+  private Arg(int number, String name, Node node, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
@@ -96,30 +96,30 @@ public class Argument {
     return type().name() + ":" + nameSanitized();
   }
 
-  public static ImmutableList<Argument> filterNamed(Collection<Argument> arguments) {
-    ImmutableList.Builder<Argument> builder = ImmutableList.builder();
-    for (Argument argument : arguments) {
-      if (argument.hasName()) {
-        builder.add(argument);
+  public static ImmutableList<Arg> filterNamed(Collection<Arg> args) {
+    ImmutableList.Builder<Arg> builder = ImmutableList.builder();
+    for (Arg arg : args) {
+      if (arg.hasName()) {
+        builder.add(arg);
       }
     }
     return builder.build();
   }
 
-  public static ImmutableMap<SType<?>, Set<Argument>> filterNameless(Collection<Argument> arguments) {
-    ImmutableMap<SType<?>, Set<Argument>> result = Helpers.createMap(allTypes());
-    for (Argument argument : arguments) {
-      if (!argument.hasName()) {
-        SType<?> type = argument.node().type();
-        result.get(type).add(argument);
+  public static ImmutableMap<SType<?>, Set<Arg>> filterNameless(Collection<Arg> args) {
+    ImmutableMap<SType<?>, Set<Arg>> result = Helpers.createMap(allTypes());
+    for (Arg arg : args) {
+      if (!arg.hasName()) {
+        SType<?> type = arg.node().type();
+        result.get(type).add(arg);
       }
     }
     return result;
   }
 
-  public static final Ordering<Argument> NUMBER_ORDERING = new Ordering<Argument>() {
+  public static final Ordering<Arg> NUMBER_ORDERING = new Ordering<Arg>() {
     @Override
-    public int compare(Argument arg1, Argument arg2) {
+    public int compare(Arg arg1, Arg arg2) {
       int number1 = arg1.number();
       int number2 = arg2.number();
       if (number1 == number2) {

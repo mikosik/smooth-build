@@ -11,13 +11,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 public class ParamToArgMapBuilder {
-  private final Map<Param, Argument> map;
+  private final Map<Param, Arg> map;
 
   public ParamToArgMapBuilder() {
     this.map = Maps.newHashMap();
   }
 
-  public void add(Param param, Argument arg) {
+  public void add(Param param, Arg arg) {
     checkNotNull(param);
     checkNotNull(arg);
     checkState(!map.containsKey(param));
@@ -25,7 +25,7 @@ public class ParamToArgMapBuilder {
     map.put(param, arg);
   }
 
-  public ImmutableMap<Param, Argument> build() {
+  public ImmutableMap<Param, Arg> build() {
     return ImmutableMap.copyOf(map);
   }
 }

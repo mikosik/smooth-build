@@ -9,8 +9,8 @@ import org.smoothbuild.testing.lang.type.FakeString;
 
 import com.google.common.collect.ImmutableMap;
 
-public class ArgumentsCreatorTest {
-  ArgumentsCreator argumentsCreator = new ArgumentsCreator(MyParametersInterface.class);
+public class ArgsCreatorTest {
+  ArgsCreator argsCreator = new ArgsCreator(MyParametersInterface.class);
   String name = "string";
   SString value = new FakeString("value");
 
@@ -30,7 +30,7 @@ public class ArgumentsCreatorTest {
   }
 
   private MyParametersInterface createArgs(ImmutableMap<String, SValue> map) {
-    return (MyParametersInterface) argumentsCreator.create(map);
+    return (MyParametersInterface) argsCreator.create(map);
   }
 
   public interface MyParametersInterface {

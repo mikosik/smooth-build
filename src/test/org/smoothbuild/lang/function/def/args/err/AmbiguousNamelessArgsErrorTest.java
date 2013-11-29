@@ -6,9 +6,9 @@ import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
+import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
@@ -22,7 +22,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.function.def.args.Argument;
+import org.smoothbuild.lang.function.def.args.Arg;
 import org.smoothbuild.lang.function.def.args.TypedParamsPool;
 import org.smoothbuild.lang.type.SType;
 
@@ -35,19 +35,19 @@ public class AmbiguousNamelessArgsErrorTest {
   public void test() {
 
     Param p1 = param(STRING, "param1");
-    Argument a1 = namedArg(12, "arg1", node(STRING), codeLocation(2));
+    Arg a1 = namedArg(12, "arg1", node(STRING), codeLocation(2));
 
     Param p2 = param(STRING_ARRAY, "param2");
-    Argument a2 = namelessArg(7, node(STRING_ARRAY), codeLocation(12));
+    Arg a2 = namelessArg(7, node(STRING_ARRAY), codeLocation(12));
 
     Param p3 = param(FILE, "param3");
-    Argument a3 = pipedArg(node(FILE), codeLocation(14));
+    Arg a3 = pipedArg(node(FILE), codeLocation(14));
 
-    Argument a4 = namedArg(3, "arg4", node(EMPTY_ARRAY), codeLocation(7));
-    Set<Argument> availableArgs = newHashSet();
+    Arg a4 = namedArg(3, "arg4", node(EMPTY_ARRAY), codeLocation(7));
+    Set<Arg> availableArgs = newHashSet();
     availableArgs.add(a4);
 
-    Map<Param, Argument> paramToArgMap = ImmutableMap.of(p1, a1, p2, a2, p3, a3);
+    Map<Param, Arg> paramToArgMap = ImmutableMap.of(p1, a1, p2, a2, p3, a3);
 
     Param p4 = param(FILE_ARRAY, "param4");
     Param p5 = param(STRING_ARRAY, "param5");

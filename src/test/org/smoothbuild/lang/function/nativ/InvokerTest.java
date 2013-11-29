@@ -18,7 +18,7 @@ public class InvokerTest {
 
   @Test(expected = NullPointerException.class)
   public void null_method_is_forbidden() throws Exception {
-    new Invoker(null, mock(ArgumentsCreator.class));
+    new Invoker(null, mock(ArgsCreator.class));
   }
 
   @Test(expected = NullPointerException.class)
@@ -31,7 +31,7 @@ public class InvokerTest {
     SString value = new FakeString("stringParamValue");
     Method method = InvokerTest.class.getMethod("myMethod", PluginApi.class, Parameters.class);
 
-    Invoker invoker = new Invoker(method, new ArgumentsCreator(Parameters.class));
+    Invoker invoker = new Invoker(method, new ArgsCreator(Parameters.class));
     ImmutableMap<String, SValue> valuesMap = ImmutableMap.<String, SValue> of("stringParam", value);
     Object result = invoker.invoke(pluginApi, valuesMap);
 

@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def.args;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.STRING;
 
@@ -24,9 +24,9 @@ public class ParamToArgMapToStringTest {
     Param param2 = param(STRING, "name2");
     Param param3 = param(FILE, "name3");
 
-    Argument arg1 = arg(1, STRING, "name4");
-    Argument arg2 = arg(1234, STRING, "name5");
-    Argument arg3 = arg(7, FILE, "name6-that-is-long");
+    Arg arg1 = arg(1, STRING, "name4");
+    Arg arg2 = arg(1234, STRING, "name5");
+    Arg arg3 = arg(7, FILE, "name6-that-is-long");
 
     // when
     String actual =
@@ -42,7 +42,7 @@ public class ParamToArgMapToStringTest {
     assertThat(actual).isEqualTo(expected.toString());
   }
 
-  private static Argument arg(int number, SType<?> type, String name) {
+  private static Arg arg(int number, SType<?> type, String name) {
     Node node = mock(Node.class);
     BDDMockito.willReturn(type).given(node).type();
 

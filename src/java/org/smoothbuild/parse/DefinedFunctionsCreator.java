@@ -1,9 +1,9 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
+import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
 import static org.smoothbuild.lang.type.STypes.basicTypes;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
@@ -39,7 +39,7 @@ import org.smoothbuild.lang.function.def.EmptyArrayNode;
 import org.smoothbuild.lang.function.def.InvalidNode;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.StringNode;
-import org.smoothbuild.lang.function.def.args.Argument;
+import org.smoothbuild.lang.function.def.args.Arg;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
@@ -60,18 +60,18 @@ import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
   private final ValueDb valueDb;
-  private final ArgumentNodesCreator argumentNodesCreator;
+  private final ArgNodesCreator argNodesCreator;
 
   @Inject
-  public DefinedFunctionsCreator(ValueDb valueDb, ArgumentNodesCreator argumentNodesCreator) {
+  public DefinedFunctionsCreator(ValueDb valueDb, ArgNodesCreator argNodesCreator) {
     this.valueDb = valueDb;
-    this.argumentNodesCreator = argumentNodesCreator;
+    this.argNodesCreator = argNodesCreator;
   }
 
   public Map<Name, Function> createDefinedFunctions(MessageGroup messages, Module builtinModule,
       Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker = new Worker(messages, builtinModule, functionContexts, sorted, valueDb,
-        argumentNodesCreator);
+        argNodesCreator);
     Map<Name, Function> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -83,19 +83,19 @@ public class DefinedFunctionsCreator {
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
     private final ValueDb valueDb;
-    private final ArgumentNodesCreator argumentNodesCreator;
+    private final ArgNodesCreator argNodesCreator;
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
     public Worker(MessageGroup messages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValueDb valueDb,
-        ArgumentNodesCreator argumentNodesCreator) {
+        ArgNodesCreator argNodesCreator) {
       this.messages = messages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
       this.valueDb = valueDb;
-      this.argumentNodesCreator = argumentNodesCreator;
+      this.argNodesCreator = argNodesCreator;
     }
 
     public Map<Name, Function> run() {
@@ -122,11 +122,11 @@ public class DefinedFunctionsCreator {
       List<CallContext> elements = pipe.call();
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
-        List<Argument> arguments = build(call.argList());
+        List<Arg> args = build(call.argList());
         // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipe.p.get(i));
-        arguments.add(pipedArg(result, codeLocation));
-        result = build(call, arguments);
+        args.add(pipedArg(result, codeLocation));
+        result = build(call, args);
       }
       return result;
     }
@@ -209,17 +209,17 @@ public class DefinedFunctionsCreator {
     }
 
     private Node build(CallContext call) {
-      List<Argument> arguments = build(call.argList());
-      return build(call, arguments);
+      List<Arg> args = build(call.argList());
+      return build(call, args);
     }
 
-    private Node build(CallContext call, List<Argument> args) {
+    private Node build(CallContext call, List<Arg> args) {
       String functionName = call.functionName().getText();
 
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, Node> namedArgs = argumentNodesCreator.createArgumentNodes(codeLocation,
+      Map<String, Node> namedArgs = argNodesCreator.createArgumentNodes(codeLocation,
           messages, function, args);
 
       if (namedArgs == null) {
@@ -244,8 +244,8 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private List<Argument> build(ArgListContext argList) {
-      List<Argument> result = Lists.newArrayList();
+    private List<Arg> build(ArgListContext argList) {
+      List<Arg> result = Lists.newArrayList();
       if (argList != null) {
         List<ArgContext> argContextList = argList.arg();
         for (int i = 0; i < argContextList.size(); i++) {
@@ -255,7 +255,7 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
-    private Argument build(int index, ArgContext arg) {
+    private Arg build(int index, ArgContext arg) {
       Node node = build(arg.expression());
 
       CodeLocation location = locationOf(arg);

@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
 import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
@@ -69,10 +69,10 @@ public class ParamToArgMapperTest {
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType, "name2");
 
-    Argument a1 = argument(p1.name(), argType);
+    Arg a1 = arg(p1.name(), argType);
 
     // when
-    Map<Param, Argument> mapping = createMapping(params(p1, p2), list(a1));
+    Map<Param, Arg> mapping = createMapping(params(p1, p2), list(a1));
 
     // then
     messages.assertNoProblems();
@@ -101,8 +101,8 @@ public class ParamToArgMapperTest {
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
 
-    Argument a1 = argument(p1.name(), argType);
-    Argument a2 = argument(p1.name(), argType);
+    Arg a1 = arg(p1.name(), argType);
+    Arg a2 = arg(p1.name(), argType);
 
     // when
     createMapping(params(p1), list(a1, a2));
@@ -116,7 +116,7 @@ public class ParamToArgMapperTest {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(STRING, "name1");
-    Argument a1 = argument("otherName", STRING);
+    Arg a1 = arg("otherName", STRING);
 
     // when
     createMapping(params(p1), list(a1));
@@ -195,7 +195,7 @@ public class ParamToArgMapperTest {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
-    Argument a1 = argument(p1.name(), argType);
+    Arg a1 = arg(p1.name(), argType);
 
     // when
     createMapping(params(p1), list(a1));
@@ -211,7 +211,7 @@ public class ParamToArgMapperTest {
     Param p1 = param(STRING, "name1");
 
     // when
-    Map<Param, Argument> mapping = createMapping(params(p1), list());
+    Map<Param, Arg> mapping = createMapping(params(p1), list());
 
     // then
     messages.assertNoProblems();
@@ -321,10 +321,10 @@ public class ParamToArgMapperTest {
     Param p2 = param(paramType, "name2");
     Param p3 = param(otherParamsType, "name3");
 
-    Argument a1 = argument(argType);
+    Arg a1 = arg(argType);
 
     // when
-    Map<Param, Argument> mapping = createMapping(params(p1, p2, p3), list(a1));
+    Map<Param, Arg> mapping = createMapping(params(p1, p2, p3), list(a1));
 
     // then
     messages.assertNoProblems();
@@ -349,12 +349,12 @@ public class ParamToArgMapperTest {
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
 
-    Argument a1 = argument(p1.name(), type);
-    Argument a2 = argument(type);
-    Argument a3 = argument(p3.name(), type);
+    Arg a1 = arg(p1.name(), type);
+    Arg a2 = arg(type);
+    Arg a3 = arg(p3.name(), type);
 
     // when
-    Map<Param, Argument> result = createMapping(params(p1, p2, p3), list(a1, a2, a3));
+    Map<Param, Arg> result = createMapping(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
@@ -407,11 +407,11 @@ public class ParamToArgMapperTest {
     Param p1 = param(type1, "name1");
     Param p2 = param(type2, "name2");
 
-    Argument a1 = argument(type1);
-    Argument a2 = argument(type2);
+    Arg a1 = arg(type1);
+    Arg a2 = arg(type2);
 
     // when
-    Map<Param, Argument> result = createMapping(params(p1, p2), list(a1, a2));
+    Map<Param, Arg> result = createMapping(params(p1, p2), list(a1, a2));
 
     // then
     messages.assertNoProblems();
@@ -432,12 +432,12 @@ public class ParamToArgMapperTest {
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
 
-    Argument a1 = argument(p1.name(), type);
-    Argument a2 = argument(EMPTY_ARRAY);
-    Argument a3 = argument(p3.name(), type);
+    Arg a1 = arg(p1.name(), type);
+    Arg a2 = arg(EMPTY_ARRAY);
+    Arg a3 = arg(p3.name(), type);
 
     // when
-    Map<Param, Argument> mapping = createMapping(params(p1, p2, p3), list(a1, a2, a3));
+    Map<Param, Arg> mapping = createMapping(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
@@ -463,11 +463,11 @@ public class ParamToArgMapperTest {
     Param p1 = param(arrayType, "name1");
     Param p2 = param(otherArrayType, "name2");
 
-    Argument a1 = argument(p1.name(), arrayType);
-    Argument a2 = argument(EMPTY_ARRAY);
+    Arg a1 = arg(p1.name(), arrayType);
+    Arg a2 = arg(EMPTY_ARRAY);
 
     // when
-    Map<Param, Argument> result = createMapping(params(p1, p2), list(a1, a2));
+    Map<Param, Arg> result = createMapping(params(p1, p2), list(a1, a2));
 
     // then
     messages.assertNoProblems();
@@ -507,7 +507,7 @@ public class ParamToArgMapperTest {
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType2, "name2");
 
-    Argument a1 = argument(argType);
+    Arg a1 = arg(argType);
 
     // when
     createMapping(params(p1, p2), list(a1));
@@ -587,7 +587,7 @@ public class ParamToArgMapperTest {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(otherType, "name1");
-    Argument a1 = argument(type);
+    Arg a1 = arg(type);
 
     // when
     createMapping(params(p1), list(a1));
@@ -596,11 +596,11 @@ public class ParamToArgMapperTest {
     messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
-  private static Argument argument(SType<?> type) {
+  private static Arg arg(SType<?> type) {
     return namelessArg(1, node(type), new FakeCodeLocation());
   }
 
-  private static Argument argument(String name, SType<?> type) {
+  private static Arg arg(String name, SType<?> type) {
     return namedArg(1, name, node(type), new FakeCodeLocation());
   }
 
@@ -610,7 +610,7 @@ public class ParamToArgMapperTest {
     return node;
   }
 
-  private Map<Param, Argument> createMapping(Iterable<Param> params, List<Argument> args) {
+  private Map<Param, Arg> createMapping(Iterable<Param> params, List<Arg> args) {
     FakeCodeLocation codeLocation = new FakeCodeLocation();
     Function function = function(params);
     return new ParamToArgMapper(codeLocation, messages, function, args).detectMapping();
@@ -621,7 +621,7 @@ public class ParamToArgMapperTest {
     return new NativeFunction(signature, mock(Invoker.class), true);
   }
 
-  private static ArrayList<Argument> list(Argument... args) {
+  private static ArrayList<Arg> list(Arg... args) {
     return newArrayList(args);
   }
 

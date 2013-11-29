@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.STRING;
 
@@ -45,8 +45,8 @@ public class ParamToArgMapBuilderTest {
     String name = "name";
     Param param1 = param(STRING, name);
 
-    Argument arg1 = arg(STRING);
-    Argument arg2 = arg(FILE);
+    Arg arg1 = arg(STRING);
+    Arg arg2 = arg(FILE);
 
     paramToArgMapBuilder.add(param1, arg1);
     try {
@@ -68,9 +68,9 @@ public class ParamToArgMapBuilderTest {
     Param param2 = param(STRING, name2);
     Param param3 = param(STRING, name3);
 
-    Argument arg1 = arg(STRING);
-    Argument arg2 = arg(STRING);
-    Argument arg3 = arg(STRING);
+    Arg arg1 = arg(STRING);
+    Arg arg2 = arg(STRING);
+    Arg arg3 = arg(STRING);
 
     paramToArgMapBuilder.add(param1, arg1);
     paramToArgMapBuilder.add(param2, arg2);
@@ -80,15 +80,15 @@ public class ParamToArgMapBuilderTest {
         ImmutableMap.of(param1, arg1, param2, arg2, param3, arg3));
   }
 
-  private static Argument arg(SType<?> type) {
+  private static Arg arg(SType<?> type) {
     return arg(type, "name");
   }
 
-  private static Argument arg(SType<?> type, String name) {
+  private static Arg arg(SType<?> type, String name) {
     return arg(1, type, name);
   }
 
-  private static Argument arg(int number, SType<?> type, String name) {
+  private static Arg arg(int number, SType<?> type, String name) {
     Node node = mock(Node.class);
     BDDMockito.willReturn(type).given(node).type();
 
