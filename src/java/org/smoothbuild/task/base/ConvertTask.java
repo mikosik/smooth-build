@@ -17,7 +17,7 @@ public class ConvertTask extends Task {
 
   @Override
   public SValue execute(PluginApiImpl pluginApi) {
-    return converter.convert(pluginApi, toConvert.result());
+    return converter.convert(pluginApi, toConvert.value());
   }
 
 }

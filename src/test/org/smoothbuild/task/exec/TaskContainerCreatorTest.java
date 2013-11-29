@@ -23,7 +23,7 @@ public class TaskContainerCreatorTest {
     BDDMockito.given(taskExecutor.execute(task)).willReturn(value);
 
     given(taskContainer = taskContainerCreator.create(task));
-    when(taskContainer.result());
+    when(taskContainer.value());
     thenReturned(value);
   }
 }

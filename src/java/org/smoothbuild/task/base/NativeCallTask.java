@@ -53,7 +53,7 @@ public class NativeCallTask extends Task {
     Builder<String, SValue> builder = ImmutableMap.builder();
     for (Map.Entry<String, Result> entry : dependencies.entrySet()) {
       String paramName = entry.getKey();
-      SValue result = entry.getValue().result();
+      SValue result = entry.getValue().value();
       builder.put(paramName, result);
     }
     return builder.build();

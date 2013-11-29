@@ -30,7 +30,7 @@ public class ArrayTask extends Task {
     ArrayBuilder<SValue> builder = (ArrayBuilder<SValue>) pluginApi.arrayBuilder(arrayType);
 
     for (Result task : elements) {
-      builder.add(task.result());
+      builder.add(task.value());
     }
     return builder.build();
   }
