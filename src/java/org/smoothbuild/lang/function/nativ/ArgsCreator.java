@@ -10,10 +10,10 @@ import org.smoothbuild.lang.type.SValue;
 
 import com.google.common.collect.ImmutableMap;
 
-public class ArgumentsCreator {
+public class ArgsCreator {
   private final Class<?> paramsInterface;
 
-  public ArgumentsCreator(Class<?> paramsInterface) {
+  public ArgsCreator(Class<?> paramsInterface) {
     this.paramsInterface = paramsInterface;
   }
 

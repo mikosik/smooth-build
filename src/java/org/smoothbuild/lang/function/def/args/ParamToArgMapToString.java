@@ -7,7 +7,7 @@ import java.util.Set;
 import org.smoothbuild.lang.function.base.Param;
 
 public class ParamToArgMapToString {
-  public static String toString(Map<Param, Argument> paramToArgMap) {
+  public static String toString(Map<Param, Arg> paramToArgMap) {
     int maxParamType = calculateLongestParamType(paramToArgMap.keySet());
     int maxParamName = calculateLongestParamName(paramToArgMap.keySet());
     int maxArgType = calculateLongestArgType(paramToArgMap.values());
@@ -15,10 +15,10 @@ public class ParamToArgMapToString {
     int maxNumber = calculateLongestArgNumber(paramToArgMap.values());
     StringBuilder builder = new StringBuilder();
 
-    for (Map.Entry<Param, Argument> entry : paramToArgMap.entrySet()) {
+    for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
       String paramPart = entry.getKey().toPaddedString(maxParamType, maxParamName);
-      Argument argument = entry.getValue();
-      String argPart = argument.toPaddedString(maxArgType, maxArgName, maxNumber);
+      Arg arg = entry.getValue();
+      String argPart = arg.toPaddedString(maxArgType, maxArgName, maxNumber);
       builder.append("  " + paramPart + " <- " + argPart + "\n");
     }
     return builder.toString();
@@ -40,25 +40,25 @@ public class ParamToArgMapToString {
     return result;
   }
 
-  private static int calculateLongestArgType(Collection<Argument> args) {
+  private static int calculateLongestArgType(Collection<Arg> args) {
     int result = 0;
-    for (Argument arg : args) {
+    for (Arg arg : args) {
       result = Math.max(result, arg.type().name().length());
     }
     return result;
   }
 
-  private static int calculateLongestArgName(Collection<Argument> args) {
+  private static int calculateLongestArgName(Collection<Arg> args) {
     int result = 0;
-    for (Argument arg : args) {
+    for (Arg arg : args) {
       result = Math.max(result, arg.nameSanitized().length());
     }
     return result;
   }
 
-  private static int calculateLongestArgNumber(Collection<Argument> args) {
+  private static int calculateLongestArgNumber(Collection<Arg> args) {
     int maxNumber = 0;
-    for (Argument arg : args) {
+    for (Arg arg : args) {
       maxNumber = Math.max(maxNumber, arg.number());
     }
     return Integer.toString(maxNumber).length();

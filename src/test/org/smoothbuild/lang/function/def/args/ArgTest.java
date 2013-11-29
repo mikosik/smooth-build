@@ -2,9 +2,9 @@ package org.smoothbuild.lang.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
+import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
+import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
@@ -23,7 +23,7 @@ import org.smoothbuild.testing.message.FakeCodeLocation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class ArgumentTest {
+public class ArgTest {
   String name = "name";
   Node node = mock(Node.class);
   CodeLocation codeLocation = new FakeCodeLocation();
@@ -136,7 +136,7 @@ public class ArgumentTest {
   public void toPaddedString() throws Exception {
     BDDMockito.willReturn(STRING).given(node).type();
 
-    Argument arg = namedArg(1, "myName", node, codeLocation);
+    Arg arg = namedArg(1, "myName", node, codeLocation);
     String actual = arg.toPaddedString(10, 13, 7);
 
     assertThat(actual).isEqualTo("String    : myName        #1       " + codeLocation.toString());
@@ -146,7 +146,7 @@ public class ArgumentTest {
   public void toPaddedStringForShortLimits() throws Exception {
     BDDMockito.willReturn(STRING).given(node).type();
 
-    Argument arg = namedArg(1, "myName", node, new FakeCodeLocation());
+    Arg arg = namedArg(1, "myName", node, new FakeCodeLocation());
     String actual = arg.toPaddedString(1, 1, 1);
 
     assertThat(actual).isEqualTo("String: myName #1 " + codeLocation.toString());
@@ -154,12 +154,12 @@ public class ArgumentTest {
 
   @Test
   public void filterNamed() throws Exception {
-    Argument named1 = named("name1");
-    Argument named2 = named("name2");
-    Argument nameless1 = nameless();
-    Argument nameless2 = nameless();
+    Arg named1 = named("name1");
+    Arg named2 = named("name2");
+    Arg nameless1 = nameless();
+    Arg nameless2 = nameless();
 
-    ImmutableList<Argument> actual = Argument.filterNamed(ImmutableList.of(named1, named2,
+    ImmutableList<Arg> actual = Arg.filterNamed(ImmutableList.of(named1, named2,
         nameless1, nameless2));
 
     assertThat(actual).containsOnly(named1, named2);
@@ -175,27 +175,27 @@ public class ArgumentTest {
   }
 
   private void doTestFilterNameless(SType<?> type) {
-    Argument named1 = named("name1");
-    Argument named2 = named("name2");
-    Argument nameless = nameless(type);
+    Arg named1 = named("name1");
+    Arg named2 = named("name2");
+    Arg nameless = nameless(type);
 
-    ImmutableMap<SType<?>, Set<Argument>> actual = Argument.filterNameless(ImmutableList.of(named1,
+    ImmutableMap<SType<?>, Set<Arg>> actual = Arg.filterNameless(ImmutableList.of(named1,
         named2, nameless));
 
     assertThat(actual.get(type)).containsOnly(nameless);
   }
 
-  private static Argument named(String name) {
-    return Argument.namedArg(1, name, mock(Node.class), new FakeCodeLocation());
+  private static Arg named(String name) {
+    return Arg.namedArg(1, name, mock(Node.class), new FakeCodeLocation());
   }
 
-  private static Argument nameless() {
+  private static Arg nameless() {
     return nameless(STRING);
   }
 
-  private static Argument nameless(SType<?> type) {
+  private static Arg nameless(SType<?> type) {
     Node node = mock(Node.class);
     BDDMockito.willReturn(type).given(node).type();
-    return Argument.namelessArg(1, node, new FakeCodeLocation());
+    return Arg.namelessArg(1, node, new FakeCodeLocation());
   }
 }

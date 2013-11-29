@@ -11,16 +11,16 @@ import org.smoothbuild.lang.type.SValue;
 
 public class Invoker {
   private final Method method;
-  private final ArgumentsCreator argumentsCreator;
+  private final ArgsCreator argsCreator;
 
-  public Invoker(Method method, ArgumentsCreator argumentsCreator) {
+  public Invoker(Method method, ArgsCreator argsCreator) {
     this.method = checkNotNull(method);
-    this.argumentsCreator = checkNotNull(argumentsCreator);
+    this.argsCreator = checkNotNull(argsCreator);
   }
 
   public SValue invoke(PluginApi pluginApi, Map<String, SValue> args) throws IllegalAccessException,
       InvocationTargetException {
-    Object arguments = argumentsCreator.create(args);
+    Object arguments = argsCreator.create(args);
     return (SValue) method.invoke(null, new Object[] { pluginApi, arguments });
   }
 }

@@ -8,27 +8,27 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.def.args.Argument;
+import org.smoothbuild.lang.function.def.args.Arg;
 import org.smoothbuild.lang.function.def.args.ParamToArgMapToString;
 import org.smoothbuild.lang.function.def.args.TypedParamsPool;
 import org.smoothbuild.message.base.CodeMessage;
 
 public class AmbiguousNamelessArgsError extends CodeMessage {
 
-  public AmbiguousNamelessArgsError(Name functionName, Map<Param, Argument> paramToArgMap,
-      Set<Argument> availableArgs, TypedParamsPool availableTypedParams) {
-    this(functionName, paramToArgMap, Argument.NUMBER_ORDERING.sortedCopy(availableArgs),
+  public AmbiguousNamelessArgsError(Name functionName, Map<Param, Arg> paramToArgMap,
+      Set<Arg> availableArgs, TypedParamsPool availableTypedParams) {
+    this(functionName, paramToArgMap, Arg.NUMBER_ORDERING.sortedCopy(availableArgs),
         availableTypedParams);
   }
 
-  public AmbiguousNamelessArgsError(Name functionName, Map<Param, Argument> paramToArgMap,
-      List<Argument> availableArgs, TypedParamsPool availableTypedParams) {
+  public AmbiguousNamelessArgsError(Name functionName, Map<Param, Arg> paramToArgMap,
+      List<Arg> availableArgs, TypedParamsPool availableTypedParams) {
     super(ERROR, availableArgs.iterator().next().codeLocation(), message(functionName,
         paramToArgMap, availableArgs, availableTypedParams));
   }
 
-  private static String message(Name functionName, Map<Param, Argument> paramToArgMap,
-      List<Argument> availableArgs, TypedParamsPool availableTypedParams) {
+  private static String message(Name functionName, Map<Param, Arg> paramToArgMap,
+      List<Arg> availableArgs, TypedParamsPool availableTypedParams) {
     String assignmentList = ParamToArgMapToString.toString(paramToArgMap);
     if (availableTypedParams.size() == 0) {
       return "Can't find parameter(s) of proper type in " + functionName
@@ -47,37 +47,37 @@ public class AmbiguousNamelessArgsError extends CodeMessage {
     }
   }
 
-  private static String argsToList(List<Argument> args) {
+  private static String argsToList(List<Arg> args) {
     int typeLength = longestArgType(args);
     int nameLength = longestArgName(args);
     int numberLength = longestArgNumber(args);
 
     StringBuilder builder = new StringBuilder();
-    for (Argument arg : args) {
+    for (Arg arg : args) {
       builder.append("  " + arg.toPaddedString(typeLength, nameLength, numberLength) + "\n");
     }
     return builder.toString();
   }
 
-  private static int longestArgType(List<Argument> args) {
+  private static int longestArgType(List<Arg> args) {
     int result = 0;
-    for (Argument arg : args) {
+    for (Arg arg : args) {
       result = Math.max(result, arg.type().name().length());
     }
     return result;
   }
 
-  private static int longestArgName(List<Argument> args) {
+  private static int longestArgName(List<Arg> args) {
     int result = 0;
-    for (Argument arg : args) {
+    for (Arg arg : args) {
       result = Math.max(result, arg.nameSanitized().length());
     }
     return result;
   }
 
-  private static int longestArgNumber(List<Argument> args) {
+  private static int longestArgNumber(List<Arg> args) {
     int maxNumber = 0;
-    for (Argument arg : args) {
+    for (Arg arg : args) {
       maxNumber = Math.max(maxNumber, arg.number());
     }
     return Integer.toString(maxNumber).length();

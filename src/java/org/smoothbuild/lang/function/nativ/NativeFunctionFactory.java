@@ -32,8 +32,8 @@ public class NativeFunctionFactory {
 
   private static Invoker createInvoker(Method method, Class<?> paramsInterface)
       throws NativeImplementationException {
-    ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
-    return new Invoker(method, argumentsCreator);
+    ArgsCreator argsCreator = new ArgsCreator(paramsInterface);
+    return new Invoker(method, argsCreator);
   }
 
   private static Method getExecuteMethod(Class<?> klass, boolean builtin)

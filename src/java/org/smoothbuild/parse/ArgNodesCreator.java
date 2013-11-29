@@ -11,7 +11,7 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.ConvertNode;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.function.def.args.Argument;
+import org.smoothbuild.lang.function.def.args.Arg;
 import org.smoothbuild.lang.function.def.args.ParamToArgMapper;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
@@ -22,22 +22,22 @@ import org.smoothbuild.message.listen.MessageGroup;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class ArgumentNodesCreator {
+public class ArgNodesCreator {
 
   public Map<String, Node> createArgumentNodes(CodeLocation codeLocation, MessageGroup messages,
-      Function function, Collection<Argument> arguments) {
-    ParamToArgMapper mapper = new ParamToArgMapper(codeLocation, messages, function, arguments);
-    Map<Param, Argument> paramToArgMap = mapper.detectMapping();
+      Function function, Collection<Arg> args) {
+    ParamToArgMapper mapper = new ParamToArgMapper(codeLocation, messages, function, args);
+    Map<Param, Arg> paramToArgMap = mapper.detectMapping();
     messages.failIfContainsProblems();
     return createArgumentNodes(paramToArgMap);
   }
 
-  private Map<String, Node> createArgumentNodes(Map<Param, Argument> paramToArgMap) {
+  private Map<String, Node> createArgumentNodes(Map<Param, Arg> paramToArgMap) {
     Builder<String, Node> builder = ImmutableMap.builder();
 
-    for (Map.Entry<Param, Argument> entry : paramToArgMap.entrySet()) {
+    for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
       Param param = entry.getKey();
-      Argument arg = entry.getValue();
+      Arg arg = entry.getValue();
       Node node = argumentNode(param, arg);
       builder.put(param.name(), node);
     }
@@ -45,7 +45,7 @@ public class ArgumentNodesCreator {
     return builder.build();
   }
 
-  private Node argumentNode(Param param, Argument arg) {
+  private Node argumentNode(Param param, Arg arg) {
     SType<?> paramType = param.type();
     SType<?> argType = arg.type();
 
