@@ -97,29 +97,6 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void convertingNamedEmptyArrayArgument() {
-    doTestConvertingNamedEmptyArrayArgument(STRING_ARRAY);
-    doTestConvertingNamedEmptyArrayArgument(BLOB_ARRAY);
-    doTestConvertingNamedEmptyArrayArgument(FILE_ARRAY);
-  }
-
-  private void doTestConvertingNamedEmptyArrayArgument(SType<?> type) {
-    // given
-    messages = new FakeMessageGroup();
-    Param p1 = param(type, "name1");
-    Param p2 = param(type, "name2");
-
-    Argument a1 = argument(p1.name(), EMPTY_ARRAY);
-
-    // when
-    Map<Param, Argument> mapping = createMapping(params(p1, p2), list(a1));
-
-    // then
-    messages.assertNoProblems();
-    assertThat(mapping).isEqualTo(ImmutableMap.of(p1, a1));
-  }
-
-  @Test
   public void duplicatedNames() {
     doTestDuplicatedNames(STRING);
     doTestDuplicatedNames(STRING_ARRAY);
