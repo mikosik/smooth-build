@@ -14,8 +14,6 @@ public class MemoryFileSystemTest extends GenericFileSystemTestCase {
   @Before
   public void before() {
     fileSystem = new MemoryFileSystem();
-    content = "file content";
-    path = path("my/dir/myFile");
   }
 
   // helpers

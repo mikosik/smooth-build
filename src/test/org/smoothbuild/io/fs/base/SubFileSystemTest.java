@@ -78,4 +78,12 @@ public class SubFileSystemTest {
     verify(fileSystem).createLink(absoluteLink, absolutePath);
   }
 
+  @Test
+  public void createDir() {
+    Path path = path("my/dir");
+    Path absolutePath = root.append(path);
+
+    subFileSystem.createDir(path);
+    verify(fileSystem).createDir(absolutePath);
+  }
 }

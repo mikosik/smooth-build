@@ -1,7 +1,6 @@
 package org.smoothbuild.io.fs.disk;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 
 import java.io.BufferedOutputStream;
@@ -24,8 +23,6 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   public void before() {
     tempDirectory = Files.createTempDir();
     fileSystem = new DiskFileSystem(tempDirectory.getAbsolutePath());
-    content = "file content";
-    path = path("my/dir/myFile");
   }
 
   @After
