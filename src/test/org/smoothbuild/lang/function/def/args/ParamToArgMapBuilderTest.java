@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.STRING;
 
@@ -16,13 +15,25 @@ import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
-public class AssignmentListTest {
-  AssignmentList assignmentList = new AssignmentList();
+import com.google.common.collect.ImmutableMap;
+
+public class ParamToArgMapBuilderTest {
+  ParamToArgMapBuilder paramToArgMapBuilder = new ParamToArgMapBuilder();
 
   @Test
-  public void addingNullAssignmentThrowsException() throws Exception {
+  public void addingNullArgThrowsException() throws Exception {
     try {
-      assignmentList.add(null);
+      paramToArgMapBuilder.add(param(STRING, "name"), null);
+      fail("exception should be thrown");
+    } catch (NullPointerException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void addingNullParamThrowsException() throws Exception {
+    try {
+      paramToArgMapBuilder.add(null, arg(STRING));
       fail("exception should be thrown");
     } catch (NullPointerException e) {
       // expected
@@ -33,14 +44,13 @@ public class AssignmentListTest {
   public void addingAssignmentForTheSameParamTwiceThrowsException() throws Exception {
     String name = "name";
     Param param1 = param(STRING, name);
-    Param param2 = param(FILE, name);
 
     Argument arg1 = arg(STRING);
     Argument arg2 = arg(FILE);
 
-    assignmentList.add(assignment(param1, arg1));
+    paramToArgMapBuilder.add(param1, arg1);
     try {
-      assignmentList.add(assignment(param2, arg2));
+      paramToArgMapBuilder.add(param1, arg2);
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
       // expected
@@ -48,7 +58,7 @@ public class AssignmentListTest {
   }
 
   @Test
-  public void iteratorReturnsAllAddedAssignments() {
+  public void build_returns_map_with_all_added_mappings() {
     // given
     String name1 = "name1";
     String name2 = "name2";
@@ -62,43 +72,12 @@ public class AssignmentListTest {
     Argument arg2 = arg(STRING);
     Argument arg3 = arg(STRING);
 
-    Assignment assignment1 = assignment(param1, arg1);
-    Assignment assignment2 = assignment(param2, arg2);
-    Assignment assignment3 = assignment(param3, arg3);
+    paramToArgMapBuilder.add(param1, arg1);
+    paramToArgMapBuilder.add(param2, arg2);
+    paramToArgMapBuilder.add(param3, arg3);
 
-    assignmentList.add(assignment1);
-    assignmentList.add(assignment2);
-    assignmentList.add(assignment3);
-
-    assertThat(assignmentList).containsOnly(assignment1, assignment2, assignment3);
-  }
-
-  @Test
-  public void testToString() throws Exception {
-    // given
-    Param param1 = param(STRING, "name1-that-is-long");
-    Param param2 = param(STRING, "name2");
-    Param param3 = param(FILE, "name3");
-
-    Argument arg1 = arg(1, STRING, "name4");
-    Argument arg2 = arg(1234, STRING, "name5");
-    Argument arg3 = arg(7, FILE, "name6-that-is-long");
-
-    assignmentList.add(assignment(param1, arg1));
-    assignmentList.add(assignment(param2, arg2));
-    assignmentList.add(assignment(param3, arg3));
-
-    // when
-    String actual = assignmentList.toString();
-
-    // then
-    String l = new FakeCodeLocation().toString();
-    StringBuilder expected = new StringBuilder();
-    expected.append("  String: name1-that-is-long <- String: name4              #1    " + l + "\n");
-    expected.append("  String: name2              <- String: name5              #1234 " + l + "\n");
-    expected.append("  File  : name3              <- File  : name6-that-is-long #7    " + l + "\n");
-
-    assertThat(actual).isEqualTo(expected.toString());
+    assertThat(paramToArgMapBuilder.build()).isEqualTo(
+        ImmutableMap.of(param1, arg1, param2, arg2, param3, arg3));
   }
 
   private static Argument arg(SType<?> type) {
