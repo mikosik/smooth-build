@@ -33,15 +33,12 @@ import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
-import org.smoothbuild.message.listen.PhaseFailedException;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.message.FakeMessageGroup;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
 
-public class ArgumentNodesCreatorTest {
+import com.google.common.collect.ImmutableMap;
+
+public class ParamToArgMapperTest {
   FakeMessageGroup messages;
 
   // converting named arguments
@@ -66,15 +63,14 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType, "name2");
 
-    Argument a1 = argument(p1.name(), node(argType));
+    Argument a1 = argument(p1.name(), argType);
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1));
+    Map<Param, Argument> mapping = createMapping(params(p1, p2), list(a1));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.node());
-    assertThat(result.size()).isEqualTo(1);
+    assertThat(mapping).isEqualTo(ImmutableMap.of(p1, a1));
   }
 
   @Test
@@ -90,16 +86,14 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType, "name2");
 
-    Argument a1 = argument(p1.name(), node(EMPTY_ARRAY));
+    Argument a1 = argument(p1.name(), EMPTY_ARRAY);
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1));
+    Map<Param, Argument> mapping = createMapping(params(p1, p2), list(a1));
 
     // then
     messages.assertNoProblems();
-    Node node = result.get(p1.name());
-    assertThat(result.size()).isEqualTo(1);
-    assertThat(node.type()).isEqualTo(paramType);
+    assertThat(mapping).isEqualTo(ImmutableMap.of(p1, a1));
   }
 
   @Test
@@ -115,15 +109,14 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(type, "name1");
     Param p2 = param(type, "name2");
 
-    Argument a1 = argument(p1.name(), emptyArrayNode());
+    Argument a1 = argument(p1.name(), EMPTY_ARRAY);
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1));
+    Map<Param, Argument> mapping = createMapping(params(p1, p2), list(a1));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.size()).isEqualTo(1);
-    assertThatNodeHasEmptyArray(result.get(p1.name()));
+    assertThat(mapping).isEqualTo(ImmutableMap.of(p1, a1));
   }
 
   @Test
@@ -141,11 +134,11 @@ public class ArgumentNodesCreatorTest {
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
 
-    Argument a1 = argument(p1.name(), node(type));
-    Argument a2 = argument(p1.name(), node(type));
+    Argument a1 = argument(p1.name(), type);
+    Argument a2 = argument(p1.name(), type);
 
     // when
-    create(params(p1), list(a1, a2));
+    createMapping(params(p1), list(a1, a2));
 
     // then
     messages.assertOnlyProblem(DuplicateArgNameError.class);
@@ -163,11 +156,11 @@ public class ArgumentNodesCreatorTest {
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
 
-    Argument a1 = argument(p1.name(), node(EMPTY_ARRAY));
-    Argument a2 = argument(p1.name(), node(EMPTY_ARRAY));
+    Argument a1 = argument(p1.name(), EMPTY_ARRAY);
+    Argument a2 = argument(p1.name(), EMPTY_ARRAY);
 
     // when
-    create(params(p1), list(a1, a2));
+    createMapping(params(p1), list(a1, a2));
 
     // then
     messages.assertOnlyProblem(DuplicateArgNameError.class);
@@ -178,10 +171,10 @@ public class ArgumentNodesCreatorTest {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(STRING, "name1");
-    Argument a1 = argument("otherName", node(STRING));
+    Argument a1 = argument("otherName", STRING);
 
     // when
-    create(params(p1), list(a1));
+    createMapping(params(p1), list(a1));
 
     // then
     messages.assertOnlyProblem(UnknownParamNameError.class);
@@ -247,10 +240,10 @@ public class ArgumentNodesCreatorTest {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
-    Argument a1 = argument(p1.name(), node(argType));
+    Argument a1 = argument(p1.name(), argType);
 
     // when
-    create(params(p1), list(a1));
+    createMapping(params(p1), list(a1));
 
     // then
     messages.assertOnlyProblem(TypeMismatchError.class);
@@ -263,11 +256,11 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(STRING, "name1");
 
     // when
-    Map<String, Node> result = create(params(p1), list());
+    Map<Param, Argument> mapping = createMapping(params(p1), list());
 
     // then
     messages.assertNoProblems();
-    assertThat(result.size()).isEqualTo(0);
+    assertThat(mapping).isEmpty();
   }
 
   @Test
@@ -328,15 +321,14 @@ public class ArgumentNodesCreatorTest {
     Param p2 = param(paramType, "name2");
     Param p3 = param(otherParamsType, "name3");
 
-    Argument a1 = argument(node(argType));
+    Argument a1 = argument(argType);
 
     // when
-    Map<String, Node> result = create(params(p1, p2, p3), list(a1));
+    Map<Param, Argument> mapping = createMapping(params(p1, p2, p3), list(a1));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p2.name())).isSameAs(a1.node());
-    assertThat(result.size()).isEqualTo(1);
+    assertThat(mapping).isEqualTo(ImmutableMap.of(p2, a1));
   }
 
   @Test
@@ -362,15 +354,14 @@ public class ArgumentNodesCreatorTest {
     Param p2 = param(paramType, "name2");
     Param p3 = param(otherParamType, "name3");
 
-    Argument a1 = argument(node(EMPTY_ARRAY));
+    Argument a1 = argument(EMPTY_ARRAY);
 
     // when
-    Map<String, Node> result = create(params(p1, p2, p3), list(a1));
+    Map<Param, Argument> mapping = createMapping(params(p1, p2, p3), list(a1));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.size()).isEqualTo(1);
-    assertThatNodeHasEmptyArray(result.get(p2.name()));
+    assertThat(mapping).isEqualTo(ImmutableMap.of(p2, a1));
   }
 
   @Test
@@ -390,19 +381,16 @@ public class ArgumentNodesCreatorTest {
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
 
-    Argument a1 = argument(p1.name(), node(type));
-    Argument a2 = argument(node(type));
-    Argument a3 = argument(p3.name(), node(type));
+    Argument a1 = argument(p1.name(), type);
+    Argument a2 = argument(type);
+    Argument a3 = argument(p3.name(), type);
 
     // when
-    Map<String, Node> result = create(params(p1, p2, p3), list(a1, a2, a3));
+    Map<Param, Argument> result = createMapping(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.node());
-    assertThat(result.get(p2.name())).isSameAs(a2.node());
-    assertThat(result.get(p3.name())).isSameAs(a3.node());
-    assertThat(result.size()).isEqualTo(3);
+    assertThat(result).isEqualTo(ImmutableMap.of(p1, a1, p2, a2, p3, a3));
   }
 
   @Test
@@ -450,17 +438,15 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(type1, "name1");
     Param p2 = param(type2, "name2");
 
-    Argument a1 = argument(node(type1));
-    Argument a2 = argument(node(type2));
+    Argument a1 = argument(type1);
+    Argument a2 = argument(type2);
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1, a2));
+    Map<Param, Argument> result = createMapping(params(p1, p2), list(a1, a2));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.node());
-    assertThat(result.get(p2.name())).isSameAs(a2.node());
-    assertThat(result.size()).isEqualTo(2);
+    assertThat(result).isEqualTo(ImmutableMap.of(p1, a1, p2, a2));
   }
 
   @Test
@@ -477,19 +463,16 @@ public class ArgumentNodesCreatorTest {
     Param p2 = param(type, "name2");
     Param p3 = param(type, "name3");
 
-    Argument a1 = argument(p1.name(), node(type));
-    Argument a2 = argument(node(EMPTY_ARRAY));
-    Argument a3 = argument(p3.name(), node(type));
+    Argument a1 = argument(p1.name(), type);
+    Argument a2 = argument(EMPTY_ARRAY);
+    Argument a3 = argument(p3.name(), type);
 
     // when
-    Map<String, Node> result = create(params(p1, p2, p3), list(a1, a2, a3));
+    Map<Param, Argument> mapping = createMapping(params(p1, p2, p3), list(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.node());
-    assertThatNodeHasEmptyArray(result.get(p2.name()));
-    assertThat(result.get(p3.name())).isSameAs(a3.node());
-    assertThat(result.size()).isEqualTo(3);
+    assertThat(mapping).isEqualTo(ImmutableMap.of(p1, a1, p2, a2, p3, a3));
   }
 
   @Test
@@ -511,17 +494,15 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(arrayType, "name1");
     Param p2 = param(otherArrayType, "name2");
 
-    Argument a1 = argument(p1.name(), node(arrayType));
-    Argument a2 = argument(node(EMPTY_ARRAY));
+    Argument a1 = argument(p1.name(), arrayType);
+    Argument a2 = argument(EMPTY_ARRAY);
 
     // when
-    Map<String, Node> result = create(params(p1, p2), list(a1, a2));
+    Map<Param, Argument> result = createMapping(params(p1, p2), list(a1, a2));
 
     // then
     messages.assertNoProblems();
-    assertThat(result.get(p1.name())).isSameAs(a1.node());
-    assertThatNodeHasEmptyArray(result.get(p2.name()));
-    assertThat(result.size()).isEqualTo(2);
+    assertThat(result).isEqualTo(ImmutableMap.of(p1, a1, p2, a2));
   }
 
   @Test
@@ -544,10 +525,10 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(paramType, "name1");
     Param p2 = param(paramType, "name2");
 
-    Argument a1 = argument(node(argType));
+    Argument a1 = argument(argType);
 
     // when
-    create(params(p1, p2), list(a1));
+    createMapping(params(p1, p2), list(a1));
 
     // then
     messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
@@ -560,10 +541,10 @@ public class ArgumentNodesCreatorTest {
     Param p1 = param(STRING_ARRAY, "name1");
     Param p2 = param(FILE_ARRAY, "name2");
 
-    Argument a1 = argument(node(EMPTY_ARRAY));
+    Argument a1 = argument(EMPTY_ARRAY);
 
     // when
-    create(params(p1, p2), list(a1));
+    createMapping(params(p1, p2), list(a1));
 
     // then
     messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
@@ -614,21 +595,21 @@ public class ArgumentNodesCreatorTest {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(otherType, "name1");
-    Argument a1 = argument(node(type));
+    Argument a1 = argument(type);
 
     // when
-    create(params(p1), list(a1));
+    createMapping(params(p1), list(a1));
 
     // then
     messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
-  private static Argument argument(Node node) {
-    return namelessArg(1, node, new FakeCodeLocation());
+  private static Argument argument(SType<?> type) {
+    return namelessArg(1, node(type), new FakeCodeLocation());
   }
 
-  private static Argument argument(String name, Node node) {
-    return namedArg(1, name, node, new FakeCodeLocation());
+  private static Argument argument(String name, SType<?> type) {
+    return namedArg(1, name, node(type), new FakeCodeLocation());
   }
 
   private static Node node(SType<?> type) {
@@ -637,13 +618,10 @@ public class ArgumentNodesCreatorTest {
     return node;
   }
 
-  private Map<String, Node> create(Iterable<Param> params, List<Argument> args) {
-    ArgumentNodesCreator creator = new ArgumentNodesCreator();
-    try {
-      return creator.createArgumentNodes(new FakeCodeLocation(), messages, function(params), args);
-    } catch (PhaseFailedException e) {
-      return null;
-    }
+  private Map<Param, Argument> createMapping(Iterable<Param> params, List<Argument> args) {
+    FakeCodeLocation codeLocation = new FakeCodeLocation();
+    Function function = function(params);
+    return new ParamToArgMapper(codeLocation, messages, function, args).detectMapping();
   }
 
   private static Function function(Iterable<Param> params) {
@@ -653,19 +631,6 @@ public class ArgumentNodesCreatorTest {
 
   private static ArrayList<Argument> list(Argument... args) {
     return newArrayList(args);
-  }
-
-  private static void assertThatNodeHasEmptyArray(Node abstractNode) {
-    TaskGenerator taskGenerator = mock(TaskGenerator.class);
-    Task task = abstractNode.generateTask(taskGenerator);
-    SValue result = task.execute(new FakePluginApi());
-    assertThat((Iterable<?>) result).isEmpty();
-  }
-
-  private static Node emptyArrayNode() {
-    Node node = mock(Node.class);
-    BDDMockito.willReturn(EMPTY_ARRAY).given(node).type();
-    return node;
   }
 
   public static Iterable<Param> params(Param... params) {
