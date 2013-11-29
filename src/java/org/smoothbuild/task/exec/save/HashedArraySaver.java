@@ -22,6 +22,11 @@ public class HashedArraySaver<T extends SValue> implements Saver<SArray<T>> {
     Path artifactPath = artifactPath(name);
 
     smoothFileSystem.delete(artifactPath);
+
+    // Create directory explicitly. When fileArray is empty for loop below won't
+    // create empty dir for us.
+    smoothFileSystem.createDir(artifactPath);
+
     int i = 0;
     for (T value : array) {
       Path filePath = path(Integer.valueOf(i).toString());
