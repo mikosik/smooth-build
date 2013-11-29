@@ -24,7 +24,7 @@ public class CallHasher {
       Result argument = args.get(param.name());
       if (argument != null) {
         hasher.putBytes(Hash.string(param.name()).asBytes());
-        hasher.putBytes(argument.result().hash().asBytes());
+        hasher.putBytes(argument.value().hash().asBytes());
       }
     }
     return hasher.hash();

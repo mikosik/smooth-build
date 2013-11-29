@@ -39,7 +39,7 @@ public class ArtifactBuilder {
     try {
       for (Entry<Name, Result> artifact : artifacts.entrySet()) {
         Name name = artifact.getKey();
-        SValue value = artifact.getValue().result();
+        SValue value = artifact.getValue().value();
 
         artifactSaver.save(name, value);
       }

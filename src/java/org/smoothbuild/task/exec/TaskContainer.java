@@ -16,7 +16,7 @@ public class TaskContainer implements Result {
   }
 
   @Override
-  public SValue result() {
+  public SValue value() {
     if (result == null) {
       result = taskExecutor.execute(task);
     }

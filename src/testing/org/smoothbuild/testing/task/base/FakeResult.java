@@ -11,7 +11,7 @@ public class FakeResult implements Result {
   }
 
   @Override
-  public SValue result() {
+  public SValue value() {
     return value;
   }
 }

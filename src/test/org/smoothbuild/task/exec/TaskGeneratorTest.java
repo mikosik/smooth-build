@@ -35,7 +35,7 @@ public class TaskGeneratorTest {
   public void generated_task_when_executed_returns_proper_result() {
     given(node = new StringNode(string, new FakeCodeLocation()));
     given(result = taskGenerator.generateTask(node));
-    when(result.result());
+    when(result.value());
     thenReturned(string);
   }
 
