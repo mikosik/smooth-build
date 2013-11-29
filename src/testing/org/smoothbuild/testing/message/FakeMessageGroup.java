@@ -52,6 +52,8 @@ public class FakeMessageGroup extends MessageGroup {
     if (!problems.isEmpty()) {
       StringBuilder builder = new StringBuilder("Expected zero problems, but got:\n");
       for (Message message : problems) {
+        builder.append(message.getClass().getCanonicalName());
+        builder.append("\n");
         builder.append(message.toString());
         builder.append("\n");
       }
