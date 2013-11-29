@@ -53,8 +53,14 @@ public class ParamToArgMapperTest {
     do_test_converting_named_argument(BLOB_ARRAY, BLOB_ARRAY);
     do_test_converting_named_argument(FILE_ARRAY, FILE_ARRAY);
 
+    // conversions
+
     do_test_converting_named_argument(BLOB, FILE);
     do_test_converting_named_argument(BLOB_ARRAY, FILE_ARRAY);
+
+    do_test_converting_named_argument(STRING_ARRAY, EMPTY_ARRAY);
+    do_test_converting_named_argument(BLOB_ARRAY, EMPTY_ARRAY);
+    do_test_converting_named_argument(FILE_ARRAY, EMPTY_ARRAY);
   }
 
   private void do_test_converting_named_argument(SType<?> paramType, SType<?> argType) {
@@ -74,45 +80,29 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void converting_named_empty_array_argument() throws Exception {
-    do_test_converting_named_empty_array_argument(STRING_ARRAY);
-    do_test_converting_named_empty_array_argument(BLOB_ARRAY);
-    do_test_converting_named_empty_array_argument(FILE_ARRAY);
+  public void duplicated_names() {
+    do_test_duplicated_names(STRING, STRING);
+    do_test_duplicated_names(STRING_ARRAY, STRING_ARRAY);
+    do_test_duplicated_names(BLOB, BLOB);
+    do_test_duplicated_names(BLOB_ARRAY, BLOB_ARRAY);
+    do_test_duplicated_names(FILE, FILE);
+    do_test_duplicated_names(FILE_ARRAY, FILE_ARRAY);
+
+    // conversions
+    do_test_duplicated_names(BLOB, FILE);
+    do_test_duplicated_names(BLOB_ARRAY, FILE_ARRAY);
+    do_test_duplicated_names(STRING_ARRAY, EMPTY_ARRAY);
+    do_test_duplicated_names(BLOB_ARRAY, EMPTY_ARRAY);
+    do_test_duplicated_names(FILE_ARRAY, EMPTY_ARRAY);
   }
 
-  private void do_test_converting_named_empty_array_argument(SType<?> paramType) {
+  private void do_test_duplicated_names(SType<?> paramType, SType<?> argType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
-    Param p2 = param(paramType, "name2");
 
-    Argument a1 = argument(p1.name(), EMPTY_ARRAY);
-
-    // when
-    Map<Param, Argument> mapping = createMapping(params(p1, p2), list(a1));
-
-    // then
-    messages.assertNoProblems();
-    assertThat(mapping).isEqualTo(ImmutableMap.of(p1, a1));
-  }
-
-  @Test
-  public void duplicatedNames() {
-    doTestDuplicatedNames(STRING);
-    doTestDuplicatedNames(STRING_ARRAY);
-    doTestDuplicatedNames(BLOB);
-    doTestDuplicatedNames(BLOB_ARRAY);
-    doTestDuplicatedNames(FILE);
-    doTestDuplicatedNames(FILE_ARRAY);
-  }
-
-  private void doTestDuplicatedNames(SType<?> type) {
-    // given
-    messages = new FakeMessageGroup();
-    Param p1 = param(type, "name1");
-
-    Argument a1 = argument(p1.name(), type);
-    Argument a2 = argument(p1.name(), type);
+    Argument a1 = argument(p1.name(), argType);
+    Argument a2 = argument(p1.name(), argType);
 
     // when
     createMapping(params(p1), list(a1, a2));
@@ -122,29 +112,7 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void duplicatedNamedEmptyArrayNames() {
-    doTestDuplicatedNamedEmptyArrayNames(STRING_ARRAY);
-    doTestDuplicatedNamedEmptyArrayNames(BLOB_ARRAY);
-    doTestDuplicatedNamedEmptyArrayNames(FILE_ARRAY);
-  }
-
-  private void doTestDuplicatedNamedEmptyArrayNames(SType<?> type) {
-    // given
-    messages = new FakeMessageGroup();
-    Param p1 = param(type, "name1");
-
-    Argument a1 = argument(p1.name(), EMPTY_ARRAY);
-    Argument a2 = argument(p1.name(), EMPTY_ARRAY);
-
-    // when
-    createMapping(params(p1), list(a1, a2));
-
-    // then
-    messages.assertOnlyProblem(DuplicateArgNameError.class);
-  }
-
-  @Test
-  public void unknownParamName() {
+  public void unknown_param_name() {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(STRING, "name1");
@@ -157,62 +125,72 @@ public class ParamToArgMapperTest {
     messages.assertOnlyProblem(UnknownParamNameError.class);
   }
 
+  // basic types
+
   @Test
-  public void typeMismatchForStringParam() throws Exception {
-    doTestTypeMismatchForParamProblem(STRING, STRING_ARRAY);
-    doTestTypeMismatchForParamProblem(STRING, BLOB);
-    doTestTypeMismatchForParamProblem(STRING, BLOB_ARRAY);
-    doTestTypeMismatchForParamProblem(STRING, FILE);
-    doTestTypeMismatchForParamProblem(STRING, FILE_ARRAY);
-    doTestTypeMismatchForParamProblem(STRING, EMPTY_ARRAY);
+  public void type_mismatch_for_string_param() throws Exception {
+    do_test_type_mismatch_for_param_problem(STRING, BLOB);
+    do_test_type_mismatch_for_param_problem(STRING, FILE);
+
+    do_test_type_mismatch_for_param_problem(STRING, STRING_ARRAY);
+    do_test_type_mismatch_for_param_problem(STRING, BLOB_ARRAY);
+    do_test_type_mismatch_for_param_problem(STRING, FILE_ARRAY);
+    do_test_type_mismatch_for_param_problem(STRING, EMPTY_ARRAY);
   }
 
   @Test
-  public void typeMismatchForStringArrayParam() throws Exception {
-    doTestTypeMismatchForParamProblem(STRING_ARRAY, STRING);
-    doTestTypeMismatchForParamProblem(STRING_ARRAY, BLOB);
-    doTestTypeMismatchForParamProblem(STRING_ARRAY, BLOB_ARRAY);
-    doTestTypeMismatchForParamProblem(STRING_ARRAY, FILE);
-    doTestTypeMismatchForParamProblem(STRING_ARRAY, FILE_ARRAY);
+  public void type_mismatch_for_blob_param() throws Exception {
+    do_test_type_mismatch_for_param_problem(BLOB, STRING);
+
+    do_test_type_mismatch_for_param_problem(BLOB, STRING_ARRAY);
+    do_test_type_mismatch_for_param_problem(BLOB, BLOB_ARRAY);
+    do_test_type_mismatch_for_param_problem(BLOB, FILE_ARRAY);
+    do_test_type_mismatch_for_param_problem(BLOB, EMPTY_ARRAY);
   }
 
   @Test
-  public void typeMismatchForBlobParam() throws Exception {
-    doTestTypeMismatchForParamProblem(BLOB, STRING);
-    doTestTypeMismatchForParamProblem(BLOB, STRING_ARRAY);
-    doTestTypeMismatchForParamProblem(BLOB, BLOB_ARRAY);
-    doTestTypeMismatchForParamProblem(BLOB, FILE_ARRAY);
-    doTestTypeMismatchForParamProblem(BLOB, EMPTY_ARRAY);
+  public void type_mismatch_for_file_param() throws Exception {
+    do_test_type_mismatch_for_param_problem(FILE, STRING);
+    do_test_type_mismatch_for_param_problem(FILE, BLOB);
+
+    do_test_type_mismatch_for_param_problem(FILE, STRING_ARRAY);
+    do_test_type_mismatch_for_param_problem(FILE, BLOB_ARRAY);
+    do_test_type_mismatch_for_param_problem(FILE, FILE_ARRAY);
+    do_test_type_mismatch_for_param_problem(FILE, EMPTY_ARRAY);
+  }
+
+  // array types
+
+  @Test
+  public void type_mismatch_for_string_array_param() throws Exception {
+    do_test_type_mismatch_for_param_problem(STRING_ARRAY, STRING);
+    do_test_type_mismatch_for_param_problem(STRING_ARRAY, BLOB);
+    do_test_type_mismatch_for_param_problem(STRING_ARRAY, FILE);
+
+    do_test_type_mismatch_for_param_problem(STRING_ARRAY, BLOB_ARRAY);
+    do_test_type_mismatch_for_param_problem(STRING_ARRAY, FILE_ARRAY);
   }
 
   @Test
-  public void typeMismatchForBlobArrayParam() throws Exception {
-    doTestTypeMismatchForParamProblem(BLOB_ARRAY, STRING);
-    doTestTypeMismatchForParamProblem(BLOB_ARRAY, STRING_ARRAY);
-    doTestTypeMismatchForParamProblem(BLOB_ARRAY, BLOB);
-    doTestTypeMismatchForParamProblem(BLOB_ARRAY, FILE);
+  public void type_mismatch_for_blob_array_param() throws Exception {
+    do_test_type_mismatch_for_param_problem(BLOB_ARRAY, STRING);
+    do_test_type_mismatch_for_param_problem(BLOB_ARRAY, BLOB);
+    do_test_type_mismatch_for_param_problem(BLOB_ARRAY, FILE);
+
+    do_test_type_mismatch_for_param_problem(BLOB_ARRAY, STRING_ARRAY);
   }
 
   @Test
-  public void typeMismatchForFileParam() throws Exception {
-    doTestTypeMismatchForParamProblem(FILE, STRING);
-    doTestTypeMismatchForParamProblem(FILE, STRING_ARRAY);
-    doTestTypeMismatchForParamProblem(FILE, BLOB);
-    doTestTypeMismatchForParamProblem(FILE, BLOB_ARRAY);
-    doTestTypeMismatchForParamProblem(FILE, FILE_ARRAY);
-    doTestTypeMismatchForParamProblem(FILE, EMPTY_ARRAY);
+  public void type_mismatch_for_file_array_param() throws Exception {
+    do_test_type_mismatch_for_param_problem(FILE_ARRAY, STRING);
+    do_test_type_mismatch_for_param_problem(FILE_ARRAY, BLOB);
+    do_test_type_mismatch_for_param_problem(FILE_ARRAY, FILE);
+
+    do_test_type_mismatch_for_param_problem(FILE_ARRAY, STRING_ARRAY);
+    do_test_type_mismatch_for_param_problem(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  @Test
-  public void typeMismatchForFileArrayParam() throws Exception {
-    doTestTypeMismatchForParamProblem(FILE_ARRAY, STRING);
-    doTestTypeMismatchForParamProblem(FILE_ARRAY, STRING_ARRAY);
-    doTestTypeMismatchForParamProblem(FILE_ARRAY, BLOB);
-    doTestTypeMismatchForParamProblem(FILE_ARRAY, BLOB_ARRAY);
-    doTestTypeMismatchForParamProblem(FILE_ARRAY, FILE);
-  }
-
-  private void doTestTypeMismatchForParamProblem(SType<?> paramType, SType<?> argType)
+  private void do_test_type_mismatch_for_param_problem(SType<?> paramType, SType<?> argType)
       throws Exception {
     // given
     messages = new FakeMessageGroup();
@@ -227,7 +205,7 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void convertingEmptyList() throws Exception {
+  public void mapping_empty_list_of_arguments() throws Exception {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(STRING, "name1");
@@ -240,57 +218,102 @@ public class ParamToArgMapperTest {
     assertThat(mapping).isEmpty();
   }
 
+  // basic types
+
   @Test
-  public void convertingSingleNamelessStringArgument() {
-    doTestConvertingSingleNamelessArgument(STRING, STRING, STRING_ARRAY);
-    doTestConvertingSingleNamelessArgument(STRING, STRING, BLOB);
-    doTestConvertingSingleNamelessArgument(STRING, STRING, BLOB_ARRAY);
-    doTestConvertingSingleNamelessArgument(STRING, STRING, FILE);
-    doTestConvertingSingleNamelessArgument(STRING, STRING, FILE_ARRAY);
+  public void converting_single_nameless_string_argument() {
+    do_test_converting_single_nameless_argument(STRING, STRING, BLOB);
+    do_test_converting_single_nameless_argument(STRING, STRING, FILE);
+    do_test_converting_single_nameless_argument(STRING, STRING, STRING_ARRAY);
+    do_test_converting_single_nameless_argument(STRING, STRING, BLOB_ARRAY);
+    do_test_converting_single_nameless_argument(STRING, STRING, FILE_ARRAY);
   }
 
   @Test
-  public void convertingSingleNamelessStringArrayArgument() {
-    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, STRING);
-    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, BLOB);
-    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, BLOB_ARRAY);
-    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, FILE);
-    doTestConvertingSingleNamelessArgument(STRING_ARRAY, STRING_ARRAY, FILE_ARRAY);
+  public void converting_single_nameless_blob_argument() {
+    do_test_converting_single_nameless_argument(BLOB, BLOB, STRING);
+    do_test_converting_single_nameless_argument(BLOB, BLOB, FILE);
+    do_test_converting_single_nameless_argument(BLOB, BLOB, STRING_ARRAY);
+    do_test_converting_single_nameless_argument(BLOB, BLOB, BLOB_ARRAY);
+    do_test_converting_single_nameless_argument(BLOB, BLOB, FILE_ARRAY);
   }
 
   @Test
-  public void convertingSingleNamelessFileArgument() {
-    doTestConvertingSingleNamelessArgument(FILE, FILE, STRING);
-    doTestConvertingSingleNamelessArgument(FILE, FILE, STRING_ARRAY);
-    doTestConvertingSingleNamelessArgument(FILE, FILE, BLOB_ARRAY);
-    doTestConvertingSingleNamelessArgument(FILE, FILE, FILE_ARRAY);
+  public void converting_single_nameless_file_argument() {
+    do_test_converting_single_nameless_argument(FILE, FILE, STRING);
+    do_test_converting_single_nameless_argument(FILE, FILE, STRING_ARRAY);
+    do_test_converting_single_nameless_argument(FILE, FILE, BLOB_ARRAY);
+    do_test_converting_single_nameless_argument(FILE, FILE, FILE_ARRAY);
   }
 
   @Test
-  public void convertingSingleNamelessFileArrayArgument() {
-    doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, STRING);
-    doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, STRING_ARRAY);
-    doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, BLOB);
-    doTestConvertingSingleNamelessArgument(FILE_ARRAY, FILE_ARRAY, FILE);
+  public void converting_single_nameless_file_argument_to_blob() throws Exception {
+    do_test_converting_single_nameless_argument(BLOB, FILE, STRING);
+    do_test_converting_single_nameless_argument(BLOB, FILE, STRING_ARRAY);
+    do_test_converting_single_nameless_argument(BLOB, FILE, BLOB_ARRAY);
+    do_test_converting_single_nameless_argument(BLOB, FILE, FILE_ARRAY);
+  }
+
+  // arrays
+
+  @Test
+  public void converting_single_nameless_string_array_argument() {
+    do_test_converting_single_nameless_argument(STRING_ARRAY, STRING_ARRAY, STRING);
+    do_test_converting_single_nameless_argument(STRING_ARRAY, STRING_ARRAY, BLOB);
+    do_test_converting_single_nameless_argument(STRING_ARRAY, STRING_ARRAY, FILE);
+    do_test_converting_single_nameless_argument(STRING_ARRAY, STRING_ARRAY, BLOB_ARRAY);
+    do_test_converting_single_nameless_argument(STRING_ARRAY, STRING_ARRAY, FILE_ARRAY);
   }
 
   @Test
-  public void convertingSingleNamelessFileArgumentToBlob() throws Exception {
-    doTestConvertingSingleNamelessArgument(BLOB, FILE, STRING);
-    doTestConvertingSingleNamelessArgument(BLOB, FILE, STRING_ARRAY);
-    doTestConvertingSingleNamelessArgument(BLOB, FILE, BLOB_ARRAY);
-    doTestConvertingSingleNamelessArgument(BLOB, FILE, FILE_ARRAY);
+  public void converting_single_nameless_blob_array_argument() {
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, STRING);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, BLOB);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, FILE);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, STRING_ARRAY);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   }
 
   @Test
-  public void convertingSingleNamelessFileArrayArgumentToBlobArray() throws Exception {
-    doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, BLOB);
-    doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, FILE);
-    doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, STRING);
-    doTestConvertingSingleNamelessArgument(BLOB_ARRAY, FILE_ARRAY, STRING_ARRAY);
+  public void converting_single_nameless_file_array_argument() {
+    do_test_converting_single_nameless_argument(FILE_ARRAY, FILE_ARRAY, STRING);
+    do_test_converting_single_nameless_argument(FILE_ARRAY, FILE_ARRAY, BLOB);
+    do_test_converting_single_nameless_argument(FILE_ARRAY, FILE_ARRAY, FILE);
+    do_test_converting_single_nameless_argument(FILE_ARRAY, FILE_ARRAY, STRING_ARRAY);
   }
 
-  private void doTestConvertingSingleNamelessArgument(SType<?> paramType, SType<?> argType,
+  @Test
+  public void converting_single_nameless_file_array_argument_to_blob_array() throws Exception {
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, FILE_ARRAY, STRING);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, FILE_ARRAY, BLOB);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, FILE_ARRAY, FILE);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, FILE_ARRAY, STRING_ARRAY);
+  }
+
+  // empty array
+
+  @Test
+  public void converting_single_nameless_empty_array_argument_to_string_array() {
+    do_test_converting_single_nameless_argument(STRING_ARRAY, EMPTY_ARRAY, STRING);
+    do_test_converting_single_nameless_argument(STRING_ARRAY, EMPTY_ARRAY, BLOB);
+    do_test_converting_single_nameless_argument(STRING_ARRAY, EMPTY_ARRAY, FILE);
+  }
+
+  @Test
+  public void converting_single_nameless_empty_array_argument_to_file_array() {
+    do_test_converting_single_nameless_argument(FILE_ARRAY, EMPTY_ARRAY, STRING);
+    do_test_converting_single_nameless_argument(FILE_ARRAY, EMPTY_ARRAY, BLOB);
+    do_test_converting_single_nameless_argument(FILE_ARRAY, EMPTY_ARRAY, FILE);
+  }
+
+  @Test
+  public void converting_single_nameless_empty_array_argument_to_blob_array() throws Exception {
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, EMPTY_ARRAY, BLOB);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, EMPTY_ARRAY, FILE);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, EMPTY_ARRAY, STRING);
+  }
+
+  private void do_test_converting_single_nameless_argument(SType<?> paramType, SType<?> argType,
       SType<?> otherParamsType) {
     // given
     messages = new FakeMessageGroup();
@@ -309,49 +332,17 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void convertingSingleNamelessEmptyArrayArgument() throws Exception {
-    doTestConvertingSingleNamelessEmptyArrayArgument(STRING_ARRAY, STRING);
-    doTestConvertingSingleNamelessEmptyArrayArgument(STRING_ARRAY, FILE);
-    doTestConvertingSingleNamelessEmptyArrayArgument(STRING_ARRAY, BLOB);
+  public void converting_single_nameless_argument_with_others_named() {
+    do_test_converting_single_nameless_argument_with_others_named(STRING);
+    do_test_converting_single_nameless_argument_with_others_named(BLOB);
+    do_test_converting_single_nameless_argument_with_others_named(FILE);
 
-    doTestConvertingSingleNamelessEmptyArrayArgument(BLOB_ARRAY, STRING);
-    doTestConvertingSingleNamelessEmptyArrayArgument(BLOB_ARRAY, FILE);
-    doTestConvertingSingleNamelessEmptyArrayArgument(BLOB_ARRAY, BLOB);
-
-    doTestConvertingSingleNamelessEmptyArrayArgument(FILE_ARRAY, STRING);
-    doTestConvertingSingleNamelessEmptyArrayArgument(FILE_ARRAY, FILE);
-    doTestConvertingSingleNamelessEmptyArrayArgument(FILE_ARRAY, BLOB);
+    do_test_converting_single_nameless_argument_with_others_named(STRING_ARRAY);
+    do_test_converting_single_nameless_argument_with_others_named(BLOB_ARRAY);
+    do_test_converting_single_nameless_argument_with_others_named(FILE_ARRAY);
   }
 
-  private void doTestConvertingSingleNamelessEmptyArrayArgument(SType<?> paramType,
-      SType<?> otherParamType) {
-    // given
-    messages = new FakeMessageGroup();
-    Param p1 = param(otherParamType, "name1");
-    Param p2 = param(paramType, "name2");
-    Param p3 = param(otherParamType, "name3");
-
-    Argument a1 = argument(EMPTY_ARRAY);
-
-    // when
-    Map<Param, Argument> mapping = createMapping(params(p1, p2, p3), list(a1));
-
-    // then
-    messages.assertNoProblems();
-    assertThat(mapping).isEqualTo(ImmutableMap.of(p2, a1));
-  }
-
-  @Test
-  public void convertingSingleNamelessArgumentWithOtherNamed() {
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING);
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(STRING_ARRAY);
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(BLOB);
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(BLOB_ARRAY);
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE);
-    doTestConvertingSingleNamelessArgumentWhitOthersNamed(FILE_ARRAY);
-  }
-
-  private void doTestConvertingSingleNamelessArgumentWhitOthersNamed(SType<?> type) {
+  private void do_test_converting_single_nameless_argument_with_others_named(SType<?> type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -371,45 +362,46 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void convertingTwoNamelessArgumentsWithDifferentType() throws Exception {
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, STRING_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, BLOB_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING, FILE_ARRAY);
+  public void converting_two_nameless_arguments_with_different_types() throws Exception {
+    do_test_converting_two_nameless_arguments_with_different_types(STRING, BLOB);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING, FILE);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING, STRING_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING, BLOB_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING, FILE_ARRAY);
 
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, BLOB_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, FILE);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(STRING_ARRAY, FILE_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING_ARRAY, STRING);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING_ARRAY, BLOB);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING_ARRAY, FILE);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING_ARRAY, BLOB_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(STRING_ARRAY, FILE_ARRAY);
 
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, STRING_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, BLOB_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, FILE);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB, FILE_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB, STRING);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB, FILE);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB, STRING_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB, BLOB_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB, FILE_ARRAY);
 
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, STRING_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, FILE);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(BLOB_ARRAY, FILE_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB_ARRAY, STRING);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB_ARRAY, BLOB);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB_ARRAY, FILE);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB_ARRAY, STRING_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(BLOB_ARRAY, FILE_ARRAY);
 
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, STRING_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, BLOB_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE, FILE_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE, STRING);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE, BLOB);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE, STRING_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE, BLOB_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE, FILE_ARRAY);
 
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, STRING);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, STRING_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, BLOB);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, BLOB_ARRAY);
-    doTestConvertingTwoNamelessArgumentsWithDifferentType(FILE_ARRAY, FILE);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE_ARRAY, STRING);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE_ARRAY, BLOB);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE_ARRAY, FILE);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE_ARRAY, STRING_ARRAY);
+    do_test_converting_two_nameless_arguments_with_different_types(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void doTestConvertingTwoNamelessArgumentsWithDifferentType(SType<?> type1, SType<?> type2) {
+  private void do_test_converting_two_nameless_arguments_with_different_types(SType<?> type1,
+      SType<?> type2) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type1, "name1");
@@ -427,13 +419,13 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void convertingSingleNamelessArrayArgumentWhitOtherNamed() throws Exception {
-    doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(STRING_ARRAY);
-    doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(BLOB_ARRAY);
-    doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(FILE_ARRAY);
+  public void converting_single_nameless_array_argument_with_other_named() throws Exception {
+    do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(STRING_ARRAY);
+    do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(BLOB_ARRAY);
+    do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(FILE_ARRAY);
   }
 
-  private void doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(SType<?> type) {
+  private void do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(SType<?> type) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(type, "name1");
@@ -453,18 +445,18 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void convertingNamelessEmptyArrayArgWithOtherNamedArray() throws Exception {
-    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(STRING_ARRAY, BLOB_ARRAY);
-    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(STRING_ARRAY, FILE_ARRAY);
+  public void converting_nameless_empty_array_arg_with_other_named_array() throws Exception {
+    converting_nameless_empty_array_arg_with_other_named_array(STRING_ARRAY, BLOB_ARRAY);
+    converting_nameless_empty_array_arg_with_other_named_array(STRING_ARRAY, FILE_ARRAY);
 
-    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(BLOB_ARRAY, STRING_ARRAY);
-    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(BLOB_ARRAY, FILE_ARRAY);
+    converting_nameless_empty_array_arg_with_other_named_array(BLOB_ARRAY, STRING_ARRAY);
+    converting_nameless_empty_array_arg_with_other_named_array(BLOB_ARRAY, FILE_ARRAY);
 
-    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(FILE_ARRAY, STRING_ARRAY);
-    doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(FILE_ARRAY, BLOB_ARRAY);
+    converting_nameless_empty_array_arg_with_other_named_array(FILE_ARRAY, STRING_ARRAY);
+    converting_nameless_empty_array_arg_with_other_named_array(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void doTestConvertingNamelessEmptyArrayArgWithOtherNamedArray(SType<?> arrayType,
+  private void converting_nameless_empty_array_arg_with_other_named_array(SType<?> arrayType,
       SType<?> otherArrayType) {
     // given
     messages = new FakeMessageGroup();
@@ -483,24 +475,37 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void ambigiuousNamelessArgument() throws Exception {
-    doTestAmbiguousNamelessArgument(STRING, STRING);
-    doTestAmbiguousNamelessArgument(STRING_ARRAY, STRING_ARRAY);
-    doTestAmbiguousNamelessArgument(BLOB, BLOB);
-    doTestAmbiguousNamelessArgument(BLOB_ARRAY, BLOB_ARRAY);
-    doTestAmbiguousNamelessArgument(FILE, FILE);
-    doTestAmbiguousNamelessArgument(FILE_ARRAY, FILE_ARRAY);
+  public void ambiguous_nameless_argument() throws Exception {
+    do_test_ambiguous_nameless_argument(STRING, STRING, STRING);
+    do_test_ambiguous_nameless_argument(BLOB, BLOB, BLOB);
+    do_test_ambiguous_nameless_argument(FILE, FILE, FILE);
 
-    doTestAmbiguousNamelessArgument(BLOB_ARRAY, EMPTY_ARRAY);
-    doTestAmbiguousNamelessArgument(FILE_ARRAY, EMPTY_ARRAY);
-    doTestAmbiguousNamelessArgument(STRING_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(STRING_ARRAY, STRING_ARRAY, STRING_ARRAY);
+    do_test_ambiguous_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, BLOB_ARRAY);
+    do_test_ambiguous_nameless_argument(FILE_ARRAY, FILE_ARRAY, FILE_ARRAY);
+
+    // conversions
+
+    do_test_ambiguous_nameless_argument(BLOB, BLOB, FILE);
+    do_test_ambiguous_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, FILE_ARRAY);
+
+    do_test_ambiguous_nameless_argument(STRING_ARRAY, STRING_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(STRING_ARRAY, BLOB_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(STRING_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(BLOB_ARRAY, STRING_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(BLOB_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(FILE_ARRAY, STRING_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(FILE_ARRAY, BLOB_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(FILE_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
   }
 
-  private void doTestAmbiguousNamelessArgument(SType<?> paramType, SType<?> argType) {
+  private void do_test_ambiguous_nameless_argument(SType<?> paramType, SType<?> paramType2,
+      SType<?> argType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(paramType, "name1");
-    Param p2 = param(paramType, "name2");
+    Param p2 = param(paramType2, "name2");
 
     Argument a1 = argument(argType);
 
@@ -511,64 +516,74 @@ public class ParamToArgMapperTest {
     messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
   }
 
+  // basic types
+
   @Test
-  public void ambiguousNamelessEmptyArrayArgument() {
-    // given
-    messages = new FakeMessageGroup();
-    Param p1 = param(STRING_ARRAY, "name1");
-    Param p2 = param(FILE_ARRAY, "name2");
+  public void no_param_with_proper_type_for_nameless_string_arg() throws Exception {
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING, BLOB);
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING, FILE);
 
-    Argument a1 = argument(EMPTY_ARRAY);
-
-    // when
-    createMapping(params(p1, p2), list(a1));
-
-    // then
-    messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING, STRING_ARRAY);
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING, BLOB_ARRAY);
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING, FILE_ARRAY);
   }
 
   @Test
-  public void noParamWithProperTypeForNamelessStringArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(STRING, STRING_ARRAY);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING, BLOB_ARRAY);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING, FILE_ARRAY);
+  public void no_param_with_proper_type_for_nameless_blob_arg() throws Exception {
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB, STRING);
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB, FILE);
+
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB, STRING_ARRAY);
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB, BLOB_ARRAY);
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB, FILE_ARRAY);
   }
 
   @Test
-  public void noParamWithProperTypeForNamelessStringArrayArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, STRING);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, BLOB_ARRAY);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, FILE);
-    doTestNoParamWithProperTypeForNamelessArgument(STRING_ARRAY, FILE_ARRAY);
+  public void no_param_with_proper_type_for_nameless_file_arg() throws Exception {
+    do_test_no_param_with_proper_type_for_nameless_arg(FILE, STRING);
+
+    do_test_no_param_with_proper_type_for_nameless_arg(FILE, STRING_ARRAY);
+    do_test_no_param_with_proper_type_for_nameless_arg(FILE, BLOB_ARRAY);
+    do_test_no_param_with_proper_type_for_nameless_arg(FILE, FILE_ARRAY);
+  }
+
+  // array types
+
+  @Test
+  public void no_param_with_proper_type_for_nameless_string_array_arg() throws Exception {
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING_ARRAY, STRING);
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING_ARRAY, BLOB);
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING_ARRAY, FILE);
+
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING_ARRAY, BLOB_ARRAY);
+    do_test_no_param_with_proper_type_for_nameless_arg(STRING_ARRAY, FILE_ARRAY);
   }
 
   @Test
-  public void noParamWithProperTypeForNamelessFileArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE, STRING_ARRAY);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE, BLOB_ARRAY);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE, FILE_ARRAY);
+  public void no_param_with_proper_type_for_nameless_blob_array_arg() throws Exception {
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB_ARRAY, STRING);
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB_ARRAY, BLOB);
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB_ARRAY, FILE);
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB_ARRAY, STRING_ARRAY);
+    do_test_no_param_with_proper_type_for_nameless_arg(BLOB_ARRAY, FILE_ARRAY);
   }
 
   @Test
-  public void noParamWithProperTypeForNamelessFileArrayArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, STRING);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, STRING_ARRAY);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(FILE_ARRAY, FILE);
+  public void no_param_with_proper_type_for_nameless_file_array_arg() throws Exception {
+    do_test_no_param_with_proper_type_for_nameless_arg(FILE_ARRAY, STRING);
+    do_test_no_param_with_proper_type_for_nameless_arg(FILE_ARRAY, BLOB);
+    do_test_no_param_with_proper_type_for_nameless_arg(FILE_ARRAY, FILE);
+    do_test_no_param_with_proper_type_for_nameless_arg(FILE_ARRAY, STRING_ARRAY);
   }
 
   @Test
-  public void noParamWithProperTypeForNamelessEmptyArrayArgument() throws Exception {
-    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, STRING);
-    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, BLOB);
-    doTestNoParamWithProperTypeForNamelessArgument(EMPTY_ARRAY, FILE);
+  public void no_param_with_proper_type_for_nameless_empty_array_arg() throws Exception {
+    do_test_no_param_with_proper_type_for_nameless_arg(EMPTY_ARRAY, STRING);
+    do_test_no_param_with_proper_type_for_nameless_arg(EMPTY_ARRAY, BLOB);
+    do_test_no_param_with_proper_type_for_nameless_arg(EMPTY_ARRAY, FILE);
   }
 
-  private void doTestNoParamWithProperTypeForNamelessArgument(SType<?> type, SType<?> otherType) {
+  private void do_test_no_param_with_proper_type_for_nameless_arg(SType<?> type, SType<?> otherType) {
     // given
     messages = new FakeMessageGroup();
     Param p1 = param(otherType, "name1");
