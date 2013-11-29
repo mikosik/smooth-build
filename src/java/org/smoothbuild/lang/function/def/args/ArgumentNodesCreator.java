@@ -1,25 +1,21 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.Collection;
 import java.util.Map;
 
+import org.smoothbuild.lang.convert.Conversions;
+import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.def.ArrayNode;
-import org.smoothbuild.lang.function.def.CachingNode;
+import org.smoothbuild.lang.function.def.ConvertNode;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -49,22 +45,16 @@ public class ArgumentNodesCreator {
 
   private Node argumentNode(Param param, Argument arg) {
     SType<?> paramType = param.type();
-    if (arg.type() == EMPTY_ARRAY) {
-      if (paramType == STRING_ARRAY) {
-        ArrayNode node = new ArrayNode(STRING_ARRAY, Empty.nodeList(), arg.codeLocation());
-        return new CachingNode(node);
-      } else if (paramType == FILE_ARRAY) {
-        ArrayNode node = new ArrayNode(FILE_ARRAY, Empty.nodeList(), arg.codeLocation());
-        return new CachingNode(node);
-      } else if (paramType == BLOB_ARRAY) {
-        ArrayNode node = new ArrayNode(BLOB_ARRAY, Empty.nodeList(), arg.codeLocation());
-        return new CachingNode(node);
-      } else {
-        throw new ErrorMessageException(new Message(FATAL,
-            "Bug in smooth binary: Cannot convert from " + arg.type() + " to " + paramType + "."));
-      }
-    } else {
+    SType<?> argType = arg.type();
+
+    if (argType == paramType) {
       return arg.node();
+    } else if (Conversions.canConvert(argType, paramType)) {
+      Converter<?> converter = Conversions.converter(argType, paramType);
+      return new ConvertNode(arg.node(), converter, arg.codeLocation());
+    } else {
+      throw new ErrorMessageException(new Message(FATAL,
+          "Bug in smooth binary: Cannot convert from " + argType + " to " + paramType + "."));
     }
   }
 }
