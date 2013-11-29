@@ -30,7 +30,7 @@ public class FakeFile extends CachedValue implements SFile {
     this(path, new FakeBlob(bytes));
   }
 
-  public FakeFile(Path path, FakeBlob content) {
+  public FakeFile(Path path, SBlob content) {
     super(FILE, calculateHash(path, content));
     this.path = path;
     this.content = content;
