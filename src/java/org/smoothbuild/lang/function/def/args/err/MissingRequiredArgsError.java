@@ -7,17 +7,17 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.def.args.AssignmentList;
+import org.smoothbuild.lang.function.def.args.ParamToArgMapBuilder;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 
 public class MissingRequiredArgsError extends CodeMessage {
   public MissingRequiredArgsError(CodeLocation codeLocation, Function function,
-      AssignmentList assignmentList, Set<Param> missingRequiredParams) {
-    super(ERROR, codeLocation, createMesssage(function, assignmentList, missingRequiredParams));
+      ParamToArgMapBuilder paramToArgMapBuilder, Set<Param> missingRequiredParams) {
+    super(ERROR, codeLocation, createMesssage(function, paramToArgMapBuilder, missingRequiredParams));
   }
 
-  private static String createMesssage(Function function, AssignmentList assignmentList,
+  private static String createMesssage(Function function, ParamToArgMapBuilder paramToArgMapBuilder,
       Set<Param> missingRequiredParams) {
     StringBuilder builder = new StringBuilder();
 
@@ -25,7 +25,7 @@ public class MissingRequiredArgsError extends CodeMessage {
         + " function has been specified.\n" + "Missing required parameters:\n");
     builder.append(paramsToString(missingRequiredParams));
     builder.append("All correct 'parameters <- arguments' assignments:\n");
-    builder.append(assignmentList.toString());
+    builder.append(paramToArgMapBuilder.toString());
 
     return builder.toString();
   }

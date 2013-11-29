@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static org.smoothbuild.lang.function.def.args.Assignment.assignment;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
@@ -72,24 +71,24 @@ public class ArgumentNodesCreator {
         return null;
       }
 
-      AssignmentList assignmentList = new AssignmentList();
-      processNamedArguments(assignmentList, namedArgs);
+      ParamToArgMapBuilder paramToArgMapBuilder = new ParamToArgMapBuilder();
+      processNamedArguments(paramToArgMapBuilder, namedArgs);
       if (messages.containsProblems()) {
         return null;
       }
 
-      processNamelessArguments(assignmentList);
+      processNamelessArguments(paramToArgMapBuilder);
       if (messages.containsProblems()) {
         return null;
       }
 
       Set<Param> missingRequiredParams = paramsPool.availableRequiredParams();
       if (missingRequiredParams.size() != 0) {
-        messages.report(new MissingRequiredArgsError(codeLocation, function, assignmentList,
+        messages.report(new MissingRequiredArgsError(codeLocation, function, paramToArgMapBuilder,
             missingRequiredParams));
         return null;
       }
-      return createArgumentNodes(assignmentList);
+      return createArgumentNodes(paramToArgMapBuilder.build());
     }
 
     private void detectDuplicatedAndUnknownArgNames(Collection<Argument> namedArgs) {
@@ -108,7 +107,8 @@ public class ArgumentNodesCreator {
       }
     }
 
-    private void processNamedArguments(AssignmentList assignmentList, Collection<Argument> namedArgs) {
+    private void processNamedArguments(ParamToArgMapBuilder paramToArgMapBuilder,
+        Collection<Argument> namedArgs) {
       for (Argument argument : namedArgs) {
         if (argument.hasName()) {
           String name = argument.name();
@@ -117,13 +117,13 @@ public class ArgumentNodesCreator {
           if (!Conversions.canConvert(argument.type(), paramType)) {
             messages.report(new TypeMismatchError(argument, paramType));
           } else {
-            assignmentList.add(assignment(param, argument));
+            paramToArgMapBuilder.add(param, argument);
           }
         }
       }
     }
 
-    private void processNamelessArguments(AssignmentList assignmentList) {
+    private void processNamelessArguments(ParamToArgMapBuilder paramToArgMapBuilder) {
       ImmutableMap<SType<?>, Set<Argument>> namelessArgs = Argument.filterNameless(allArguments);
 
       for (SType<?> type : allTypes()) {
@@ -135,12 +135,12 @@ public class ArgumentNodesCreator {
           if (argsSize == 1 && availableTypedParams.hasCandidate()) {
             Argument onlyArg = availableArgs.iterator().next();
             Param candidateParam = availableTypedParams.candidate();
-            assignmentList.add(assignment(candidateParam, onlyArg));
+            paramToArgMapBuilder.add(candidateParam, onlyArg);
             paramsPool.take(candidateParam);
           } else {
             AmbiguousNamelessArgsError error =
-                new AmbiguousNamelessArgsError(function.name(), assignmentList, availableArgs,
-                    availableTypedParams);
+                new AmbiguousNamelessArgsError(function.name(), paramToArgMapBuilder.build(),
+                    availableArgs, availableTypedParams);
             messages.report(error);
             return;
           }
@@ -148,36 +148,37 @@ public class ArgumentNodesCreator {
       }
     }
 
-    private Map<String, Node> createArgumentNodes(AssignmentList assignments) {
+    private Map<String, Node> createArgumentNodes(ImmutableMap<Param, Argument> paramToArgMap) {
       Builder<String, Node> builder = ImmutableMap.builder();
 
-      for (Assignment assignment : assignments) {
-        Node node = argumentNode(assignment);
-        builder.put(assignment.assignedName(), node);
+      for (Map.Entry<Param, Argument> entry : paramToArgMap.entrySet()) {
+        Param param = entry.getKey();
+        Argument arg = entry.getValue();
+        Node node = argumentNode(param, arg);
+        builder.put(param.name(), node);
       }
 
       return builder.build();
     }
 
-    private Node argumentNode(Assignment assignment) {
-      SType<?> paramType = assignment.param().type();
-      Argument argument = assignment.argument();
-      if (argument.type() == EMPTY_ARRAY) {
+    private Node argumentNode(Param param, Argument arg) {
+      SType<?> paramType = param.type();
+      if (arg.type() == EMPTY_ARRAY) {
         if (paramType == STRING_ARRAY) {
-          ArrayNode node = new ArrayNode(STRING_ARRAY, Empty.nodeList(), argument.codeLocation());
+          ArrayNode node = new ArrayNode(STRING_ARRAY, Empty.nodeList(), arg.codeLocation());
           return new CachingNode(node);
         } else if (paramType == FILE_ARRAY) {
-          ArrayNode node = new ArrayNode(FILE_ARRAY, Empty.nodeList(), argument.codeLocation());
+          ArrayNode node = new ArrayNode(FILE_ARRAY, Empty.nodeList(), arg.codeLocation());
           return new CachingNode(node);
         } else if (paramType == BLOB_ARRAY) {
-          ArrayNode node = new ArrayNode(BLOB_ARRAY, Empty.nodeList(), argument.codeLocation());
+          ArrayNode node = new ArrayNode(BLOB_ARRAY, Empty.nodeList(), arg.codeLocation());
           return new CachingNode(node);
         } else {
           throw new ErrorMessageException(new Message(FATAL,
-              "Bug in smooth binary: Cannot convert from " + argument.type() + " to " + paramType + "."));
+              "Bug in smooth binary: Cannot convert from " + arg.type() + " to " + paramType + "."));
         }
       } else {
-        return argument.node();
+        return arg.node();
       }
     }
   }
