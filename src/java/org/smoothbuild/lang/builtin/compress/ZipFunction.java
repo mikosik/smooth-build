@@ -1,14 +1,11 @@
 package org.smoothbuild.lang.builtin.compress;
 
-import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.io.cache.value.build.FileBuilder;
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.err.CannotAddDuplicatePathError;
@@ -16,8 +13,8 @@ import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -27,18 +24,15 @@ public class ZipFunction {
     @Required
     public SArray<SFile> files();
 
-    public SString output();
-
     // add missing parameters: level, comment, method
   }
 
   @SmoothFunction(name = "zip")
-  public static SFile execute(PluginApi pluginApi, Parameters params) {
+  public static SBlob execute(PluginApi pluginApi, Parameters params) {
     return new Worker(pluginApi, params).execute();
   }
 
   private static class Worker {
-    private static final Path DEFAULT_OUTPUT = path("output.zip");
     private final PluginApi pluginApi;
     private final Parameters params;
 
@@ -51,11 +45,10 @@ public class ZipFunction {
       this.duplicatesDetector = new DuplicatesDetector<Path>();
     }
 
-    public SFile execute() {
-      FileBuilder fileBuilder = pluginApi.fileBuilder();
-      fileBuilder.setPath(outputPath());
+    public SBlob execute() {
+      BlobBuilder blobBuilder = pluginApi.blobBuilder();
 
-      try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileBuilder.openOutputStream());) {
+      try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.openOutputStream());) {
         for (SFile file : params.files()) {
           addEntry(zipOutputStream, file);
         }
@@ -63,15 +56,7 @@ public class ZipFunction {
         throw new FileSystemException(e);
       }
 
-      return fileBuilder.build();
-    }
-
-    private Path outputPath() {
-      if (params.output() == null) {
-        return DEFAULT_OUTPUT;
-      } else {
-        return validatedPath("output", params.output());
-      }
+      return blobBuilder.build();
     }
 
     private void addEntry(ZipOutputStream zipOutputStream, SFile file) throws IOException {

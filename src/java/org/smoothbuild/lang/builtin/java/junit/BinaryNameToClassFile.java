@@ -10,35 +10,34 @@ import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.Maps;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, SFile> binaryNameToClassFile(PluginApi pluginApi, Iterable<SFile> libraryJars) {
+  public static Map<String, SFile> binaryNameToClassFile(PluginApi pluginApi,
+      Iterable<SBlob> libraryJars) {
     Unjarer unjarer = new Unjarer(pluginApi);
-    Map<Path, Path> binaryNameToJar = Maps.newHashMap();
+    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<Path>();
     Map<String, SFile> binaryNameToClassFile = Maps.newHashMap();
 
-    for (SFile jarFile : libraryJars) {
+    for (SBlob jarFile : libraryJars) {
       SArray<SFile> fileArray = unjarer.unjarFile(jarFile, isClassFilePredicate());
 
       for (SFile classFile : fileArray) {
-        Path path = classFile.path();
-        String binaryName = toBinaryName(path);
-        if (binaryNameToJar.containsKey(binaryName)) {
-          Path otherJarPath = binaryNameToJar.get(binaryName);
-          throw new ErrorMessageException(new DuplicateClassFileError(path, otherJarPath,
-              jarFile.path()));
+        Path classFilePath = classFile.path();
+        String binaryName = toBinaryName(classFilePath);
+        if (duplicatesDetector.add(classFilePath)) {
+          throw new ErrorMessageException(new DuplicateClassFileError(classFilePath));
         } else {
           binaryNameToClassFile.put(binaryName, classFile);
-          binaryNameToJar.put(path, jarFile.path());
         }
       }
     }
     return binaryNameToClassFile;
   }
-
 }

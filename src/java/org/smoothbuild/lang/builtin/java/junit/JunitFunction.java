@@ -11,6 +11,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
@@ -25,7 +26,7 @@ import org.smoothbuild.task.exec.PluginApiImpl;
  */
 public class JunitFunction {
   public interface Parameters {
-    SArray<SFile> libs();
+    SArray<SBlob> libs();
   }
 
   @SmoothFunction(name = "junit")
@@ -43,8 +44,8 @@ public class JunitFunction {
     }
 
     public SString execute() {
-      Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(pluginApi,
-          nullToEmpty(params.libs()));
+      Map<String, SFile> binaryNameToClassFile =
+          binaryNameToClassFile(pluginApi, nullToEmpty(params.libs()));
       FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
       JUnitCore jUnitCore = new JUnitCore();
 
@@ -67,8 +68,8 @@ public class JunitFunction {
       try {
         return classLoader.loadClass(binaryName);
       } catch (ClassNotFoundException e) {
-        Message errorMessage = new Message(ERROR, "Couldn't find class for binaryName = "
-            + binaryName);
+        Message errorMessage =
+            new Message(ERROR, "Couldn't find class for binaryName = " + binaryName);
         throw new ErrorMessageException(errorMessage);
       }
     }

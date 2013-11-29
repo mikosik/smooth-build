@@ -18,6 +18,7 @@ import org.smoothbuild.lang.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -36,7 +37,7 @@ public class Unzipper {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public SArray<SFile> unzipFile(SFile zipFile) {
+  public SArray<SFile> unzipFile(SBlob zipFile) {
     this.duplicatesDetector = new DuplicatesDetector<Path>();
     ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
     try {

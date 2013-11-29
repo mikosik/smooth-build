@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.lang.type.FileTester;
@@ -22,7 +23,8 @@ public class BinaryNameToClassFileTest {
     String file1 = "a/Klass.class";
     String file2 = "b/Klass.class";
     FakeFile jarFile = jaredFiles(file1, file2);
-    Map<String, SFile> x = binaryNameToClassFile(new FakePluginApi(), ImmutableList.<SFile> of(jarFile));
+    Map<String, SFile> x =
+        binaryNameToClassFile(new FakePluginApi(), ImmutableList.<SBlob> of(jarFile.content()));
 
     FileTester.assertContentContains(x.get("a.Klass"), file1);
     FileTester.assertContentContains(x.get("b.Klass"), file2);
@@ -34,7 +36,8 @@ public class BinaryNameToClassFileTest {
     String file1 = "a/Klass.txt";
     String file2 = "b/Klass.java";
     FakeFile jarFile = jaredFiles(file1, file2);
-    Map<String, SFile> x = binaryNameToClassFile(new FakePluginApi(), ImmutableList.<SFile> of(jarFile));
+    Map<String, SFile> x =
+        binaryNameToClassFile(new FakePluginApi(), ImmutableList.<SBlob> of(jarFile.content()));
 
     assertThat(x.size()).isEqualTo(0);
   }

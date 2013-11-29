@@ -29,7 +29,7 @@ public class UnjarerTest {
   public void unjaringTwoFiles() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
-    SArray<SFile> fileArray = unjarer.unjarFile(jarFile);
+    SArray<SFile> fileArray = unjarer.unjarFile(jarFile.content());
 
     int fileCount = 0;
     for (SFile file : fileArray) {
@@ -43,7 +43,7 @@ public class UnjarerTest {
   public void unjaringIgnoresDirectories() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, directoryName);
 
-    SArray<SFile> fileArray = unjarer.unjarFile(jarFile);
+    SArray<SFile> fileArray = unjarer.unjarFile(jarFile.content());
 
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
     assertThat(fileArray.iterator().next().path()).isEqualTo(path(fileName1));
@@ -53,7 +53,7 @@ public class UnjarerTest {
   public void unjaringWithFilter() throws Exception {
     FakeFile jarFile = jaredFiles(fileName1, fileName2);
 
-    SArray<SFile> fileArray = unjarer.unjarFile(jarFile, Predicates.equalTo(fileName2));
+    SArray<SFile> fileArray = unjarer.unjarFile(jarFile.content(), Predicates.equalTo(fileName2));
 
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
     assertThat(fileArray.iterator().next().path().value()).isEqualTo(fileName2);
@@ -65,7 +65,7 @@ public class UnjarerTest {
     FakeFile jarFile = jaredFiles(illegalFileName);
 
     try {
-      unjarer.unjarFile(jarFile);
+      unjarer.unjarFile(jarFile.content());
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected

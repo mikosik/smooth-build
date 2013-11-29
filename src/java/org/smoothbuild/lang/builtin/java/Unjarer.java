@@ -21,6 +21,7 @@ import org.smoothbuild.lang.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -41,11 +42,11 @@ public class Unjarer {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public SArray<SFile> unjarFile(SFile jarFile) {
+  public SArray<SFile> unjarFile(SBlob jarFile) {
     return unjarFile(jarFile, Predicates.<String> alwaysTrue());
   }
 
-  public SArray<SFile> unjarFile(SFile jarFile, Predicate<String> nameFilter) {
+  public SArray<SFile> unjarFile(SBlob jarFile, Predicate<String> nameFilter) {
     this.duplicatesDetector = new DuplicatesDetector<Path>();
     ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
