@@ -9,7 +9,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
-public class StoringArtifactSmoothTest extends IntegrationTestCase {
+public class ArtifactSaverSmoothTest extends IntegrationTestCase {
   private static final Path RESULTS_PATH = SMOOTH_DIR.append(RESULTS_DIR);
 
   Path path1 = path("def/filename1.txt");
