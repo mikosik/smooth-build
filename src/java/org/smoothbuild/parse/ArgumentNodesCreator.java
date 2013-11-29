@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args;
+package org.smoothbuild.parse;
 
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
@@ -11,6 +11,8 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.ConvertNode;
 import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.function.def.args.Argument;
+import org.smoothbuild.lang.function.def.args.ParamToArgMapper;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
