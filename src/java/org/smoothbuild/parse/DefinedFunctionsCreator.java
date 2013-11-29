@@ -40,7 +40,6 @@ import org.smoothbuild.lang.function.def.InvalidNode;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.StringNode;
 import org.smoothbuild.lang.function.def.args.Argument;
-import org.smoothbuild.lang.function.def.args.ArgumentNodesCreator;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
