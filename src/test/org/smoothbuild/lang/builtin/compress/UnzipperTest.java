@@ -33,7 +33,7 @@ public class UnzipperTest {
   public void unzipping() throws Exception {
     FakeFile zipFile = zipped(fileName1, fileName2);
 
-    SArray<SFile> resultFileArray = unzipper.unzipFile(zipFile);
+    SArray<SFile> resultFileArray = unzipper.unzipFile(zipFile.content());
 
     int fileCount = 0;
     for (SFile file : resultFileArray) {
@@ -47,7 +47,7 @@ public class UnzipperTest {
   public void unzipperIgnoresDirectories() throws Exception {
     FakeFile zipFile = zipped(fileName1, directoryName);
 
-    SArray<SFile> resultFileArray = unzipper.unzipFile(zipFile);
+    SArray<SFile> resultFileArray = unzipper.unzipFile(zipFile.content());
 
     assertThat(Iterables.size(resultFileArray)).isEqualTo(1);
     assertThat(resultFileArray.iterator().next().path()).isEqualTo(path(fileName1));
@@ -58,7 +58,7 @@ public class UnzipperTest {
     String illegalFileName = "/leading/slash/is/forbidden";
     FakeFile file = zipped(illegalFileName);
     try {
-      unzipper.unzipFile(file);
+      unzipper.unzipFile(file.content());
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected

@@ -6,8 +6,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.Message;
 
 public class DuplicateClassFileError extends Message {
-  public DuplicateClassFileError(Path path, Path jar1, Path jar2) {
-    super(ERROR, "File " + path + " is contained by both library jar files: " + jar1 + " and "
-        + jar2 + ".");
+  public DuplicateClassFileError(Path path) {
+    super(ERROR, "File " + path + " is contained by two different library jar files.");
   }
 }

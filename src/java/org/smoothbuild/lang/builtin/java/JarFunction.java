@@ -1,8 +1,5 @@
 package org.smoothbuild.lang.builtin.java;
 
-import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,7 +7,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.smoothbuild.io.cache.value.build.FileBuilder;
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.compress.Constants;
@@ -19,8 +16,8 @@ import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -30,18 +27,15 @@ public class JarFunction {
     @Required
     public SArray<SFile> files();
 
-    public SString output();
-
-    public SFile manifest();
+    public SBlob manifest();
   }
 
   @SmoothFunction(name = "jar")
-  public static SFile execute(PluginApi pluginApi, Parameters params) {
+  public static SBlob execute(PluginApi pluginApi, Parameters params) {
     return new Worker(pluginApi, params).execute();
   }
 
   private static class Worker {
-    private static final Path DEFAULT_OUTPUT = path("output.jar");
     private final PluginApi pluginApi;
     private final Parameters params;
 
@@ -54,10 +48,9 @@ public class JarFunction {
       this.duplicatesDetector = new DuplicatesDetector<Path>();
     }
 
-    public SFile execute() {
-      FileBuilder fileBuilder = pluginApi.fileBuilder();
-      fileBuilder.setPath(outputPath());
-      try (JarOutputStream jarOutputStream = createOutputStream(fileBuilder);) {
+    public SBlob execute() {
+      BlobBuilder blobBuilder = pluginApi.blobBuilder();
+      try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder);) {
         for (SFile file : params.files()) {
           addEntry(jarOutputStream, file);
         }
@@ -65,19 +58,11 @@ public class JarFunction {
         throw new FileSystemException(e);
       }
 
-      return fileBuilder.build();
+      return blobBuilder.build();
     }
 
-    private Path outputPath() {
-      if (params.output() == null) {
-        return DEFAULT_OUTPUT;
-      } else {
-        return validatedPath("output", params.output());
-      }
-    }
-
-    private JarOutputStream createOutputStream(FileBuilder fileBuilder) throws IOException {
-      OutputStream outputStream = fileBuilder.openOutputStream();
+    private JarOutputStream createOutputStream(BlobBuilder blobBuilder) throws IOException {
+      OutputStream outputStream = blobBuilder.openOutputStream();
       if (params.manifest() == null) {
         return new JarOutputStream(outputStream);
       } else {

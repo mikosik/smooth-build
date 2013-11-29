@@ -22,6 +22,7 @@ import org.smoothbuild.lang.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
@@ -40,7 +41,7 @@ public class JavacFunction {
     @Required
     SArray<SFile> sources();
 
-    SArray<SFile> libs();
+    SArray<SBlob> libs();
 
     SString source();
 
@@ -87,8 +88,9 @@ public class JavacFunction {
         Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files);
 
         // run compilation task
-        CompilationTask task = compiler.getTask(additionalCompilerOutput, fileManager, diagnostic,
-            options, null, inputSourceFiles);
+        CompilationTask task =
+            compiler.getTask(additionalCompilerOutput, fileManager, diagnostic, options, null,
+                inputSourceFiles);
         boolean success = task.call();
 
         // tidy up
@@ -136,10 +138,10 @@ public class JavacFunction {
     }
 
     private SandboxedJavaFileManager fileManager(ReportingDiagnosticListener diagnostic) {
-      StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostic, null,
-          defaultCharset());
-      Multimap<String, JavaFileObject> libsClasses = PackagedJavaFileObjects
-          .packagedJavaFileObjects(pluginApi, nullToEmpty(params.libs()));
+      StandardJavaFileManager fileManager =
+          compiler.getStandardFileManager(diagnostic, null, defaultCharset());
+      Multimap<String, JavaFileObject> libsClasses =
+          PackagedJavaFileObjects.packagedJavaFileObjects(pluginApi, nullToEmpty(params.libs()));
       return new SandboxedJavaFileManager(fileManager, pluginApi, libsClasses);
     }
 
