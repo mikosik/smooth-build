@@ -25,8 +25,8 @@ public class BinaryNameToClassFile {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<Path>();
     Map<String, SFile> binaryNameToClassFile = Maps.newHashMap();
 
-    for (SBlob jarFile : libraryJars) {
-      SArray<SFile> fileArray = unjarer.unjarFile(jarFile, isClassFilePredicate());
+    for (SBlob jarBlob : libraryJars) {
+      SArray<SFile> fileArray = unjarer.unjar(jarBlob, isClassFilePredicate());
 
       for (SFile classFile : fileArray) {
         Path classFilePath = classFile.path();

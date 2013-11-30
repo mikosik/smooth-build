@@ -15,6 +15,6 @@ public class UnzipFunction {
 
   @SmoothFunction(name = "unzip")
   public static SArray<SFile> execute(PluginApi pluginApi, Parameters params) {
-    return new Unzipper(pluginApi).unzipFile(params.blob());
+    return new Unzipper(pluginApi).unzip(params.blob());
   }
 }

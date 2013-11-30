@@ -21,8 +21,8 @@ public class PackagedJavaFileObjects {
     Unjarer unjarer = new Unjarer(pluginApi);
     Multimap<String, JavaFileObject> result = HashMultimap.create();
 
-    for (SBlob jarFile : libraryJars) {
-      SArray<SFile> files = unjarer.unjarFile(jarFile, isClassFilePredicate());
+    for (SBlob jarBlob : libraryJars) {
+      SArray<SFile> files = unjarer.unjar(jarBlob, isClassFilePredicate());
       for (SFile classFile : files) {
         InputClassFile inputClassFile = new InputClassFile(classFile);
         String aPackage = inputClassFile.aPackage();

@@ -3,15 +3,15 @@ package org.smoothbuild.lang.builtin.java;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.common.JarTester.jaredFiles;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.testing.lang.type.FakeFile;
+import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 import com.google.common.base.Predicates;
@@ -27,9 +27,9 @@ public class UnjarerTest {
 
   @Test
   public void unjaringTwoFiles() throws Exception {
-    FakeFile jarFile = jaredFiles(fileName1, fileName2);
+    SBlob blob = JarTester.jar(fileName1, fileName2);
 
-    SArray<SFile> fileArray = unjarer.unjarFile(jarFile.content());
+    SArray<SFile> fileArray = unjarer.unjar(blob);
 
     int fileCount = 0;
     for (SFile file : fileArray) {
@@ -41,9 +41,9 @@ public class UnjarerTest {
 
   @Test
   public void unjaringIgnoresDirectories() throws Exception {
-    FakeFile jarFile = jaredFiles(fileName1, directoryName);
+    SBlob blob = JarTester.jar(fileName1, directoryName);
 
-    SArray<SFile> fileArray = unjarer.unjarFile(jarFile.content());
+    SArray<SFile> fileArray = unjarer.unjar(blob);
 
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
     assertThat(fileArray.iterator().next().path()).isEqualTo(path(fileName1));
@@ -51,9 +51,9 @@ public class UnjarerTest {
 
   @Test
   public void unjaringWithFilter() throws Exception {
-    FakeFile jarFile = jaredFiles(fileName1, fileName2);
+    SBlob blob = JarTester.jar(fileName1, fileName2);
 
-    SArray<SFile> fileArray = unjarer.unjarFile(jarFile.content(), Predicates.equalTo(fileName2));
+    SArray<SFile> fileArray = unjarer.unjar(blob, Predicates.equalTo(fileName2));
 
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
     assertThat(fileArray.iterator().next().path().value()).isEqualTo(fileName2);
@@ -62,10 +62,10 @@ public class UnjarerTest {
   @Test
   public void entryWithIllegalName() throws Exception {
     String illegalFileName = "/leading/slash/is/forbidden";
-    FakeFile jarFile = jaredFiles(illegalFileName);
+    SBlob blob = JarTester.jar(illegalFileName);
 
     try {
-      unjarer.unjarFile(jarFile.content());
+      unjarer.unjar(blob);
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
