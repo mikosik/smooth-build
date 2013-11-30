@@ -4,6 +4,7 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.STypes.basicTypes;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
@@ -35,7 +36,6 @@ import org.smoothbuild.lang.function.def.ArrayNode;
 import org.smoothbuild.lang.function.def.CachingNode;
 import org.smoothbuild.lang.function.def.CallNode;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.function.def.EmptyArrayNode;
 import org.smoothbuild.lang.function.def.InvalidNode;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.StringNode;
@@ -51,6 +51,7 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.parse.err.ForbiddenArrayElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
+import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
@@ -70,8 +71,8 @@ public class DefinedFunctionsCreator {
 
   public Map<Name, Function> createDefinedFunctions(MessageGroup messages, Module builtinModule,
       Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    Worker worker = new Worker(messages, builtinModule, functionContexts, sorted, valueDb,
-        argNodesCreator);
+    Worker worker =
+        new Worker(messages, builtinModule, functionContexts, sorted, valueDb, argNodesCreator);
     Map<Name, Function> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -151,11 +152,11 @@ public class DefinedFunctionsCreator {
       ImmutableList<Node> elemNodes = build(elems);
 
       if (elemNodes.isEmpty()) {
-        return new CachingNode(new EmptyArrayNode(locationOf(list)));
+        return new CachingNode(new ArrayNode(EMPTY_ARRAY, Empty.nodeList(), locationOf(list)));
       }
 
       if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return new CachingNode(new EmptyArrayNode(locationOf(list)));
+        return new CachingNode(new ArrayNode(EMPTY_ARRAY, Empty.nodeList(), locationOf(list)));
       }
 
       SType<?> elemsType = elemNodes.get(0).type();
@@ -219,8 +220,8 @@ public class DefinedFunctionsCreator {
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, Node> namedArgs = argNodesCreator.createArgumentNodes(codeLocation,
-          messages, function, args);
+      Map<String, Node> namedArgs =
+          argNodesCreator.createArgumentNodes(codeLocation, messages, function, args);
 
       if (namedArgs == null) {
         InvalidNode node = new InvalidNode(function.type(), locationOf(call.functionName()));

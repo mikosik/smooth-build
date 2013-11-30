@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
@@ -76,8 +77,8 @@ public class ValueDbTest {
   // empty array
 
   @Test
-  public void empty_array_is_empty() throws Exception {
-    when(valueDb).emptyArray();
+  public void created_empty_array_is_empty() throws Exception {
+    when(valueDb.arrayBuilder(EMPTY_ARRAY).build());
     thenReturned(Matchers.emptyIterable());
   }
 
@@ -281,8 +282,8 @@ public class ValueDbTest {
     given(stringValue = valueDb.writeString(string));
     given(stringValue2 = valueDb.writeString(string2));
     given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    given(stringArray2 = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2)
-        .build());
+    given(stringArray2 =
+        valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2).build());
 
     when(stringArray.hash());
     thenReturned(not(equalTo(stringArray2.hash())));
