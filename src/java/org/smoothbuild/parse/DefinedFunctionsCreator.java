@@ -4,7 +4,11 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
+import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.type.STypes.NOTHING;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.basicTypes;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
@@ -51,7 +55,6 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.parse.err.ForbiddenArrayElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
-import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
@@ -151,21 +154,13 @@ public class DefinedFunctionsCreator {
       List<ArrayElemContext> elems = list.arrayElem();
       ImmutableList<Node> elemNodes = build(elems);
 
-      if (elemNodes.isEmpty()) {
-        return new CachingNode(new ArrayNode(EMPTY_ARRAY, Empty.nodeList(), locationOf(list)));
-      }
+      SType<?> elemType = commonSuperType(elems, elemNodes, locationOf(list));
 
-      if (!areAllElemTypesEqual(elems, elemNodes)) {
-        return new CachingNode(new ArrayNode(EMPTY_ARRAY, Empty.nodeList(), locationOf(list)));
-      }
-
-      SType<?> elemsType = elemNodes.get(0).type();
-      SArrayType<?> arrayType = STypes.arrayTypeContaining(elemsType);
-      if (arrayType != null) {
+      if (elemType != null) {
+        SArrayType<?> arrayType = STypes.arrayTypeContaining(elemType);
         return new CachingNode(new ArrayNode(arrayType, elemNodes, locationOf(list)));
       } else {
-        throw new ErrorMessageException(new Message(FATAL,
-            "Bug in smooth binary: Unexpected list element type = " + elemsType));
+        return new InvalidNode(EMPTY_ARRAY, locationOf(list));
       }
     }
 
@@ -195,18 +190,49 @@ public class DefinedFunctionsCreator {
               + " without children."));
     }
 
-    private boolean areAllElemTypesEqual(List<ArrayElemContext> elems, List<Node> elemNodes) {
-      boolean success = true;
+    private SType<?> commonSuperType(List<ArrayElemContext> elems, ImmutableList<Node> elemNodes,
+        CodeLocation location) {
+      if (elems.size() == 0) {
+        return NOTHING;
+      }
       SType<?> firstType = elemNodes.get(0).type();
-      for (int i = 0; i < elemNodes.size(); i++) {
-        Node elemNode = elemNodes.get(i);
-        if (elemNode.type() != firstType) {
-          CodeLocation location = locationOf(elems.get(i));
-          messages.report(new IncompatibleArrayElemsError(location, firstType, i, elemNode.type()));
-          success = false;
+      SType<?> commonSuperType = firstType;
+
+      for (int i = 1; i < elemNodes.size(); i++) {
+        SType<?> currentType = elemNodes.get(i).type();
+        commonSuperType = commonSuperType(commonSuperType, currentType);
+
+        if (commonSuperType == null) {
+          messages.report(new IncompatibleArrayElemsError(location, firstType, i, currentType));
+          return null;
         }
       }
-      return success;
+      return commonSuperType;
+    }
+
+    private static SType<?> commonSuperType(SType<?> type1, SType<?> type2) {
+      // TODO hardcoded algorithm below should be replaced by algorithm driven
+      // by a data structures describing type hierarchy
+      if (type1 == STRING) {
+        if (type2 == STRING) {
+          return STRING;
+        } else {
+          return null;
+        }
+      } else if (type1 == BLOB) {
+        if (type2 == BLOB || type2 == FILE) {
+          return BLOB;
+        } else {
+          return null;
+        }
+      } else if (type1 == FILE) {
+        if (type2 == FILE) {
+          return FILE;
+        } else {
+          return null;
+        }
+      }
+      return null;
     }
 
     private Node build(CallContext call) {
