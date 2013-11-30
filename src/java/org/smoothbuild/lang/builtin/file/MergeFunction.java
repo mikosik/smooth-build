@@ -51,9 +51,9 @@ public class MergeFunction {
     }
 
     private void addFile(SFile file, ArrayBuilder<SFile> builder,
-        DuplicatesDetector<Path> alreadyAdded) {
+        DuplicatesDetector<Path> duplicatesDetector) {
       Path path = file.path();
-      if (alreadyAdded.add(path)) {
+      if (duplicatesDetector.add(path)) {
         pluginApi.report(new DuplicateMergedPathError(path));
       } else {
         builder.add(file);
