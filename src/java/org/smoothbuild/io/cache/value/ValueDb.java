@@ -26,7 +26,6 @@ import org.smoothbuild.io.cache.value.read.ReadNothing;
 import org.smoothbuild.io.cache.value.read.ReadString;
 import org.smoothbuild.io.cache.value.read.ReadValue;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
@@ -95,11 +94,13 @@ public class ValueDb {
       ArrayBuilder<T> result = (ArrayBuilder<T>) stringArrayBuilder();
       return result;
     }
-    throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
-  }
+    if (arrayType == EMPTY_ARRAY) {
+      @SuppressWarnings("unchecked")
+      ArrayBuilder<T> result = (ArrayBuilder<T>) emptyArrayBuilder();
+      return result;
+    }
 
-  public SArray<SNothing> emptyArray() {
-    return new ArrayBuilder<SNothing>(hashedDb, EMPTY_ARRAY, readNothing).build();
+    throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
   }
 
   private ArrayBuilder<SFile> fileArrayBuilder() {
@@ -112,6 +113,10 @@ public class ValueDb {
 
   private ArrayBuilder<SString> stringArrayBuilder() {
     return new ArrayBuilder<SString>(hashedDb, STRING_ARRAY, readString);
+  }
+
+  private ArrayBuilder<SNothing> emptyArrayBuilder() {
+    return new ArrayBuilder<SNothing>(hashedDb, EMPTY_ARRAY, readNothing);
   }
 
   // writers

@@ -6,9 +6,7 @@ import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.plugin.PluginApi;
-import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SArrayType;
-import org.smoothbuild.lang.type.SNothing;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
@@ -51,10 +49,6 @@ public class PluginApiImpl implements PluginApi {
   @Override
   public SString string(String string) {
     return valueDb.writeString(string);
-  }
-
-  public SArray<SNothing> emptyArray() {
-    return valueDb.emptyArray();
   }
 
   public FileSystem projectFileSystem() {
