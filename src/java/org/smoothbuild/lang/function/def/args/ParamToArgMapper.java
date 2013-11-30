@@ -45,10 +45,6 @@ public class ParamToArgMapper {
       return null;
     }
 
-    if (messages.containsProblems()) {
-      return null;
-    }
-
     ParamToArgMapBuilder paramToArgMapBuilder = new ParamToArgMapBuilder();
     processNamedArguments(paramToArgMapBuilder, namedArgs);
     if (messages.containsProblems()) {
