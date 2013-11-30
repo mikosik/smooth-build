@@ -42,16 +42,16 @@ public class Unjarer {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public SArray<SFile> unjarFile(SBlob jarFile) {
-    return unjarFile(jarFile, Predicates.<String> alwaysTrue());
+  public SArray<SFile> unjar(SBlob jarBlob) {
+    return unjar(jarBlob, Predicates.<String> alwaysTrue());
   }
 
-  public SArray<SFile> unjarFile(SBlob jarFile, Predicate<String> nameFilter) {
+  public SArray<SFile> unjar(SBlob jarBlob, Predicate<String> nameFilter) {
     this.duplicatesDetector = new DuplicatesDetector<Path>();
     ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
-      try (JarInputStream jarInputStream = new JarInputStream(jarFile.openInputStream());) {
+      try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream());) {
         JarEntry entry = null;
         while ((entry = jarInputStream.getNextJarEntry()) != null) {
           String fileName = entry.getName();

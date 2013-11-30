@@ -8,9 +8,13 @@ import java.io.OutputStreamWriter;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeFile;
+import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 public class JarTester {
   public static FakeFile jaredFiles(String... fileNames) throws IOException {
@@ -27,7 +31,19 @@ public class JarTester {
       }
     }
 
-    return new FakeFile(path, inputStreamToBytes(fileSystem.openInputStream(path)));
+    FakeBlob blob = new FakeBlob(inputStreamToBytes(fileSystem.openInputStream(path)));
+    return new FakeFile(path, blob);
+  }
+
+  public static SBlob jar(String... fileNames) throws IOException {
+    BlobBuilder blobBuilder = new FakePluginApi().blobBuilder();
+    try (JarOutputStream jarOutputStream = new JarOutputStream(blobBuilder.openOutputStream());) {
+      for (String fileName : fileNames) {
+        addEntry(jarOutputStream, fileName);
+      }
+    }
+
+    return blobBuilder.build();
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, String fileName) throws IOException {

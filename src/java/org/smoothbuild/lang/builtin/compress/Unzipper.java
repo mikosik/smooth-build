@@ -37,11 +37,11 @@ public class Unzipper {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public SArray<SFile> unzipFile(SBlob zipFile) {
+  public SArray<SFile> unzip(SBlob zipBlob) {
     this.duplicatesDetector = new DuplicatesDetector<Path>();
     ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
     try {
-      try (ZipInputStream zipInputStream = new ZipInputStream(zipFile.openInputStream());) {
+      try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream());) {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
           if (!IS_DIRECTORY.apply(entry.getName())) {

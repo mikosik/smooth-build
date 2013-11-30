@@ -16,7 +16,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.type.FakeFile;
+import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 import com.google.common.collect.Iterables;
@@ -31,9 +31,9 @@ public class UnzipperTest {
 
   @Test
   public void unzipping() throws Exception {
-    FakeFile zipFile = zipped(fileName1, fileName2);
+    FakeBlob zipBlob = zipped(fileName1, fileName2);
 
-    SArray<SFile> resultFileArray = unzipper.unzipFile(zipFile.content());
+    SArray<SFile> resultFileArray = unzipper.unzip(zipBlob);
 
     int fileCount = 0;
     for (SFile file : resultFileArray) {
@@ -45,9 +45,9 @@ public class UnzipperTest {
 
   @Test
   public void unzipperIgnoresDirectories() throws Exception {
-    FakeFile zipFile = zipped(fileName1, directoryName);
+    FakeBlob zipBlob = zipped(fileName1, directoryName);
 
-    SArray<SFile> resultFileArray = unzipper.unzipFile(zipFile.content());
+    SArray<SFile> resultFileArray = unzipper.unzip(zipBlob);
 
     assertThat(Iterables.size(resultFileArray)).isEqualTo(1);
     assertThat(resultFileArray.iterator().next().path()).isEqualTo(path(fileName1));
@@ -56,9 +56,9 @@ public class UnzipperTest {
   @Test
   public void entryWithIllegalName() throws Exception {
     String illegalFileName = "/leading/slash/is/forbidden";
-    FakeFile file = zipped(illegalFileName);
+    FakeBlob zipBlob = zipped(illegalFileName);
     try {
-      unzipper.unzipFile(file.content());
+      unzipper.unzip(zipBlob);
       fail("exception should be thrown");
     } catch (ErrorMessageException e) {
       // expected
@@ -66,9 +66,9 @@ public class UnzipperTest {
     }
   }
 
-  private static FakeFile zipped(String... fileNames) throws IOException {
+  private static FakeBlob zipped(String... fileNames) throws IOException {
     FakeFileSystem fileSystem = new FakeFileSystem();
     Path path = ZipTester.zippedFiles(fileSystem, fileNames);
-    return new FakeFile(path, inputStreamToBytes(fileSystem.openInputStream(path)));
+    return new FakeBlob(inputStreamToBytes(fileSystem.openInputStream(path)));
   }
 }

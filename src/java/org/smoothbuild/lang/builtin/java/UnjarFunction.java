@@ -15,6 +15,6 @@ public class UnjarFunction {
 
   @SmoothFunction(name = "unjar")
   public static SArray<SFile> execute(PluginApi pluginApi, Parameters params) {
-    return new Unjarer(pluginApi).unjarFile(params.blob());
+    return new Unjarer(pluginApi).unjar(params.blob());
   }
 }
