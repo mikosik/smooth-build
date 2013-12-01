@@ -1,12 +1,13 @@
 package org.smoothbuild.util;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.testory.Testory.given;
+import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 public class DuplicatesDetectorTest {
   String string1 = "string1";
@@ -19,8 +20,7 @@ public class DuplicatesDetectorTest {
   @Test
   public void initially_has_no_duplicates() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    when(duplicatesDetector.hasDuplicates());
-    thenReturned(false);
+    then(!duplicatesDetector.hasDuplicates());
   }
 
   @Test
@@ -33,9 +33,8 @@ public class DuplicatesDetectorTest {
   @Test
   public void has_no_duplicates_after_adding_first_element() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector.hasDuplicates());
-    thenReturned(false);
+    when(duplicatesDetector).add(string1);
+    then(!duplicatesDetector.hasDuplicates());
   }
 
   @Test
@@ -50,9 +49,8 @@ public class DuplicatesDetectorTest {
   public void has_duplicates_after_adding_element_twice() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
     given(duplicatesDetector).add(string1);
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector.hasDuplicates());
-    thenReturned(true);
+    when(duplicatesDetector).add(string1);
+    then(duplicatesDetector.hasDuplicates());
   }
 
   @Test
@@ -67,26 +65,23 @@ public class DuplicatesDetectorTest {
   public void has_no_duplicates_after_adding_two_different_elements() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
     given(duplicatesDetector).add(string1);
-    given(duplicatesDetector).add(string2);
-    when(duplicatesDetector.hasDuplicates());
-    thenReturned(false);
+    when(duplicatesDetector).add(string2);
+    then(!duplicatesDetector.hasDuplicates());
   }
 
   // getDuplicates()
 
   @Test
   public void get_duplicates_returns_empty_set_initially() throws Exception {
-    given(duplicatesDetector = new DuplicatesDetector<String>());
-    when(duplicatesDetector.getDuplicates());
-    thenReturned(Sets.newHashSet());
+    when(duplicatesDetector = new DuplicatesDetector<String>());
+    then(duplicatesDetector.getDuplicates(), empty());
   }
 
   @Test
   public void get_duplicates_returns_empty_set_when_one_element_has_been_added() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector.getDuplicates());
-    thenReturned(Sets.newHashSet());
+    when(duplicatesDetector).add(string1);
+    then(duplicatesDetector.getDuplicates(), empty());
   }
 
   @Test
@@ -94,18 +89,16 @@ public class DuplicatesDetectorTest {
       throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
     given(duplicatesDetector).add(string1);
-    given(duplicatesDetector).add(string2);
-    when(duplicatesDetector.getDuplicates());
-    thenReturned(Sets.newHashSet());
+    when(duplicatesDetector).add(string2);
+    then(duplicatesDetector.getDuplicates(), empty());
   }
 
   @Test
   public void get_duplicates_returns_set_with_element_that_has_been_added_twice() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
     given(duplicatesDetector).add(string1);
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector.getDuplicates());
-    thenReturned(Sets.newHashSet(string1));
+    when(duplicatesDetector).add(string1);
+    then(duplicatesDetector.getDuplicates(), containsInAnyOrder(string1));
   }
 
   @Test
@@ -119,7 +112,6 @@ public class DuplicatesDetectorTest {
     given(duplicatesDetector).add(string3);
     given(duplicatesDetector).add(string4);
 
-    when(duplicatesDetector.getDuplicates());
-    thenReturned(Sets.newHashSet(string1, string3));
+    then(duplicatesDetector.getDuplicates(), containsInAnyOrder(string1, string3));
   }
 }
