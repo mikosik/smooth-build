@@ -54,7 +54,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
 
     ScriptBuilder scriptBuilder = new ScriptBuilder();
     scriptBuilder.addLine("myString: 'abc' ;");
-    scriptBuilder.addLine("myBlob: file(" + path + ") | contentOf ;");
+    scriptBuilder.addLine("myBlob: file(" + path + ") | toBlob ;");
     scriptBuilder.addLine("run: [ myString, myBlob ] ;");
 
     script(scriptBuilder.build());
