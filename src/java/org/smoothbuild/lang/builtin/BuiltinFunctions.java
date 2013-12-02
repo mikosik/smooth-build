@@ -6,7 +6,6 @@ import org.smoothbuild.lang.builtin.file.ConcatenateFilesFunction;
 import org.smoothbuild.lang.builtin.file.FileFunction;
 import org.smoothbuild.lang.builtin.file.FilesFunction;
 import org.smoothbuild.lang.builtin.file.FilterFunction;
-import org.smoothbuild.lang.builtin.file.MergeFunction;
 import org.smoothbuild.lang.builtin.file.NewFileFunction;
 import org.smoothbuild.lang.builtin.file.ToBlobFunction;
 import org.smoothbuild.lang.builtin.java.JarFunction;
@@ -29,7 +28,6 @@ public class BuiltinFunctions {
     builder.add(ToBlobFunction.class);
     builder.add(ConcatenateFilesFunction.class);
     builder.add(FilterFunction.class);
-    builder.add(MergeFunction.class);
 
     // java related
     builder.add(JavacFunction.class);
