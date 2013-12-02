@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.builtin.file;
+package org.smoothbuild.base;
 
 import static org.smoothbuild.io.IoConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.cache.CacheModule.RESULTS_DIR;
