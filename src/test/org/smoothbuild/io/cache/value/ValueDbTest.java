@@ -1,5 +1,6 @@
 package org.smoothbuild.io.cache.value;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
@@ -13,6 +14,7 @@ import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.testory.Testory.given;
+import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -30,8 +32,10 @@ import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.lang.type.FakeBlob;
+import org.smoothbuild.testing.lang.type.FakeFile;
+import org.smoothbuild.testing.lang.type.FakeString;
 
-import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
 
 public class ValueDbTest {
@@ -85,57 +89,18 @@ public class ValueDbTest {
   // file array
 
   @Test
-  public void created_file_array_with_one_file_added_contains_one_file() throws Exception {
+  public void created_file_array_contains_file_that_was_added_to_it() throws Exception {
     given(file = valueDb.writeFile(path, bytes));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    when(Iterables.size(fileArray));
-    thenReturned(1);
+    then(fileArray, contains(new FakeFile(path, bytes)));
   }
 
   @Test
-  public void created_file_array_contains_file_with_path_of_file_that_was_added_to_it()
+  public void created_file_array_with_one_file_added_when_queried_by_hash_contains_that_file()
       throws Exception {
     given(file = valueDb.writeFile(path, bytes));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    when(fileArray.iterator().next().path());
-    thenReturned(path);
-  }
-
-  @Test
-  public void created_file_array_contains_file_with_content_of_file_that_was_added_to_it()
-      throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    when(inputStreamToBytes(fileArray.iterator().next().openInputStream()));
-    thenReturned(bytes);
-  }
-
-  @Test
-  public void created_file_array_with_one_file_added_when_queried_by_hash_contains_one_file()
-      throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    when(Iterables.size(valueDb.read(FILE_ARRAY, fileArray.hash())));
-    thenReturned(1);
-  }
-
-  @Test
-  public void created_file_array_when_queried_by_hash_contains_file_with_path_of_file_that_was_added_to_it()
-      throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    when(valueDb.read(FILE_ARRAY, fileArray.hash()).iterator().next().path());
-    thenReturned(path);
-  }
-
-  @Test
-  public void created_file_array_when_queried_by_hash_contains_file_with_content_of_file_that_was_added_to_it()
-      throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    when(inputStreamToBytes(valueDb.read(FILE_ARRAY, fileArray.hash()).iterator().next()
-        .openInputStream()));
-    thenReturned(bytes);
+    then(valueDb.read(FILE_ARRAY, fileArray.hash()), contains(new FakeFile(path, bytes)));
   }
 
   @Test
@@ -169,39 +134,18 @@ public class ValueDbTest {
   // blob array
 
   @Test
-  public void created_blob_array_with_one_blob_added_contains_one_blob() throws Exception {
+  public void created_blob_array_with_one_blob_added_contains_that_blob() throws Exception {
     given(blob = valueDb.writeBlob(bytes));
-    given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    when(Iterables.size(blobArray));
-    thenReturned(1);
+    when(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
+    then(blobArray, contains(new FakeBlob(bytes)));
   }
 
   @Test
-  public void created_blob_array_contains_blob_with_content_of_blob_that_was_added_to_it()
+  public void created_blob_array_with_one_blob_added_when_queried_by_hash_contains_that_blob()
       throws Exception {
     given(blob = valueDb.writeBlob(bytes));
-    given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    when(inputStreamToBytes(blobArray.iterator().next().openInputStream()));
-    thenReturned(bytes);
-  }
-
-  @Test
-  public void created_blob_array_with_one_blob_added_when_queried_by_hash_contains_one_blob()
-      throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    when(Iterables.size(valueDb.read(BLOB_ARRAY, blobArray.hash())));
-    thenReturned(1);
-  }
-
-  @Test
-  public void created_blob_array_when_queried_by_hash_contains_blob_with_content_of_blob_that_was_added_to_it()
-      throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    when(inputStreamToBytes(valueDb.read(BLOB_ARRAY, blobArray.hash()).iterator().next()
-        .openInputStream()));
-    thenReturned(bytes);
+    when(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
+    then(valueDb.read(BLOB_ARRAY, blobArray.hash()), contains(new FakeBlob(bytes)));
   }
 
   @Test
@@ -234,37 +178,18 @@ public class ValueDbTest {
   // string array
 
   @Test
-  public void created_string_array_with_one_string_added_contains_one_string() throws Exception {
+  public void created_string_array_with_one_string_added_contains_that_string() throws Exception {
     given(stringValue = valueDb.writeString(string));
-    given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    when(Iterables.size(stringArray));
-    thenReturned(1);
+    when(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
+    then(stringArray, contains(new FakeString(string)));
   }
 
   @Test
-  public void created_string_array_contains_string_that_was_added_to_it() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    when(stringArray.iterator().next().value());
-    thenReturned(string);
-  }
-
-  @Test
-  public void created_string_array_with_one_string_added_when_queried_by_hash_contains_one_string()
+  public void created_string_array_with_one_string_added_when_queried_by_hash_contains_that_string()
       throws Exception {
     given(stringValue = valueDb.writeString(string));
-    given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    when(Iterables.size(valueDb.read(STRING_ARRAY, stringArray.hash())));
-    thenReturned(1);
-  }
-
-  @Test
-  public void created_string_array_when_queried_by_hash_contains_string_that_was_added_to_it()
-      throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    when(valueDb.read(STRING_ARRAY, stringArray.hash()).iterator().next().value());
-    thenReturned(string);
+    when(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
+    then(valueDb.read(STRING_ARRAY, stringArray.hash()), contains(new FakeString(string)));
   }
 
   @Test
