@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.builtin;
 
+import org.smoothbuild.lang.builtin.blob.ConcatenateBlobsFunction;
 import org.smoothbuild.lang.builtin.compress.UnzipFunction;
 import org.smoothbuild.lang.builtin.compress.ZipFunction;
 import org.smoothbuild.lang.builtin.file.ConcatenateFilesFunction;
@@ -21,7 +22,11 @@ public class BuiltinFunctions {
 
   private static ImmutableList<Class<?>> createList() {
     Builder<Class<?>> builder = ImmutableList.builder();
-    // file related
+
+    // Blob related
+    builder.add(ConcatenateBlobsFunction.class);
+
+    // File related
     builder.add(FileFunction.class);
     builder.add(FilesFunction.class);
     builder.add(NewFileFunction.class);
