@@ -90,7 +90,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     builder.addLine("libraryClasses : [ file(path=" + libraryJavaFile + ") ] | javac ;");
     builder.addLine("libraryJar: libraryClasses | jar ;");
     builder.addLine("appClasses: [ file(path=" + appJavaFile + ") ] | javac(libs=[libraryJar]) ;");
-    builder.addLine("run: libraryClasses | merge(with=appClasses) ;");
+    builder.addLine("run: libraryClasses | concatenateFiles(with=appClasses) ;");
     this.script(builder.build());
 
     build("run");
