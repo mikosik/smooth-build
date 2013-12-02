@@ -53,9 +53,9 @@ public class STypes {
    * be used there.
    */
 
-  static final ImmutableSet<SType<?>> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  static final ImmutableSet<SType<?>> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING);
   static final ImmutableSet<SArrayType<?>> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY, BLOB_ARRAY,
-      FILE_ARRAY);
+      FILE_ARRAY, EMPTY_ARRAY);
 
   @SuppressWarnings("unchecked")
   static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
@@ -65,7 +65,7 @@ public class STypes {
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   @SuppressWarnings("unchecked")
   private static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
-      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
+      NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
 
   /*
    * Some of the set above converted to java types.

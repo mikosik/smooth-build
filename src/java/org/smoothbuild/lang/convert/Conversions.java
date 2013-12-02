@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.NOTHING;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 
@@ -48,6 +49,7 @@ public class Conversions {
     builder.put(STRING, Empty.typeToConverterMap());
     builder.put(BLOB, Empty.typeToConverterMap());
     builder.put(FILE, convertersMap(new FileToBlobConverter()));
+    builder.put(NOTHING, Empty.typeToConverterMap());
 
     builder.put(STRING_ARRAY, Empty.typeToConverterMap());
     builder.put(BLOB_ARRAY, Empty.typeToConverterMap());

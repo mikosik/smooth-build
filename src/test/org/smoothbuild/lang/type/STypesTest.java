@@ -55,12 +55,12 @@ public class STypesTest {
 
   @Test
   public void testBasicTypes() throws Exception {
-    assertThat(basicTypes()).containsExactly(STRING, BLOB, FILE);
+    assertThat(basicTypes()).containsExactly(STRING, BLOB, FILE, NOTHING);
   }
 
   @Test
   public void testArrayTypes() throws Exception {
-    assertThat(arrayTypes()).containsExactly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
+    assertThat(arrayTypes()).containsExactly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
   }
 
   @Test
@@ -118,6 +118,7 @@ public class STypesTest {
     assertThat(arrayTypeContaining(STRING)).isEqualTo(STRING_ARRAY);
     assertThat(arrayTypeContaining(BLOB)).isEqualTo(BLOB_ARRAY);
     assertThat(arrayTypeContaining(FILE)).isEqualTo(FILE_ARRAY);
+    assertThat(arrayTypeContaining(NOTHING)).isEqualTo(EMPTY_ARRAY);
   }
 
   private static TypeLiteral<?> type(Class<?> klass) {
