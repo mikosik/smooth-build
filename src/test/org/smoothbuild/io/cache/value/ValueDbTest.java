@@ -39,22 +39,30 @@ import org.smoothbuild.testing.lang.type.FakeString;
 import com.google.common.hash.HashCode;
 
 public class ValueDbTest {
-  byte[] bytes = new byte[] { 1, 2, 3, 4, 5, 6 };
-  byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
+  byte[] bytes = new byte[] { 1, 2, 3, 4 };
+  byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5 };
+  byte[] bytes3 = new byte[] { 1, 2, 3, 4, 5, 6 };
+  byte[] bytes4 = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
 
   SArray<SFile> fileArray;
   SArray<SFile> fileArray2;
 
   SFile file;
   SFile file2;
+  SFile file3;
+  SFile file4;
   Path path = path("my/path1");
   Path path2 = path("my/path2");
+  Path path3 = path("my/path3");
+  Path path4 = path("my/path4");
 
   SArray<SBlob> blobArray;
   SArray<SBlob> blobArray2;
 
   SBlob blob;
   SBlob blob2;
+  SBlob blob3;
+  SBlob blob4;
   SBlob blobRead;
 
   SArray<SString> stringArray;
@@ -62,9 +70,13 @@ public class ValueDbTest {
 
   SString stringValue;
   SString stringValue2;
+  SString stringValue3;
+  SString stringValue4;
   SString stringValueRead;
   String string = "a string";
   String string2 = "a string 2";
+  String string3 = "a string 3";
+  String string4 = "a string 4";
 
   ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
 
@@ -93,6 +105,19 @@ public class ValueDbTest {
     given(file = valueDb.writeFile(path, bytes));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
     then(fileArray, contains(new FakeFile(path, bytes)));
+  }
+
+  @Test
+  public void created_file_array_contains_all_files_that_were_added_to_it() throws Exception {
+    given(file = valueDb.writeFile(path, bytes));
+    given(file2 = valueDb.writeFile(path2, bytes2));
+    given(file3 = valueDb.writeFile(path3, bytes3));
+    given(file4 = valueDb.writeFile(path4, bytes4));
+
+    given(fileArray =
+        valueDb.arrayBuilder(FILE_ARRAY).add(file).add(file2).add(file3).add(file4).build());
+    then(fileArray, contains(new FakeFile(path, bytes), new FakeFile(path2, bytes2), new FakeFile(
+        path3, bytes3), new FakeFile(path4, bytes4)));
   }
 
   @Test
@@ -141,6 +166,18 @@ public class ValueDbTest {
   }
 
   @Test
+  public void created_blob_array_with_blobs_added_contains_all_blobs() throws Exception {
+    given(blob = valueDb.writeBlob(bytes));
+    given(blob2 = valueDb.writeBlob(bytes2));
+    given(blob3 = valueDb.writeBlob(bytes3));
+    given(blob4 = valueDb.writeBlob(bytes4));
+    when(blobArray =
+        valueDb.arrayBuilder(BLOB_ARRAY).add(blob).add(blob2).add(blob3).add(blob4).build());
+    then(blobArray, contains(new FakeBlob(bytes), new FakeBlob(bytes2), new FakeBlob(bytes3),
+        new FakeBlob(bytes4)));
+  }
+
+  @Test
   public void created_blob_array_with_one_blob_added_when_queried_by_hash_contains_that_blob()
       throws Exception {
     given(blob = valueDb.writeBlob(bytes));
@@ -182,6 +219,19 @@ public class ValueDbTest {
     given(stringValue = valueDb.writeString(string));
     when(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     then(stringArray, contains(new FakeString(string)));
+  }
+
+  @Test
+  public void created_string_array_with_strings_added_contains_all_strings() throws Exception {
+    given(stringValue = valueDb.writeString(string));
+    given(stringValue2 = valueDb.writeString(string2));
+    given(stringValue3 = valueDb.writeString(string3));
+    given(stringValue4 = valueDb.writeString(string4));
+    when(stringArray =
+        valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2).add(stringValue3)
+            .add(stringValue4).build());
+    then(stringArray, contains(new FakeString(string), new FakeString(string2), new FakeString(
+        string3), new FakeString(string4)));
   }
 
   @Test

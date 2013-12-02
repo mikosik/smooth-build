@@ -21,10 +21,8 @@ public class Marshaller {
   }
 
   public void write(List<? extends Hashed> elements) {
-    List<Hashed> sortedElements = HashedSorter.sort(elements);
-
-    write(sortedElements.size());
-    for (Hashed element : sortedElements) {
+    write(elements.size());
+    for (Hashed element : elements) {
       write(element.hash());
     }
   }
