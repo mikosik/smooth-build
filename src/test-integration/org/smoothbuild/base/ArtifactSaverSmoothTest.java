@@ -40,7 +40,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFile(path1, content1);
 
-    script(functionName + " : file(" + path1 + ") | contentOf ;");
+    script(functionName + " : file(" + path1 + ") | toBlob ;");
 
     // when
     build(functionName);
@@ -96,8 +96,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
 
     String functionName = "myFunction";
 
-    script(functionName + " : [ contentOf(file(" + path1 + ")) , contentOf(file(" + path2
-        + ")) ] ;");
+    script(functionName + " : [ toBlob(file(" + path1 + ")) , toBlob(file(" + path2 + ")) ] ;");
 
     // when
     build(functionName);

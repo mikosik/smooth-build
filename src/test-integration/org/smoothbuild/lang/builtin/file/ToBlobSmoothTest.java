@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
-public class ContentOfSmoothTest extends IntegrationTestCase {
+public class ToBlobSmoothTest extends IntegrationTestCase {
 
   @Test
   public void saveFile_pipe() throws IOException {
@@ -16,7 +16,7 @@ public class ContentOfSmoothTest extends IntegrationTestCase {
     String content = "file content";
     fileSystem.createFile(path, content);
 
-    script("run : file(" + path + ") | contentOf ;");
+    script("run : file(" + path + ") | toBlob ;");
 
     build("run");
 
