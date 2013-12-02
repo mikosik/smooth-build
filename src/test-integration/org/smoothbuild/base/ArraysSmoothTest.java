@@ -8,8 +8,10 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
+import org.smoothbuild.testing.parse.ScriptBuilder;
 
 public class ArraysSmoothTest extends IntegrationTestCase {
   @Test
@@ -22,6 +24,46 @@ public class ArraysSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.assertOnlyProblem(SyntaxError.class);
+  }
+
+  @Test
+  public void array_containing_string_and_file_is_forbidden() throws Exception {
+    // given
+    Path path = path("some/dir");
+    fileSystem.createDir(path);
+
+    ScriptBuilder scriptBuilder = new ScriptBuilder();
+    scriptBuilder.addLine("myString: 'abc' ;");
+    scriptBuilder.addLine("myFile: file(" + path + ") ;");
+    scriptBuilder.addLine("run: [ myString, myFile ] ;");
+
+    script(scriptBuilder.build());
+
+    // when
+    build("run");
+
+    // then
+    userConsole.assertOnlyProblem(IncompatibleArrayElemsError.class);
+  }
+
+  @Test
+  public void array_containing_string_and_blob_is_forbidden() throws Exception {
+    // given
+    Path path = path("some/dir");
+    fileSystem.createDir(path);
+
+    ScriptBuilder scriptBuilder = new ScriptBuilder();
+    scriptBuilder.addLine("myString: 'abc' ;");
+    scriptBuilder.addLine("myBlob: file(" + path + ") | contentOf ;");
+    scriptBuilder.addLine("run: [ myString, myBlob ] ;");
+
+    script(scriptBuilder.build());
+
+    // when
+    build("run");
+
+    // then
+    userConsole.assertOnlyProblem(IncompatibleArrayElemsError.class);
   }
 
   @Test
