@@ -19,7 +19,7 @@ public class DuplicatesDetectorTest {
 
   @Test
   public void initially_has_no_duplicates() throws Exception {
-    given(duplicatesDetector = new DuplicatesDetector<String>());
+    when(duplicatesDetector = new DuplicatesDetector<String>());
     then(!duplicatesDetector.hasDuplicates());
   }
 
