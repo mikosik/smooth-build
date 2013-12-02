@@ -4,6 +4,8 @@ Change Log
 Version 0.6.0 (2013.12.02)
 --------------------------
 
+ * added concatenateFiles, concatenateBlobs smooth functions
+ * removed merge smooth function
  * added toBlob smooth function
  * added automatic conversions File -> Blob, and File[] -> Blob[]
  * replaced collection types (File*, String*, Blob*) with array types (File[], String[], Blob[])
