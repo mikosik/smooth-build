@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-Version 0.6.0 (??????????)
+Version 0.6.0 (2013.12.02)
 --------------------------
 
+ * added toBlob smooth function
+ * added automatic conversions File -> Blob, and File[] -> Blob[]
+ * replaced collection types (File*, String*, Blob*) with array types (File[], String[], Blob[])
+ * added Blob type
  * allowed dashes ('-') in function names
 
 Version 0.5.0 (2013.11.16)
