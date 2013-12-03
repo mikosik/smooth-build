@@ -18,9 +18,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
-    StringBuilder builder = new StringBuilder();
-    builder.append("run : [ file(" + path1 + "), file(" + path2 + "), ];\n");
-    script(builder.toString());
+    script("run : [ file(" + path1 + "), file(" + path2 + "), ];");
 
     // when
     build("run");
@@ -50,9 +48,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
-    StringBuilder builder = new StringBuilder();
-    builder.append("run : [ file(" + path1 + "), file(" + path2 + ") ];\n");
-    script(builder.toString());
+    script("run : [ file(" + path1 + "), file(" + path2 + ") ];");
 
     // when
     build("run");
@@ -69,9 +65,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFileContainingItsPath(path1);
 
-    StringBuilder builder = new StringBuilder();
-    builder.append("run : [ file(" + path1 + ") ];\n");
-    script(builder.toString());
+    script("run : [ file(" + path1 + ") ];");
 
     // when
     build("run");
@@ -85,9 +79,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
   @Test
   public void saveEmptyFileArray() throws IOException {
     // given
-    StringBuilder builder = new StringBuilder();
-    builder.append("run : [ ];\n");
-    script(builder.toString());
+    script("run : [ ];");
 
     // when
     build("run");
