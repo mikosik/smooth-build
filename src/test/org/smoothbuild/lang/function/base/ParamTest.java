@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.testing.EqualsTester;
 
@@ -103,10 +104,10 @@ public class ParamTest {
 
     String actual = paramsToString(params);
 
-    StringBuilder builder = new StringBuilder();
-    builder.append("  String: param1               \n");
-    builder.append("  File[]: param3               \n");
-    builder.append("  String: param2-with-very-long\n");
-    assertThat(actual).isEqualTo(builder.toString());
+    LineBuilder builder = new LineBuilder();
+    builder.addLine("  String: param1               ");
+    builder.addLine("  File[]: param3               ");
+    builder.addLine("  String: param2-with-very-long");
+    assertThat(actual).isEqualTo(builder.build());
   }
 }
