@@ -15,6 +15,7 @@ import org.smoothbuild.lang.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
+import org.smoothbuild.util.LineBuilder;
 
 public class JavacSmoothTest extends IntegrationTestCase {
   MyClassLoader classLoader = new MyClassLoader();
@@ -34,15 +35,15 @@ public class JavacSmoothTest extends IntegrationTestCase {
   public void compileOneFile() throws Exception {
     String returnedString = "returned string";
 
-    StringBuilder builder = new StringBuilder();
-    builder.append("public class MyClass {");
-    builder.append("  public static String myMethod() {");
-    builder.append("    return \"" + returnedString + "\";");
-    builder.append("  }");
-    builder.append("}");
+    LineBuilder builder = new LineBuilder();
+    builder.addLine("public class MyClass {");
+    builder.addLine("  public static String myMethod() {");
+    builder.addLine("    return \"" + returnedString + "\";");
+    builder.addLine("  }");
+    builder.addLine("}");
 
     Path path = path("MyClass.java");
-    fileSystem.createFile(path, builder.toString());
+    fileSystem.createFile(path, builder.build());
 
     script("run : [ file(path=" + path + ") ] | javac ;");
     build("run");
@@ -64,26 +65,26 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path appJavaFile = appSourceDir.append(path("MyClass2.java"));
 
     {
-      StringBuilder builder = new StringBuilder();
-      builder.append("package library;");
-      builder.append("public class LibraryClass {");
-      builder.append("  public static int add(int a, int b) {");
-      builder.append("    return a + b;");
-      builder.append("  }");
-      builder.append("}");
+      LineBuilder builder = new LineBuilder();
+      builder.addLine("package library;");
+      builder.addLine("public class LibraryClass {");
+      builder.addLine("  public static int add(int a, int b) {");
+      builder.addLine("    return a + b;");
+      builder.addLine("  }");
+      builder.addLine("}");
 
-      fileSystem.createFile(libraryJavaFile, builder.toString());
+      fileSystem.createFile(libraryJavaFile, builder.build());
     }
     {
-      StringBuilder builder = new StringBuilder();
-      builder.append("import library.LibraryClass;");
-      builder.append("public class MyClass2 {");
-      builder.append("  public static String myMethod() {");
-      builder.append("    return Integer.toString(LibraryClass.add(2, 3));");
-      builder.append("  }");
-      builder.append("}");
+      LineBuilder builder = new LineBuilder();
+      builder.addLine("import library.LibraryClass;");
+      builder.addLine("public class MyClass2 {");
+      builder.addLine("  public static String myMethod() {");
+      builder.addLine("    return Integer.toString(LibraryClass.add(2, 3));");
+      builder.addLine("  }");
+      builder.addLine("}");
 
-      fileSystem.createFile(appJavaFile, builder.toString());
+      fileSystem.createFile(appJavaFile, builder.build());
     }
 
     ScriptBuilder builder = new ScriptBuilder();
