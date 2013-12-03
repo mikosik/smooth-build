@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
+import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -138,13 +139,13 @@ public class DependencyStackTest {
 
     CycleInCallGraphError error = dependencyStack.createCycleError();
 
-    StringBuilder builder = new StringBuilder();
-    builder.append("Function call graph contains cycle:\n");
-    builder.append(name2.value() + codeLocation(2) + " -> " + name3.value() + "\n");
-    builder.append(name3.value() + codeLocation(3) + " -> " + name4.value() + "\n");
-    builder.append(name4.value() + codeLocation(4) + " -> " + name2.value() + "\n");
+    LineBuilder builder = new LineBuilder();
+    builder.addLine("Function call graph contains cycle:");
+    builder.addLine(name2.value() + codeLocation(2) + " -> " + name3.value());
+    builder.addLine(name3.value() + codeLocation(3) + " -> " + name4.value());
+    builder.addLine(name4.value() + codeLocation(4) + " -> " + name2.value());
 
-    assertThat(error.message()).isEqualTo(builder.toString());
+    assertThat(error.message()).isEqualTo(builder.build());
   }
 
   @Test
@@ -154,11 +155,11 @@ public class DependencyStackTest {
 
     CycleInCallGraphError error = dependencyStack.createCycleError();
 
-    StringBuilder builder = new StringBuilder();
-    builder.append("Function call graph contains cycle:\n");
-    builder.append(name2.value() + codeLocation(2) + " -> " + name2.value() + "\n");
+    LineBuilder builder = new LineBuilder();
+    builder.addLine("Function call graph contains cycle:");
+    builder.addLine(name2.value() + codeLocation(2) + " -> " + name2.value());
 
-    assertThat(error.message()).isEqualTo(builder.toString());
+    assertThat(error.message()).isEqualTo(builder.build());
   }
 
   private DependencyStackElem elem(Name from, Name to, int location) {
