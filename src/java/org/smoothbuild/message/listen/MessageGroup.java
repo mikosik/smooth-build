@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageStats;
+import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.Lists;
 
@@ -66,11 +67,10 @@ public class MessageGroup implements Iterable<Message> {
 
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
+    LineBuilder builder = new LineBuilder();
     for (Message message : messages) {
-      builder.append(message.toString());
-      builder.append("\n");
+      builder.addLine(message.toString());
     }
-    return builder.toString();
+    return builder.build();
   }
 }
