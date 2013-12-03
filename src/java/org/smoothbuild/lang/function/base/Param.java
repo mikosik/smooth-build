@@ -8,6 +8,7 @@ import static org.smoothbuild.lang.type.STypes.allowedForParam;
 import java.util.Set;
 
 import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.util.LineBuilder;
 
 public class Param {
   private final SType<?> type;
@@ -76,11 +77,11 @@ public class Param {
     int typeLength = longestParamType(params);
     int nameLength = longestParamName(params);
 
-    StringBuilder builder = new StringBuilder();
+    LineBuilder builder = new LineBuilder();
     for (Param param : params) {
-      builder.append("  " + param.toPaddedString(typeLength, nameLength) + "\n");
+      builder.addLine("  " + param.toPaddedString(typeLength, nameLength));
     }
-    return builder.toString();
+    return builder.build();
   }
 
   private static int longestParamType(Set<Param> params) {
