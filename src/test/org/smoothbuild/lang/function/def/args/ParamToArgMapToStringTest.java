@@ -13,6 +13,7 @@ import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.testing.message.FakeCodeLocation;
+import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -34,12 +35,12 @@ public class ParamToArgMapToStringTest {
 
     // then
     String l = new FakeCodeLocation().toString();
-    StringBuilder expected = new StringBuilder();
-    expected.append("  String: name1-that-is-long <- String: name4              #1    " + l + "\n");
-    expected.append("  String: name2              <- String: name5              #1234 " + l + "\n");
-    expected.append("  File  : name3              <- File  : name6-that-is-long #7    " + l + "\n");
+    LineBuilder expected = new LineBuilder();
+    expected.addLine("  String: name1-that-is-long <- String: name4              #1    " + l);
+    expected.addLine("  String: name2              <- String: name5              #1234 " + l);
+    expected.addLine("  File  : name3              <- File  : name6-that-is-long #7    " + l);
 
-    assertThat(actual).isEqualTo(expected.toString());
+    assertThat(actual).isEqualTo(expected.build());
   }
 
   private static Arg arg(int number, SType<?> type, String name) {
