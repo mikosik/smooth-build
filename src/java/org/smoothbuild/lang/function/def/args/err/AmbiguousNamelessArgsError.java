@@ -12,6 +12,7 @@ import org.smoothbuild.lang.function.def.args.Arg;
 import org.smoothbuild.lang.function.def.args.ParamToArgMapToString;
 import org.smoothbuild.lang.function.def.args.TypedParamsPool;
 import org.smoothbuild.message.base.CodeMessage;
+import org.smoothbuild.util.LineBuilder;
 
 public class AmbiguousNamelessArgsError extends CodeMessage {
 
@@ -52,11 +53,11 @@ public class AmbiguousNamelessArgsError extends CodeMessage {
     int nameLength = longestArgName(args);
     int numberLength = longestArgNumber(args);
 
-    StringBuilder builder = new StringBuilder();
+    LineBuilder builder = new LineBuilder();
     for (Arg arg : args) {
-      builder.append("  " + arg.toPaddedString(typeLength, nameLength, numberLength) + "\n");
+      builder.addLine("  " + arg.toPaddedString(typeLength, nameLength, numberLength));
     }
-    return builder.toString();
+    return builder.build();
   }
 
   private static int longestArgType(List<Arg> args) {
