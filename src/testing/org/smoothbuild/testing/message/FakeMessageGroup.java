@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.Lists;
 
@@ -50,14 +51,13 @@ public class FakeMessageGroup extends MessageGroup {
 
   public void assertNoProblems() {
     if (!problems.isEmpty()) {
-      StringBuilder builder = new StringBuilder("Expected zero problems, but got:\n");
+      LineBuilder builder = new LineBuilder();
+      builder.addLine("Expected zero problems, but got:");
       for (Message message : problems) {
-        builder.append(message.getClass().getCanonicalName());
-        builder.append("\n");
-        builder.append(message.toString());
-        builder.append("\n");
+        builder.addLine(message.getClass().getCanonicalName());
+        builder.addLine(message.toString());
       }
-      throw new AssertionError(builder.toString());
+      throw new AssertionError(builder.build());
     }
   }
 }
