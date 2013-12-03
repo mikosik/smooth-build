@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.util.LineBuilder;
 
 public class ParamToArgMapToString {
   public static String toString(Map<Param, Arg> paramToArgMap) {
@@ -13,15 +14,15 @@ public class ParamToArgMapToString {
     int maxArgType = calculateLongestArgType(paramToArgMap.values());
     int maxArgName = calculateLongestArgName(paramToArgMap.values());
     int maxNumber = calculateLongestArgNumber(paramToArgMap.values());
-    StringBuilder builder = new StringBuilder();
 
+    LineBuilder builder = new LineBuilder();
     for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
       String paramPart = entry.getKey().toPaddedString(maxParamType, maxParamName);
       Arg arg = entry.getValue();
       String argPart = arg.toPaddedString(maxArgType, maxArgName, maxNumber);
-      builder.append("  " + paramPart + " <- " + argPart + "\n");
+      builder.addLine("  " + paramPart + " <- " + argPart);
     }
-    return builder.toString();
+    return builder.build();
   }
 
   private static int calculateLongestParamType(Set<Param> params) {
