@@ -6,6 +6,7 @@ import static org.smoothbuild.message.base.MessageType.ERROR;
 import java.io.IOException;
 
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.base.Throwables;
 
@@ -23,17 +24,17 @@ public class FileSystemError extends Message {
   }
 
   private static String createMessage(Throwable e) {
-    StringBuilder b = new StringBuilder();
+    LineBuilder b = new LineBuilder();
 
-    b.append("Accessing file system caused error:\n");
-    b.append("It was probably caused by:\n");
-    b.append(" - some other process (maybe other instance of Smooth) changing content of "
-        + SMOOTH_DIR + " dir\n");
-    b.append(" - bug in plugin implementation\n");
-    b.append(" - bug in Smooth tool or one of builtin functions\n");
-    b.append("Full java stacktrace below:\n");
-    b.append(Throwables.getStackTraceAsString(e));
+    b.addLine("Accessing file system caused error:");
+    b.addLine("It was probably caused by:");
+    b.addLine(" - some other process (maybe other instance of Smooth) changing content of "
+        + SMOOTH_DIR + " dir");
+    b.addLine(" - bug in plugin implementation");
+    b.addLine(" - bug in Smooth tool or one of builtin functions");
+    b.addLine("Full java stacktrace below:");
+    b.add(Throwables.getStackTraceAsString(e));
 
-    return b.toString();
+    return b.build();
   }
 }
