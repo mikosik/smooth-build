@@ -5,6 +5,7 @@ import static org.smoothbuild.message.base.MessageType.ERROR;
 import java.util.Set;
 
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.util.LineBuilder;
 
 public class IllegalTargetParamError extends Message {
   public IllegalTargetParamError(String value, Set<String> allowed) {
@@ -12,11 +13,11 @@ public class IllegalTargetParamError extends Message {
   }
 
   private static String createMessage(String value, Set<String> allowed) {
-    StringBuilder builder = new StringBuilder();
+    LineBuilder builder = new LineBuilder();
 
-    builder.append("Parameter target has illegal value = '" + value + "'.\n");
-    builder.append("Only following values are allowed " + allowed);
+    builder.addLine("Parameter target has illegal value = '" + value + "'.");
+    builder.add("Only following values are allowed " + allowed);
 
-    return builder.toString();
+    return builder.build();
   }
 }
