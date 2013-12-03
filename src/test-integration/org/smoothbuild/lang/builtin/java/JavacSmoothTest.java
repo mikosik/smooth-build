@@ -107,6 +107,17 @@ public class JavacSmoothTest extends IntegrationTestCase {
   }
 
   @Test
+  public void duplicate_java_files_cause_error() throws Exception {
+    Path path = path("MyClass.java");
+    fileSystem.createFile(path, "public class MyClass {}");
+
+    script("run : [ file(" + path + "), file(" + path + ") ] | javac ;");
+    build("run");
+
+    userConsole.assertOnlyProblem(JavaCompilerMessage.class);
+  }
+
+  @Test
   public void illegalSourceParamCausesError() throws Exception {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
