@@ -1,5 +1,6 @@
 package org.smoothbuild.util;
 
+import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.when;
 
@@ -25,7 +26,7 @@ public class LineBuilderTest {
 
   @Test
   public void build_returns_all_added_strings() throws Exception {
-    when(lineBuilder).add(string);
+    given(lineBuilder).add(string);
     when(lineBuilder).add(string2);
     thenEqual(lineBuilder.build(), string + string2);
   }
@@ -38,9 +39,8 @@ public class LineBuilderTest {
 
   @Test
   public void build_returns_added_lines_with_new_line_appended() throws Exception {
-    when(lineBuilder).addLine(string);
+    given(lineBuilder).addLine(string);
     when(lineBuilder).addLine(string2);
-
     thenEqual(lineBuilder.build(), string + "\n" + string2 + "\n");
   }
 }
