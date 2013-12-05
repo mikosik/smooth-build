@@ -14,6 +14,9 @@ import org.smoothbuild.testing.parse.ScriptBuilder;
 // TODO
 @Ignore("For strange reasons this test fails when run by ant")
 public class JunitSmoothTest extends IntegrationTestCase {
+  private static final String FAILING_TEST_CLASS = "MyClassFailingTest";
+  private static final String SUCCESS_TEST_CLASS = "MyClassTest";
+
   Path srcPath = path("src");
   Path fakeJunitPath = path("junit");
 
@@ -39,12 +42,29 @@ public class JunitSmoothTest extends IntegrationTestCase {
     userConsole.assertOnlyProblem(JunitTestFailedError.class);
   }
 
+  @Test
+  public void only_test_matching_pattern_are_executed() throws Exception {
+    createTestAnnotation();
+    createSuccessfulTest();
+    createFailingTest();
+
+    script(createScript(SUCCESS_TEST_CLASS));
+
+    build("run");
+    userConsole.assertNoProblems();
+  }
+
   private String createScript() {
+    return createScript(null);
+  }
+
+  private String createScript(String pattern) {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("sources: files(" + srcPath + ");");
     builder.addLine("fakeJunitJar: files(" + fakeJunitPath + ") | javac | jar;");
     builder.addLine("jarFile: sources | javac(libs=[fakeJunitJar]) | jar;");
-    builder.addLine("run: junit(libs=[jarFile]);");
+    String include = pattern == null ? "" : ", include='" + pattern + "'";
+    builder.addLine("run: junit(libs=[jarFile]" + include + ");");
     String script = builder.build();
     return script;
   }
@@ -79,7 +99,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
 
   private void createSuccessfulTest() throws IOException {
     ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("public class MyClassTest {");
+    builder.addLine("public class " + SUCCESS_TEST_CLASS + " {");
     builder.addLine("  @org.junit.Test");
     builder.addLine("  public void testMyMethod() {");
     builder.addLine("  }");
@@ -92,7 +112,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
 
   private void createFailingTest() throws IOException {
     ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("public class MyClassFailingTest {");
+    builder.addLine("public class " + FAILING_TEST_CLASS + " {");
     builder.addLine("  @org.junit.Test");
     builder.addLine("  public void testMyMethod() {");
     builder.addLine("    throw new AssertionError();");
