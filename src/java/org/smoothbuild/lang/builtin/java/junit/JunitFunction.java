@@ -13,6 +13,8 @@ import org.junit.runner.notification.Failure;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.match.IllegalPathPatternException;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathPatternError;
+import org.smoothbuild.lang.builtin.java.junit.err.JunitTestFailedError;
+import org.smoothbuild.lang.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
@@ -58,9 +60,11 @@ public class JunitFunction {
       JUnitCore jUnitCore = new JUnitCore();
 
       Predicate<Path> filter = createFilter();
+      int testCount = 0;
       for (String binaryName : binaryNameToClassFile.keySet()) {
         Path filePath = binaryNameToClassFile.get(binaryName).path();
         if (filter.apply(filePath)) {
+          testCount++;
           Class<?> testClass = loadClass(classLoader, binaryName);
           Result result = jUnitCore.run(testClass);
           if (!result.wasSuccessful()) {
@@ -70,6 +74,9 @@ public class JunitFunction {
             return pluginApi.string("FAILURE");
           }
         }
+      }
+      if (testCount == 0) {
+        pluginApi.report(new NoJunitTestFoundWarning());
       }
       return pluginApi.string("SUCCESS");
     }
