@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.builtin.java.junit;
+package org.smoothbuild.lang.builtin.java.junit.err;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 

@@ -7,7 +7,8 @@ import java.io.IOException;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.builtin.java.junit.JunitTestFailedError;
+import org.smoothbuild.lang.builtin.java.junit.err.JunitTestFailedError;
+import org.smoothbuild.lang.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
@@ -21,7 +22,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
   Path fakeJunitPath = path("junit");
 
   @Test
-  public void runSuccessfulTest() throws Exception {
+  public void junit_function_succeeds_when_all_junit_tests_succeed() throws Exception {
     createTestAnnotation();
     createSuccessfulTest();
 
@@ -32,7 +33,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void runFailingTest() throws Exception {
+  public void junit_function_fails_when_junit_test_fails() throws Exception {
     createTestAnnotation();
     createFailingTest();
 
@@ -40,6 +41,18 @@ public class JunitSmoothTest extends IntegrationTestCase {
 
     build("run");
     userConsole.messageGroup().assertContainsOnly(JunitTestFailedError.class);
+  }
+
+  @Test
+  public void waring_is_reported_when_no_test_is_found() throws Exception {
+    createTestAnnotation();
+    fileSystem.createDir(srcPath);
+
+    script(createScript());
+
+    build("run");
+    userConsole.messageGroup().assertNoProblems();
+    userConsole.messageGroup().assertContains(NoJunitTestFoundWarning.class);
   }
 
   @Test
