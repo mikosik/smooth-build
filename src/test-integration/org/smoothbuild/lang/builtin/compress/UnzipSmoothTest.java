@@ -22,7 +22,7 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
 
     Path dirPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(dirPath, path1);

@@ -23,7 +23,7 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
 
     Path artifactPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(artifactPath, path1);

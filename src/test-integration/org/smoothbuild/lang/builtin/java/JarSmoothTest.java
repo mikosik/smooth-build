@@ -29,7 +29,7 @@ public class JarSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;

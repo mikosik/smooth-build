@@ -15,6 +15,6 @@ public class ParameterSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
   }
 }

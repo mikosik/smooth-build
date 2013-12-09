@@ -24,7 +24,7 @@ public class FakeUserConsole extends UserConsole {
     messageGroup.report(message);
   }
 
-  public FakeMessageGroup messageGroup() {
+  public FakeMessageGroup messages() {
     return messageGroup;
   }
 }

@@ -26,7 +26,7 @@ public class ConcatenateBlobsSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContains(artifactPath.append(path("0")), path1.value());
     fileSystem.assertFileContains(artifactPath.append(path("1")), path2.value());

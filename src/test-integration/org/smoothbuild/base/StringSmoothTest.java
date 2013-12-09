@@ -17,7 +17,7 @@ public class StringSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
     fileSystem.assertFileContains(RESULTS_PATH.append(path("run")), "\"");
   }
 
@@ -30,7 +30,7 @@ public class StringSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
     fileSystem.assertFileContains(RESULTS_PATH.append(path("run")), "\\");
   }
 }

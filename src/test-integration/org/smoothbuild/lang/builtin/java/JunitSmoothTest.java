@@ -29,7 +29,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     script(createScript());
 
     build("run");
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
   }
 
   @Test
@@ -40,7 +40,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     script(createScript());
 
     build("run");
-    userConsole.messageGroup().assertContainsOnly(JunitTestFailedError.class);
+    userConsole.messages().assertContainsOnly(JunitTestFailedError.class);
   }
 
   @Test
@@ -51,8 +51,8 @@ public class JunitSmoothTest extends IntegrationTestCase {
     script(createScript());
 
     build("run");
-    userConsole.messageGroup().assertNoProblems();
-    userConsole.messageGroup().assertContains(NoJunitTestFoundWarning.class);
+    userConsole.messages().assertNoProblems();
+    userConsole.messages().assertContains(NoJunitTestFoundWarning.class);
   }
 
   @Test
@@ -64,7 +64,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     script(createScript(SUCCESS_TEST_CLASS));
 
     build("run");
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
   }
 
   private String createScript() {
