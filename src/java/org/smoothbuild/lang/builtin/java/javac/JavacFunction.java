@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
+import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import org.smoothbuild.lang.builtin.java.javac.err.CompilerFailedWithoutDiagnost
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.NoCompilerAvailableError;
+import org.smoothbuild.lang.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
@@ -32,6 +34,7 @@ import org.smoothbuild.task.exec.PluginApiImpl;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
@@ -76,7 +79,7 @@ public class JavacFunction {
       return compile(params.sources());
     }
 
-    public SArray<SFile> compile(Iterable<SFile> files) {
+    public SArray<SFile> compile(SArray<SFile> files) {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
@@ -86,6 +89,14 @@ public class JavacFunction {
 
       try {
         Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files);
+
+        /*
+         * Java compiler fails miserably when there's no java files.
+         */
+        if (Iterables.isEmpty(inputSourceFiles)) {
+          pluginApi.report(new NoJavaSourceFilesFoundWarning());
+          return pluginApi.arrayBuilder(FILE_ARRAY).build();
+        }
 
         // run compilation task
         CompilationTask task =

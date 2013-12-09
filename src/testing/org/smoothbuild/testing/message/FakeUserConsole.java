@@ -28,6 +28,10 @@ public class FakeUserConsole extends UserConsole {
     messageGroup.assertOnlyProblem(klass);
   }
 
+  public void assertOnlyInfo(Class<? extends Message> klass) {
+    messageGroup.assertOnlyInfo(klass);
+  }
+
   public void assertNoProblems() {
     messageGroup.assertNoProblems();
   }
