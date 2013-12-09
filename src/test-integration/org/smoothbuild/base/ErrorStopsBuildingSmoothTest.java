@@ -82,7 +82,7 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertOnlyProblem(Message.class);
+    userConsole.messageGroup().assertOnlyProblem(Message.class);
     verifyZeroInteractions(normalInvoker);
   }
 

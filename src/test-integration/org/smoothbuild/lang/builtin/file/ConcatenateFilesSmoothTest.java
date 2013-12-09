@@ -26,7 +26,7 @@ public class ConcatenateFilesSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(artifactPath, path1);
     fileSystem.assertFileContainsItsPath(artifactPath, path2);

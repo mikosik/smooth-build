@@ -20,7 +20,7 @@ public class NewFileSmoothTest extends IntegrationTestCase {
 
     build("run");
 
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContains(artifactPath, content);
   }

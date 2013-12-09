@@ -29,7 +29,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac ;");
     build("run");
 
-    userConsole.assertOnlyProblem(JavaCompilerMessage.class);
+    userConsole.messageGroup().assertOnlyProblem(JavaCompilerMessage.class);
   }
 
   @Test
@@ -37,7 +37,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ ] | javac ;");
     build("run");
 
-    userConsole.assertOnlyInfo(NoJavaSourceFilesFoundWarning.class);
+    userConsole.messageGroup().assertOnlyInfo(NoJavaSourceFilesFoundWarning.class);
   }
 
   @Test
@@ -57,7 +57,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac ;");
     build("run");
 
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
 
     Path artifactPath = RESULTS_PATH.append(path("run"));
     Path classFile = artifactPath.append(path("MyClass.class"));
@@ -109,7 +109,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path libClassFile = artifactPath.append(path("library/LibraryClass.class"));
     Path appClassFile = artifactPath.append(path("MyClass2.class"));
 
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     loadClass(byteCode(libClassFile));
     String method = "myMethod";
     Object result = invoke(appClassFile, method);
@@ -124,7 +124,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(" + path + "), file(" + path + ") ] | javac ;");
     build("run");
 
-    userConsole.assertOnlyProblem(JavaCompilerMessage.class);
+    userConsole.messageGroup().assertOnlyProblem(JavaCompilerMessage.class);
   }
 
   @Test
@@ -135,7 +135,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
     build("run");
 
-    userConsole.assertOnlyProblem(IllegalSourceParamError.class);
+    userConsole.messageGroup().assertOnlyProblem(IllegalSourceParamError.class);
   }
 
   @Test
@@ -146,7 +146,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
     build("run");
 
-    userConsole.assertOnlyProblem(IllegalTargetParamError.class);
+    userConsole.messageGroup().assertOnlyProblem(IllegalTargetParamError.class);
   }
 
   @Test
@@ -157,7 +157,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
     build("run");
 
-    userConsole.assertOnlyProblem(JavaCompilerMessage.class);
+    userConsole.messageGroup().assertOnlyProblem(JavaCompilerMessage.class);
   }
 
   private Object invoke(Path appClassFile, String method) throws IOException,

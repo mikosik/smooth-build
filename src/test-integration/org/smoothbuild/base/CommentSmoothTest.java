@@ -19,7 +19,7 @@ public class CommentSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
   }
 
   @Test
@@ -31,6 +31,6 @@ public class CommentSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
   }
 }
