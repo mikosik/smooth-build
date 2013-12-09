@@ -13,6 +13,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.JavaCompilerMessage;
+import org.smoothbuild.lang.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 import org.smoothbuild.util.LineBuilder;
@@ -29,6 +30,14 @@ public class JavacSmoothTest extends IntegrationTestCase {
     build("run");
 
     userConsole.assertOnlyProblem(JavaCompilerMessage.class);
+  }
+
+  @Test
+  public void compileZeroFiles() throws Exception {
+    script("run : [ ] | javac ;");
+    build("run");
+
+    userConsole.assertOnlyInfo(NoJavaSourceFilesFoundWarning.class);
   }
 
   @Test
