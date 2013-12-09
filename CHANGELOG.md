@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 0.7.0 (??????????)
+--------------------------
+
+ * added 'include' param to junit function
+ * 'junit' function reports warning when no test is found
+
 Version 0.6.0 (2013.12.02)
 --------------------------
 
