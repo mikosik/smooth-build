@@ -23,7 +23,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertContainsOnly(IllegalPathPatternError.class);
+    userConsole.messages().assertContainsOnly(IllegalPathPatternError.class);
   }
 
   @Test
@@ -125,7 +125,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path("run"));
     for (String path : excluded) {
       assertThat(fileSystem.pathState(artifactPath.append(path(path)))).isEqualTo(NOTHING);

@@ -20,7 +20,7 @@ public class ToBlobSmoothTest extends IntegrationTestCase {
 
     build("run");
 
-    userConsole.messageGroup().assertNoProblems();
+    userConsole.messages().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContains(artifactPath, content);
   }
