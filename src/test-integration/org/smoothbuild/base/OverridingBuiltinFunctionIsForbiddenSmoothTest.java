@@ -20,6 +20,6 @@ public class OverridingBuiltinFunctionIsForbiddenSmoothTest extends IntegrationT
     build("run");
 
     // then
-    userConsole.messageGroup().assertOnlyProblem(OverridenBuiltinFunctionError.class);
+    userConsole.messageGroup().assertContainsOnly(OverridenBuiltinFunctionError.class);
   }
 }

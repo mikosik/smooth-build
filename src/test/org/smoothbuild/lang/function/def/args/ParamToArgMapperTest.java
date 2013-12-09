@@ -108,7 +108,7 @@ public class ParamToArgMapperTest {
     createMapping(params(p1), list(a1, a2));
 
     // then
-    messages.assertOnlyProblem(DuplicateArgNameError.class);
+    messages.assertContainsOnly(DuplicateArgNameError.class);
   }
 
   @Test
@@ -122,7 +122,7 @@ public class ParamToArgMapperTest {
     createMapping(params(p1), list(a1));
 
     // then
-    messages.assertOnlyProblem(UnknownParamNameError.class);
+    messages.assertContainsOnly(UnknownParamNameError.class);
   }
 
   // basic types
@@ -201,7 +201,7 @@ public class ParamToArgMapperTest {
     createMapping(params(p1), list(a1));
 
     // then
-    messages.assertOnlyProblem(TypeMismatchError.class);
+    messages.assertContainsOnly(TypeMismatchError.class);
   }
 
   @Test
@@ -513,7 +513,7 @@ public class ParamToArgMapperTest {
     createMapping(params(p1, p2), list(a1));
 
     // then
-    messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
+    messages.assertContainsOnly(AmbiguousNamelessArgsError.class);
   }
 
   // basic types
@@ -593,7 +593,7 @@ public class ParamToArgMapperTest {
     createMapping(params(p1), list(a1));
 
     // then
-    messages.assertOnlyProblem(AmbiguousNamelessArgsError.class);
+    messages.assertContainsOnly(AmbiguousNamelessArgsError.class);
   }
 
   private static Arg arg(SType<?> type) {

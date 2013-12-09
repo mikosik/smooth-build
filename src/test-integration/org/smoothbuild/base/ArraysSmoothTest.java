@@ -23,7 +23,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertOnlyProblem(SyntaxError.class);
+    userConsole.messageGroup().assertContainsOnly(SyntaxError.class);
   }
 
   @Test
@@ -43,7 +43,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertOnlyProblem(IncompatibleArrayElemsError.class);
+    userConsole.messageGroup().assertContainsOnly(IncompatibleArrayElemsError.class);
   }
 
   @Test
@@ -63,7 +63,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertOnlyProblem(IncompatibleArrayElemsError.class);
+    userConsole.messageGroup().assertContainsOnly(IncompatibleArrayElemsError.class);
   }
 
   @Test

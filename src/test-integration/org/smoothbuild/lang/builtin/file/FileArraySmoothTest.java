@@ -39,7 +39,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertOnlyProblem(SyntaxError.class);
+    userConsole.messageGroup().assertContainsOnly(SyntaxError.class);
   }
 
   @Test

@@ -36,21 +36,21 @@ public class FunctionsCollectorTest {
     FunctionContext function2 = functionCtx(name2.value());
     FakeModuleContext module = moduleCtx(function1, function2);
 
-    ImmutableMap<Name, FunctionContext> expected = ImmutableMap.of(name1, function1, name2,
-        function2);
+    ImmutableMap<Name, FunctionContext> expected =
+        ImmutableMap.of(name1, function1, name2, function2);
     assertThat(collectFunctions(module)).isEqualTo(expected);
   }
 
   @Test
   public void illegalFunctionNameIsReported() {
     collectFunctions(moduleCtx(functionCtx("function^name")));
-    messages.assertOnlyProblem(IllegalFunctionNameError.class);
+    messages.assertContainsOnly(IllegalFunctionNameError.class);
   }
 
   @Test
   public void duplicateFunction() throws Exception {
     collectFunctions(moduleCtx(functionCtx("functionA"), functionCtx("functionA")));
-    messages.assertOnlyProblem(DuplicateFunctionError.class);
+    messages.assertContainsOnly(DuplicateFunctionError.class);
   }
 
   @Test
@@ -58,7 +58,7 @@ public class FunctionsCollectorTest {
     Function function = mock(Function.class);
     Module builtinModule = new ImmutableModule(ImmutableMap.of(name1, function));
     collectFunctions(moduleCtx(functionCtx(name1.value())), builtinModule);
-    messages.assertOnlyProblem(OverridenBuiltinFunctionError.class);
+    messages.assertContainsOnly(OverridenBuiltinFunctionError.class);
   }
 
   private Map<Name, FunctionContext> collectFunctions(FakeModuleContext moduleContext) {

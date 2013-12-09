@@ -66,8 +66,8 @@ public class NativeCallTaskTest {
     Result subTask = new FakeResult(argValue);
 
     String name = "param";
-    NativeCallTask nativeCallTask = new NativeCallTask(function1, ImmutableMap.of(name, subTask),
-        codeLocation);
+    NativeCallTask nativeCallTask =
+        new NativeCallTask(function1, ImmutableMap.of(name, subTask), codeLocation);
 
     SString result = new FakeString("result");
     when(invoker.invoke(pluginApi, ImmutableMap.<String, SValue> of(name, argValue))).thenReturn(
@@ -82,7 +82,7 @@ public class NativeCallTaskTest {
 
     nativeCallTask.execute(pluginApi);
 
-    pluginApi.messages().assertOnlyProblem(NullResultError.class);
+    pluginApi.messages().assertContainsOnly(NullResultError.class);
   }
 
   @Test
@@ -102,7 +102,7 @@ public class NativeCallTaskTest {
 
     nativeCallTask.execute(pluginApi);
 
-    pluginApi.messages().assertOnlyProblem(CodeMessage.class);
+    pluginApi.messages().assertContainsOnly(CodeMessage.class);
   }
 
   @Test
@@ -112,14 +112,15 @@ public class NativeCallTaskTest {
 
   @Test
   public void file_system_error_is_reported_for_file_system_exception() throws Exception {
-    InvocationTargetException exception = new InvocationTargetException(new FileSystemException(""));
+    InvocationTargetException exception =
+        new InvocationTargetException(new FileSystemException(""));
     assertExceptionIsReportedAsProblem(exception, FileSystemError.class);
   }
 
   @Test
   public void message_thrown_as_error_message_exception_is_reported() throws Exception {
-    InvocationTargetException exception = new InvocationTargetException(new ErrorMessageException(
-        new MyError()));
+    InvocationTargetException exception =
+        new InvocationTargetException(new ErrorMessageException(new MyError()));
     assertExceptionIsReportedAsProblem(exception, MyError.class);
   }
 
@@ -141,6 +142,6 @@ public class NativeCallTaskTest {
 
     nativeCallTask.execute(pluginApi);
 
-    pluginApi.messages().assertOnlyProblem(expected);
+    pluginApi.messages().assertContainsOnly(expected);
   }
 }

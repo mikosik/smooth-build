@@ -3,7 +3,6 @@ package org.smoothbuild.testing.message;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.message.base.MessageType.INFO;
-import static org.smoothbuild.message.base.MessageType.SUGGESTION;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 
 import org.junit.Test;
@@ -14,107 +13,69 @@ public class FakeMessageGroupTest {
   FakeMessageGroup testingProblemListener = new FakeMessageGroup();
   CodeLocation location = new FakeCodeLocation();
 
-  // assertProblemsFound()
+  // assertContainsOnly()
 
-  @Test(expected = AssertionError.class)
-  public void assert_problems_found_fails_when_nothing_was_reported() throws Exception {
-    testingProblemListener.assertProblemsFound();
+  @Test
+  public void assert_contais_only_succeeds_when_one_required_message_was_reported() {
+    testingProblemListener.report(new MyInfo());
+    testingProblemListener.assertContainsOnly(MyInfo.class);
   }
 
   @Test(expected = AssertionError.class)
-  public void assert_problems_found_fails_when_info_was_reported() throws Exception {
+  public void assert_contains_only_fails_when_nothing_was_reported() {
+    testingProblemListener.assertContainsOnly(MyInfo.class);
+  }
+
+  @Test(expected = AssertionError.class)
+  public void assert_contains_only_fails_when_required_message_was_reported_twice() {
+    testingProblemListener.report(new MyInfo());
+    testingProblemListener.report(new MyInfo());
+
+    testingProblemListener.assertContainsOnly(MyInfo.class);
+  }
+
+  @Test(expected = AssertionError.class)
+  public void assert_contains_only_fails_when_info_of_different_type_was_reported() {
     testingProblemListener.report(new Message(INFO, "message"));
-    testingProblemListener.assertProblemsFound();
+    testingProblemListener.assertContainsOnly(MyInfo.class);
   }
 
   @Test(expected = AssertionError.class)
-  public void assert_problems_found_fails_when_suggestion_was_reported() throws Exception {
-    testingProblemListener.report(new Message(SUGGESTION, "message"));
-    testingProblemListener.assertProblemsFound();
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assert_problems_found_fails_when_warning_was_reported() throws Exception {
+  public void assert_cotais_only_info_fails_when_warning_was_reported() {
     testingProblemListener.report(new Message(WARNING, "message"));
-    testingProblemListener.assertProblemsFound();
+    testingProblemListener.assertContainsOnly(MyInfo.class);
   }
 
-  @Test
-  public void assert_problems_found_succeeds_when_error_was_reported() throws Exception {
-    testingProblemListener.report(new Message(ERROR, "message"));
-    testingProblemListener.assertProblemsFound();
-  }
+  // assertContains()
 
   @Test
-  public void assert_problems_found_succeeds_when_fatal_was_reported() throws Exception {
-    testingProblemListener.report(new Message(FATAL, "message"));
-    testingProblemListener.assertProblemsFound();
-  }
-
-  // assertOnlyInfo()
-
-  @Test
-  public void assert_only_info_succeeds_when_one_info_was_reported() {
+  public void assert_contais_succeeds_when_one_required_message_was_reported() {
     testingProblemListener.report(new MyInfo());
-    testingProblemListener.assertOnlyInfo(MyInfo.class);
+    testingProblemListener.assertContains(MyInfo.class);
   }
 
   @Test(expected = AssertionError.class)
-  public void assert_only_info_fails_when_nothing_was_reported() {
-    testingProblemListener.assertOnlyInfo(MyInfo.class);
+  public void assert_contains_fails_when_nothing_was_reported() {
+    testingProblemListener.assertContains(MyInfo.class);
   }
 
-  @Test(expected = AssertionError.class)
-  public void assert_only_info_fails_when_two_infos_were_reported() {
+  public void assert_contains_succeeds_when_required_message_was_reported_twice() {
     testingProblemListener.report(new MyInfo());
     testingProblemListener.report(new MyInfo());
 
-    testingProblemListener.assertOnlyInfo(MyInfo.class);
+    testingProblemListener.assertContains(MyInfo.class);
   }
 
   @Test(expected = AssertionError.class)
-  public void assert_only_info_fails_when_info_of_different_type_was_reported() {
+  public void assert_contains_fails_when_info_of_different_type_was_reported() {
     testingProblemListener.report(new Message(INFO, "message"));
-    testingProblemListener.assertOnlyInfo(MyInfo.class);
+    testingProblemListener.assertContains(MyInfo.class);
   }
 
   @Test(expected = AssertionError.class)
-  public void assert_only_info_fails_when_warning_was_reported() {
+  public void assert_cotais_info_fails_when_warning_was_reported() {
     testingProblemListener.report(new Message(WARNING, "message"));
-    testingProblemListener.assertOnlyInfo(MyInfo.class);
-  }
-
-  // assertOnlyProblem()
-
-  @Test
-  public void assert_only_problem_succeeds_when_one_problem_was_reported() {
-    testingProblemListener.report(new MyProblem());
-    testingProblemListener.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assert_only_problem_fails_when_nothing_was_reported() {
-    testingProblemListener.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assert_only_problem_fails_when_two_problems_were_reported() {
-    testingProblemListener.report(new MyProblem());
-    testingProblemListener.report(new MyProblem());
-
-    testingProblemListener.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assert_only_problem_fails_when_problem_of_different_type_was_reported() {
-    testingProblemListener.report(new Message(ERROR, "message"));
-    testingProblemListener.assertOnlyProblem(MyProblem.class);
-  }
-
-  @Test(expected = AssertionError.class)
-  public void assert_only_problem_fails_when_info_was_reported() {
-    testingProblemListener.report(new Message(INFO, "message"));
-    testingProblemListener.assertOnlyProblem(MyProblem.class);
+    testingProblemListener.assertContains(MyInfo.class);
   }
 
   // assertNoProblems()
@@ -131,15 +92,15 @@ public class FakeMessageGroupTest {
   }
 
   @Test(expected = AssertionError.class)
-  public void assert_no_problems_fails_when_on_problem_was_reported() throws Exception {
-    testingProblemListener.report(new MyProblem());
+  public void assert_no_problems_fails_when_on_error_was_reported() throws Exception {
+    testingProblemListener.report(new Message(ERROR, ""));
     testingProblemListener.assertNoProblems();
   }
 
-  private static class MyProblem extends Message {
-    public MyProblem() {
-      super(ERROR, "message");
-    }
+  @Test(expected = AssertionError.class)
+  public void assert_no_problems_fails_when_on_fatal_was_reported() throws Exception {
+    testingProblemListener.report(new Message(FATAL, ""));
+    testingProblemListener.assertNoProblems();
   }
 
   private static class MyInfo extends Message {

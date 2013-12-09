@@ -66,7 +66,7 @@ public class DependencySorterTest {
 
     sort(map);
 
-    messageGroup.assertOnlyProblem(CycleInCallGraphError.class);
+    messageGroup.assertContainsOnly(CycleInCallGraphError.class);
   }
 
   @Test
@@ -78,7 +78,7 @@ public class DependencySorterTest {
 
     sort(map);
 
-    messageGroup.assertOnlyProblem(CycleInCallGraphError.class);
+    messageGroup.assertContainsOnly(CycleInCallGraphError.class);
   }
 
   private List<Name> sort(Map<Name, Set<Dependency>> map) {

@@ -48,8 +48,8 @@ public class UnknownFunctionCallsDetectorTest {
 
   @Test
   public void referenceToDefinedFunction() {
-    Map<Name, Set<Dependency>> dependencyMap = ImmutableMap.of(name1, dependencies(name2), name2,
-        dependencies(name1));
+    Map<Name, Set<Dependency>> dependencyMap =
+        ImmutableMap.of(name1, dependencies(name2), name2, dependencies(name1));
 
     detectUndefinedFunctions(messageGroup, emptyBuiltinModule, dependencyMap);
 
@@ -67,6 +67,6 @@ public class UnknownFunctionCallsDetectorTest {
       // expected
     }
 
-    messageGroup.assertOnlyProblem(UnknownFunctionCallError.class);
+    messageGroup.assertContainsOnly(UnknownFunctionCallError.class);
   }
 }
