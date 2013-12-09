@@ -39,7 +39,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     script(createScript());
 
     build("run");
-    userConsole.messageGroup().assertOnlyProblem(JunitTestFailedError.class);
+    userConsole.messageGroup().assertContainsOnly(JunitTestFailedError.class);
   }
 
   @Test

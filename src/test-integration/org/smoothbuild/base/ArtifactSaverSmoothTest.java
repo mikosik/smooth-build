@@ -150,6 +150,6 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     build(functionName);
 
     // then
-    userConsole.messageGroup().assertOnlyProblem(DuplicatePathsInFileArrayArtifactError.class);
+    userConsole.messageGroup().assertContainsOnly(DuplicatePathsInFileArrayArtifactError.class);
   }
 }

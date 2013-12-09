@@ -31,7 +31,7 @@ public class FileArraySaverTest {
 
     fileArraySaver = new FileArraySaver(fileSystem, messageGroup);
     fileArraySaver.save(name, fakeArray(FILE_ARRAY, file1, file1));
-    messageGroup.assertOnlyProblem(DuplicatePathsInFileArrayArtifactError.class);
+    messageGroup.assertContainsOnly(DuplicatePathsInFileArrayArtifactError.class);
   }
 
   @Test

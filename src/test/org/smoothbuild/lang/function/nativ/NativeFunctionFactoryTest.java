@@ -25,8 +25,8 @@ import org.smoothbuild.lang.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.function.nativ.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
@@ -76,8 +76,8 @@ public class NativeFunctionFactoryTest {
     Function function = NativeFunctionFactory.create(Func.class, false);
     Result result1 = new FakeResult(new FakeString("abc"));
     Result result2 = new FakeResult(new FakeString("def"));
-    ImmutableMap<String, Result> dependencies = ImmutableMap.<String, Result> of("stringA",
-        result1, "stringB", result2);
+    ImmutableMap<String, Result> dependencies =
+        ImmutableMap.<String, Result> of("stringA", result1, "stringB", result2);
 
     Task task = function.generateTask(taskGenerator, dependencies, codeLocation);
     SString result = (SString) task.execute(pluginApi);
@@ -348,9 +348,9 @@ public class NativeFunctionFactoryTest {
   @Test
   public void runtime_exception_thrown_from_native_function_is_reported() throws Exception {
     Function function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
-    function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation)
-        .execute(pluginApi);
-    pluginApi.messages().assertOnlyProblem(UnexpectedError.class);
+    function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation).execute(
+        pluginApi);
+    pluginApi.messages().assertContainsOnly(UnexpectedError.class);
   }
 
   public static class FuncWithThrowingSmoothMethod {

@@ -29,7 +29,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac ;");
     build("run");
 
-    userConsole.messageGroup().assertOnlyProblem(JavaCompilerMessage.class);
+    userConsole.messageGroup().assertContainsOnly(JavaCompilerMessage.class);
   }
 
   @Test
@@ -37,7 +37,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ ] | javac ;");
     build("run");
 
-    userConsole.messageGroup().assertOnlyInfo(NoJavaSourceFilesFoundWarning.class);
+    userConsole.messageGroup().assertContainsOnly(NoJavaSourceFilesFoundWarning.class);
   }
 
   @Test
@@ -124,7 +124,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(" + path + "), file(" + path + ") ] | javac ;");
     build("run");
 
-    userConsole.messageGroup().assertOnlyProblem(JavaCompilerMessage.class);
+    userConsole.messageGroup().assertContainsOnly(JavaCompilerMessage.class);
   }
 
   @Test
@@ -135,7 +135,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
     build("run");
 
-    userConsole.messageGroup().assertOnlyProblem(IllegalSourceParamError.class);
+    userConsole.messageGroup().assertContainsOnly(IllegalSourceParamError.class);
   }
 
   @Test
@@ -146,7 +146,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
     build("run");
 
-    userConsole.messageGroup().assertOnlyProblem(IllegalTargetParamError.class);
+    userConsole.messageGroup().assertContainsOnly(IllegalTargetParamError.class);
   }
 
   @Test
@@ -157,7 +157,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
     script("run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
     build("run");
 
-    userConsole.messageGroup().assertOnlyProblem(JavaCompilerMessage.class);
+    userConsole.messageGroup().assertContainsOnly(JavaCompilerMessage.class);
   }
 
   private Object invoke(Path appClassFile, String method) throws IOException,

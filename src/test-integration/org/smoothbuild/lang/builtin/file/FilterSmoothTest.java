@@ -23,7 +23,7 @@ public class FilterSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messageGroup().assertOnlyProblem(IllegalPathPatternError.class);
+    userConsole.messageGroup().assertContainsOnly(IllegalPathPatternError.class);
   }
 
   @Test
@@ -101,10 +101,10 @@ public class FilterSmoothTest extends IntegrationTestCase {
   @Test
   public void filter_all_java_files_from_given_dir() throws Exception {
     String pattern = "src/**/*.java";
-    ImmutableList<String> included = ImmutableList
-        .of("src/Klass.java", "src/com/example/Main.java");
-    ImmutableList<String> excluded = ImmutableList
-        .of("dir/Main.java", "src/com/example/Main.class");
+    ImmutableList<String> included =
+        ImmutableList.of("src/Klass.java", "src/com/example/Main.java");
+    ImmutableList<String> excluded =
+        ImmutableList.of("dir/Main.java", "src/com/example/Main.class");
 
     doTestFiltering(pattern, included, excluded);
   }

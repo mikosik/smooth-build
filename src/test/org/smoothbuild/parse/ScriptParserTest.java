@@ -59,7 +59,7 @@ public class ScriptParserTest {
       fail("exception should be thrown");
     } catch (PhaseFailedException e) {
       // expected
-      messages.assertProblemsFound();
+      messages.assertContains(SyntaxError.class);
     }
   }
 
@@ -96,7 +96,7 @@ public class ScriptParserTest {
       fail("exception should be thrown");
     } catch (PhaseFailedException e) {
       // expected
-      messages.assertOnlyProblem(SyntaxError.class);
+      messages.assertContainsOnly(SyntaxError.class);
     }
   }
 
