@@ -27,7 +27,7 @@ public class ZipSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;

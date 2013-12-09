@@ -70,7 +70,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     verify(invoker, times(1)).invoke(Matchers.<PluginApi> any(), Matchers.<Map<String, SValue>> any());
   }
 
@@ -87,7 +87,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     verify(invoker, times(2)).invoke(Matchers.<PluginApi> any(), Matchers.<Map<String, SValue>> any());
   }
 

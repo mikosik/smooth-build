@@ -23,7 +23,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertOnlyProblem(SyntaxError.class);
+    userConsole.messageGroup().assertOnlyProblem(SyntaxError.class);
   }
 
   @Test
@@ -43,7 +43,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertOnlyProblem(IncompatibleArrayElemsError.class);
+    userConsole.messageGroup().assertOnlyProblem(IncompatibleArrayElemsError.class);
   }
 
   @Test
@@ -63,7 +63,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertOnlyProblem(IncompatibleArrayElemsError.class);
+    userConsole.messageGroup().assertOnlyProblem(IncompatibleArrayElemsError.class);
   }
 
   @Test
@@ -75,7 +75,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
 
     Path artifactPath = RESULTS_PATH.append(path("run"));
     assertThat(fileSystem.pathState(artifactPath)).isEqualTo(PathState.DIR);
@@ -93,7 +93,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
 
     Path artifactPath = RESULTS_PATH.append(path("run"));
     assertThat(fileSystem.pathState(artifactPath)).isEqualTo(PathState.DIR);

@@ -24,7 +24,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(artifactPath, path1);
     fileSystem.assertFileContainsItsPath(artifactPath, path2);
@@ -39,7 +39,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertOnlyProblem(SyntaxError.class);
+    userConsole.messageGroup().assertOnlyProblem(SyntaxError.class);
   }
 
   @Test
@@ -54,7 +54,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(artifactPath, path1);
     fileSystem.assertFileContainsItsPath(artifactPath, path2);
@@ -71,7 +71,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(artifactPath, path1);
   }
@@ -85,7 +85,7 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
   }
 
   @Test
@@ -99,6 +99,6 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
   }
 }

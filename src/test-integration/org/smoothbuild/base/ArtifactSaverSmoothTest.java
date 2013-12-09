@@ -30,7 +30,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     build(functionName);
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path(functionName));
     fileSystem.assertFileContains(artifactPath, content1);
   }
@@ -46,7 +46,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     build(functionName);
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path(functionName));
     fileSystem.assertFileContains(artifactPath, content1);
   }
@@ -62,7 +62,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     build(functionName);
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
     Path artifactPath = RESULTS_PATH.append(path(functionName));
     fileSystem.assertFileContains(artifactPath, content1);
   }
@@ -78,7 +78,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     build(functionName);
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
 
     Path dirPath = RESULTS_PATH.append(path(functionName));
     Path artifact1Path = dirPath.append(path("0"));
@@ -102,7 +102,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     build(functionName);
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
 
     Path dirPath = RESULTS_PATH.append(path(functionName));
     Path artifact1Path = dirPath.append(path("0"));
@@ -126,7 +126,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     build(functionName);
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
 
     Path dirPath = RESULTS_PATH.append(path(functionName));
     Path artifact1Path = dirPath.append(path1);
@@ -150,6 +150,6 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     build(functionName);
 
     // then
-    userConsole.assertOnlyProblem(DuplicatePathsInFileArrayArtifactError.class);
+    userConsole.messageGroup().assertOnlyProblem(DuplicatePathsInFileArrayArtifactError.class);
   }
 }

@@ -15,6 +15,6 @@ public class ConstantFunctionSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.assertNoProblems();
+    userConsole.messageGroup().assertNoProblems();
   }
 }
