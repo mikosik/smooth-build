@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.7.0 (??????????)
+Version 0.7.0 (2013.12.10)
 --------------------------
 
  * added 'include' param to junit function
