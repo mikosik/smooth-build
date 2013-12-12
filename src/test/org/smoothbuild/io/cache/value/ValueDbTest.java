@@ -84,8 +84,8 @@ public class ValueDbTest {
 
   @Test
   public void file_hash_is_different_from_file_content_hash() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
     given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
     when(file.hash());
     thenReturned(not(blob.hash()));
   }
@@ -102,17 +102,22 @@ public class ValueDbTest {
 
   @Test
   public void created_file_array_contains_file_that_was_added_to_it() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
     then(fileArray, contains(new FakeFile(path, bytes)));
   }
 
   @Test
   public void created_file_array_contains_all_files_that_were_added_to_it() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(file2 = valueDb.writeFile(path2, bytes2));
-    given(file3 = valueDb.writeFile(path3, bytes3));
-    given(file4 = valueDb.writeFile(path4, bytes4));
+    given(blob = valueDb.writeBlob(bytes));
+    given(blob2 = valueDb.writeBlob(bytes2));
+    given(blob3 = valueDb.writeBlob(bytes3));
+    given(blob4 = valueDb.writeBlob(bytes4));
+    given(file = valueDb.writeFile(path, blob));
+    given(file2 = valueDb.writeFile(path2, blob2));
+    given(file3 = valueDb.writeFile(path3, blob3));
+    given(file4 = valueDb.writeFile(path4, blob4));
 
     given(fileArray =
         valueDb.arrayBuilder(FILE_ARRAY).add(file).add(file2).add(file3).add(file4).build());
@@ -123,14 +128,16 @@ public class ValueDbTest {
   @Test
   public void created_file_array_with_one_file_added_when_queried_by_hash_contains_that_file()
       throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
     then(valueDb.read(FILE_ARRAY, fileArray.hash()), contains(new FakeFile(path, bytes)));
   }
 
   @Test
   public void file_array_with_one_file_has_different_hash_from_that_file() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
 
     when(file.hash());
@@ -140,8 +147,10 @@ public class ValueDbTest {
   @Test
   public void file_array_with_one_element_has_different_hash_from_file_array_with_two_elements()
       throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(file2 = valueDb.writeFile(path2, bytes2));
+    given(blob = valueDb.writeBlob(bytes));
+    given(blob2 = valueDb.writeBlob(bytes2));
+    given(file = valueDb.writeFile(path, blob));
+    given(file2 = valueDb.writeFile(path2, blob2));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(fileArray2 = valueDb.arrayBuilder(FILE_ARRAY).add(file).add(file2).build());
 
@@ -275,37 +284,43 @@ public class ValueDbTest {
 
   @Test
   public void created_file_contains_stored_bytes() throws IOException {
-    given(file = valueDb.writeFile(path, bytes));
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
     when(inputStreamToBytes(file.openInputStream()));
     thenReturned(bytes);
   }
 
   @Test
   public void created_file_contains_stored_path() throws IOException {
-    given(file = valueDb.writeFile(path, bytes));
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
     when(file.path());
     thenReturned(path);
   }
 
   @Test
   public void files_with_different_bytes_have_different_hashes() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(file2 = valueDb.writeFile(path, bytes2));
+    given(blob = valueDb.writeBlob(bytes));
+    given(blob2 = valueDb.writeBlob(bytes2));
+    given(file = valueDb.writeFile(path, blob));
+    given(file2 = valueDb.writeFile(path, blob2));
     when(file.hash());
     thenReturned(not(file2.hash()));
   }
 
   @Test
   public void files_with_different_paths_have_different_hashes() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(file2 = valueDb.writeFile(path2, bytes));
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
+    given(file2 = valueDb.writeFile(path2, blob));
     when(file.hash());
     thenReturned(not(file2.hash()));
   }
 
   @Test
   public void file_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
     given(file2 = valueDb.read(FILE, file.hash()));
     when(file2.hash());
     thenReturned(file.hash());
@@ -313,18 +328,19 @@ public class ValueDbTest {
 
   @Test
   public void file_retrieved_via_hash_contains_path_that_were_stored() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
     given(file2 = valueDb.read(FILE, file.hash()));
     when(file2.path());
     thenReturned(path);
   }
 
   @Test
-  public void file_retrieved_via_hash_contains_bytes_that_were_stored() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
-    given(file2 = valueDb.read(FILE, file.hash()));
-    when(inputStreamToBytes(file2.openInputStream()));
-    thenReturned(bytes);
+  public void file_retrieved_via_hash_contains_blob_that_were_stored() throws Exception {
+    given(blob = valueDb.writeBlob(bytes));
+    given(file = valueDb.writeFile(path, blob));
+    when(valueDb.read(FILE, file.hash())).content();
+    thenReturned(blob);
   }
 
   @Test

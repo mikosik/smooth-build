@@ -12,6 +12,10 @@ import org.smoothbuild.lang.type.SBlob;
 public class FakeBlob extends CachedValue implements SBlob {
   private final byte[] data;
 
+  public FakeBlob() {
+    this(new byte[] { 1, 2, 3 });
+  }
+
   public FakeBlob(byte[] data) {
     super(BLOB, Hash.function().hashBytes(data));
     this.data = data.clone();

@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
-import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
@@ -24,9 +23,8 @@ public class OutputClassFileTest {
   public void openOutputStream() throws IOException {
     Path path = Path.path("my/path");
     ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
-    FileBuilder fileBuilder = pluginApi.fileBuilder();
 
-    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);
+    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, pluginApi);
 
     String content = "content";
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
@@ -42,9 +40,8 @@ public class OutputClassFileTest {
   public void uri() throws Exception {
     Path path = Path.path("my/path");
     ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
-    FileBuilder fileBuilder = pluginApi.fileBuilder();
 
-    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, fileBuilder);
+    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, pluginApi);
 
     assertThat(outputClassFile.getName()).isEqualTo("/" + path.value());
   }

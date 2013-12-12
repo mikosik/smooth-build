@@ -3,18 +3,16 @@ package org.smoothbuild.io.cache.value.build;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 
 public class FileBuilder {
   private final ValueDb valueDb;
 
   private Path path;
-  private ByteArrayOutputStream outputStream;
+  private SBlob content;
 
   public FileBuilder(ValueDb valueDb) {
     this.valueDb = valueDb;
@@ -25,16 +23,15 @@ public class FileBuilder {
     this.path = checkNotNull(path);
   }
 
-  public OutputStream openOutputStream() {
-    checkState(this.outputStream == null, "Cannot open output stream twice.");
-    this.outputStream = new ByteArrayOutputStream();
-    return outputStream;
+  public void setContent(SBlob content) {
+    checkState(this.content == null, "Content has been already set.");
+    this.content = checkNotNull(content);
   }
 
   public SFile build() {
-    checkState(outputStream != null, "No file content available. Create one via openOutputStream()");
+    checkState(content != null, "No content set");
     checkState(path != null, "No path set");
 
-    return valueDb.writeFile(path, outputStream.toByteArray());
+    return valueDb.writeFile(path, content);
   }
 }

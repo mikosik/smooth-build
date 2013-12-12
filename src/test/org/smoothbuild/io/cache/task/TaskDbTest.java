@@ -24,6 +24,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.util.Empty;
 
@@ -69,9 +70,9 @@ public class TaskDbTest {
 
   @Test
   public void stored_messages_can_be_read_back() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
+    given(blob = valueDb.writeBlob(bytes));
     given(message = new Message(ERROR, "message string"));
-    given(taskDb).store(hash, new CachedResult(file, ImmutableList.of(message)));
+    given(taskDb).store(hash, new CachedResult(blob, ImmutableList.of(message)));
     when(taskDb.read(hash).messages());
     thenReturned(contains(message));
   }
@@ -79,7 +80,7 @@ public class TaskDbTest {
   @SuppressWarnings("unchecked")
   @Test
   public void stored_file_array_can_be_read_back() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
+    given(file = valueDb.writeFile(path, new FakeBlob(bytes)));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(taskDb).store(hash, new CachedResult(fileArray, Empty.messageList()));
     when(((SArray<SFile>) taskDb.read(hash).value()).iterator().next());
@@ -108,7 +109,7 @@ public class TaskDbTest {
 
   @Test
   public void stored_file_can_be_read_back() throws Exception {
-    given(file = valueDb.writeFile(path, bytes));
+    given(file = valueDb.writeFile(path, new FakeBlob(bytes)));
     given(taskDb).store(hash, new CachedResult(file, Empty.messageList()));
     when(taskDb.read(hash).value());
     thenReturned(file);

@@ -48,7 +48,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       String classFilePath = className.replace('.', '/') + ".class";
       String message = validationError(classFilePath);
       if (message == null) {
-        return new OutputClassFile(resultClassFiles, path(classFilePath), pluginApi.fileBuilder());
+        return new OutputClassFile(resultClassFiles, path(classFilePath), pluginApi);
       } else {
         Message errorMessage = new IncorrectClassNameGivenByJavaCompilerError(className);
         throw new ErrorMessageException(errorMessage);

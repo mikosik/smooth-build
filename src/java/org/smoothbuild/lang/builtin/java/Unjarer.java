@@ -13,6 +13,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
@@ -77,19 +78,25 @@ public class Unjarer {
     if (errorMessage != null) {
       throw new ErrorMessageException(new IllegalPathInJarError(fileName));
     }
-    Path path = path(fileName);
+
     FileBuilder fileBuilder = pluginApi.fileBuilder();
-    fileBuilder.setPath(path);
+    fileBuilder.setPath(path(fileName));
+    fileBuilder.setContent(unjarEntryContent(jarInputStream));
+    return fileBuilder.build();
+  }
+
+  private SBlob unjarEntryContent(JarInputStream jarInputStream) {
+    BlobBuilder contentBuilder = pluginApi.blobBuilder();
     try {
-      try (OutputStream outputStream = fileBuilder.openOutputStream()) {
+      try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len = 0;
         while ((len = jarInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);
         }
       }
+      return contentBuilder.build();
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
-    return fileBuilder.build();
   }
 }

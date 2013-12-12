@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 public class ToBlobFunctionTest {
@@ -17,7 +17,8 @@ public class ToBlobFunctionTest {
   public void content_of_file_is_returned_as_blob() throws Exception {
     FileBuilder builder = pluginApi.fileBuilder();
     builder.setPath(path("some/path"));
-    StreamTester.writeAndClose(builder.openOutputStream(), "some content");
+    FakeBlob blob = new FakeBlob();
+    builder.setContent(blob);
     SFile file = builder.build();
 
     SBlob actual = ToBlobFunction.execute(pluginApi, params(file));

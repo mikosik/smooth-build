@@ -8,12 +8,14 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.task.exec.PluginApiImpl;
@@ -50,14 +52,19 @@ public class NewFileFunction {
     private SFile createFile(Path filePath) {
       FileBuilder fileBuilder = pluginApi.fileBuilder();
       fileBuilder.setPath(filePath);
+      fileBuilder.setContent(createContent(params.content()));
+      return fileBuilder.build();
+    }
 
-      OutputStream outputStream = fileBuilder.openOutputStream();
+    private SBlob createContent(SString content) {
+      BlobBuilder contentBuilder = pluginApi.blobBuilder();
+      OutputStream outputStream = contentBuilder.openOutputStream();
       try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, CHARSET)) {
-        writer.write(params.content().value());
+        writer.write(content.value());
       } catch (IOException e) {
         throw new FileSystemException(e);
       }
-      return fileBuilder.build();
+      return contentBuilder.build();
     }
   }
 }
