@@ -10,7 +10,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 
-public class ToBlobFunctionTest {
+public class ContentFunctionTest {
   FakePluginApi pluginApi = new FakePluginApi();
 
   @Test
@@ -21,12 +21,12 @@ public class ToBlobFunctionTest {
     builder.setContent(blob);
     SFile file = builder.build();
 
-    SBlob actual = ToBlobFunction.execute(pluginApi, params(file));
+    SBlob actual = ContentFunction.execute(pluginApi, params(file));
     assertThat(actual).isSameAs(file.content());
   }
 
-  private static ToBlobFunction.Parameters params(final SFile file) {
-    return new ToBlobFunction.Parameters() {
+  private static ContentFunction.Parameters params(final SFile file) {
+    return new ContentFunction.Parameters() {
       @Override
       public SFile file() {
         return file;
