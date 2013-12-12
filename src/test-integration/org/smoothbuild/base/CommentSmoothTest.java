@@ -12,7 +12,7 @@ public class CommentSmoothTest extends IntegrationTestCase {
     // given
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("# full line comment");
-    builder.addLine("run: newFile(path='file.txt', 'content'); # comment at the end of line");
+    builder.addLine("run: 'string value' ; # comment at the end of line");
     script(builder.build());
 
     // when
@@ -25,7 +25,7 @@ public class CommentSmoothTest extends IntegrationTestCase {
   @Test
   public void comment_char_is_allowed_in_strings() throws IOException {
     // given
-    script("run: newFile(path='file.txt', '###');");
+    script("run: '## string with hashes ##' ;");
 
     // when
     build("run");
