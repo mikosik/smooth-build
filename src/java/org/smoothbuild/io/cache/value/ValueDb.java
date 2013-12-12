@@ -121,16 +121,13 @@ public class ValueDb {
 
   // writers
 
-  public SFile writeFile(Path path, byte[] bytes) {
-    CachedBlob blob = writeBlob(bytes);
-    HashCode contentHash = blob.hash();
-
+  public SFile writeFile(Path path, SBlob content) {
     Marshaller marshaller = new Marshaller();
-    marshaller.write(contentHash);
+    marshaller.write(content.hash());
     marshaller.write(path);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    return new CachedFile(path, blob, hash);
+    return new CachedFile(path, content, hash);
   }
 
   public SString writeString(String string) {

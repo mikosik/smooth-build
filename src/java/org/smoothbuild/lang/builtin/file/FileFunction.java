@@ -5,6 +5,9 @@ import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.copy;
 
+import java.io.InputStream;
+
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -13,6 +16,7 @@ import org.smoothbuild.lang.builtin.file.err.NoSuchFileError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
@@ -54,7 +58,7 @@ public class FileFunction {
         case FILE:
           FileBuilder fileBuilder = pluginApi.fileBuilder();
           fileBuilder.setPath(path);
-          copy(fileSystem.openInputStream(path), fileBuilder.openOutputStream());
+          fileBuilder.setContent(createContent(path));
           return fileBuilder.build();
         case DIR:
           throw new ErrorMessageException(new NoSuchFileButDirError(path));
@@ -64,6 +68,13 @@ public class FileFunction {
           throw new ErrorMessageException(new Message(FATAL,
               "Broken 'file' function implementation: unreachable case"));
       }
+    }
+
+    private SBlob createContent(Path path) {
+      InputStream inputStream = pluginApi.projectFileSystem().openInputStream(path);
+      BlobBuilder contentBuilder = pluginApi.blobBuilder();
+      copy(inputStream, contentBuilder.openOutputStream());
+      return contentBuilder.build();
     }
   }
 }

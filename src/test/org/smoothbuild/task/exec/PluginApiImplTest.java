@@ -16,9 +16,11 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
@@ -46,9 +48,13 @@ public class PluginApiImplTest {
 
   @Test
   public void file_array_builder_stores_files_in_value_db() throws Exception {
+    BlobBuilder blobBuilder = pluginApi.blobBuilder();
+    StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
+    SBlob blob = blobBuilder.build();
+
     FileBuilder fileBuilder = pluginApi.fileBuilder();
     fileBuilder.setPath(path1);
-    StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
+    fileBuilder.setContent(blob);
     SFile file = fileBuilder.build();
 
     ArrayBuilder<SFile> builder = pluginApi.arrayBuilder(FILE_ARRAY);
@@ -84,9 +90,13 @@ public class PluginApiImplTest {
 
   @Test
   public void file_builder_stores_file_in_value_db() throws Exception {
+    BlobBuilder blobBuilder = pluginApi.blobBuilder();
+    StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
+    SBlob blob = blobBuilder.build();
+
     FileBuilder fileBuilder = pluginApi.fileBuilder();
     fileBuilder.setPath(path1);
-    StreamTester.writeAndClose(fileBuilder.openOutputStream(), content);
+    fileBuilder.setContent(blob);
     HashCode hash = fileBuilder.build().hash();
 
     SFile file = valueDb.read(FILE, hash);

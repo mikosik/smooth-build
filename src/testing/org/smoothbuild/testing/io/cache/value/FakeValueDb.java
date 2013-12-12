@@ -4,6 +4,7 @@ import static org.smoothbuild.command.SmoothContants.CHARSET;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.value.instance.CachedBlob;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SFile;
@@ -24,6 +25,7 @@ public class FakeValueDb extends ValueDb {
   }
 
   public SFile createFileContainingItsPath(Path path) {
-    return writeFile(path, path.value().getBytes(CHARSET));
+    CachedBlob content = writeBlob(path.value().getBytes(CHARSET));
+    return writeFile(path, content);
   }
 }

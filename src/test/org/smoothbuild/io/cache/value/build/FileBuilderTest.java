@@ -10,14 +10,16 @@ import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.smoothbuild.io.cache.value.ValueDb;
-import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.cache.value.instance.CachedFile;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.testing.lang.type.FakeBlob;
 
 public class FileBuilderTest {
   ValueDb valueDb = mock(ValueDb.class);
   FileBuilder fileBuilder = new FileBuilder(valueDb);
   Path path = Path.path("my/path");
+  SBlob blob = new FakeBlob();
   byte[] bytes = new byte[] { 1, 2, 3 };
   CachedFile file = Mockito.mock(CachedFile.class);
 
@@ -35,9 +37,15 @@ public class FileBuilderTest {
   }
 
   @Test
-  public void opening_output_stream_twice_fails() throws Exception {
-    given(fileBuilder).openOutputStream();
-    when(fileBuilder).openOutputStream();
+  public void setting_null_content_fails() throws Exception {
+    when(fileBuilder).setContent(null);
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void setting_content_twice_fails() throws Exception {
+    given(fileBuilder).setContent(blob);
+    when(fileBuilder).setContent(blob);
     thenThrown(IllegalStateException.class);
   }
 
@@ -50,24 +58,16 @@ public class FileBuilderTest {
 
   @Test
   public void build_fails_when_no_path_was_provided() {
-    given(fileBuilder).openOutputStream();
+    given(fileBuilder).setContent(blob);
     when(fileBuilder).build();
     thenThrown(IllegalStateException.class);
   }
 
   @Test
-  public void build_returns_file_stored_in_object_db_with_empty_content() throws Exception {
-    BDDMockito.given(valueDb.writeFile(path, new byte[] {})).willReturn(file);
-    given(fileBuilder).openOutputStream();
-    given(fileBuilder).setPath(path);
-    when(fileBuilder).build();
-    thenReturned(file);
-  }
-
-  @Test
   public void build_returns_file_stored_in_object_db() throws Exception {
-    BDDMockito.given(valueDb.writeFile(path, bytes)).willReturn(file);
-    given(fileBuilder.openOutputStream()).write(bytes);
+    given(blob = new FakeBlob(bytes));
+    BDDMockito.given(valueDb.writeFile(path, blob)).willReturn(file);
+    given(fileBuilder).setContent(blob);
     given(fileBuilder).setPath(path);
     when(fileBuilder).build();
     thenReturned(file);

@@ -11,6 +11,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
@@ -66,17 +67,23 @@ public class Unzipper {
     if (duplicatesDetector.add(path)) {
       throw new ErrorMessageException(new DuplicatePathInZipError(path));
     }
-    try {
-      FileBuilder fileBuilder = pluginApi.fileBuilder();
-      fileBuilder.setPath(path);
 
-      try (OutputStream outputStream = fileBuilder.openOutputStream()) {
+    FileBuilder fileBuilder = pluginApi.fileBuilder();
+    fileBuilder.setPath(path);
+    fileBuilder.setContent(unzipEntryContent(zipInputStream));
+    return fileBuilder.build();
+  }
+
+  private SBlob unzipEntryContent(ZipInputStream zipInputStream) {
+    try {
+      BlobBuilder contentBuilder = pluginApi.blobBuilder();
+      try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len = 0;
         while ((len = zipInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);
         }
       }
-      return fileBuilder.build();
+      return contentBuilder.build();
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
