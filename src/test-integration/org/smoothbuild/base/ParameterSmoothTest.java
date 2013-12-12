@@ -9,7 +9,7 @@ public class ParameterSmoothTest extends IntegrationTestCase {
   @Test
   public void trailingCommaIsAllowedInParameterList() throws IOException {
     // given
-    script("run : newFile(path='file.txt', content='abc',) ;");
+    script("run : toBlob(string='abc',) ;");
 
     // when
     build("run");
