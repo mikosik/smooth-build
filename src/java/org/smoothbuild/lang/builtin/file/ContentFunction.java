@@ -6,13 +6,13 @@ import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
-public class ToBlobFunction {
+public class ContentFunction {
   public interface Parameters {
     @Required
     public SFile file();
   }
 
-  @SmoothFunction(name = "toBlob")
+  @SmoothFunction(name = "content")
   public static SBlob execute(PluginApiImpl pluginApi, Parameters params) {
     return params.file().content();
   }
