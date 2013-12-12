@@ -4,7 +4,6 @@ import static org.smoothbuild.command.SmoothContants.CHARSET;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
 
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.exc.FileSystemException;
@@ -15,8 +14,6 @@ import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class ToBlobFunction {
-  public static final Charset US_ASCII = Charset.forName("US-ASCII");
-
   public interface Parameters {
     @Required
     public SString string();
