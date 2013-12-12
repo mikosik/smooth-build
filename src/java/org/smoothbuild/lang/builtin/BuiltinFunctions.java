@@ -14,6 +14,7 @@ import org.smoothbuild.lang.builtin.java.JarFunction;
 import org.smoothbuild.lang.builtin.java.UnjarFunction;
 import org.smoothbuild.lang.builtin.java.javac.JavacFunction;
 import org.smoothbuild.lang.builtin.java.junit.JunitFunction;
+import org.smoothbuild.lang.builtin.string.ToBlobFunction;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -23,6 +24,9 @@ public class BuiltinFunctions {
 
   private static ImmutableList<Class<?>> createList() {
     Builder<Class<?>> builder = ImmutableList.builder();
+
+    // String related
+    builder.add(ToBlobFunction.class);
 
     // Blob related
     builder.add(ConcatenateBlobsFunction.class);
