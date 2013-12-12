@@ -5,11 +5,10 @@ import org.smoothbuild.lang.builtin.blob.ToFileFunction;
 import org.smoothbuild.lang.builtin.compress.UnzipFunction;
 import org.smoothbuild.lang.builtin.compress.ZipFunction;
 import org.smoothbuild.lang.builtin.file.ConcatenateFilesFunction;
+import org.smoothbuild.lang.builtin.file.ContentFunction;
 import org.smoothbuild.lang.builtin.file.FileFunction;
 import org.smoothbuild.lang.builtin.file.FilesFunction;
 import org.smoothbuild.lang.builtin.file.FilterFunction;
-import org.smoothbuild.lang.builtin.file.NewFileFunction;
-import org.smoothbuild.lang.builtin.file.ContentFunction;
 import org.smoothbuild.lang.builtin.java.JarFunction;
 import org.smoothbuild.lang.builtin.java.UnjarFunction;
 import org.smoothbuild.lang.builtin.java.javac.JavacFunction;
@@ -35,7 +34,6 @@ public class BuiltinFunctions {
     // File related
     builder.add(FileFunction.class);
     builder.add(FilesFunction.class);
-    builder.add(NewFileFunction.class);
     builder.add(ContentFunction.class);
     builder.add(ConcatenateFilesFunction.class);
     builder.add(FilterFunction.class);
