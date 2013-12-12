@@ -4,6 +4,7 @@ Change Log
 Version 0.8.0 (??????????)
 --------------------------
 
+ * removed undocumented 'newFile()' function
  * added 'toBlob()' function
  * added 'toFile()' function for converting Blob + path -> File
  * renamed 'toBlob()' function to 'content()'
