@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.builtin;
 
 import org.smoothbuild.lang.builtin.blob.ConcatenateBlobsFunction;
+import org.smoothbuild.lang.builtin.blob.ToFileFunction;
 import org.smoothbuild.lang.builtin.compress.UnzipFunction;
 import org.smoothbuild.lang.builtin.compress.ZipFunction;
 import org.smoothbuild.lang.builtin.file.ConcatenateFilesFunction;
@@ -25,6 +26,7 @@ public class BuiltinFunctions {
 
     // Blob related
     builder.add(ConcatenateBlobsFunction.class);
+    builder.add(ToFileFunction.class);
 
     // File related
     builder.add(FileFunction.class);
