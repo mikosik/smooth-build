@@ -4,6 +4,7 @@ Change Log
 Version 0.8.0 (??????????)
 --------------------------
 
+ * command line 'smooth build' without functions will print available functions
  * added 'path()' function returning File path
  * removed undocumented 'newFile()' function
  * added 'toBlob()' function

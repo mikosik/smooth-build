@@ -11,9 +11,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.command.err.DuplicatedFunctionNameWarning;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
-import org.smoothbuild.command.err.NothingToDoError;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
 
 import com.google.common.collect.ImmutableList;
@@ -33,10 +31,6 @@ public class CommandLineParser {
   }
 
   public CommandLineArguments parse(List<String> args) {
-    if (args.size() == 0) {
-      throw new ErrorMessageException(new NothingToDoError());
-    }
-
     return new CommandLineArguments(DEFAULT_SCRIPT, names(args));
   }
 
