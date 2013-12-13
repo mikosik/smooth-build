@@ -32,7 +32,7 @@ public class BuildWorker {
   public boolean run(List<String> functions) {
     CommandLineArguments args = commandLineParserPhase.execute(ImmutableList.copyOf(functions));
 
-    if (args != null) {
+    if (!userConsole.isProblemReported()) {
       Module module = moduleParserPhase.execute(args);
       if (!userConsole.isProblemReported()) {
         smoothExecutorPhase.execute(new ExecutionData(args, module));

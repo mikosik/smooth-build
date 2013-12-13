@@ -17,7 +17,7 @@ public class UnknownFunctionError extends Message {
         + "Only following function(s) are available: " + nameList(availableNames));
   }
 
-  private static String nameList(Collection<Name> availableNames) {
+  public static String nameList(Collection<Name> availableNames) {
     String prefix = "\n  ";
     List<Name> sortedNames = Ordering.usingToString().sortedCopy(availableNames);
     return prefix + Joiner.on(prefix).join(sortedNames);
