@@ -10,9 +10,6 @@ import static org.testory.Testory.when;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
-import org.smoothbuild.io.cache.value.instance.CachedBlob;
-import org.smoothbuild.io.cache.value.instance.CachedFile;
 import org.smoothbuild.io.fs.base.Path;
 import org.testory.common.Closure;
 
@@ -59,19 +56,17 @@ public class CachedFileTest {
   }
 
   @Test
+  public void content() {
+    given(cachedFile = new CachedFile(path, content, hash));
+    when(cachedFile.content());
+    thenReturned(content);
+  }
+
+  @Test
   public void hash() throws Exception {
     given(cachedFile = new CachedFile(path, content, hash));
     when(cachedFile.hash());
     thenReturned(hash);
-  }
-
-  @Test
-  public void openInputStream() throws Exception {
-    given(inputStream = mock(InputStream.class));
-    BDDMockito.given(content.openInputStream()).willReturn(inputStream);
-    given(cachedFile = new CachedFile(path, content, hash));
-    when(cachedFile.openInputStream());
-    thenReturned(inputStream);
   }
 
   private static Closure fileObject(final Path path, final CachedBlob content, final HashCode hash) {

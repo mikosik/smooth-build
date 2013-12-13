@@ -31,7 +31,7 @@ public class FileClassLoader extends ClassLoader {
 
   private byte[] fileToByteArray(SFile file) {
     try {
-      return ByteStreams.toByteArray(file.openInputStream());
+      return ByteStreams.toByteArray(file.content().openInputStream());
     } catch (IOException e) {
       throw new ErrorMessageException(new Message(FATAL, "Error reading from " + file.path()
           + ". Java exception is:\n" + getStackTraceAsString(e)));

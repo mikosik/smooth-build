@@ -141,7 +141,7 @@ public class PluginApiImplTest {
 
     SFile file = valueDb.read(FILE, hash);
     assertThat(file.path()).isEqualTo(path1);
-    assertThat(inputStreamToString(file.openInputStream())).isEqualTo(content);
+    assertThat(inputStreamToString(file.content().openInputStream())).isEqualTo(content);
   }
 
   @Test

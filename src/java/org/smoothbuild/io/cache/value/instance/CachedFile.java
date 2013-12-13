@@ -3,8 +3,6 @@ package org.smoothbuild.io.cache.value.instance;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.type.STypes.FILE;
 
-import java.io.InputStream;
-
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
@@ -29,10 +27,5 @@ public class CachedFile extends CachedValue implements SFile {
   @Override
   public SBlob content() {
     return content;
-  }
-
-  @Override
-  public InputStream openInputStream() {
-    return content.openInputStream();
   }
 }

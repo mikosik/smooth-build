@@ -33,7 +33,7 @@ public class FileArrayMatchers {
         for (SFile file : fileArray) {
           if (file.path().equals(path)) {
             try {
-              return inputStreamToString(file.openInputStream()).equals(content);
+              return inputStreamToString(file.content().openInputStream()).equals(content);
             } catch (IOException e) {
               throw new RuntimeException(e);
             }

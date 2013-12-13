@@ -22,7 +22,7 @@ public class InputSourceFile extends SimpleJavaFileObject {
 
   @Override
   public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-    try (InputStreamReader is = new InputStreamReader(file.openInputStream(), UTF_8)) {
+    try (InputStreamReader is = new InputStreamReader(file.content().openInputStream(), UTF_8)) {
       return CharStreams.toString(is);
     }
   }
