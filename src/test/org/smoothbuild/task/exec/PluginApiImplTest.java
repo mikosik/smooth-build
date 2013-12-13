@@ -3,6 +3,8 @@ package org.smoothbuild.task.exec;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
@@ -67,6 +69,37 @@ public class PluginApiImplTest {
   }
 
   @Test
+  public void file_array_builder_can_store_empty_array() throws Exception {
+    HashCode hash = pluginApi.arrayBuilder(FILE_ARRAY).build().hash();
+    SArray<SFile> fileArray = valueDb.read(FILE_ARRAY, hash);
+    assertThat(fileArray).isEmpty();
+  }
+
+  @Test
+  public void blob_array_builder_stores_blobs_in_value_db() throws Exception {
+    BlobBuilder blobBuilder = pluginApi.blobBuilder();
+    StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
+    SBlob blob = blobBuilder.build();
+
+    ArrayBuilder<SBlob> builder = pluginApi.arrayBuilder(BLOB_ARRAY);
+    builder.add(blob);
+    HashCode hash = builder.build().hash();
+
+    SArray<SBlob> fileArray = valueDb.read(BLOB_ARRAY, hash);
+    assertThat(Iterables.size(fileArray)).isEqualTo(1);
+    assertThat(inputStreamToString(fileArray.iterator().next().openInputStream())).isEqualTo(
+        content);
+  }
+
+  @Test
+  public void blob_array_builder_can_store_empty_array() throws Exception {
+    HashCode hash = pluginApi.arrayBuilder(BLOB_ARRAY).build().hash();
+
+    SArray<SBlob> fileArray = valueDb.read(BLOB_ARRAY, hash);
+    assertThat(fileArray).isEmpty();
+  }
+
+  @Test
   public void string_array_builder_stores_files_in_value_db() throws Exception {
     String jdkString1 = "my string 1";
     String jdkString2 = "my string 2";
@@ -89,6 +122,13 @@ public class PluginApiImplTest {
   }
 
   @Test
+  public void string_array_builder_can_store_empty_array() throws Exception {
+    HashCode hash = pluginApi.arrayBuilder(STRING_ARRAY).build().hash();
+    SArray<SString> stringArray = valueDb.read(STRING_ARRAY, hash);
+    assertThat(stringArray).isEmpty();
+  }
+
+  @Test
   public void file_builder_stores_file_in_value_db() throws Exception {
     BlobBuilder blobBuilder = pluginApi.blobBuilder();
     StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
@@ -102,6 +142,16 @@ public class PluginApiImplTest {
     SFile file = valueDb.read(FILE, hash);
     assertThat(file.path()).isEqualTo(path1);
     assertThat(inputStreamToString(file.openInputStream())).isEqualTo(content);
+  }
+
+  @Test
+  public void blob_builder_stores_blob_in_value_db() throws Exception {
+    BlobBuilder blobBuilder = pluginApi.blobBuilder();
+    StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
+    HashCode hash = blobBuilder.build().hash();
+
+    SBlob blob = valueDb.read(BLOB, hash);
+    assertThat(inputStreamToString(blob.openInputStream())).isEqualTo(content);
   }
 
   @Test
