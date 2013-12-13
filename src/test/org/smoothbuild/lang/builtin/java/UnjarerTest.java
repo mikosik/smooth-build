@@ -34,7 +34,7 @@ public class UnjarerTest {
     int fileCount = 0;
     for (SFile file : fileArray) {
       fileCount++;
-      assertContent(file.openInputStream(), file.path().value());
+      assertContent(file.content().openInputStream(), file.path().value());
     }
     assertThat(fileCount).isEqualTo(2);
   }

@@ -51,13 +51,6 @@ public class FakeFileTest {
   }
 
   @Test
-  public void open_output_stream_returns_data_passed_to_constructor() throws Exception {
-    given(file = new FakeFile(path, content));
-    when(Streams.inputStreamToString(file.openInputStream()));
-    thenReturned(content);
-  }
-
-  @Test
   public void open_output_stream_on_content_returns_data_passed_to_constructor() throws Exception {
     given(file = new FakeFile(path, content));
     when(Streams.inputStreamToString(file.content().openInputStream()));

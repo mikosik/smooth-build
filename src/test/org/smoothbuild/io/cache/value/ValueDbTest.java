@@ -286,7 +286,7 @@ public class ValueDbTest {
   public void created_file_contains_stored_bytes() throws IOException {
     given(blob = valueDb.writeBlob(bytes));
     given(file = valueDb.writeFile(path, blob));
-    when(inputStreamToBytes(file.openInputStream()));
+    when(inputStreamToBytes(file.content().openInputStream()));
     thenReturned(bytes);
   }
 

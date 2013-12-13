@@ -4,12 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.util.Streams.inputStreamToString;
 
-import java.io.InputStream;
 import java.net.URI;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.testing.lang.type.FakeFile;
 
 public class InputClassFileTest {
 
@@ -49,11 +50,11 @@ public class InputClassFileTest {
 
   @Test
   public void openInputStream() throws Exception {
-    InputStream inputStream = mock(InputStream.class);
-    SFile file = file("my/package/Klass.class");
-    when(file.openInputStream()).thenReturn(inputStream);
+    String content = "some content";
+    SFile file = new FakeFile(path("my/package/Klass.class"), content);
+    InputClassFile inputClassFile = new InputClassFile(file);
 
-    assertThat(new InputClassFile(file).openInputStream()).isSameAs(inputStream);
+    assertThat(inputStreamToString(inputClassFile.openInputStream())).isEqualTo(content);
   }
 
   private InputClassFile inputClassFile(String path) {

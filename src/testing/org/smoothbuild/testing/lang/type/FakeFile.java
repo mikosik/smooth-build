@@ -1,9 +1,6 @@
 package org.smoothbuild.testing.lang.type;
 
-import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.lang.type.STypes.FILE;
-
-import java.io.InputStream;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.Marshaller;
@@ -23,7 +20,7 @@ public class FakeFile extends CachedValue implements SFile {
   }
 
   public FakeFile(Path path, String content) {
-    this(path, content.getBytes(CHARSET));
+    this(path, new FakeBlob(content));
   }
 
   public FakeFile(Path path, byte[] bytes) {
@@ -44,11 +41,6 @@ public class FakeFile extends CachedValue implements SFile {
   @Override
   public SBlob content() {
     return content;
-  }
-
-  @Override
-  public InputStream openInputStream() {
-    return content.openInputStream();
   }
 
   private static HashCode calculateHash(Path path, SBlob blob) {

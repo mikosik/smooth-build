@@ -24,8 +24,8 @@ public class FileMatchers {
         if (!expected.path().equals(actual.path())) {
           return false;
         }
-        try (InputStream expectedInputStream = expected.openInputStream();
-            InputStream actualInputStream = actual.openInputStream()) {
+        try (InputStream expectedInputStream = expected.content().openInputStream();
+            InputStream actualInputStream = actual.content().openInputStream()) {
           byte[] expectedBytes = ByteStreams.toByteArray(expectedInputStream);
           byte[] actualBytes = ByteStreams.toByteArray(actualInputStream);
           return Arrays.equals(expectedBytes, actualBytes);

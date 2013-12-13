@@ -79,7 +79,7 @@ public class JarFunction {
       JarEntry entry = new JarEntry(path.value());
       jarOutputStream.putNextEntry(entry);
 
-      try (InputStream inputStream = file.openInputStream();) {
+      try (InputStream inputStream = file.content().openInputStream();) {
         int readCount = inputStream.read(buffer);
         while (readCount > 0) {
           jarOutputStream.write(buffer, 0, readCount);

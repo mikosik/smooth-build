@@ -28,7 +28,7 @@ public class FakeValueDbTest {
   @Test
   public void created_file_containing_its_path_can_be_read_from_db2() throws IOException {
     given(file = fakeValueDb.createFileContainingItsPath(path));
-    when(inputStreamToString(fakeValueDb.read(FILE, file.hash()).openInputStream()));
+    when(inputStreamToString(fakeValueDb.read(FILE, file.hash()).content().openInputStream()));
     thenReturned(path.value());
   }
 }

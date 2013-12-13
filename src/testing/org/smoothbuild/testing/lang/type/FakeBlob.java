@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.type.STypes.BLOB;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.smoothbuild.command.SmoothContants;
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.instance.CachedValue;
 import org.smoothbuild.lang.type.SBlob;
@@ -14,6 +15,10 @@ public class FakeBlob extends CachedValue implements SBlob {
 
   public FakeBlob() {
     this(new byte[] { 1, 2, 3 });
+  }
+
+  public FakeBlob(String string) {
+    this(string.getBytes(SmoothContants.CHARSET));
   }
 
   public FakeBlob(byte[] data) {

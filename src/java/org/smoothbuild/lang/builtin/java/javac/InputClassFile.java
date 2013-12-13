@@ -37,7 +37,7 @@ public class InputClassFile extends SimpleJavaFileObject {
 
   @Override
   public InputStream openInputStream() throws IOException {
-    return file.openInputStream();
+    return file.content().openInputStream();
   }
 
   @Override

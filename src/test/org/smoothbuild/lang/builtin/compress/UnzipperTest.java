@@ -38,7 +38,7 @@ public class UnzipperTest {
     int fileCount = 0;
     for (SFile file : resultFileArray) {
       fileCount++;
-      assertContent(file.openInputStream(), file.path().value());
+      assertContent(file.content().openInputStream(), file.path().value());
     }
     assertThat(fileCount).isEqualTo(2);
   }

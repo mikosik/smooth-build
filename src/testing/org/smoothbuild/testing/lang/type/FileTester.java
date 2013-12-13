@@ -13,6 +13,6 @@ public class FileTester {
   }
 
   public static void assertContentContains(SFile file, String content) throws IOException {
-    assertContent(file.openInputStream(), content);
+    assertContent(file.content().openInputStream(), content);
   }
 }
