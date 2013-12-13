@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.8.0 (??????????)
+Version 0.8.0 (2013.12.13)
 --------------------------
 
  * command line 'smooth build' without functions will print available functions
