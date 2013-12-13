@@ -5,6 +5,7 @@ import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import org.junit.Test;
+import org.smoothbuild.command.err.DuplicatedFunctionNameWarning;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 
@@ -16,7 +17,7 @@ public class CommandLineParserTest {
   CommandLineParser parser = new CommandLineParser(messages);
 
   @Test
-  public void functionToRun() {
+  public void functions_to_run() {
     CommandLineArguments args = parser.parse(ImmutableList.of(functionName));
     assertThat(args.functionsToRun()).isEqualTo(ImmutableList.of(name(functionName)));
   }
@@ -25,6 +26,12 @@ public class CommandLineParserTest {
   public void illegal_function_name_is_reported() throws Exception {
     parser.parse(ImmutableList.of("illegal^namme"));
     messages.assertContainsOnly(IllegalFunctionNameError.class);
+  }
+
+  @Test
+  public void dpulicate_is_detected() throws Exception {
+    parser.parse(ImmutableList.of("abc", "def", "abc"));
+    messages.assertContainsOnly(DuplicatedFunctionNameWarning.class);
   }
 
   @Test
