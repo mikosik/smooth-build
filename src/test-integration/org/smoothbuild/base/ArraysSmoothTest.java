@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.parse.err.ForbiddenArrayElemTypeError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
@@ -24,6 +25,28 @@ public class ArraysSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.messages().assertContainsOnly(SyntaxError.class);
+  }
+
+  /**
+   * arrays nested inline ( [[ 'abc' ]] ) are detected as syntax errors while
+   * those passed as function results ([ myArray() ]) are detected by parser.
+   * This will probably change in future when more complicated expression are
+   * allowed.
+   */
+  @Test
+  public void nested_arrays_are_forbidden_regression_test() throws IOException {
+    // given
+    ScriptBuilder scriptBuilder = new ScriptBuilder();
+    scriptBuilder.addLine("someArray: [ 'abc' ] ;");
+    scriptBuilder.addLine("run: [ someArray ] ;");
+
+    script(scriptBuilder.build());
+
+    // when
+    build("run");
+
+    // then
+    userConsole.messages().assertContainsOnly(ForbiddenArrayElemTypeError.class);
   }
 
   @Test
