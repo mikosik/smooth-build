@@ -53,7 +53,11 @@ public class STypes {
    * be used there.
    */
 
-  static final ImmutableSet<SType<?>> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING);
+  /**
+   * NOTHING is not a basic type as it is not possible to create instance of
+   * that type.
+   */
+  static final ImmutableSet<SType<?>> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
   static final ImmutableSet<SArrayType<?>> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY, BLOB_ARRAY,
       FILE_ARRAY, EMPTY_ARRAY);
 
