@@ -3,6 +3,7 @@ package org.smoothbuild.util;
 import java.util.Set;
 
 import com.google.common.collect.HashMultiset;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
 
@@ -29,5 +30,9 @@ public class DuplicatesDetector<T> {
       }
     }
     return result;
+  }
+
+  public Set<T> getUniqueValues() {
+    return ImmutableSet.copyOf(set.elementSet());
   }
 }
