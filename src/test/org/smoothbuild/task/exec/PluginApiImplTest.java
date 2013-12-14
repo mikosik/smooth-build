@@ -94,7 +94,6 @@ public class PluginApiImplTest {
   @Test
   public void blob_array_builder_can_store_empty_array() throws Exception {
     HashCode hash = pluginApi.arrayBuilder(BLOB_ARRAY).build().hash();
-
     SArray<SBlob> fileArray = valueDb.read(BLOB_ARRAY, hash);
     assertThat(fileArray).isEmpty();
   }
