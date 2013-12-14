@@ -27,93 +27,95 @@ public class DuplicatesDetectorTest {
   @Test
   public void adding_first_element_returns_false() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    when(duplicatesDetector).add(string1);
+    when(duplicatesDetector).addValue(string1);
     thenReturned(false);
   }
 
   @Test
   public void has_no_duplicates_after_adding_first_element() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    when(duplicatesDetector).add(string1);
+    when(duplicatesDetector).addValue(string1);
     then(!duplicatesDetector.hasDuplicates());
   }
 
   @Test
   public void adding_element_for_the_second_time_returns_true() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector).add(string1);
+    given(duplicatesDetector).addValue(string1);
+    when(duplicatesDetector).addValue(string1);
     thenReturned(true);
   }
 
   @Test
   public void has_duplicates_after_adding_element_twice() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector).add(string1);
+    given(duplicatesDetector).addValue(string1);
+    when(duplicatesDetector).addValue(string1);
     then(duplicatesDetector.hasDuplicates());
   }
 
   @Test
   public void adding_second_but_different_element_returns_false() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector).add(string2);
+    given(duplicatesDetector).addValue(string1);
+    when(duplicatesDetector).addValue(string2);
     thenReturned(false);
   }
 
   @Test
   public void has_no_duplicates_after_adding_two_different_elements() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector).add(string2);
+    given(duplicatesDetector).addValue(string1);
+    when(duplicatesDetector).addValue(string2);
     then(!duplicatesDetector.hasDuplicates());
   }
 
-  // getDuplicates()
+  // getDuplicateValues()
 
   @Test
-  public void get_duplicates_returns_empty_set_initially() throws Exception {
+  public void get_duplicate_values_returns_empty_set_initially() throws Exception {
     when(duplicatesDetector = new DuplicatesDetector<String>());
-    then(duplicatesDetector.getDuplicates(), empty());
+    then(duplicatesDetector.getDuplicateValues(), empty());
   }
 
   @Test
-  public void get_duplicates_returns_empty_set_when_one_element_has_been_added() throws Exception {
-    given(duplicatesDetector = new DuplicatesDetector<String>());
-    when(duplicatesDetector).add(string1);
-    then(duplicatesDetector.getDuplicates(), empty());
-  }
-
-  @Test
-  public void get_duplicates_returns_empty_set_when_two_different_elements_have_been_added()
+  public void get_duplicate_values_returns_empty_set_when_one_element_has_been_added()
       throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector).add(string2);
-    then(duplicatesDetector.getDuplicates(), empty());
+    when(duplicatesDetector).addValue(string1);
+    then(duplicatesDetector.getDuplicateValues(), empty());
   }
 
   @Test
-  public void get_duplicates_returns_set_with_element_that_has_been_added_twice() throws Exception {
-    given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector).add(string1);
-    thenEqual(duplicatesDetector.getDuplicates(), newHashSet(string1));
-  }
-
-  @Test
-  public void get_duplicates_returns_set_with_elements_that_have_been_added_twice_without_those_added_once()
+  public void get_duplicate_values_returns_empty_set_when_two_different_elements_have_been_added()
       throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    given(duplicatesDetector).add(string1);
-    given(duplicatesDetector).add(string2);
-    given(duplicatesDetector).add(string3);
-    given(duplicatesDetector).add(string3);
-    given(duplicatesDetector).add(string4);
+    given(duplicatesDetector).addValue(string1);
+    when(duplicatesDetector).addValue(string2);
+    then(duplicatesDetector.getDuplicateValues(), empty());
+  }
 
-    thenEqual(duplicatesDetector.getDuplicates(), newHashSet(string1, string3));
+  @Test
+  public void get_duplicate_values_returns_set_with_element_that_has_been_added_twice()
+      throws Exception {
+    given(duplicatesDetector = new DuplicatesDetector<String>());
+    given(duplicatesDetector).addValue(string1);
+    when(duplicatesDetector).addValue(string1);
+    thenEqual(duplicatesDetector.getDuplicateValues(), newHashSet(string1));
+  }
+
+  @Test
+  public void get_duplicate_values_returns_set_with_elements_that_have_been_added_twice_without_those_added_once()
+      throws Exception {
+    given(duplicatesDetector = new DuplicatesDetector<String>());
+    given(duplicatesDetector).addValue(string1);
+    given(duplicatesDetector).addValue(string1);
+    given(duplicatesDetector).addValue(string2);
+    given(duplicatesDetector).addValue(string3);
+    given(duplicatesDetector).addValue(string3);
+    given(duplicatesDetector).addValue(string4);
+
+    thenEqual(duplicatesDetector.getDuplicateValues(), newHashSet(string1, string3));
   }
 
   // getUniqueValues()
@@ -128,23 +130,23 @@ public class DuplicatesDetectorTest {
   @Test
   public void get_unique_values_returns_element_that_has_been_added() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    when(duplicatesDetector).add(string1);
+    when(duplicatesDetector).addValue(string1);
     thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1));
   }
 
   @Test
   public void get_unique_values_returns_both_added_elements() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector).add(string2);
+    given(duplicatesDetector).addValue(string1);
+    when(duplicatesDetector).addValue(string2);
     thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1, string2));
   }
 
   @Test
   public void get_unique_values_returns_contains_only_once_duplicated_element() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    when(duplicatesDetector).add(string1);
+    given(duplicatesDetector).addValue(string1);
+    when(duplicatesDetector).addValue(string1);
     thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1));
   }
 
@@ -152,12 +154,12 @@ public class DuplicatesDetectorTest {
   public void get_unique_values_returns_set_with_deduplicated_values_that_has_been_added()
       throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<String>());
-    given(duplicatesDetector).add(string1);
-    given(duplicatesDetector).add(string1);
-    given(duplicatesDetector).add(string2);
-    given(duplicatesDetector).add(string3);
-    given(duplicatesDetector).add(string3);
-    given(duplicatesDetector).add(string4);
+    given(duplicatesDetector).addValue(string1);
+    given(duplicatesDetector).addValue(string1);
+    given(duplicatesDetector).addValue(string2);
+    given(duplicatesDetector).addValue(string3);
+    given(duplicatesDetector).addValue(string3);
+    given(duplicatesDetector).addValue(string4);
 
     thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1, string2, string3, string4));
   }

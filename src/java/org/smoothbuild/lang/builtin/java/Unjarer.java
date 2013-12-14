@@ -59,7 +59,7 @@ public class Unjarer {
           if (filter.apply(fileName)) {
             SFile file = unjarEntry(jarInputStream, fileName);
             Path path = file.path();
-            if (duplicatesDetector.add(path)) {
+            if (duplicatesDetector.addValue(path)) {
               throw new ErrorMessageException(new DuplicatePathInJarError(path));
             } else {
               fileArrayBuilder.add(file);

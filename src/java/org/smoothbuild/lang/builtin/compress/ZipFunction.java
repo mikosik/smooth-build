@@ -61,7 +61,7 @@ public class ZipFunction {
 
     private void addEntry(ZipOutputStream zipOutputStream, SFile file) throws IOException {
       Path path = file.path();
-      if (duplicatesDetector.add(path)) {
+      if (duplicatesDetector.addValue(path)) {
         throw new ErrorMessageException(new CannotAddDuplicatePathError(path));
       }
       ZipEntry entry = new ZipEntry(path.value());

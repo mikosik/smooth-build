@@ -31,7 +31,7 @@ public class BinaryNameToClassFile {
       for (SFile classFile : fileArray) {
         Path classFilePath = classFile.path();
         String binaryName = toBinaryName(classFilePath);
-        if (duplicatesDetector.add(classFilePath)) {
+        if (duplicatesDetector.addValue(classFilePath)) {
           throw new ErrorMessageException(new DuplicateClassFileError(classFilePath));
         } else {
           binaryNameToClassFile.put(binaryName, classFile);

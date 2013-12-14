@@ -40,7 +40,7 @@ public class CommandLineParser {
     for (String nameString : args) {
       if (isLegalName(nameString)) {
         Name name = name(nameString);
-        if (!duplicatesDetector.add(name)) {
+        if (!duplicatesDetector.addValue(name)) {
           builder.add(name);
         }
       } else {
@@ -48,7 +48,7 @@ public class CommandLineParser {
       }
     }
 
-    for (Name name : duplicatesDetector.getDuplicates()) {
+    for (Name name : duplicatesDetector.getDuplicateValues()) {
       messages.report(new DuplicatedFunctionNameWarning(name));
     }
 

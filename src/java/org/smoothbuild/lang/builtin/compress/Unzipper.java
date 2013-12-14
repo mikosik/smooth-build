@@ -64,7 +64,7 @@ public class Unzipper {
       throw new ErrorMessageException(new IllegalPathInZipError(fileName));
     }
     Path path = path(fileName);
-    if (duplicatesDetector.add(path)) {
+    if (duplicatesDetector.addValue(path)) {
       throw new ErrorMessageException(new DuplicatePathInZipError(path));
     }
 
