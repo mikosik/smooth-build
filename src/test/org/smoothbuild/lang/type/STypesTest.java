@@ -55,7 +55,7 @@ public class STypesTest {
 
   @Test
   public void testBasicTypes() throws Exception {
-    assertThat(basicTypes()).containsExactly(STRING, BLOB, FILE, NOTHING);
+    assertThat(basicTypes()).containsExactly(STRING, BLOB, FILE);
   }
 
   @Test
