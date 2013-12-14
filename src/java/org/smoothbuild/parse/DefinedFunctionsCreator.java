@@ -169,7 +169,9 @@ public class DefinedFunctionsCreator {
       for (ArrayElemContext elem : elems) {
         Node node = build(elem);
         if (!basicTypes().contains(node.type())) {
-          messages.report(new ForbiddenArrayElemTypeError(locationOf(elem), node.type()));
+          CodeLocation location = locationOf(elem);
+          messages.report(new ForbiddenArrayElemTypeError(location, node.type()));
+          builder.add(new InvalidNode(NOTHING, location));
         } else {
           builder.add(node);
         }
