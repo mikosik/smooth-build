@@ -53,7 +53,7 @@ import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.parse.err.ForbiddenArrayElemTypeError;
+import org.smoothbuild.parse.err.ForbiddenArrayElemError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -170,7 +170,7 @@ public class DefinedFunctionsCreator {
         Node node = build(elem);
         if (!basicTypes().contains(node.type())) {
           CodeLocation location = locationOf(elem);
-          messages.report(new ForbiddenArrayElemTypeError(location, node.type()));
+          messages.report(new ForbiddenArrayElemError(location, node.type()));
           builder.add(new InvalidNode(NOTHING, location));
         } else {
           builder.add(node);
