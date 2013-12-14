@@ -9,6 +9,10 @@ public class SType<T extends SValue> {
   private final String name;
   private final TypeLiteral<? extends SValue> javaType;
 
+  protected static <T extends SValue> SType<T> sType(String name, TypeLiteral<T> javaType) {
+    return new SType<T>(name, javaType);
+  }
+
   protected SType(String name, TypeLiteral<T> javaType) {
     this.name = name;
     this.javaType = javaType;
