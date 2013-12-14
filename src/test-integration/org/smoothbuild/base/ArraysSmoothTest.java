@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.parse.err.ForbiddenArrayElemTypeError;
+import org.smoothbuild.parse.err.ForbiddenArrayElemError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
@@ -46,7 +46,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
     build("run");
 
     // then
-    userConsole.messages().assertContainsOnly(ForbiddenArrayElemTypeError.class);
+    userConsole.messages().assertContainsOnly(ForbiddenArrayElemError.class);
   }
 
   @Test
