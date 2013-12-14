@@ -2,27 +2,27 @@ package org.smoothbuild.command;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class CommandLineArguments {
   private final Path scriptFile;
-  private final ImmutableList<Name> functions;
+  private final ImmutableSet<Name> functions;
 
-  public CommandLineArguments(Path scriptFile, List<Name> functions) {
+  public CommandLineArguments(Path scriptFile, Collection<Name> functions) {
     this.scriptFile = checkNotNull(scriptFile);
-    this.functions = ImmutableList.copyOf(functions);
+    this.functions = ImmutableSet.copyOf(functions);
   }
 
   public Path scriptFile() {
     return scriptFile;
   }
 
-  public ImmutableList<Name> functionsToRun() {
+  public ImmutableSet<Name> functionsToRun() {
     return functions;
   }
 }
