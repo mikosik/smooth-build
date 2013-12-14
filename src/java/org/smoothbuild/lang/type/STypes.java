@@ -1,5 +1,8 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.SArrayType.sArrayType;
+import static org.smoothbuild.lang.type.SType.sType;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
@@ -35,17 +38,15 @@ public class STypes {
    * Smooth types. Used by smooth-build code to represent smooth types.
    */
 
-  public static final SType<SString> STRING = new SType<SString>(STRING_N, STRING_T);
-  public static final SType<SBlob> BLOB = new SType<SBlob>(BLOB_N, BLOB_T);
-  public static final SType<SFile> FILE = new SType<SFile>(FILE_N, FILE_T);
-  public static final SType<SNothing> NOTHING = new SType<SNothing>(NOTHING_N, NOTHING_T);
+  public static final SType<SString> STRING = sType(STRING_N, STRING_T);
+  public static final SType<SBlob> BLOB = sType(BLOB_N, BLOB_T);
+  public static final SType<SFile> FILE = sType(FILE_N, FILE_T);
+  public static final SType<SNothing> NOTHING = sType(NOTHING_N, NOTHING_T);
 
-  public static final SArrayType<SString> STRING_ARRAY =
-      new SArrayType<SString>(STRING_A_T, STRING);
-  public static final SArrayType<SBlob> BLOB_ARRAY = new SArrayType<SBlob>(BLOB_A_T, BLOB);
-  public static final SArrayType<SFile> FILE_ARRAY = new SArrayType<SFile>(FILE_A_T, FILE);
-  public static final SArrayType<SNothing> EMPTY_ARRAY = new SArrayType<SNothing>(EMPTY_A_T,
-      NOTHING);
+  public static final SArrayType<SString> STRING_ARRAY = sArrayType(STRING_A_T, STRING);
+  public static final SArrayType<SBlob> BLOB_ARRAY = sArrayType(BLOB_A_T, BLOB);
+  public static final SArrayType<SFile> FILE_ARRAY = sArrayType(FILE_A_T, FILE);
+  public static final SArrayType<SNothing> EMPTY_ARRAY = sArrayType(EMPTY_A_T, NOTHING);
 
   /*
    * Not each type can be used in every place. Each set below represent one
