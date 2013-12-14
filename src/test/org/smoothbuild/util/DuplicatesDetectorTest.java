@@ -1,9 +1,10 @@
 package org.smoothbuild.util;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static com.google.common.collect.Sets.newHashSet;
 import static org.hamcrest.Matchers.empty;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
+import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
@@ -98,7 +99,7 @@ public class DuplicatesDetectorTest {
     given(duplicatesDetector = new DuplicatesDetector<String>());
     given(duplicatesDetector).add(string1);
     when(duplicatesDetector).add(string1);
-    then(duplicatesDetector.getDuplicates(), containsInAnyOrder(string1));
+    thenEqual(duplicatesDetector.getDuplicates(), newHashSet(string1));
   }
 
   @Test
@@ -112,6 +113,52 @@ public class DuplicatesDetectorTest {
     given(duplicatesDetector).add(string3);
     given(duplicatesDetector).add(string4);
 
-    then(duplicatesDetector.getDuplicates(), containsInAnyOrder(string1, string3));
+    thenEqual(duplicatesDetector.getDuplicates(), newHashSet(string1, string3));
+  }
+
+  // getUniqueValues()
+
+  @Test
+  public void initially_get_unique_values_is_empty() throws Exception {
+    given(duplicatesDetector = new DuplicatesDetector<String>());
+    when(duplicatesDetector.getUniqueValues());
+    thenReturned(empty());
+  }
+
+  @Test
+  public void get_unique_values_returns_element_that_has_been_added() throws Exception {
+    given(duplicatesDetector = new DuplicatesDetector<String>());
+    when(duplicatesDetector).add(string1);
+    thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1));
+  }
+
+  @Test
+  public void get_unique_values_returns_both_added_elements() throws Exception {
+    given(duplicatesDetector = new DuplicatesDetector<String>());
+    given(duplicatesDetector).add(string1);
+    when(duplicatesDetector).add(string2);
+    thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1, string2));
+  }
+
+  @Test
+  public void get_unique_values_returns_contains_only_once_duplicated_element() throws Exception {
+    given(duplicatesDetector = new DuplicatesDetector<String>());
+    given(duplicatesDetector).add(string1);
+    when(duplicatesDetector).add(string1);
+    thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1));
+  }
+
+  @Test
+  public void get_unique_values_returns_set_with_deduplicated_values_that_has_been_added()
+      throws Exception {
+    given(duplicatesDetector = new DuplicatesDetector<String>());
+    given(duplicatesDetector).add(string1);
+    given(duplicatesDetector).add(string1);
+    given(duplicatesDetector).add(string2);
+    given(duplicatesDetector).add(string3);
+    given(duplicatesDetector).add(string3);
+    given(duplicatesDetector).add(string4);
+
+    thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1, string2, string3, string4));
   }
 }
