@@ -10,6 +10,7 @@ import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.testing.message.FakeMessageGroup;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class CommandLineParserTest {
   String functionName = "function1";
@@ -19,7 +20,7 @@ public class CommandLineParserTest {
   @Test
   public void functions_to_run() {
     CommandLineArguments args = parser.parse(ImmutableList.of(functionName));
-    assertThat(args.functionsToRun()).isEqualTo(ImmutableList.of(name(functionName)));
+    assertThat(args.functionsToRun()).isEqualTo(ImmutableSet.of(name(functionName)));
   }
 
   @Test
