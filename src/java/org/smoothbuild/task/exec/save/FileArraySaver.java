@@ -36,14 +36,14 @@ public class FileArraySaver implements Saver<SArray<SFile>> {
 
     for (SFile file : fileArray) {
       Path sourcePath = artifactPath.append(file.path());
-      if (!duplicatesDetector.add(sourcePath)) {
+      if (!duplicatesDetector.addValue(sourcePath)) {
         Path targetPath = targetPath(file.content());
         smoothFileSystem.createLink(sourcePath, targetPath);
       }
     }
 
     if (duplicatesDetector.hasDuplicates()) {
-      Set<Path> duplicates = duplicatesDetector.getDuplicates();
+      Set<Path> duplicates = duplicatesDetector.getDuplicateValues();
       messages.report(new DuplicatePathsInFileArrayArtifactError(name, duplicates));
     }
   }

@@ -73,7 +73,7 @@ public class JarFunction {
 
     private void addEntry(JarOutputStream jarOutputStream, SFile file) throws IOException {
       Path path = file.path();
-      if (duplicatesDetector.add(path)) {
+      if (duplicatesDetector.addValue(path)) {
         throw new ErrorMessageException(new CannotAddDuplicatePathError(path));
       }
       JarEntry entry = new JarEntry(path.value());

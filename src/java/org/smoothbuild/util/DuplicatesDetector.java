@@ -11,7 +11,7 @@ public class DuplicatesDetector<T> {
   private final Multiset<T> set = HashMultiset.create();
   private boolean hasDuplicates = false;
 
-  public boolean add(T value) {
+  public boolean addValue(T value) {
     boolean alreadyContains = set.contains(value);
     hasDuplicates = hasDuplicates || alreadyContains;
     set.add(value);
@@ -22,7 +22,7 @@ public class DuplicatesDetector<T> {
     return hasDuplicates;
   }
 
-  public Set<T> getDuplicates() {
+  public Set<T> getDuplicateValues() {
     Set<T> result = Sets.newHashSet();
     for (Multiset.Entry<T> entry : set.entrySet()) {
       if (1 < entry.getCount()) {
