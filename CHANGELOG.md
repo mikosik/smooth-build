@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 0.9.0 (??????????)
+--------------------------
+
+ * fixed "Too many open files" bug caused by not closing all streams correctly
+
 Version 0.8.0 (2013.12.13)
 --------------------------
 
