@@ -66,8 +66,10 @@ public class JarFunction {
       if (params.manifest() == null) {
         return new JarOutputStream(outputStream);
       } else {
-        Manifest manifest = new Manifest(params.manifest().openInputStream());
-        return new JarOutputStream(outputStream, manifest);
+        try (InputStream manifestStream = params.manifest().openInputStream();) {
+          Manifest manifest = new Manifest(manifestStream);
+          return new JarOutputStream(outputStream, manifest);
+        }
       }
     }
 
