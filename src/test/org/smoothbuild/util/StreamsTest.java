@@ -44,6 +44,18 @@ public class StreamsTest {
     thenReturned(content);
   }
 
+  @Test
+  public void input_stream_to_string_rethrows_io_exceptions() throws Exception {
+    inputStream = mock(InputStream.class);
+    BDDMockito.willThrow(IOException.class).given(inputStream).read((byte[]) Matchers.any());
+    try {
+      Streams.inputStreamToString(inputStream);
+      fail("exception should be thrown");
+    } catch (IOException e) {
+      // expected
+    }
+  }
+
   // inputStreamToByteArray()
 
   @Test
