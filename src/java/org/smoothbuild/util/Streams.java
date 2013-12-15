@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
-
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 
@@ -25,11 +23,9 @@ public class Streams {
     }
   }
 
-  public static void copy(InputStream from, OutputStream to) {
+  public static void copy(InputStream from, OutputStream to) throws IOException {
     try (InputStream input = from; OutputStream output = to) {
       ByteStreams.copy(input, output);
-    } catch (IOException e) {
-      throw new FileSystemException(e);
     }
   }
 }
