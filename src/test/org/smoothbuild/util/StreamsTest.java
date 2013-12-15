@@ -1,5 +1,7 @@
 package org.smoothbuild.util;
 
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.util.Streams.copy;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
+import org.mockito.BDDMockito;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.testory.common.Closure;
@@ -39,6 +42,34 @@ public class StreamsTest {
     given(inputStream = inputStreamContaining(content));
     when(Streams.inputStreamToString(inputStream));
     thenReturned(content);
+  }
+
+  // inputStreamToByteArray()
+
+  @Test
+  public void input_stream_to_byte_array() throws Exception {
+    given(inputStream = new ByteArrayInputStream(bytes.clone()));
+    when(Streams.inputStreamToByteArray(inputStream));
+    thenReturned(bytes);
+  }
+
+  @Test
+  public void empty_input_stream_to_byt_array() throws Exception {
+    given(inputStream = new ByteArrayInputStream(new byte[] {}));
+    when(Streams.inputStreamToByteArray(inputStream));
+    thenReturned(new byte[] {});
+  }
+
+  @Test
+  public void input_stream_to_byte_array_rethrows_io_exceptions() throws Exception {
+    inputStream = mock(InputStream.class);
+    BDDMockito.willThrow(IOException.class).given(inputStream).read((byte[]) Matchers.any());
+    try {
+      Streams.inputStreamToByteArray(inputStream);
+      fail("exception should be thrown");
+    } catch (IOException e) {
+      // expected
+    }
   }
 
   // copy()

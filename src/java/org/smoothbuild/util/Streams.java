@@ -19,6 +19,12 @@ public class Streams {
     }
   }
 
+  public static byte[] inputStreamToByteArray(InputStream inputStream) throws IOException {
+    try (InputStream is = inputStream) {
+      return ByteStreams.toByteArray(is);
+    }
+  }
+
   public static void copy(InputStream from, OutputStream to) {
     try (InputStream input = from; OutputStream output = to) {
       ByteStreams.copy(input, output);
