@@ -5,12 +5,15 @@ import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.copy;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.builtin.file.err.NoSuchFileButDirError;
 import org.smoothbuild.lang.builtin.file.err.NoSuchFileError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
@@ -70,11 +73,20 @@ public class FileFunction {
       }
     }
 
+    // TODO refactor common code from here and FilesFunction
     private SBlob createContent(Path path) {
       InputStream inputStream = pluginApi.projectFileSystem().openInputStream(path);
       BlobBuilder contentBuilder = pluginApi.blobBuilder();
-      copy(inputStream, contentBuilder.openOutputStream());
+      doCopy(inputStream, contentBuilder.openOutputStream());
       return contentBuilder.build();
+    }
+
+    private static void doCopy(InputStream source, OutputStream destination) {
+      try {
+        copy(source, destination);
+      } catch (IOException e) {
+        throw new FileSystemException(e);
+      }
     }
   }
 }
