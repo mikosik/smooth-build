@@ -21,7 +21,6 @@ public class ReadFile implements ReadValue<SFile> {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       HashCode blobHash = unmarshaller.readHash();
       Path path = unmarshaller.readPath();
-      // TODO copy pasted from BlobReader
       CachedBlob blob = new CachedBlob(hashedDb, blobHash);
 
       return new CachedFile(path, blob, hash);
