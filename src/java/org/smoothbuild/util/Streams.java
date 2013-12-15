@@ -10,6 +10,10 @@ import java.io.OutputStream;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 
+/**
+ * Utility methods for converting stream data to required format and closing
+ * stream afterwards.
+ */
 public class Streams {
   public static String inputStreamToString(InputStream inputStream) throws IOException {
     try (InputStreamReader is = new InputStreamReader(inputStream, CHARSET)) {
