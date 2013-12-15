@@ -2,6 +2,7 @@ package org.smoothbuild.util;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.util.Streams.copy;
@@ -56,6 +57,13 @@ public class StreamsTest {
     }
   }
 
+  @Test
+  public void input_stream_to_string_closes_stream() throws Exception {
+    inputStream = spy(inputStreamContaining(content));
+    Streams.inputStreamToString(inputStream);
+    verify(inputStream).close();
+  }
+
   // inputStreamToByteArray()
 
   @Test
@@ -82,6 +90,13 @@ public class StreamsTest {
     } catch (IOException e) {
       // expected
     }
+  }
+
+  @Test
+  public void input_stream_to_byte_array_closes_stream() throws Exception {
+    inputStream = spy(new ByteArrayInputStream(bytes));
+    Streams.inputStreamToByteArray(inputStream);
+    verify(inputStream).close();
   }
 
   // copy()
