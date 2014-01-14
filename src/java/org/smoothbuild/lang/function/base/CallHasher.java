@@ -23,8 +23,11 @@ public class CallHasher {
     for (Param param : function.params().values()) {
       Result argument = args.get(param.name());
       if (argument != null) {
-        hasher.putBytes(Hash.string(param.name()).asBytes());
-        hasher.putBytes(argument.value().hash().asBytes());
+        HashCode paramNameHash = param.nameHash();
+        HashCode valueHash = argument.value().hash();
+
+        hasher.putBytes(paramNameHash.asBytes());
+        hasher.putBytes(valueHash.asBytes());
       }
     }
     return hasher.hash();
