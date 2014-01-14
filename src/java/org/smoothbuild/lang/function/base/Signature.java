@@ -32,7 +32,9 @@ public class Signature {
   }
 
   /**
-   * Parameters sorted lexicographically by their names.
+   * @return Parameters ordered lexicographically by their names. Methods
+   *         values(), keySet(), entrySet() of returned map returns collections
+   *         which elements keep that order.
    */
   public ImmutableMap<String, Param> params() {
     return params;
