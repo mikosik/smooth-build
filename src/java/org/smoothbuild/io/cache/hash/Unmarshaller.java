@@ -1,6 +1,8 @@
 package org.smoothbuild.io.cache.hash;
 
 import static org.smoothbuild.command.SmoothContants.CHARSET;
+import static org.smoothbuild.io.cache.hash.Constants.FALSE_AS_BYTE;
+import static org.smoothbuild.io.cache.hash.Constants.TRUE_AS_BYTE;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.Closeable;
@@ -70,9 +72,9 @@ public class Unmarshaller implements Closeable {
   public boolean readBool() {
     byte byteValue = readBytes(1, "bool")[0];
     switch (byteValue) {
-      case HashedDb.FALSE_AS_BYTE:
+      case FALSE_AS_BYTE:
         return false;
-      case HashedDb.TRUE_AS_BYTE:
+      case TRUE_AS_BYTE:
         return true;
       default:
         throw new ErrorMessageException(new CorruptedBoolError(byteValue));

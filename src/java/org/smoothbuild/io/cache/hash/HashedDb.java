@@ -16,9 +16,6 @@ import org.smoothbuild.message.listen.ErrorMessageException;
 import com.google.common.hash.HashCode;
 
 public class HashedDb {
-  public static final byte FALSE_AS_BYTE = 1;
-  public static final byte TRUE_AS_BYTE = 2;
-
   private final FileSystem dbFileSystem;
 
   public HashedDb(FileSystem dbFileSystem) {
