@@ -22,8 +22,8 @@ public class CachableFunction extends AbstractFunction {
   @Override
   public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> args,
       CodeLocation codeLocation) {
-    CallHasher nativeCallHasher = new CallHasher(function, args);
+    CallHasher callHasher = new CallHasher(function, args);
     Task task = function.generateTask(taskGenerator, args, codeLocation);
-    return new CachingTask(taskDb, nativeCallHasher, task);
+    return new CachingTask(taskDb, callHasher, task);
   }
 }
