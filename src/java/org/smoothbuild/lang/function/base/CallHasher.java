@@ -3,6 +3,7 @@ package org.smoothbuild.lang.function.base;
 import java.util.Map;
 
 import org.smoothbuild.io.cache.hash.Hash;
+import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.task.base.Result;
 
 import com.google.common.hash.HashCode;
@@ -12,7 +13,7 @@ public class CallHasher {
   private final Function function;
   private final Map<String, Result> args;
 
-  public CallHasher(Function function, Map<String, Result> args) {
+  public CallHasher(NativeFunction function, Map<String, Result> args) {
     this.function = function;
     this.args = args;
   }
