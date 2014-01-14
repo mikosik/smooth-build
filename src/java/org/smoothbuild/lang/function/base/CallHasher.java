@@ -35,7 +35,9 @@ public class CallHasher {
     //
 
     Hasher hasher = Hash.function().newHasher();
-    hasher.putBytes(Hash.string(function.signature().name().value()).asBytes());
+
+    HashCode functionHash = Hash.string(function.signature().name().value());
+    hasher.putBytes(functionHash.asBytes());
 
     // function.params() are sorted lexicographically
     for (Param param : function.params().values()) {
