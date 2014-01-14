@@ -19,11 +19,17 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class CallHasherTest {
-  Result value1 = new FakeResult(new FakeString("abc"));
-  Result value2 = new FakeResult(new FakeString("def"));
+  String name1 = "name1";
+  String name2 = "name2";
+  String string1 = "abc";
+  String string2 = "def";
 
-  Param param1 = param(STRING, "name1", false);
-  Param param2 = param(STRING, "name2", false);
+  Result value1 = new FakeResult(new FakeString(string1));
+  Result value2 = new FakeResult(new FakeString(string2));
+  Result valueLong = new FakeResult(new FakeString(string1 + name2 + string2));
+
+  Param param1 = param(STRING, name1, false);
+  Param param2 = param(STRING, name2, false);
 
   ImmutableList<Param> params = ImmutableList.of(param1, param2);
   Function function = createFunction(params, "func1");
@@ -44,6 +50,14 @@ public class CallHasherTest {
   @Test
   public void hash_of_function_call_with_different_arguments_is_different() {
     given(arguments = ImmutableMap.of(param1.name(), value1));
+    given(arguments2 = ImmutableMap.of(param1.name(), value1, param2.name(), value2));
+    when(new CallHasher(function, arguments).hash());
+    thenReturned(not(new CallHasher(function, arguments2).hash()));
+  }
+
+  @Test
+  public void hash_of_function_with_two_args_is_different_from_hash_of_function_with_one_which_value_contains_second_param_name_and_its_value() {
+    given(arguments = ImmutableMap.of(param1.name(), valueLong));
     given(arguments2 = ImmutableMap.of(param1.name(), value1, param2.name(), value2));
     when(new CallHasher(function, arguments).hash());
     thenReturned(not(new CallHasher(function, arguments2).hash()));
