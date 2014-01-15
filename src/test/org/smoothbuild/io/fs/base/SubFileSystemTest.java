@@ -23,13 +23,6 @@ public class SubFileSystemTest {
   SubFileSystem subFileSystem = new SubFileSystem(fileSystem, root);
 
   @Test
-  public void root() throws Exception {
-    Path parentRoot = path("parent/root");
-    when(fileSystem.root()).thenReturn(parentRoot);
-    assertThat(subFileSystem.root()).isEqualTo(parentRoot.append(root));
-  }
-
-  @Test
   public void pathKind() throws Exception {
     when(fileSystem.pathState(absolutePath)).thenReturn(FILE);
     assertThat(subFileSystem.pathState(path)).isEqualTo(FILE);

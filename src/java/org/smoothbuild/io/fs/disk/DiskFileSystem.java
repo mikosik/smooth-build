@@ -38,11 +38,6 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public Path root() {
-    return Path.rootPath();
-  }
-
-  @Override
   public PathState pathState(Path path) {
     java.nio.file.Path jdkPath = jdkPath(path);
     if (!Files.exists(jdkPath)) {

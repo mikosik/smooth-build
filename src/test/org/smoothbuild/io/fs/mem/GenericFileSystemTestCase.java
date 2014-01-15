@@ -30,11 +30,6 @@ public abstract class GenericFileSystemTestCase {
   protected String content = "file content";
   protected Path path = path("my/dir/myFile");
 
-  @Test
-  public void root() throws Exception {
-    assertThat(fileSystem.root()).isEqualTo(Path.rootPath());
-  }
-
   // pathKind()
 
   @Test
