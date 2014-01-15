@@ -17,8 +17,6 @@ import java.nio.file.NotDirectoryException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import javax.inject.Singleton;
-
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
@@ -32,7 +30,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-@Singleton
 public class DiskFileSystem implements FileSystem {
   private final String projectRoot;
 
