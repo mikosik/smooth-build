@@ -31,10 +31,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class DiskFileSystem implements FileSystem {
-  private final String projectRoot;
+  private final String rootDir;
 
-  public DiskFileSystem(String projectRoot) {
-    this.projectRoot = projectRoot;
+  public DiskFileSystem(String rootDir) {
+    this.rootDir = rootDir;
   }
 
   @Override
@@ -165,6 +165,6 @@ public class DiskFileSystem implements FileSystem {
   }
 
   private java.nio.file.Path jdkPath(Path path) {
-    return Paths.get(projectRoot, path.value());
+    return Paths.get(rootDir, path.value());
   }
 }
