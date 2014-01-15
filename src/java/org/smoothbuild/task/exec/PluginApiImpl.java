@@ -1,6 +1,5 @@
 package org.smoothbuild.task.exec;
 
-import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
@@ -9,6 +8,7 @@ import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
 import org.smoothbuild.message.listen.UserConsole;
@@ -18,37 +18,38 @@ import com.google.common.base.Strings;
 
 public class PluginApiImpl implements PluginApi {
   private final FileSystem projectFileSystem;
+  private final SValueBuilders valueBuilders;
   private final MessageGroup messageGroup;
-  private final ValueDb valueDb;
 
-  public PluginApiImpl(FileSystem fileSystem, ValueDb valueDb, Task task) {
-    this(fileSystem, valueDb, createMessages(task));
+  public PluginApiImpl(FileSystem fileSystem, SValueBuilders valueBuilders, Task task) {
+    this(fileSystem, valueBuilders, createMessages(task));
   }
 
-  public PluginApiImpl(FileSystem fileSystem, ValueDb valueDb, MessageGroup messageGroup) {
+  public PluginApiImpl(FileSystem fileSystem, SValueBuilders valueBuilders,
+      MessageGroup messageGroup) {
     this.projectFileSystem = fileSystem;
-    this.valueDb = valueDb;
+    this.valueBuilders = valueBuilders;
     this.messageGroup = messageGroup;
   }
 
   @Override
   public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
-    return valueDb.arrayBuilder(arrayType);
+    return valueBuilders.arrayBuilder(arrayType);
   }
 
   @Override
   public FileBuilder fileBuilder() {
-    return new FileBuilder(valueDb);
+    return valueBuilders.fileBuilder();
   }
 
   @Override
   public BlobBuilder blobBuilder() {
-    return new BlobBuilder(valueDb);
+    return valueBuilders.blobBuilder();
   }
 
   @Override
   public SString string(String string) {
-    return valueDb.writeString(string);
+    return valueBuilders.string(string);
   }
 
   public FileSystem projectFileSystem() {

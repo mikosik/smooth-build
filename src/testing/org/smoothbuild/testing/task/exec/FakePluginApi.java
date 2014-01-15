@@ -2,6 +2,7 @@ package org.smoothbuild.testing.task.exec;
 
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 
+import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.exec.PluginApiImpl;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
@@ -17,13 +18,13 @@ public class FakePluginApi extends PluginApiImpl {
     this(new FakeFileSystem());
   }
 
-  public FakePluginApi(FakeFileSystem fileSystem) {
+  private FakePluginApi(FakeFileSystem fileSystem) {
     this(fileSystem, new FakeMessageGroup(), new FakeValueDb(fileSystem));
   }
 
-  public FakePluginApi(FakeFileSystem fileSystem, FakeMessageGroup messageGroup,
+  private FakePluginApi(FakeFileSystem fileSystem, FakeMessageGroup messageGroup,
       FakeValueDb valueDb) {
-    super(fileSystem, valueDb, messageGroup);
+    super(fileSystem, new SValueBuildersImpl(valueDb), messageGroup);
     this.fileSystem = fileSystem;
     this.messageGroup = messageGroup;
     this.valueDb = valueDb;

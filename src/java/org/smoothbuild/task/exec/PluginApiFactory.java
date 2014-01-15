@@ -2,22 +2,22 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.task.base.Task;
 
 public class PluginApiFactory {
   private final FileSystem fileSystem;
-  private final ValueDb valueDb;
+  private final SValueBuilders valueBuilders;
 
   @Inject
-  public PluginApiFactory(@ProjectDir FileSystem fileSystem, ValueDb valueDb) {
+  public PluginApiFactory(@ProjectDir FileSystem fileSystem, SValueBuilders valueBuilders) {
     this.fileSystem = fileSystem;
-    this.valueDb = valueDb;
+    this.valueBuilders = valueBuilders;
   }
 
   public PluginApiImpl createPluginApi(Task task) {
-    return new PluginApiImpl(fileSystem, valueDb, task);
+    return new PluginApiImpl(fileSystem, valueBuilders, task);
   }
 }
