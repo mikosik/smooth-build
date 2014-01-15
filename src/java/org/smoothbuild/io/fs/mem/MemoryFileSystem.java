@@ -26,11 +26,6 @@ public class MemoryFileSystem implements FileSystem {
   private final MemoryDirectory root = new MemoryDirectory(null, "");
 
   @Override
-  public Path root() {
-    return Path.rootPath();
-  }
-
-  @Override
   public PathState pathState(Path path) {
     MemoryElement element = findElement(path);
     if (element == null) {

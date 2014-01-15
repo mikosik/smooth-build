@@ -9,8 +9,6 @@ import org.smoothbuild.io.fs.base.exc.FileSystemException;
  * All errors are reported by throwing {@link FileSystemException}.
  */
 public interface FileSystem {
-  public Path root();
-
   public PathState pathState(Path path);
 
   public Iterable<String> childNames(Path directory);
