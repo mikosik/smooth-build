@@ -1,6 +1,6 @@
 package org.smoothbuild.io.fs.base.exc;
 
-import static org.smoothbuild.io.IoConstants.SMOOTH_DIR;
+import static org.smoothbuild.io.Constants.SMOOTH_DIR;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.io.IOException;
