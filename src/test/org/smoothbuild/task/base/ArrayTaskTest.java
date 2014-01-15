@@ -17,8 +17,8 @@ import org.smoothbuild.testing.task.exec.FakePluginApi;
 public class ArrayTaskTest {
   FakePluginApi pluginApi = new FakePluginApi();
   CodeLocation codeLocation = new FakeCodeLocation();
-  SString string1 = pluginApi.objectDb().writeString("string1");
-  SString string2 = pluginApi.objectDb().writeString("string2");
+  SString string1 = pluginApi.valueDb().writeString("string1");
+  SString string2 = pluginApi.valueDb().writeString("string2");
 
   Result result1 = new FakeResult(string1);
   Result result2 = new FakeResult(string2);

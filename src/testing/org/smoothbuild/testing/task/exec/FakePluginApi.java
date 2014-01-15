@@ -11,7 +11,7 @@ import org.smoothbuild.testing.message.FakeMessageGroup;
 public class FakePluginApi extends PluginApiImpl {
   private final FakeFileSystem fileSystem;
   private final FakeMessageGroup messageGroup;
-  private final FakeValueDb objectDb;
+  private final FakeValueDb valueDb;
 
   public FakePluginApi() {
     this(new FakeFileSystem());
@@ -22,11 +22,11 @@ public class FakePluginApi extends PluginApiImpl {
   }
 
   public FakePluginApi(FakeFileSystem fileSystem, FakeMessageGroup messageGroup,
-      FakeValueDb objectDb) {
-    super(fileSystem, objectDb, messageGroup);
+      FakeValueDb valueDb) {
+    super(fileSystem, valueDb, messageGroup);
     this.fileSystem = fileSystem;
     this.messageGroup = messageGroup;
-    this.objectDb = objectDb;
+    this.valueDb = valueDb;
   }
 
   @Override
@@ -34,8 +34,8 @@ public class FakePluginApi extends PluginApiImpl {
     return fileSystem;
   }
 
-  public FakeValueDb objectDb() {
-    return objectDb;
+  public FakeValueDb valueDb() {
+    return valueDb;
   }
 
   public FakeMessageGroup messages() {
