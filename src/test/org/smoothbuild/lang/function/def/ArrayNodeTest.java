@@ -25,8 +25,8 @@ public class ArrayNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakePluginApi pluginApi = new FakePluginApi();
   CodeLocation codeLocation = new FakeCodeLocation();
-  SString string1 = pluginApi.objectDb().writeString("string1");
-  SString string2 = pluginApi.objectDb().writeString("string2");
+  SString string1 = pluginApi.valueDb().writeString("string1");
+  SString string2 = pluginApi.valueDb().writeString("string2");
 
   Node node1 = mock(Node.class);
   Node node2 = mock(Node.class);
