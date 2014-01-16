@@ -82,7 +82,7 @@ public class NativeCallTaskTest {
 
     nativeCallTask.execute(pluginApi);
 
-    pluginApi.messages().assertContainsOnly(NullResultError.class);
+    pluginApi.loggedMessages().assertContainsOnly(NullResultError.class);
   }
 
   @Test
@@ -95,14 +95,14 @@ public class NativeCallTaskTest {
       @Override
       public SFile answer(InvocationOnMock invocation) throws Throwable {
         PluginApi pluginApi = (PluginApi) invocation.getArguments()[0];
-        pluginApi.report(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
+        pluginApi.log(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
         return null;
       }
     });
 
     nativeCallTask.execute(pluginApi);
 
-    pluginApi.messages().assertContainsOnly(CodeMessage.class);
+    pluginApi.loggedMessages().assertContainsOnly(CodeMessage.class);
   }
 
   @Test
@@ -142,6 +142,6 @@ public class NativeCallTaskTest {
 
     nativeCallTask.execute(pluginApi);
 
-    pluginApi.messages().assertContainsOnly(expected);
+    pluginApi.loggedMessages().assertContainsOnly(expected);
   }
 }

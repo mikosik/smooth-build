@@ -11,7 +11,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.testing.message.FakeMessageGroup;
+import org.smoothbuild.testing.message.FakeLoggedMessages;
 import org.smoothbuild.testing.parse.FakeFunctionContext;
 import org.smoothbuild.testing.parse.FakeModuleContext;
 import org.smoothbuild.testing.parse.FakePipeContext;
@@ -23,7 +23,7 @@ public class DependencyCollectorTest {
   Name name2 = name("funcation2");
   Name name3 = name("funcation3");
 
-  FakeMessageGroup messages = new FakeMessageGroup();
+  FakeLoggedMessages messages = new FakeLoggedMessages();
 
   @Test
   public void emptyMapIsReturnedForEmptyModule() throws Exception {

@@ -12,18 +12,18 @@ import javax.inject.Inject;
 import org.smoothbuild.command.err.DuplicatedFunctionNameWarning;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class CommandLineParser {
-  private final MessageGroup messages;
+  private final LoggedMessages messages;
 
   @Inject
   public CommandLineParser(CommandLineParserMessages messages) {
-    this((MessageGroup) messages);
+    this((LoggedMessages) messages);
   }
 
-  public CommandLineParser(MessageGroup messages) {
+  public CommandLineParser(LoggedMessages messages) {
     this.messages = messages;
   }
 
@@ -38,12 +38,12 @@ public class CommandLineParser {
       if (isLegalName(nameString)) {
         duplicatesDetector.addValue(name(nameString));
       } else {
-        messages.report(new IllegalFunctionNameError(nameString));
+        messages.log(new IllegalFunctionNameError(nameString));
       }
     }
 
     for (Name name : duplicatesDetector.getDuplicateValues()) {
-      messages.report(new DuplicatedFunctionNameWarning(name));
+      messages.log(new DuplicatedFunctionNameWarning(name));
     }
 
     return duplicatesDetector.getUniqueValues();

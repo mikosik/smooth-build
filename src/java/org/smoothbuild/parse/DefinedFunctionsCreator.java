@@ -52,7 +52,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.ForbiddenArrayElemError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.util.UnescapingFailedException;
@@ -72,7 +72,7 @@ public class DefinedFunctionsCreator {
     this.argNodesCreator = argNodesCreator;
   }
 
-  public Map<Name, Function> createDefinedFunctions(MessageGroup messages, Module builtinModule,
+  public Map<Name, Function> createDefinedFunctions(LoggedMessages messages, Module builtinModule,
       Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker =
         new Worker(messages, builtinModule, functionContexts, sorted, valueDb, argNodesCreator);
@@ -82,7 +82,7 @@ public class DefinedFunctionsCreator {
   }
 
   private static class Worker {
-    private final MessageGroup messages;
+    private final LoggedMessages messages;
     private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
@@ -91,7 +91,7 @@ public class DefinedFunctionsCreator {
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
-    public Worker(MessageGroup messages, Module builtinModule,
+    public Worker(LoggedMessages messages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValueDb valueDb,
         ArgNodesCreator argNodesCreator) {
       this.messages = messages;
@@ -170,7 +170,7 @@ public class DefinedFunctionsCreator {
         Node node = build(elem);
         if (!basicTypes().contains(node.type())) {
           CodeLocation location = locationOf(elem);
-          messages.report(new ForbiddenArrayElemError(location, node.type()));
+          messages.log(new ForbiddenArrayElemError(location, node.type()));
           builder.add(new InvalidNode(NOTHING, location));
         } else {
           builder.add(node);
@@ -205,7 +205,7 @@ public class DefinedFunctionsCreator {
         commonSuperType = commonSuperType(commonSuperType, currentType);
 
         if (commonSuperType == null) {
-          messages.report(new IncompatibleArrayElemsError(location, firstType, i, currentType));
+          messages.log(new IncompatibleArrayElemsError(location, firstType, i, currentType));
           return null;
         }
       }
@@ -304,7 +304,7 @@ public class DefinedFunctionsCreator {
         return new CachingNode(new StringNode(stringValue, locationOf(stringToken.getSymbol())));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
-        messages.report(new CodeMessage(ERROR, location, e.getMessage()));
+        messages.log(new CodeMessage(ERROR, location, e.getMessage()));
         return new CachingNode(new InvalidNode(STypes.STRING, locationOf(stringToken.getSymbol())));
       }
     }

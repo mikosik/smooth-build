@@ -12,11 +12,11 @@ import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.Lists;
 
-public class MessageGroup implements Iterable<Message> {
+public class LoggedMessages implements Iterable<Message> {
   private final List<Message> messages;
   private final MessageStats stats;
 
-  public MessageGroup() {
+  public LoggedMessages() {
     this.messages = Lists.newArrayList();
     this.stats = new MessageStats();
   }
@@ -26,7 +26,7 @@ public class MessageGroup implements Iterable<Message> {
     return unmodifiableIterator(messages.iterator());
   }
 
-  public void report(Message message) {
+  public void log(Message message) {
     checkNotNull(message);
     messages.add(message);
     stats.incCount(message.type());

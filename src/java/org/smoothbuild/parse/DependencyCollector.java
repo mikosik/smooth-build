@@ -14,7 +14,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 
 import com.google.common.collect.ImmutableMap;
@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableSet;
  * given function).
  */
 public class DependencyCollector {
-  public static Map<Name, Set<Dependency>> collectDependencies(MessageGroup messages,
+  public static Map<Name, Set<Dependency>> collectDependencies(LoggedMessages messages,
       ModuleContext moduleContext) {
     Worker worker = new Worker(messages);
     worker.visit(moduleContext);
@@ -33,12 +33,12 @@ public class DependencyCollector {
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
-    private final MessageGroup messages;
+    private final LoggedMessages messages;
     private final ImmutableMap.Builder<Name, Set<Dependency>> dependencies;
     private ImmutableSet.Builder<Dependency> currentFunctionDependencies;
 
-    public Worker(MessageGroup messageGroup) {
-      this.messages = messageGroup;
+    public Worker(LoggedMessages loggedMessages) {
+      this.messages = loggedMessages;
       this.dependencies = ImmutableMap.builder();
     }
 
@@ -48,7 +48,7 @@ public class DependencyCollector {
       String nameString = function.functionName().getText();
 
       if (!isLegalName(nameString)) {
-        messages.report(new IllegalFunctionNameError(locationOf(function), nameString));
+        messages.log(new IllegalFunctionNameError(locationOf(function), nameString));
         return null;
       }
 
@@ -65,7 +65,7 @@ public class DependencyCollector {
       FunctionNameContext functionName = call.functionName();
       String nameString = functionName.getText();
       if (!isLegalName(nameString)) {
-        messages.report(new IllegalFunctionNameError(locationOf(call), nameString));
+        messages.log(new IllegalFunctionNameError(locationOf(call), nameString));
         return null;
       }
 

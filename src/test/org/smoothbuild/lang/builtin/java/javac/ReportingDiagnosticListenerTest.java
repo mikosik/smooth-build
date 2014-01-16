@@ -29,7 +29,7 @@ public class ReportingDiagnosticListenerTest {
   @Test
   public void diagnosticIsReportedAsError() {
     listener.report(diagnostic);
-    verify(pluginApi).report(isA(JavaCompilerMessage.class));
+    verify(pluginApi).log(isA(JavaCompilerMessage.class));
   }
 
   @Test

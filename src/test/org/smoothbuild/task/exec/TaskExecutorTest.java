@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.task.base.Task;
 
 import com.google.inject.util.Providers;
@@ -18,7 +18,7 @@ import com.google.inject.util.Providers;
 public class TaskExecutorTest {
   Task task = mock(Task.class);
   SValue value = mock(SValue.class);
-  MessageGroup messageGroup = new MessageGroup();
+  LoggedMessages loggedMessages = new LoggedMessages();
   PluginApiImpl pluginApi = mock(PluginApiImpl.class);
   TaskReporter taskReporter = mock(TaskReporter.class);
 
@@ -26,7 +26,7 @@ public class TaskExecutorTest {
 
   @Before
   public void before() {
-    Mockito.when(pluginApi.messages()).thenReturn(messageGroup);
+    Mockito.when(pluginApi.loggedMessages()).thenReturn(loggedMessages);
     Mockito.when(task.execute(pluginApi)).thenReturn(value);
   }
 
@@ -37,7 +37,7 @@ public class TaskExecutorTest {
 
   @Test
   public void error_message_causes_exception() throws Exception {
-    messageGroup.report(new Message(ERROR, ""));
+    loggedMessages.log(new Message(ERROR, ""));
     try {
       taskExecutor.execute(task);
       fail("exception should be thrown");

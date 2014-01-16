@@ -18,7 +18,7 @@ import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
-import org.smoothbuild.testing.message.FakeMessageGroup;
+import org.smoothbuild.testing.message.FakeLoggedMessages;
 import org.smoothbuild.testing.parse.FakeModuleContext;
 import org.smoothbuild.util.Empty;
 
@@ -28,7 +28,7 @@ public class FunctionsCollectorTest {
   Name name1 = name("funcation1");
   Name name2 = name("funcation2");
 
-  FakeMessageGroup messages = new FakeMessageGroup();
+  FakeLoggedMessages messages = new FakeLoggedMessages();
 
   @Test
   public void visitedFunctionNamesAreReturned() throws Exception {

@@ -94,7 +94,7 @@ public class JavacFunction {
          * Java compiler fails miserably when there's no java files.
          */
         if (Iterables.isEmpty(inputSourceFiles)) {
-          pluginApi.report(new NoJavaSourceFilesFoundWarning());
+          pluginApi.log(new NoJavaSourceFilesFoundWarning());
           return pluginApi.arrayBuilder(FILE_ARRAY).build();
         }
 
@@ -106,18 +106,18 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          pluginApi.report(new CompilerFailedWithoutDiagnosticsError());
+          pluginApi.log(new CompilerFailedWithoutDiagnosticsError());
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
-          pluginApi.report(new AdditionalCompilerInfo(additionalInfo));
+          pluginApi.log(new AdditionalCompilerInfo(additionalInfo));
         }
         return fileManager.resultClassfiles();
       } finally {
         try {
           fileManager.close();
         } catch (IOException e) {
-          pluginApi.report(new FileSystemError(e));
+          pluginApi.log(new FileSystemError(e));
         }
       }
     }

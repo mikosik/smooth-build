@@ -31,14 +31,14 @@ public class UserConsole {
     this.messageStats = new MessageStats();
   }
 
-  public void report(String header, MessageGroup messageGroup) {
+  public void report(String header, LoggedMessages loggedMessages) {
     println(GROUP_PREFIX + header);
-    printGroup(messageGroup);
-    messageStats.add(messageGroup.stats());
+    printGroup(loggedMessages);
+    messageStats.add(loggedMessages.stats());
   }
 
-  private void printGroup(MessageGroup messageGroup) {
-    for (Message message : messageGroup) {
+  private void printGroup(LoggedMessages loggedMessages) {
+    for (Message message : loggedMessages) {
       report(message);
     }
   }

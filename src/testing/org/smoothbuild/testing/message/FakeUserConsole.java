@@ -8,23 +8,23 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
 
 public class FakeUserConsole extends UserConsole {
-  private final FakeMessageGroup messageGroup;
+  private final FakeLoggedMessages messages;
 
   public FakeUserConsole() {
-    this(new FakeMessageGroup());
+    this(new FakeLoggedMessages());
   }
 
-  public FakeUserConsole(FakeMessageGroup messageGroup) {
+  public FakeUserConsole(FakeLoggedMessages messageGroup) {
     super(new PrintStream(nullOutputStream()));
-    this.messageGroup = messageGroup;
+    this.messages = messageGroup;
   }
 
   @Override
   public void report(Message message) {
-    messageGroup.report(message);
+    messages.log(message);
   }
 
-  public FakeMessageGroup messages() {
-    return messageGroup;
+  public FakeLoggedMessages messages() {
+    return messages;
   }
 }

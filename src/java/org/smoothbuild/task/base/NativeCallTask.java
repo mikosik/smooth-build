@@ -30,20 +30,20 @@ public class NativeCallTask extends Task {
   public SValue execute(PluginApiImpl pluginApi) {
     try {
       SValue result = function.invoke(pluginApi, calculateArguments());
-      if (result == null && !pluginApi.messages().containsProblems()) {
-        pluginApi.report(new NullResultError());
+      if (result == null && !pluginApi.loggedMessages().containsProblems()) {
+        pluginApi.log(new NullResultError());
       } else {
         return result;
       }
     } catch (IllegalAccessException e) {
-      pluginApi.report(new ReflexiveInternalError(e));
+      pluginApi.log(new ReflexiveInternalError(e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof ErrorMessageException) {
         ErrorMessageException errorMessageException = (ErrorMessageException) cause;
-        pluginApi.report(errorMessageException.errorMessage());
+        pluginApi.log(errorMessageException.errorMessage());
       } else {
-        pluginApi.report(new UnexpectedError(cause));
+        pluginApi.log(new UnexpectedError(cause));
       }
     }
     return null;

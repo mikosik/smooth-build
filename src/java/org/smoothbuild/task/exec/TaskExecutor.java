@@ -21,7 +21,7 @@ public class TaskExecutor {
     SValue result = task.execute(pluginApi);
     taskReporter.report(task, pluginApi);
 
-    if (pluginApi.messages().containsProblems()) {
+    if (pluginApi.loggedMessages().containsProblems()) {
       throw new BuildInterruptedException();
     }
 

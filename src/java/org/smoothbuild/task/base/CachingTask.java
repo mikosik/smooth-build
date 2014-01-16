@@ -30,13 +30,13 @@ public class CachingTask extends Task {
       pluginApi.setResultIsFromCache();
       CachedResult cachedResult = taskDb.read(hash);
       for (Message message : cachedResult.messages()) {
-        pluginApi.report(message);
+        pluginApi.log(message);
       }
       return cachedResult.value();
     }
 
     SValue result = task.execute(pluginApi);
-    taskDb.store(hash, new CachedResult(result, pluginApi.messages()));
+    taskDb.store(hash, new CachedResult(result, pluginApi.loggedMessages()));
     return result;
   }
 }

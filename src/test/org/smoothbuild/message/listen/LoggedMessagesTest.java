@@ -14,7 +14,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.message.base.Message;
 
-public class MessageGroupTest {
+public class LoggedMessagesTest {
   String name = "name";
   Message info = new Message(INFO, "message");
   Message suggestion = new Message(SUGGESTION, "message");
@@ -22,12 +22,12 @@ public class MessageGroupTest {
   Message error = new Message(ERROR, "message");
   Message fatal = new Message(FATAL, "message");
 
-  MessageGroup messageGroup = new MessageGroup();
+  LoggedMessages loggedMessages = new LoggedMessages();
 
   @Test
   public void added_messages_are_iterable() throws Exception {
-    given(messageGroup).report(error);
-    when(messageGroup);
+    given(loggedMessages).log(error);
+    when(loggedMessages);
     thenReturned(contains(error));
   }
 
@@ -35,42 +35,42 @@ public class MessageGroupTest {
 
   @Test
   public void contains_no_messages_initially() throws Exception {
-    when(!messageGroup.isEmpty());
+    when(!loggedMessages.isEmpty());
     thenReturned(false);
   }
 
   @Test
   public void contains_messages_when_info_has_been_added() throws Exception {
-    given(messageGroup).report(info);
-    when(!messageGroup.isEmpty());
+    given(loggedMessages).log(info);
+    when(!loggedMessages.isEmpty());
     thenReturned(true);
   }
 
   @Test
   public void contains_messages_when_suggestion_has_been_added() throws Exception {
-    given(messageGroup).report(suggestion);
-    when(!messageGroup.isEmpty());
+    given(loggedMessages).log(suggestion);
+    when(!loggedMessages.isEmpty());
     thenReturned(true);
   }
 
   @Test
   public void contains_messages_when_warning_has_been_added() throws Exception {
-    given(messageGroup).report(warning);
-    when(!messageGroup.isEmpty());
+    given(loggedMessages).log(warning);
+    when(!loggedMessages.isEmpty());
     thenReturned(true);
   }
 
   @Test
   public void contains_messages_when_error_has_been_added() throws Exception {
-    given(messageGroup).report(error);
-    when(!messageGroup.isEmpty());
+    given(loggedMessages).log(error);
+    when(!loggedMessages.isEmpty());
     thenReturned(true);
   }
 
   @Test
   public void contains_messages_when_fatal_has_been_added() throws Exception {
-    given(messageGroup).report(fatal);
-    when(!messageGroup.isEmpty());
+    given(loggedMessages).log(fatal);
+    when(!loggedMessages.isEmpty());
     thenReturned(true);
   }
 
@@ -78,42 +78,42 @@ public class MessageGroupTest {
 
   @Test
   public void contains_no_problem_initially() throws Exception {
-    when(messageGroup.containsProblems());
+    when(loggedMessages.containsProblems());
     thenReturned(false);
   }
 
   @Test
   public void contains_no_problem_after_adding_info() throws Exception {
-    given(messageGroup).report(info);
-    when(messageGroup.containsProblems());
+    given(loggedMessages).log(info);
+    when(loggedMessages.containsProblems());
     thenReturned(false);
   }
 
   @Test
   public void contains_no_problem_after_adding_suggeestion() throws Exception {
-    given(messageGroup).report(suggestion);
-    when(messageGroup.containsProblems());
+    given(loggedMessages).log(suggestion);
+    when(loggedMessages.containsProblems());
     thenReturned(false);
   }
 
   @Test
   public void contains_no_problems_after_adding_warning() throws Exception {
-    given(messageGroup).report(warning);
-    when(messageGroup.containsProblems());
+    given(loggedMessages).log(warning);
+    when(loggedMessages.containsProblems());
     thenReturned(false);
   }
 
   @Test
   public void contains_problems_after_adding_error() throws Exception {
-    given(messageGroup).report(error);
-    when(messageGroup.containsProblems());
+    given(loggedMessages).log(error);
+    when(loggedMessages.containsProblems());
     thenReturned(true);
   }
 
   @Test
   public void contains_problems_after_adding_fatal() throws Exception {
-    given(messageGroup).report(fatal);
-    when(messageGroup.containsProblems());
+    given(loggedMessages).log(fatal);
+    when(loggedMessages.containsProblems());
     thenReturned(true);
   }
 
@@ -121,37 +121,37 @@ public class MessageGroupTest {
 
   @Test
   public void failIfContainsProblems_throws_exception_when_info_was_reported() throws Exception {
-    given(messageGroup).report(info);
-    when(messageGroup).failIfContainsProblems();
+    given(loggedMessages).log(info);
+    when(loggedMessages).failIfContainsProblems();
     thenReturned();
   }
 
   @Test
   public void failIfContainsProblems_throws_exception_when_suggestion_was_reported()
       throws Exception {
-    given(messageGroup).report(suggestion);
-    when(messageGroup).failIfContainsProblems();
+    given(loggedMessages).log(suggestion);
+    when(loggedMessages).failIfContainsProblems();
     thenReturned();
   }
 
   @Test
   public void failIfContainsProblems_does_nothing_when_only_warning_was_reported() throws Exception {
-    given(messageGroup).report(warning);
-    when(messageGroup).failIfContainsProblems();
+    given(loggedMessages).log(warning);
+    when(loggedMessages).failIfContainsProblems();
     thenReturned();
   }
 
   @Test
   public void failIfContainsProblems_throws_exception_when_error_was_reported() throws Exception {
-    given(messageGroup).report(error);
-    when(messageGroup).failIfContainsProblems();
+    given(loggedMessages).log(error);
+    when(loggedMessages).failIfContainsProblems();
     thenThrown(PhaseFailedException.class);
   }
 
   @Test
   public void failIfContainsProblems_throws_exception_when_fatal_was_reported() throws Exception {
-    given(messageGroup).report(fatal);
-    when(messageGroup).failIfContainsProblems();
+    given(loggedMessages).log(fatal);
+    when(loggedMessages).failIfContainsProblems();
     thenThrown(PhaseFailedException.class);
   }
 
@@ -159,8 +159,8 @@ public class MessageGroupTest {
 
   @Test
   public void test_toString() throws Exception {
-    given(messageGroup).report(error);
-    when(messageGroup.toString());
+    given(loggedMessages).log(error);
+    when(loggedMessages.toString());
     thenReturned(error.toString() + "\n");
   }
 }

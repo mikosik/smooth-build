@@ -2,27 +2,27 @@ package org.smoothbuild.message.listen;
 
 public abstract class MessageCatchingExecutor<A, R> {
   private final UserConsole userConsole;
-  private final MessageGroup messageGroup;
+  private final LoggedMessages loggedMessages;
   private final String name;
 
-  public MessageCatchingExecutor(UserConsole userConsole, String name, MessageGroup messageGroup) {
+  public MessageCatchingExecutor(UserConsole userConsole, String name, LoggedMessages loggedMessages) {
     this.userConsole = userConsole;
     this.name = name;
-    this.messageGroup = messageGroup;
+    this.loggedMessages = loggedMessages;
   }
 
   public R execute(A argument) {
     try {
       return executeImpl(argument);
     } catch (ErrorMessageException e) {
-      messageGroup.report(e.errorMessage());
+      loggedMessages.log(e.errorMessage());
     } catch (PhaseFailedException e) {
-      if (!messageGroup.containsProblems()) {
-        messageGroup.report(new PhaseFailedWithoutErrorError());
+      if (!loggedMessages.containsProblems()) {
+        loggedMessages.log(new PhaseFailedWithoutErrorError());
       }
     } finally {
-      if (messageGroup.containsProblems()) {
-        userConsole.report(name, messageGroup);
+      if (loggedMessages.containsProblems()) {
+        userConsole.report(name, loggedMessages);
       }
     }
     return null;

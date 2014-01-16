@@ -26,7 +26,7 @@ import org.smoothbuild.lang.function.base.ImmutableModule;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
 public class ModuleParser {
@@ -59,17 +59,17 @@ public class ModuleParser {
     }
   }
 
-  private Module createModule(MessageGroup messageGroup, InputStream inputStream, Path scriptFile) {
-    ModuleContext module = parseScript(messageGroup, inputStream, scriptFile);
+  private Module createModule(LoggedMessages loggedMessages, InputStream inputStream, Path scriptFile) {
+    ModuleContext module = parseScript(loggedMessages, inputStream, scriptFile);
 
-    Map<Name, FunctionContext> functions = collectFunctions(messageGroup, builtinModule, module);
+    Map<Name, FunctionContext> functions = collectFunctions(loggedMessages, builtinModule, module);
 
-    Map<Name, Set<Dependency>> dependencies = collectDependencies(messageGroup, module);
-    detectUndefinedFunctions(messageGroup, builtinModule, dependencies);
+    Map<Name, Set<Dependency>> dependencies = collectDependencies(loggedMessages, module);
+    detectUndefinedFunctions(loggedMessages, builtinModule, dependencies);
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        messageGroup, builtinModule, functions, sorted);
+        loggedMessages, builtinModule, functions, sorted);
 
     return new ImmutableModule(definedFunctions);
   }
