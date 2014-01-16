@@ -7,18 +7,18 @@ import java.util.List;
 
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.Lists;
 
-public class FakeMessageGroup extends MessageGroup {
+public class FakeLoggedMessages extends LoggedMessages {
   private final List<Message> messages = Lists.newArrayList();
 
   @Override
-  public void report(Message message) {
+  public void log(Message message) {
     messages.add(message);
-    super.report(message);
+    super.log(message);
   }
 
   public void assertContainsOnly(Class<? extends Message> messageClass) {

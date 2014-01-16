@@ -8,11 +8,11 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.PluginApiImpl;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.message.FakeMessageGroup;
+import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 public class FakePluginApi extends PluginApiImpl {
   private final FakeFileSystem fileSystem;
-  private final FakeMessageGroup messageGroup;
+  private final FakeLoggedMessages messages;
   private final FakeValueDb valueDb;
 
   public FakePluginApi() {
@@ -26,7 +26,7 @@ public class FakePluginApi extends PluginApiImpl {
   private FakePluginApi(FakeFileSystem fileSystem, FakeValueDb valueDb) {
     super(fileSystem, new SValueBuildersImpl(valueDb));
     this.fileSystem = fileSystem;
-    this.messageGroup = new FakeMessageGroup();
+    this.messages = new FakeLoggedMessages();
     this.valueDb = valueDb;
   }
 
@@ -40,13 +40,13 @@ public class FakePluginApi extends PluginApiImpl {
   }
 
   @Override
-  public FakeMessageGroup messages() {
-    return messageGroup;
+  public FakeLoggedMessages loggedMessages() {
+    return messages;
   }
 
   @Override
-  public void report(Message message) {
-    messageGroup.report(message);
+  public void log(Message message) {
+    messages.log(message);
   }
 
   public SValue emptyArray() {

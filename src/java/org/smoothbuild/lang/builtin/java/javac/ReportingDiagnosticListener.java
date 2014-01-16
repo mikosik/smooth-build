@@ -18,7 +18,7 @@ public class ReportingDiagnosticListener implements DiagnosticListener<JavaFileO
 
   @Override
   public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-    pluginApi.report(new JavaCompilerMessage(diagnostic));
+    pluginApi.log(new JavaCompilerMessage(diagnostic));
     errorReported = true;
   }
 

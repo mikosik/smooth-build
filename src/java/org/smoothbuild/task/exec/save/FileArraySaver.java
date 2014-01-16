@@ -10,15 +10,15 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class FileArraySaver implements Saver<SArray<SFile>> {
   private final FileSystem smoothFileSystem;
-  private final MessageGroup messages;
+  private final LoggedMessages messages;
 
-  public FileArraySaver(FileSystem smoothFileSystem, MessageGroup messages) {
+  public FileArraySaver(FileSystem smoothFileSystem, LoggedMessages messages) {
     this.smoothFileSystem = smoothFileSystem;
     this.messages = messages;
   }
@@ -44,7 +44,7 @@ public class FileArraySaver implements Saver<SArray<SFile>> {
 
     if (duplicatesDetector.hasDuplicates()) {
       Set<Path> duplicates = duplicatesDetector.getDuplicateValues();
-      messages.report(new DuplicatePathsInFileArrayArtifactError(name, duplicates));
+      messages.log(new DuplicatePathsInFileArrayArtifactError(name, duplicates));
     }
   }
 }

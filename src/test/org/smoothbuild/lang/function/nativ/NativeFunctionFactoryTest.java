@@ -81,7 +81,7 @@ public class NativeFunctionFactoryTest {
 
     Task task = function.generateTask(taskGenerator, dependencies, codeLocation);
     SString result = (SString) task.execute(pluginApi);
-    pluginApi.messages().assertNoProblems();
+    pluginApi.loggedMessages().assertNoProblems();
     assertThat(result.value()).isEqualTo("abcdef");
   }
 
@@ -350,7 +350,7 @@ public class NativeFunctionFactoryTest {
     Function function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
     function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation).execute(
         pluginApi);
-    pluginApi.messages().assertContainsOnly(UnexpectedError.class);
+    pluginApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
   }
 
   public static class FuncWithThrowingSmoothMethod {

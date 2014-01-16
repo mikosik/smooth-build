@@ -13,19 +13,19 @@ import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 
 public class PluginApiImpl implements PluginApi {
   private final FileSystem projectFileSystem;
   private final SValueBuilders valueBuilders;
-  private final MessageGroup messages;
+  private final LoggedMessages messages;
   private boolean isResultFromCache;
 
   @Inject
   public PluginApiImpl(@ProjectDir FileSystem fileSystem, SValueBuilders valueBuilders) {
     this.projectFileSystem = fileSystem;
     this.valueBuilders = valueBuilders;
-    this.messages = new MessageGroup();
+    this.messages = new LoggedMessages();
     this.isResultFromCache = false;
   }
 
@@ -54,11 +54,11 @@ public class PluginApiImpl implements PluginApi {
   }
 
   @Override
-  public void report(Message message) {
-    messages.report(message);
+  public void log(Message message) {
+    messages.log(message);
   }
 
-  public MessageGroup messages() {
+  public LoggedMessages loggedMessages() {
     return messages;
   }
 

@@ -5,14 +5,14 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.UnknownFunctionCallError;
 
 /**
  * Detects calls to functions that are neither declared nor imported.
  */
 public class UnknownFunctionCallsDetector {
-  public static void detectUndefinedFunctions(MessageGroup messages, Module builtinModule,
+  public static void detectUndefinedFunctions(LoggedMessages messages, Module builtinModule,
       Map<Name, Set<Dependency>> dependencies) {
 
     Set<Name> declaredFunctions = dependencies.keySet();
@@ -21,7 +21,7 @@ public class UnknownFunctionCallsDetector {
       for (Dependency dependency : functionDependecies) {
         Name name = dependency.functionName();
         if (!builtinModule.containsFunction(name) && !declaredFunctions.contains(name)) {
-          messages.report(new UnknownFunctionCallError(dependency.location(), name));
+          messages.log(new UnknownFunctionCallError(dependency.location(), name));
         }
       }
     }

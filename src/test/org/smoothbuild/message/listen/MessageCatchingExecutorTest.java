@@ -35,7 +35,7 @@ public class MessageCatchingExecutorTest {
 
   private static class MyNormalExecutor extends MessageCatchingExecutor<String, String> {
     public MyNormalExecutor(UserConsole userConsole, String name) {
-      super(userConsole, name, new MessageGroup());
+      super(userConsole, name, new LoggedMessages());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MessageCatchingExecutorTest {
     MyThrowingExecutor executor = new MyThrowingExecutor(userConsole, name);
     executor.execute(value);
 
-    ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
+    ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
     verify(userConsole).report(eq(name), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
@@ -57,7 +57,7 @@ public class MessageCatchingExecutorTest {
 
   private static class MyThrowingExecutor extends MessageCatchingExecutor<String, String> {
     public MyThrowingExecutor(UserConsole userConsole, String name) {
-      super(userConsole, name, new MessageGroup());
+      super(userConsole, name, new LoggedMessages());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MessageCatchingExecutorTest {
         new MyReportingAndThrowingFailedExceptionExecutor(userConsole);
     executor.execute(value);
 
-    ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
+    ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
     verify(userConsole).report(eq(name), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
@@ -80,21 +80,21 @@ public class MessageCatchingExecutorTest {
 
   private static class MyReportingAndThrowingFailedExceptionExecutor extends
       MessageCatchingExecutor<String, String> {
-    private final MessageGroup messageGroup;
+    private final LoggedMessages loggedMessages;
 
     public MyReportingAndThrowingFailedExceptionExecutor(UserConsole userConsole) {
-      this(userConsole, new MessageGroup());
+      this(userConsole, new LoggedMessages());
     }
 
     public MyReportingAndThrowingFailedExceptionExecutor(UserConsole userConsole,
-        MessageGroup messageGroup) {
-      super(userConsole, name, messageGroup);
-      this.messageGroup = messageGroup;
+        LoggedMessages loggedMessages) {
+      super(userConsole, name, loggedMessages);
+      this.loggedMessages = loggedMessages;
     }
 
     @Override
     public String executeImpl(String arguments) {
-      messageGroup.report(new Message(ERROR, arguments));
+      loggedMessages.log(new Message(ERROR, arguments));
       throw new PhaseFailedException();
     }
   }
@@ -105,7 +105,7 @@ public class MessageCatchingExecutorTest {
     MyThrowingFailedExceptionExecutor executor = new MyThrowingFailedExceptionExecutor(userConsole);
     executor.execute(value);
 
-    ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
+    ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
     verify(userConsole).report(eq("name"), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0)).isInstanceOf(
@@ -116,7 +116,7 @@ public class MessageCatchingExecutorTest {
       MessageCatchingExecutor<String, String> {
 
     public MyThrowingFailedExceptionExecutor(UserConsole userConsole) {
-      super(userConsole, "name", new MessageGroup());
+      super(userConsole, "name", new LoggedMessages());
     }
 
     @Override

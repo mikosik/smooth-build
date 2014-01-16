@@ -22,10 +22,10 @@ public class UserConsoleTest {
 
   @Test
   public void reporting_message_group_with_error_message() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(ERROR, "message string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(ERROR, "message string"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
 
     LineBuilder builder = new LineBuilder();
     builder.addLine(" + GROUP NAME");
@@ -36,10 +36,10 @@ public class UserConsoleTest {
 
   @Test
   public void reporting_message_group_without_error_message() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(WARNING, "message string\nsecond line"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(WARNING, "message string\nsecond line"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
 
     LineBuilder builder = new LineBuilder();
     builder.addLine(" + GROUP NAME");
@@ -52,47 +52,47 @@ public class UserConsoleTest {
 
   @Test
   public void isProblemReported_returns_false_when_only_info_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(INFO, "message string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(INFO, "message string"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
     assertThat(userConsole.isProblemReported()).isFalse();
   }
 
   @Test
   public void isProblemReported_returns_false_when_only_suggestion_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(SUGGESTION, "message string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(SUGGESTION, "message string"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
     assertThat(userConsole.isProblemReported()).isFalse();
   }
 
   @Test
   public void isProblemReported_returns_false_when_only_warning_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(WARNING, "message string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(WARNING, "message string"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
     assertThat(userConsole.isProblemReported()).isFalse();
   }
 
   @Test
   public void isProblemReported_returns_true_when_error_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(ERROR, "message string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(ERROR, "message string"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
 
     assertThat(userConsole.isProblemReported()).isTrue();
   }
 
   @Test
   public void isProblemReported_returns_true_when_fatal_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(FATAL, "message string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(FATAL, "message string"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
 
     assertThat(userConsole.isProblemReported()).isTrue();
   }
@@ -101,10 +101,10 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_is_success_when_only_warning_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(WARNING, "message string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(WARNING, "message string"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
     userConsole.printFinalSummary();
 
     LineBuilder builder = new LineBuilder();
@@ -118,10 +118,10 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_is_failed_when_error_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(ERROR, "message string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(ERROR, "message string"));
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
     userConsole.printFinalSummary();
 
     LineBuilder builder = new LineBuilder();
@@ -135,22 +135,22 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_contains_all_stats() throws Exception {
-    MessageGroup messageGroup = new MessageGroup();
-    messageGroup.report(new Message(INFO, "info string"));
+    LoggedMessages loggedMessages = new LoggedMessages();
+    loggedMessages.log(new Message(INFO, "info string"));
     for (int i = 0; i < 2; i++) {
-      messageGroup.report(new Message(SUGGESTION, "suggestion string"));
+      loggedMessages.log(new Message(SUGGESTION, "suggestion string"));
     }
     for (int i = 0; i < 3; i++) {
-      messageGroup.report(new Message(WARNING, "warning string"));
+      loggedMessages.log(new Message(WARNING, "warning string"));
     }
     for (int i = 0; i < 4; i++) {
-      messageGroup.report(new Message(ERROR, "error string"));
+      loggedMessages.log(new Message(ERROR, "error string"));
     }
     for (int i = 0; i < 5; i++) {
-      messageGroup.report(new Message(FATAL, "fatal string"));
+      loggedMessages.log(new Message(FATAL, "fatal string"));
     }
 
-    userConsole.report(name, messageGroup);
+    userConsole.report(name, loggedMessages);
     userConsole.printFinalSummary();
 
     LineBuilder builder = new LineBuilder();

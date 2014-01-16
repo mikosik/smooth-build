@@ -13,7 +13,7 @@ import org.smoothbuild.lang.function.base.ImmutableModule;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.testing.message.FakeMessageGroup;
+import org.smoothbuild.testing.message.FakeLoggedMessages;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
@@ -27,7 +27,7 @@ public class DependencySorterTest {
   private static final Name NAME5 = name("funcation5");
   private static final Name NAME6 = name("funcation6");
 
-  FakeMessageGroup messageGroup = new FakeMessageGroup();
+  FakeLoggedMessages messages = new FakeLoggedMessages();
 
   @Test
   public void linearDependency() {
@@ -38,7 +38,7 @@ public class DependencySorterTest {
     map.put(NAME2, dependencies(NAME3));
 
     assertThat(sort(map)).isEqualTo(ImmutableList.of(NAME4, NAME3, NAME2, NAME1));
-    messageGroup.assertNoProblems();
+    messages.assertNoProblems();
   }
 
   @Test
@@ -56,7 +56,7 @@ public class DependencySorterTest {
     assertThat(actual).containsSubsequence(NAME4, NAME2, NAME1);
     assertThat(actual).containsSubsequence(NAME6, NAME5, NAME3, NAME1);
 
-    messageGroup.assertNoProblems();
+    messages.assertNoProblems();
   }
 
   @Test
@@ -66,7 +66,7 @@ public class DependencySorterTest {
 
     sort(map);
 
-    messageGroup.assertContainsOnly(CycleInCallGraphError.class);
+    messages.assertContainsOnly(CycleInCallGraphError.class);
   }
 
   @Test
@@ -78,7 +78,7 @@ public class DependencySorterTest {
 
     sort(map);
 
-    messageGroup.assertContainsOnly(CycleInCallGraphError.class);
+    messages.assertContainsOnly(CycleInCallGraphError.class);
   }
 
   private List<Name> sort(Map<Name, Set<Dependency>> map) {
@@ -86,7 +86,7 @@ public class DependencySorterTest {
       ImmutableModule builtinModule = new ImmutableModule(Empty.nameToFunctionMap());
       return DependencySorter.sortDependencies(builtinModule, map);
     } catch (ErrorMessageException e) {
-      messageGroup.report(e.errorMessage());
+      messages.log(e.errorMessage());
       return null;
     }
   }

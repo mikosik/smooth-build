@@ -29,8 +29,8 @@ public class PluginApiImplTest {
   @Test
   public void reportedErrors() throws Exception {
     Message errorMessage = new Message(ERROR, "message");
-    pluginApi.report(errorMessage);
-    assertThat(pluginApi.messages()).containsOnly(errorMessage);
+    pluginApi.log(errorMessage);
+    assertThat(pluginApi.loggedMessages()).containsOnly(errorMessage);
   }
 
   private static Task task() {

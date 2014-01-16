@@ -26,12 +26,12 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.listen.ErrorMessageException;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(MessageGroup messages, InputStream inputStream,
+  public static ModuleContext parseScript(LoggedMessages messages, InputStream inputStream,
       Path scriptFile) {
     ErrorListener errorListener = new ErrorListener(messages);
 
@@ -56,9 +56,9 @@ public class ScriptParser {
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final MessageGroup messages;
+    private final LoggedMessages messages;
 
-    public ErrorListener(MessageGroup messages) {
+    public ErrorListener(LoggedMessages messages) {
       this.messages = messages;
     }
 
@@ -66,7 +66,7 @@ public class ScriptParser {
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol,
         int line, int charPositionInLine, String msg, @Nullable RecognitionException e) {
       CodeLocation location = createLocation(offendingSymbol, line, charPositionInLine);
-      messages.report(new SyntaxError(location, msg));
+      messages.log(new SyntaxError(location, msg));
     }
 
     private CodeLocation createLocation(Object offendingSymbol, int line, int charPositionInLine) {
@@ -98,7 +98,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      messages.report(new CodeMessage(ERROR, locationOf(token), message));
+      messages.log(new CodeMessage(ERROR, locationOf(token), message));
     }
   }
 }

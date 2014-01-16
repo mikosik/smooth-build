@@ -9,10 +9,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.message.FakeMessageGroup;
+import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 public class ScriptParserTest {
 
@@ -53,7 +53,7 @@ public class ScriptParserTest {
 
   @Test
   public void notClosedStringLiteralFails() throws Exception {
-    FakeMessageGroup messages = new FakeMessageGroup();
+    FakeLoggedMessages messages = new FakeLoggedMessages();
     try {
       runScriptParser(script("functionA : 'abc ;"), messages);
       fail("exception should be thrown");
@@ -79,7 +79,7 @@ public class ScriptParserTest {
   }
 
   private static void assertParsingSucceeds(String script) throws IOException {
-    FakeMessageGroup messages = new FakeMessageGroup();
+    FakeLoggedMessages messages = new FakeLoggedMessages();
     try {
       runScriptParser(script, messages);
     } catch (PhaseFailedException e) {
@@ -90,7 +90,7 @@ public class ScriptParserTest {
   }
 
   private static void assertParsingFails(String script) throws IOException {
-    FakeMessageGroup messages = new FakeMessageGroup();
+    FakeLoggedMessages messages = new FakeLoggedMessages();
     try {
       runScriptParser(script, messages);
       fail("exception should be thrown");
@@ -100,7 +100,7 @@ public class ScriptParserTest {
     }
   }
 
-  private static void runScriptParser(String string, MessageGroup messages) {
+  private static void runScriptParser(String string, LoggedMessages messages) {
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(CHARSET));
     ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));
   }

@@ -7,14 +7,14 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import org.junit.Test;
 import org.smoothbuild.command.err.DuplicatedFunctionNameWarning;
 import org.smoothbuild.command.err.IllegalFunctionNameError;
-import org.smoothbuild.testing.message.FakeMessageGroup;
+import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class CommandLineParserTest {
   String functionName = "function1";
-  FakeMessageGroup messages = new FakeMessageGroup();
+  FakeLoggedMessages messages = new FakeLoggedMessages();
   CommandLineParser parser = new CommandLineParser(messages);
 
   @Test

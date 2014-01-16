@@ -12,12 +12,12 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
 
 public class TaskReporterTest {
-  MessageGroup messages = new MessageGroup();
+  LoggedMessages messages = new LoggedMessages();
   UserConsole userConsole = mock(UserConsole.class);
   PluginApiImpl pluginApi = mock(PluginApiImpl.class);
 
@@ -25,13 +25,13 @@ public class TaskReporterTest {
 
   @Before
   public void before() {
-    Mockito.when(pluginApi.messages()).thenReturn(messages);
+    Mockito.when(pluginApi.loggedMessages()).thenReturn(messages);
   }
 
   @Test
   public void messages_of_internal_task_are_printed() {
     Task task = createTask(true);
-    messages.report(new Message(WARNING, "message"));
+    messages.log(new Message(WARNING, "message"));
 
     taskReporter.report(task, pluginApi);
 
@@ -48,7 +48,7 @@ public class TaskReporterTest {
   @Test
   public void messages_of_non_internal_tasks_are_printed() {
     Task task = createTask(false);
-    messages.report(new Message(WARNING, "message"));
+    messages.log(new Message(WARNING, "message"));
 
     taskReporter.report(task, pluginApi);
 

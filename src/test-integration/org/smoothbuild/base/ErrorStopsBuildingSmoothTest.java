@@ -61,7 +61,7 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
           @Override
           public SString answer(InvocationOnMock invocation) throws Throwable {
             PluginApi pluginApi = (PluginApi) invocation.getArguments()[0];
-            pluginApi.report(new Message(ERROR, "message"));
+            pluginApi.log(new Message(ERROR, "message"));
             return null;
           }
         });

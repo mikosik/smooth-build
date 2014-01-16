@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
 
@@ -18,7 +18,7 @@ public class TaskReporter {
   }
 
   public void report(Task task, PluginApiImpl pluginApi) {
-    MessageGroup messages = pluginApi.messages();
+    LoggedMessages messages = pluginApi.loggedMessages();
     if (!(task.isInternal() && messages.isEmpty())) {
       String header = header(task, pluginApi.isResultFromCache());
       userConsole.report(header, messages);

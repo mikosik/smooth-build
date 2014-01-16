@@ -69,14 +69,14 @@ public class JunitFunction {
           Result result = jUnitCore.run(testClass);
           if (!result.wasSuccessful()) {
             for (Failure failure : result.getFailures()) {
-              pluginApi.report(new JunitTestFailedError(failure));
+              pluginApi.log(new JunitTestFailedError(failure));
             }
             return pluginApi.string("FAILURE");
           }
         }
       }
       if (testCount == 0) {
-        pluginApi.report(new NoJunitTestFoundWarning());
+        pluginApi.log(new NoJunitTestFoundWarning());
       }
       return pluginApi.string("SUCCESS");
     }

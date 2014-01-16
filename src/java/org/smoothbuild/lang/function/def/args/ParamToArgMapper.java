@@ -15,7 +15,7 @@ import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -23,12 +23,12 @@ import com.google.common.collect.Sets;
 
 public class ParamToArgMapper {
   private final CodeLocation codeLocation;
-  private final MessageGroup messages;
+  private final LoggedMessages messages;
   private final Function function;
   private final ParamsPool paramsPool;
   private final Collection<Arg> allArguments;
 
-  public ParamToArgMapper(CodeLocation codeLocation, MessageGroup messages, Function function,
+  public ParamToArgMapper(CodeLocation codeLocation, LoggedMessages messages, Function function,
       Collection<Arg> args) {
     this.codeLocation = codeLocation;
     this.messages = messages;
@@ -58,7 +58,7 @@ public class ParamToArgMapper {
 
     Set<Param> missingRequiredParams = paramsPool.availableRequiredParams();
     if (missingRequiredParams.size() != 0) {
-      messages.report(new MissingRequiredArgsError(codeLocation, function, paramToArgMapBuilder,
+      messages.log(new MissingRequiredArgsError(codeLocation, function, paramToArgMapBuilder,
           missingRequiredParams));
       return null;
     }
@@ -72,9 +72,9 @@ public class ParamToArgMapper {
       if (arg.hasName()) {
         String name = arg.name();
         if (names.contains(name)) {
-          messages.report(new DuplicateArgNameError(arg));
+          messages.log(new DuplicateArgNameError(arg));
         } else if (!function.params().containsKey(name)) {
-          messages.report(new UnknownParamNameError(function.name(), arg));
+          messages.log(new UnknownParamNameError(function.name(), arg));
         } else {
           names.add(name);
         }
@@ -90,7 +90,7 @@ public class ParamToArgMapper {
         Param param = paramsPool.takeByName(name);
         SType<?> paramType = param.type();
         if (!Conversions.canConvert(arg.type(), paramType)) {
-          messages.report(new TypeMismatchError(arg, paramType));
+          messages.log(new TypeMismatchError(arg, paramType));
         } else {
           paramToArgMapBuilder.add(param, arg);
         }
@@ -116,7 +116,7 @@ public class ParamToArgMapper {
           AmbiguousNamelessArgsError error =
               new AmbiguousNamelessArgsError(function.name(), paramToArgMapBuilder.build(),
                   availableArgs, availableTypedParams);
-          messages.report(error);
+          messages.log(error);
           return;
         }
       }

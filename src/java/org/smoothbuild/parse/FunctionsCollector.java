@@ -14,7 +14,7 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.MessageGroup;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
@@ -28,7 +28,7 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<Name, FunctionContext> collectFunctions(MessageGroup messages,
+  public static Map<Name, FunctionContext> collectFunctions(LoggedMessages messages,
       Module builtinModule, ModuleContext module) {
     Worker worker = new Worker(messages, builtinModule);
     worker.visit(module);
@@ -38,11 +38,11 @@ public class FunctionsCollector {
 
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final Module builtinModule;
-    private final MessageGroup messages;
+    private final LoggedMessages messages;
     private final Map<Name, FunctionContext> functions;
 
     @Inject
-    public Worker(MessageGroup messages, Module builtinModule) {
+    public Worker(LoggedMessages messages, Module builtinModule) {
       this.builtinModule = builtinModule;
       this.messages = messages;
       this.functions = Maps.newHashMap();
@@ -54,18 +54,18 @@ public class FunctionsCollector {
       String nameString = nameContext.getText();
 
       if (!isLegalName(nameString)) {
-        messages.report(new IllegalFunctionNameError(locationOf(nameContext), nameString));
+        messages.log(new IllegalFunctionNameError(locationOf(nameContext), nameString));
         return null;
       }
 
       Name name = Name.name(nameString);
       if (functions.keySet().contains(name)) {
-        messages.report(new DuplicateFunctionError(locationOf(nameContext), name));
+        messages.log(new DuplicateFunctionError(locationOf(nameContext), name));
         return null;
       }
       if (builtinModule.containsFunction(name)) {
         CodeLocation location = locationOf(nameContext);
-        messages.report(new OverridenBuiltinFunctionError(location, name));
+        messages.log(new OverridenBuiltinFunctionError(location, name));
         return null;
       }
 

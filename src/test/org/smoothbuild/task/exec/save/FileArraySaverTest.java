@@ -13,7 +13,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeFile;
-import org.smoothbuild.testing.message.FakeMessageGroup;
+import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 public class FileArraySaverTest {
   Name name = name("name");
@@ -21,7 +21,7 @@ public class FileArraySaverTest {
   SFile file2 = new FakeFile(path("def"));
 
   FakeFileSystem fileSystem = new FakeFileSystem();
-  FakeMessageGroup messageGroup = new FakeMessageGroup();
+  FakeLoggedMessages messages = new FakeLoggedMessages();
 
   FileArraySaver fileArraySaver;
 
@@ -29,9 +29,9 @@ public class FileArraySaverTest {
   public void duplicated_file_paths_causes_error() throws Exception {
     fileSystem.createFile(targetPath(file1.content()), "ignored");
 
-    fileArraySaver = new FileArraySaver(fileSystem, messageGroup);
+    fileArraySaver = new FileArraySaver(fileSystem, messages);
     fileArraySaver.save(name, fakeArray(FILE_ARRAY, file1, file1));
-    messageGroup.assertContainsOnly(DuplicatePathsInFileArrayArtifactError.class);
+    messages.assertContainsOnly(DuplicatePathsInFileArrayArtifactError.class);
   }
 
   @Test
@@ -39,12 +39,12 @@ public class FileArraySaverTest {
     fileSystem.createFile(targetPath(file1.content()), file1.path().value());
     fileSystem.createFile(targetPath(file2.content()), file2.path().value());
 
-    fileArraySaver = new FileArraySaver(fileSystem, messageGroup);
+    fileArraySaver = new FileArraySaver(fileSystem, messages);
     fileArraySaver.save(name, fakeArray(FILE_ARRAY, file1, file2));
 
     fileSystem.assertFileContains(artifactPath(name).append(file1.path()), file1.path().value());
     fileSystem.assertFileContains(artifactPath(name).append(file2.path()), file2.path().value());
 
-    messageGroup.assertNoProblems();
+    messages.assertNoProblems();
   }
 }
