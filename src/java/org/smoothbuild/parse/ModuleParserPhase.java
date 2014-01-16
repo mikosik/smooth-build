@@ -13,7 +13,7 @@ public class ModuleParserPhase extends MessageCatchingExecutor<CommandLineArgume
   @Inject
   public ModuleParserPhase(UserConsole userConsole, ModuleParserMessages messages,
       ModuleParser moduleParser) {
-    super(userConsole, messages);
+    super(userConsole, "SCRIPT PARSER", messages);
     this.moduleParser = moduleParser;
   }
 

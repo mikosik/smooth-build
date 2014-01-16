@@ -10,7 +10,6 @@ import org.smoothbuild.message.base.MessageStats;
 import org.smoothbuild.message.base.MessageType;
 
 import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 
 @Singleton
 public class UserConsole {
@@ -32,15 +31,9 @@ public class UserConsole {
     this.messageStats = new MessageStats();
   }
 
-  public void report(MessageGroup messageGroup) {
-    String groupHeader = GROUP_PREFIX + messageGroup.name();
-    if (messageGroup.isResultFromCache()) {
-      groupHeader = Strings.padEnd(groupHeader, MESSAGE_GROUP_NAME_HEADER_LENGTH, ' ') + " CACHE";
-    }
-    println(groupHeader);
-
+  public void report(String header, MessageGroup messageGroup) {
+    println(GROUP_PREFIX + header);
     printGroup(messageGroup);
-
     messageStats.add(messageGroup.stats());
   }
 

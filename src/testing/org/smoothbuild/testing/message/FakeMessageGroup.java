@@ -15,10 +15,6 @@ import com.google.common.collect.Lists;
 public class FakeMessageGroup extends MessageGroup {
   private final List<Message> messages = Lists.newArrayList();
 
-  public FakeMessageGroup() {
-    super("TestMessageGroup");
-  }
-
   @Override
   public void report(Message message) {
     messages.add(message);

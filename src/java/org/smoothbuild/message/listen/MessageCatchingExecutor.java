@@ -2,14 +2,12 @@ package org.smoothbuild.message.listen;
 
 public abstract class MessageCatchingExecutor<A, R> {
   private final UserConsole userConsole;
-  private MessageGroup messageGroup;
+  private final MessageGroup messageGroup;
+  private final String name;
 
-  public MessageCatchingExecutor(UserConsole userConsole, String name) {
-    this(userConsole, new MessageGroup(name));
-  }
-
-  public MessageCatchingExecutor(UserConsole userConsole, MessageGroup messageGroup) {
+  public MessageCatchingExecutor(UserConsole userConsole, String name, MessageGroup messageGroup) {
     this.userConsole = userConsole;
+    this.name = name;
     this.messageGroup = messageGroup;
   }
 
@@ -24,7 +22,7 @@ public abstract class MessageCatchingExecutor<A, R> {
       }
     } finally {
       if (messageGroup.containsProblems()) {
-        userConsole.report(messageGroup);
+        userConsole.report(name, messageGroup);
       }
     }
     return null;

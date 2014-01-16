@@ -11,7 +11,7 @@ public class SmoothExecutorPhase extends MessageCatchingExecutor<ExecutionData, 
   @Inject
   public SmoothExecutorPhase(UserConsole userConsole, SmoothExecutor smoothExecutor,
       SmoothExecutorMessages messages) {
-    super(userConsole, messages);
+    super(userConsole, "SMOOTH EXECUTOR", messages);
     this.smoothExecutor = smoothExecutor;
   }
 
