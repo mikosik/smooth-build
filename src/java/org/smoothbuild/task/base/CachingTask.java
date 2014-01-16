@@ -27,14 +27,22 @@ public class CachingTask extends Task {
   public SValue execute(PluginApiImpl pluginApi) {
     HashCode hash = callHasher.hash();
     if (taskDb.contains(hash)) {
-      pluginApi.setResultIsFromCache();
-      CachedResult cachedResult = taskDb.read(hash);
-      for (Message message : cachedResult.messages()) {
-        pluginApi.log(message);
-      }
-      return cachedResult.value();
+      return readFromCache(pluginApi, hash);
+    } else {
+      return executeAndCache(pluginApi, hash);
     }
+  }
 
+  private SValue readFromCache(PluginApiImpl pluginApi, HashCode hash) {
+    pluginApi.setResultIsFromCache();
+    CachedResult cachedResult = taskDb.read(hash);
+    for (Message message : cachedResult.messages()) {
+      pluginApi.log(message);
+    }
+    return cachedResult.value();
+  }
+
+  private SValue executeAndCache(PluginApiImpl pluginApi, HashCode hash) {
     SValue result = task.execute(pluginApi);
     taskDb.store(hash, new CachedResult(result, pluginApi.loggedMessages()));
     return result;
