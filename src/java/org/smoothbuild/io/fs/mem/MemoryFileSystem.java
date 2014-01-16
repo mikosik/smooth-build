@@ -49,16 +49,17 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public void delete(Path path) {
+    if (path.isRoot()) {
+      root.removeAllChildren();
+      return;
+    }
+
     MemoryElement element = findElement(path);
     if (element == null) {
       return;
     }
-    MemoryDirectory parent = element.parent();
-    if (parent == null) {
-      throw new IllegalArgumentException("Cannot delete root directory.");
-    } else {
-      parent.removeChild(element);
-    }
+
+    element.parent().removeChild(element);
   }
 
   @Override

@@ -6,6 +6,7 @@ import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,20 +15,21 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.GenericFileSystemTestCase;
 import org.smoothbuild.testing.common.JdkFileTester;
 
-import com.google.common.io.Files;
-
 public class DiskFileSystemTest extends GenericFileSystemTestCase {
   private File tempDirectory;
 
   @Before
   public void before() {
-    tempDirectory = Files.createTempDir();
+    tempDirectory = com.google.common.io.Files.createTempDir();
     fileSystem = new DiskFileSystem(tempDirectory.getAbsolutePath());
   }
 
   @After
   public void after() throws IOException {
-    deleteRecursively(tempDirectory.toPath());
+    java.nio.file.Path tempPath = tempDirectory.toPath();
+    if (Files.isDirectory(tempPath)) {
+      deleteRecursively(tempPath);
+    }
   }
 
   @Test

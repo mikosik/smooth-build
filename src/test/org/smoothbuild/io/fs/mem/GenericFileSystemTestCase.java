@@ -247,6 +247,23 @@ public abstract class GenericFileSystemTestCase {
     fileSystem.delete(path("nonexistent"));
   }
 
+  @Test
+  public void deleting_root_path_removes_all_files() throws Exception {
+    // given
+    Path file1 = path("dir1/file1");
+    Path file2 = path("dir2/file2");
+
+    createEmptyFile(file1);
+    createEmptyFile(file2);
+
+    // when
+    fileSystem.delete(Path.rootPath());
+
+    // then
+    assertThat(fileSystem.pathState(file1)).isEqualTo(NOTHING);
+    assertThat(fileSystem.pathState(file2)).isEqualTo(NOTHING);
+  }
+
   // links
 
   @Test

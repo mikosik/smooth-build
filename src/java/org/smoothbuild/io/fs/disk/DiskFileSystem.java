@@ -169,6 +169,10 @@ public class DiskFileSystem implements FileSystem {
   }
 
   private java.nio.file.Path jdkPath(Path path) {
-    return rootDir.resolve(path.value());
+    if (path.isRoot()) {
+      return rootDir;
+    } else {
+      return rootDir.resolve(path.value());
+    }
   }
 }

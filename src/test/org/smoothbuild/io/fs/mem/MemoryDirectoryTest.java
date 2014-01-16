@@ -10,9 +10,11 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 
 public class MemoryDirectoryTest {
-  private static final String CHILD_NAME = "childName";
+  private static final String NAME1 = "childName1";
+  private static final String NAME2 = "childName2";
 
-  MemoryElement child = createChild();
+  MemoryElement child = createChild(NAME1);
+  MemoryElement child2 = createChild(NAME2);
   MemoryDirectory parent = mock(MemoryDirectory.class);
   MemoryDirectory dir = new MemoryDirectory(parent, "name");
 
@@ -38,19 +40,19 @@ public class MemoryDirectoryTest {
 
   @Test
   public void doesNotHaveChildThatIsNotAdded() {
-    assertThat(dir.hasChild(CHILD_NAME)).isFalse();
+    assertThat(dir.hasChild(NAME1)).isFalse();
   }
 
   @Test
   public void hasChildAfterAdding() {
     dir.addChild(child);
-    assertThat(dir.hasChild(CHILD_NAME)).isTrue();
+    assertThat(dir.hasChild(NAME1)).isTrue();
   }
 
   @Test
   public void addingAndRetrievingChild() throws Exception {
     dir.addChild(child);
-    assertThat(dir.child(CHILD_NAME)).isSameAs(child);
+    assertThat(dir.child(NAME1)).isSameAs(child);
   }
 
   @Test
@@ -72,7 +74,15 @@ public class MemoryDirectoryTest {
   @Test
   public void childNamesReturnsAddedChildren() throws Exception {
     dir.addChild(child);
-    assertThat(dir.childNames()).isEqualTo(ImmutableList.of(CHILD_NAME));
+    assertThat(dir.childNames()).isEqualTo(ImmutableList.of(NAME1));
+  }
+
+  @Test
+  public void removeAllChildren() throws Exception {
+    dir.addChild(child);
+    dir.addChild(child2);
+    dir.removeAllChildren();
+    assertThat(dir.childNames()).isEmpty();
   }
 
   @Test
@@ -95,10 +105,9 @@ public class MemoryDirectoryTest {
     }
   }
 
-  private static MemoryElement createChild() {
+  private static MemoryElement createChild(String name) {
     MemoryElement childMock = mock(MemoryElement.class);
-    when(childMock.name()).thenReturn(CHILD_NAME);
+    when(childMock.name()).thenReturn(name);
     return childMock;
   }
-
 }
