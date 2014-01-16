@@ -1,6 +1,7 @@
 package org.smoothbuild.message.listen;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -13,8 +14,8 @@ import org.smoothbuild.message.base.Message;
 import com.google.common.collect.Iterables;
 
 public class MessageCatchingExecutorTest {
+  private static final String name = "phase name";
   UserConsole userConsole = mock(UserConsole.class);
-  String name = "phase name";
   String value = "value";
 
   @Test
@@ -34,7 +35,7 @@ public class MessageCatchingExecutorTest {
 
   private static class MyNormalExecutor extends MessageCatchingExecutor<String, String> {
     public MyNormalExecutor(UserConsole userConsole, String name) {
-      super(userConsole, name);
+      super(userConsole, name, new MessageGroup());
     }
 
     @Override
@@ -49,14 +50,14 @@ public class MessageCatchingExecutorTest {
     executor.execute(value);
 
     ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
-    verify(userConsole).report(captured.capture());
+    verify(userConsole).report(eq(name), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
   }
 
   private static class MyThrowingExecutor extends MessageCatchingExecutor<String, String> {
     public MyThrowingExecutor(UserConsole userConsole, String name) {
-      super(userConsole, name);
+      super(userConsole, name, new MessageGroup());
     }
 
     @Override
@@ -67,12 +68,12 @@ public class MessageCatchingExecutorTest {
 
   @Test
   public void phase_failed_exception_is_caught() throws Exception {
-    MyReportingAndThrowingFailedExceptionExecutor executor = new MyReportingAndThrowingFailedExceptionExecutor(
-        userConsole);
+    MyReportingAndThrowingFailedExceptionExecutor executor =
+        new MyReportingAndThrowingFailedExceptionExecutor(userConsole);
     executor.execute(value);
 
     ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
-    verify(userConsole).report(captured.capture());
+    verify(userConsole).report(eq(name), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
   }
@@ -82,12 +83,12 @@ public class MessageCatchingExecutorTest {
     private final MessageGroup messageGroup;
 
     public MyReportingAndThrowingFailedExceptionExecutor(UserConsole userConsole) {
-      this(userConsole, new MessageGroup("name"));
+      this(userConsole, new MessageGroup());
     }
 
     public MyReportingAndThrowingFailedExceptionExecutor(UserConsole userConsole,
         MessageGroup messageGroup) {
-      super(userConsole, messageGroup);
+      super(userConsole, name, messageGroup);
       this.messageGroup = messageGroup;
     }
 
@@ -105,7 +106,7 @@ public class MessageCatchingExecutorTest {
     executor.execute(value);
 
     ArgumentCaptor<MessageGroup> captured = ArgumentCaptor.forClass(MessageGroup.class);
-    verify(userConsole).report(captured.capture());
+    verify(userConsole).report(eq("name"), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0)).isInstanceOf(
         PhaseFailedWithoutErrorError.class);
@@ -115,7 +116,7 @@ public class MessageCatchingExecutorTest {
       MessageCatchingExecutor<String, String> {
 
     public MyThrowingFailedExceptionExecutor(UserConsole userConsole) {
-      super(userConsole, "name");
+      super(userConsole, "name", new MessageGroup());
     }
 
     @Override

@@ -1,33 +1,30 @@
 package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.smoothbuild.lang.type.SValue;
-import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
 
 public class TaskExecutor {
-  private final PluginApiFactory pluginApiFactory;
-  private final UserConsole userConsole;
+  private final Provider<PluginApiImpl> pluginApiProvider;
+  private final TaskReporter taskReporter;
 
   @Inject
-  public TaskExecutor(PluginApiFactory pluginApiFactory, UserConsole userConsole) {
-    this.pluginApiFactory = pluginApiFactory;
-    this.userConsole = userConsole;
+  public TaskExecutor(Provider<PluginApiImpl> pluginApiProvider, TaskReporter taskReporter) {
+    this.pluginApiProvider = pluginApiProvider;
+    this.taskReporter = taskReporter;
   }
 
   public SValue execute(Task task) {
-    PluginApiImpl pluginApi = pluginApiFactory.createPluginApi(task);
+    PluginApiImpl pluginApi = pluginApiProvider.get();
     SValue result = task.execute(pluginApi);
+    taskReporter.report(task, pluginApi);
 
-    MessageGroup messageGroup = pluginApi.messageGroup();
-    if (!task.isInternal() || messageGroup.containsMessages()) {
-      userConsole.report(messageGroup);
-    }
-    if (messageGroup.containsProblems()) {
+    if (pluginApi.messages().containsProblems()) {
       throw new BuildInterruptedException();
     }
+
     return result;
   }
 }

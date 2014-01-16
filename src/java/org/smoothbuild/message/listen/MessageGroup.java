@@ -13,19 +13,12 @@ import org.smoothbuild.util.LineBuilder;
 import com.google.common.collect.Lists;
 
 public class MessageGroup implements Iterable<Message> {
-  private final String name;
   private final List<Message> messages;
   private final MessageStats stats;
-  private boolean isResultFromCache;
 
-  public MessageGroup(String name) {
-    this.name = checkNotNull(name);
+  public MessageGroup() {
     this.messages = Lists.newArrayList();
     this.stats = new MessageStats();
-  }
-
-  public String name() {
-    return name;
   }
 
   @Override
@@ -39,8 +32,8 @@ public class MessageGroup implements Iterable<Message> {
     stats.incCount(message.type());
   }
 
-  public boolean containsMessages() {
-    return !messages.isEmpty();
+  public boolean isEmpty() {
+    return messages.isEmpty();
   }
 
   public boolean containsProblems() {
@@ -55,14 +48,6 @@ public class MessageGroup implements Iterable<Message> {
 
   public MessageStats stats() {
     return stats;
-  }
-
-  public void setResultIsFromCache() {
-    isResultFromCache = true;
-  }
-
-  public boolean isResultFromCache() {
-    return isResultFromCache;
   }
 
   @Override

@@ -15,17 +15,17 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.LineBuilder;
 
 public class UserConsoleTest {
+  String name = "GROUP NAME";
   ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   PrintStream printStream = new PrintStream(outputStream);
   UserConsole userConsole = new UserConsole(printStream);
 
   @Test
   public void reporting_message_group_with_error_message() throws Exception {
-    String name = "GROUP NAME";
-    MessageGroup messageGroup = new MessageGroup(name);
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(ERROR, "message string"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
 
     LineBuilder builder = new LineBuilder();
     builder.addLine(" + GROUP NAME");
@@ -36,31 +36,13 @@ public class UserConsoleTest {
 
   @Test
   public void reporting_message_group_without_error_message() throws Exception {
-    String name = "GROUP NAME";
-    MessageGroup messageGroup = new MessageGroup(name);
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(WARNING, "message string\nsecond line"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
 
     LineBuilder builder = new LineBuilder();
     builder.addLine(" + GROUP NAME");
-    builder.addLine("   + WARNING: message string");
-    builder.addLine("     second line");
-    assertThat(outputStream.toString()).isEqualTo(builder.build());
-  }
-
-  @Test
-  public void reporting_message_group_with_cache_result() throws Exception {
-    String name = "GROUP NAME";
-    MessageGroup messageGroup = new MessageGroup(name);
-    messageGroup.setResultIsFromCache();
-    messageGroup.report(new Message(WARNING, "message string\nsecond line"));
-
-    userConsole.report(messageGroup);
-
-    LineBuilder builder = new LineBuilder();
-    builder
-        .addLine(" + GROUP NAME                                                             CACHE");
     builder.addLine("   + WARNING: message string");
     builder.addLine("     second line");
     assertThat(outputStream.toString()).isEqualTo(builder.build());
@@ -70,47 +52,47 @@ public class UserConsoleTest {
 
   @Test
   public void isProblemReported_returns_false_when_only_info_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(INFO, "message string"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
     assertThat(userConsole.isProblemReported()).isFalse();
   }
 
   @Test
   public void isProblemReported_returns_false_when_only_suggestion_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(SUGGESTION, "message string"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
     assertThat(userConsole.isProblemReported()).isFalse();
   }
 
   @Test
   public void isProblemReported_returns_false_when_only_warning_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(WARNING, "message string"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
     assertThat(userConsole.isProblemReported()).isFalse();
   }
 
   @Test
   public void isProblemReported_returns_true_when_error_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(ERROR, "message string"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
 
     assertThat(userConsole.isProblemReported()).isTrue();
   }
 
   @Test
   public void isProblemReported_returns_true_when_fatal_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(FATAL, "message string"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
 
     assertThat(userConsole.isProblemReported()).isTrue();
   }
@@ -119,10 +101,10 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_is_success_when_only_warning_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(WARNING, "message string"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
     userConsole.printFinalSummary();
 
     LineBuilder builder = new LineBuilder();
@@ -136,10 +118,10 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_is_failed_when_error_was_reported() throws Exception {
-    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(ERROR, "message string"));
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
     userConsole.printFinalSummary();
 
     LineBuilder builder = new LineBuilder();
@@ -153,7 +135,7 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_contains_all_stats() throws Exception {
-    MessageGroup messageGroup = new MessageGroup("GROUP NAME");
+    MessageGroup messageGroup = new MessageGroup();
     messageGroup.report(new Message(INFO, "info string"));
     for (int i = 0; i < 2; i++) {
       messageGroup.report(new Message(SUGGESTION, "suggestion string"));
@@ -168,7 +150,7 @@ public class UserConsoleTest {
       messageGroup.report(new Message(FATAL, "fatal string"));
     }
 
-    userConsole.report(messageGroup);
+    userConsole.report(name, messageGroup);
     userConsole.printFinalSummary();
 
     LineBuilder builder = new LineBuilder();

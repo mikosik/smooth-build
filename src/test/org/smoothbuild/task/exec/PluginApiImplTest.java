@@ -19,7 +19,7 @@ public class PluginApiImplTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeValueDb valueDb = new FakeValueDb(fileSystem);
 
-  PluginApiImpl pluginApi = new PluginApiImpl(fileSystem, new SValueBuildersImpl(valueDb), task);
+  PluginApiImpl pluginApi = new PluginApiImpl(fileSystem, new SValueBuildersImpl(valueDb));
 
   @Test
   public void fileSystem() throws Exception {
@@ -30,7 +30,7 @@ public class PluginApiImplTest {
   public void reportedErrors() throws Exception {
     Message errorMessage = new Message(ERROR, "message");
     pluginApi.report(errorMessage);
-    assertThat(pluginApi.messageGroup()).containsOnly(errorMessage);
+    assertThat(pluginApi.messages()).containsOnly(errorMessage);
   }
 
   private static Task task() {

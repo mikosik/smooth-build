@@ -13,7 +13,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.message.base.Message;
-import org.testory.common.Closure;
 
 public class MessageGroupTest {
   String name = "name";
@@ -23,29 +22,7 @@ public class MessageGroupTest {
   Message error = new Message(ERROR, "message");
   Message fatal = new Message(FATAL, "message");
 
-  MessageGroup messageGroup = new MessageGroup(name);
-
-  @Test
-  public void null_name_is_forbidden() throws Exception {
-    when($messageGroup(null));
-    thenThrown(NullPointerException.class);
-  }
-
-  private Closure $messageGroup(final String name) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return new MessageGroup(name);
-      }
-    };
-  }
-
-  @Test
-  public void name() throws Exception {
-    given(messageGroup = new MessageGroup(name));
-    when(messageGroup.name());
-    thenReturned(name);
-  }
+  MessageGroup messageGroup = new MessageGroup();
 
   @Test
   public void added_messages_are_iterable() throws Exception {
@@ -58,42 +35,42 @@ public class MessageGroupTest {
 
   @Test
   public void contains_no_messages_initially() throws Exception {
-    when(messageGroup.containsMessages());
+    when(!messageGroup.isEmpty());
     thenReturned(false);
   }
 
   @Test
   public void contains_messages_when_info_has_been_added() throws Exception {
     given(messageGroup).report(info);
-    when(messageGroup.containsMessages());
+    when(!messageGroup.isEmpty());
     thenReturned(true);
   }
 
   @Test
   public void contains_messages_when_suggestion_has_been_added() throws Exception {
     given(messageGroup).report(suggestion);
-    when(messageGroup.containsMessages());
+    when(!messageGroup.isEmpty());
     thenReturned(true);
   }
 
   @Test
   public void contains_messages_when_warning_has_been_added() throws Exception {
     given(messageGroup).report(warning);
-    when(messageGroup.containsMessages());
+    when(!messageGroup.isEmpty());
     thenReturned(true);
   }
 
   @Test
   public void contains_messages_when_error_has_been_added() throws Exception {
     given(messageGroup).report(error);
-    when(messageGroup.containsMessages());
+    when(!messageGroup.isEmpty());
     thenReturned(true);
   }
 
   @Test
   public void contains_messages_when_fatal_has_been_added() throws Exception {
     given(messageGroup).report(fatal);
-    when(messageGroup.containsMessages());
+    when(!messageGroup.isEmpty());
     thenReturned(true);
   }
 

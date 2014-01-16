@@ -30,7 +30,7 @@ public class NativeCallTask extends Task {
   public SValue execute(PluginApiImpl pluginApi) {
     try {
       SValue result = function.invoke(pluginApi, calculateArguments());
-      if (result == null && !pluginApi.messageGroup().containsProblems()) {
+      if (result == null && !pluginApi.messages().containsProblems()) {
         pluginApi.report(new NullResultError());
       } else {
         return result;

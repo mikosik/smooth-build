@@ -1,10 +1,9 @@
 package org.smoothbuild.task.exec;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,63 +11,38 @@ import org.mockito.Mockito;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.MessageGroup;
-import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
+
+import com.google.inject.util.Providers;
 
 public class TaskExecutorTest {
   Task task = mock(Task.class);
   SValue value = mock(SValue.class);
-  UserConsole userConsole = mock(UserConsole.class);
-  MessageGroup messageGroup = new MessageGroup("name");
+  MessageGroup messageGroup = new MessageGroup();
   PluginApiImpl pluginApi = mock(PluginApiImpl.class);
-  PluginApiFactory pluginApiFactory = mock(PluginApiFactory.class);
+  TaskReporter taskReporter = mock(TaskReporter.class);
 
-  TaskExecutor taskExecutor = new TaskExecutor(pluginApiFactory, userConsole);
+  TaskExecutor taskExecutor = new TaskExecutor(Providers.of(pluginApi), taskReporter);
 
   @Before
   public void before() {
-    Mockito.when(pluginApiFactory.createPluginApi(task)).thenReturn(pluginApi);
-    Mockito.when(pluginApi.messageGroup()).thenReturn(messageGroup);
+    Mockito.when(pluginApi.messages()).thenReturn(messageGroup);
     Mockito.when(task.execute(pluginApi)).thenReturn(value);
   }
 
   @Test
-  public void execute_invokes_task_execute() {
+  public void execute_return_value_returned_by_task_execute() {
     assertThat(taskExecutor.execute(task)).isEqualTo(value);
   }
 
   @Test
-  public void execute_prints_message_group_for_internal_task_when_message_occurred() {
-    Mockito.when(task.isInternal()).thenReturn(true);
-    messageGroup.report(new Message(WARNING, "message"));
-
-    taskExecutor.execute(task);
-
-    verify(userConsole).report(messageGroup);
+  public void error_message_causes_exception() throws Exception {
+    messageGroup.report(new Message(ERROR, ""));
+    try {
+      taskExecutor.execute(task);
+      fail("exception should be thrown");
+    } catch (BuildInterruptedException e) {
+      // expected
+    }
   }
-
-  @Test
-  public void execute_prints_no_message_group_for_internal_task_when_no_message_occurred() {
-    Mockito.when(task.isInternal()).thenReturn(true);
-    taskExecutor.execute(task);
-    verifyZeroInteractions(userConsole);
-  }
-
-  @Test
-  public void execute_prints_message_group_for_non_internal_task_when_message_occurred() {
-    Mockito.when(task.isInternal()).thenReturn(false);
-    messageGroup.report(new Message(WARNING, "message"));
-
-    taskExecutor.execute(task);
-
-    verify(userConsole).report(messageGroup);
-  }
-
-  @Test
-  public void execute_prints_message_group_for_non_internal_task_when_no_message_occurred() {
-    Mockito.when(task.isInternal()).thenReturn(false);
-    taskExecutor.execute(task);
-    verify(userConsole).report(messageGroup);
-  }
-
 }
