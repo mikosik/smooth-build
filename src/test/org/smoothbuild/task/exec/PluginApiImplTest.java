@@ -7,10 +7,13 @@ import static org.smoothbuild.message.base.MessageType.ERROR;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
+import org.smoothbuild.io.temp.TempDirectoryManager;
+import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.io.temp.FakeTempDirectoryManager;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class PluginApiImplTest {
@@ -18,8 +21,10 @@ public class PluginApiImplTest {
 
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeValueDb valueDb = new FakeValueDb(fileSystem);
+  SValueBuilders valueBuilders = new SValueBuildersImpl(valueDb);
+  TempDirectoryManager tempDirectoryManager = new FakeTempDirectoryManager(valueBuilders);
 
-  PluginApiImpl pluginApi = new PluginApiImpl(fileSystem, new SValueBuildersImpl(valueDb));
+  PluginApiImpl pluginApi = new PluginApiImpl(fileSystem, valueBuilders, tempDirectoryManager);
 
   @Test
   public void fileSystem() throws Exception {

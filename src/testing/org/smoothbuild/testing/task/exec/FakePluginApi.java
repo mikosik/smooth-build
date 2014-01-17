@@ -4,10 +4,12 @@ import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 
 import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
 import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.PluginApiImpl;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.io.temp.FakeTempDirectoryManager;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 public class FakePluginApi extends PluginApiImpl {
@@ -24,7 +26,11 @@ public class FakePluginApi extends PluginApiImpl {
   }
 
   private FakePluginApi(FakeFileSystem fileSystem, FakeValueDb valueDb) {
-    super(fileSystem, new SValueBuildersImpl(valueDb));
+    this(fileSystem, new SValueBuildersImpl(valueDb), valueDb);
+  }
+
+  public FakePluginApi(FakeFileSystem fileSystem, SValueBuilders sValueBuilders, FakeValueDb valueDb) {
+    super(fileSystem, sValueBuilders, new FakeTempDirectoryManager(sValueBuilders));
     this.fileSystem = fileSystem;
     this.messages = new FakeLoggedMessages();
     this.valueDb = valueDb;
