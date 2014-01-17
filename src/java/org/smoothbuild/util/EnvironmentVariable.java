@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.builtin.android;
+package org.smoothbuild.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -29,5 +29,10 @@ public class EnvironmentVariable {
 
   public boolean isSet() {
     return isSet;
+  }
+
+  @Override
+  public String toString() {
+    return name + "=" + value;
   }
 }
