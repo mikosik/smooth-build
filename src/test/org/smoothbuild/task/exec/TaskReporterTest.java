@@ -35,7 +35,7 @@ public class TaskReporterTest {
 
     taskReporter.report(task, pluginApi);
 
-    verify(userConsole).report(header(task, false), messages);
+    verify(userConsole).print(header(task, false), messages);
   }
 
   @Test
@@ -52,14 +52,14 @@ public class TaskReporterTest {
 
     taskReporter.report(task, pluginApi);
 
-    verify(userConsole).report(header(task, false), messages);
+    verify(userConsole).print(header(task, false), messages);
   }
 
   @Test
   public void non_internal_task_without_messages_is_printed() {
     Task task = createTask(false);
     taskReporter.report(task, pluginApi);
-    verify(userConsole).report(header(task, false), messages);
+    verify(userConsole).print(header(task, false), messages);
   }
 
   private static Task createTask(boolean isInternal) {

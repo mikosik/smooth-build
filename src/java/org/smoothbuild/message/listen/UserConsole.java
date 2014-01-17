@@ -31,15 +31,15 @@ public class UserConsole {
     this.messageStats = new MessageStats();
   }
 
-  public void report(String header, LoggedMessages loggedMessages) {
+  public void print(String header, LoggedMessages loggedMessages) {
     println(GROUP_PREFIX + header);
-    printGroup(loggedMessages);
+    print(loggedMessages);
     messageStats.add(loggedMessages.stats());
   }
 
-  private void printGroup(LoggedMessages loggedMessages) {
+  private void print(LoggedMessages loggedMessages) {
     for (Message message : loggedMessages) {
-      report(message);
+      print(message);
     }
   }
 
@@ -66,7 +66,7 @@ public class UserConsole {
     }
   }
 
-  protected void report(Message message) {
+  protected void print(Message message) {
     Iterator<String> it = Splitter.on("\n").split(message.toString()).iterator();
 
     print(MESSAGE_FIRST_LINE_PREFIX);

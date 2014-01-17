@@ -60,7 +60,7 @@ public class DependencySorterTest {
   }
 
   @Test
-  public void simpleRecursionIsReported() throws Exception {
+  public void simpleRecursionIsLoggedAsError() throws Exception {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(NAME1, dependencies(NAME1));
 
@@ -70,7 +70,7 @@ public class DependencySorterTest {
   }
 
   @Test
-  public void cycleIsReported() throws Exception {
+  public void cycleIsLoggedAsError() throws Exception {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(NAME1, dependencies(NAME2));
     map.put(NAME2, dependencies(NAME3));

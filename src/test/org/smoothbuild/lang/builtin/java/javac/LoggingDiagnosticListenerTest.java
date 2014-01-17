@@ -14,11 +14,11 @@ import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.lang.plugin.PluginApi;
 
-public class ReportingDiagnosticListenerTest {
+public class LoggingDiagnosticListenerTest {
   @SuppressWarnings("unchecked")
   Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
   PluginApi pluginApi = mock(PluginApi.class);
-  ReportingDiagnosticListener listener = new ReportingDiagnosticListener(pluginApi);
+  LoggingDiagnosticListener listener = new LoggingDiagnosticListener(pluginApi);
 
   @Before
   public void before() {

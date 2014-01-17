@@ -7,11 +7,11 @@ import javax.tools.JavaFileObject;
 import org.smoothbuild.lang.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.lang.plugin.PluginApi;
 
-public class ReportingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
+public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
   private final PluginApi pluginApi;
   private boolean errorReported;
 
-  public ReportingDiagnosticListener(PluginApi pluginApi) {
+  public LoggingDiagnosticListener(PluginApi pluginApi) {
     this.pluginApi = pluginApi;
     this.errorReported = false;
   }

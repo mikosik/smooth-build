@@ -24,7 +24,7 @@ public class CommandLineParserTest {
   }
 
   @Test
-  public void illegal_function_name_is_reported() throws Exception {
+  public void illegal_function_name_is_logged_as_error() throws Exception {
     parser.parse(ImmutableList.of("illegal^namme"));
     messages.assertContainsOnly(IllegalFunctionNameError.class);
   }

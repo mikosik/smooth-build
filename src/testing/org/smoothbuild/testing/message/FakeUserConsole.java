@@ -20,7 +20,7 @@ public class FakeUserConsole extends UserConsole {
   }
 
   @Override
-  public void report(Message message) {
+  public void print(Message message) {
     messages.log(message);
   }
 

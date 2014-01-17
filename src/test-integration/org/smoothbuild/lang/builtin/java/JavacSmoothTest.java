@@ -22,7 +22,7 @@ public class JavacSmoothTest extends IntegrationTestCase {
   MyClassLoader classLoader = new MyClassLoader();
 
   @Test
-  public void errorIsReportedForCompilationErrors() throws Exception {
+  public void errorIsLoggededForCompilationErrors() throws Exception {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public private class MyClass {}");
 

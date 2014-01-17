@@ -83,7 +83,7 @@ public class JavacFunction {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
-      ReportingDiagnosticListener diagnostic = new ReportingDiagnosticListener(pluginApi);
+      LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(pluginApi);
       Iterable<String> options = options();
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
@@ -148,7 +148,7 @@ public class JavacFunction {
       return result;
     }
 
-    private SandboxedJavaFileManager fileManager(ReportingDiagnosticListener diagnostic) {
+    private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic) {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
       Multimap<String, JavaFileObject> libsClasses =

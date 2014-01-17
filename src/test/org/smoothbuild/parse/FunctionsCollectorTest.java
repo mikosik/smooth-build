@@ -42,7 +42,7 @@ public class FunctionsCollectorTest {
   }
 
   @Test
-  public void illegalFunctionNameIsReported() {
+  public void illegalFunctionNameIsLogged() {
     collectFunctions(moduleCtx(functionCtx("function^name")));
     messages.assertContainsOnly(IllegalFunctionNameError.class);
   }
