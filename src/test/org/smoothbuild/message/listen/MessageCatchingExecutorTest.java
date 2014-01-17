@@ -26,7 +26,7 @@ public class MessageCatchingExecutorTest {
   }
 
   @Test
-  public void nothing_is_reported_on_successful_execution() throws Exception {
+  public void nothing_is_logged_on_successful_execution() throws Exception {
     MyNormalExecutor executor = new MyNormalExecutor(userConsole, name);
     executor.execute(value);
 
@@ -45,12 +45,12 @@ public class MessageCatchingExecutorTest {
   }
 
   @Test
-  public void executor_reports_thrown_message_errors() throws Exception {
+  public void executor_logs_thrown_message_errors() throws Exception {
     MyThrowingExecutor executor = new MyThrowingExecutor(userConsole, name);
     executor.execute(value);
 
     ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
-    verify(userConsole).report(eq(name), captured.capture());
+    verify(userConsole).print(eq(name), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
   }
@@ -68,25 +68,25 @@ public class MessageCatchingExecutorTest {
 
   @Test
   public void phase_failed_exception_is_caught() throws Exception {
-    MyReportingAndThrowingFailedExceptionExecutor executor =
-        new MyReportingAndThrowingFailedExceptionExecutor(userConsole);
+    MyLoggingAndThrowingFailedExceptionExecutor executor =
+        new MyLoggingAndThrowingFailedExceptionExecutor(userConsole);
     executor.execute(value);
 
     ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
-    verify(userConsole).report(eq(name), captured.capture());
+    verify(userConsole).print(eq(name), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
   }
 
-  private static class MyReportingAndThrowingFailedExceptionExecutor extends
+  private static class MyLoggingAndThrowingFailedExceptionExecutor extends
       MessageCatchingExecutor<String, String> {
     private final LoggedMessages loggedMessages;
 
-    public MyReportingAndThrowingFailedExceptionExecutor(UserConsole userConsole) {
+    public MyLoggingAndThrowingFailedExceptionExecutor(UserConsole userConsole) {
       this(userConsole, new LoggedMessages());
     }
 
-    public MyReportingAndThrowingFailedExceptionExecutor(UserConsole userConsole,
+    public MyLoggingAndThrowingFailedExceptionExecutor(UserConsole userConsole,
         LoggedMessages loggedMessages) {
       super(userConsole, name, loggedMessages);
       this.loggedMessages = loggedMessages;
@@ -100,13 +100,13 @@ public class MessageCatchingExecutorTest {
   }
 
   @Test
-  public void additional_error_is_added_when_PhaseFailedException_is_thrown_without_reporting_any_error()
+  public void additional_error_is_added_when_PhaseFailedException_is_thrown_without_logging_any_error()
       throws Exception {
     MyThrowingFailedExceptionExecutor executor = new MyThrowingFailedExceptionExecutor(userConsole);
     executor.execute(value);
 
     ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
-    verify(userConsole).report(eq("name"), captured.capture());
+    verify(userConsole).print(eq("name"), captured.capture());
     assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
     assertThat(Iterables.get(captured.getValue(), 0)).isInstanceOf(
         PhaseFailedWithoutErrorError.class);

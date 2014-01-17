@@ -343,10 +343,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // runtime_exception_thrown_from_native_function_is_reported
+  // runtime_exception_thrown_from_native_function_is_logged
 
   @Test
-  public void runtime_exception_thrown_from_native_function_is_reported() throws Exception {
+  public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     Function function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
     function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation).execute(
         pluginApi);

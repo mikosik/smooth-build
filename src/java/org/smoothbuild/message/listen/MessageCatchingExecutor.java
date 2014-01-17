@@ -22,7 +22,7 @@ public abstract class MessageCatchingExecutor<A, R> {
       }
     } finally {
       if (loggedMessages.containsProblems()) {
-        userConsole.report(name, loggedMessages);
+        userConsole.print(name, loggedMessages);
       }
     }
     return null;

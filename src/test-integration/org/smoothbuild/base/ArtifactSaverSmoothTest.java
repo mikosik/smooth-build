@@ -137,7 +137,7 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void storing_file_array_artifact_reports_problem_whe_files_have_duplicated_paths()
+  public void storing_file_array_artifact_logs_error_when_files_have_duplicated_paths()
       throws Exception {
     // given
     fileSystem.createFile(path1, content1);

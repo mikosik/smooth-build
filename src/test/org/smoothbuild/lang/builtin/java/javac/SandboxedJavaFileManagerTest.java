@@ -27,13 +27,14 @@ public class SandboxedJavaFileManagerTest {
       packagedJavaFileObjects);
 
   @Test
-  public void getJavaFileOutputIsNotForwardedToStandardManagerForClassOutput() throws Exception {
+  public void getJavaFile_output_is_not_forwarded_to_standard_manager_for_class_output()
+      throws Exception {
     manager.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT, "className", Kind.CLASS, null);
     verifyZeroInteractions(sfm);
   }
 
   @Test
-  public void getJavaFileOutputReportsProblemWhenClassNameIsIllegal() throws Exception {
+  public void getJavaFileOutput_logs_error_when_class_name_is_illegal() throws Exception {
     String className = ".illegal.MyClass";
 
     try {

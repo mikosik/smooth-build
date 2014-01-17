@@ -32,7 +32,7 @@ public class PluginApiImplTest {
   }
 
   @Test
-  public void reportedErrors() throws Exception {
+  public void messages_are_logged() throws Exception {
     Message errorMessage = new Message(ERROR, "message");
     pluginApi.log(errorMessage);
     assertThat(pluginApi.loggedMessages()).containsOnly(errorMessage);

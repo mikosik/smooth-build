@@ -77,7 +77,7 @@ public class NativeCallTaskTest {
   }
 
   @Test
-  public void null_result_is_reported_when_functio_has_non_void_return_type() throws Exception {
+  public void null_result_is_logged_when_functio_has_non_void_return_type() throws Exception {
     when(invoker.invoke(pluginApi, Empty.stringValueMap())).thenReturn(null);
 
     nativeCallTask.execute(pluginApi);
@@ -86,7 +86,7 @@ public class NativeCallTaskTest {
   }
 
   @Test
-  public void null_can_be_returned_when_function_reported_errors() throws Exception {
+  public void null_can_be_returned_when_function_logged_errors() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
     Signature signature = new Signature(FILE, name("name"), params);
     function1 = new NativeFunction(signature, invoker, true);
@@ -106,28 +106,28 @@ public class NativeCallTaskTest {
   }
 
   @Test
-  public void reflexive_internal_error_is_reported_for_illegal_access_exception() throws Exception {
-    assertExceptionIsReportedAsProblem(new IllegalAccessException(""), ReflexiveInternalError.class);
+  public void reflexive_internal_error_is_logged_for_illegal_access_exception() throws Exception {
+    assertExceptionIsLoggedAsProblem(new IllegalAccessException(""), ReflexiveInternalError.class);
   }
 
   @Test
-  public void file_system_error_is_reported_for_file_system_exception() throws Exception {
+  public void file_system_error_is_logged_for_file_system_exception() throws Exception {
     InvocationTargetException exception =
         new InvocationTargetException(new FileSystemException(""));
-    assertExceptionIsReportedAsProblem(exception, FileSystemError.class);
+    assertExceptionIsLoggedAsProblem(exception, FileSystemError.class);
   }
 
   @Test
-  public void message_thrown_as_error_message_exception_is_reported() throws Exception {
+  public void message_thrown_as_error_message_exception_is_logged() throws Exception {
     InvocationTargetException exception =
         new InvocationTargetException(new ErrorMessageException(new MyError()));
-    assertExceptionIsReportedAsProblem(exception, MyError.class);
+    assertExceptionIsLoggedAsProblem(exception, MyError.class);
   }
 
   @Test
-  public void unexpected_error_is_reported_for_unexpected_runtime_exception() throws Exception {
+  public void unexpected_error_is_logged_for_unexpected_runtime_exception() throws Exception {
     InvocationTargetException exception = new InvocationTargetException(new RuntimeException());
-    assertExceptionIsReportedAsProblem(exception, UnexpectedError.class);
+    assertExceptionIsLoggedAsProblem(exception, UnexpectedError.class);
   }
 
   private static class MyError extends Message {
@@ -136,8 +136,8 @@ public class NativeCallTaskTest {
     }
   }
 
-  private void assertExceptionIsReportedAsProblem(Throwable thrown,
-      Class<? extends Message> expected) throws Exception {
+  private void assertExceptionIsLoggedAsProblem(Throwable thrown, Class<? extends Message> expected)
+      throws Exception {
     when(invoker.invoke(pluginApi, Empty.stringValueMap())).thenThrow(thrown);
 
     nativeCallTask.execute(pluginApi);

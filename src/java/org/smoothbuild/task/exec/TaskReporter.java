@@ -21,7 +21,7 @@ public class TaskReporter {
     LoggedMessages messages = pluginApi.loggedMessages();
     if (!(task.isInternal() && messages.isEmpty())) {
       String header = header(task, pluginApi.isResultFromCache());
-      userConsole.report(header, messages);
+      userConsole.print(header, messages);
     }
   }
 

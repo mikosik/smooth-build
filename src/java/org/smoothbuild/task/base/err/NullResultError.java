@@ -6,6 +6,6 @@ import org.smoothbuild.message.base.Message;
 
 public class NullResultError extends Message {
   public NullResultError() {
-    super(ERROR, "Faulty function implementation : 'null' was returned but no error reported.");
+    super(ERROR, "Faulty function implementation : it returned 'null' but logged no error.");
   }
 }

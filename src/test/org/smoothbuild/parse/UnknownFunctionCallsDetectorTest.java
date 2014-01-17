@@ -57,7 +57,7 @@ public class UnknownFunctionCallsDetectorTest {
   }
 
   @Test
-  public void referenceToUndefinedFunctionReportsProblem() {
+  public void referenceToUndefinedFunctionIsLoggedAsError() {
     Map<Name, Set<Dependency>> dependencyMap = ImmutableMap.of(name1, dependencies(name2));
 
     try {

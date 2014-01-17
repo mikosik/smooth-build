@@ -44,7 +44,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void waring_is_reported_when_no_test_is_found() throws Exception {
+  public void waring_is_logged_when_no_test_is_found() throws Exception {
     createTestAnnotation();
     fileSystem.createDir(srcPath);
 
