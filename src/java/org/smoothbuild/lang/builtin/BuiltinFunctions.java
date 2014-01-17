@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.builtin;
 
+import org.smoothbuild.lang.builtin.android.AidlFunction;
 import org.smoothbuild.lang.builtin.blob.ConcatenateBlobsFunction;
 import org.smoothbuild.lang.builtin.blob.ToFileFunction;
 import org.smoothbuild.lang.builtin.compress.UnzipFunction;
@@ -49,6 +50,9 @@ public class BuiltinFunctions {
     // compression related
     builder.add(ZipFunction.class);
     builder.add(UnzipFunction.class);
+
+    // android related
+    builder.add(AidlFunction.class);
 
     return builder.build();
   }

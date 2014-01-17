@@ -17,7 +17,7 @@ public class AndroidSdk {
   private static final EnvironmentVariable ANDROID_SDK_ROOT = environmentVariable("ANDROID_SDK");
   private static final String BUILD_TOOLS = "build-tools";
   private static final String PLATFORMS = "platforms";
-  private static final String AIDL_BINARY = "aidl";
+  public static final String AIDL_BINARY = "aidl";
   private static final String FRAMEWORK_AIDL = "framework.aidl";
 
   public static Path getFrameworkAidl(String apiLevel) {

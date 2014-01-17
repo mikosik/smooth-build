@@ -4,6 +4,7 @@ Change Log
 Version 0.9.0 (??????????)
 --------------------------
 
+ * added 'aidl' function for running android aidl tool
  * fixed "Too many open files" bug caused by not closing all streams correctly
 
 Version 0.8.0 (2013.12.13)
