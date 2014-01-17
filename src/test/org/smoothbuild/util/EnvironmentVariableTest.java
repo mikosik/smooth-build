@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.builtin.android;
+package org.smoothbuild.util;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -45,5 +45,12 @@ public class EnvironmentVariableTest {
     given(environmentVariable = new EnvironmentVariable(name, null));
     when(environmentVariable).value();
     thenThrown(IllegalStateException.class);
+  }
+
+  @Test
+  public void test_to_string() {
+    given(environmentVariable = new EnvironmentVariable(name, value));
+    when(environmentVariable).toString();
+    thenReturned(name + "=" + value);
   }
 }
