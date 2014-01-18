@@ -264,7 +264,7 @@
 
   <!-- release -->
   <target name="release" depends="jar-file">
-    <zip destfile="${dir.build.release.file}">
+    <zip destfile="${dir.build.release.file}" level="9">
       <zipfileset prefix="smooth" file="${dir.build.jar.file}"/>
       <zipfileset prefix="smooth" file="${dir.src.script}/smooth" filemode="755"/>
       <zipfileset prefix="smooth" file="${dir.src.script}/smooth.bat"/>
