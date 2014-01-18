@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.9.0 (??????????)
+Version 0.9.0 (2014.01.18)
 --------------------------
 
  * added 'aidl' function for running android aidl tool
