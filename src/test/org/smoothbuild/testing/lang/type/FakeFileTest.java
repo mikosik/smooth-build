@@ -12,7 +12,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.util.Streams;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 public class FakeFileTest {
   Path path = path("my/path");

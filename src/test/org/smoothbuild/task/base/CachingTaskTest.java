@@ -18,7 +18,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 import org.smoothbuild.util.Empty;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
 

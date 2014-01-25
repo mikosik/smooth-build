@@ -10,7 +10,7 @@ import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.PluginApiImpl;
 import org.smoothbuild.testing.message.FakeCodeLocation;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 public class TaskTest {
   String name = "name";
