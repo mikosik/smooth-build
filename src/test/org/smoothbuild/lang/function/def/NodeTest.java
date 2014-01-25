@@ -12,7 +12,7 @@ import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 public class NodeTest {
   SType<?> type;

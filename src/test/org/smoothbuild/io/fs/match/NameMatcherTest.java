@@ -8,7 +8,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 public class NameMatcherTest {
   NameMatcher nameMatcher;

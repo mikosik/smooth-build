@@ -11,7 +11,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
 

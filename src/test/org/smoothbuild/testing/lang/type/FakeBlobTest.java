@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.testing.common.StreamTester;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 public class FakeBlobTest {
   byte[] data = new byte[] { 1, 2, 3 };

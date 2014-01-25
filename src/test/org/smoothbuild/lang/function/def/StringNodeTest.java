@@ -14,7 +14,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 public class StringNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);

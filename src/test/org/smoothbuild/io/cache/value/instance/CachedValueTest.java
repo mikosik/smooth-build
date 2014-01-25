@@ -8,9 +8,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.io.cache.value.instance.CachedValue;
 import org.smoothbuild.lang.type.SType;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
 

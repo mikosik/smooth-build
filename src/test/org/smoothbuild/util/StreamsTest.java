@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.testory.common.Closure;
+import org.testory.Closure;
 
 public class StreamsTest {
   byte[] bytes = new byte[] { 1, 2, 3 };
