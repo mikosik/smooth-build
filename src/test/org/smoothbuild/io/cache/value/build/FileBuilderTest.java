@@ -1,14 +1,13 @@
 package org.smoothbuild.io.cache.value.build;
 
-import static org.mockito.Mockito.mock;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.cache.value.instance.CachedFile;
 import org.smoothbuild.io.fs.base.Path;
@@ -21,7 +20,7 @@ public class FileBuilderTest {
   Path path = Path.path("my/path");
   SBlob blob = new FakeBlob();
   byte[] bytes = new byte[] { 1, 2, 3 };
-  CachedFile file = Mockito.mock(CachedFile.class);
+  CachedFile file = mock(CachedFile.class);
 
   @Test
   public void setting_null_path_fails() throws Exception {
@@ -66,7 +65,7 @@ public class FileBuilderTest {
   @Test
   public void build_returns_file_stored_in_object_db() throws Exception {
     given(blob = new FakeBlob(bytes));
-    BDDMockito.given(valueDb.writeFile(path, blob)).willReturn(file);
+    given(willReturn(file), valueDb).writeFile(path, blob);
     given(fileBuilder).setContent(blob);
     given(fileBuilder).setPath(path);
     when(fileBuilder).build();

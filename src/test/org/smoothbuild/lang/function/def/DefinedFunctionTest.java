@@ -1,9 +1,10 @@
 package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Signature;
@@ -32,7 +33,7 @@ public class DefinedFunctionTest {
   @Test
   public void generateTaskWithEmptyDependency() throws Exception {
     Task task = mock(Task.class);
-    when(root.generateTask(taskGenerator)).thenReturn(task);
+    given(willReturn(task), root).generateTask(taskGenerator);
 
     Task actual = definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap(),
         codeLocation);
@@ -49,7 +50,7 @@ public class DefinedFunctionTest {
   @Test
   public void generateTaskForwardsCallToRootNode() throws Exception {
     Task task = mock(Task.class);
-    when(root.generateTask(taskGenerator)).thenReturn(task);
+    given(willReturn(task), root).generateTask(taskGenerator);
 
     Task actual = definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap(), null);
 

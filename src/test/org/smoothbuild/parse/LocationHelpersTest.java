@@ -1,8 +1,9 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -25,13 +26,13 @@ public class LocationHelpersTest {
     int start = 11;
     int end = 17;
     String text = "123";
-    when(argContext.paramName()).thenReturn(paramNameContext);
-    when(paramNameContext.getStart()).thenReturn(startToken);
-    when(paramNameContext.getStop()).thenReturn(stopToken);
-    when(startToken.getLine()).thenReturn(line);
-    when(startToken.getCharPositionInLine()).thenReturn(start);
-    when(stopToken.getCharPositionInLine()).thenReturn(end);
-    when(stopToken.getText()).thenReturn(text);
+    given(willReturn(paramNameContext), argContext).paramName();
+    given(willReturn(startToken), paramNameContext).getStart();
+    given(willReturn(stopToken), paramNameContext).getStop();
+    given(willReturn(line), startToken).getLine();
+    given(willReturn(start), startToken).getCharPositionInLine();
+    given(willReturn(end), stopToken).getCharPositionInLine();
+    given(willReturn(text), stopToken).getText();
 
     // when
     CodeLocation location = LocationHelpers.locationOf(argContext);
@@ -49,13 +50,13 @@ public class LocationHelpersTest {
     int start = 11;
     int end = 17;
     String text = "123";
-    when(argContext.expression()).thenReturn(expressionContext);
-    when(expressionContext.getStart()).thenReturn(startToken);
-    when(expressionContext.getStop()).thenReturn(stopToken);
-    when(startToken.getLine()).thenReturn(line);
-    when(startToken.getCharPositionInLine()).thenReturn(start);
-    when(stopToken.getCharPositionInLine()).thenReturn(end);
-    when(stopToken.getText()).thenReturn(text);
+    given(willReturn(expressionContext), argContext).expression();
+    given(willReturn(startToken), expressionContext).getStart();
+    given(willReturn(stopToken), expressionContext).getStop();
+    given(willReturn(line), startToken).getLine();
+    given(willReturn(start), startToken).getCharPositionInLine();
+    given(willReturn(end), stopToken).getCharPositionInLine();
+    given(willReturn(text), stopToken).getText();
 
     // when
     CodeLocation location = LocationHelpers.locationOf(argContext);
@@ -72,12 +73,12 @@ public class LocationHelpersTest {
     int line = 13;
     int end = 17;
     String text = "123";
-    when(parserRuleContext.getStart()).thenReturn(startToken);
-    when(parserRuleContext.getStop()).thenReturn(stopToken);
-    when(startToken.getLine()).thenReturn(line);
-    when(startToken.getCharPositionInLine()).thenReturn(start);
-    when(stopToken.getCharPositionInLine()).thenReturn(end);
-    when(stopToken.getText()).thenReturn(text);
+    given(willReturn(startToken), parserRuleContext).getStart();
+    given(willReturn(stopToken), parserRuleContext).getStop();
+    given(willReturn(line), startToken).getLine();
+    given(willReturn(start), startToken).getCharPositionInLine();
+    given(willReturn(end), stopToken).getCharPositionInLine();
+    given(willReturn(text), stopToken).getText();
 
     // when
     CodeLocation location = LocationHelpers.locationOf(parserRuleContext);
@@ -92,9 +93,9 @@ public class LocationHelpersTest {
     int start = 11;
     int line = 13;
     String text = "123";
-    when(startToken.getLine()).thenReturn(line);
-    when(startToken.getCharPositionInLine()).thenReturn(start);
-    when(startToken.getText()).thenReturn(text);
+    given(willReturn(line), startToken).getLine();
+    given(willReturn(start), startToken).getCharPositionInLine();
+    given(willReturn(text), startToken).getText();
 
     // when
     CodeLocation location = LocationHelpers.locationOf(startToken);

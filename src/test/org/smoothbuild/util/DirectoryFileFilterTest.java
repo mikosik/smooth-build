@@ -1,8 +1,9 @@
 package org.smoothbuild.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import java.io.File;
 
@@ -14,14 +15,14 @@ public class DirectoryFileFilterTest {
   @Test
   public void directory_file_is_accepted() {
     File file = mock(File.class);
-    when(file.isDirectory()).thenReturn(true);
+    given(willReturn(true), file).isDirectory();
     assertThat(directoryFileFilter.accept(file)).isTrue();
   }
 
   @Test
   public void normal_file_is_not_accepted() {
     File file = mock(File.class);
-    when(file.isDirectory()).thenReturn(false);
+    given(willReturn(false), file).isDirectory();
     assertThat(directoryFileFilter.accept(file)).isFalse();
   }
 }

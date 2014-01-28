@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.builtin.java.javac;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import java.net.URI;
 
@@ -63,7 +64,7 @@ public class InputClassFileTest {
 
   private SFile file(String path) {
     SFile file = mock(SFile.class);
-    when(file.path()).thenReturn(path(path));
+    given(willReturn(path(path)), file).path();
     return file;
   }
 }
