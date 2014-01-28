@@ -40,7 +40,7 @@
   <property name="lib.junit" value="${dir.lib}/junit-4.11.jar" />
   <property name="lib.junit.license" value="${dir.lib}/junit.LICENSE" />
   <property name="lib.mockito" value="${dir.lib}/mockito-all-1.9.5.jar" />
-  <property name="lib.testory" value="${dir.lib}/testory-0.7.jar" />
+  <property name="lib.testory" value="${dir.lib}/testory-0.8.3.jar" />
 
   <target name="init">
     <mkdir dir="${dir.build.java.parser}" />
