@@ -1,14 +1,14 @@
 package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.task.CachedResult;
 import org.smoothbuild.io.cache.task.TaskDb;
@@ -63,10 +63,9 @@ public class CachingTaskTest {
   @Test
   public void is_internal_forwards_negative_result_from_wrapped_task() throws Exception {
     task = mock(Task.class);
-    BDDMockito.given(task.name()).willReturn("name");
-    BDDMockito.given(task.isInternal()).willReturn(false);
-    BDDMockito.given(task.codeLocation()).willReturn(codeLocation);
-
+    given(willReturn("name"), task).name();
+    given(willReturn(false), task).isInternal();
+    given(willReturn(codeLocation), task).codeLocation();
     given(cachingTask = new CachingTask(taskDb, callHasher, task));
     when(cachingTask.isInternal());
     thenReturned(false);
@@ -81,9 +80,8 @@ public class CachingTaskTest {
 
   @Test
   public void task_is_executed_when_result_db_does_not_contain_its_result() {
-    BDDMockito.given(callHasher.hash()).willReturn(hash);
-    BDDMockito.given(taskDb.contains(hash)).willReturn(false);
-
+    given(willReturn(hash), callHasher).hash();
+    given(willReturn(false), taskDb).contains(hash);
     given(cachingTask = new CachingTask(taskDb, callHasher, task));
     when(cachingTask.execute(pluginApi));
     thenReturned(stringValue);
@@ -91,12 +89,10 @@ public class CachingTaskTest {
 
   @Test
   public void task_is_not_executed_when_result_from_db_is_returned() throws Exception {
-    BDDMockito.given(callHasher.hash()).willReturn(hash);
-    BDDMockito.given(taskDb.contains(hash)).willReturn(true);
-    BDDMockito.given(taskDb.read(hash)).willReturn(
-        new CachedResult(stringValue2, Empty.messageList()));
-
-    cachingTask = new CachingTask(taskDb, callHasher, task);
+    given(willReturn(hash), callHasher).hash();
+    given(willReturn(true), taskDb).contains(hash);
+    given(willReturn(new CachedResult(stringValue2, Empty.messageList())), taskDb).read(hash);
+    given(cachingTask = new CachingTask(taskDb, callHasher, task));
     assertThat(cachingTask.execute(pluginApi)).isEqualTo(stringValue2);
   }
 

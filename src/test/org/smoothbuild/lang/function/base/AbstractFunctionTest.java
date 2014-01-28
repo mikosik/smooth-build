@@ -1,16 +1,16 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import java.util.Map;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -29,14 +29,14 @@ public class AbstractFunctionTest {
 
   @Test
   public void type() {
-    BDDMockito.willReturn(STRING).given(signature).type();
+    given(willReturn(STRING), signature).type();
     assertThat(function.type()).isEqualTo(STRING);
   }
 
   @Test
   public void name() {
     Name name = Name.name("name");
-    when(signature.name()).thenReturn(name);
+    given(willReturn(name), signature).name();
 
     assertThat(function.name()).isEqualTo(name);
   }
@@ -44,7 +44,7 @@ public class AbstractFunctionTest {
   @Test
   public void testParams() {
     ImmutableMap<String, Param> params = params(param(STRING, "name"));
-    when(signature.params()).thenReturn(params);
+    given(willReturn(params), signature).params();
 
     assertThat(function.params()).isEqualTo(params);
   }

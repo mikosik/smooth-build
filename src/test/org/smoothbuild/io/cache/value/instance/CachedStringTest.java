@@ -1,19 +1,19 @@
 package org.smoothbuild.io.cache.value.instance;
 
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.command.SmoothContants.CHARSET;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.testory.Closure;
 
@@ -55,8 +55,8 @@ public class CachedStringTest {
 
   @Test
   public void open_input_stream_calls_hashed_db_open_input_stream() throws IOException {
-    BDDMockito.given(hashedDb.openInputStream(hash)).willReturn(
-        new ByteArrayInputStream(content.getBytes(CHARSET)));
+    given(willReturn(
+        new ByteArrayInputStream(content.getBytes(CHARSET))), hashedDb).openInputStream(hash);
     given(cachedString = new CachedString(hashedDb, hash));
     when(cachedString.value());
     thenReturned(content);

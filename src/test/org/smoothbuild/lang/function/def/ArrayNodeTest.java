@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
@@ -52,8 +52,8 @@ public class ArrayNodeTest {
 
   @Test
   public void generateTask() throws Exception {
-    Mockito.when(taskGenerator.generateTask(node1)).thenReturn(result1);
-    Mockito.when(taskGenerator.generateTask(node2)).thenReturn(result2);
+    given(willReturn(result1), taskGenerator).generateTask(node1);
+    given(willReturn(result2), taskGenerator).generateTask(node2);
 
     Task task = arrayNode.generateTask(taskGenerator);
     @SuppressWarnings("unchecked")

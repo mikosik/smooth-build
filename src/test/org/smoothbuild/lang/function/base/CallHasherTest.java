@@ -1,16 +1,16 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.hamcrest.Matchers.not;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.testing.lang.type.FakeString;
@@ -76,8 +76,8 @@ public class CallHasherTest {
   private static NativeFunction createFunction(Iterable<Param> params, String name) {
     NativeFunction function = mock(NativeFunction.class);
     Signature signature = new Signature(STRING, name(name), params);
-    Mockito.when(function.signature()).thenReturn(signature);
-    Mockito.when(function.params()).thenReturn(signature.params());
+    given(willReturn(signature), function).signature();
+    given(willReturn(signature.params()), function).params();
     return function;
   }
 }

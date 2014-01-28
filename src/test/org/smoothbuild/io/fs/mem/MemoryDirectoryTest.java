@@ -2,8 +2,9 @@ package org.smoothbuild.io.fs.mem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 
@@ -107,7 +108,7 @@ public class MemoryDirectoryTest {
 
   private static MemoryElement createChild(String name) {
     MemoryElement childMock = mock(MemoryElement.class);
-    when(childMock.name()).thenReturn(name);
+    given(willReturn(name), childMock).name();
     return childMock;
   }
 }

@@ -2,12 +2,13 @@ package org.smoothbuild.task.exec;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
@@ -26,8 +27,8 @@ public class TaskExecutorTest {
 
   @Before
   public void before() {
-    Mockito.when(pluginApi.loggedMessages()).thenReturn(loggedMessages);
-    Mockito.when(task.execute(pluginApi)).thenReturn(value);
+    given(willReturn(loggedMessages), pluginApi).loggedMessages();
+    given(willReturn(value), task).execute(pluginApi);
   }
 
   @Test

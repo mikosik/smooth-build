@@ -1,11 +1,12 @@
 package org.smoothbuild.task.exec;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.io.temp.TempDirectoryManager;
@@ -37,7 +38,7 @@ public class PluginApiImplTest {
   @Test
   public void create_temp_directory_call_is_forwarded_to_temp_directory_manager() throws Exception {
     TempDirectory tempDirectory = mock(TempDirectory.class);
-    Mockito.when(tempDirectoryManager.createTempDirectory()).thenReturn(tempDirectory);
+    given(willReturn(tempDirectory), tempDirectoryManager).createTempDirectory();
     assertThat(pluginApi.createTempDirectory()).isSameAs(tempDirectory);
   }
 }
