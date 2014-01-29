@@ -23,16 +23,10 @@ public class LocationHelpersTest {
     ArgContext argContext = mock(ArgContext.class);
     ParamNameContext paramNameContext = mock(ParamNameContext.class);
     int line = 13;
-    int start = 11;
-    int end = 17;
-    String text = "123";
     given(willReturn(paramNameContext), argContext).paramName();
     given(willReturn(startToken), paramNameContext).getStart();
     given(willReturn(stopToken), paramNameContext).getStop();
     given(willReturn(line), startToken).getLine();
-    given(willReturn(start), startToken).getCharPositionInLine();
-    given(willReturn(end), stopToken).getCharPositionInLine();
-    given(willReturn(text), stopToken).getText();
 
     // when
     CodeLocation location = LocationHelpers.locationOf(argContext);
@@ -47,16 +41,10 @@ public class LocationHelpersTest {
     ArgContext argContext = mock(ArgContext.class);
     ExpressionContext expressionContext = mock(ExpressionContext.class);
     int line = 13;
-    int start = 11;
-    int end = 17;
-    String text = "123";
     given(willReturn(expressionContext), argContext).expression();
     given(willReturn(startToken), expressionContext).getStart();
     given(willReturn(stopToken), expressionContext).getStop();
     given(willReturn(line), startToken).getLine();
-    given(willReturn(start), startToken).getCharPositionInLine();
-    given(willReturn(end), stopToken).getCharPositionInLine();
-    given(willReturn(text), stopToken).getText();
 
     // when
     CodeLocation location = LocationHelpers.locationOf(argContext);
@@ -69,16 +57,10 @@ public class LocationHelpersTest {
   public void locationOfParserRuleContext() {
     // given
     ParserRuleContext parserRuleContext = mock(ParserRuleContext.class);
-    int start = 11;
     int line = 13;
-    int end = 17;
-    String text = "123";
     given(willReturn(startToken), parserRuleContext).getStart();
     given(willReturn(stopToken), parserRuleContext).getStop();
     given(willReturn(line), startToken).getLine();
-    given(willReturn(start), startToken).getCharPositionInLine();
-    given(willReturn(end), stopToken).getCharPositionInLine();
-    given(willReturn(text), stopToken).getText();
 
     // when
     CodeLocation location = LocationHelpers.locationOf(parserRuleContext);
@@ -90,12 +72,8 @@ public class LocationHelpersTest {
   @Test
   public void locationOfToken() throws Exception {
     // given
-    int start = 11;
     int line = 13;
-    String text = "123";
     given(willReturn(line), startToken).getLine();
-    given(willReturn(start), startToken).getCharPositionInLine();
-    given(willReturn(text), startToken).getText();
 
     // when
     CodeLocation location = LocationHelpers.locationOf(startToken);
