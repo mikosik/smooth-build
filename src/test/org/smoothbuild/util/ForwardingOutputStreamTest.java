@@ -59,8 +59,8 @@ public class ForwardingOutputStreamTest {
 
   @Test
   public void close_call_is_forwarded() throws IOException {
-    forwardingOutputStream.flush();
-    verify(outputStream).flush();
+    forwardingOutputStream.close();
+    verify(outputStream).close();
     verifyNoMoreInteractions(outputStream);
   }
 }
