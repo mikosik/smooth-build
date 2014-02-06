@@ -36,7 +36,7 @@ import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 import org.smoothbuild.util.Empty;
-import org.testory.Will;
+import org.testory.proxy.Handler;
 import org.testory.proxy.Invocation;
 
 import com.google.common.collect.ImmutableList;
@@ -92,7 +92,7 @@ public class NativeCallTaskTest {
     Signature signature = new Signature(FILE, name("name"), params);
     function1 = new NativeFunction(signature, invoker, true);
     nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
-    given(new Will() {
+    given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {
         PluginApi pluginApi = (PluginApi) invocation.arguments.get(0);
