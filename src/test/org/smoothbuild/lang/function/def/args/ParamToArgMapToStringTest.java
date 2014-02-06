@@ -1,14 +1,15 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.SType;
@@ -45,7 +46,7 @@ public class ParamToArgMapToStringTest {
 
   private static Arg arg(int number, SType<?> type, String name) {
     Node node = mock(Node.class);
-    BDDMockito.willReturn(type).given(node).type();
+    given(willReturn(type), node).type();
 
     return namedArg(number, name, node, new FakeCodeLocation());
   }

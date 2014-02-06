@@ -1,7 +1,7 @@
 package org.smoothbuild.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.testory.Testory.mock;
 
 import org.junit.Test;
 import org.smoothbuild.lang.convert.Converter;

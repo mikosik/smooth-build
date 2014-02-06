@@ -1,15 +1,19 @@
 package org.smoothbuild.util;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.util.Streams.copy;
+import static org.testory.Testory.any;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
+import static org.testory.Testory.willThrow;
+import static org.testory.proxy.Invocation.invocation;
+import static org.testory.proxy.Invocations.invoke;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,10 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 import org.testory.Closure;
+import org.testory.On;
+import org.testory.common.Nullable;
+import org.testory.proxy.Handler;
+import org.testory.proxy.Invocation;
 
 public class StreamsTest {
   byte[] bytes = new byte[] { 1, 2, 3 };
@@ -48,7 +53,7 @@ public class StreamsTest {
   @Test
   public void input_stream_to_string_rethrows_io_exceptions() throws Exception {
     inputStream = mock(InputStream.class);
-    BDDMockito.willThrow(IOException.class).given(inputStream).read((byte[]) Matchers.any());
+    given(willThrow(new IOException()), inputStream).read(any(byte[].class));
     try {
       Streams.inputStreamToString(inputStream);
       fail("exception should be thrown");
@@ -59,9 +64,10 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_string_closes_stream() throws Exception {
-    inputStream = spy(inputStreamContaining(content));
+    inputStream = mock(InputStream.class);
+    given(willForwardTo(inputStreamContaining(content)), onAnyMethod());
     Streams.inputStreamToString(inputStream);
-    verify(inputStream).close();
+    thenCalled(inputStream).close();
   }
 
   // inputStreamToByteArray()
@@ -83,7 +89,7 @@ public class StreamsTest {
   @Test
   public void input_stream_to_byte_array_rethrows_io_exceptions() throws Exception {
     inputStream = mock(InputStream.class);
-    BDDMockito.willThrow(IOException.class).given(inputStream).read((byte[]) Matchers.any());
+    given(willThrow(new IOException()), inputStream).read(any(byte[].class));
     try {
       Streams.inputStreamToByteArray(inputStream);
       fail("exception should be thrown");
@@ -94,9 +100,10 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_byte_array_closes_stream() throws Exception {
-    inputStream = spy(new ByteArrayInputStream(bytes));
+    inputStream = mock(InputStream.class);
+    given(willForwardTo(new ByteArrayInputStream(bytes)), onAnyMethod());
     Streams.inputStreamToByteArray(inputStream);
-    verify(inputStream).close();
+    thenCalled(inputStream).close();
   }
 
   // copy()
@@ -110,18 +117,18 @@ public class StreamsTest {
 
   @Test
   public void input_stream_is_closed_by_copy() throws IOException {
-    inputStream = Mockito.mock(InputStream.class);
-    Mockito.when(inputStream.read((byte[]) Matchers.any())).thenReturn(-1);
+    inputStream = mock(InputStream.class);
+    given(willReturn(-1), inputStream).read(any(byte[].class));
     Streams.copy(inputStream, outputStream);
-    verify(inputStream).close();
+    thenCalled(inputStream).close();
   }
 
   @Test
   public void output_stream_is_closed_by_copy() throws IOException {
-    outputStream = Mockito.mock(ByteArrayOutputStream.class);
+    outputStream = mock(ByteArrayOutputStream.class);
     inputStream = new ByteArrayInputStream(bytes);
     copy(inputStream, outputStream);
-    verify(outputStream).close();
+    thenCalled(outputStream).close();
   }
 
   private static Closure $copy(final InputStream inputStream,
@@ -131,6 +138,26 @@ public class StreamsTest {
       public Void invoke() throws Throwable {
         Streams.copy(inputStream, outputStream);
         return null;
+      }
+    };
+  }
+
+  public static On onAnyMethod() {
+    return new On() {
+      @Override
+      public boolean matches(Invocation invocation) {
+        return true;
+      }
+    };
+  }
+
+  // TODO remove when spying implemented in Testory
+  public static Handler willForwardTo(final Object instance) {
+    return new Handler() {
+      @Override
+      @Nullable
+      public Object handle(Invocation invocation) throws Throwable {
+        return invoke(invocation(invocation.method, instance, invocation.arguments));
       }
     };
   }

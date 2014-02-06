@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
@@ -10,11 +9,13 @@ import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import java.util.Set;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
@@ -85,7 +86,7 @@ public class ArgTest {
 
   @Test
   public void typeReturnsTypeOfNode() throws Exception {
-    BDDMockito.willReturn(FILE).given(node).type();
+    given(willReturn(FILE), node).type();
     SType<?> arg = namedArg(1, name, node, codeLocation).type();
     assertThat(arg).isEqualTo(FILE);
   }
@@ -122,19 +123,19 @@ public class ArgTest {
 
   @Test
   public void namedArgToString() throws Exception {
-    BDDMockito.willReturn(STRING).given(node).type();
+    given(willReturn(STRING), node).type();
     assertThat(namedArg(1, name, node, codeLocation).toString()).isEqualTo("String:" + name);
   }
 
   @Test
   public void namelessArgToString() throws Exception {
-    BDDMockito.willReturn(STRING).given(node).type();
+    given(willReturn(STRING), node).type();
     assertThat(namelessArg(1, node, codeLocation).toString()).isEqualTo("String:<nameless>");
   }
 
   @Test
   public void toPaddedString() throws Exception {
-    BDDMockito.willReturn(STRING).given(node).type();
+    given(willReturn(STRING), node).type();
 
     Arg arg = namedArg(1, "myName", node, codeLocation);
     String actual = arg.toPaddedString(10, 13, 7);
@@ -144,7 +145,7 @@ public class ArgTest {
 
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
-    BDDMockito.willReturn(STRING).given(node).type();
+    given(willReturn(STRING), node).type();
 
     Arg arg = namedArg(1, "myName", node, new FakeCodeLocation());
     String actual = arg.toPaddedString(1, 1, 1);
@@ -195,7 +196,7 @@ public class ArgTest {
 
   private static Arg nameless(SType<?> type) {
     Node node = mock(Node.class);
-    BDDMockito.willReturn(type).given(node).type();
+    given(willReturn(type), node).type();
     return Arg.namelessArg(1, node, new FakeCodeLocation());
   }
 }

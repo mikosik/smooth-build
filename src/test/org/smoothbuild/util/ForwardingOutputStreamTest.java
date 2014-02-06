@@ -1,18 +1,29 @@
 package org.smoothbuild.util;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.willReturn;
+import static org.testory.Testory.willThrow;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.testory.On;
+import org.testory.TestoryAssertionError;
+import org.testory.proxy.Invocation;
 
 public class ForwardingOutputStreamTest {
   OutputStream outputStream = mock(OutputStream.class);
   ForwardingOutputStream forwardingOutputStream = new ForwardingOutputStream(outputStream);
+
+  @Before
+  public void before() {
+    given(willThrow(new TestoryAssertionError()), onInstance(outputStream));
+  }
 
   @Test
   public void null_output_stream_is_forbidden() throws Exception {
@@ -27,17 +38,17 @@ public class ForwardingOutputStreamTest {
   @Test
   public void byte_call_with_one_byte_is_forwarded() throws IOException {
     int oneByte = 33;
+    given(willReturn(null), outputStream).write(oneByte);
     forwardingOutputStream.write(oneByte);
-    verify(outputStream).write(oneByte);
-    verifyNoMoreInteractions(outputStream);
+    thenCalled(outputStream).write(oneByte);
   }
 
   @Test
   public void byte_call_with_byte_array_is_forwarded() throws IOException {
     byte[] bytes = new byte[] { 1, 2, 2 };
+    given(willReturn(null), outputStream).write(bytes);
     forwardingOutputStream.write(bytes);
-    verify(outputStream).write(bytes);
-    verifyNoMoreInteractions(outputStream);
+    thenCalled(outputStream).write(bytes);
   }
 
   @Test
@@ -45,22 +56,31 @@ public class ForwardingOutputStreamTest {
     byte[] bytes = new byte[] { 1, 2, 2 };
     int offset = 13;
     int length = 17;
+    given(willReturn(null), outputStream).write(bytes, offset, length);
     forwardingOutputStream.write(bytes, offset, length);
-    verify(outputStream).write(bytes, offset, length);
-    verifyNoMoreInteractions(outputStream);
+    thenCalled(outputStream).write(bytes, offset, length);
   }
 
   @Test
   public void flush_call_is_forwarded() throws IOException {
+    given(willReturn(null), outputStream).flush();
     forwardingOutputStream.flush();
-    verify(outputStream).flush();
-    verifyNoMoreInteractions(outputStream);
+    thenCalled(outputStream).flush();
   }
 
   @Test
   public void close_call_is_forwarded() throws IOException {
+    given(willReturn(null), outputStream).close();
     forwardingOutputStream.close();
-    verify(outputStream).close();
-    verifyNoMoreInteractions(outputStream);
+    thenCalled(outputStream).close();
+  }
+
+  private static On onInstance(final Object mock) {
+    return new On() {
+      @Override
+      public boolean matches(Invocation invocation) {
+        return mock == invocation.instance;
+      }
+    };
   }
 }

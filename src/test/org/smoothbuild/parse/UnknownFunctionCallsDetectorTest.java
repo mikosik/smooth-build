@@ -1,10 +1,10 @@
 package org.smoothbuild.parse;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.UnknownFunctionCallsDetector.detectUndefinedFunctions;
 import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
+import static org.testory.Testory.mock;
 
 import java.util.Map;
 import java.util.Set;

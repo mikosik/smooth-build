@@ -1,10 +1,10 @@
 package org.smoothbuild.io.fs.mem;
 
 import static org.hamcrest.Matchers.sameInstance;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;

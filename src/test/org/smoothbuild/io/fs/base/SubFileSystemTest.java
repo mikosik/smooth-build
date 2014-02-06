@@ -1,11 +1,12 @@
 package org.smoothbuild.io.fs.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.willReturn;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,41 +25,41 @@ public class SubFileSystemTest {
 
   @Test
   public void pathKind() throws Exception {
-    when(fileSystem.pathState(absolutePath)).thenReturn(FILE);
+    given(willReturn(FILE), fileSystem).pathState(absolutePath);
     assertThat(subFileSystem.pathState(path)).isEqualTo(FILE);
   }
 
   @Test
   public void childNames() {
     ImmutableList<String> strings = ImmutableList.of("abc");
-    when(fileSystem.childNames(absolutePath)).thenReturn(strings);
+    given(willReturn(strings), fileSystem).childNames(absolutePath);
     assertThat(subFileSystem.childNames(path)).isSameAs(strings);
   }
 
   @Test
   public void filesFrom() {
     ImmutableList<Path> pathList = ImmutableList.of(path("some/path"));
-    when(fileSystem.filesFrom(absolutePath)).thenReturn(pathList);
+    given(willReturn(pathList), fileSystem).filesFrom(absolutePath);
     assertThat(subFileSystem.filesFrom(path)).isSameAs(pathList);
   }
 
   @Test
   public void deleteDirectoryRecursively() {
     subFileSystem.delete(path);
-    verify(fileSystem).delete(absolutePath);
+    thenCalled(fileSystem).delete(absolutePath);
   }
 
   @Test
   public void createInputStream() {
     InputStream inputStream = mock(InputStream.class);
-    when(fileSystem.openInputStream(absolutePath)).thenReturn(inputStream);
+    given(willReturn(inputStream), fileSystem).openInputStream(absolutePath);
     assertThat(subFileSystem.openInputStream(path)).isSameAs(inputStream);
   }
 
   @Test
   public void createOutputStream() {
     OutputStream outputStream = mock(OutputStream.class);
-    when(fileSystem.openOutputStream(absolutePath)).thenReturn(outputStream);
+    given(willReturn(outputStream), fileSystem).openOutputStream(absolutePath);
     assertThat(subFileSystem.openOutputStream(path)).isSameAs(outputStream);
   }
 
@@ -68,7 +69,7 @@ public class SubFileSystemTest {
     Path absoluteLink = root.append(link);
 
     subFileSystem.createLink(link, path);
-    verify(fileSystem).createLink(absoluteLink, absolutePath);
+    thenCalled(fileSystem).createLink(absoluteLink, absolutePath);
   }
 
   @Test
@@ -77,6 +78,6 @@ public class SubFileSystemTest {
     Path absolutePath = root.append(path);
 
     subFileSystem.createDir(path);
-    verify(fileSystem).createDir(absolutePath);
+    thenCalled(fileSystem).createDir(absolutePath);
   }
 }

@@ -2,8 +2,6 @@ package org.smoothbuild.lang.function.def.args.err;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
@@ -15,6 +13,9 @@ import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import java.util.Map;
 import java.util.Set;
@@ -76,7 +77,7 @@ public class AmbiguousNamelessArgsErrorTest {
 
   private Node node(SType<?> type) {
     Node result = mock(Node.class);
-    willReturn(type).given(result).type();
+    given(willReturn(type), result).type();
     return result;
   }
 }

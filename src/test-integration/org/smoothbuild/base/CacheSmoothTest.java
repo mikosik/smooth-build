@@ -1,23 +1,20 @@
 package org.smoothbuild.base;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.testory.Testory.any;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenCalledTimes;
 
 import java.util.Map;
 
 import javax.inject.Singleton;
 
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.Builtin;
 import org.smoothbuild.lang.builtin.BuiltinFunctions;
@@ -29,9 +26,9 @@ import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.lang.plugin.PluginApi;
-import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
+import org.testory.proxy.Handler;
+import org.testory.proxy.Invocation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Provides;
@@ -44,14 +41,13 @@ public class CacheSmoothTest extends IntegrationTestCase {
   @Singleton
   @Builtin
   public Module provideBuiltinModule(ModuleBuilder builder) throws Exception {
-    Mockito.when(invoker.invoke(Matchers.<PluginApi> any(), Matchers.<Map<String, SValue>> any()))
-        .thenAnswer(new Answer<SString>() {
-          @Override
-          public SString answer(InvocationOnMock invocation) throws Throwable {
-            PluginApi pluginApi = (PluginApi) invocation.getArguments()[0];
-            return pluginApi.string("abc");
-          }
-        });
+    given(new Handler() {
+      @Override
+      public Object handle(Invocation invocation) throws Throwable {
+        PluginApi pluginApi = (PluginApi) invocation.arguments.get(0);
+        return pluginApi.string("abc");
+      }
+    }, invoker).invoke(any(PluginApi.class), any(Map.class));
     builder.addFunction(function(name, invoker));
 
     for (Class<?> klass : BuiltinFunctions.BUILTIN_FUNCTION_CLASSES) {
@@ -71,7 +67,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.messages().assertNoProblems();
-    verify(invoker, times(1)).invoke(Matchers.<PluginApi> any(), Matchers.<Map<String, SValue>> any());
+    thenCalledTimes(1, invoker).invoke(any(PluginApi.class), any(Map.class));
   }
 
   @Test
@@ -88,7 +84,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.messages().assertNoProblems();
-    verify(invoker, times(2)).invoke(Matchers.<PluginApi> any(), Matchers.<Map<String, SValue>> any());
+    thenCalledTimes(2, invoker).invoke(any(PluginApi.class), any(Map.class));
   }
 
   private static NativeFunction function(String name, Invoker invoker) {

@@ -2,7 +2,6 @@ package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
@@ -14,6 +13,9 @@ import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.willReturn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
-import org.mockito.BDDMockito;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
@@ -606,7 +607,7 @@ public class ParamToArgMapperTest {
 
   private static Node node(SType<?> type) {
     Node node = mock(Node.class);
-    BDDMockito.willReturn(type).given(node).type();
+    given(willReturn(type), node).type();
     return node;
   }
 

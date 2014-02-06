@@ -1,10 +1,12 @@
 package org.smoothbuild.lang.builtin.java.javac;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.testory.Testory.any;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.willReturn;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -13,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.message.base.Message;
 
 public class LoggingDiagnosticListenerTest {
   @SuppressWarnings("unchecked")
@@ -22,14 +25,14 @@ public class LoggingDiagnosticListenerTest {
 
   @Before
   public void before() {
-    when(diagnostic.getKind()).thenReturn(Diagnostic.Kind.ERROR);
-    when(diagnostic.getMessage(null)).thenReturn("diagnostic message");
+    given(willReturn(Diagnostic.Kind.ERROR), diagnostic).getKind();
+    given(willReturn("diagnostic message"), diagnostic).getMessage(null);
   }
 
   @Test
   public void diagnosticIsReportedAsError() {
     listener.report(diagnostic);
-    verify(pluginApi).log(isA(JavaCompilerMessage.class));
+    thenCalled(pluginApi).log(any(Message.class, instanceOf(JavaCompilerMessage.class)));
   }
 
   @Test
