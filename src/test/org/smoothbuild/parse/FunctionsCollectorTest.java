@@ -1,10 +1,10 @@
 package org.smoothbuild.parse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.testing.parse.FakeFunctionContext.functionCtx;
 import static org.smoothbuild.testing.parse.FakeModuleContext.moduleCtx;
+import static org.testory.Testory.mock;
 
 import java.util.Map;
 

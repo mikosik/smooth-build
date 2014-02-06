@@ -1,14 +1,14 @@
 package org.smoothbuild.message.listen;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.testory.Testory.any;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.onInstance;
+import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.thenCalledTimes;
 
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.Iterables;
@@ -30,7 +30,7 @@ public class MessageCatchingExecutorTest {
     MyNormalExecutor executor = new MyNormalExecutor(userConsole, name);
     executor.execute(value);
 
-    verifyZeroInteractions(userConsole);
+    thenCalledTimes(0, onInstance(userConsole));
   }
 
   private static class MyNormalExecutor extends MessageCatchingExecutor<String, String> {
@@ -49,10 +49,18 @@ public class MessageCatchingExecutorTest {
     MyThrowingExecutor executor = new MyThrowingExecutor(userConsole, name);
     executor.execute(value);
 
-    ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
-    verify(userConsole).print(eq(name), captured.capture());
-    assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
-    assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
+    thenCalled(userConsole).print(name, anyLoggedMessagesOf(value));
+  }
+
+  private static LoggedMessages anyLoggedMessagesOf(final String value) {
+    return any(LoggedMessages.class, new Object() {
+      @SuppressWarnings("unused")
+      public boolean matches(Object item) {
+        LoggedMessages loggedMessages = (LoggedMessages) item;
+        return Iterables.size(loggedMessages) == 1
+            && Iterables.get(loggedMessages, 0).message().equals(value);
+      }
+    });
   }
 
   private static class MyThrowingExecutor extends MessageCatchingExecutor<String, String> {
@@ -68,14 +76,11 @@ public class MessageCatchingExecutorTest {
 
   @Test
   public void phase_failed_exception_is_caught() throws Exception {
-    MyLoggingAndThrowingFailedExceptionExecutor executor =
-        new MyLoggingAndThrowingFailedExceptionExecutor(userConsole);
+    MyLoggingAndThrowingFailedExceptionExecutor executor = new MyLoggingAndThrowingFailedExceptionExecutor(
+        userConsole);
     executor.execute(value);
 
-    ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
-    verify(userConsole).print(eq(name), captured.capture());
-    assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
-    assertThat(Iterables.get(captured.getValue(), 0).message()).isEqualTo(value);
+    thenCalled(userConsole).print(name, anyLoggedMessagesOf(value));
   }
 
   private static class MyLoggingAndThrowingFailedExceptionExecutor extends
@@ -105,11 +110,14 @@ public class MessageCatchingExecutorTest {
     MyThrowingFailedExceptionExecutor executor = new MyThrowingFailedExceptionExecutor(userConsole);
     executor.execute(value);
 
-    ArgumentCaptor<LoggedMessages> captured = ArgumentCaptor.forClass(LoggedMessages.class);
-    verify(userConsole).print(eq("name"), captured.capture());
-    assertThat(Iterables.size(captured.getValue())).isEqualTo(1);
-    assertThat(Iterables.get(captured.getValue(), 0)).isInstanceOf(
-        PhaseFailedWithoutErrorError.class);
+    thenCalled(userConsole).print("name", any(LoggedMessages.class, new Object() {
+      @SuppressWarnings("unused")
+      public boolean matches(Object item) {
+        LoggedMessages loggedMessages = (LoggedMessages) item;
+        return Iterables.size(loggedMessages) == 1
+            && (Iterables.get(loggedMessages, 0) instanceof PhaseFailedWithoutErrorError);
+      }
+    }));
   }
 
   private static class MyThrowingFailedExceptionExecutor extends

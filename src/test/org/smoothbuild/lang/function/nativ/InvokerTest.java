@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.testory.Testory.mock;
 
 import java.lang.reflect.Method;
 

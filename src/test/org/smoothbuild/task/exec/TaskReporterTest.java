@@ -1,15 +1,17 @@
 package org.smoothbuild.task.exec;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 import static org.smoothbuild.task.exec.TaskReporter.header;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.onInstance;
+import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.thenCalledTimes;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
@@ -25,7 +27,7 @@ public class TaskReporterTest {
 
   @Before
   public void before() {
-    Mockito.when(pluginApi.loggedMessages()).thenReturn(messages);
+    given(willReturn(messages), pluginApi).loggedMessages();
   }
 
   @Test
@@ -35,14 +37,14 @@ public class TaskReporterTest {
 
     taskReporter.report(task, pluginApi);
 
-    verify(userConsole).print(header(task, false), messages);
+    thenCalled(userConsole).print(header(task, false), messages);
   }
 
   @Test
   public void internal_task_without_messages_are_not_printed() {
     Task task = createTask(true);
     taskReporter.report(task, pluginApi);
-    verifyZeroInteractions(userConsole);
+    thenCalledTimes(0, onInstance(userConsole));
   }
 
   @Test
@@ -52,14 +54,14 @@ public class TaskReporterTest {
 
     taskReporter.report(task, pluginApi);
 
-    verify(userConsole).print(header(task, false), messages);
+    thenCalled(userConsole).print(header(task, false), messages);
   }
 
   @Test
   public void non_internal_task_without_messages_is_printed() {
     Task task = createTask(false);
     taskReporter.report(task, pluginApi);
-    verify(userConsole).print(header(task, false), messages);
+    thenCalled(userConsole).print(header(task, false), messages);
   }
 
   private static Task createTask(boolean isInternal) {

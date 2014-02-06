@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.io.cache.task.TaskDb;
@@ -49,7 +50,7 @@ public class NativeFunctionTest {
     @SuppressWarnings("unchecked")
     ImmutableMap<String, SValue> args = mock(ImmutableMap.class);
     function.invoke(pluginApi, args);
-    verify(invoker).invoke(pluginApi, args);
+    thenCalled(invoker).invoke(pluginApi, args);
   }
 
   @Test
@@ -57,7 +58,7 @@ public class NativeFunctionTest {
     SString result = new FakeString("result");
 
     // given
-    when(invoker.invoke(pluginApi, Empty.stringValueMap())).thenReturn(result);
+    given(willReturn(result), invoker).invoke(pluginApi, Empty.stringValueMap());
 
     // when
     Task task = function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation);

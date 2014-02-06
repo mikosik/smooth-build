@@ -1,8 +1,8 @@
 package org.smoothbuild.io.cache.value.instance;
 
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;

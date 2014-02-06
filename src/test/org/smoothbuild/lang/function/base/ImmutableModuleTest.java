@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 

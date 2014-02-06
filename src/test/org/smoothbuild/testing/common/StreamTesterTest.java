@@ -2,13 +2,16 @@ package org.smoothbuild.testing.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.testory.Testory.any;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.willReturn;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,8 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 
 public class StreamTesterTest {
 
@@ -100,10 +101,10 @@ public class StreamTesterTest {
   @Test
   public void inputStreamToBytesClosesStream() throws Exception {
     InputStream inputStream = mock(InputStream.class);
-    Mockito.when(inputStream.read((byte[]) Matchers.any())).thenReturn(-1);
+    given(willReturn(-1), inputStream).read(any(byte[].class));
 
     inputStreamToBytes(inputStream);
-    verify(inputStream).close();
+    thenCalled(inputStream).close();
   }
 
   private static ByteArrayInputStream inputStream(ByteArrayOutputStream outputStream) {

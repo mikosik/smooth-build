@@ -1,7 +1,7 @@
 package org.smoothbuild.task.exec;
 
-import static org.mockito.Mockito.mock;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 

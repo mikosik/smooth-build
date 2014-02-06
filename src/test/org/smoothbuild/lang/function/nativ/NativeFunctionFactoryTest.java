@@ -2,12 +2,12 @@ package org.smoothbuild.lang.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
+import static org.testory.Testory.mock;
 
 import org.junit.Test;
 import org.smoothbuild.io.cache.task.TaskDb;
