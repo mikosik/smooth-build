@@ -33,6 +33,7 @@ import org.testory.proxy.Invocation;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Provides;
 
+@SuppressWarnings("unchecked")
 public class CacheSmoothTest extends IntegrationTestCase {
   String name = "myFunction";
   Invoker invoker = mock(Invoker.class);
