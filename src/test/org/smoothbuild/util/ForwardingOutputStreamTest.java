@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 import static org.testory.Testory.willThrow;
 
@@ -19,6 +20,11 @@ import org.testory.proxy.Invocation;
 public class ForwardingOutputStreamTest {
   OutputStream outputStream = mock(OutputStream.class);
   ForwardingOutputStream forwardingOutputStream = new ForwardingOutputStream(outputStream);
+
+  int oneByte = 33;
+  byte[] bytes = new byte[] { 1, 2, 3 };
+  int offset = 13;
+  int length = 17;
 
   @Before
   public void before() {
@@ -37,41 +43,36 @@ public class ForwardingOutputStreamTest {
 
   @Test
   public void byte_call_with_one_byte_is_forwarded() throws IOException {
-    int oneByte = 33;
     given(willReturn(null), outputStream).write(oneByte);
-    forwardingOutputStream.write(oneByte);
+    when(forwardingOutputStream).write(oneByte);
     thenCalled(outputStream).write(oneByte);
   }
 
   @Test
   public void byte_call_with_byte_array_is_forwarded() throws IOException {
-    byte[] bytes = new byte[] { 1, 2, 2 };
     given(willReturn(null), outputStream).write(bytes);
-    forwardingOutputStream.write(bytes);
+    when(forwardingOutputStream).write(bytes);
     thenCalled(outputStream).write(bytes);
   }
 
   @Test
   public void byte_call_with_byte_array_and_offset_is_forwarded() throws IOException {
-    byte[] bytes = new byte[] { 1, 2, 2 };
-    int offset = 13;
-    int length = 17;
     given(willReturn(null), outputStream).write(bytes, offset, length);
-    forwardingOutputStream.write(bytes, offset, length);
+    when(forwardingOutputStream).write(bytes, offset, length);
     thenCalled(outputStream).write(bytes, offset, length);
   }
 
   @Test
   public void flush_call_is_forwarded() throws IOException {
     given(willReturn(null), outputStream).flush();
-    forwardingOutputStream.flush();
+    when(forwardingOutputStream).flush();
     thenCalled(outputStream).flush();
   }
 
   @Test
   public void close_call_is_forwarded() throws IOException {
     given(willReturn(null), outputStream).close();
-    forwardingOutputStream.close();
+    when(forwardingOutputStream).close();
     thenCalled(outputStream).close();
   }
 

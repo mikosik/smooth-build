@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.function.def;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenCalledTimes;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
@@ -22,17 +23,17 @@ public class CachingNodeTest {
   @Test
   public void first_generate_task_call_forwards_call_to_node_generate_task() {
     given(willReturn(task), node).generateTask(taskGenerator);
-    assertThat(cachingNode.generateTask(taskGenerator)).isEqualTo(task);
+    when(cachingNode).generateTask(taskGenerator);
+    thenReturned(task);
   }
 
   @Test
   public void second_generate_task_call_uses_cached_value() {
     given(willReturn(task), node).generateTask(taskGenerator);
-
-    cachingNode.generateTask(taskGenerator);
-    assertThat(cachingNode.generateTask(taskGenerator)).isEqualTo(task);
-
-    thenCalledTimes(1,node).generateTask(taskGenerator);
+    given(cachingNode.generateTask(taskGenerator));
+    when(cachingNode).generateTask(taskGenerator);
+    thenReturned(task);
+    thenCalledTimes(1, node).generateTask(taskGenerator);
   }
 
   private static Node node() {

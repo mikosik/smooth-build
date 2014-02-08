@@ -11,6 +11,8 @@ import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import java.util.Set;
@@ -87,8 +89,8 @@ public class ArgTest {
   @Test
   public void typeReturnsTypeOfNode() throws Exception {
     given(willReturn(FILE), node).type();
-    SType<?> arg = namedArg(1, name, node, codeLocation).type();
-    assertThat(arg).isEqualTo(FILE);
+    when(namedArg(1, name, node, codeLocation)).type();
+    thenReturned(FILE);
   }
 
   @Test(expected = UnsupportedOperationException.class)
@@ -124,33 +126,29 @@ public class ArgTest {
   @Test
   public void namedArgToString() throws Exception {
     given(willReturn(STRING), node).type();
-    assertThat(namedArg(1, name, node, codeLocation).toString()).isEqualTo("String:" + name);
+    when(namedArg(1, name, node, codeLocation)).toString();
+    thenReturned("String:" + name);
   }
 
   @Test
   public void namelessArgToString() throws Exception {
     given(willReturn(STRING), node).type();
-    assertThat(namelessArg(1, node, codeLocation).toString()).isEqualTo("String:<nameless>");
+    when(namelessArg(1, node, codeLocation)).toString();
+    thenReturned("String:<nameless>");
   }
 
   @Test
   public void toPaddedString() throws Exception {
     given(willReturn(STRING), node).type();
-
-    Arg arg = namedArg(1, "myName", node, codeLocation);
-    String actual = arg.toPaddedString(10, 13, 7);
-
-    assertThat(actual).isEqualTo("String    : myName        #1       " + codeLocation.toString());
+    when(namedArg(1, "myName", node, codeLocation)).toPaddedString(10, 13, 7);
+    thenReturned("String    : myName        #1       " + codeLocation.toString());
   }
 
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
     given(willReturn(STRING), node).type();
-
-    Arg arg = namedArg(1, "myName", node, new FakeCodeLocation());
-    String actual = arg.toPaddedString(1, 1, 1);
-
-    assertThat(actual).isEqualTo("String: myName #1 " + codeLocation.toString());
+    when(namedArg(1, "myName", node, new FakeCodeLocation())).toPaddedString(1, 1, 1);
+    thenReturned("String: myName #1 " + codeLocation.toString());
   }
 
   @Test
@@ -160,8 +158,8 @@ public class ArgTest {
     Arg nameless1 = nameless();
     Arg nameless2 = nameless();
 
-    ImmutableList<Arg> actual = Arg.filterNamed(ImmutableList.of(named1, named2,
-        nameless1, nameless2));
+    ImmutableList<Arg> actual =
+        Arg.filterNamed(ImmutableList.of(named1, named2, nameless1, nameless2));
 
     assertThat(actual).containsOnly(named1, named2);
   }
@@ -180,8 +178,8 @@ public class ArgTest {
     Arg named2 = named("name2");
     Arg nameless = nameless(type);
 
-    ImmutableMap<SType<?>, Set<Arg>> actual = Arg.filterNameless(ImmutableList.of(named1,
-        named2, nameless));
+    ImmutableMap<SType<?>, Set<Arg>> actual =
+        Arg.filterNameless(ImmutableList.of(named1, named2, nameless));
 
     assertThat(actual.get(type)).containsOnly(nameless);
   }

@@ -6,6 +6,8 @@ import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import javax.tools.Diagnostic;
@@ -31,7 +33,7 @@ public class LoggingDiagnosticListenerTest {
 
   @Test
   public void diagnosticIsReportedAsError() {
-    listener.report(diagnostic);
+    when(listener).report(diagnostic);
     thenCalled(pluginApi).log(any(Message.class, instanceOf(JavaCompilerMessage.class)));
   }
 
@@ -42,7 +44,8 @@ public class LoggingDiagnosticListenerTest {
 
   @Test
   public void diagnosticMakesErrorReportedReturnsTrue() throws Exception {
-    listener.report(diagnostic);
-    assertThat(listener.errorReported()).isTrue();
+    given(listener).report(diagnostic);
+    when(listener).errorReported();
+    thenReturned(true);
   }
 }

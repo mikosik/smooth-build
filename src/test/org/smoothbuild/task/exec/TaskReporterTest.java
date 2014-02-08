@@ -8,6 +8,7 @@ import static org.testory.Testory.mock;
 import static org.testory.Testory.onInstance;
 import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.thenCalledTimes;
+import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Before;
@@ -25,6 +26,8 @@ public class TaskReporterTest {
 
   TaskReporter taskReporter = new TaskReporter(userConsole);
 
+  Task task;
+
   @Before
   public void before() {
     given(willReturn(messages), pluginApi).loggedMessages();
@@ -32,35 +35,35 @@ public class TaskReporterTest {
 
   @Test
   public void messages_of_internal_task_are_printed() {
-    Task task = createTask(true);
-    messages.log(new Message(WARNING, "message"));
+    given(task = createTask(true));
+    given(messages).log(new Message(WARNING, "message"));
 
-    taskReporter.report(task, pluginApi);
+    when(taskReporter).report(task, pluginApi);
 
     thenCalled(userConsole).print(header(task, false), messages);
   }
 
   @Test
   public void internal_task_without_messages_are_not_printed() {
-    Task task = createTask(true);
-    taskReporter.report(task, pluginApi);
+    given(task = createTask(true));
+    when(taskReporter).report(task, pluginApi);
     thenCalledTimes(0, onInstance(userConsole));
   }
 
   @Test
   public void messages_of_non_internal_tasks_are_printed() {
-    Task task = createTask(false);
-    messages.log(new Message(WARNING, "message"));
+    given(task = createTask(false));
+    given(messages).log(new Message(WARNING, "message"));
 
-    taskReporter.report(task, pluginApi);
+    when(taskReporter).report(task, pluginApi);
 
     thenCalled(userConsole).print(header(task, false), messages);
   }
 
   @Test
   public void non_internal_task_without_messages_is_printed() {
-    Task task = createTask(false);
-    taskReporter.report(task, pluginApi);
+    given(task = createTask(false));
+    when(taskReporter).report(task, pluginApi);
     thenCalled(userConsole).print(header(task, false), messages);
   }
 

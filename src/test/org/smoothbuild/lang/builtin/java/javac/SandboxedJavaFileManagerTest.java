@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.onInstance;
 import static org.testory.Testory.thenCalledTimes;
+import static org.testory.Testory.when;
 
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
@@ -30,7 +31,8 @@ public class SandboxedJavaFileManagerTest {
   @Test
   public void getJavaFile_output_is_not_forwarded_to_standard_manager_for_class_output()
       throws Exception {
-    manager.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT, "className", Kind.CLASS, null);
+    when(manager)
+        .getJavaFileForOutput(StandardLocation.CLASS_OUTPUT, "className", Kind.CLASS, null);
     thenCalledTimes(0, onInstance(sfm));
   }
 
