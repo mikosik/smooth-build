@@ -39,7 +39,6 @@
   <property name="lib.jarjar" value="${dir.lib}/jarjar-1.4.jar" />
   <property name="lib.junit" value="${dir.lib}/junit-4.11.jar" />
   <property name="lib.junit.license" value="${dir.lib}/junit.LICENSE" />
-  <property name="lib.mockito" value="${dir.lib}/mockito-all-1.9.5.jar" />
   <property name="lib.testory" value="${dir.lib}/testory-0.11.0.jar" />
 
   <target name="init">
@@ -105,7 +104,6 @@
     <path refid="classpath.with.java" />
     <pathelement location="${lib.assertj-core}" />
     <pathelement location="${lib.junit}" />
-    <pathelement location="${lib.mockito}" />
   </path>
 
   <target name="compile-testing" depends="compile-java">
@@ -135,7 +133,6 @@
     <pathelement location="${lib.guava-testlib}" />
     <pathelement location="${lib.hamcrest-library}" />
     <pathelement location="${lib.junit}" />
-    <pathelement location="${lib.mockito}" />
     <pathelement location="${lib.testory}" />
   </path>
 
