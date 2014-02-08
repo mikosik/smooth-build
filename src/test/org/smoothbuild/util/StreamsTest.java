@@ -2,7 +2,6 @@ package org.smoothbuild.util;
 
 import static org.junit.Assert.fail;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
-import static org.smoothbuild.util.Streams.copy;
 import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -52,7 +51,7 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_string_rethrows_io_exceptions() throws Exception {
-    inputStream = mock(InputStream.class);
+    given(inputStream = mock(InputStream.class));
     given(willThrow(new IOException()), inputStream).read(any(byte[].class));
     try {
       Streams.inputStreamToString(inputStream);
@@ -64,9 +63,9 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_string_closes_stream() throws Exception {
-    inputStream = mock(InputStream.class);
+    given(inputStream = mock(InputStream.class));
     given(willForwardTo(inputStreamContaining(content)), onAnyMethod());
-    Streams.inputStreamToString(inputStream);
+    when(Streams.inputStreamToString(inputStream));
     thenCalled(inputStream).close();
   }
 
@@ -100,9 +99,9 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_byte_array_closes_stream() throws Exception {
-    inputStream = mock(InputStream.class);
+    given(inputStream = mock(InputStream.class));
     given(willForwardTo(new ByteArrayInputStream(bytes)), onAnyMethod());
-    Streams.inputStreamToByteArray(inputStream);
+    when(Streams.inputStreamToByteArray(inputStream));
     thenCalled(inputStream).close();
   }
 
@@ -117,17 +116,17 @@ public class StreamsTest {
 
   @Test
   public void input_stream_is_closed_by_copy() throws IOException {
-    inputStream = mock(InputStream.class);
+    given(inputStream = mock(InputStream.class));
     given(willReturn(-1), inputStream).read(any(byte[].class));
-    Streams.copy(inputStream, outputStream);
+    when($copy(inputStream, outputStream));
     thenCalled(inputStream).close();
   }
 
   @Test
   public void output_stream_is_closed_by_copy() throws IOException {
-    outputStream = mock(ByteArrayOutputStream.class);
-    inputStream = new ByteArrayInputStream(bytes);
-    copy(inputStream, outputStream);
+    given(outputStream = mock(ByteArrayOutputStream.class));
+    given(inputStream = new ByteArrayInputStream(bytes));
+    when($copy(inputStream, outputStream));
     thenCalled(outputStream).close();
   }
 

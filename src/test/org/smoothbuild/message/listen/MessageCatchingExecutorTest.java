@@ -1,12 +1,14 @@
 package org.smoothbuild.message.listen;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.testory.Testory.any;
+import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.onInstance;
 import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.thenCalledTimes;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.message.base.Message;
@@ -18,18 +20,19 @@ public class MessageCatchingExecutorTest {
   UserConsole userConsole = mock(UserConsole.class);
   String value = "value";
 
+  MessageCatchingExecutor<String, String> executor;
+
   @Test
   public void executor_returns_value() throws Exception {
-    MyNormalExecutor executor = new MyNormalExecutor(userConsole, name);
-    String result = executor.execute(value);
-    assertThat(result).isEqualTo(value);
+    given(executor = new MyNormalExecutor(userConsole, name));
+    when(executor).execute(value);
+    thenReturned(value);
   }
 
   @Test
   public void nothing_is_logged_on_successful_execution() throws Exception {
-    MyNormalExecutor executor = new MyNormalExecutor(userConsole, name);
-    executor.execute(value);
-
+    given(executor = new MyNormalExecutor(userConsole, name));
+    when(executor).execute(value);
     thenCalledTimes(0, onInstance(userConsole));
   }
 
@@ -46,9 +49,8 @@ public class MessageCatchingExecutorTest {
 
   @Test
   public void executor_logs_thrown_message_errors() throws Exception {
-    MyThrowingExecutor executor = new MyThrowingExecutor(userConsole, name);
-    executor.execute(value);
-
+    given(executor = new MyThrowingExecutor(userConsole, name));
+    when(executor).execute(value);
     thenCalled(userConsole).print(name, anyLoggedMessagesOf(value));
   }
 
@@ -76,10 +78,8 @@ public class MessageCatchingExecutorTest {
 
   @Test
   public void phase_failed_exception_is_caught() throws Exception {
-    MyLoggingAndThrowingFailedExceptionExecutor executor = new MyLoggingAndThrowingFailedExceptionExecutor(
-        userConsole);
-    executor.execute(value);
-
+    given(executor = new MyLoggingAndThrowingFailedExceptionExecutor(userConsole));
+    when(executor).execute(value);
     thenCalled(userConsole).print(name, anyLoggedMessagesOf(value));
   }
 
@@ -107,8 +107,8 @@ public class MessageCatchingExecutorTest {
   @Test
   public void additional_error_is_added_when_PhaseFailedException_is_thrown_without_logging_any_error()
       throws Exception {
-    MyThrowingFailedExceptionExecutor executor = new MyThrowingFailedExceptionExecutor(userConsole);
-    executor.execute(value);
+    given(executor = new MyThrowingFailedExceptionExecutor(userConsole));
+    when(executor).execute(value);
 
     thenCalled(userConsole).print("name", any(LoggedMessages.class, new Object() {
       @SuppressWarnings("unused")
