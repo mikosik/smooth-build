@@ -5,14 +5,13 @@ import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
+import static org.testory.Testory.spy;
 import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 import static org.testory.Testory.willThrow;
-import static org.testory.proxy.Invocation.invocation;
-import static org.testory.proxy.Invocations.invoke;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,10 +20,6 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.testory.Closure;
-import org.testory.On;
-import org.testory.common.Nullable;
-import org.testory.proxy.Handler;
-import org.testory.proxy.Invocation;
 
 public class StreamsTest {
   byte[] bytes = new byte[] { 1, 2, 3 };
@@ -63,8 +58,7 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_string_closes_stream() throws Exception {
-    given(inputStream = mock(InputStream.class));
-    given(willForwardTo(inputStreamContaining(content)), onAnyMethod());
+    given(inputStream = spy(inputStreamContaining(content)));
     when(Streams.inputStreamToString(inputStream));
     thenCalled(inputStream).close();
   }
@@ -99,8 +93,7 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_byte_array_closes_stream() throws Exception {
-    given(inputStream = mock(InputStream.class));
-    given(willForwardTo(new ByteArrayInputStream(bytes)), onAnyMethod());
+    given(inputStream = spy(new ByteArrayInputStream(bytes)));
     when(Streams.inputStreamToByteArray(inputStream));
     thenCalled(inputStream).close();
   }
@@ -137,26 +130,6 @@ public class StreamsTest {
       public Void invoke() throws Throwable {
         Streams.copy(inputStream, outputStream);
         return null;
-      }
-    };
-  }
-
-  public static On onAnyMethod() {
-    return new On() {
-      @Override
-      public boolean matches(Invocation invocation) {
-        return true;
-      }
-    };
-  }
-
-  // TODO remove when spying implemented in Testory
-  public static Handler willForwardTo(final Object instance) {
-    return new Handler() {
-      @Override
-      @Nullable
-      public Object handle(Invocation invocation) throws Throwable {
-        return invoke(invocation(invocation.method, instance, invocation.arguments));
       }
     };
   }

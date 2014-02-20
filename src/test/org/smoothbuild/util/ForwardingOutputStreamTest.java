@@ -3,6 +3,7 @@ package org.smoothbuild.util;
 import static org.junit.Assert.fail;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
+import static org.testory.Testory.onInstance;
 import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
@@ -13,9 +14,7 @@ import java.io.OutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.testory.On;
 import org.testory.TestoryAssertionError;
-import org.testory.proxy.Invocation;
 
 public class ForwardingOutputStreamTest {
   OutputStream outputStream = mock(OutputStream.class);
@@ -74,14 +73,5 @@ public class ForwardingOutputStreamTest {
     given(willReturn(null), outputStream).close();
     when(forwardingOutputStream).close();
     thenCalled(outputStream).close();
-  }
-
-  private static On onInstance(final Object mock) {
-    return new On() {
-      @Override
-      public boolean matches(Invocation invocation) {
-        return mock == invocation.instance;
-      }
-    };
   }
 }
