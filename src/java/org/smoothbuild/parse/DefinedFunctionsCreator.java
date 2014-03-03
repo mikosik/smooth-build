@@ -158,7 +158,8 @@ public class DefinedFunctionsCreator {
 
       if (elemType != null) {
         SArrayType<?> arrayType = STypes.arrayTypeContaining(elemType);
-        return new CachingNode(new ArrayNode(arrayType, elemNodes, locationOf(list)));
+        ImmutableList<Node> convertedNodes = Convert.ifNeeded(elemType, elemNodes);
+        return new CachingNode(new ArrayNode(arrayType, convertedNodes, locationOf(list)));
       } else {
         return new InvalidNode(EMPTY_ARRAY, locationOf(list));
       }
@@ -230,6 +231,8 @@ public class DefinedFunctionsCreator {
       } else if (type1 == FILE) {
         if (type2 == FILE) {
           return FILE;
+        } else if (type2 == BLOB) {
+          return BLOB;
         } else {
           return null;
         }
