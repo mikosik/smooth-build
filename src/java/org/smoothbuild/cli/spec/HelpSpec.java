@@ -13,7 +13,7 @@ public class HelpSpec implements CommandSpec {
     parser.help(DESCRIPTION);
 
     Argument argument = parser.addArgument(ARGUMENT_NAME);
-    argument.metavar("command");
+    argument.metavar("<command>");
     argument.help("command for which help is printed");
     argument.nargs("?");
   }
