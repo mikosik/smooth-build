@@ -21,8 +21,6 @@
   <property name="dir.build.release" location="${dir.build}/release" />
   <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip" />
 
-  <property name="lib.airline" value="${dir.lib}/airline-0.6.jar" />
-  <property name="lib.airline.license" value="${dir.lib}/airline.LICENSE" />
   <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar" />
   <property name="lib.antlr.license" value="${dir.lib}/antlr.LICENSE" />
   <property name="lib.aopalliance" value="${dir.lib}/aopalliance.jar" />
@@ -69,7 +67,6 @@
   <!-- compile-java -->
         
   <path id="classpath.for.java">
-    <pathelement location="${lib.airline}" />
     <pathelement location="${lib.antlr}" />
     <pathelement location="${lib.aopalliance}" />
     <pathelement location="${lib.argparse4j}" />
@@ -221,7 +218,6 @@
       and other files from top directories
       in dependent jars are not copied
       -->
-      <zipfileset excludes="* META-INF/**" src="${lib.airline}"/>
       <zipfileset excludes="* META-INF/**" src="${lib.antlr}"/>
       <zipfileset excludes="* META-INF/**" src="${lib.aopalliance}"/>
       <zipfileset excludes="* META-INF/**" src="${lib.argparse4j}"/>
@@ -235,7 +231,6 @@
       <zipfileset dir="${dir.build.class.java}"/>
       <zipfileset file="LICENSE"/>
 
-      <zipfileset file="${lib.airline.license}"/>
       <zipfileset file="${lib.antlr.license}"/>
       <zipfileset file="${lib.argparse4j.license}"/>
       <zipfileset file="${lib.guava.license}"/>
@@ -244,7 +239,6 @@
       <zipfileset file="${lib.junit.license}"/>
       <zipfileset file="${lib.hamcrest.license}"/>
   
-      <rule pattern="io.airlift.command.**" result="org.smoothbuild.airline.@1"/>
       <rule pattern="net.sourceforge.argparse4j.**" result="org.smoothbuild.argparse4j.@1"/>
       <rule pattern="com.google.inject.**" result="org.smoothbuild.guice.@1"/>
       <rule pattern="com.google.common.**" result="org.smoothbuild.guava.@1"/>
