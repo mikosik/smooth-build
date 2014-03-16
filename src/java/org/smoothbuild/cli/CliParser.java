@@ -20,8 +20,8 @@ public class CliParser {
     this.parser = ArgumentParsers.newArgumentParser("smooth", false);
 
     Subparsers subparsers = parser().addSubparsers();
-    subparsers.metavar("COMMAND");
-    subparsers.help("DESCRIPTION");
+    subparsers.metavar("<command>");
+    subparsers.help("<description>");
     subparsers.title("All available commands are");
 
     this.map = createCommandParsers(subparsers);

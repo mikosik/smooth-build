@@ -14,7 +14,7 @@ public class BuildSpec implements CommandSpec {
 
     Argument functionsArg = parser.addArgument(FUNCTIONS_ARG);
     functionsArg.dest(FUNCTIONS_ARG);
-    functionsArg.metavar("function");
+    functionsArg.metavar("<function>");
     functionsArg.nargs("*");
     functionsArg.help("function to invoke");
   }
