@@ -8,7 +8,7 @@ import static org.smoothbuild.io.cache.CacheModule.RESULTS_DIR;
 import java.io.IOException;
 
 import org.junit.Before;
-import org.smoothbuild.app.BuildWorker;
+import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;

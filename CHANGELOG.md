@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 0.?.? (??????????)
+--------------------------
+
+ * fixed bug #7 in command line interface by switching from airline to argparser4j lib
+
 Version 0.9.1 (2014.03.03)
 --------------------------
 
