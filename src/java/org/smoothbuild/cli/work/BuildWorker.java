@@ -1,4 +1,4 @@
-package org.smoothbuild.app;
+package org.smoothbuild.cli.work;
 
 import java.util.List;
 
