@@ -4,6 +4,7 @@ Change Log
 Version 0.?.? (??????????)
 --------------------------
 
+ * added 'toString' function
  * added 'jarjar' function
  * fixed bug #7 in command line interface by switching from airline to argparser4j lib
 
