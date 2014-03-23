@@ -12,6 +12,7 @@ import org.smoothbuild.lang.builtin.file.FilesFunction;
 import org.smoothbuild.lang.builtin.file.FilterFunction;
 import org.smoothbuild.lang.builtin.file.PathFunction;
 import org.smoothbuild.lang.builtin.java.JarFunction;
+import org.smoothbuild.lang.builtin.java.JarjarFunction;
 import org.smoothbuild.lang.builtin.java.UnjarFunction;
 import org.smoothbuild.lang.builtin.java.javac.JavacFunction;
 import org.smoothbuild.lang.builtin.java.junit.JunitFunction;
@@ -44,6 +45,7 @@ public class BuiltinFunctions {
     // java related
     builder.add(JavacFunction.class);
     builder.add(JarFunction.class);
+    builder.add(JarjarFunction.class);
     builder.add(UnjarFunction.class);
     builder.add(JunitFunction.class);
 
