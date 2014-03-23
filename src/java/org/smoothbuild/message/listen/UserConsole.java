@@ -48,13 +48,9 @@ public class UserConsole {
   }
 
   public void printFinalSummary() {
-    if (isProblemReported()) {
-      println(GROUP_PREFIX + "FAILED :(");
-      printMessageStats();
-    } else {
-      println(GROUP_PREFIX + "SUCCESS :)");
-      printMessageStats();
-    }
+    String message = isProblemReported() ? "FAILED :(" : "SUCCESS :)";
+    println(GROUP_PREFIX + message);
+    printMessageStats();
   }
 
   private void printMessageStats() {
