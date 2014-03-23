@@ -76,22 +76,26 @@ public class TempDirectory {
 
   private void writeFilesImpl(SArray<SFile> files) throws IOException {
     for (SFile file : files) {
-      writeFileImpl(file);
+      writeFileImpl(file.path(), file.content());
     }
   }
 
   public void writeFile(SFile file) {
+    writeFile(file.path(), file.content());
+  }
+
+  public void writeFile(Path path, SBlob content) {
     assertNotDestroyed();
     try {
-      writeFileImpl(file);
+      writeFileImpl(path, content);
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
   }
 
-  private void writeFileImpl(SFile file) throws IOException {
-    InputStream inputStream = file.content().openInputStream();
-    OutputStream outputStream = fileSystem.openOutputStream(file.path());
+  private void writeFileImpl(Path path, SBlob content) throws IOException {
+    InputStream inputStream = content.openInputStream();
+    OutputStream outputStream = fileSystem.openOutputStream(path);
     Streams.copy(inputStream, outputStream);
   }
 

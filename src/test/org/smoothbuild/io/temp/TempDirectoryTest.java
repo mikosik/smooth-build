@@ -18,6 +18,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeFile;
 
 import com.google.common.collect.Iterables;
@@ -61,6 +62,24 @@ public class TempDirectoryTest {
 
     try {
       tempDirectory.writeFile(file);
+      fail("exception should be thrown");
+    } catch (IllegalStateException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void content_and_path_is_written_to_file_system() throws Exception {
+    tempDirectory.writeFile(path, new FakeBlob(content));
+    fileSystem.assertFileContains(path, content);
+  }
+
+  @Test
+  public void writing_content_after_destroy_throws_exception() throws Exception {
+    tempDirectory.destroy();
+
+    try {
+      tempDirectory.writeFile(path, new FakeBlob(content));
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
       // expected
