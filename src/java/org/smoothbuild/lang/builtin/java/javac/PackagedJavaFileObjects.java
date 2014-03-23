@@ -10,7 +10,6 @@ import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -27,7 +26,7 @@ public class PackagedJavaFileObjects {
         InputClassFile inputClassFile = new InputClassFile(classFile);
         String aPackage = inputClassFile.aPackage();
         if (result.containsEntry(aPackage, inputClassFile)) {
-          throw new ErrorMessageException(new DuplicateClassFileError(classFile.path()));
+          throw new DuplicateClassFileError(classFile.path());
         } else {
           result.put(aPackage, inputClassFile);
         }

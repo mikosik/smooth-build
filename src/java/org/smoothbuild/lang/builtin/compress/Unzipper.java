@@ -14,14 +14,13 @@ import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.EndsWithPredicate;
 
@@ -52,7 +51,7 @@ public class Unzipper {
       }
       return fileArrayBuilder.build();
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 
@@ -61,11 +60,11 @@ public class Unzipper {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new ErrorMessageException(new IllegalPathInZipError(fileName));
+      throw new IllegalPathInZipError(fileName);
     }
     Path path = path(fileName);
     if (duplicatesDetector.addValue(path)) {
-      throw new ErrorMessageException(new DuplicatePathInZipError(path));
+      throw new DuplicatePathInZipError(path);
     }
 
     FileBuilder fileBuilder = pluginApi.fileBuilder();
@@ -85,7 +84,7 @@ public class Unzipper {
       }
       return contentBuilder.build();
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 }

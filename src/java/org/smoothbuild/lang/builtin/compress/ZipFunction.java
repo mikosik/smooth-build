@@ -7,7 +7,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.builtin.compress.err.CannotAddDuplicatePathError;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.Required;
@@ -15,7 +15,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
@@ -53,7 +52,7 @@ public class ZipFunction {
           addEntry(zipOutputStream, file);
         }
       } catch (IOException e) {
-        throw new FileSystemException(e);
+        throw new FileSystemError(e);
       }
 
       return blobBuilder.build();
@@ -62,7 +61,7 @@ public class ZipFunction {
     private void addEntry(ZipOutputStream zipOutputStream, SFile file) throws IOException {
       Path path = file.path();
       if (duplicatesDetector.addValue(path)) {
-        throw new ErrorMessageException(new CannotAddDuplicatePathError(path));
+        throw new CannotAddDuplicatePathError(path);
       }
       ZipEntry entry = new ZipEntry(path.value());
       zipOutputStream.putNextEntry(entry);

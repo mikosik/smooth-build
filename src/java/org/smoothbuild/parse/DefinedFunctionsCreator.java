@@ -51,7 +51,6 @@ import org.smoothbuild.lang.type.STypes;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.ForbiddenArrayElemError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
@@ -145,9 +144,8 @@ public class DefinedFunctionsCreator {
       if (expression.STRING() != null) {
         return buildStringNode(expression.STRING());
       }
-      throw new ErrorMessageException(new Message(FATAL,
-          "Bug in smooth binary: Illegal parse tree: " + ExpressionContext.class.getSimpleName()
-              + " without children."));
+      throw new Message(FATAL, "Bug in smooth binary: Illegal parse tree: "
+          + ExpressionContext.class.getSimpleName() + " without children.");
     }
 
     private Node build(ArrayContext list) {
@@ -188,9 +186,8 @@ public class DefinedFunctionsCreator {
         return build(elem.call());
       }
 
-      throw new ErrorMessageException(new Message(FATAL,
-          "Bug in smooth binary: Illegal parse tree: " + ArrayElemContext.class.getSimpleName()
-              + " without children."));
+      throw new Message(FATAL, "Bug in smooth binary: Illegal parse tree: "
+          + ArrayElemContext.class.getSimpleName() + " without children.");
     }
 
     private SType<?> commonSuperType(List<ArrayElemContext> elems, ImmutableList<Node> elemNodes,

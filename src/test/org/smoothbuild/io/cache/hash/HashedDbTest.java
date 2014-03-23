@@ -2,7 +2,6 @@ package org.smoothbuild.io.cache.hash;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
-import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -87,6 +86,6 @@ public class HashedDbTest {
   @Test
   public void reading_not_stored_value_fails() throws Exception {
     when(hashedDb).openInputStream(HashCode.fromInt(33));
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 }

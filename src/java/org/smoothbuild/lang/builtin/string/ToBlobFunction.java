@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -29,7 +29,7 @@ public class ToBlobFunction {
     try (OutputStreamWriter writer = new OutputStreamWriter(builder.openOutputStream(), CHARSET)) {
       writer.write(string.value());
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
     return builder.build();
   }

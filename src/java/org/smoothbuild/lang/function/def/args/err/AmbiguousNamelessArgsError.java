@@ -14,6 +14,7 @@ import org.smoothbuild.lang.function.def.args.TypedParamsPool;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.util.LineBuilder;
 
+@SuppressWarnings("serial")
 public class AmbiguousNamelessArgsError extends CodeMessage {
 
   public AmbiguousNamelessArgsError(Name functionName, Map<Param, Arg> paramToArgMap,

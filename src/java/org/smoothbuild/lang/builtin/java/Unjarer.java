@@ -16,7 +16,7 @@ import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
@@ -24,7 +24,6 @@ import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.EndsWithPredicate;
 
@@ -60,7 +59,7 @@ public class Unjarer {
             SFile file = unjarEntry(jarInputStream, fileName);
             Path path = file.path();
             if (duplicatesDetector.addValue(path)) {
-              throw new ErrorMessageException(new DuplicatePathInJarError(path));
+              throw new DuplicatePathInJarError(path);
             } else {
               fileArrayBuilder.add(file);
             }
@@ -68,7 +67,7 @@ public class Unjarer {
         }
       }
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
     return fileArrayBuilder.build();
   }
@@ -76,7 +75,7 @@ public class Unjarer {
   private SFile unjarEntry(JarInputStream jarInputStream, String fileName) {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new ErrorMessageException(new IllegalPathInJarError(fileName));
+      throw new IllegalPathInJarError(fileName);
     }
 
     FileBuilder fileBuilder = pluginApi.fileBuilder();
@@ -96,7 +95,7 @@ public class Unjarer {
       }
       return contentBuilder.build();
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 }

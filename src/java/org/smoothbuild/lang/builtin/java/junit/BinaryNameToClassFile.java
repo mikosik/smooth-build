@@ -12,7 +12,6 @@ import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.Maps;
@@ -32,7 +31,7 @@ public class BinaryNameToClassFile {
         Path classFilePath = classFile.path();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {
-          throw new ErrorMessageException(new DuplicateClassFileError(classFilePath));
+          throw new DuplicateClassFileError(classFilePath);
         } else {
           binaryNameToClassFile.put(binaryName, classFile);
         }

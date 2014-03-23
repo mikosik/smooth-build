@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -65,7 +64,7 @@ public class TaskDbTest {
   @Test
   public void reading_not_stored_value_fails() throws Exception {
     when(taskDb).read(hash);
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 
   @Test

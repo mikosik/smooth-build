@@ -7,8 +7,8 @@ import javax.tools.JavaFileObject;
 
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
+@SuppressWarnings("serial")
 public class JavaCompilerMessage extends Message {
   public JavaCompilerMessage(Diagnostic<? extends JavaFileObject> diagnostic) {
     super(typeOf(diagnostic), diagnostic.getMessage(null));
@@ -27,8 +27,7 @@ public class JavaCompilerMessage extends Message {
       case OTHER:
         return MessageType.INFO;
       default:
-        throw new ErrorMessageException(new Message(FATAL, "Unknown diagnostic kind "
-            + diagnostic.getKind()));
+        throw new Message(FATAL, "Unknown diagnostic kind " + diagnostic.getKind());
     }
   }
 }

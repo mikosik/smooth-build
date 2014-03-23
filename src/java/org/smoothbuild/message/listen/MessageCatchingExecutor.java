@@ -1,5 +1,7 @@
 package org.smoothbuild.message.listen;
 
+import org.smoothbuild.message.base.Message;
+
 public abstract class MessageCatchingExecutor<A, R> {
   private final UserConsole userConsole;
   private final LoggedMessages loggedMessages;
@@ -14,8 +16,8 @@ public abstract class MessageCatchingExecutor<A, R> {
   public R execute(A argument) {
     try {
       return executeImpl(argument);
-    } catch (ErrorMessageException e) {
-      loggedMessages.log(e.errorMessage());
+    } catch (Message e) {
+      loggedMessages.log(e);
     } catch (PhaseFailedException e) {
       if (!loggedMessages.containsProblems()) {
         loggedMessages.log(new PhaseFailedWithoutErrorError());

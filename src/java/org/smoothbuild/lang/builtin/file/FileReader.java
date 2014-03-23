@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.task.exec.PluginApiImpl;
@@ -39,7 +39,7 @@ public class FileReader {
     try {
       copy(source, destination);
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 }

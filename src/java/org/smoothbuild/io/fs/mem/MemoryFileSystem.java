@@ -13,11 +13,11 @@ import java.util.List;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.base.exc.CannotCreateFileException;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
-import org.smoothbuild.io.fs.base.exc.NoSuchDirException;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.io.fs.base.exc.NoSuchPathException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
+import org.smoothbuild.io.fs.base.exc.NoSuchFileButDirError;
+import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
+import org.smoothbuild.io.fs.base.exc.NoSuchPathError;
 
 /**
  * In memory implementation of FileSystem.
@@ -70,7 +70,7 @@ public class MemoryFileSystem implements FileSystem {
   @Override
   public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
-      throw new CannotCreateFileException(path);
+      throw new NoSuchFileButDirError(path);
     }
     MemoryDirectory dir = createDirImpl(path.parent());
 
@@ -80,7 +80,7 @@ public class MemoryFileSystem implements FileSystem {
       if (child.isFile()) {
         return child.createOutputStream();
       } else {
-        throw new CannotCreateFileException(path);
+        throw new NoSuchFileButDirError(path);
       }
     }
 
@@ -93,13 +93,13 @@ public class MemoryFileSystem implements FileSystem {
   public void createLink(Path link, Path target) {
     MemoryElement targetElement = findElement(target);
     if (targetElement == null) {
-      throw new NoSuchPathException(target);
+      throw new NoSuchPathError(target);
     }
 
     String name = link.lastPart().value();
     MemoryDirectory dir = createDirImpl(link.parent());
     if (dir.hasChild(name)) {
-      throw new FileSystemException("Cannot create link as path " + link + " exists.");
+      throw new FileSystemError("Cannot create link as path " + link + " exists.");
     }
     dir.addChild(new MemoryLink(dir, name, targetElement));
   }
@@ -119,8 +119,8 @@ public class MemoryFileSystem implements FileSystem {
         if (child.isDirectory()) {
           currentDir = (MemoryDirectory) child;
         } else {
-          throw new FileSystemException("Path (or subpath) of to be created directory ("
-              + directory + ") is taken by some file.");
+          throw new FileSystemError("Path (or subpath) of to be created directory (" + directory
+              + ") is taken by some file.");
         }
       } else {
         MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
@@ -136,7 +136,7 @@ public class MemoryFileSystem implements FileSystem {
     if (found != null && found.isFile()) {
       return found;
     } else {
-      throw new NoSuchFileException(path);
+      throw new NoSuchFileError(path);
     }
   }
 
@@ -145,7 +145,7 @@ public class MemoryFileSystem implements FileSystem {
     if (found != null && found.isDirectory()) {
       return found;
     } else {
-      throw new NoSuchDirException(path);
+      throw new NoSuchDirError(path);
     }
   }
 

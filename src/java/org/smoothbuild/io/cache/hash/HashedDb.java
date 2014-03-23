@@ -11,7 +11,6 @@ import org.smoothbuild.io.cache.hash.err.ReadingHashedObjectFailedError;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.hash.HashCode;
 
@@ -32,7 +31,7 @@ public class HashedDb {
     if (dbFileSystem.pathState(path) == PathState.FILE) {
       return dbFileSystem.openInputStream(path);
     } else {
-      throw new ErrorMessageException(new NoObjectWithGivenHashError(hash));
+      throw new NoObjectWithGivenHashError(hash);
     }
   }
 
@@ -50,7 +49,7 @@ public class HashedDb {
     try (OutputStream outputStream = dbFileSystem.openOutputStream(path)) {
       outputStream.write(bytes);
     } catch (IOException e) {
-      throw new ErrorMessageException(new ReadingHashedObjectFailedError(hash, e));
+      throw new ReadingHashedObjectFailedError(hash, e);
     }
 
     return hash;

@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 public class FileClassLoader extends ClassLoader {
   private final Map<String, SFile> binaryNameToFile;
@@ -32,8 +31,8 @@ public class FileClassLoader extends ClassLoader {
     try {
       return inputStreamToByteArray(file.content().openInputStream());
     } catch (IOException e) {
-      throw new ErrorMessageException(new Message(FATAL, "Error reading from " + file.path()
-          + ". Java exception is:\n" + getStackTraceAsString(e)));
+      throw new Message(FATAL, "Error reading from " + file.path() + ". Java exception is:\n"
+          + getStackTraceAsString(e));
     }
   }
 }

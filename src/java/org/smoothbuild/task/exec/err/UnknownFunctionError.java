@@ -11,6 +11,7 @@ import org.smoothbuild.message.base.Message;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Ordering;
 
+@SuppressWarnings("serial")
 public class UnknownFunctionError extends Message {
   public UnknownFunctionError(Name name, Collection<Name> availableNames) {
     super(ERROR, "Unknown function " + name + " passed in command line.\n"

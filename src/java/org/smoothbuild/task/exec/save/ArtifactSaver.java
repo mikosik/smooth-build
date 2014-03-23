@@ -20,7 +20,6 @@ import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.SmoothExecutorMessages;
 
 import com.google.common.collect.ImmutableMap;
@@ -57,8 +56,8 @@ public class ArtifactSaver {
     if (saver != null) {
       saver.save(name, value);
     } else {
-      throw new ErrorMessageException(new Message(FATAL,
-          "Bug in smooth binary.\nUnknown value type " + value.getClass().getName()));
+      throw new Message(FATAL, "Bug in smooth binary.\nUnknown value type "
+          + value.getClass().getName());
     }
   }
 }

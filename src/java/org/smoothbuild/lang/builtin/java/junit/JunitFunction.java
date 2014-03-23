@@ -21,7 +21,6 @@ import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
 import com.google.common.base.Predicate;
@@ -85,9 +84,7 @@ public class JunitFunction {
       try {
         return classLoader.loadClass(binaryName);
       } catch (ClassNotFoundException e) {
-        Message errorMessage =
-            new Message(ERROR, "Couldn't find class for binaryName = " + binaryName);
-        throw new ErrorMessageException(errorMessage);
+        throw new Message(ERROR, "Couldn't find class for binaryName = " + binaryName);
       }
     }
 
@@ -104,7 +101,7 @@ public class JunitFunction {
       try {
         return pathMatcher(includeExpression);
       } catch (IllegalPathPatternException e) {
-        throw new ErrorMessageException(new IllegalPathPatternError("include", e.getMessage()));
+        throw new IllegalPathPatternError("include", e.getMessage());
       }
     }
   }

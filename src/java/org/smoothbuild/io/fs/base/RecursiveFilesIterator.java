@@ -8,7 +8,6 @@ import java.util.ArrayDeque;
 import java.util.Iterator;
 
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 public class RecursiveFilesIterator implements Iterator<Path> {
   private final FileSystem fileSystem;
@@ -56,13 +55,12 @@ public class RecursiveFilesIterator implements Iterator<Path> {
             directoryStack.push(file);
             break;
           case NOTHING:
-            throw new ErrorMessageException(new Message(FATAL,
-                "Bug in smooth binary: Unexpected case " + NOTHING + " in "
-                    + RecursiveFilesIterator.class.getSimpleName()));
+            throw new Message(FATAL, "Bug in smooth binary: Unexpected case " + NOTHING + " in "
+                + RecursiveFilesIterator.class.getSimpleName());
           default:
-            throw new ErrorMessageException(new Message(FATAL,
-                "Bug in smooth binary: Unhandled case " + fileSystem.pathState(file) + " in "
-                    + RecursiveFilesIterator.class.getSimpleName()));
+            throw new Message(FATAL, "Bug in smooth binary: Unhandled case "
+                + fileSystem.pathState(file) + " in "
+                + RecursiveFilesIterator.class.getSimpleName());
 
         }
       }

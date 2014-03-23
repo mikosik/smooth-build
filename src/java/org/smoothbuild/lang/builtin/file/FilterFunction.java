@@ -7,13 +7,12 @@ import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.match.IllegalPathPatternException;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathPatternError;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
 import com.google.common.base.Predicate;
@@ -58,7 +57,7 @@ public class FilterFunction {
       try {
         return pathMatcher(params.include().value());
       } catch (IllegalPathPatternException e) {
-        throw new ErrorMessageException(new IllegalPathPatternError("include", e.getMessage()));
+        throw new IllegalPathPatternError("include", e.getMessage());
       }
     }
   }

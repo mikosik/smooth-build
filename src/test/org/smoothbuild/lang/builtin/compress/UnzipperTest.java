@@ -13,7 +13,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;
@@ -60,9 +59,8 @@ public class UnzipperTest {
     try {
       unzipper.unzip(zipBlob);
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (IllegalPathInZipError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(IllegalPathInZipError.class);
     }
   }
 

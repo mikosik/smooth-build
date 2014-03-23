@@ -19,8 +19,6 @@ import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJava
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.Multimap;
 
@@ -50,8 +48,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       if (message == null) {
         return new OutputClassFile(resultClassFiles, path(classFilePath), pluginApi);
       } else {
-        Message errorMessage = new IncorrectClassNameGivenByJavaCompilerError(className);
-        throw new ErrorMessageException(errorMessage);
+        throw new IncorrectClassNameGivenByJavaCompilerError(className);
       }
     } else {
       return super.getJavaFileForOutput(location, className, kind, sibling);

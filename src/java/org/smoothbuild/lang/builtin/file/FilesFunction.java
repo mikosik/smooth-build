@@ -8,9 +8,9 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.exc.NoSuchDirButFileError;
+import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
 import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
-import org.smoothbuild.lang.builtin.file.err.NoSuchDirButFileError;
-import org.smoothbuild.lang.builtin.file.err.NoSuchDirError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -18,7 +18,6 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class FilesFunction {
@@ -51,11 +50,11 @@ public class FilesFunction {
       FileSystem fileSystem = pluginApi.projectFileSystem();
 
       if (dirPath.isRoot()) {
-        throw new ErrorMessageException(new CannotListRootDirError());
+        throw new CannotListRootDirError();
       }
 
       if (dirPath.firstPart().equals(SMOOTH_DIR)) {
-        throw new ErrorMessageException(new ReadFromSmoothDirError(dirPath));
+        throw new ReadFromSmoothDirError(dirPath);
       }
 
       switch (fileSystem.pathState(dirPath)) {
@@ -66,12 +65,11 @@ public class FilesFunction {
           }
           return fileArrayBuilder.build();
         case FILE:
-          throw new ErrorMessageException(new NoSuchDirButFileError(dirPath));
+          throw new NoSuchDirButFileError(dirPath);
         case NOTHING:
-          throw new ErrorMessageException(new NoSuchDirError(dirPath));
+          throw new NoSuchDirError(dirPath);
         default:
-          throw new ErrorMessageException(new Message(FATAL,
-              "Broken 'files' function implementation: unreachable case"));
+          throw new Message(FATAL, "Broken 'files' function implementation: unreachable case");
       }
     }
   }

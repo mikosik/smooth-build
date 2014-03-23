@@ -13,14 +13,12 @@ import static org.smoothbuild.util.Streams.inputStreamToString;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.CannotCreateFileException;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
-import org.smoothbuild.io.fs.base.exc.NoSuchDirException;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
+import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
 
 import com.google.common.io.LineReader;
 
@@ -69,12 +67,12 @@ public abstract class GenericFileSystemTestCase {
     createEmptyFile("abc/def/ghi/text.txt");
   }
 
-  @Test(expected = NoSuchDirException.class)
+  @Test(expected = NoSuchDirError.class)
   public void childNamesThrowsExceptionWhenDirDoesNotExist() throws Exception {
     fileSystem.childNames(path("abc"));
   }
 
-  @Test(expected = NoSuchDirException.class)
+  @Test(expected = NoSuchDirError.class)
   public void childNamesThrowsExceptionForFilePassedAsDir() throws Exception {
     createEmptyFile(path);
     fileSystem.childNames(path);
@@ -104,8 +102,8 @@ public abstract class GenericFileSystemTestCase {
   public void childNamesThrowsExceptionWhenPathDoesNotExist() throws Exception {
     try {
       fileSystem.childNames(path("abc"));
-      Assert.fail("exception expected");
-    } catch (FileSystemException e) {
+      fail("exception expected");
+    } catch (FileSystemError e) {
       // expected
     }
   }
@@ -115,8 +113,8 @@ public abstract class GenericFileSystemTestCase {
     createEmptyFile(path);
     try {
       fileSystem.childNames(path("abc"));
-      Assert.fail("exception expected");
-    } catch (NoSuchDirException e) {
+      fail("exception expected");
+    } catch (NoSuchDirError e) {
       // expected
     }
   }
@@ -156,7 +154,8 @@ public abstract class GenericFileSystemTestCase {
     createEmptyFile("abc/def/file.txt");
     try {
       fileSystem.openOutputStream(path("abc/def"));
-    } catch (FileSystemException e) {
+      fail("exception should be thrown");
+    } catch (FileSystemError e) {
       // expected
     }
   }
@@ -184,12 +183,12 @@ public abstract class GenericFileSystemTestCase {
     try {
       fileSystem.openOutputStream(dir);
       fail("exception should be thrown");
-    } catch (CannotCreateFileException e) {
+    } catch (FileSystemError e) {
       // expected
     }
   }
 
-  @Test(expected = NoSuchFileException.class)
+  @Test(expected = NoSuchFileError.class)
   public void createInputStreamThrowsExceptionWhenDirDoesNotExist() throws Exception {
     fileSystem.openInputStream(path("abc"));
   }
@@ -199,7 +198,8 @@ public abstract class GenericFileSystemTestCase {
     createEmptyFile("abc/def/file.txt");
     try {
       fileSystem.openInputStream(path("abc/def"));
-    } catch (FileSystemException e) {
+      fail("exception should be thrown");
+    } catch (FileSystemError e) {
       // expected
     }
   }
@@ -347,7 +347,7 @@ public abstract class GenericFileSystemTestCase {
     try {
       fileSystem.createDir(path);
       fail("exception should be thrown");
-    } catch (FileSystemException e) {
+    } catch (FileSystemError e) {
       // expected
     }
   }

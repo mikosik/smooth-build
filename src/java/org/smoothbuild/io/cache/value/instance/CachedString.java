@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.err.ReadingHashedObjectFailedError;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.hash.HashCode;
 
@@ -26,7 +25,7 @@ public class CachedString extends CachedValue implements SString {
     try {
       return inputStreamToString(hashedDb.openInputStream(hash()));
     } catch (IOException e) {
-      throw new ErrorMessageException(new ReadingHashedObjectFailedError(hash(), e));
+      throw new ReadingHashedObjectFailedError(hash(), e);
     }
   }
 }

@@ -17,7 +17,6 @@ import org.smoothbuild.io.cache.hash.err.ReadingHashedObjectFailedError;
 import org.smoothbuild.io.cache.hash.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.io.cache.hash.err.WritingHashedObjectFailedError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -60,7 +59,7 @@ public class Unmarshaller implements Closeable {
     try {
       return path(value);
     } catch (IllegalArgumentException e) {
-      throw new ErrorMessageException(new IllegalPathInObjectError(hash, e.getMessage()));
+      throw new IllegalPathInObjectError(hash, e.getMessage());
     }
   }
 
@@ -77,7 +76,7 @@ public class Unmarshaller implements Closeable {
       case TRUE_AS_BYTE:
         return true;
       default:
-        throw new ErrorMessageException(new CorruptedBoolError(byteValue));
+        throw new CorruptedBoolError(byteValue);
     }
   }
 
@@ -96,7 +95,7 @@ public class Unmarshaller implements Closeable {
     if (enumValues.isValidByte(byteValue)) {
       return enumValues.byteToValue(byteValue);
     } else {
-      throw new ErrorMessageException(new CorruptedEnumValue(enumValues, byteValue));
+      throw new CorruptedEnumValue(enumValues, byteValue);
     }
   }
 
@@ -104,7 +103,7 @@ public class Unmarshaller implements Closeable {
     try {
       return readBytesImpl(size, valueName);
     } catch (IOException e) {
-      throw new ErrorMessageException(new ReadingHashedObjectFailedError(hash, e));
+      throw new ReadingHashedObjectFailedError(hash, e);
     }
   }
 
@@ -112,7 +111,7 @@ public class Unmarshaller implements Closeable {
     byte[] bytes = new byte[size];
     int read = inputStream.read(bytes);
     if (read < size) {
-      throw new ErrorMessageException(new TooFewBytesToUnmarshallValue(hash, valueName, size, read));
+      throw new TooFewBytesToUnmarshallValue(hash, valueName, size, read);
     }
     return bytes;
   }
@@ -122,7 +121,7 @@ public class Unmarshaller implements Closeable {
     try {
       inputStream.close();
     } catch (IOException e) {
-      throw new ErrorMessageException(new WritingHashedObjectFailedError(hash, e));
+      throw new WritingHashedObjectFailedError(hash, e);
     }
   }
 }

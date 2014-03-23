@@ -11,20 +11,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.base.exc.CannotCreateFileException;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
-import org.smoothbuild.io.fs.base.exc.NoSuchDirException;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileException;
-import org.smoothbuild.io.fs.base.exc.NoSuchPathException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
+import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
+import org.smoothbuild.io.fs.base.exc.NoSuchPathError;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -62,10 +59,8 @@ public class DiskFileSystem implements FileSystem {
         builder.add(path.getFileName().toString());
       }
       return builder.build();
-    } catch (NotDirectoryException e) {
-      throw new NoSuchDirException(directory);
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 
@@ -79,24 +74,22 @@ public class DiskFileSystem implements FileSystem {
     assertFileExists(path);
     try {
       return new BufferedInputStream(Files.newInputStream(jdkPath(path)));
-    } catch (java.nio.file.NoSuchFileException e) {
-      throw new NoSuchFileException(path);
     } catch (IOException e) {
-      throw new FileSystemException("Could not read " + path, e);
+      throw new FileSystemError(e);
     }
   }
 
   @Override
   public OutputStream openOutputStream(Path path) {
     if (path.isRoot()) {
-      throw new FileSystemException("Cannot open file " + path + " as it is directory.");
+      throw new FileSystemError("Cannot open file " + path + " as it is directory.");
     }
     createDir(path.parent());
 
     try {
       return new BufferedOutputStream(java.nio.file.Files.newOutputStream(jdkPath(path)));
     } catch (IOException e) {
-      throw new CannotCreateFileException(path, e);
+      throw new FileSystemError(e);
     }
   }
 
@@ -104,11 +97,8 @@ public class DiskFileSystem implements FileSystem {
   public void createDir(Path path) {
     try {
       Files.createDirectories(jdkPath(path));
-    } catch (FileAlreadyExistsException e) {
-      throw new FileSystemException("Could not create directory " + path
-          + " as it's either a file or one of its ancestors is a file.");
     } catch (IOException e) {
-      throw new FileSystemException("Could not create directory " + path + ".");
+      throw new FileSystemError(e);
     }
   }
 
@@ -120,7 +110,7 @@ public class DiskFileSystem implements FileSystem {
     try {
       RecursiveDeleter.deleteRecursively(jdkPath(path));
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 
@@ -129,7 +119,7 @@ public class DiskFileSystem implements FileSystem {
     assertPathExists(target);
 
     if (link.isRoot()) {
-      throw new FileSystemException("Cannot create link " + link + " as it is directory.");
+      throw new FileSystemError("Cannot create link " + link + " as it is directory.");
     }
     createDir(link.parent());
 
@@ -137,10 +127,8 @@ public class DiskFileSystem implements FileSystem {
       String escape = escapeString(link.parts().size());
       java.nio.file.Path targetJdkPath = Paths.get(escape, target.value());
       Files.createSymbolicLink(jdkPath(link), targetJdkPath);
-    } catch (FileAlreadyExistsException e) {
-      throw new CannotCreateFileException(link, e);
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 
@@ -152,19 +140,19 @@ public class DiskFileSystem implements FileSystem {
 
   private void assertDirExists(Path directory) {
     if (pathState(directory) != DIR) {
-      throw new NoSuchDirException(directory);
+      throw new NoSuchDirError(directory);
     }
   }
 
   private void assertFileExists(Path path) {
     if (pathState(path) != FILE) {
-      throw new NoSuchFileException(path);
+      throw new NoSuchFileError(path);
     }
   }
 
   private void assertPathExists(Path path) {
     if (pathState(path) == NOTHING) {
-      throw new NoSuchPathException(path);
+      throw new NoSuchPathError(path);
     }
   }
 

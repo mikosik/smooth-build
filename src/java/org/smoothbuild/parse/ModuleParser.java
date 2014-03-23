@@ -19,13 +19,12 @@ import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileException;
+import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
 import org.smoothbuild.lang.builtin.Builtin;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.ImmutableModule;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
@@ -54,12 +53,13 @@ public class ModuleParser {
   private InputStream scriptInputStream(Path scriptFile) {
     try {
       return fileSystem.openInputStream(scriptFile);
-    } catch (NoSuchFileException e) {
-      throw new ErrorMessageException(new ScriptFileNotFoundError(scriptFile));
+    } catch (NoSuchFileError e) {
+      throw new ScriptFileNotFoundError(scriptFile);
     }
   }
 
-  private Module createModule(LoggedMessages loggedMessages, InputStream inputStream, Path scriptFile) {
+  private Module createModule(LoggedMessages loggedMessages, InputStream inputStream,
+      Path scriptFile) {
     ModuleContext module = parseScript(loggedMessages, inputStream, scriptFile);
 
     Map<Name, FunctionContext> functions = collectFunctions(loggedMessages, builtinModule, module);
@@ -68,8 +68,9 @@ public class ModuleParser {
     detectUndefinedFunctions(loggedMessages, builtinModule, dependencies);
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
-    Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        loggedMessages, builtinModule, functions, sorted);
+    Map<Name, Function> definedFunctions =
+        definedFunctionsCreator.createDefinedFunctions(loggedMessages, builtinModule, functions,
+            sorted);
 
     return new ImmutableModule(definedFunctions);
   }

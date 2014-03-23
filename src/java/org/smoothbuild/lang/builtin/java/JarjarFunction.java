@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.Required;
@@ -45,7 +45,7 @@ public class JarjarFunction {
       Main main = new Main();
       main.process(rulesFile, inJarFile, outJarFile);
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
 
     return tempDir.readContent(outJarPath);

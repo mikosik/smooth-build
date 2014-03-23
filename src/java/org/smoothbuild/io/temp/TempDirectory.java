@@ -15,7 +15,7 @@ import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
@@ -70,7 +70,7 @@ public class TempDirectory {
     try {
       writeFilesImpl(files);
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 
@@ -89,7 +89,7 @@ public class TempDirectory {
     try {
       writeFileImpl(path, content);
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 
@@ -104,7 +104,7 @@ public class TempDirectory {
     try {
       return readFilesImpl();
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 
@@ -128,7 +128,7 @@ public class TempDirectory {
     try {
       return readContentImpl(path);
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 
