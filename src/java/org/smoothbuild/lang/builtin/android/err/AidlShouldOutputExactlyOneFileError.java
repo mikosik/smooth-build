@@ -10,6 +10,7 @@ import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.Iterables;
 
+@SuppressWarnings("serial")
 public class AidlShouldOutputExactlyOneFileError extends Message {
   public AidlShouldOutputExactlyOneFileError(SArray<SFile> outputFiles) {
     super(ERROR, createMessage(outputFiles));

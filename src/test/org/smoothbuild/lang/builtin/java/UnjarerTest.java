@@ -10,7 +10,6 @@ import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 
@@ -67,9 +66,8 @@ public class UnjarerTest {
     try {
       unjarer.unjar(blob);
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (IllegalPathInJarError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(IllegalPathInJarError.class);
     }
   }
 }

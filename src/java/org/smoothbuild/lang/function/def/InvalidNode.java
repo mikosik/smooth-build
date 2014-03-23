@@ -6,7 +6,6 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
@@ -25,7 +24,7 @@ public class InvalidNode extends Node {
 
   @Override
   public Task generateTask(TaskGenerator taskGenerator) {
-    throw new ErrorMessageException(new Message(FATAL,
-        "Bug in smooth binary: InvalidNode.generateTask() should not be called."));
+    throw new Message(FATAL,
+        "Bug in smooth binary: InvalidNode.generateTask() should not be called.");
   }
 }

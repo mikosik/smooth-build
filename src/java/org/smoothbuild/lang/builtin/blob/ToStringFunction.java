@@ -2,7 +2,7 @@ package org.smoothbuild.lang.builtin.blob;
 
 import java.io.IOException;
 
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SBlob;
@@ -23,7 +23,7 @@ public class ToStringFunction {
       string = Streams.inputStreamToString(params.blob().openInputStream());
       return pluginApi.string(string);
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new FileSystemError(e);
     }
   }
 }

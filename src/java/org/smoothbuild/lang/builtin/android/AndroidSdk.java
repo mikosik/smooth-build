@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import org.smoothbuild.lang.builtin.android.err.AndroidSdkLacksFileError;
 import org.smoothbuild.lang.builtin.android.err.AndroidSdkRootDoesNotExistError;
 import org.smoothbuild.lang.builtin.android.err.AndroidSdkVariableNotSetError;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.EnvironmentVariable;
 
 public class AndroidSdk {
@@ -34,18 +33,18 @@ public class AndroidSdk {
   private static Path getFullPath(Path fileSubPath) {
     Path fullPath = getSdkDir().resolve(fileSubPath);
     if (!isRegularFile(fullPath)) {
-      throw new ErrorMessageException(new AndroidSdkLacksFileError(ANDROID_SDK_ROOT, fileSubPath));
+      throw new AndroidSdkLacksFileError(ANDROID_SDK_ROOT, fileSubPath);
     }
     return fullPath;
   }
 
   public static Path getSdkDir() {
     if (!ANDROID_SDK_ROOT.isSet()) {
-      throw new ErrorMessageException(new AndroidSdkVariableNotSetError(ANDROID_SDK_ROOT));
+      throw new AndroidSdkVariableNotSetError(ANDROID_SDK_ROOT);
     }
     Path sdkRoot = Paths.get(ANDROID_SDK_ROOT.value());
     if (!isDirectory(sdkRoot)) {
-      throw new ErrorMessageException(new AndroidSdkRootDoesNotExistError(ANDROID_SDK_ROOT));
+      throw new AndroidSdkRootDoesNotExistError(ANDROID_SDK_ROOT);
     }
     return sdkRoot;
   }

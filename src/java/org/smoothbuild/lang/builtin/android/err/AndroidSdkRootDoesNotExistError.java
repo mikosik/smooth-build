@@ -6,6 +6,7 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.EnvironmentVariable;
 import org.smoothbuild.util.LineBuilder;
 
+@SuppressWarnings("serial")
 public class AndroidSdkRootDoesNotExistError extends Message {
   public AndroidSdkRootDoesNotExistError(EnvironmentVariable androidSdkVar) {
     super(ERROR, createMessage(androidSdkVar));

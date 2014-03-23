@@ -6,7 +6,6 @@ import org.smoothbuild.command.CommandLineArguments;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.err.NoFunctionSpecifiedError;
 import org.smoothbuild.task.exec.err.UnknownFunctionError;
 
@@ -23,12 +22,12 @@ public class SmoothExecutor {
     Module module = executionData.module();
 
     if (args.functionsToRun().isEmpty()) {
-      throw new ErrorMessageException(new NoFunctionSpecifiedError(module.availableNames()));
+      throw new NoFunctionSpecifiedError(module.availableNames());
     }
     for (Name name : args.functionsToRun()) {
       Function function = module.getFunction(name);
       if (function == null) {
-        throw new ErrorMessageException(new UnknownFunctionError(name, module.availableNames()));
+        throw new UnknownFunctionError(name, module.availableNames());
       }
       artifactBuilder.addArtifact(function);
     }

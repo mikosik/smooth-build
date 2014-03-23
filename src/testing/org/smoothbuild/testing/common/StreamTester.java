@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.io.ByteStreams;
 
@@ -23,9 +22,9 @@ public class StreamTester {
     try {
       writeAndClose(stream, content);
     } catch (IOException e) {
-      throw new ErrorMessageException(new Message(FATAL,
+      throw new Message(FATAL,
           "Bug in smooth binary: IOException should never be thrown by ByteArrayOutputStream.\n"
-              + "Java stack trace is:\n" + getStackTraceAsString(e)));
+              + "Java stack trace is:\n" + getStackTraceAsString(e));
     }
     return new ByteArrayInputStream(stream.toByteArray());
   }

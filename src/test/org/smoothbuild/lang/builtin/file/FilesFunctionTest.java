@@ -8,16 +8,15 @@ import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileCo
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.exc.NoSuchDirButFileError;
+import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
 import org.smoothbuild.lang.builtin.file.FilesFunction.Parameters;
 import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
-import org.smoothbuild.lang.builtin.file.err.NoSuchDirButFileError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
-import org.smoothbuild.lang.builtin.file.err.NoSuchDirError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
@@ -30,9 +29,8 @@ public class FilesFunctionTest {
     try {
       runExecute(params(Path.rootPath().value()));
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (CannotListRootDirError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(CannotListRootDirError.class);
     }
   }
 
@@ -41,9 +39,8 @@ public class FilesFunctionTest {
     try {
       runExecute(params(SMOOTH_DIR.value()));
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (ReadFromSmoothDirError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -52,9 +49,8 @@ public class FilesFunctionTest {
     try {
       runExecute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (ReadFromSmoothDirError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(ReadFromSmoothDirError.class);
     }
   }
 
@@ -65,9 +61,8 @@ public class FilesFunctionTest {
       try {
         runExecute(params(path));
         fail("exception should be thrown");
-      } catch (ErrorMessageException e) {
+      } catch (IllegalPathError e) {
         // expected
-        assertThat(e.errorMessage()).isInstanceOf(IllegalPathError.class);
       }
     }
   }
@@ -77,9 +72,8 @@ public class FilesFunctionTest {
     try {
       runExecute(params("some/path"));
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (NoSuchDirError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(NoSuchDirError.class);
     }
   }
 
@@ -91,10 +85,8 @@ public class FilesFunctionTest {
     try {
       runExecute(params(filePath.value()));
       fail("exception should be thrown");
-
-    } catch (ErrorMessageException e) {
+    } catch (NoSuchDirButFileError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(NoSuchDirButFileError.class);
     }
   }
 

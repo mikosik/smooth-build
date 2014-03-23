@@ -10,7 +10,6 @@ import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 
@@ -43,9 +42,8 @@ public class PackagedJavaFileObjectsTest {
       packagedJavaFileObjects(new FakePluginApi(), ImmutableList.of(file1.content(), file2
           .content()));
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (DuplicateClassFileError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(DuplicateClassFileError.class);
     }
   }
 }

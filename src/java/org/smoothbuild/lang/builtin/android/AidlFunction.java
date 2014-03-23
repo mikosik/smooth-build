@@ -13,7 +13,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.util.CommandExecutor;
 
 import com.google.common.collect.Iterables;
@@ -60,7 +59,7 @@ public class AidlFunction {
 
     SArray<SFile> outputFiles = outputFilesDir.readFiles();
     if (Iterables.size(outputFiles) != 1) {
-      throw new ErrorMessageException(new AidlShouldOutputExactlyOneFileError(outputFiles));
+      throw new AidlShouldOutputExactlyOneFileError(outputFiles);
     }
 
     return outputFiles.iterator().next();
@@ -70,10 +69,10 @@ public class AidlFunction {
     try {
       int exitValue = CommandExecutor.execute(command);
       if (exitValue != 0) {
-        throw new ErrorMessageException(new AidlBinaryReturnedNonZeroCodeError(exitValue));
+        throw new AidlBinaryReturnedNonZeroCodeError(exitValue);
       }
     } catch (IOException e) {
-      throw new ErrorMessageException(new RunningAidlBinaryFailedError(command, e));
+      throw new RunningAidlBinaryFailedError(command, e);
     }
   }
 

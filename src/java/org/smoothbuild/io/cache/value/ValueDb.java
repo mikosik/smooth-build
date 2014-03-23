@@ -34,7 +34,6 @@ import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -149,8 +148,7 @@ public class ValueDb {
     @SuppressWarnings("unchecked")
     ReadValue<T> reader = (ReadValue<T>) readersMap.get(typeLiteral);
     if (reader == null) {
-      throw new ErrorMessageException(new Message(FATAL,
-          "Bug in smooth binary: Unexpected value type " + typeLiteral));
+      throw new Message(FATAL, "Bug in smooth binary: Unexpected value type " + typeLiteral);
     }
     return reader.read(hash);
   }

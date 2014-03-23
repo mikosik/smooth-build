@@ -6,15 +6,14 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.builtin.file.err.NoSuchFileButDirError;
-import org.smoothbuild.lang.builtin.file.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.exc.NoSuchFileButDirError;
+import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class FileFunction {
@@ -46,7 +45,7 @@ public class FileFunction {
 
     private SFile createFile(Path path) {
       if (!path.isRoot() && path.firstPart().equals(SMOOTH_DIR)) {
-        throw new ErrorMessageException(new ReadFromSmoothDirError(path));
+        throw new ReadFromSmoothDirError(path);
       }
 
       FileSystem fileSystem = pluginApi.projectFileSystem();
@@ -54,12 +53,11 @@ public class FileFunction {
         case FILE:
           return reader.createFile(path, path);
         case DIR:
-          throw new ErrorMessageException(new NoSuchFileButDirError(path));
+          throw new NoSuchFileButDirError(path);
         case NOTHING:
-          throw new ErrorMessageException(new NoSuchFileError(path));
+          throw new NoSuchFileError(path);
         default:
-          throw new ErrorMessageException(new Message(FATAL,
-              "Broken 'file' function implementation: unreachable case"));
+          throw new Message(FATAL, "Broken 'file' function implementation: unreachable case");
       }
     }
   }

@@ -3,10 +3,10 @@ package org.smoothbuild.io.fs.base;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
+import org.smoothbuild.io.fs.base.exc.FileSystemError;
 
 /**
- * All errors are reported by throwing {@link FileSystemException}.
+ * All errors are reported by throwing {@link FileSystemError}.
  */
 public interface FileSystem {
   public PathState pathState(Path path);

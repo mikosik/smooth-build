@@ -27,8 +27,6 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
 import com.google.common.base.Function;
@@ -74,7 +72,7 @@ public class JavacFunction {
 
     public SArray<SFile> execute() {
       if (compiler == null) {
-        throw new ErrorMessageException(new NoCompilerAvailableError());
+        throw new NoCompilerAvailableError();
       }
       return compile(params.sources());
     }
@@ -128,8 +126,7 @@ public class JavacFunction {
       if (params.source() != null) {
         String sourceArg = params.source().value();
         if (!SOURCE_VALUES.contains(sourceArg)) {
-          Message error = new IllegalSourceParamError(sourceArg, SOURCE_VALUES);
-          throw new ErrorMessageException(error);
+          throw new IllegalSourceParamError(sourceArg, SOURCE_VALUES);
         }
         result.add("-source");
         result.add(sourceArg);
@@ -138,8 +135,7 @@ public class JavacFunction {
       if (params.target() != null) {
         String targetArg = params.target().value();
         if (!TARGET_VALUES.contains(targetArg)) {
-          Message error = new IllegalTargetParamError(targetArg, TARGET_VALUES);
-          throw new ErrorMessageException(error);
+          throw new IllegalTargetParamError(targetArg, TARGET_VALUES);
         }
         result.add("-target");
         result.add(targetArg);

@@ -11,7 +11,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.ImmutableModule;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
 import org.smoothbuild.util.Empty;
@@ -85,8 +85,8 @@ public class DependencySorterTest {
     try {
       ImmutableModule builtinModule = new ImmutableModule(Empty.nameToFunctionMap());
       return DependencySorter.sortDependencies(builtinModule, map);
-    } catch (ErrorMessageException e) {
-      messages.log(e.errorMessage());
+    } catch (Message e) {
+      messages.log(e);
       return null;
     }
   }

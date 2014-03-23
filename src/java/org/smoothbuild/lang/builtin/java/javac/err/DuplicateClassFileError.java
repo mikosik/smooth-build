@@ -5,6 +5,7 @@ import static org.smoothbuild.message.base.MessageType.ERROR;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.Message;
 
+@SuppressWarnings("serial")
 public class DuplicateClassFileError extends Message {
   public DuplicateClassFileError(Path path) {
     super(ERROR, "File " + path + " is contained by two different library jar files.");

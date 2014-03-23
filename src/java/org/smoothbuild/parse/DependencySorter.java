@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.listen.ErrorMessageException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -62,7 +61,7 @@ public class DependencySorter {
           // DependencyCollector made sure that all dependency exists so the
           // only possibility at this point is that missing dependency is on
           // stack and we have cycle in call graph.
-          throw new ErrorMessageException(stack.createCycleError());
+          throw stack.createCycleError();
         } else {
           stack.push(new DependencyStackElem(missing.functionName(), next));
         }

@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.builtin.java.javac;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.onInstance;
@@ -14,7 +13,6 @@ import javax.tools.StandardLocation;
 
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
 
 import com.google.common.collect.Multimap;
@@ -43,9 +41,8 @@ public class SandboxedJavaFileManagerTest {
     try {
       manager.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT, className, Kind.CLASS, null);
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (IncorrectClassNameGivenByJavaCompilerError e) {
       // expected
-      assertThat(e.errorMessage()).isInstanceOf(IncorrectClassNameGivenByJavaCompilerError.class);
     }
     thenCalledTimes(0, onInstance(sfm));
   }

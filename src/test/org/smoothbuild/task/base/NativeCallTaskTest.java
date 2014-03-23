@@ -16,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.exc.FileSystemError;
-import org.smoothbuild.io.fs.base.exc.FileSystemException;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
@@ -27,7 +26,6 @@ import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
@@ -67,8 +65,8 @@ public class NativeCallTaskTest {
     Result subTask = new FakeResult(argValue);
 
     String name = "param";
-    NativeCallTask nativeCallTask = new NativeCallTask(function1, ImmutableMap.of(name, subTask),
-        codeLocation);
+    NativeCallTask nativeCallTask =
+        new NativeCallTask(function1, ImmutableMap.of(name, subTask), codeLocation);
 
     SString result = new FakeString("result");
     given(willReturn(result), invoker).invoke(pluginApi,
@@ -113,14 +111,13 @@ public class NativeCallTaskTest {
 
   @Test
   public void file_system_error_is_logged_for_file_system_exception() throws Exception {
-    InvocationTargetException exception = new InvocationTargetException(new FileSystemException(""));
+    InvocationTargetException exception = new InvocationTargetException(new FileSystemError(""));
     assertExceptionIsLoggedAsProblem(exception, FileSystemError.class);
   }
 
   @Test
   public void message_thrown_as_error_message_exception_is_logged() throws Exception {
-    InvocationTargetException exception = new InvocationTargetException(new ErrorMessageException(
-        new MyError()));
+    InvocationTargetException exception = new InvocationTargetException(new MyError());
     assertExceptionIsLoggedAsProblem(exception, MyError.class);
   }
 
@@ -130,6 +127,7 @@ public class NativeCallTaskTest {
     assertExceptionIsLoggedAsProblem(exception, UnexpectedError.class);
   }
 
+  @SuppressWarnings("serial")
   private static class MyError extends Message {
     public MyError() {
       super(ERROR, "message");

@@ -6,7 +6,7 @@ import java.util.Map;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.ErrorMessageException;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
@@ -39,9 +39,8 @@ public class NativeCallTask extends Task {
       pluginApi.log(new ReflexiveInternalError(e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
-      if (cause instanceof ErrorMessageException) {
-        ErrorMessageException errorMessageException = (ErrorMessageException) cause;
-        pluginApi.log(errorMessageException.errorMessage());
+      if (cause instanceof Message) {
+        pluginApi.log((Message) cause);
       } else {
         pluginApi.log(new UnexpectedError(cause));
       }

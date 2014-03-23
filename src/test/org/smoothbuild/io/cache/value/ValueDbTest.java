@@ -12,7 +12,6 @@ import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
-import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
@@ -162,7 +161,7 @@ public class ValueDbTest {
   public void reading_elements_from_not_stored_file_array_fails() throws Exception {
     given(fileArray = valueDb.read(FILE_ARRAY, HashCode.fromInt(33)));
     when(fileArray).iterator();
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 
   // blob array
@@ -218,7 +217,7 @@ public class ValueDbTest {
   public void reading_elements_from_not_stored_blob_array_fails() throws Exception {
     given(blobArray = valueDb.read(BLOB_ARRAY, HashCode.fromInt(33)));
     when(blobArray).iterator();
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 
   // string array
@@ -277,7 +276,7 @@ public class ValueDbTest {
   public void reading_elements_from_not_stored_string_array_fails() throws Exception {
     given(stringArray = valueDb.read(STRING_ARRAY, HashCode.fromInt(33)));
     when(stringArray).iterator();
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 
   // file object
@@ -346,7 +345,7 @@ public class ValueDbTest {
   @Test
   public void reading_not_stored_file_fails() throws Exception {
     when(valueDb).read(FILE, HashCode.fromInt(33));
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 
   // blob object
@@ -385,7 +384,7 @@ public class ValueDbTest {
   public void reading_not_stored_blob_fails() throws Exception {
     given(blob = valueDb.read(BLOB, HashCode.fromInt(33)));
     when(blob).openInputStream();
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 
   // string object
@@ -424,6 +423,6 @@ public class ValueDbTest {
   public void reading_not_stored_string_object_fails() throws Exception {
     given(stringValue = valueDb.read(STRING, HashCode.fromInt(33)));
     when(stringValue).value();
-    thenThrown(containsInstanceOf(NoObjectWithGivenHashError.class));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 }

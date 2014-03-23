@@ -25,7 +25,6 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.CannotReadScriptError;
 import org.smoothbuild.parse.err.SyntaxError;
@@ -39,7 +38,7 @@ public class ScriptParser {
     try {
       antlrInputStream = new ANTLRInputStream(inputStream);
     } catch (IOException e) {
-      throw new ErrorMessageException(new CannotReadScriptError(scriptFile, e));
+      throw new CannotReadScriptError(scriptFile, e);
     }
 
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);

@@ -72,7 +72,7 @@ public class MessageCatchingExecutorTest {
 
     @Override
     public String executeImpl(String arguments) {
-      throw new ErrorMessageException(new Message(ERROR, arguments));
+      throw new Message(ERROR, arguments);
     }
   }
 

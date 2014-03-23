@@ -8,6 +8,7 @@ import java.util.Collection;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.Message;
 
+@SuppressWarnings("serial")
 public class NoFunctionSpecifiedError extends Message {
   public NoFunctionSpecifiedError(Collection<Name> availableNames) {
     super(ERROR, "No function passed to build command.\n"

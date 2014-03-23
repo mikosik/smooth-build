@@ -1,16 +1,13 @@
 package org.smoothbuild.io.cache.hash;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.cache.hash.HashCodes.toPath;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.message.ErrorMessageMatchers.containsInstanceOf;
 
 import java.io.DataOutputStream;
 import java.util.List;
 
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.smoothbuild.io.cache.hash.err.CorruptedBoolError;
 import org.smoothbuild.io.cache.hash.err.CorruptedEnumValue;
@@ -19,7 +16,6 @@ import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.cache.hash.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.Hashed;
-import org.smoothbuild.message.listen.ErrorMessageException;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeHashed;
 
@@ -107,8 +103,9 @@ public class UnmarshallerTest {
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
       unmarshaller.readBool();
-    } catch (ErrorMessageException e) {
-      assertThat(e, containsInstanceOf(CorruptedBoolError.class));
+      fail("exception should be thrown");
+    } catch (CorruptedBoolError e) {
+      // expected
     }
   }
 
@@ -169,8 +166,9 @@ public class UnmarshallerTest {
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
       unmarshaller.readEnum(enumValues);
-    } catch (ErrorMessageException e) {
-      assertThat(e, containsInstanceOf(CorruptedEnumValue.class));
+      fail("exception should be thrown");
+    } catch (CorruptedEnumValue e) {
+      // expected
     }
   }
 
@@ -205,16 +203,17 @@ public class UnmarshallerTest {
   public void too_short_hash_in_db_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
     Path objectPath = toPath(objectHash);
-    try (DataOutputStream outputStream = new DataOutputStream(
-        fileSystem.openOutputStream(objectPath))) {
+    try (DataOutputStream outputStream =
+        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
       outputStream.write(new byte[Hash.size() - 1]);
     }
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
       try {
         unmarshaller.readHash();
-      } catch (ErrorMessageException e) {
-        assertThat(containsInstanceOf(TooFewBytesToUnmarshallValue.class).matches(e)).isTrue();
+        fail("exception should be thrown");
+      } catch (TooFewBytesToUnmarshallValue e) {
+        // expected
       }
     }
   }
@@ -223,8 +222,8 @@ public class UnmarshallerTest {
   public void too_short_path_in_db_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
     Path objectPath = toPath(objectHash);
-    try (DataOutputStream outputStream = new DataOutputStream(
-        fileSystem.openOutputStream(objectPath))) {
+    try (DataOutputStream outputStream =
+        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
       int size = 10;
       outputStream.writeInt(size + 1);
       outputStream.write(new byte[size]);
@@ -233,8 +232,9 @@ public class UnmarshallerTest {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
       try {
         unmarshaller.readPath();
-      } catch (ErrorMessageException e) {
-        assertThat(containsInstanceOf(TooFewBytesToUnmarshallValue.class).matches(e)).isTrue();
+        fail("exception should be thrown");
+      } catch (TooFewBytesToUnmarshallValue e) {
+        // expected
       }
     }
   }
@@ -243,16 +243,17 @@ public class UnmarshallerTest {
   public void halfed_size_of_path_in_db_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
     Path objectPath = toPath(objectHash);
-    try (DataOutputStream outputStream = new DataOutputStream(
-        fileSystem.openOutputStream(objectPath))) {
+    try (DataOutputStream outputStream =
+        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
       outputStream.write(new byte[3]);
     }
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
       try {
         unmarshaller.readPath();
-      } catch (ErrorMessageException e) {
-        assertThat(containsInstanceOf(TooFewBytesToUnmarshallValue.class).matches(e)).isTrue();
+        fail("exception should be thrown");
+      } catch (TooFewBytesToUnmarshallValue e) {
+        // expected
       }
     }
   }
@@ -263,8 +264,8 @@ public class UnmarshallerTest {
     Path objectPath = toPath(objectHash);
     String illegalPathValue = "/";
 
-    try (DataOutputStream outputStream = new DataOutputStream(
-        fileSystem.openOutputStream(objectPath))) {
+    try (DataOutputStream outputStream =
+        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
       byte[] bytes = illegalPathValue.getBytes();
       outputStream.writeInt(bytes.length);
       outputStream.write(bytes);
@@ -273,8 +274,9 @@ public class UnmarshallerTest {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
       try {
         unmarshaller.readPath();
-      } catch (ErrorMessageException e) {
-        assertThat(containsInstanceOf(IllegalPathInObjectError.class).matches(e)).isTrue();
+        fail("exception should be thrown");
+      } catch (IllegalPathInObjectError e) {
+        // expected
       }
     }
   }
@@ -283,16 +285,17 @@ public class UnmarshallerTest {
   public void too_short_int_in_db_causes_exception() throws Exception {
     HashCode objectHash = HashCode.fromInt(33);
     Path objectPath = toPath(objectHash);
-    try (DataOutputStream outputStream = new DataOutputStream(
-        fileSystem.openOutputStream(objectPath))) {
+    try (DataOutputStream outputStream =
+        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
       outputStream.write(new byte[3]);
     }
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
       try {
         unmarshaller.readInt();
-      } catch (ErrorMessageException e) {
-        assertThat(containsInstanceOf(TooFewBytesToUnmarshallValue.class).matches(e)).isTrue();
+        fail("exception should be thrown");
+      } catch (TooFewBytesToUnmarshallValue e) {
+        // expected
       }
     }
   }
@@ -302,9 +305,8 @@ public class UnmarshallerTest {
     try {
       new Unmarshaller(hashedDb, HashCode.fromInt(33));
       fail("exception should be thrown");
-    } catch (ErrorMessageException e) {
+    } catch (NoObjectWithGivenHashError e) {
       // expected
-      MatcherAssert.assertThat(e, containsInstanceOf(NoObjectWithGivenHashError.class));
     }
   }
 }
