@@ -111,19 +111,28 @@ public class TempDirectory {
   private SArray<SFile> readFilesImpl() throws IOException {
     ArrayBuilder<SFile> arrayBuilder = valueBuilders.arrayBuilder(FILE_ARRAY);
     for (Path path : fileSystem.filesFrom(Path.rootPath())) {
-      arrayBuilder.add(fileToSFile(path).build());
+      arrayBuilder.add(readFileImpl(path).build());
     }
     return arrayBuilder.build();
   }
 
-  private FileBuilder fileToSFile(Path path) throws IOException {
+  private FileBuilder readFileImpl(Path path) throws IOException {
     FileBuilder fileBuilder = valueBuilders.fileBuilder();
     fileBuilder.setPath(path);
-    fileBuilder.setContent(contentToBlob(path));
+    fileBuilder.setContent(readContentImpl(path));
     return fileBuilder;
   }
 
-  private SBlob contentToBlob(Path path) throws IOException {
+  public SBlob readContent(Path path) {
+    assertNotDestroyed();
+    try {
+      return readContentImpl(path);
+    } catch (IOException e) {
+      throw new FileSystemException(e);
+    }
+  }
+
+  private SBlob readContentImpl(Path path) throws IOException {
     BlobBuilder blobBuilder = valueBuilders.blobBuilder();
     Streams.copy(fileSystem.openInputStream(path), blobBuilder.openOutputStream());
     return blobBuilder.build();

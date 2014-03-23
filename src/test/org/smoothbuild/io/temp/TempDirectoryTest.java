@@ -14,10 +14,12 @@ import org.junit.Test;
 import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.lang.type.BlobTester;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeFile;
 
@@ -126,6 +128,26 @@ public class TempDirectoryTest {
 
     try {
       tempDirectory.readFiles();
+      fail("exception should be thrown");
+    } catch (IllegalStateException e) {
+      // expected
+    }
+  }
+
+  @Test
+  public void content_is_read_from_file_system() throws Exception {
+    fileSystem.createFile(path, content);
+    SBlob blobContent = tempDirectory.readContent(path);
+    BlobTester.assertContains(blobContent, content);
+  }
+
+  @Test
+  public void reading_content_after_destroy_throws_exception() throws Exception {
+    fileSystem.createFile(path, content);
+    tempDirectory.destroy();
+
+    try {
+      tempDirectory.readContent(path);
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
       // expected
