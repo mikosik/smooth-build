@@ -2,6 +2,8 @@ package org.smoothbuild.message.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Throwables;
+
 @SuppressWarnings("serial")
 public class Message extends RuntimeException {
   private final MessageType type;
@@ -41,6 +43,15 @@ public class Message extends RuntimeException {
 
   @Override
   public String toString() {
-    return type.toString() + ": " + message;
+    return type.toString() + ": " + message + stackTrace();
+  }
+
+  private String stackTrace() {
+    Throwable cause = getCause();
+    if (cause == null) {
+      return "";
+    } else {
+      return "\n" + Throwables.getStackTraceAsString(cause);
+    }
   }
 }
