@@ -1,5 +1,6 @@
 package org.smoothbuild.message.base;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.WARNING;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import com.google.common.testing.EqualsTester;
 
 public class MessageTest {
+  String messageString = "message";
 
   @Test(expected = NullPointerException.class)
   public void nullMessageIsForbidden() throws Exception {
@@ -17,27 +19,37 @@ public class MessageTest {
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() throws Exception {
-    new Message(null, "message");
+    new Message(null, messageString);
   }
 
   @Test
   public void testError() {
-    String string = "message";
-
-    Message message = new Message(ERROR, string);
+    Message message = new Message(ERROR, messageString);
 
     assertThat(message.type()).isEqualTo(ERROR);
-    assertThat(message.message()).isEqualTo(string);
+    assertThat(message.message()).isEqualTo(messageString);
   }
 
   @Test
   public void testWarning() {
-    String string = "message";
-
-    Message message = new Message(WARNING, string);
+    Message message = new Message(WARNING, messageString);
 
     assertThat(message.type()).isEqualTo(WARNING);
-    assertThat(message.message()).isEqualTo(string);
+    assertThat(message.message()).isEqualTo(messageString);
+  }
+
+  @Test
+  public void to_string() throws Exception {
+    Message message = new Message(ERROR, messageString);
+    assertThat(message.toString()).isEqualTo("ERROR: " + messageString);
+  }
+
+  @Test
+  public void to_string_with_cause() throws Exception {
+    Throwable throwable = new Throwable();
+    Message message = new Message(ERROR, "message", throwable);
+    assertThat(message.toString()).isEqualTo(
+        "ERROR: " + messageString + "\n" + getStackTraceAsString(throwable));
   }
 
   @Test
