@@ -35,7 +35,7 @@ public class CachingTask extends Task {
 
   private SValue readFromCache(PluginApiImpl pluginApi, HashCode hash) {
     pluginApi.setResultIsFromCache();
-    CachedResult cachedResult = taskDb.read(hash);
+    CachedResult cachedResult = taskDb.read(hash, task.type());
     for (Message message : cachedResult.messages()) {
       pluginApi.log(message);
     }

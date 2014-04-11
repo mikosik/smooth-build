@@ -60,23 +60,24 @@ public class TaskDb {
     return taskResultsDb.contains(taskHash);
   }
 
-  public CachedResult read(HashCode taskHash) {
+  public <T extends SValue> CachedResult read(HashCode taskHash, SType<T> type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(taskResultsDb, taskHash);) {
       int size = unmarshaller.readInt();
       boolean hasErrors = false;
       List<Message> messages = newArrayList();
       for (int i = 0; i < size; i++) {
-        MessageType type = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
+        MessageType messageType = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();
         String messageString = valueDb.read(STRING, messageStringHash).value();
-        messages.add(new Message(type, messageString));
-        hasErrors = hasErrors || type == ERROR;
+        messages.add(new Message(messageType, messageString));
+        hasErrors = hasErrors || messageType == ERROR;
       }
 
       if (hasErrors) {
         return new CachedResult(null, messages);
       } else {
-        SType<?> type = unmarshaller.readEnum(AllObjectTypes.INSTANCE);
+        // TODO storing object type is no longer needed.
+        unmarshaller.readEnum(AllObjectTypes.INSTANCE);
         HashCode resultObjectHash = unmarshaller.readHash();
         SValue value = valueDb.read(type, resultObjectHash);
         return new CachedResult(value, messages);
