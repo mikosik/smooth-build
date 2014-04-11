@@ -88,7 +88,7 @@ public class ParamTest {
 
   @Test
   public void toPaddedString() throws Exception {
-    Node abstractNode = mock(Node.class);
+    Node<?> abstractNode = mock(Node.class);
     given(willReturn(STRING), abstractNode).type();
 
     Param param = param(STRING, "myName", false);
@@ -99,7 +99,7 @@ public class ParamTest {
 
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
-    Node abstractNode = mock(Node.class);
+    Node<?> abstractNode = mock(Node.class);
     given(willReturn(STRING), abstractNode).type();
 
     Param param = param(STRING, "myName", false);

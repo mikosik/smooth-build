@@ -24,11 +24,11 @@ import com.google.common.collect.Sets;
 public class ParamToArgMapper {
   private final CodeLocation codeLocation;
   private final LoggedMessages messages;
-  private final Function function;
+  private final Function<?> function;
   private final ParamsPool paramsPool;
   private final Collection<Arg> allArguments;
 
-  public ParamToArgMapper(CodeLocation codeLocation, LoggedMessages messages, Function function,
+  public ParamToArgMapper(CodeLocation codeLocation, LoggedMessages messages, Function<?> function,
       Collection<Arg> args) {
     this.codeLocation = codeLocation;
     this.messages = messages;

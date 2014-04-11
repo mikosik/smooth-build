@@ -30,19 +30,20 @@ public class NativeFunctionTest {
   CodeLocation codeLocation = new FakeCodeLocation();
 
   TaskDb taskDb = mock(TaskDb.class);
-  Signature signature = fakeSignature("functionName");
-  Invoker invoker = mock(Invoker.class);
+  Signature<SString> signature = fakeSignature("functionName");
+  @SuppressWarnings("unchecked")
+  Invoker<SString> invoker = mock(Invoker.class);
 
-  NativeFunction function = new NativeFunction(signature, invoker, true);
+  NativeFunction<SString> function = new NativeFunction<>(signature, invoker, true);
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
-    new NativeFunction(null, invoker, true);
+    new NativeFunction<>(null, invoker, true);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullInvokerIsForbidden() throws Exception {
-    new NativeFunction(signature, null, true);
+    new NativeFunction<>(signature, null, true);
   }
 
   @Test
@@ -61,7 +62,7 @@ public class NativeFunctionTest {
     given(willReturn(result), invoker).invoke(pluginApi, Empty.stringValueMap());
 
     // when
-    Task task = function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation);
+    Task<?> task = function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation);
     SString actual = (SString) task.execute(pluginApi);
 
     // then

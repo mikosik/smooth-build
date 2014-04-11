@@ -32,7 +32,7 @@ public class TaskDb {
     this.valueDb = valueDb;
   }
 
-  public void store(HashCode taskHash, CachedResult cachedResult) {
+  public void store(HashCode taskHash, CachedResult<? extends SValue> cachedResult) {
     Marshaller marshaller = new Marshaller();
 
     SValue value = cachedResult.value();
@@ -59,7 +59,7 @@ public class TaskDb {
     return taskResultsDb.contains(taskHash);
   }
 
-  public <T extends SValue> CachedResult read(HashCode taskHash, SType<T> type) {
+  public <T extends SValue> CachedResult<T> read(HashCode taskHash, SType<T> type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(taskResultsDb, taskHash);) {
       int size = unmarshaller.readInt();
       boolean hasErrors = false;
@@ -73,11 +73,11 @@ public class TaskDb {
       }
 
       if (hasErrors) {
-        return new CachedResult(null, messages);
+        return new CachedResult<T>(null, messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
-        SValue value = valueDb.read(type, resultObjectHash);
-        return new CachedResult(value, messages);
+        T value = valueDb.read(type, resultObjectHash);
+        return new CachedResult<>(value, messages);
       }
     }
   }

@@ -21,7 +21,7 @@ public class StringNodeTest {
   SString string = mock(SString.class);
   CodeLocation codeLocation = new FakeCodeLocation();
   StringNode stringNode = new StringNode(string, codeLocation);
-  Task task;
+  Task<SString> task;
 
   @Test
   public void null_string_value_is_forbidden() throws Exception {

@@ -18,15 +18,15 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<String, Result> stringTaskResultMap() {
+  public static ImmutableMap<String, Result<?>> stringTaskResultMap() {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<Name, Function> nameToFunctionMap() {
+  public static ImmutableMap<Name, Function<?>> nameToFunctionMap() {
     return ImmutableMap.of();
   }
 
-  public static ImmutableList<Node> nodeList() {
+  public static ImmutableList<Node<?>> nodeList() {
     return ImmutableList.of();
   }
 
@@ -42,7 +42,7 @@ public class Empty {
     }
   }
 
-  public static ImmutableMap<SType<?>, Converter<?>> typeToConverterMap() {
+  public static ImmutableMap<SType<?>, Converter<?, ?>> typeToConverterMap() {
     return ImmutableMap.of();
   }
 }

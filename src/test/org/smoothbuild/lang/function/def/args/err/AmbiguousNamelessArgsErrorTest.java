@@ -75,8 +75,8 @@ public class AmbiguousNamelessArgsErrorTest {
     assertThat(error.toString()).isEqualTo(builder.build());
   }
 
-  private Node node(SType<?> type) {
-    Node result = mock(Node.class);
+  private Node<?> node(SType<?> type) {
+    Node<?> result = mock(Node.class);
     given(willReturn(type), result).type();
     return result;
   }

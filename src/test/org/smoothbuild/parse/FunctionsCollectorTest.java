@@ -55,7 +55,7 @@ public class FunctionsCollectorTest {
 
   @Test
   public void overridenBuiltinFunction() throws Exception {
-    Function function = mock(Function.class);
+    Function<?> function = mock(Function.class);
     Module builtinModule = new ImmutableModule(ImmutableMap.of(name1, function));
     collectFunctions(moduleCtx(functionCtx(name1.value())), builtinModule);
     messages.assertContainsOnly(OverridenBuiltinFunctionError.class);

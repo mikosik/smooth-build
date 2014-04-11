@@ -22,11 +22,11 @@ import com.google.common.collect.ImmutableMap;
  * {@link org.smoothbuild.lang.function.def.DefinedFunction} which is defined in
  * Smooth script using Smooth language).
  */
-public class NativeFunction extends AbstractFunction {
-  private final Invoker invoker;
+public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
+  private final Invoker<T> invoker;
   private final boolean isCacheable;
 
-  public NativeFunction(Signature signature, Invoker invoker, boolean isCacheable) {
+  public NativeFunction(Signature<T> signature, Invoker<T> invoker, boolean isCacheable) {
     super(signature);
     this.invoker = checkNotNull(invoker);
     this.isCacheable = isCacheable;
@@ -37,12 +37,12 @@ public class NativeFunction extends AbstractFunction {
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> args,
+  public Task<T> generateTask(TaskGenerator taskGenerator, Map<String, ? extends Result<?>> args,
       CodeLocation codeLocation) {
-    return new NativeCallTask(this, args, codeLocation);
+    return new NativeCallTask<T>(this, args, codeLocation);
   }
 
-  public SValue invoke(PluginApi pluginApi, ImmutableMap<String, SValue> args)
+  public T invoke(PluginApi pluginApi, ImmutableMap<String, SValue> args)
       throws IllegalAccessException, InvocationTargetException {
     return invoker.invoke(pluginApi, args);
   }

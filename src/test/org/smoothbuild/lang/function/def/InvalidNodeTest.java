@@ -15,28 +15,28 @@ import org.smoothbuild.testing.message.FakeCodeLocation;
 public class InvalidNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   CodeLocation codeLocation = new FakeCodeLocation();
-  InvalidNode invalidNode = new InvalidNode(STRING, codeLocation);
+  InvalidNode<?> invalidNode = new InvalidNode<>(STRING, codeLocation);
 
   @Test(expected = NullPointerException.class)
   public void null_type_is_forbidden() throws Exception {
-    new InvalidNode(null, codeLocation);
+    new InvalidNode<>(null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_code_location_is_forbidden() throws Exception {
-    new InvalidNode(STRING, null);
+    new InvalidNode<>(STRING, null);
   }
 
   @Test
   public void type() {
-    given(invalidNode = new InvalidNode(STRING, codeLocation));
+    given(invalidNode = new InvalidNode<>(STRING, codeLocation));
     when(invalidNode.type());
     thenReturned(STRING);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(invalidNode = new InvalidNode(STRING, codeLocation));
+    given(invalidNode = new InvalidNode<>(STRING, codeLocation));
     when(invalidNode.codeLocation());
     thenReturned(codeLocation);
   }

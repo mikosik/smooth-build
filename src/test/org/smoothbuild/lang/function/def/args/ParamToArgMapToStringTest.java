@@ -45,7 +45,7 @@ public class ParamToArgMapToStringTest {
   }
 
   private static Arg arg(int number, SType<?> type, String name) {
-    Node node = mock(Node.class);
+    Node<?> node = mock(Node.class);
     given(willReturn(type), node).type();
 
     return namedArg(number, name, node, new FakeCodeLocation());

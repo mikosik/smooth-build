@@ -20,8 +20,8 @@ import com.google.inject.Injector;
 
 public class TaskGeneratorTest {
   SString string = mock(SString.class);
-  Result result;
-  Node node;
+  Result<?> result;
+  Node<?> node;
 
   TaskGenerator taskGenerator;
 
@@ -41,7 +41,7 @@ public class TaskGeneratorTest {
 
   @Test
   public void generating_task_twice_for_the_same_node_returns_the_same_task_container() {
-    given(node = new CachingNode(new StringNode(string, new FakeCodeLocation())));
+    given(node = new CachingNode<>(new StringNode(string, new FakeCodeLocation())));
     given(result = taskGenerator.generateTask(node));
     when(taskGenerator.generateTask(node));
     thenReturned(result);

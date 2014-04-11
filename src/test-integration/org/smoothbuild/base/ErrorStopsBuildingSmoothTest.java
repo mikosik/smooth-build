@@ -25,6 +25,7 @@ import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.testory.common.Nullable;
@@ -37,8 +38,10 @@ import com.google.inject.Provides;
 public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
   String normalFunction = "myFunction";
   String erroneousFunction = "erroneous";
-  Invoker normalInvoker = mock(Invoker.class);
-  Invoker erroneousInvoker = mock(Invoker.class);
+  @SuppressWarnings("unchecked")
+  Invoker<SString> normalInvoker = mock(Invoker.class);
+  @SuppressWarnings("unchecked")
+  Invoker<SString> erroneousInvoker = mock(Invoker.class);
 
   @SuppressWarnings("unchecked")
   @Provides
@@ -87,9 +90,9 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
     thenCalledTimes(0, onInstance(normalInvoker));
   }
 
-  private static NativeFunction function(String name, Invoker invoker) {
+  private static NativeFunction<SString> function(String name, Invoker<SString> invoker) {
     ImmutableList<Param> params = ImmutableList.of(param(STRING, "value"));
-    Signature signature = new Signature(STRING, name(name), params);
-    return new NativeFunction(signature, invoker, true);
+    Signature<SString> signature = new Signature<>(STRING, name(name), params);
+    return new NativeFunction<>(signature, invoker, true);
   }
 }

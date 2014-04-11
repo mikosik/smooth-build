@@ -15,11 +15,11 @@ import org.smoothbuild.task.exec.PluginApiImpl;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class NativeCallTask extends Task {
-  private final NativeFunction function;
-  private final ImmutableMap<String, Result> dependencies;
+public class NativeCallTask<T extends SValue> extends Task<T> {
+  private final NativeFunction<T> function;
+  private final ImmutableMap<String, Result<?>> dependencies;
 
-  public NativeCallTask(NativeFunction function, Map<String, Result> dependencies,
+  public NativeCallTask(NativeFunction<T> function, Map<String, ? extends Result<?>> dependencies,
       CodeLocation codeLocation) {
     super(function.type(), function.name().value(), false, codeLocation);
     this.function = function;
@@ -27,9 +27,9 @@ public class NativeCallTask extends Task {
   }
 
   @Override
-  public SValue execute(PluginApiImpl pluginApi) {
+  public T execute(PluginApiImpl pluginApi) {
     try {
-      SValue result = function.invoke(pluginApi, calculateArguments());
+      T result = function.invoke(pluginApi, calculateArguments());
       if (result == null && !pluginApi.loggedMessages().containsProblems()) {
         pluginApi.log(new NullResultError());
       } else {
@@ -50,7 +50,7 @@ public class NativeCallTask extends Task {
 
   private ImmutableMap<String, SValue> calculateArguments() {
     Builder<String, SValue> builder = ImmutableMap.builder();
-    for (Map.Entry<String, Result> entry : dependencies.entrySet()) {
+    for (Map.Entry<String, Result<?>> entry : dependencies.entrySet()) {
       String paramName = entry.getKey();
       SValue result = entry.getValue().value();
       builder.put(paramName, result);

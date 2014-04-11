@@ -6,9 +6,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class ImmutableModule implements Module {
-  private final ImmutableMap<Name, Function> functions;
+  private final ImmutableMap<Name, Function<?>> functions;
 
-  public ImmutableModule(Map<Name, Function> definedFunctions) {
+  public ImmutableModule(Map<Name, ? extends Function<?>> definedFunctions) {
     this.functions = ImmutableMap.copyOf(definedFunctions);
   }
 
@@ -18,7 +18,7 @@ public class ImmutableModule implements Module {
   }
 
   @Override
-  public Function getFunction(Name name) {
+  public Function<?> getFunction(Name name) {
     return functions.get(name);
   }
 

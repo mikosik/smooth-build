@@ -11,6 +11,7 @@ import static org.testory.Testory.willReturn;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -19,8 +20,9 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import com.google.common.collect.ImmutableMap;
 
 public class AbstractFunctionTest {
-  Signature signature = mock(Signature.class);
-  AbstractFunction function = new MyAbstractFunction(signature);
+  @SuppressWarnings("unchecked")
+  Signature<SString> signature = mock(Signature.class);
+  AbstractFunction<SString> function = new MyAbstractFunction(signature);
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
@@ -49,14 +51,14 @@ public class AbstractFunctionTest {
     assertThat(function.params()).isEqualTo(params);
   }
 
-  public static class MyAbstractFunction extends AbstractFunction {
-    public MyAbstractFunction(Signature signature) {
+  public static class MyAbstractFunction extends AbstractFunction<SString> {
+    public MyAbstractFunction(Signature<SString> signature) {
       super(signature);
     }
 
     @Override
-    public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> arguments,
-        CodeLocation codeLocation) {
+    public Task<SString> generateTask(TaskGenerator taskGenerator,
+        Map<String, ? extends Result<?>> arguments, CodeLocation codeLocation) {
       return null;
     }
   }

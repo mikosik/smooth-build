@@ -33,6 +33,7 @@ import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
@@ -605,21 +606,23 @@ public class ParamToArgMapperTest {
     return namedArg(1, name, node(type), new FakeCodeLocation());
   }
 
-  private static Node node(SType<?> type) {
-    Node node = mock(Node.class);
+  private static Node<?> node(SType<?> type) {
+    Node<?> node = mock(Node.class);
     given(willReturn(type), node).type();
     return node;
   }
 
   private Map<Param, Arg> createMapping(Iterable<Param> params, List<Arg> args) {
     FakeCodeLocation codeLocation = new FakeCodeLocation();
-    Function function = function(params);
+    Function<?> function = function(params);
     return new ParamToArgMapper(codeLocation, messages, function, args).detectMapping();
   }
 
-  private static Function function(Iterable<Param> params) {
-    Signature signature = new Signature(STRING, name("name"), params);
-    return new NativeFunction(signature, mock(Invoker.class), true);
+  private static Function<?> function(Iterable<Param> params) {
+    Signature<SString> signature = new Signature<>(STRING, name("name"), params);
+    @SuppressWarnings("unchecked")
+    Invoker<SString> invoker = mock(Invoker.class);
+    return new NativeFunction<>(signature, invoker, true);
   }
 
   private static ArrayList<Arg> list(Arg... args) {

@@ -15,10 +15,10 @@ import org.smoothbuild.testing.message.FakeCodeLocation;
 
 public class CachingNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  Node node = node();
-  Task task = mock(Task.class);
+  Node<?> node = node();
+  Task<?> task = mock(Task.class);
 
-  CachingNode cachingNode = new CachingNode(node);
+  CachingNode<?> cachingNode = new CachingNode<>(node);
 
   @Test
   public void first_generate_task_call_forwards_call_to_node_generate_task() {
@@ -36,8 +36,8 @@ public class CachingNodeTest {
     thenCalledTimes(1, node).generateTask(taskGenerator);
   }
 
-  private static Node node() {
-    Node node = mock(Node.class);
+  private static Node<?> node() {
+    Node<?> node = mock(Node.class);
     given(willReturn(new FakeCodeLocation()), node).codeLocation();
     given(willReturn(STRING), node).type();
     return node;

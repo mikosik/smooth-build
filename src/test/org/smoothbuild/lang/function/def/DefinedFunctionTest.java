@@ -8,6 +8,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -19,40 +20,41 @@ import com.google.common.collect.ImmutableMap;
 
 public class DefinedFunctionTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  Signature signature = fakeSignature();
-  Node root = mock(Node.class);
+  Signature<SString> signature = fakeSignature();
+  @SuppressWarnings("unchecked")
+  Node<SString> root = mock(Node.class);
   CodeLocation codeLocation = new FakeCodeLocation();
 
-  DefinedFunction definedFunction = new DefinedFunction(signature, root);
+  DefinedFunction<?> definedFunction = new DefinedFunction<>(signature, root);
 
   @Test(expected = NullPointerException.class)
   public void nullRootIsForbidden() {
-    new DefinedFunction(signature, null);
+    new DefinedFunction<>(signature, null);
   }
 
   @Test
   public void generateTaskWithEmptyDependency() throws Exception {
-    Task task = mock(Task.class);
+    Task<?> task = mock(Task.class);
     given(willReturn(task), root).generateTask(taskGenerator);
 
-    Task actual = definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap(),
-        codeLocation);
+    Task<?> actual =
+        definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation);
 
     assertThat(actual).isSameAs(task);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void generateTaskThrowsExceptionWhenDependenciesAreNotEmpty() throws Exception {
-    definedFunction.generateTask(taskGenerator, ImmutableMap.of("name", mock(Result.class)),
-        codeLocation);
+    Result<?> result = mock(Result.class);
+    definedFunction.generateTask(taskGenerator, ImmutableMap.of("name", result), codeLocation);
   }
 
   @Test
   public void generateTaskForwardsCallToRootNode() throws Exception {
-    Task task = mock(Task.class);
+    Task<?> task = mock(Task.class);
     given(willReturn(task), root).generateTask(taskGenerator);
 
-    Task actual = definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap(), null);
+    Task<?> actual = definedFunction.generateTask(taskGenerator, Empty.stringTaskResultMap(), null);
 
     assertThat(actual).isSameAs(task);
   }

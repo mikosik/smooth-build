@@ -11,12 +11,12 @@ import org.smoothbuild.task.exec.PluginApiImpl;
 
 import com.google.common.hash.HashCode;
 
-public class CachingTask extends Task {
+public class CachingTask<T extends SValue> extends Task<T> {
   private final TaskDb taskDb;
-  private final CallHasher callHasher;
-  private final Task task;
+  private final CallHasher<T> callHasher;
+  private final Task<T> task;
 
-  public CachingTask(TaskDb taskDb, CallHasher callHasher, Task task) {
+  public CachingTask(TaskDb taskDb, CallHasher<T> callHasher, Task<T> task) {
     super(task.type(), task.name(), task.isInternal(), task.codeLocation());
     this.taskDb = checkNotNull(taskDb);
     this.callHasher = checkNotNull(callHasher);
@@ -24,7 +24,7 @@ public class CachingTask extends Task {
   }
 
   @Override
-  public SValue execute(PluginApiImpl pluginApi) {
+  public T execute(PluginApiImpl pluginApi) {
     HashCode hash = callHasher.hash();
     if (taskDb.contains(hash)) {
       return readFromCache(pluginApi, hash);
@@ -33,18 +33,18 @@ public class CachingTask extends Task {
     }
   }
 
-  private SValue readFromCache(PluginApiImpl pluginApi, HashCode hash) {
+  private T readFromCache(PluginApiImpl pluginApi, HashCode hash) {
     pluginApi.setResultIsFromCache();
-    CachedResult cachedResult = taskDb.read(hash, task.type());
+    CachedResult<T> cachedResult = taskDb.read(hash, task.type());
     for (Message message : cachedResult.messages()) {
       pluginApi.log(message);
     }
     return cachedResult.value();
   }
 
-  private SValue executeAndCache(PluginApiImpl pluginApi, HashCode hash) {
-    SValue result = task.execute(pluginApi);
-    taskDb.store(hash, new CachedResult(result, pluginApi.loggedMessages()));
+  private T executeAndCache(PluginApiImpl pluginApi, HashCode hash) {
+    T result = task.execute(pluginApi);
+    taskDb.store(hash, new CachedResult<T>(result, pluginApi.loggedMessages()));
     return result;
   }
 }

@@ -11,7 +11,7 @@ import com.google.common.collect.Maps;
 
 public class ModuleBuilder {
   private final TaskDb taskDb;
-  private final Map<Name, Function> functions;
+  private final Map<Name, Function<?>> functions;
 
   @Inject
   public ModuleBuilder(TaskDb taskDb) {
@@ -19,7 +19,7 @@ public class ModuleBuilder {
     this.functions = Maps.newHashMap();
   }
 
-  public void addFunction(NativeFunction function) {
+  public void addFunction(NativeFunction<?> function) {
     Name name = function.name();
     if (functions.containsKey(name)) {
       throw new IllegalArgumentException("Function " + name
@@ -29,9 +29,9 @@ public class ModuleBuilder {
     }
   }
 
-  private Function makeCacheable(NativeFunction function) {
+  private Function<?> makeCacheable(NativeFunction<?> function) {
     if (function.isCacheable()) {
-      return new CachableFunction(taskDb, function);
+      return new CachableFunction<>(taskDb, function);
     } else {
       return function;
     }
