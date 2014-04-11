@@ -2,19 +2,26 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
 public abstract class Task {
+  private final SType<?> type;
   private final String name;
   private final boolean isInternal;
   private final CodeLocation codeLocation;
 
-  public Task(String name, boolean isInternal, CodeLocation codeLocation) {
+  public Task(SType<?> type, String name, boolean isInternal, CodeLocation codeLocation) {
+    this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.isInternal = isInternal;
     this.codeLocation = checkNotNull(codeLocation);
+  }
+
+  public SType<?> type() {
+    return type;
   }
 
   public String name() {

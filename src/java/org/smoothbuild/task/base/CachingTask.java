@@ -17,7 +17,7 @@ public class CachingTask extends Task {
   private final Task task;
 
   public CachingTask(TaskDb taskDb, CallHasher callHasher, Task task) {
-    super(task.name(), task.isInternal(), task.codeLocation());
+    super(task.type(), task.name(), task.isInternal(), task.codeLocation());
     this.taskDb = checkNotNull(taskDb);
     this.callHasher = checkNotNull(callHasher);
     this.task = checkNotNull(task);

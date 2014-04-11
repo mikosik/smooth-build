@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -65,6 +66,7 @@ public class CachingTaskTest {
     task = mock(Task.class);
     given(willReturn("name"), task).name();
     given(willReturn(false), task).isInternal();
+    given(willReturn(STRING), task).type();
     given(willReturn(codeLocation), task).codeLocation();
     given(cachingTask = new CachingTask(taskDb, callHasher, task));
     when(cachingTask.isInternal());

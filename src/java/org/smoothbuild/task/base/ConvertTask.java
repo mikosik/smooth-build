@@ -10,7 +10,7 @@ public class ConvertTask extends Task {
   private final Converter<?> converter;
 
   public ConvertTask(Result toConvert, Converter<?> converter, CodeLocation codeLocation) {
-    super(converter.name(), true, codeLocation);
+    super(converter.targetType(), converter.name(), true, codeLocation);
     this.toConvert = toConvert;
     this.converter = converter;
   }
