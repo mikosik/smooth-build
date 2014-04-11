@@ -93,7 +93,8 @@ public class CachingTaskTest {
   public void task_is_not_executed_when_result_from_db_is_returned() throws Exception {
     given(willReturn(hash), callHasher).hash();
     given(willReturn(true), taskDb).contains(hash);
-    given(willReturn(new CachedResult(stringValue2, Empty.messageList())), taskDb).read(hash);
+    given(willReturn(new CachedResult(stringValue2, Empty.messageList())), taskDb).read(hash,
+        STRING);
     given(cachingTask = new CachingTask(taskDb, callHasher, task));
     assertThat(cachingTask.execute(pluginApi)).isEqualTo(stringValue2);
   }

@@ -2,8 +2,11 @@ package org.smoothbuild.io.cache.task;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.STypes.BLOB;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.testory.Testory.given;
@@ -63,7 +66,7 @@ public class TaskDbTest {
 
   @Test
   public void reading_not_stored_value_fails() throws Exception {
-    when(taskDb).read(hash);
+    when(taskDb).read(hash, STRING);
     thenThrown(NoObjectWithGivenHashError.class);
   }
 
@@ -72,7 +75,7 @@ public class TaskDbTest {
     given(blob = valueDb.writeBlob(bytes));
     given(message = new Message(ERROR, "message string"));
     given(taskDb).store(hash, new CachedResult(blob, ImmutableList.of(message)));
-    when(taskDb.read(hash).messages());
+    when(taskDb.read(hash, BLOB).messages());
     thenReturned(contains(message));
   }
 
@@ -82,7 +85,7 @@ public class TaskDbTest {
     given(file = valueDb.writeFile(path, new FakeBlob(bytes)));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(taskDb).store(hash, new CachedResult(fileArray, Empty.messageList()));
-    when(((SArray<SFile>) taskDb.read(hash).value()).iterator().next());
+    when(((SArray<SFile>) taskDb.read(hash, FILE_ARRAY).value()).iterator().next());
     thenReturned(file);
   }
 
@@ -92,7 +95,7 @@ public class TaskDbTest {
     given(blob = valueDb.writeBlob(bytes));
     given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     given(taskDb).store(hash, new CachedResult(blobArray, Empty.messageList()));
-    when(((SArray<SBlob>) taskDb.read(hash).value()).iterator().next());
+    when(((SArray<SBlob>) taskDb.read(hash, BLOB_ARRAY).value()).iterator().next());
     thenReturned(blob);
   }
 
@@ -102,7 +105,7 @@ public class TaskDbTest {
     given(stringValue = valueDb.writeString(string));
     given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     given(taskDb).store(hash, new CachedResult(stringArray, Empty.messageList()));
-    when(((SArray<SString>) taskDb.read(hash).value()).iterator().next());
+    when(((SArray<SString>) taskDb.read(hash, STRING_ARRAY).value()).iterator().next());
     thenReturned(stringValue);
   }
 
@@ -110,7 +113,7 @@ public class TaskDbTest {
   public void stored_file_can_be_read_back() throws Exception {
     given(file = valueDb.writeFile(path, new FakeBlob(bytes)));
     given(taskDb).store(hash, new CachedResult(file, Empty.messageList()));
-    when(taskDb.read(hash).value());
+    when(taskDb.read(hash, FILE).value());
     thenReturned(file);
   }
 
@@ -118,7 +121,7 @@ public class TaskDbTest {
   public void stored_blob_can_be_read_back() throws Exception {
     given(blob = valueDb.writeBlob(bytes));
     given(taskDb).store(hash, new CachedResult(blob, Empty.messageList()));
-    when(taskDb.read(hash).value());
+    when(taskDb.read(hash, BLOB).value());
     thenReturned(blob);
   }
 
@@ -126,7 +129,7 @@ public class TaskDbTest {
   public void stored_string_can_be_read_back() throws Exception {
     given(stringValue = valueDb.writeString(string));
     given(taskDb).store(hash, new CachedResult(stringValue, Empty.messageList()));
-    when(((SString) taskDb.read(hash).value()).value());
+    when(((SString) taskDb.read(hash, STRING).value()).value());
     thenReturned(string);
   }
 }
