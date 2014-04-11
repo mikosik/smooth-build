@@ -15,7 +15,7 @@ public class ArrayTask extends Task {
   private final ImmutableList<Result> elements;
 
   public ArrayTask(SArrayType<?> arrayType, List<Result> elements, CodeLocation codeLocation) {
-    super(arrayType.name(), true, codeLocation);
+    super(arrayType, arrayType.name(), true, codeLocation);
     this.arrayType = arrayType;
     this.elements = ImmutableList.copyOf(elements);
   }

@@ -21,7 +21,7 @@ public class NativeCallTask extends Task {
 
   public NativeCallTask(NativeFunction function, Map<String, Result> dependencies,
       CodeLocation codeLocation) {
-    super(function.name().value(), false, codeLocation);
+    super(function.type(), function.name().value(), false, codeLocation);
     this.function = function;
     this.dependencies = ImmutableMap.copyOf(dependencies);
   }

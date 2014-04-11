@@ -12,7 +12,7 @@ public class StringTask extends Task {
   private final SString string;
 
   public StringTask(SString string, CodeLocation codeLocation) {
-    super(STRING.name(), true, codeLocation);
+    super(STRING, STRING.name(), true, codeLocation);
     this.string = checkNotNull(string);
   }
 

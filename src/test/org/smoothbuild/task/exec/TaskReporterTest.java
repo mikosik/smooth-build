@@ -1,5 +1,6 @@
 package org.smoothbuild.task.exec;
 
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 import static org.smoothbuild.task.exec.TaskReporter.header;
@@ -68,7 +69,7 @@ public class TaskReporterTest {
   }
 
   private static Task createTask(boolean isInternal) {
-    return new Task("name", isInternal, codeLocation(13)) {
+    return new Task(STRING, "name", isInternal, codeLocation(13)) {
       @Override
       public SValue execute(PluginApiImpl pluginApi) {
         return null;
