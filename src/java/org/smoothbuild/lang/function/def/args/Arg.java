@@ -19,24 +19,24 @@ import com.google.common.collect.Ordering;
 public class Arg {
   private final int number;
   private final String name;
-  private final Node node;
+  private final Node<?> node;
   private final CodeLocation codeLocation;
 
-  public static Arg namedArg(int number, String name, Node node, CodeLocation codeLocation) {
+  public static Arg namedArg(int number, String name, Node<?> node, CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Arg(number, checkNotNull(name), node, codeLocation);
   }
 
-  public static Arg namelessArg(int number, Node node, CodeLocation codeLocation) {
+  public static Arg namelessArg(int number, Node<?> node, CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Arg(number, null, node, codeLocation);
   }
 
-  public static Arg pipedArg(Node node, CodeLocation codeLocation) {
+  public static Arg pipedArg(Node<?> node, CodeLocation codeLocation) {
     return new Arg(0, null, node, codeLocation);
   }
 
-  private Arg(int number, String name, Node node, CodeLocation codeLocation) {
+  private Arg(int number, String name, Node<?> node, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
@@ -67,7 +67,7 @@ public class Arg {
     return node.type();
   }
 
-  public Node node() {
+  public Node<?> node() {
     return node;
   }
 

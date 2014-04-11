@@ -26,13 +26,13 @@ import com.google.inject.TypeLiteral;
 
 public class SignatureFactory {
 
-  public static Signature create(Method method, Class<?> paramsInterface)
+  public static Signature<?> create(Method method, Class<?> paramsInterface)
       throws NativeImplementationException {
     SType<?> type = getReturnType(method);
     Name name = getFunctionName(method);
     Iterable<Param> params = getParams(method, paramsInterface);
 
-    return new Signature(type, name, params);
+    return new Signature<>(type, name, params);
   }
 
   private static Name getFunctionName(Method method) throws NativeImplementationException {

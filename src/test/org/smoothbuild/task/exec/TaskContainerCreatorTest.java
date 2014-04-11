@@ -12,10 +12,10 @@ import org.smoothbuild.task.base.Task;
 
 public class TaskContainerCreatorTest {
   SValue value = mock(SValue.class);
-  Task task = mock(Task.class);
+  Task<?> task = mock(Task.class);
   TaskExecutor taskExecutor = mock(TaskExecutor.class);
 
-  TaskContainer taskContainer;
+  TaskContainer<?> taskContainer;
   TaskContainerCreator taskContainerCreator = new TaskContainerCreator(taskExecutor);
 
   @Test

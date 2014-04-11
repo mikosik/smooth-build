@@ -17,7 +17,7 @@ public class TaskReporter {
     this.userConsole = userConsole;
   }
 
-  public void report(Task task, PluginApiImpl pluginApi) {
+  public void report(Task<?> task, PluginApiImpl pluginApi) {
     LoggedMessages messages = pluginApi.loggedMessages();
     if (!(task.isInternal() && messages.isEmpty())) {
       String header = header(task, pluginApi.isResultFromCache());
@@ -26,7 +26,7 @@ public class TaskReporter {
   }
 
   @VisibleForTesting
-  static String header(Task task, boolean isResultFromCached) {
+  static String header(Task<?> task, boolean isResultFromCached) {
     String locationString = task.codeLocation().toString();
     int paddedLength = UserConsole.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
     String name = Strings.padEnd(task.name(), paddedLength, ' ');

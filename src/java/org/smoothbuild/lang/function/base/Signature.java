@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Set;
 
 import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.type.SValue;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -12,18 +13,18 @@ import com.google.common.collect.Sets;
 /**
  * Function's signature.
  */
-public class Signature {
-  private final SType<?> type;
+public class Signature<T extends SValue> {
+  private final SType<T> type;
   private final Name name;
   private final ImmutableMap<String, Param> params;
 
-  public Signature(SType<?> type, Name name, Iterable<Param> params) {
+  public Signature(SType<T> type, Name name, Iterable<Param> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.params = createParamsMap(params);
   }
 
-  public SType<?> type() {
+  public SType<T> type() {
     return type;
   }
 

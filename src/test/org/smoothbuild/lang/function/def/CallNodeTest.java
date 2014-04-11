@@ -24,36 +24,36 @@ import com.google.common.collect.ImmutableMap;
 public class CallNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   CodeLocation codeLocation = new FakeCodeLocation();
-  Function function = mock(Function.class);
+  Function<?> function = mock(Function.class);
 
   @Test
   public void type() throws Exception {
     given(willReturn(STRING), function).type();
     given(willReturn(name("function")), function).name();
 
-    ImmutableMap<String, Node> empty = ImmutableMap.<String, Node> of();
+    ImmutableMap<String, Node<?>> empty = ImmutableMap.<String, Node<?>> of();
 
-    assertThat(new CallNode(function, codeLocation, empty).type()).isEqualTo(STRING);
+    assertThat(new CallNode<>(function, codeLocation, empty).type()).isEqualTo(STRING);
   }
 
   @Test
   public void generateTask() throws Exception {
-    Function function = mock(Function.class);
-    Node node = mock(Node.class);
-    Task task = mock(Task.class);
+    Function<?> function = mock(Function.class);
+    Node<?> node = mock(Node.class);
+    Task<?> task = mock(Task.class);
     given(willReturn(name("function")), function).name();
     given(willReturn(STRING), function).type();
 
-    Result result = new FakeResult(new FakeString("arg"));
+    Result<?> result = new FakeResult<>(new FakeString("arg"));
 
     String name = "name";
-    Map<String, Node> argNodes = ImmutableMap.of(name, node);
+    Map<String, ? extends Node<?>> argNodes = ImmutableMap.of(name, node);
 
     given(willReturn(result), taskGenerator).generateTask(node);
     given(willReturn(task), function).generateTask(taskGenerator, ImmutableMap.of(name, result),
         codeLocation);
 
-    Task actual = new CallNode(function, codeLocation, argNodes).generateTask(taskGenerator);
+    Task<?> actual = new CallNode<>(function, codeLocation, argNodes).generateTask(taskGenerator);
 
     assertThat(actual).isSameAs(task);
   }

@@ -4,13 +4,13 @@ import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.lang.type.SValueBuilders;
 
-public abstract class Converter<T extends SValue> {
+public abstract class Converter<S extends SValue, T extends SValue> {
   private static final String ARROW_STRING = " => ";
 
-  private final SType<?> sourceType;
+  private final SType<S> sourceType;
   private final SType<T> targetType;
 
-  public Converter(SType<?> sourceType, SType<T> targetType) {
+  public Converter(SType<S> sourceType, SType<T> targetType) {
     this.sourceType = sourceType;
     this.targetType = targetType;
   }
@@ -23,5 +23,5 @@ public abstract class Converter<T extends SValue> {
     return targetType;
   }
 
-  public abstract T convert(SValueBuilders valueBuilders, SValue value);
+  public abstract T convert(SValueBuilders valueBuilders, S value);
 }

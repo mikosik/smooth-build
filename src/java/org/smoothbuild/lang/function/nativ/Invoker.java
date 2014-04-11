@@ -9,7 +9,7 @@ import java.util.Map;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.type.SValue;
 
-public class Invoker {
+public class Invoker<T extends SValue> {
   private final Method method;
   private final ArgsCreator argsCreator;
 
@@ -18,9 +18,13 @@ public class Invoker {
     this.argsCreator = checkNotNull(argsCreator);
   }
 
-  public SValue invoke(PluginApi pluginApi, Map<String, SValue> args) throws IllegalAccessException,
+  public T invoke(PluginApi pluginApi, Map<String, SValue> args) throws IllegalAccessException,
       InvocationTargetException {
     Object arguments = argsCreator.create(args);
-    return (SValue) method.invoke(null, new Object[] { pluginApi, arguments });
+    Object[] javaArguments = new Object[] { pluginApi, arguments };
+
+    @SuppressWarnings("unchecked")
+    T result = (T) method.invoke(null, javaArguments);
+    return result;
   }
 }

@@ -15,6 +15,7 @@ import org.smoothbuild.io.cache.task.CachedResult;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
 import org.smoothbuild.lang.type.SString;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakePluginApi;
@@ -31,10 +32,11 @@ public class CachingTaskTest {
   CodeLocation codeLocation = new FakeCodeLocation();
 
   TaskDb taskDb = mock(TaskDb.class);
-  CallHasher callHasher = mock(CallHasher.class);
-  Task task = new StringTask(stringValue, codeLocation);
+  @SuppressWarnings("unchecked")
+  CallHasher<SString> callHasher = mock(CallHasher.class);
+  Task<SString> task = new StringTask(stringValue, codeLocation);
 
-  CachingTask cachingTask;
+  CachingTask<?> cachingTask;
 
   @Test
   public void null_result_db_is_forbidden() throws Exception {
@@ -56,26 +58,27 @@ public class CachingTaskTest {
 
   @Test
   public void name_of_wrapped_task_is_returned() throws Exception {
-    given(cachingTask = new CachingTask(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
     when(cachingTask.name());
     thenReturned(task.name());
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void is_internal_forwards_negative_result_from_wrapped_task() throws Exception {
-    task = mock(Task.class);
+    given(task = mock(Task.class));
     given(willReturn("name"), task).name();
     given(willReturn(false), task).isInternal();
     given(willReturn(STRING), task).type();
     given(willReturn(codeLocation), task).codeLocation();
-    given(cachingTask = new CachingTask(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
     when(cachingTask.isInternal());
     thenReturned(false);
   }
 
   @Test
   public void is_internal_forwards_positive_result_from_wrapped_task() throws Exception {
-    given(cachingTask = new CachingTask(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
     when(cachingTask.isInternal());
     thenReturned(true);
   }
@@ -84,7 +87,7 @@ public class CachingTaskTest {
   public void task_is_executed_when_result_db_does_not_contain_its_result() {
     given(willReturn(hash), callHasher).hash();
     given(willReturn(false), taskDb).contains(hash);
-    given(cachingTask = new CachingTask(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
     when(cachingTask.execute(pluginApi));
     thenReturned(stringValue);
   }
@@ -93,18 +96,18 @@ public class CachingTaskTest {
   public void task_is_not_executed_when_result_from_db_is_returned() throws Exception {
     given(willReturn(hash), callHasher).hash();
     given(willReturn(true), taskDb).contains(hash);
-    given(willReturn(new CachedResult(stringValue2, Empty.messageList())), taskDb).read(hash,
+    given(willReturn(new CachedResult<>(stringValue2, Empty.messageList())), taskDb).read(hash,
         STRING);
-    given(cachingTask = new CachingTask(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
     assertThat(cachingTask.execute(pluginApi)).isEqualTo(stringValue2);
   }
 
-  private static Closure $cachingTask(final TaskDb taskDb, final CallHasher callHasher,
-      final Task task) {
+  private static <T extends SValue> Closure $cachingTask(final TaskDb taskDb,
+      final CallHasher<T> callHasher, final Task<T> task) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new CachingTask(taskDb, callHasher, task);
+        return new CachingTask<>(taskDb, callHasher, task);
       }
     };
   }

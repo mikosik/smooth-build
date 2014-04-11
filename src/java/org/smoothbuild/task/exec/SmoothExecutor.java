@@ -25,7 +25,7 @@ public class SmoothExecutor {
       throw new NoFunctionSpecifiedError(module.availableNames());
     }
     for (Name name : args.functionsToRun()) {
-      Function function = module.getFunction(name);
+      Function<?> function = module.getFunction(name);
       if (function == null) {
         throw new UnknownFunctionError(name, module.availableNames());
       }

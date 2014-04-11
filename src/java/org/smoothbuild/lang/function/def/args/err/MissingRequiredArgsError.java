@@ -14,13 +14,13 @@ import org.smoothbuild.util.LineBuilder;
 
 @SuppressWarnings("serial")
 public class MissingRequiredArgsError extends CodeMessage {
-  public MissingRequiredArgsError(CodeLocation codeLocation, Function function,
+  public MissingRequiredArgsError(CodeLocation codeLocation, Function<?> function,
       ParamToArgMapBuilder paramToArgMapBuilder, Set<Param> missingRequiredParams) {
     super(ERROR, codeLocation,
         createMesssage(function, paramToArgMapBuilder, missingRequiredParams));
   }
 
-  private static String createMesssage(Function function,
+  private static String createMesssage(Function<?> function,
       ParamToArgMapBuilder paramToArgMapBuilder, Set<Param> missingRequiredParams) {
     LineBuilder builder = new LineBuilder();
 

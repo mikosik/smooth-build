@@ -4,19 +4,19 @@ import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 
-public class TaskContainer implements Result {
+public class TaskContainer<T extends SValue> implements Result<T> {
   private final TaskExecutor taskExecutor;
-  private final Task task;
-  private SValue result;
+  private final Task<T> task;
+  private T result;
 
-  public TaskContainer(TaskExecutor taskExecutor, Task task) {
+  public TaskContainer(TaskExecutor taskExecutor, Task<T> task) {
     this.taskExecutor = taskExecutor;
     this.task = task;
     this.result = null;
   }
 
   @Override
-  public SValue value() {
+  public T value() {
     if (result == null) {
       result = taskExecutor.execute(task);
     }

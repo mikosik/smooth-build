@@ -56,10 +56,10 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void testSignature() throws Exception {
-    Function function = NativeFunctionFactory.create(Func.class, false);
+    Function<?> function = NativeFunctionFactory.create(Func.class, false);
 
     assertThat(function.name()).isEqualTo(name("myFunction"));
-    Signature signature = function.signature();
+    Signature<?> signature = function.signature();
     assertThat(signature.name()).isEqualTo(name("myFunction"));
     assertThat(signature.type()).isEqualTo(STRING);
 
@@ -73,13 +73,13 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void testInvokation() throws Exception {
-    Function function = NativeFunctionFactory.create(Func.class, false);
-    Result result1 = new FakeResult(new FakeString("abc"));
-    Result result2 = new FakeResult(new FakeString("def"));
-    ImmutableMap<String, Result> dependencies =
-        ImmutableMap.<String, Result> of("stringA", result1, "stringB", result2);
+    Function<?> function = NativeFunctionFactory.create(Func.class, false);
+    Result<?> result1 = new FakeResult<>(new FakeString("abc"));
+    Result<?> result2 = new FakeResult<>(new FakeString("def"));
+    ImmutableMap<String, ? extends Result<?>> dependencies =
+        ImmutableMap.of("stringA", result1, "stringB", result2);
 
-    Task task = function.generateTask(taskGenerator, dependencies, codeLocation);
+    Task<?> task = function.generateTask(taskGenerator, dependencies, codeLocation);
     SString result = (SString) task.execute(pluginApi);
     pluginApi.loggedMessages().assertNoProblems();
     assertThat(result.value()).isEqualTo("abcdef");
@@ -130,7 +130,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void params_annotated_as_required_are_required() throws Exception {
-    Function f = NativeFunctionFactory.create(FuncWithAnnotatedParams.class, false);
+    Function<?> f = NativeFunctionFactory.create(FuncWithAnnotatedParams.class, false);
     ImmutableMap<String, Param> params = f.params();
     assertThat(params.get("string1").isRequired()).isTrue();
     assertThat(params.get("string2").isRequired()).isFalse();
@@ -347,7 +347,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
-    Function function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
+    Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
     function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation).execute(
         pluginApi);
     pluginApi.loggedMessages().assertContainsOnly(UnexpectedError.class);

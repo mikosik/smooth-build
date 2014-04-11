@@ -17,7 +17,7 @@ import org.smoothbuild.task.base.Task;
 import com.google.inject.util.Providers;
 
 public class TaskExecutorTest {
-  Task task = mock(Task.class);
+  Task<?> task = mock(Task.class);
   SValue value = mock(SValue.class);
   LoggedMessages loggedMessages = new LoggedMessages();
   PluginApiImpl pluginApi = mock(PluginApiImpl.class);

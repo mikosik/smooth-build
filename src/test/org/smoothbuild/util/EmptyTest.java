@@ -46,7 +46,7 @@ public class EmptyTest {
   @Test
   public void emptyStringTaskResultMapIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<String, Result> map = Empty.stringTaskResultMap();
+    ImmutableMap<String, Result<?>> map = Empty.stringTaskResultMap();
   }
 
   @Test
@@ -64,7 +64,7 @@ public class EmptyTest {
   @Test
   public void emptyNameToFunctionMapIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<Name, Function> map = Empty.nameToFunctionMap();
+    ImmutableMap<Name, Function<?>> map = Empty.nameToFunctionMap();
   }
 
   @Test
@@ -82,7 +82,7 @@ public class EmptyTest {
   @Test
   public void emptyNodeListIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableList<Node> list = Empty.nodeList();
+    ImmutableList<Node<?>> list = Empty.nodeList();
   }
 
   @Test
@@ -132,7 +132,7 @@ public class EmptyTest {
   @Test
   public void typeToConverterMapIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<SType<?>, Converter<?>> map = Empty.typeToConverterMap();
+    ImmutableMap<SType<?>, Converter<?, ?>> map = Empty.typeToConverterMap();
   }
 
   @Test

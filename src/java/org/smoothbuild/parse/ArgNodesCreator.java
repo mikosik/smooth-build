@@ -16,21 +16,21 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 public class ArgNodesCreator {
 
-  public Map<String, Node> createArgumentNodes(CodeLocation codeLocation, LoggedMessages messages,
-      Function function, Collection<Arg> args) {
+  public Map<String, Node<?>> createArgumentNodes(CodeLocation codeLocation,
+      LoggedMessages messages, Function<?> function, Collection<Arg> args) {
     ParamToArgMapper mapper = new ParamToArgMapper(codeLocation, messages, function, args);
     Map<Param, Arg> paramToArgMap = mapper.detectMapping();
     messages.failIfContainsProblems();
     return createArgumentNodes(paramToArgMap);
   }
 
-  private Map<String, Node> createArgumentNodes(Map<Param, Arg> paramToArgMap) {
-    Builder<String, Node> builder = ImmutableMap.builder();
+  private Map<String, Node<?>> createArgumentNodes(Map<Param, Arg> paramToArgMap) {
+    Builder<String, Node<?>> builder = ImmutableMap.builder();
 
     for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
       Param param = entry.getKey();
       Arg arg = entry.getValue();
-      Node node = Convert.ifNeeded(param.type(), arg.node());
+      Node<?> node = Convert.ifNeeded(param.type(), arg.node());
       builder.put(param.name(), node);
     }
 

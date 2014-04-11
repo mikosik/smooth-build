@@ -19,7 +19,7 @@ public class TaskTest {
   String name = "name";
   FakeCodeLocation codeLocation = new FakeCodeLocation();
 
-  Task task;
+  Task<?> task;
 
   @Test
   public void null_type_is_forbidden() throws Exception {
@@ -41,56 +41,56 @@ public class TaskTest {
 
   @Test
   public void type() throws Exception {
-    given(task = new MyTask(type, name, false, codeLocation));
+    given(task = new MyTask<>(type, name, false, codeLocation));
     when(task.type());
     thenReturned(type);
   }
 
   @Test
   public void name() throws Exception {
-    given(task = new MyTask(type, name, false, codeLocation));
+    given(task = new MyTask<>(type, name, false, codeLocation));
     when(task.name());
     thenReturned(name);
   }
 
   @Test
   public void is_internal_return_true_when_true_passed_to_constructor() throws Exception {
-    given(task = new MyTask(type, name, true, codeLocation));
+    given(task = new MyTask<>(type, name, true, codeLocation));
     when(task.isInternal());
     thenReturned(true);
   }
 
   @Test
   public void is_internal_return_false_when_false_passed_to_constructor() throws Exception {
-    given(task = new MyTask(type, name, false, codeLocation));
+    given(task = new MyTask<>(type, name, false, codeLocation));
     when(task.isInternal());
     thenReturned(false);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(task = new MyTask(type, name, false, codeLocation));
+    given(task = new MyTask<>(type, name, false, codeLocation));
     when(task.codeLocation());
     thenReturned(codeLocation);
   }
 
-  private static Closure $myTask(final SType<?> type, final String name, final boolean isInternal,
-      final FakeCodeLocation codeLocation) {
+  private static <T extends SValue> Closure $myTask(final SType<T> type, final String name,
+      final boolean isInternal, final FakeCodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new MyTask(type, name, isInternal, codeLocation);
+        return new MyTask<>(type, name, isInternal, codeLocation);
       }
     };
   }
 
-  public static class MyTask extends Task {
-    public MyTask(SType<?> type, String name, boolean isInternal, CodeLocation codeLocation) {
+  public static class MyTask<T extends SValue> extends Task<T> {
+    public MyTask(SType<T> type, String name, boolean isInternal, CodeLocation codeLocation) {
       super(type, name, isInternal, codeLocation);
     }
 
     @Override
-    public SValue execute(PluginApiImpl pluginApi) {
+    public T execute(PluginApiImpl pluginApi) {
       return null;
     }
   }

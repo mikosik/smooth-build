@@ -28,14 +28,16 @@ public class ArrayNodeTest {
   SString string1 = pluginApi.valueDb().writeString("string1");
   SString string2 = pluginApi.valueDb().writeString("string2");
 
-  Node node1 = mock(Node.class);
-  Node node2 = mock(Node.class);
+  @SuppressWarnings("unchecked")
+  Node<SString> node1 = mock(Node.class);
+  @SuppressWarnings("unchecked")
+  Node<SString> node2 = mock(Node.class);
 
-  Result result1 = new FakeResult(string1);
-  Result result2 = new FakeResult(string2);
+  Result<?> result1 = new FakeResult<>(string1);
+  Result<?> result2 = new FakeResult<>(string2);
 
-  ImmutableList<Node> elemNodes = ImmutableList.of(node1, node2);
-  ArrayNode arrayNode = new ArrayNode(STRING_ARRAY, elemNodes, codeLocation);
+  ImmutableList<Node<SString>> elemNodes = ImmutableList.of(node1, node2);
+  ArrayNode<SString> arrayNode = new ArrayNode<>(STRING_ARRAY, elemNodes, codeLocation);
 
   @Test
   public void type() {
@@ -45,7 +47,7 @@ public class ArrayNodeTest {
 
   @Test
   public void code_location() throws Exception {
-    given(arrayNode = new ArrayNode(STRING_ARRAY, elemNodes, codeLocation));
+    given(arrayNode = new ArrayNode<>(STRING_ARRAY, elemNodes, codeLocation));
     when(arrayNode.codeLocation());
     thenReturned(codeLocation);
   }
@@ -55,7 +57,7 @@ public class ArrayNodeTest {
     given(willReturn(result1), taskGenerator).generateTask(node1);
     given(willReturn(result2), taskGenerator).generateTask(node2);
 
-    Task task = arrayNode.generateTask(taskGenerator);
+    Task<?> task = arrayNode.generateTask(taskGenerator);
     @SuppressWarnings("unchecked")
     SArray<SString> result = (SArray<SString>) task.execute(pluginApi);
     assertThat(result).containsOnly(string1, string2);

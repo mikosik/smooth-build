@@ -4,27 +4,28 @@ import java.util.Map;
 
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.CachingTask;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public class CachableFunction extends AbstractFunction {
+public class CachableFunction<T extends SValue> extends AbstractFunction<T> {
   private final TaskDb taskDb;
-  private final NativeFunction function;
+  private final NativeFunction<T> function;
 
-  public CachableFunction(TaskDb taskDb, NativeFunction function) {
+  public CachableFunction(TaskDb taskDb, NativeFunction<T> function) {
     super(function.signature());
     this.taskDb = taskDb;
     this.function = function;
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> args,
+  public Task<T> generateTask(TaskGenerator taskGenerator, Map<String, ? extends Result<?>> args,
       CodeLocation codeLocation) {
-    CallHasher callHasher = new CallHasher(function, args);
-    Task task = function.generateTask(taskGenerator, args, codeLocation);
-    return new CachingTask(taskDb, callHasher, task);
+    CallHasher<T> callHasher = new CallHasher<T>(function, args);
+    Task<T> task = function.generateTask(taskGenerator, args, codeLocation);
+    return new CachingTask<T>(taskDb, callHasher, task);
   }
 }

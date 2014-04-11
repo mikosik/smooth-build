@@ -18,17 +18,17 @@ public class SignatureTest {
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() {
-    new Signature(null, name, params);
+    new Signature<>(null, name, params);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbidden() {
-    new Signature(type, null, params);
+    new Signature<>(type, null, params);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullParamsIsForbidden() {
-    new Signature(type, name, null);
+    new Signature<>(type, name, null);
   }
 
   @Test
@@ -46,8 +46,9 @@ public class SignatureTest {
     Param param5 = param(STRING, name5, false);
     Param param6 = param(STRING, name6, false);
 
-    Signature signature = new Signature(type, name, ImmutableList.of(param4, param6, param1,
-        param3, param5, param2));
+    Signature<?> signature =
+        new Signature<>(type, name, ImmutableList
+            .of(param4, param6, param1, param3, param5, param2));
 
     ImmutableMap<String, Param> map = signature.params();
     assertThat(map.values()).containsExactly(param1, param2, param3, param4, param5, param6);

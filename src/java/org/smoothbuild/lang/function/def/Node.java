@@ -3,21 +3,22 @@ package org.smoothbuild.lang.function.def;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.Taskable;
 import org.smoothbuild.task.exec.TaskGenerator;
 
-public abstract class Node implements Taskable {
-  private final SType<?> type;
+public abstract class Node<T extends SValue> implements Taskable<T> {
+  private final SType<T> type;
   private final CodeLocation codeLocation;
 
-  public Node(SType<?> type, CodeLocation codeLocation) {
+  public Node(SType<T> type, CodeLocation codeLocation) {
     this.type = checkNotNull(type);
     this.codeLocation = checkNotNull(codeLocation);
   }
 
-  public SType<?> type() {
+  public SType<T> type() {
     return type;
   }
 
@@ -26,5 +27,5 @@ public abstract class Node implements Taskable {
   }
 
   @Override
-  public abstract Task generateTask(TaskGenerator taskGenerator);
+  public abstract Task<T> generateTask(TaskGenerator taskGenerator);
 }

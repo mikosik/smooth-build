@@ -15,25 +15,36 @@ import org.smoothbuild.lang.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.lang.plugin.PluginApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
 public class NativeFunctionFactory {
-  public static NativeFunction create(Class<?> klass, boolean builtin)
+  public static NativeFunction<?> create(Class<?> klass, boolean builtin)
       throws NativeImplementationException {
     Method method = getExecuteMethod(klass, builtin);
     Class<?> paramsInterface = method.getParameterTypes()[1];
+    Signature<? extends SValue> signature = SignatureFactory.create(method, paramsInterface);
 
-    Signature signature = SignatureFactory.create(method, paramsInterface);
-    Invoker invoker = createInvoker(method, paramsInterface);
-    boolean isCacheable = isCacheable(method);
-
-    return new NativeFunction(signature, invoker, isCacheable);
+    return createNativeFunction(method, signature, paramsInterface);
   }
 
-  private static Invoker createInvoker(Method method, Class<?> paramsInterface)
+  private static <T extends SValue> NativeFunction<T> createNativeFunction(Method method,
+      Signature<T> signature, Class<?> paramsInterface) throws NativeImplementationException,
+      MissingNameException {
+
+    /*
+     * Cast is safe as T is return type of 'method'.
+     */
+    @SuppressWarnings("unchecked")
+    Invoker<T> invoker = (Invoker<T>) createInvoker(method, paramsInterface);
+
+    return new NativeFunction<>(signature, invoker, isCacheable(method));
+  }
+
+  private static Invoker<?> createInvoker(Method method, Class<?> paramsInterface)
       throws NativeImplementationException {
     ArgsCreator argsCreator = new ArgsCreator(paramsInterface);
-    return new Invoker(method, argsCreator);
+    return new Invoker<>(method, argsCreator);
   }
 
   private static Method getExecuteMethod(Class<?> klass, boolean builtin)

@@ -13,6 +13,7 @@ import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
@@ -25,7 +26,7 @@ public class Conversions {
    * Maps smooth type to a map that contains keys being super-types of that type
    * and values being converters to each super-type.
    */
-  private static final ImmutableMap<SType<?>, ImmutableMap<SType<?>, Converter<?>>> map =
+  private static final ImmutableMap<SType<?>, ImmutableMap<SType<?>, Converter<?, ?>>> map =
       createMap();
 
   public static ImmutableSet<SType<?>> superTypesOf(SType<?> type) {
@@ -39,12 +40,21 @@ public class Conversions {
     return map.get(from).containsKey(to);
   }
 
-  public static Converter<?> converter(SType<?> from, SType<?> to) {
-    return map.get(from).get(to);
+  public static <S extends SValue, T extends SValue> Converter<S, T> converter(SType<S> from,
+      SType<T> to) {
+    ImmutableMap<SType<?>, Converter<?, ?>> x = map.get(from);
+
+    /*
+     * This is safe as we created map in correct way and do not allow changing
+     * it.
+     */
+    @SuppressWarnings("unchecked")
+    Converter<S, T> result = (Converter<S, T>) x.get(to);
+    return result;
   }
 
-  private static ImmutableMap<SType<?>, ImmutableMap<SType<?>, Converter<?>>> createMap() {
-    Builder<SType<?>, ImmutableMap<SType<?>, Converter<?>>> builder = ImmutableMap.builder();
+  private static ImmutableMap<SType<?>, ImmutableMap<SType<?>, Converter<?, ?>>> createMap() {
+    Builder<SType<?>, ImmutableMap<SType<?>, Converter<?, ?>>> builder = ImmutableMap.builder();
 
     builder.put(STRING, Empty.typeToConverterMap());
     builder.put(BLOB, Empty.typeToConverterMap());
@@ -55,18 +65,19 @@ public class Conversions {
     builder.put(BLOB_ARRAY, Empty.typeToConverterMap());
     builder.put(FILE_ARRAY, convertersMap(new FileArrayToBlobArrayConverter()));
 
-    Converter<?> nilToStringArray = new EmptyArrayToTypedArrayConverter<SString>(STRING_ARRAY);
-    Converter<?> nilToBlobArray = new EmptyArrayToTypedArrayConverter<SBlob>(BLOB_ARRAY);
-    Converter<?> nilToFileArray = new EmptyArrayToTypedArrayConverter<SFile>(FILE_ARRAY);
+    Converter<?, ?> nilToStringArray = new EmptyArrayToTypedArrayConverter<SString>(STRING_ARRAY);
+    Converter<?, ?> nilToBlobArray = new EmptyArrayToTypedArrayConverter<SBlob>(BLOB_ARRAY);
+    Converter<?, ?> nilToFileArray = new EmptyArrayToTypedArrayConverter<SFile>(FILE_ARRAY);
 
     builder.put(EMPTY_ARRAY, convertersMap(nilToStringArray, nilToBlobArray, nilToFileArray));
 
     return builder.build();
   }
 
-  private static ImmutableMap<SType<?>, Converter<?>> convertersMap(Converter<?>... converters) {
-    Builder<SType<?>, Converter<?>> builder = ImmutableMap.builder();
-    for (Converter<?> converter : converters) {
+  private static ImmutableMap<SType<?>, Converter<?, ?>> convertersMap(
+      Converter<?, ?>... converters) {
+    Builder<SType<?>, Converter<?, ?>> builder = ImmutableMap.builder();
+    for (Converter<?, ?> converter : converters) {
       builder.put(converter.targetType(), converter);
     }
     return builder.build();

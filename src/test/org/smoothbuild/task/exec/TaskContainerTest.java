@@ -12,10 +12,10 @@ import org.smoothbuild.task.base.Task;
 
 public class TaskContainerTest {
   TaskExecutor taskExecutor = mock(TaskExecutor.class);
-  Task task = mock(Task.class);
+  Task<?> task = mock(Task.class);
   SValue value = mock(SValue.class);
 
-  TaskContainer taskContainer = new TaskContainer(taskExecutor, task);
+  TaskContainer<?> taskContainer = new TaskContainer<>(taskExecutor, task);
 
   @Test
   public void result_is_calculated_by_passing_task_to_task_executor() {

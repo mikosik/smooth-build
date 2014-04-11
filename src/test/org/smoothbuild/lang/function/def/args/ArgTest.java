@@ -28,7 +28,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class ArgTest {
   String name = "name";
-  Node node = mock(Node.class);
+  Node<?> node = mock(Node.class);
   CodeLocation codeLocation = new FakeCodeLocation();
 
   @Test(expected = IllegalArgumentException.class)
@@ -193,7 +193,7 @@ public class ArgTest {
   }
 
   private static Arg nameless(SType<?> type) {
-    Node node = mock(Node.class);
+    Node<?> node = mock(Node.class);
     given(willReturn(type), node).type();
     return Arg.namelessArg(1, node, new FakeCodeLocation());
   }

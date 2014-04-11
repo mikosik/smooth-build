@@ -14,7 +14,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.message.listen.UserConsole;
@@ -27,7 +27,7 @@ public class TaskReporterTest {
 
   TaskReporter taskReporter = new TaskReporter(userConsole);
 
-  Task task;
+  Task<?> task;
 
   @Before
   public void before() {
@@ -68,10 +68,10 @@ public class TaskReporterTest {
     thenCalled(userConsole).print(header(task, false), messages);
   }
 
-  private static Task createTask(boolean isInternal) {
-    return new Task(STRING, "name", isInternal, codeLocation(13)) {
+  private static Task<SString> createTask(boolean isInternal) {
+    return new Task<SString>(STRING, "name", isInternal, codeLocation(13)) {
       @Override
-      public SValue execute(PluginApiImpl pluginApi) {
+      public SString execute(PluginApiImpl pluginApi) {
         return null;
       }
     };

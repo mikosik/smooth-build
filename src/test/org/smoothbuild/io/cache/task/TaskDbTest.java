@@ -59,7 +59,7 @@ public class TaskDbTest {
 
   @Test
   public void result_cache_contains_stored_result() {
-    given(taskDb).store(hash, new CachedResult(new FakeString("result"), Empty.messageList()));
+    given(taskDb).store(hash, new CachedResult<>(new FakeString("result"), Empty.messageList()));
     when(taskDb.contains(hash));
     thenReturned(true);
   }
@@ -74,45 +74,42 @@ public class TaskDbTest {
   public void stored_messages_can_be_read_back() throws Exception {
     given(blob = valueDb.writeBlob(bytes));
     given(message = new Message(ERROR, "message string"));
-    given(taskDb).store(hash, new CachedResult(blob, ImmutableList.of(message)));
+    given(taskDb).store(hash, new CachedResult<>(blob, ImmutableList.of(message)));
     when(taskDb.read(hash, BLOB).messages());
     thenReturned(contains(message));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void stored_file_array_can_be_read_back() throws Exception {
     given(file = valueDb.writeFile(path, new FakeBlob(bytes)));
     given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    given(taskDb).store(hash, new CachedResult(fileArray, Empty.messageList()));
-    when(((SArray<SFile>) taskDb.read(hash, FILE_ARRAY).value()).iterator().next());
+    given(taskDb).store(hash, new CachedResult<>(fileArray, Empty.messageList()));
+    when(taskDb.read(hash, FILE_ARRAY).value().iterator().next());
     thenReturned(file);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void stored_blob_array_can_be_read_back() throws Exception {
     given(blob = valueDb.writeBlob(bytes));
     given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    given(taskDb).store(hash, new CachedResult(blobArray, Empty.messageList()));
-    when(((SArray<SBlob>) taskDb.read(hash, BLOB_ARRAY).value()).iterator().next());
+    given(taskDb).store(hash, new CachedResult<>(blobArray, Empty.messageList()));
+    when(taskDb.read(hash, BLOB_ARRAY).value().iterator().next());
     thenReturned(blob);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void stored_string_array_can_be_read_back() throws Exception {
     given(stringValue = valueDb.writeString(string));
     given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    given(taskDb).store(hash, new CachedResult(stringArray, Empty.messageList()));
-    when(((SArray<SString>) taskDb.read(hash, STRING_ARRAY).value()).iterator().next());
+    given(taskDb).store(hash, new CachedResult<>(stringArray, Empty.messageList()));
+    when(taskDb.read(hash, STRING_ARRAY).value().iterator().next());
     thenReturned(stringValue);
   }
 
   @Test
   public void stored_file_can_be_read_back() throws Exception {
     given(file = valueDb.writeFile(path, new FakeBlob(bytes)));
-    given(taskDb).store(hash, new CachedResult(file, Empty.messageList()));
+    given(taskDb).store(hash, new CachedResult<>(file, Empty.messageList()));
     when(taskDb.read(hash, FILE).value());
     thenReturned(file);
   }
@@ -120,7 +117,7 @@ public class TaskDbTest {
   @Test
   public void stored_blob_can_be_read_back() throws Exception {
     given(blob = valueDb.writeBlob(bytes));
-    given(taskDb).store(hash, new CachedResult(blob, Empty.messageList()));
+    given(taskDb).store(hash, new CachedResult<>(blob, Empty.messageList()));
     when(taskDb.read(hash, BLOB).value());
     thenReturned(blob);
   }
@@ -128,8 +125,8 @@ public class TaskDbTest {
   @Test
   public void stored_string_can_be_read_back() throws Exception {
     given(stringValue = valueDb.writeString(string));
-    given(taskDb).store(hash, new CachedResult(stringValue, Empty.messageList()));
-    when(((SString) taskDb.read(hash, STRING).value()).value());
+    given(taskDb).store(hash, new CachedResult<>(stringValue, Empty.messageList()));
+    when(taskDb.read(hash, STRING).value().value());
     thenReturned(string);
   }
 }

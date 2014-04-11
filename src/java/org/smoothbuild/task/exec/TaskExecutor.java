@@ -16,9 +16,9 @@ public class TaskExecutor {
     this.taskReporter = taskReporter;
   }
 
-  public SValue execute(Task task) {
+  public <T extends SValue> T execute(Task<T> task) {
     PluginApiImpl pluginApi = pluginApiProvider.get();
-    SValue result = task.execute(pluginApi);
+    T result = task.execute(pluginApi);
     taskReporter.report(task, pluginApi);
 
     if (pluginApi.loggedMessages().containsProblems()) {

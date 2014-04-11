@@ -18,10 +18,10 @@ public class SignatureFactoryTest {
 
   @Test
   public void test() throws Exception {
-    Method method = SignatureFactoryTest.class.getMethod("smoothMethod", PluginApi.class,
-        Params.class);
+    Method method =
+        SignatureFactoryTest.class.getMethod("smoothMethod", PluginApi.class, Params.class);
 
-    Signature signature = SignatureFactory.create(method, Params.class);
+    Signature<?> signature = SignatureFactory.create(method, Params.class);
     assertThat(signature.type()).isEqualTo(FILE);
     assertThat(signature.name()).isEqualTo(name("function"));
     assertThat(signature.params()).isEqualTo(params(param(FILE, "param1", false)));

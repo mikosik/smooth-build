@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
@@ -15,20 +16,20 @@ import com.google.common.base.Preconditions;
 
 /**
  * Function that is defined completely in Smooth script using Smooth language
- * (as opposed to {@link org.smoothbuild.lang.function.nativ.NativeFunction} which is
- * implemented completely in java language).
+ * (as opposed to {@link org.smoothbuild.lang.function.nativ.NativeFunction}
+ * which is implemented completely in java language).
  */
-public class DefinedFunction extends AbstractFunction {
-  private final Node root;
+public class DefinedFunction<T extends SValue> extends AbstractFunction<T> {
+  private final Node<T> root;
 
-  public DefinedFunction(Signature signature, Node root) {
+  public DefinedFunction(Signature<T> signature, Node<T> root) {
     super(signature);
     this.root = checkNotNull(root);
   }
 
   @Override
-  public Task generateTask(TaskGenerator taskGenerator, Map<String, Result> arguments,
-      CodeLocation codeLocation) {
+  public Task<T> generateTask(TaskGenerator taskGenerator,
+      Map<String, ? extends Result<?>> arguments, CodeLocation codeLocation) {
     Preconditions.checkArgument(arguments.isEmpty(),
         "DefinedFunction.generateTask() cannot accept non-empty arguments");
     return root.generateTask(taskGenerator);

@@ -3,7 +3,6 @@ package org.smoothbuild.task.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.STypes.FILE;
 import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
@@ -42,12 +41,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class NativeCallTaskTest {
-  Invoker invoker = mock(Invoker.class);
+  @SuppressWarnings("unchecked")
+  Invoker<SString> invoker = mock(Invoker.class);
   FakePluginApi pluginApi = new FakePluginApi();
   CodeLocation codeLocation = new FakeCodeLocation();
   HashCode hash = HashCode.fromInt(33);
-  NativeFunction function1 = new NativeFunction(fakeSignature(), invoker, true);
-  NativeFunction function2 = new NativeFunction(fakeSignature(), invoker, true);
+  NativeFunction<?> function1 = new NativeFunction<>(fakeSignature(), invoker, true);
+  NativeFunction<?> function2 = new NativeFunction<>(fakeSignature(), invoker, true);
 
   String name1 = "name1";
   String name2 = "name2";
@@ -56,17 +56,17 @@ public class NativeCallTaskTest {
 
   ImmutableList<Param> params = ImmutableList.of(param(STRING, name1), param(STRING, name2));
 
-  NativeCallTask nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(),
+  NativeCallTask<?> nativeCallTask = new NativeCallTask<>(function1, Empty.stringTaskResultMap(),
       codeLocation);
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
     SString argValue = new FakeString("subTaskResult");
-    Result subTask = new FakeResult(argValue);
+    Result<?> subTask = new FakeResult<>(argValue);
 
     String name = "param";
-    NativeCallTask nativeCallTask =
-        new NativeCallTask(function1, ImmutableMap.of(name, subTask), codeLocation);
+    NativeCallTask<?> nativeCallTask =
+        new NativeCallTask<>(function1, ImmutableMap.of(name, subTask), codeLocation);
 
     SString result = new FakeString("result");
     given(willReturn(result), invoker).invoke(pluginApi,
@@ -87,9 +87,9 @@ public class NativeCallTaskTest {
   @Test
   public void null_can_be_returned_when_function_logged_errors() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
-    Signature signature = new Signature(FILE, name("name"), params);
-    function1 = new NativeFunction(signature, invoker, true);
-    nativeCallTask = new NativeCallTask(function1, Empty.stringTaskResultMap(), codeLocation);
+    Signature<SString> signature = new Signature<>(STRING, name("name"), params);
+    function1 = new NativeFunction<>(signature, invoker, true);
+    nativeCallTask = new NativeCallTask<>(function1, Empty.stringTaskResultMap(), codeLocation);
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {

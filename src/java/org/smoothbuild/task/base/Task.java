@@ -7,20 +7,20 @@ import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.PluginApiImpl;
 
-public abstract class Task {
-  private final SType<?> type;
+public abstract class Task<T extends SValue> {
+  private final SType<T> type;
   private final String name;
   private final boolean isInternal;
   private final CodeLocation codeLocation;
 
-  public Task(SType<?> type, String name, boolean isInternal, CodeLocation codeLocation) {
+  public Task(SType<T> type, String name, boolean isInternal, CodeLocation codeLocation) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.isInternal = isInternal;
     this.codeLocation = checkNotNull(codeLocation);
   }
 
-  public SType<?> type() {
+  public SType<T> type() {
     return type;
   }
 
@@ -36,5 +36,5 @@ public abstract class Task {
     return codeLocation;
   }
 
-  public abstract SValue execute(PluginApiImpl pluginApi);
+  public abstract T execute(PluginApiImpl pluginApi);
 }

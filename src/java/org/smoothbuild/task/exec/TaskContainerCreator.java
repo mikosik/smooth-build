@@ -2,6 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.base.Task;
 
 public class TaskContainerCreator {
@@ -12,7 +13,7 @@ public class TaskContainerCreator {
     this.taskExecutor = taskExecutor;
   }
 
-  public TaskContainer create(Task task) {
-    return new TaskContainer(taskExecutor, task);
+  public <T extends SValue> TaskContainer<T> create(Task<T> task) {
+    return new TaskContainer<T>(taskExecutor, task);
   }
 }

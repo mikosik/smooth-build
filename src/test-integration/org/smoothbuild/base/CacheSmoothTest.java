@@ -26,6 +26,7 @@ import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.testory.proxy.Handler;
 import org.testory.proxy.Invocation;
@@ -36,7 +37,7 @@ import com.google.inject.Provides;
 @SuppressWarnings("unchecked")
 public class CacheSmoothTest extends IntegrationTestCase {
   String name = "myFunction";
-  Invoker invoker = mock(Invoker.class);
+  Invoker<SString> invoker = mock(Invoker.class);
 
   @Provides
   @Singleton
@@ -88,9 +89,9 @@ public class CacheSmoothTest extends IntegrationTestCase {
     thenCalledTimes(2, invoker).invoke(any(PluginApi.class), any(Map.class));
   }
 
-  private static NativeFunction function(String name, Invoker invoker) {
+  private static NativeFunction<SString> function(String name, Invoker<SString> invoker) {
     ImmutableList<Param> params = ImmutableList.of(param(FILE, "file"));
-    Signature signature = new Signature(STRING, name(name), params);
-    return new NativeFunction(signature, invoker, true);
+    Signature<SString> signature = new Signature<>(STRING, name(name), params);
+    return new NativeFunction<>(signature, invoker, true);
   }
 }

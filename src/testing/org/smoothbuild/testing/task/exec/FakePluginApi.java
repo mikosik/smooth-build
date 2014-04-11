@@ -3,7 +3,8 @@ package org.smoothbuild.testing.task.exec;
 import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
 
 import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.type.SArray;
+import org.smoothbuild.lang.type.SNothing;
 import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.PluginApiImpl;
@@ -55,7 +56,7 @@ public class FakePluginApi extends PluginApiImpl {
     messages.log(message);
   }
 
-  public SValue emptyArray() {
+  public SArray<SNothing> emptyArray() {
     return arrayBuilder(EMPTY_ARRAY).build();
   }
 }

@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
+import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
@@ -8,6 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
@@ -15,7 +17,7 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import org.testory.Closure;
 
 public class NodeTest {
-  SType<?> type;
+  SType<SString> type = STRING;
   CodeLocation codeLocation;
 
   MyNode node;
@@ -51,7 +53,7 @@ public class NodeTest {
     thenReturned(codeLocation);
   }
 
-  private static Closure $myNode(final SType<?> type, final CodeLocation codeLocation) {
+  private static Closure $myNode(final SType<SString> type, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
@@ -60,13 +62,13 @@ public class NodeTest {
     };
   }
 
-  public static class MyNode extends Node {
-    public MyNode(SType<?> type, CodeLocation codeLocation) {
+  public static class MyNode extends Node<SString> {
+    public MyNode(SType<SString> type, CodeLocation codeLocation) {
       super(type, codeLocation);
     }
 
     @Override
-    public Task generateTask(TaskGenerator taskGenerator) {
+    public Task<SString> generateTask(TaskGenerator taskGenerator) {
       return null;
     }
   }
