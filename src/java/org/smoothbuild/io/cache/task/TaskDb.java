@@ -49,7 +49,6 @@ public class TaskDb {
     }
 
     if (!hasErrors) {
-      marshaller.write(AllObjectTypes.INSTANCE.valueToByte(value.type()));
       marshaller.write(value.hash());
     }
 
@@ -76,8 +75,6 @@ public class TaskDb {
       if (hasErrors) {
         return new CachedResult(null, messages);
       } else {
-        // TODO storing object type is no longer needed.
-        unmarshaller.readEnum(AllObjectTypes.INSTANCE);
         HashCode resultObjectHash = unmarshaller.readHash();
         SValue value = valueDb.read(type, resultObjectHash);
         return new CachedResult(value, messages);
