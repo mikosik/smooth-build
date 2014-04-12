@@ -6,12 +6,12 @@ import static org.smoothbuild.lang.builtin.java.util.JavaNaming.toBinaryName;
 import java.util.Map;
 
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.Maps;

@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.builtin.Builtin;
 import org.smoothbuild.lang.builtin.BuiltinFunctions;
@@ -26,7 +27,6 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.testory.proxy.Handler;
 import org.testory.proxy.Invocation;

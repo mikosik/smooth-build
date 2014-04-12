@@ -9,11 +9,11 @@ import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.io.temp.TempDirectoryManager;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.base.SValueBuilders;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 

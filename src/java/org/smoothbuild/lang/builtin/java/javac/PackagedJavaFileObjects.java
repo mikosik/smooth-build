@@ -4,12 +4,12 @@ import static org.smoothbuild.lang.builtin.java.util.JavaNaming.isClassFilePredi
 
 import javax.tools.JavaFileObject;
 
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
