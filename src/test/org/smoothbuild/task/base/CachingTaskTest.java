@@ -69,7 +69,7 @@ public class CachingTaskTest {
     given(task = mock(Task.class));
     given(willReturn("name"), task).name();
     given(willReturn(false), task).isInternal();
-    given(willReturn(STRING), task).type();
+    given(willReturn(STRING), task).resultType();
     given(willReturn(codeLocation), task).codeLocation();
     given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
     when(cachingTask.isInternal());

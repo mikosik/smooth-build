@@ -17,7 +17,7 @@ public class CachingTask<T extends SValue> extends Task<T> {
   private final Task<T> task;
 
   public CachingTask(TaskDb taskDb, CallHasher<T> callHasher, Task<T> task) {
-    super(task.type(), task.name(), task.isInternal(), task.codeLocation());
+    super(task.resultType(), task.name(), task.isInternal(), task.codeLocation());
     this.taskDb = checkNotNull(taskDb);
     this.callHasher = checkNotNull(callHasher);
     this.task = checkNotNull(task);
@@ -35,7 +35,7 @@ public class CachingTask<T extends SValue> extends Task<T> {
 
   private T readFromCache(PluginApiImpl pluginApi, HashCode hash) {
     pluginApi.setResultIsFromCache();
-    CachedResult<T> cachedResult = taskDb.read(hash, task.type());
+    CachedResult<T> cachedResult = taskDb.read(hash, task.resultType());
     for (Message message : cachedResult.messages()) {
       pluginApi.log(message);
     }
