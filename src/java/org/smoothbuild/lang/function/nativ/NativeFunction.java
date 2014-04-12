@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.NativeCallTask;
@@ -42,8 +42,8 @@ public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
     return new NativeCallTask<T>(this, args, codeLocation);
   }
 
-  public T invoke(PluginApi pluginApi, ImmutableMap<String, SValue> args)
+  public T invoke(NativeApi nativeApi, ImmutableMap<String, SValue> args)
       throws IllegalAccessException, InvocationTargetException {
-    return invoker.invoke(pluginApi, args);
+    return invoker.invoke(nativeApi, args);
   }
 }

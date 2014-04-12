@@ -17,10 +17,10 @@ import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.lang.type.FileTester;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class FileFunctionTest {
-  FakePluginApi pluginApi = new FakePluginApi();
+  FakeNativeApi nativeApi = new FakeNativeApi();
 
   @Test
   public void accessToSmoothDirIsReported() throws Exception {
@@ -45,7 +45,7 @@ public class FileFunctionTest {
   @Test
   public void illegalPathIsReported() {
     for (String path : PathTesting.listOfInvalidPaths()) {
-      pluginApi = new FakePluginApi();
+      nativeApi = new FakeNativeApi();
       try {
         runExecute(params(path));
         fail("exception should be thrown");
@@ -70,7 +70,7 @@ public class FileFunctionTest {
   public void nonFilePathIsReported() throws Exception {
     Path dir = path("some/path");
     Path file = dir.append(path("file.txt"));
-    pluginApi.projectFileSystem().createFileContainingItsPath(file);
+    nativeApi.projectFileSystem().createFileContainingItsPath(file);
 
     try {
       runExecute(params(dir.value()));
@@ -83,7 +83,7 @@ public class FileFunctionTest {
   @Test
   public void execute() throws Exception {
     Path filePath = path("file/path/file.txt");
-    pluginApi.projectFileSystem().createFileContainingItsPath(filePath);
+    nativeApi.projectFileSystem().createFileContainingItsPath(filePath);
 
     SFile file = runExecute(params(filePath.value()));
 
@@ -101,6 +101,6 @@ public class FileFunctionTest {
   }
 
   private SFile runExecute(Parameters params) {
-    return FileFunction.execute(pluginApi, params);
+    return FileFunction.execute(nativeApi, params);
   }
 }

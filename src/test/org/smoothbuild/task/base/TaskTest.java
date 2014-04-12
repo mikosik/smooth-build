@@ -10,7 +10,7 @@ import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.STypes;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.Closure;
 
@@ -90,7 +90,7 @@ public class TaskTest {
     }
 
     @Override
-    public T execute(PluginApiImpl pluginApi) {
+    public T execute(NativeApiImpl nativeApi) {
       return null;
     }
   }

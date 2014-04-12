@@ -14,7 +14,7 @@ import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeFile;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class JarTester {
   public static FakeFile jaredFiles(String... fileNames) throws IOException {
@@ -36,7 +36,7 @@ public class JarTester {
   }
 
   public static SBlob jar(String... fileNames) throws IOException {
-    BlobBuilder blobBuilder = new FakePluginApi().blobBuilder();
+    BlobBuilder blobBuilder = new FakeNativeApi().blobBuilder();
     try (JarOutputStream jarOutputStream = new JarOutputStream(blobBuilder.openOutputStream());) {
       for (String fileName : fileNames) {
         addEntry(jarOutputStream, fileName);

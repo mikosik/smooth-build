@@ -18,14 +18,14 @@ import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
 
 public class CachingTaskTest {
-  FakePluginApi pluginApi = new FakePluginApi();
+  FakeNativeApi nativeApi = new FakeNativeApi();
   SString stringValue = mock(SString.class);
   SString stringValue2 = mock(SString.class);
   HashCode hash = Hash.string("abc");
@@ -88,7 +88,7 @@ public class CachingTaskTest {
     given(willReturn(hash), callHasher).hash();
     given(willReturn(false), taskDb).contains(hash);
     given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
-    when(cachingTask.execute(pluginApi));
+    when(cachingTask.execute(nativeApi));
     thenReturned(stringValue);
   }
 
@@ -99,7 +99,7 @@ public class CachingTaskTest {
     given(willReturn(new CachedResult<>(stringValue2, Empty.messageList())), taskDb).read(hash,
         STRING);
     given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
-    assertThat(cachingTask.execute(pluginApi)).isEqualTo(stringValue2);
+    assertThat(cachingTask.execute(nativeApi)).isEqualTo(stringValue2);
   }
 
   private static <T extends SValue> Closure $cachingTask(final TaskDb taskDb,

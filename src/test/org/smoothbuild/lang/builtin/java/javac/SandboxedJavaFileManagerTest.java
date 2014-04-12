@@ -13,17 +13,17 @@ import javax.tools.StandardLocation;
 
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManagerTest {
   StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  FakePluginApi pluginApi = new FakePluginApi();
+  FakeNativeApi nativeApi = new FakeNativeApi();
   @SuppressWarnings("unchecked")
   Multimap<String, JavaFileObject> packagedJavaFileObjects = mock(Multimap.class);
 
-  SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, pluginApi,
+  SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, nativeApi,
       packagedJavaFileObjects);
 
   @Test

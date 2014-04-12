@@ -10,7 +10,7 @@ import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.util.ForwardingOutputStream;
 
@@ -18,14 +18,14 @@ public class OutputClassFile extends SimpleJavaFileObject {
   private final ArrayBuilder<SFile> fileArrayBuilder;
   private final Path path;
   private final BlobBuilder contentBuilder;
-  private final PluginApi pluginApi;
+  private final NativeApi nativeApi;
 
-  public OutputClassFile(ArrayBuilder<SFile> fileArrayBuilder, Path path, PluginApi pluginApi) {
+  public OutputClassFile(ArrayBuilder<SFile> fileArrayBuilder, Path path, NativeApi nativeApi) {
     super(URI.create("class:///" + path.value()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;
-    this.pluginApi = pluginApi;
-    this.contentBuilder = pluginApi.blobBuilder();
+    this.nativeApi = nativeApi;
+    this.contentBuilder = nativeApi.blobBuilder();
   }
 
   @Override
@@ -36,7 +36,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       public void close() throws IOException {
         outputStream.close();
 
-        FileBuilder fileBuilder = pluginApi.fileBuilder();
+        FileBuilder fileBuilder = nativeApi.fileBuilder();
         fileBuilder.setPath(path);
         fileBuilder.setContent(contentBuilder.build());
         SFile file = fileBuilder.build();

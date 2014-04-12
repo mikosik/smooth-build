@@ -7,21 +7,21 @@ import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.base.Task;
 
 public class TaskExecutor {
-  private final Provider<PluginApiImpl> pluginApiProvider;
+  private final Provider<NativeApiImpl> nativeApiProvider;
   private final TaskReporter taskReporter;
 
   @Inject
-  public TaskExecutor(Provider<PluginApiImpl> pluginApiProvider, TaskReporter taskReporter) {
-    this.pluginApiProvider = pluginApiProvider;
+  public TaskExecutor(Provider<NativeApiImpl> nativeApiProvider, TaskReporter taskReporter) {
+    this.nativeApiProvider = nativeApiProvider;
     this.taskReporter = taskReporter;
   }
 
   public <T extends SValue> T execute(Task<T> task) {
-    PluginApiImpl pluginApi = pluginApiProvider.get();
-    T result = task.execute(pluginApi);
-    taskReporter.report(task, pluginApi);
+    NativeApiImpl nativeApi = nativeApiProvider.get();
+    T result = task.execute(nativeApi);
+    taskReporter.report(task, nativeApi);
 
-    if (pluginApi.loggedMessages().containsProblems()) {
+    if (nativeApi.loggedMessages().containsProblems()) {
       throw new BuildInterruptedException();
     }
 

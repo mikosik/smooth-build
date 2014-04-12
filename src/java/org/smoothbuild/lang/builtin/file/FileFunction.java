@@ -14,7 +14,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class FileFunction {
 
@@ -24,19 +24,19 @@ public class FileFunction {
   }
 
   @SmoothFunction(name = "file", cacheable = false)
-  public static SFile execute(PluginApiImpl pluginApi, Parameters params) {
-    return new Worker(pluginApi, params).execute();
+  public static SFile execute(NativeApiImpl nativeApi, Parameters params) {
+    return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
-    private final PluginApiImpl pluginApi;
+    private final NativeApiImpl nativeApi;
     private final Parameters params;
     private final FileReader reader;
 
-    public Worker(PluginApiImpl pluginApi, Parameters params) {
-      this.pluginApi = pluginApi;
+    public Worker(NativeApiImpl nativeApi, Parameters params) {
+      this.nativeApi = nativeApi;
       this.params = params;
-      this.reader = new FileReader(pluginApi);
+      this.reader = new FileReader(nativeApi);
     }
 
     public SFile execute() {
@@ -48,7 +48,7 @@ public class FileFunction {
         throw new ReadFromSmoothDirError(path);
       }
 
-      FileSystem fileSystem = pluginApi.projectFileSystem();
+      FileSystem fileSystem = nativeApi.projectFileSystem();
       switch (fileSystem.pathState(path)) {
         case FILE:
           return reader.createFile(path, path);

@@ -12,7 +12,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.CannotAddDuplicatePathError;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
@@ -30,25 +30,25 @@ public class JarFunction {
   }
 
   @SmoothFunction(name = "jar")
-  public static SBlob execute(PluginApi pluginApi, Parameters params) {
-    return new Worker(pluginApi, params).execute();
+  public static SBlob execute(NativeApi nativeApi, Parameters params) {
+    return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
-    private final PluginApi pluginApi;
+    private final NativeApi nativeApi;
     private final Parameters params;
 
     private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
     private final DuplicatesDetector<Path> duplicatesDetector;
 
-    public Worker(PluginApi pluginApi, Parameters params) {
-      this.pluginApi = pluginApi;
+    public Worker(NativeApi nativeApi, Parameters params) {
+      this.nativeApi = nativeApi;
       this.params = params;
       this.duplicatesDetector = new DuplicatesDetector<Path>();
     }
 
     public SBlob execute() {
-      BlobBuilder blobBuilder = pluginApi.blobBuilder();
+      BlobBuilder blobBuilder = nativeApi.blobBuilder();
       try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder);) {
         for (SFile file : params.files()) {
           addEntry(jarOutputStream, file);

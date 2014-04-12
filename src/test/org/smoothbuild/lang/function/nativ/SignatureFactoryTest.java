@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SFile;
 
@@ -19,7 +19,7 @@ public class SignatureFactoryTest {
   @Test
   public void test() throws Exception {
     Method method =
-        SignatureFactoryTest.class.getMethod("smoothMethod", PluginApi.class, Params.class);
+        SignatureFactoryTest.class.getMethod("smoothMethod", NativeApi.class, Params.class);
 
     Signature<?> signature = SignatureFactory.create(method, Params.class);
     assertThat(signature.type()).isEqualTo(FILE);
@@ -32,7 +32,7 @@ public class SignatureFactoryTest {
   }
 
   @SmoothFunction(name = "function")
-  public static SFile smoothMethod(PluginApi pluginApi, Params params) {
+  public static SFile smoothMethod(NativeApi nativeApi, Params params) {
     return null;
   }
 }

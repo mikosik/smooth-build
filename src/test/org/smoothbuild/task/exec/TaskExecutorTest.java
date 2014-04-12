@@ -20,15 +20,15 @@ public class TaskExecutorTest {
   Task<?> task = mock(Task.class);
   SValue value = mock(SValue.class);
   LoggedMessages loggedMessages = new LoggedMessages();
-  PluginApiImpl pluginApi = mock(PluginApiImpl.class);
+  NativeApiImpl nativeApi = mock(NativeApiImpl.class);
   TaskReporter taskReporter = mock(TaskReporter.class);
 
-  TaskExecutor taskExecutor = new TaskExecutor(Providers.of(pluginApi), taskReporter);
+  TaskExecutor taskExecutor = new TaskExecutor(Providers.of(nativeApi), taskReporter);
 
   @Before
   public void before() {
-    given(willReturn(loggedMessages), pluginApi).loggedMessages();
-    given(willReturn(value), task).execute(pluginApi);
+    given(willReturn(loggedMessages), nativeApi).loggedMessages();
+    given(willReturn(value), task).execute(nativeApi);
   }
 
   @Test

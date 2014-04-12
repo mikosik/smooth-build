@@ -7,30 +7,30 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SNothing;
 import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.io.temp.FakeTempDirectoryManager;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
 
-public class FakePluginApi extends PluginApiImpl {
+public class FakeNativeApi extends NativeApiImpl {
   private final FakeFileSystem fileSystem;
   private final FakeLoggedMessages messages;
   private final FakeValueDb valueDb;
 
-  public FakePluginApi() {
+  public FakeNativeApi() {
     this(new FakeFileSystem());
   }
 
-  private FakePluginApi(FakeFileSystem fileSystem) {
+  private FakeNativeApi(FakeFileSystem fileSystem) {
     this(fileSystem, new FakeValueDb(fileSystem));
   }
 
-  private FakePluginApi(FakeFileSystem fileSystem, FakeValueDb valueDb) {
+  private FakeNativeApi(FakeFileSystem fileSystem, FakeValueDb valueDb) {
     this(fileSystem, new SValueBuildersImpl(valueDb), valueDb);
   }
 
-  public FakePluginApi(FakeFileSystem fileSystem, SValueBuilders sValueBuilders, FakeValueDb valueDb) {
+  public FakeNativeApi(FakeFileSystem fileSystem, SValueBuilders sValueBuilders, FakeValueDb valueDb) {
     super(fileSystem, sValueBuilders, new FakeTempDirectoryManager(sValueBuilders));
     this.fileSystem = fileSystem;
     this.messages = new FakeLoggedMessages();

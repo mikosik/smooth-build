@@ -16,7 +16,7 @@ import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.Iterables;
 
@@ -25,8 +25,8 @@ public class UnzipperTest {
   String fileName2 = "file/path/file2.txt";
   String directoryName = "my/directory/";
 
-  FakePluginApi pluginApi = new FakePluginApi();
-  Unzipper unzipper = new Unzipper(pluginApi);
+  FakeNativeApi nativeApi = new FakeNativeApi();
+  Unzipper unzipper = new Unzipper(nativeApi);
 
   @Test
   public void unzipping() throws Exception {

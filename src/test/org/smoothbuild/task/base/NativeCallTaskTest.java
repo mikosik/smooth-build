@@ -19,7 +19,7 @@ import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
@@ -31,7 +31,7 @@ import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 import org.testory.proxy.Handler;
 import org.testory.proxy.Invocation;
@@ -43,7 +43,7 @@ import com.google.common.hash.HashCode;
 public class NativeCallTaskTest {
   @SuppressWarnings("unchecked")
   Invoker<SString> invoker = mock(Invoker.class);
-  FakePluginApi pluginApi = new FakePluginApi();
+  FakeNativeApi nativeApi = new FakeNativeApi();
   CodeLocation codeLocation = new FakeCodeLocation();
   HashCode hash = HashCode.fromInt(33);
   NativeFunction<?> function1 = new NativeFunction<>(fakeSignature(), invoker, true);
@@ -69,19 +69,19 @@ public class NativeCallTaskTest {
         new NativeCallTask<>(function1, ImmutableMap.of(name, subTask), codeLocation);
 
     SString result = new FakeString("result");
-    given(willReturn(result), invoker).invoke(pluginApi,
+    given(willReturn(result), invoker).invoke(nativeApi,
         ImmutableMap.<String, SValue> of(name, argValue));
 
-    assertThat(nativeCallTask.execute(pluginApi)).isSameAs(result);
+    assertThat(nativeCallTask.execute(nativeApi)).isSameAs(result);
   }
 
   @Test
   public void null_result_is_logged_when_functio_has_non_void_return_type() throws Exception {
-    given(willReturn(null), invoker).invoke(pluginApi, Empty.stringValueMap());
+    given(willReturn(null), invoker).invoke(nativeApi, Empty.stringValueMap());
 
-    nativeCallTask.execute(pluginApi);
+    nativeCallTask.execute(nativeApi);
 
-    pluginApi.loggedMessages().assertContainsOnly(NullResultError.class);
+    nativeApi.loggedMessages().assertContainsOnly(NullResultError.class);
   }
 
   @Test
@@ -93,15 +93,15 @@ public class NativeCallTaskTest {
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {
-        PluginApi pluginApi = (PluginApi) invocation.arguments.get(0);
-        pluginApi.log(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
+        NativeApi nativeApi = (NativeApi) invocation.arguments.get(0);
+        nativeApi.log(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
         return null;
       }
-    }, invoker).invoke(pluginApi, Empty.stringValueMap());
+    }, invoker).invoke(nativeApi, Empty.stringValueMap());
 
-    nativeCallTask.execute(pluginApi);
+    nativeCallTask.execute(nativeApi);
 
-    pluginApi.loggedMessages().assertContainsOnly(CodeMessage.class);
+    nativeApi.loggedMessages().assertContainsOnly(CodeMessage.class);
   }
 
   @Test
@@ -136,10 +136,10 @@ public class NativeCallTaskTest {
 
   private void assertExceptionIsLoggedAsProblem(Throwable thrown, Class<? extends Message> expected)
       throws Exception {
-    given(willThrow(thrown), invoker).invoke(pluginApi, Empty.stringValueMap());
+    given(willThrow(thrown), invoker).invoke(nativeApi, Empty.stringValueMap());
 
-    nativeCallTask.execute(pluginApi);
+    nativeCallTask.execute(nativeApi);
 
-    pluginApi.loggedMessages().assertContainsOnly(expected);
+    nativeApi.loggedMessages().assertContainsOnly(expected);
   }
 }

@@ -16,14 +16,14 @@ import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.JavaCompilerMessage;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.message.base.Message;
 
 public class LoggingDiagnosticListenerTest {
   @SuppressWarnings("unchecked")
   Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
-  PluginApi pluginApi = mock(PluginApi.class);
-  LoggingDiagnosticListener listener = new LoggingDiagnosticListener(pluginApi);
+  NativeApi nativeApi = mock(NativeApi.class);
+  LoggingDiagnosticListener listener = new LoggingDiagnosticListener(nativeApi);
 
   @Before
   public void before() {
@@ -34,7 +34,7 @@ public class LoggingDiagnosticListenerTest {
   @Test
   public void diagnosticIsReportedAsError() {
     when(listener).report(diagnostic);
-    thenCalled(pluginApi).log(any(Message.class, instanceOf(JavaCompilerMessage.class)));
+    thenCalled(nativeApi).log(any(Message.class, instanceOf(JavaCompilerMessage.class)));
   }
 
   @Test

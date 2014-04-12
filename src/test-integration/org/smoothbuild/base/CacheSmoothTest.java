@@ -25,7 +25,7 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.testory.proxy.Handler;
@@ -46,10 +46,10 @@ public class CacheSmoothTest extends IntegrationTestCase {
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {
-        PluginApi pluginApi = (PluginApi) invocation.arguments.get(0);
-        return pluginApi.string("abc");
+        NativeApi nativeApi = (NativeApi) invocation.arguments.get(0);
+        return nativeApi.string("abc");
       }
-    }, invoker).invoke(any(PluginApi.class), any(Map.class));
+    }, invoker).invoke(any(NativeApi.class), any(Map.class));
     builder.addFunction(function(name, invoker));
 
     for (Class<?> klass : BuiltinFunctions.BUILTIN_FUNCTION_CLASSES) {
@@ -69,7 +69,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.messages().assertNoProblems();
-    thenCalledTimes(1, invoker).invoke(any(PluginApi.class), any(Map.class));
+    thenCalledTimes(1, invoker).invoke(any(NativeApi.class), any(Map.class));
   }
 
   @Test
@@ -86,7 +86,7 @@ public class CacheSmoothTest extends IntegrationTestCase {
 
     // then
     userConsole.messages().assertNoProblems();
-    thenCalledTimes(2, invoker).invoke(any(PluginApi.class), any(Map.class));
+    thenCalledTimes(2, invoker).invoke(any(NativeApi.class), any(Map.class));
   }
 
   private static NativeFunction<SString> function(String name, Invoker<SString> invoker) {

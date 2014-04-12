@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public abstract class Task<T extends SValue> {
   private final SType<T> type;
@@ -36,5 +36,5 @@ public abstract class Task<T extends SValue> {
     return codeLocation;
   }
 
-  public abstract T execute(PluginApiImpl pluginApi);
+  public abstract T execute(NativeApiImpl nativeApi);
 }

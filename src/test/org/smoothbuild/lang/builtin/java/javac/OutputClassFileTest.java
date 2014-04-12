@@ -12,19 +12,19 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.lang.type.FileTester;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.Iterables;
 
 public class OutputClassFileTest {
-  FakePluginApi pluginApi = new FakePluginApi();
+  FakeNativeApi nativeApi = new FakeNativeApi();
 
   @Test
   public void openOutputStream() throws IOException {
     Path path = Path.path("my/path");
-    ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
 
-    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, pluginApi);
+    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi);
 
     String content = "content";
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
@@ -39,9 +39,9 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     Path path = Path.path("my/path");
-    ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
 
-    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, pluginApi);
+    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi);
 
     assertThat(outputClassFile.getName()).isEqualTo("/" + path.value());
   }

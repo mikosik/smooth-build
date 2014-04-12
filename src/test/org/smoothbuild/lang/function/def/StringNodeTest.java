@@ -13,7 +13,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.testory.Closure;
 
 public class StringNodeTest {
@@ -44,7 +44,7 @@ public class StringNodeTest {
   @Test
   public void generateTask() throws Exception {
     given(task = stringNode.generateTask(taskGenerator));
-    when(task.execute(new FakePluginApi()));
+    when(task.execute(new FakeNativeApi()));
     thenReturned(string);
   }
 

@@ -12,25 +12,25 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class FileReader {
-  private final PluginApiImpl pluginApi;
+  private final NativeApiImpl nativeApi;
 
-  public FileReader(PluginApiImpl pluginApi) {
-    this.pluginApi = pluginApi;
+  public FileReader(NativeApiImpl nativeApi) {
+    this.nativeApi = nativeApi;
   }
 
   public SFile createFile(Path path, Path projectPath) {
-    FileBuilder fileBuilder = pluginApi.fileBuilder();
+    FileBuilder fileBuilder = nativeApi.fileBuilder();
     fileBuilder.setPath(path);
     fileBuilder.setContent(createContent(projectPath));
     return fileBuilder.build();
   }
 
   private SBlob createContent(Path path) {
-    InputStream inputStream = pluginApi.projectFileSystem().openInputStream(path);
-    BlobBuilder contentBuilder = pluginApi.blobBuilder();
+    InputStream inputStream = nativeApi.projectFileSystem().openInputStream(path);
+    BlobBuilder contentBuilder = nativeApi.blobBuilder();
     doCopy(inputStream, contentBuilder.openOutputStream());
     return contentBuilder.build();
   }

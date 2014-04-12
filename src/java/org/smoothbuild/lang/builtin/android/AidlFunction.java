@@ -7,7 +7,7 @@ import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.lang.builtin.android.err.AidlBinaryReturnedNonZeroCodeError;
 import org.smoothbuild.lang.builtin.android.err.AidlShouldOutputExactlyOneFileError;
 import org.smoothbuild.lang.builtin.android.err.RunningAidlBinaryFailedError;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
@@ -31,23 +31,23 @@ public class AidlFunction {
   }
 
   @SmoothFunction(name = "aidl")
-  public static SFile execute(PluginApi pluginApi, Parameters params) throws InterruptedException {
+  public static SFile execute(NativeApi nativeApi, Parameters params) throws InterruptedException {
     String buildToolsVersion = params.buildToolsVersion().value();
     String apiLevel = params.apiLevel().value();
     SFile interfaceFile = params.interfaceFile();
 
-    return execute(pluginApi, buildToolsVersion, apiLevel, interfaceFile);
+    return execute(nativeApi, buildToolsVersion, apiLevel, interfaceFile);
   }
 
-  private static SFile execute(PluginApi pluginApi, String buildToolsVersion, String apiLevel,
+  private static SFile execute(NativeApi nativeApi, String buildToolsVersion, String apiLevel,
       SFile interfaceFile) throws InterruptedException {
     String aidlBinary = AndroidSdk.getAidlBinaryPath(buildToolsVersion).toString();
     String frameworkAidl = AndroidSdk.getFrameworkAidl(apiLevel).toString();
 
-    TempDirectory inputFilesDir = pluginApi.createTempDirectory();
+    TempDirectory inputFilesDir = nativeApi.createTempDirectory();
     inputFilesDir.writeFile(interfaceFile);
 
-    TempDirectory outputFilesDir = pluginApi.createTempDirectory();
+    TempDirectory outputFilesDir = nativeApi.createTempDirectory();
 
     List<String> command = Lists.newArrayList();
     command.add(aidlBinary);

@@ -24,7 +24,7 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
@@ -52,10 +52,10 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
       @Override
       @Nullable
       public Object handle(Invocation invocation) throws Throwable {
-        PluginApi pluginApi = (PluginApi) invocation.arguments.get(0);
-        return pluginApi.string("abc");
+        NativeApi nativeApi = (NativeApi) invocation.arguments.get(0);
+        return nativeApi.string("abc");
       }
-    }, normalInvoker).invoke(any(PluginApi.class), any(Map.class));
+    }, normalInvoker).invoke(any(NativeApi.class), any(Map.class));
 
     builder.addFunction(function(normalFunction, normalInvoker));
 
@@ -63,11 +63,11 @@ public class ErrorStopsBuildingSmoothTest extends IntegrationTestCase {
       @Override
       @Nullable
       public Object handle(Invocation invocation) throws Throwable {
-        PluginApi pluginApi = (PluginApi) invocation.arguments.get(0);
-        pluginApi.log(new Message(ERROR, "message"));
+        NativeApi nativeApi = (NativeApi) invocation.arguments.get(0);
+        nativeApi.log(new Message(ERROR, "message"));
         return null;
       }
-    }, erroneousInvoker).invoke(any(PluginApi.class), any(Map.class));
+    }, erroneousInvoker).invoke(any(NativeApi.class), any(Map.class));
 
     builder.addFunction(function(erroneousFunction, erroneousInvoker));
 
