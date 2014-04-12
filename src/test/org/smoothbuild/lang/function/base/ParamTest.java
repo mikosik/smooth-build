@@ -2,13 +2,13 @@ package org.smoothbuild.lang.function.base;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.base.STypes.BLOB;
+import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.allowedForParam;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.Param.paramsToString;
-import static org.smoothbuild.lang.type.STypes.BLOB;
-import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.type.STypes.STRING;
-import static org.smoothbuild.lang.type.STypes.allowedForParam;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
@@ -16,8 +16,8 @@ import static org.testory.Testory.willReturn;
 import java.util.Set;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.hash.HashCode;

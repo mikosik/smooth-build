@@ -9,7 +9,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.task.base.Task;

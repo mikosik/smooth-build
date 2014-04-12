@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.collect.ImmutableMap;
 

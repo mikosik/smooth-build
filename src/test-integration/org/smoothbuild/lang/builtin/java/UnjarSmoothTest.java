@@ -4,7 +4,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 

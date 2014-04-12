@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.builtin.file;
 
 import static org.smoothbuild.io.Constants.SMOOTH_DIR;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
@@ -10,13 +10,13 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 

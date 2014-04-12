@@ -1,27 +1,33 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.STypes.BLOB;
-import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
-import static org.smoothbuild.lang.type.STypes.FILE;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.type.STypes.JAVA_PARAM_TO_SMOOTH;
-import static org.smoothbuild.lang.type.STypes.JAVA_RESULT_TO_SMOOTH;
-import static org.smoothbuild.lang.type.STypes.NOTHING;
-import static org.smoothbuild.lang.type.STypes.PARAM_TYPES;
-import static org.smoothbuild.lang.type.STypes.RESULT_TYPES;
-import static org.smoothbuild.lang.type.STypes.STRING;
-import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
-import static org.smoothbuild.lang.type.STypes.arrayTypeContaining;
-import static org.smoothbuild.lang.type.STypes.arrayTypes;
-import static org.smoothbuild.lang.type.STypes.basicTypes;
-import static org.smoothbuild.lang.type.STypes.javaParamTypetoType;
-import static org.smoothbuild.lang.type.STypes.javaResultTypetoType;
+import static org.smoothbuild.lang.base.STypes.BLOB;
+import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.JAVA_PARAM_TO_SMOOTH;
+import static org.smoothbuild.lang.base.STypes.JAVA_RESULT_TO_SMOOTH;
+import static org.smoothbuild.lang.base.STypes.NOTHING;
+import static org.smoothbuild.lang.base.STypes.PARAM_TYPES;
+import static org.smoothbuild.lang.base.STypes.RESULT_TYPES;
+import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.STypes.arrayTypeContaining;
+import static org.smoothbuild.lang.base.STypes.arrayTypes;
+import static org.smoothbuild.lang.base.STypes.basicTypes;
+import static org.smoothbuild.lang.base.STypes.javaParamTypetoType;
+import static org.smoothbuild.lang.base.STypes.javaResultTypetoType;
 
 import java.util.Set;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.convert.Conversions;
 
 import com.google.common.collect.Sets;

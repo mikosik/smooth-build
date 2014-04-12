@@ -1,6 +1,6 @@
 package org.smoothbuild.io.cache.value.read;
 
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.hash.HashCode;
 

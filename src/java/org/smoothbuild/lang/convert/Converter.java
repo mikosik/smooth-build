@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.convert;
 
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
-import org.smoothbuild.lang.type.SValueBuilders;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.SValueBuilders;
 
 public abstract class Converter<S extends SValue, T extends SValue> {
   private static final String ARROW_STRING = " => ";

@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.base.Result;
 
 import com.google.common.hash.HashCode;

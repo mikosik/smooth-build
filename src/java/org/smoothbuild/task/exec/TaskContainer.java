@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 

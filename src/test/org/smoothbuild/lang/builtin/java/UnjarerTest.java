@@ -6,10 +6,10 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 

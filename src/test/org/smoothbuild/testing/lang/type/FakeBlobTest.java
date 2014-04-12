@@ -2,7 +2,7 @@ package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;

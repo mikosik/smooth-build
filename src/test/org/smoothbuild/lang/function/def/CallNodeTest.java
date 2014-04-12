@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;

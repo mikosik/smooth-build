@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.base.ParamOrdering.PARAM_ORDERING;
-import static org.smoothbuild.lang.type.STypes.STRING;
 
 import java.util.List;
 

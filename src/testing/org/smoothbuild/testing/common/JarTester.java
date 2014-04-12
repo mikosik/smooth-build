@@ -10,7 +10,7 @@ import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeFile;

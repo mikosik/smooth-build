@@ -2,8 +2,8 @@ package org.smoothbuild.io.cache.value.instance;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.hash.HashCode;
 

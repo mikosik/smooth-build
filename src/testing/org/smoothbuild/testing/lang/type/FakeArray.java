@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.instance.CachedValue;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;

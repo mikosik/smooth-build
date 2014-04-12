@@ -1,6 +1,6 @@
 package org.smoothbuild.io.cache.value.instance;
 
-import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;

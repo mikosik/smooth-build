@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.def.args;
 
 import java.util.Set;
 
-import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.base.SType;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;

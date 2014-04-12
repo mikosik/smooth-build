@@ -1,6 +1,6 @@
 package org.smoothbuild.io.cache.value.instance;
 
-import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;

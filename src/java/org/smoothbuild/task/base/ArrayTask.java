@@ -3,9 +3,9 @@ package org.smoothbuild.task.base;
 import java.util.List;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SArrayType;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.NativeApiImpl;
 

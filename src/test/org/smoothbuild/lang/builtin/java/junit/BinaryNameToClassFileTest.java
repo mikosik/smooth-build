@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.lang.type.FileTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;

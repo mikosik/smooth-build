@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.def;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SString;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;

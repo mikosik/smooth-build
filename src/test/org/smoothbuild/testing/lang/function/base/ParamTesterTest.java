@@ -2,8 +2,8 @@ package org.smoothbuild.testing.lang.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import java.util.Map;

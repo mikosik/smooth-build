@@ -1,7 +1,7 @@
 package org.smoothbuild.io.cache.value.instance;
 
 import static org.smoothbuild.command.SmoothContants.CHARSET;
-import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;

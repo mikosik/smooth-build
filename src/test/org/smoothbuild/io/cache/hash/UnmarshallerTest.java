@@ -15,7 +15,7 @@ import org.smoothbuild.io.cache.hash.err.IllegalPathInObjectError;
 import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.cache.hash.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.Hashed;
+import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeHashed;
 

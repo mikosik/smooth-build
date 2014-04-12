@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 
 public class FileBuilder {
   private final ValueDb valueDb;

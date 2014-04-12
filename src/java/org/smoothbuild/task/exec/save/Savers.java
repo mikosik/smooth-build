@@ -6,8 +6,8 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.smoothbuild.io.cache.hash.HashCodes;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.Hashed;
 
 public class Savers {
   public static Path targetPath(Hashed hashed) {

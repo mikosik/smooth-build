@@ -5,7 +5,7 @@ import static com.google.common.base.Predicates.not;
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,13 +17,13 @@ import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.EndsWithPredicate;
 

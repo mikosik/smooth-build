@@ -8,11 +8,11 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 

@@ -7,7 +7,7 @@ import static org.testory.Testory.thenCalledTimes;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.task.base.Task;
 
 public class TaskContainerTest {

@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.message.base.Message;
 
 public class FileClassLoader extends ClassLoader {

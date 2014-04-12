@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.convert;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
 
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SArrayType;
-import org.smoothbuild.lang.type.SNothing;
-import org.smoothbuild.lang.type.SValue;
-import org.smoothbuild.lang.type.SValueBuilders;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.SNothing;
+import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.SValueBuilders;
 
 public class EmptyArrayToTypedArrayConverter<T extends SValue> extends
     Converter<SArray<SNothing>, SArray<T>> {

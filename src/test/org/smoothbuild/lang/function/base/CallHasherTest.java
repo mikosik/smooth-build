@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -13,8 +13,8 @@ import static org.testory.Testory.willReturn;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.task.base.FakeResult;

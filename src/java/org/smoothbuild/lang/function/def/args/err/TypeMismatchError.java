@@ -2,8 +2,8 @@ package org.smoothbuild.lang.function.def.args.err;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
+import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.function.def.args.Arg;
-import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeMessage;
 
 @SuppressWarnings("serial")

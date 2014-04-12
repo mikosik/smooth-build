@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.io.IOException;
@@ -15,6 +15,10 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.lang.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalSourceParamError;
@@ -23,10 +27,6 @@ import org.smoothbuild.lang.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.lang.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Function;

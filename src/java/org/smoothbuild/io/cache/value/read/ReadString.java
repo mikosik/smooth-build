@@ -2,7 +2,7 @@ package org.smoothbuild.io.cache.value.read;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.value.instance.CachedString;
-import org.smoothbuild.lang.type.SString;
+import org.smoothbuild.lang.base.SString;
 
 import com.google.common.hash.HashCode;
 

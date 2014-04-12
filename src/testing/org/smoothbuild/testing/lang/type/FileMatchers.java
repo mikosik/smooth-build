@@ -7,7 +7,7 @@ import java.util.Arrays;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 
 import com.google.common.io.ByteStreams;
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.io.cache.value.instance;
 
-import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -10,8 +10,8 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.value.read.ReadValue;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.testory.Closure;
 

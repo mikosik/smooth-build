@@ -6,10 +6,10 @@ import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.value.instance.CachedArray;
 import org.smoothbuild.io.cache.value.read.ReadValue;
-import org.smoothbuild.lang.type.Hashed;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.Hashed;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;

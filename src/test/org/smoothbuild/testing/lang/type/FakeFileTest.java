@@ -3,7 +3,7 @@ package org.smoothbuild.testing.lang.type;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;

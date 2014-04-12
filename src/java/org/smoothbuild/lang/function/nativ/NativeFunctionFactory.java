@@ -5,6 +5,7 @@ import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
 import java.lang.reflect.Method;
 
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.MissingNameException;
 import org.smoothbuild.lang.function.nativ.err.MoreThanOneSmoothFunctionException;
@@ -15,7 +16,6 @@ import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class NativeFunctionFactory {

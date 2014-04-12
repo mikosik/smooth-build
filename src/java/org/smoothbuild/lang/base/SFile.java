@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.base;
 
 import org.smoothbuild.io.fs.base.Path;
 

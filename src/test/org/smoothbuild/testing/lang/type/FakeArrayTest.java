@@ -2,14 +2,14 @@ package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 
 import com.google.common.collect.Iterables;
 

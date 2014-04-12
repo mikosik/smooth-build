@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.plugin;
 
 import org.smoothbuild.io.temp.TempDirectory;
-import org.smoothbuild.lang.type.SValueBuilders;
+import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 

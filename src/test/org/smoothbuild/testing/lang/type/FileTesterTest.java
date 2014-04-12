@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 
 public class FileTesterTest {
   String content = "some content";

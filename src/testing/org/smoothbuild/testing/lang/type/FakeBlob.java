@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.lang.type;
 
-import static org.smoothbuild.lang.type.STypes.BLOB;
+import static org.smoothbuild.lang.base.STypes.BLOB;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.io.InputStream;
 import org.smoothbuild.command.SmoothContants;
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.value.instance.CachedValue;
-import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.base.SBlob;
 
 public class FakeBlob extends CachedValue implements SBlob {
   private final byte[] data;

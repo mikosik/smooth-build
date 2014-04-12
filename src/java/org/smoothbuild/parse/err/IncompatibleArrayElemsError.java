@@ -2,7 +2,7 @@ package org.smoothbuild.parse.err;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
-import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 

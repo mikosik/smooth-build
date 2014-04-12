@@ -10,7 +10,7 @@ import static org.testory.Testory.willReturn;
 import java.net.URI;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.lang.type.FakeFile;
 
 public class InputClassFileTest {

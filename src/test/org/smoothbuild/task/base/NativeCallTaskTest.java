@@ -1,9 +1,9 @@
 package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
 import static org.testory.Testory.given;
@@ -15,13 +15,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;

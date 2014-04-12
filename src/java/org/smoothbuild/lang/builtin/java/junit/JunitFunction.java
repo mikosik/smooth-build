@@ -12,14 +12,14 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.match.IllegalPathPatternException;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.lang.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.lang.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 

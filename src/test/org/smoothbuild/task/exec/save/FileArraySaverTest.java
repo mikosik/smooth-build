@@ -1,15 +1,15 @@
 package org.smoothbuild.task.exec.save;
 
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
 import static org.smoothbuild.task.exec.save.Savers.artifactPath;
 import static org.smoothbuild.task.exec.save.Savers.targetPath;
 import static org.smoothbuild.testing.lang.type.FakeArray.fakeArray;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeFile;
