@@ -42,7 +42,7 @@ public class TaskTest {
   @Test
   public void type() throws Exception {
     given(task = new MyTask<>(type, name, false, codeLocation));
-    when(task.type());
+    when(task.resultType());
     thenReturned(type);
   }
 

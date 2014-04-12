@@ -20,7 +20,7 @@ public abstract class Task<T extends SValue> {
     this.codeLocation = checkNotNull(codeLocation);
   }
 
-  public SType<T> type() {
+  public SType<T> resultType() {
     return type;
   }
 
