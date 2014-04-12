@@ -15,7 +15,7 @@ import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;

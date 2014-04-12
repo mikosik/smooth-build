@@ -3,7 +3,7 @@ package org.smoothbuild.io.fs.base;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
 
 /**
  * All errors are reported by throwing {@link FileSystemError}.

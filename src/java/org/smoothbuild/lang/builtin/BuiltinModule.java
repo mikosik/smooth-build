@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.ModuleBuilder;
 import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
-import org.smoothbuild.lang.function.nativ.exc.NativeImplementationException;
+import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;

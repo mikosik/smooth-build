@@ -14,7 +14,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.lang.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalSourceParamError;

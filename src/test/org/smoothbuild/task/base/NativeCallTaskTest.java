@@ -14,7 +14,7 @@ import static org.testory.Testory.willThrow;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;

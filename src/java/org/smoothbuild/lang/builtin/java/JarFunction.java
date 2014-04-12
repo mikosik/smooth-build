@@ -9,7 +9,7 @@ import java.util.jar.Manifest;
 
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.CannotAddDuplicatePathError;
 import org.smoothbuild.lang.plugin.NativeApi;

@@ -1,4 +1,4 @@
-package org.smoothbuild.io.fs.base.exc;
+package org.smoothbuild.io.fs.base.err;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.nativ.exc;
+package org.smoothbuild.lang.function.nativ.err;
 
 import org.smoothbuild.lang.plugin.SmoothFunction;
 

@@ -8,8 +8,8 @@ import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileCo
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.NoSuchDirButFileError;
-import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.lang.builtin.file.FilesFunction.Parameters;
 import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;

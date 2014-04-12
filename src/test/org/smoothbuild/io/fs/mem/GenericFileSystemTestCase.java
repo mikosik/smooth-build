@@ -16,9 +16,9 @@ import java.io.InputStreamReader;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
-import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 
 import com.google.common.io.LineReader;
 
