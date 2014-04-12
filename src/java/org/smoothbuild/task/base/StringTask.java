@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.type.STypes.STRING;
 
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class StringTask extends Task<SString> {
   private final SString string;
@@ -16,7 +16,7 @@ public class StringTask extends Task<SString> {
   }
 
   @Override
-  public SString execute(PluginApiImpl pluginApi) {
+  public SString execute(NativeApiImpl nativeApi) {
     return string;
   }
 }

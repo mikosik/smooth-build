@@ -4,7 +4,7 @@ import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class PathFunction {
   public interface Parameters {
@@ -13,7 +13,7 @@ public class PathFunction {
   }
 
   @SmoothFunction(name = "path")
-  public static SString execute(PluginApiImpl pluginApi, Parameters params) {
-    return pluginApi.string(params.file().path().value());
+  public static SString execute(NativeApiImpl nativeApi, Parameters params) {
+    return nativeApi.string(params.file().path().value());
   }
 }

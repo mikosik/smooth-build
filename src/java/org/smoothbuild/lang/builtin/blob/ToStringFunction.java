@@ -7,7 +7,7 @@ import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.util.Streams;
 
 public class ToStringFunction {
@@ -17,11 +17,11 @@ public class ToStringFunction {
   }
 
   @SmoothFunction(name = "toString")
-  public static SString execute(PluginApiImpl pluginApi, Parameters params) {
+  public static SString execute(NativeApiImpl nativeApi, Parameters params) {
     String string;
     try {
       string = Streams.inputStreamToString(params.blob().openInputStream());
-      return pluginApi.string(string);
+      return nativeApi.string(string);
     } catch (IOException e) {
       throw new FileSystemError(e);
     }

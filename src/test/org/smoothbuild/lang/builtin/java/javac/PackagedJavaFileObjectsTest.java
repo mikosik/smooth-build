@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
@@ -25,7 +25,7 @@ public class PackagedJavaFileObjectsTest {
     SFile file = jaredFiles(fileName1, fileName2);
 
     Multimap<String, JavaFileObject> packageToJavaFileObjects =
-        packagedJavaFileObjects(new FakePluginApi(), ImmutableList.of(file.content()));
+        packagedJavaFileObjects(new FakeNativeApi(), ImmutableList.of(file.content()));
 
     JavaFileObject fileObject = packageToJavaFileObjects.get("my.package").iterator().next();
     StreamTester.assertContent(fileObject.openInputStream(), fileName1);
@@ -39,7 +39,7 @@ public class PackagedJavaFileObjectsTest {
     SFile file2 = jaredFiles(fileName);
 
     try {
-      packagedJavaFileObjects(new FakePluginApi(), ImmutableList.of(file1.content(), file2
+      packagedJavaFileObjects(new FakeNativeApi(), ImmutableList.of(file1.content(), file2
           .content()));
       fail("exception should be thrown");
     } catch (DuplicateClassFileError e) {

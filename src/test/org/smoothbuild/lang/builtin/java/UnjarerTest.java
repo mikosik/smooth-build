@@ -11,7 +11,7 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.JarTester;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
@@ -21,8 +21,8 @@ public class UnjarerTest {
   String fileName2 = "file/path/file2.txt";
   String directoryName = "my/directory/";
 
-  FakePluginApi pluginApi = new FakePluginApi();
-  Unjarer unjarer = new Unjarer(pluginApi);
+  FakeNativeApi nativeApi = new FakeNativeApi();
+  Unjarer unjarer = new Unjarer(nativeApi);
 
   @Test
   public void unjaringTwoFiles() throws Exception {

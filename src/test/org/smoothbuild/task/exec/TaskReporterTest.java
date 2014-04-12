@@ -23,7 +23,7 @@ import org.smoothbuild.task.base.Task;
 public class TaskReporterTest {
   LoggedMessages messages = new LoggedMessages();
   UserConsole userConsole = mock(UserConsole.class);
-  PluginApiImpl pluginApi = mock(PluginApiImpl.class);
+  NativeApiImpl nativeApi = mock(NativeApiImpl.class);
 
   TaskReporter taskReporter = new TaskReporter(userConsole);
 
@@ -31,7 +31,7 @@ public class TaskReporterTest {
 
   @Before
   public void before() {
-    given(willReturn(messages), pluginApi).loggedMessages();
+    given(willReturn(messages), nativeApi).loggedMessages();
   }
 
   @Test
@@ -39,7 +39,7 @@ public class TaskReporterTest {
     given(task = createTask(true));
     given(messages).log(new Message(WARNING, "message"));
 
-    when(taskReporter).report(task, pluginApi);
+    when(taskReporter).report(task, nativeApi);
 
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -47,7 +47,7 @@ public class TaskReporterTest {
   @Test
   public void internal_task_without_messages_are_not_printed() {
     given(task = createTask(true));
-    when(taskReporter).report(task, pluginApi);
+    when(taskReporter).report(task, nativeApi);
     thenCalledTimes(0, onInstance(userConsole));
   }
 
@@ -56,7 +56,7 @@ public class TaskReporterTest {
     given(task = createTask(false));
     given(messages).log(new Message(WARNING, "message"));
 
-    when(taskReporter).report(task, pluginApi);
+    when(taskReporter).report(task, nativeApi);
 
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -64,14 +64,14 @@ public class TaskReporterTest {
   @Test
   public void non_internal_task_without_messages_is_printed() {
     given(task = createTask(false));
-    when(taskReporter).report(task, pluginApi);
+    when(taskReporter).report(task, nativeApi);
     thenCalled(userConsole).print(header(task, false), messages);
   }
 
   private static Task<SString> createTask(boolean isInternal) {
     return new Task<SString>(STRING, "name", isInternal, codeLocation(13)) {
       @Override
-      public SString execute(PluginApiImpl pluginApi) {
+      public SString execute(NativeApiImpl nativeApi) {
         return null;
       }
     };

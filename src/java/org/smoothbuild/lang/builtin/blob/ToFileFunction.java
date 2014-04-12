@@ -4,13 +4,13 @@ import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class ToFileFunction {
 
@@ -23,16 +23,16 @@ public class ToFileFunction {
   }
 
   @SmoothFunction(name = "toFile")
-  public static SFile execute(PluginApiImpl pluginApi, Parameters params) {
-    return new Worker(pluginApi, params).execute();
+  public static SFile execute(NativeApiImpl nativeApi, Parameters params) {
+    return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
-    private final PluginApi pluginApi;
+    private final NativeApi nativeApi;
     private final Parameters params;
 
-    public Worker(PluginApi pluginApi, Parameters params) {
-      this.pluginApi = pluginApi;
+    public Worker(NativeApi nativeApi, Parameters params) {
+      this.nativeApi = nativeApi;
       this.params = params;
     }
 
@@ -41,7 +41,7 @@ public class ToFileFunction {
     }
 
     private SFile createFile(Path filePath) {
-      FileBuilder fileBuilder = pluginApi.fileBuilder();
+      FileBuilder fileBuilder = nativeApi.fileBuilder();
       fileBuilder.setPath(filePath);
       fileBuilder.setContent(params.content());
       return fileBuilder.build();

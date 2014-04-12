@@ -8,7 +8,7 @@ import java.util.Map;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
@@ -18,9 +18,9 @@ import com.google.common.collect.Maps;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, SFile> binaryNameToClassFile(PluginApi pluginApi,
+  public static Map<String, SFile> binaryNameToClassFile(NativeApi nativeApi,
       Iterable<SBlob> libraryJars) {
-    Unjarer unjarer = new Unjarer(pluginApi);
+    Unjarer unjarer = new Unjarer(nativeApi);
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<Path>();
     Map<String, SFile> binaryNameToClassFile = Maps.newHashMap();
 

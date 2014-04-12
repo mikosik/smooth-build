@@ -11,7 +11,7 @@ import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.lang.type.FileTester;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.ImmutableList;
 
@@ -23,7 +23,7 @@ public class BinaryNameToClassFileTest {
     String file2 = "b/Klass.class";
     SBlob blob = JarTester.jar(file1, file2);
     Map<String, SFile> x =
-        binaryNameToClassFile(new FakePluginApi(), ImmutableList.<SBlob> of(blob));
+        binaryNameToClassFile(new FakeNativeApi(), ImmutableList.<SBlob> of(blob));
 
     FileTester.assertContentContains(x.get("a.Klass"), file1);
     FileTester.assertContentContains(x.get("b.Klass"), file2);
@@ -36,7 +36,7 @@ public class BinaryNameToClassFileTest {
     String file2 = "b/Klass.java";
     SBlob blob = JarTester.jar(file1, file2);
     Map<String, SFile> x =
-        binaryNameToClassFile(new FakePluginApi(), ImmutableList.<SBlob> of(blob));
+        binaryNameToClassFile(new FakeNativeApi(), ImmutableList.<SBlob> of(blob));
 
     assertThat(x.size()).isEqualTo(0);
   }

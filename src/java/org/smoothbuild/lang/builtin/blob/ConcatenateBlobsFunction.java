@@ -3,7 +3,7 @@ package org.smoothbuild.lang.builtin.blob;
 import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
@@ -20,21 +20,21 @@ public class ConcatenateBlobsFunction {
   }
 
   @SmoothFunction(name = "concatenateBlobs")
-  public static SArray<SBlob> execute(PluginApi pluginApi, Parameters params) {
-    return new Worker(pluginApi, params).execute();
+  public static SArray<SBlob> execute(NativeApi nativeApi, Parameters params) {
+    return new Worker(nativeApi, params).execute();
   }
 
   public static class Worker {
-    private final PluginApi pluginApi;
+    private final NativeApi nativeApi;
     private final Parameters params;
 
-    public Worker(PluginApi pluginApi, Parameters params) {
-      this.pluginApi = pluginApi;
+    public Worker(NativeApi nativeApi, Parameters params) {
+      this.nativeApi = nativeApi;
       this.params = params;
     }
 
     public SArray<SBlob> execute() {
-      ArrayBuilder<SBlob> builder = pluginApi.arrayBuilder(BLOB_ARRAY);
+      ArrayBuilder<SBlob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
 
       for (SBlob blob : params.blobs()) {
         builder.add(blob);

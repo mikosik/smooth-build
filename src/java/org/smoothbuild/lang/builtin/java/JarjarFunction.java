@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.io.temp.TempDirectory;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SBlob;
@@ -27,14 +27,14 @@ public class JarjarFunction {
   }
 
   @SmoothFunction(name = "jarjar")
-  public static SBlob execute(PluginApi pluginApi, Parameters params) throws InterruptedException {
-    TempDirectory tempDir = pluginApi.createTempDirectory();
+  public static SBlob execute(NativeApi nativeApi, Parameters params) throws InterruptedException {
+    TempDirectory tempDir = nativeApi.createTempDirectory();
 
     Path rulesPath = path("rules");
     Path inJarPath = path("in.jar");
     Path outJarPath = path("out.jar");
 
-    tempDir.writeFile(rulesPath, stringToBlob(pluginApi, params.rules()));
+    tempDir.writeFile(rulesPath, stringToBlob(nativeApi, params.rules()));
     tempDir.writeFile(inJarPath, params.in());
 
     File rulesFile = new File(tempDir.asOsPath(rulesPath));

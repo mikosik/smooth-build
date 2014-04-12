@@ -5,7 +5,7 @@ import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 
-public interface PluginApi extends SValueBuilders {
+public interface NativeApi extends SValueBuilders {
   public void log(Message message);
 
   /**

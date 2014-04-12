@@ -5,20 +5,20 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 import org.smoothbuild.lang.builtin.java.javac.err.JavaCompilerMessage;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
-  private final PluginApi pluginApi;
+  private final NativeApi nativeApi;
   private boolean errorReported;
 
-  public LoggingDiagnosticListener(PluginApi pluginApi) {
-    this.pluginApi = pluginApi;
+  public LoggingDiagnosticListener(NativeApi nativeApi) {
+    this.nativeApi = nativeApi;
     this.errorReported = false;
   }
 
   @Override
   public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-    pluginApi.log(new JavaCompilerMessage(diagnostic));
+    nativeApi.log(new JavaCompilerMessage(diagnostic));
     errorReported = true;
   }
 

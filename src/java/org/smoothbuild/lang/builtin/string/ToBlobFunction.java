@@ -7,7 +7,7 @@ import java.io.OutputStreamWriter;
 
 import org.smoothbuild.io.cache.value.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.exc.FileSystemError;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SBlob;
@@ -20,12 +20,12 @@ public class ToBlobFunction {
   }
 
   @SmoothFunction(name = "toBlob")
-  public static SBlob execute(PluginApi pluginApi, Parameters params) {
-    return stringToBlob(pluginApi, params.string());
+  public static SBlob execute(NativeApi nativeApi, Parameters params) {
+    return stringToBlob(nativeApi, params.string());
   }
 
-  public static SBlob stringToBlob(PluginApi pluginApi, SString string) {
-    BlobBuilder builder = pluginApi.blobBuilder();
+  public static SBlob stringToBlob(NativeApi nativeApi, SString string) {
+    BlobBuilder builder = nativeApi.blobBuilder();
     try (OutputStreamWriter writer = new OutputStreamWriter(builder.openOutputStream(), CHARSET)) {
       writer.write(string.value());
     } catch (IOException e) {

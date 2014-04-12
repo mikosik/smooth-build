@@ -17,10 +17,10 @@ public class TaskReporter {
     this.userConsole = userConsole;
   }
 
-  public void report(Task<?> task, PluginApiImpl pluginApi) {
-    LoggedMessages messages = pluginApi.loggedMessages();
+  public void report(Task<?> task, NativeApiImpl nativeApi) {
+    LoggedMessages messages = nativeApi.loggedMessages();
     if (!(task.isInternal() && messages.isEmpty())) {
-      String header = header(task, pluginApi.isResultFromCache());
+      String header = header(task, nativeApi.isResultFromCache());
       userConsole.print(header, messages);
     }
   }

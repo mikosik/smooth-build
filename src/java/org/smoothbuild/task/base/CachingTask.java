@@ -7,7 +7,7 @@ import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.function.base.CallHasher;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.hash.HashCode;
 
@@ -24,27 +24,27 @@ public class CachingTask<T extends SValue> extends Task<T> {
   }
 
   @Override
-  public T execute(PluginApiImpl pluginApi) {
+  public T execute(NativeApiImpl nativeApi) {
     HashCode hash = callHasher.hash();
     if (taskDb.contains(hash)) {
-      return readFromCache(pluginApi, hash);
+      return readFromCache(nativeApi, hash);
     } else {
-      return executeAndCache(pluginApi, hash);
+      return executeAndCache(nativeApi, hash);
     }
   }
 
-  private T readFromCache(PluginApiImpl pluginApi, HashCode hash) {
-    pluginApi.setResultIsFromCache();
+  private T readFromCache(NativeApiImpl nativeApi, HashCode hash) {
+    nativeApi.setResultIsFromCache();
     CachedResult<T> cachedResult = taskDb.read(hash, task.resultType());
     for (Message message : cachedResult.messages()) {
-      pluginApi.log(message);
+      nativeApi.log(message);
     }
     return cachedResult.value();
   }
 
-  private T executeAndCache(PluginApiImpl pluginApi, HashCode hash) {
-    T result = task.execute(pluginApi);
-    taskDb.store(hash, new CachedResult<T>(result, pluginApi.loggedMessages()));
+  private T executeAndCache(NativeApiImpl nativeApi, HashCode hash) {
+    T result = task.execute(nativeApi);
+    taskDb.store(hash, new CachedResult<T>(result, nativeApi.loggedMessages()));
     return result;
   }
 }

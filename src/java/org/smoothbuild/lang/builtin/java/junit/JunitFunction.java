@@ -21,7 +21,7 @@ import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Predicate;
 
@@ -39,22 +39,22 @@ public class JunitFunction {
   }
 
   @SmoothFunction(name = "junit")
-  public static SString execute(PluginApiImpl pluginApi, Parameters params) {
-    return new Worker(pluginApi, params).execute();
+  public static SString execute(NativeApiImpl nativeApi, Parameters params) {
+    return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
-    private final PluginApiImpl pluginApi;
+    private final NativeApiImpl nativeApi;
     private final Parameters params;
 
-    public Worker(PluginApiImpl pluginApi, Parameters params) {
-      this.pluginApi = pluginApi;
+    public Worker(NativeApiImpl nativeApi, Parameters params) {
+      this.nativeApi = nativeApi;
       this.params = params;
     }
 
     public SString execute() {
       Map<String, SFile> binaryNameToClassFile =
-          binaryNameToClassFile(pluginApi, nullToEmpty(params.libs()));
+          binaryNameToClassFile(nativeApi, nullToEmpty(params.libs()));
       FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
       JUnitCore jUnitCore = new JUnitCore();
 
@@ -68,16 +68,16 @@ public class JunitFunction {
           Result result = jUnitCore.run(testClass);
           if (!result.wasSuccessful()) {
             for (Failure failure : result.getFailures()) {
-              pluginApi.log(new JunitTestFailedError(failure));
+              nativeApi.log(new JunitTestFailedError(failure));
             }
-            return pluginApi.string("FAILURE");
+            return nativeApi.string("FAILURE");
           }
         }
       }
       if (testCount == 0) {
-        pluginApi.log(new NoJunitTestFoundWarning());
+        nativeApi.log(new NoJunitTestFoundWarning());
       }
-      return pluginApi.string("SUCCESS");
+      return nativeApi.string("SUCCESS");
     }
 
     private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {

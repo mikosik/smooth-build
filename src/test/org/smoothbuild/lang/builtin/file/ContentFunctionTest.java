@@ -8,20 +8,20 @@ import org.smoothbuild.io.cache.value.build.FileBuilder;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.lang.type.FakeBlob;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class ContentFunctionTest {
-  FakePluginApi pluginApi = new FakePluginApi();
+  FakeNativeApi nativeApi = new FakeNativeApi();
 
   @Test
   public void content_of_file_is_returned_as_blob() throws Exception {
-    FileBuilder builder = pluginApi.fileBuilder();
+    FileBuilder builder = nativeApi.fileBuilder();
     builder.setPath(path("some/path"));
     FakeBlob blob = new FakeBlob();
     builder.setContent(blob);
     SFile file = builder.build();
 
-    SBlob actual = ContentFunction.execute(pluginApi, params(file));
+    SBlob actual = ContentFunction.execute(nativeApi, params(file));
     assertThat(actual).isSameAs(file.content());
   }
 

@@ -13,10 +13,10 @@ import org.smoothbuild.lang.function.nativ.exc.NoSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SValue;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class NativeFunctionFactory {
   public static NativeFunction<?> create(Class<?> klass, boolean builtin)
@@ -64,7 +64,7 @@ public class NativeFunctionFactory {
           throw new WrongParamsInSmoothFunctionException(method);
         }
         Class<?> first = paramTypes[0];
-        if (!(first.equals(PluginApi.class) || (builtin && first.equals(PluginApiImpl.class)))) {
+        if (!(first.equals(NativeApi.class) || (builtin && first.equals(NativeApiImpl.class)))) {
           throw new WrongParamsInSmoothFunctionException(method);
         }
 

@@ -25,7 +25,7 @@ import org.smoothbuild.lang.function.nativ.exc.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.exc.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.exc.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.function.nativ.exc.WrongParamsInSmoothFunctionException;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.SArray;
@@ -40,14 +40,14 @@ import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionFactoryTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  FakePluginApi pluginApi = new FakePluginApi();
+  FakeNativeApi nativeApi = new FakeNativeApi();
   Path tempDir = path("tem/dir");
   TaskDb taskDb = mock(TaskDb.class);
   CodeLocation codeLocation = new FakeCodeLocation();
@@ -80,8 +80,8 @@ public class NativeFunctionFactoryTest {
         ImmutableMap.of("stringA", result1, "stringB", result2);
 
     Task<?> task = function.generateTask(taskGenerator, dependencies, codeLocation);
-    SString result = (SString) task.execute(pluginApi);
-    pluginApi.loggedMessages().assertNoProblems();
+    SString result = (SString) task.execute(nativeApi);
+    nativeApi.loggedMessages().assertNoProblems();
     assertThat(result.value()).isEqualTo("abcdef");
   }
 
@@ -93,7 +93,7 @@ public class NativeFunctionFactoryTest {
 
   public static class Func {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, Parameters params) {
+    public static SString execute(NativeApi nativeApi, Parameters params) {
       return new FakeString(params.stringA().value() + params.stringB().value());
     }
   }
@@ -121,7 +121,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithAllowedParamTypes {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, AllowedParameters params) {
+    public static SString execute(NativeApi nativeApi, AllowedParameters params) {
       return new FakeString("string");
     }
   }
@@ -145,7 +145,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithAnnotatedParams {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, AnnotatedParameters params) {
+    public static SString execute(NativeApi nativeApi, AnnotatedParameters params) {
       return null;
     }
   }
@@ -163,7 +163,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithArrayOfArrayParamType {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, ArrayOfArrayParams params) {
+    public static SString execute(NativeApi nativeApi, ArrayOfArrayParams params) {
       return null;
     }
   }
@@ -181,7 +181,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithForbiddenParamType {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, ForbiddenParams params) {
+    public static SString execute(NativeApi nativeApi, ForbiddenParams params) {
       return null;
     }
   }
@@ -197,7 +197,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithEmptyParameters {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -211,7 +211,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithStringResult {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -225,7 +225,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobResult {
     @SmoothFunction(name = "myFunction")
-    public static SBlob execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SBlob execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -239,7 +239,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithFileResult {
     @SmoothFunction(name = "myFunction")
-    public static SFile execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SFile execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -253,7 +253,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithStringArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static SArray<SString> execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SArray<SString> execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -267,7 +267,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static SArray<SBlob> execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SArray<SBlob> execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -281,7 +281,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithFileArrayResult {
     @SmoothFunction(name = "myFunction")
-    public static SArray<SFile> execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SArray<SFile> execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -295,7 +295,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithIllegalReturnType {
     @SmoothFunction(name = "myFunction")
-    public static Runnable execute(PluginApi pluginApi, EmptyParameters params) {
+    public static Runnable execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -309,7 +309,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithArrayOfArrayReturnType {
     @SmoothFunction(name = "myFunction")
-    public static SArray<SArray<SFile>> execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SArray<SArray<SFile>> execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -324,7 +324,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithParamThatIsNotInterface {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, String string) {
+    public static SString execute(NativeApi nativeApi, String string) {
       return null;
     }
   }
@@ -338,7 +338,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithIllegalFunctionName {
     @SmoothFunction(name = "my^package")
-    public static SString execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -349,13 +349,13 @@ public class NativeFunctionFactoryTest {
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
     function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation).execute(
-        pluginApi);
-    pluginApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
+        nativeApi);
+    nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
   }
 
   public static class FuncWithThrowingSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, EmptyParameters params) {
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
       throw new RuntimeException();
     }
   }
@@ -369,10 +369,10 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithTwoSmoothMethods {
     @SmoothFunction(name = "myFunction")
-    public static void execute(PluginApi pluginApi, EmptyParameters params) {}
+    public static void execute(NativeApi nativeApi, EmptyParameters params) {}
 
     @SmoothFunction(name = "myFunction2")
-    public static void execute2(PluginApi pluginApi, EmptyParameters params) {}
+    public static void execute2(NativeApi nativeApi, EmptyParameters params) {}
   }
 
   @Test
@@ -391,7 +391,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithPrivateSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    private static void execute(PluginApi pluginApi, EmptyParameters params) {}
+    private static void execute(NativeApi nativeApi, EmptyParameters params) {}
   }
 
   // method_in_params_interface_cannot_have_parameters
@@ -408,7 +408,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithParamMethodThatHasParameters {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, ParametersWithMethodWithParameters params) {
+    public static SString execute(NativeApi nativeApi, ParametersWithMethodWithParameters params) {
       return null;
     }
   }
@@ -423,7 +423,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithNonStaticSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    public void execute(PluginApi pluginApi, EmptyParameters params) {}
+    public void execute(NativeApi nativeApi, EmptyParameters params) {}
   }
 
   // native_smooth_method_cannot_have_zero_parameters
@@ -475,7 +475,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithSmoothMethodWithWrongSecondParam {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(PluginApi pluginApi, Integer wrong) {
+    public static SString execute(NativeApi nativeApi, Integer wrong) {
       return null;
     }
   }

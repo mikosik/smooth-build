@@ -27,7 +27,7 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
@@ -50,8 +50,8 @@ public class JavacFunction {
   }
 
   @SmoothFunction(name = "javac")
-  public static SArray<SFile> execute(PluginApiImpl pluginApi, Parameters params) {
-    return new Worker(pluginApi, params).execute();
+  public static SArray<SFile> execute(NativeApiImpl nativeApi, Parameters params) {
+    return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
@@ -61,12 +61,12 @@ public class JavacFunction {
         "1.4", "1.5", "5", "1.6", "6", "1.7", "7");
 
     private final JavaCompiler compiler;
-    private final PluginApiImpl pluginApi;
+    private final NativeApiImpl nativeApi;
     private final Parameters params;
 
-    public Worker(PluginApiImpl pluginApi, Parameters params) {
+    public Worker(NativeApiImpl nativeApi, Parameters params) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
-      this.pluginApi = pluginApi;
+      this.nativeApi = nativeApi;
       this.params = params;
     }
 
@@ -81,7 +81,7 @@ public class JavacFunction {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
-      LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(pluginApi);
+      LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(nativeApi);
       Iterable<String> options = options();
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
@@ -92,8 +92,8 @@ public class JavacFunction {
          * Java compiler fails miserably when there's no java files.
          */
         if (Iterables.isEmpty(inputSourceFiles)) {
-          pluginApi.log(new NoJavaSourceFilesFoundWarning());
-          return pluginApi.arrayBuilder(FILE_ARRAY).build();
+          nativeApi.log(new NoJavaSourceFilesFoundWarning());
+          return nativeApi.arrayBuilder(FILE_ARRAY).build();
         }
 
         // run compilation task
@@ -104,18 +104,18 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          pluginApi.log(new CompilerFailedWithoutDiagnosticsError());
+          nativeApi.log(new CompilerFailedWithoutDiagnosticsError());
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
-          pluginApi.log(new AdditionalCompilerInfo(additionalInfo));
+          nativeApi.log(new AdditionalCompilerInfo(additionalInfo));
         }
         return fileManager.resultClassfiles();
       } finally {
         try {
           fileManager.close();
         } catch (IOException e) {
-          pluginApi.log(new FileSystemError(e));
+          nativeApi.log(new FileSystemError(e));
         }
       }
     }
@@ -148,8 +148,8 @@ public class JavacFunction {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
       Multimap<String, JavaFileObject> libsClasses =
-          PackagedJavaFileObjects.packagedJavaFileObjects(pluginApi, nullToEmpty(params.libs()));
-      return new SandboxedJavaFileManager(fileManager, pluginApi, libsClasses);
+          PackagedJavaFileObjects.packagedJavaFileObjects(nativeApi, nullToEmpty(params.libs()));
+      return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<SFile> sourceFiles) {

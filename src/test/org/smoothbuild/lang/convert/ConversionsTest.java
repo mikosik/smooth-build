@@ -19,7 +19,7 @@ import org.smoothbuild.lang.type.SNothing;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.testing.lang.type.FakeArray;
 import org.smoothbuild.testing.lang.type.FakeFile;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class ConversionsTest {
 
@@ -98,7 +98,7 @@ public class ConversionsTest {
   @Test
   public void convertFileToBlob() throws Exception {
     FakeFile file = new FakeFile(path("abc"));
-    Object blob = Conversions.converter(FILE, BLOB).convert(new FakePluginApi(), file);
+    Object blob = Conversions.converter(FILE, BLOB).convert(new FakeNativeApi(), file);
     assertThat(blob).isSameAs(file.content());
   }
 
@@ -110,37 +110,37 @@ public class ConversionsTest {
     FakeArray<SFile> fileArray = fakeArray(FILE_ARRAY, file1, file2);
     Converter<SArray<SFile>, SArray<SBlob>> converter =
         Conversions.converter(FILE_ARRAY, BLOB_ARRAY);
-    SArray<SBlob> blobArray = converter.convert(new FakePluginApi(), fileArray);
+    SArray<SBlob> blobArray = converter.convert(new FakeNativeApi(), fileArray);
     assertThat(blobArray).containsExactly(file1.content(), file2.content());
   }
 
   @Test
   public void convertEmptyArrayToStringArray() throws Exception {
-    FakePluginApi pluginApi = new FakePluginApi();
+    FakeNativeApi nativeApi = new FakeNativeApi();
 
     Converter<SArray<SNothing>, SArray<SString>> converter =
         Conversions.converter(EMPTY_ARRAY, STRING_ARRAY);
-    SArray<SString> array = converter.convert(pluginApi, pluginApi.emptyArray());
+    SArray<SString> array = converter.convert(nativeApi, nativeApi.emptyArray());
     assertThat(array).isEmpty();
   }
 
   @Test
   public void convertEmptyArrayToBlobArray() throws Exception {
-    FakePluginApi pluginApi = new FakePluginApi();
+    FakeNativeApi nativeApi = new FakeNativeApi();
 
     Converter<SArray<SNothing>, SArray<SBlob>> converter =
         Conversions.converter(EMPTY_ARRAY, BLOB_ARRAY);
-    SArray<SBlob> array = converter.convert(pluginApi, pluginApi.emptyArray());
+    SArray<SBlob> array = converter.convert(nativeApi, nativeApi.emptyArray());
     assertThat(array).isEmpty();
   }
 
   @Test
   public void convertEmptyArrayToFileArray() throws Exception {
-    FakePluginApi pluginApi = new FakePluginApi();
+    FakeNativeApi nativeApi = new FakeNativeApi();
 
     Converter<SArray<SNothing>, SArray<SFile>> converter =
         Conversions.converter(EMPTY_ARRAY, FILE_ARRAY);
-    SArray<SFile> array = converter.convert(pluginApi, pluginApi.emptyArray());
+    SArray<SFile> array = converter.convert(nativeApi, nativeApi.emptyArray());
     assertThat(array).isEmpty();
   }
 }

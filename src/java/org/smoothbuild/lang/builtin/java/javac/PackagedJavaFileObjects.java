@@ -6,7 +6,7 @@ import javax.tools.JavaFileObject;
 
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
@@ -15,9 +15,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjects {
-  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(PluginApi pluginApi,
+  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(NativeApi nativeApi,
       Iterable<SBlob> libraryJars) {
-    Unjarer unjarer = new Unjarer(pluginApi);
+    Unjarer unjarer = new Unjarer(nativeApi);
     Multimap<String, JavaFileObject> result = HashMultimap.create();
 
     for (SBlob jarBlob : libraryJars) {

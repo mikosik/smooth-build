@@ -20,7 +20,7 @@ import org.smoothbuild.io.fs.base.exc.FileSystemError;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SBlob;
 import org.smoothbuild.lang.type.SFile;
@@ -33,12 +33,12 @@ import com.google.common.base.Predicates;
 public class Unjarer {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
 
-  private final PluginApi pluginApi;
+  private final NativeApi nativeApi;
   private final byte[] buffer;
   private DuplicatesDetector<Path> duplicatesDetector;
 
-  public Unjarer(PluginApi pluginApi) {
-    this.pluginApi = pluginApi;
+  public Unjarer(NativeApi nativeApi) {
+    this.nativeApi = nativeApi;
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
@@ -48,7 +48,7 @@ public class Unjarer {
 
   public SArray<SFile> unjar(SBlob jarBlob, Predicate<String> nameFilter) {
     this.duplicatesDetector = new DuplicatesDetector<Path>();
-    ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream());) {
@@ -78,14 +78,14 @@ public class Unjarer {
       throw new IllegalPathInJarError(fileName);
     }
 
-    FileBuilder fileBuilder = pluginApi.fileBuilder();
+    FileBuilder fileBuilder = nativeApi.fileBuilder();
     fileBuilder.setPath(path(fileName));
     fileBuilder.setContent(unjarEntryContent(jarInputStream));
     return fileBuilder.build();
   }
 
   private SBlob unjarEntryContent(JarInputStream jarInputStream) {
-    BlobBuilder contentBuilder = pluginApi.blobBuilder();
+    BlobBuilder contentBuilder = nativeApi.blobBuilder();
     try {
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len = 0;

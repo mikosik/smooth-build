@@ -18,7 +18,7 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class FilesFunction {
   public interface Parameters {
@@ -27,19 +27,19 @@ public class FilesFunction {
   }
 
   @SmoothFunction(name = "files", cacheable = false)
-  public static SArray<SFile> execute(PluginApiImpl pluginApi, Parameters params) {
-    return new Worker(pluginApi, params).execute();
+  public static SArray<SFile> execute(NativeApiImpl nativeApi, Parameters params) {
+    return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
-    private final PluginApiImpl pluginApi;
+    private final NativeApiImpl nativeApi;
     private final Parameters params;
     private final FileReader reader;
 
-    public Worker(PluginApiImpl pluginApi, Parameters params) {
-      this.pluginApi = pluginApi;
+    public Worker(NativeApiImpl nativeApi, Parameters params) {
+      this.nativeApi = nativeApi;
       this.params = params;
-      this.reader = new FileReader(pluginApi);
+      this.reader = new FileReader(nativeApi);
     }
 
     public SArray<SFile> execute() {
@@ -47,7 +47,7 @@ public class FilesFunction {
     }
 
     private SArray<SFile> createFiles(Path dirPath) {
-      FileSystem fileSystem = pluginApi.projectFileSystem();
+      FileSystem fileSystem = nativeApi.projectFileSystem();
 
       if (dirPath.isRoot()) {
         throw new CannotListRootDirError();
@@ -59,7 +59,7 @@ public class FilesFunction {
 
       switch (fileSystem.pathState(dirPath)) {
         case DIR:
-          ArrayBuilder<SFile> fileArrayBuilder = pluginApi.arrayBuilder(FILE_ARRAY);
+          ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
           for (Path filePath : fileSystem.filesFrom(dirPath)) {
             fileArrayBuilder.add(reader.createFile(filePath, dirPath.append(filePath)));
           }

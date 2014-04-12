@@ -9,7 +9,7 @@ import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.io.temp.TempDirectoryManager;
-import org.smoothbuild.lang.plugin.PluginApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.lang.type.SValue;
@@ -17,7 +17,7 @@ import org.smoothbuild.lang.type.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 
-public class PluginApiImpl implements PluginApi {
+public class NativeApiImpl implements NativeApi {
   private final FileSystem projectFileSystem;
   private final SValueBuilders valueBuilders;
   private final TempDirectoryManager tempDirectoryManager;
@@ -25,7 +25,7 @@ public class PluginApiImpl implements PluginApi {
   private boolean isResultFromCache;
 
   @Inject
-  public PluginApiImpl(@ProjectDir FileSystem fileSystem, SValueBuilders valueBuilders,
+  public NativeApiImpl(@ProjectDir FileSystem fileSystem, SValueBuilders valueBuilders,
       TempDirectoryManager tempDirectoryManager) {
     this.projectFileSystem = fileSystem;
     this.valueBuilders = valueBuilders;

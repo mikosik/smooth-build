@@ -17,16 +17,16 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
-import org.smoothbuild.testing.task.exec.FakePluginApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.ImmutableList;
 
 public class ArrayNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  FakePluginApi pluginApi = new FakePluginApi();
+  FakeNativeApi nativeApi = new FakeNativeApi();
   CodeLocation codeLocation = new FakeCodeLocation();
-  SString string1 = pluginApi.valueDb().writeString("string1");
-  SString string2 = pluginApi.valueDb().writeString("string2");
+  SString string1 = nativeApi.valueDb().writeString("string1");
+  SString string2 = nativeApi.valueDb().writeString("string2");
 
   @SuppressWarnings("unchecked")
   Node<SString> node1 = mock(Node.class);
@@ -59,7 +59,7 @@ public class ArrayNodeTest {
 
     Task<?> task = arrayNode.generateTask(taskGenerator);
     @SuppressWarnings("unchecked")
-    SArray<SString> result = (SArray<SString>) task.execute(pluginApi);
+    SArray<SString> result = (SArray<SString>) task.execute(nativeApi);
     assertThat(result).containsOnly(string1, string2);
   }
 }

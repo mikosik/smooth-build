@@ -10,7 +10,7 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -27,22 +27,22 @@ public class NativeCallTask<T extends SValue> extends Task<T> {
   }
 
   @Override
-  public T execute(PluginApiImpl pluginApi) {
+  public T execute(NativeApiImpl nativeApi) {
     try {
-      T result = function.invoke(pluginApi, calculateArguments());
-      if (result == null && !pluginApi.loggedMessages().containsProblems()) {
-        pluginApi.log(new NullResultError());
+      T result = function.invoke(nativeApi, calculateArguments());
+      if (result == null && !nativeApi.loggedMessages().containsProblems()) {
+        nativeApi.log(new NullResultError());
       } else {
         return result;
       }
     } catch (IllegalAccessException e) {
-      pluginApi.log(new ReflexiveInternalError(e));
+      nativeApi.log(new ReflexiveInternalError(e));
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Message) {
-        pluginApi.log((Message) cause);
+        nativeApi.log((Message) cause);
       } else {
-        pluginApi.log(new UnexpectedError(cause));
+        nativeApi.log(new UnexpectedError(cause));
       }
     }
     return null;

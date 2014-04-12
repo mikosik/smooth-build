@@ -7,7 +7,7 @@ import org.smoothbuild.lang.type.SArray;
 import org.smoothbuild.lang.type.SArrayType;
 import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.PluginApiImpl;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.collect.ImmutableList;
 
@@ -23,8 +23,8 @@ public class ArrayTask<T extends SValue> extends Task<SArray<T>> {
   }
 
   @Override
-  public SArray<T> execute(PluginApiImpl pluginApi) {
-    ArrayBuilder<T> builder = pluginApi.arrayBuilder(arrayType);
+  public SArray<T> execute(NativeApiImpl nativeApi) {
+    ArrayBuilder<T> builder = nativeApi.arrayBuilder(arrayType);
     for (Result<T> task : elements) {
       builder.add(task.value());
     }
