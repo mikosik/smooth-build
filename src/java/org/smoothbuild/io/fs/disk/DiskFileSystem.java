@@ -18,10 +18,10 @@ import java.util.Arrays;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
-import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
-import org.smoothbuild.io.fs.base.exc.NoSuchPathError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.NoSuchPathError;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;

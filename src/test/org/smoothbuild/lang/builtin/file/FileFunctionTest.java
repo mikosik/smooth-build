@@ -7,8 +7,8 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileButDirError;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.builtin.file.FileFunction.Parameters;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;

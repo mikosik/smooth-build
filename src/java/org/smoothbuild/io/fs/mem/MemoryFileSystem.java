@@ -13,11 +13,11 @@ import java.util.List;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
-import org.smoothbuild.io.fs.base.exc.NoSuchDirError;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileButDirError;
-import org.smoothbuild.io.fs.base.exc.NoSuchFileError;
-import org.smoothbuild.io.fs.base.exc.NoSuchPathError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.NoSuchPathError;
 
 /**
  * In memory implementation of FileSystem.

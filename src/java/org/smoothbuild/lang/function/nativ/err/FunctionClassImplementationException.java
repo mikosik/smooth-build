@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.nativ.exc;
+package org.smoothbuild.lang.function.nativ.err;
 
 @SuppressWarnings("serial")
 public class FunctionClassImplementationException extends NativeImplementationException {

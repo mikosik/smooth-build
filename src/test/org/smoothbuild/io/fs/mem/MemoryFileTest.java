@@ -14,7 +14,7 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.io.fs.base.exc.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
 
 public class MemoryFileTest {
   MemoryDirectory parent = mock(MemoryDirectory.class);
