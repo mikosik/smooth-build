@@ -21,7 +21,7 @@ public interface PluginApi extends SValueBuilders {
    * 
    * Each call to this methods creates separate directory which is what you
    * should do when your command line tool read data from one directory and
-   * outputs it to antother.
+   * outputs it to another.
    */
   public TempDirectory createTempDirectory();
 }
