@@ -3,9 +3,9 @@ package org.smoothbuild.lang.builtin.file;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 

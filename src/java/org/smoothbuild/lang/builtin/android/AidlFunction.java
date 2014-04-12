@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.List;
 
 import org.smoothbuild.io.temp.TempDirectory;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.builtin.android.err.AidlBinaryReturnedNonZeroCodeError;
 import org.smoothbuild.lang.builtin.android.err.AidlShouldOutputExactlyOneFileError;
 import org.smoothbuild.lang.builtin.android.err.RunningAidlBinaryFailedError;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.util.CommandExecutor;

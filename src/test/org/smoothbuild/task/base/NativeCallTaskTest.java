@@ -15,13 +15,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;

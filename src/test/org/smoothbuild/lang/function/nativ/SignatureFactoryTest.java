@@ -9,9 +9,9 @@ import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 import java.lang.reflect.Method;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 
 public class SignatureFactoryTest {
