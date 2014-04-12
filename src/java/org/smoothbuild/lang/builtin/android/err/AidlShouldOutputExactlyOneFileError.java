@@ -3,8 +3,8 @@ package org.smoothbuild.lang.builtin.android.err;
 import static org.smoothbuild.lang.builtin.android.AndroidSdk.AIDL_BINARY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.LineBuilder;
 

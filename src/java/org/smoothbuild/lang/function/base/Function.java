@@ -2,8 +2,8 @@ package org.smoothbuild.lang.function.base;
 
 import java.util.Map;
 
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;

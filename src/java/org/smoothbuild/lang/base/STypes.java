@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.base;
 
-import static org.smoothbuild.lang.type.SArrayType.sArrayType;
-import static org.smoothbuild.lang.type.SType.sType;
+import static org.smoothbuild.lang.base.SArrayType.sArrayType;
+import static org.smoothbuild.lang.base.SType.sType;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

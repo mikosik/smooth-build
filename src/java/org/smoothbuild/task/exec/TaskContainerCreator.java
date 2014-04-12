@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.task.base.Task;
 
 public class TaskContainerCreator {

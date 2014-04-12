@@ -7,9 +7,9 @@ import java.util.Set;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.util.DuplicatesDetector;

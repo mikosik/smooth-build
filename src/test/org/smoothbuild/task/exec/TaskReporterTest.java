@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 import static org.smoothbuild.task.exec.TaskReporter.header;
@@ -14,7 +14,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.type.SString;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.message.listen.UserConsole;

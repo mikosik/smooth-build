@@ -3,13 +3,13 @@ package org.smoothbuild.lang.function.def.args;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
-import static org.smoothbuild.lang.type.STypes.allTypes;
+import static org.smoothbuild.lang.base.STypes.allTypes;
 
 import java.util.Collection;
 import java.util.Set;
 
+import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;

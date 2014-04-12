@@ -1,7 +1,7 @@
 package org.smoothbuild.task.base;
 
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.convert.Converter;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.NativeApiImpl;
 

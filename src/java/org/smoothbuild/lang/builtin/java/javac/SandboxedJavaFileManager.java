@@ -2,7 +2,7 @@ package org.smoothbuild.lang.builtin.java.javac;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 import java.util.Set;
@@ -15,10 +15,10 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SFile;
 
 import com.google.common.collect.Multimap;
 

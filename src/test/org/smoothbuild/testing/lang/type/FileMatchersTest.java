@@ -6,7 +6,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.lang.type.FileMatchers;
 

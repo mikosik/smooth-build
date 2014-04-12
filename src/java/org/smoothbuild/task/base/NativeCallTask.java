@@ -3,8 +3,8 @@ package org.smoothbuild.task.base;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.err.NullResultError;

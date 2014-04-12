@@ -5,8 +5,8 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.io.cache.value.build.FileBuilder;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 

@@ -3,8 +3,8 @@ package org.smoothbuild.lang.function.def;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Task;

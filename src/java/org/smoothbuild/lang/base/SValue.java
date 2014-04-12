@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.base;
 
 /**
  * Smooth Value. A value in smooth language.

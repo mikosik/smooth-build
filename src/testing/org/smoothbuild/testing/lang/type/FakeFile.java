@@ -1,13 +1,13 @@
 package org.smoothbuild.testing.lang.type;
 
-import static org.smoothbuild.lang.type.STypes.FILE;
+import static org.smoothbuild.lang.base.STypes.FILE;
 
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.value.instance.CachedValue;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 
 import com.google.common.hash.HashCode;
 

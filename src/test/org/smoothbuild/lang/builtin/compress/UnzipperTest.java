@@ -10,9 +10,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;

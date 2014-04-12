@@ -1,15 +1,15 @@
 package org.smoothbuild.lang.builtin.java.javac;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.lang.type.FileTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;

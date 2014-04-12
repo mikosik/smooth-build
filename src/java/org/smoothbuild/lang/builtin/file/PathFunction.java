@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.builtin.file;
 
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class PathFunction {

@@ -1,7 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -13,9 +13,9 @@ import org.junit.Test;
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.task.CachedResult;
 import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.CallHasher;
-import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;

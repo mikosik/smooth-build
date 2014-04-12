@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.builtin.blob;
 
-import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
 
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SBlob;
 
 public class ConcatenateBlobsFunction {
 

@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.STypes.STRING;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SType;
+import org.smoothbuild.lang.base.SType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

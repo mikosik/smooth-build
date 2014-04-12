@@ -4,8 +4,8 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
-import org.smoothbuild.lang.type.SString;
 
 public class PathArgValidator {
   public static Path validatedPath(String name, SString stringValue) {

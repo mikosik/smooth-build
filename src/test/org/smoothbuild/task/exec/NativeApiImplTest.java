@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.io.temp.TempDirectoryManager;
-import org.smoothbuild.lang.type.SValueBuilders;
+import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;

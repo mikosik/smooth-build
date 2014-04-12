@@ -5,8 +5,8 @@ import static org.smoothbuild.task.exec.save.Savers.targetPath;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.SBlob;
 
 public class BlobSaver implements Saver<SBlob> {
   private final FileSystem smoothFileSystem;

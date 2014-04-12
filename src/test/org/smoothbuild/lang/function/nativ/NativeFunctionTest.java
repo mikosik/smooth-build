@@ -9,9 +9,9 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.NativeApiImpl;

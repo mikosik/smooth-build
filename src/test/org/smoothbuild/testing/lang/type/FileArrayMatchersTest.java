@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.lang.type;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFile;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContaining;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContainingItsPath;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 
 public class FileArrayMatchersTest {
   FakeFile file;

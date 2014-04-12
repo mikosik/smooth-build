@@ -8,9 +8,9 @@ import java.util.List;
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.value.read.ReadValue;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

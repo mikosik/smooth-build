@@ -1,7 +1,7 @@
 package org.smoothbuild.io.temp;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,10 +17,10 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SFile;
-import org.smoothbuild.lang.type.SValueBuilders;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.annotations.VisibleForTesting;

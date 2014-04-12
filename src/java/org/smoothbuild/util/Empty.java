@@ -1,11 +1,11 @@
 package org.smoothbuild.util;
 
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Result;
 

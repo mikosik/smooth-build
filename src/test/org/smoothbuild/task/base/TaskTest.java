@@ -6,9 +6,9 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.STypes;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.STypes;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.message.FakeCodeLocation;

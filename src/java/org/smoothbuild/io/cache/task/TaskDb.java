@@ -1,7 +1,7 @@
 package org.smoothbuild.io.cache.task;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.util.List;
@@ -13,9 +13,9 @@ import org.smoothbuild.io.cache.hash.Marshaller;
 import org.smoothbuild.io.cache.hash.TasksCache;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.value.ValueDb;
-import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 

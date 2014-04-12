@@ -3,10 +3,10 @@ package org.smoothbuild.lang.builtin.blob;
 import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.util.Streams;
 

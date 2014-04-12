@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.task.base;
 
-import org.smoothbuild.lang.type.SValue;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.task.base.Result;
 
 public class FakeResult<T extends SValue> implements Result<T> {

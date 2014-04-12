@@ -5,10 +5,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.NativeCallTask;
 import org.smoothbuild.task.base.Result;

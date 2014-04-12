@@ -1,11 +1,11 @@
 package org.smoothbuild.testing.task.exec;
 
-import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
 
 import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SNothing;
-import org.smoothbuild.lang.type.SValueBuilders;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SNothing;
+import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.io.cache.value.FakeValueDb;

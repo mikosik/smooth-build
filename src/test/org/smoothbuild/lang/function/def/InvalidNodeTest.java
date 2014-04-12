@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
-import static org.smoothbuild.lang.type.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;

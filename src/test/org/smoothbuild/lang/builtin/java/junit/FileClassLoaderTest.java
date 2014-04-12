@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.lang.type.FakeFile;
 
 import com.google.common.collect.ImmutableMap;

@@ -1,8 +1,8 @@
 package org.smoothbuild.task.exec.save;
 
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.SFile;
 
 public class FileSaver implements Saver<SFile> {
   private final BlobSaver blobSaver;

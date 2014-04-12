@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.io.cache.value.ValueDb;
-import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.base.SBlob;
 
 public class BlobBuilder {
   private final ValueDb valueDb;

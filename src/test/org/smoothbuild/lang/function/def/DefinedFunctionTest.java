@@ -7,8 +7,8 @@ import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.type.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;

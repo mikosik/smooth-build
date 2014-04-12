@@ -1,24 +1,24 @@
 package org.smoothbuild.task.exec.save;
 
-import static org.smoothbuild.lang.type.STypes.BLOB;
-import static org.smoothbuild.lang.type.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.type.STypes.EMPTY_ARRAY;
-import static org.smoothbuild.lang.type.STypes.FILE;
-import static org.smoothbuild.lang.type.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.type.STypes.STRING;
-import static org.smoothbuild.lang.type.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.STypes.BLOB;
+import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.FILE;
+import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SNothing;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.SBlob;
-import org.smoothbuild.lang.type.SNothing;
-import org.smoothbuild.lang.type.SString;
-import org.smoothbuild.lang.type.SType;
-import org.smoothbuild.lang.type.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.SmoothExecutorMessages;
 

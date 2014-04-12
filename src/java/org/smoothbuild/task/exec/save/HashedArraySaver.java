@@ -6,9 +6,9 @@ import static org.smoothbuild.task.exec.save.Savers.targetPath;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SValue;
 
 public class HashedArraySaver<T extends SValue> implements Saver<SArray<T>> {
   private final FileSystem smoothFileSystem;

@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.type.STypes.STRING;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -11,7 +11,7 @@ import static org.testory.Testory.willReturn;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SString;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;

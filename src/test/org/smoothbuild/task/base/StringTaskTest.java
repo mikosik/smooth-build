@@ -5,7 +5,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.SString;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.message.FakeCodeLocation;

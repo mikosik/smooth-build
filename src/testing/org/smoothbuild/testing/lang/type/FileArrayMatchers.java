@@ -8,8 +8,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SArray;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SFile;
 
 public class FileArrayMatchers {
 

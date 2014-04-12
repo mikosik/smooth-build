@@ -7,7 +7,7 @@ import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.cache.value.instance.CachedBlob;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SFile;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 public class FakeValueDb extends ValueDb {

@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static org.smoothbuild.lang.type.STypes.allTypes;
+import static org.smoothbuild.lang.base.STypes.allTypes;
 
 import java.util.Collection;
 import java.util.Set;
 
+import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.convert.Conversions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
@@ -13,7 +14,6 @@ import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.args.err.MissingRequiredArgsError;
 import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
-import org.smoothbuild.lang.type.SType;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 

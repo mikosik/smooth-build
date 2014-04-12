@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.io.cache.value.instance.CachedFile;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.SBlob;
+import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 
 public class FileBuilderTest {

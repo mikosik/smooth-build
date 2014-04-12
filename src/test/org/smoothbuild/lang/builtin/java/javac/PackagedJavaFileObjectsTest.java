@@ -8,8 +8,8 @@ import static org.smoothbuild.testing.common.JarTester.jaredFiles;
 import javax.tools.JavaFileObject;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.type.SFile;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
