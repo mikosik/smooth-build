@@ -17,14 +17,14 @@ public class DbModule extends AbstractModule {
 
   @TaskResults
   @Provides
-  public HashedDb provideTasksCache(@SmoothDir FileSystem fileSystem) {
+  public HashedDb provideTaksResultsHashedDb(@SmoothDir FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, TASK_RESULTS_DIR);
     return new HashedDb(objectsFileSystem);
   }
 
   @Objects
   @Provides
-  public HashedDb provideValuesCache(@SmoothDir FileSystem fileSystem) {
+  public HashedDb provideObjectsHashedDb(@SmoothDir FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, OBJECTS_DIR);
     return new HashedDb(objectsFileSystem);
   }
