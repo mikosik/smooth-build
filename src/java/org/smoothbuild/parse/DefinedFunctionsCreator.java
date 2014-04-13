@@ -220,8 +220,6 @@ public class DefinedFunctionsCreator {
     }
 
     private static SType<?> commonSuperType(SType<?> type1, SType<?> type2) {
-      // TODO hardcoded algorithm below should be replaced by algorithm driven
-      // by a data structures describing type hierarchy
       if (type1 == STRING) {
         if (type2 == STRING) {
           return STRING;

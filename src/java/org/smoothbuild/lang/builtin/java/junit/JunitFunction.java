@@ -25,12 +25,6 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Predicate;
 
-/*
- * TODO
- * Current implementation requires classes from junit.jar being present in
- * smooth.jar. Once plugin system is in place this function should be moved to a
- * plugin and should require junitLib parameter that would provide junit binary.
- */
 public class JunitFunction {
   public interface Parameters {
     SArray<SBlob> libs();
