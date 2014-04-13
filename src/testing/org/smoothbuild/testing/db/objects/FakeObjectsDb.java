@@ -4,7 +4,7 @@ import static org.smoothbuild.SmoothContants.CHARSET;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.objects.instance.CachedBlob;
+import org.smoothbuild.db.objects.instance.BlobObject;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
@@ -25,7 +25,7 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   public SFile createFileContainingItsPath(Path path) {
-    CachedBlob content = writeBlob(path.value().getBytes(CHARSET));
+    BlobObject content = writeBlob(path.value().getBytes(CHARSET));
     return writeFile(path, content);
   }
 }

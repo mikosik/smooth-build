@@ -16,9 +16,9 @@ import org.smoothbuild.db.Objects;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.objects.build.ArrayBuilder;
-import org.smoothbuild.db.objects.instance.CachedBlob;
-import org.smoothbuild.db.objects.instance.CachedFile;
-import org.smoothbuild.db.objects.instance.CachedString;
+import org.smoothbuild.db.objects.instance.BlobObject;
+import org.smoothbuild.db.objects.instance.FileObject;
+import org.smoothbuild.db.objects.instance.StringObject;
 import org.smoothbuild.db.objects.read.ReadArray;
 import org.smoothbuild.db.objects.read.ReadBlob;
 import org.smoothbuild.db.objects.read.ReadFile;
@@ -126,17 +126,17 @@ public class ObjectsDb {
     marshaller.write(path);
     HashCode hash = hashedDb.store(marshaller.getBytes());
 
-    return new CachedFile(path, content, hash);
+    return new FileObject(path, content, hash);
   }
 
   public SString writeString(String string) {
     HashCode hash = hashedDb.store(string.getBytes(CHARSET));
-    return new CachedString(hashedDb, hash);
+    return new StringObject(hashedDb, hash);
   }
 
-  public CachedBlob writeBlob(byte[] objectBytes) {
+  public BlobObject writeBlob(byte[] objectBytes) {
     HashCode hash = hashedDb.store(objectBytes);
-    return new CachedBlob(hashedDb, hash);
+    return new BlobObject(hashedDb, hash);
   }
 
   // readers

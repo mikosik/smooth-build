@@ -10,13 +10,13 @@ import static org.testory.Testory.willReturn;
 import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.db.objects.build.BlobBuilder;
-import org.smoothbuild.db.objects.instance.CachedBlob;
+import org.smoothbuild.db.objects.instance.BlobObject;
 
 public class BlobBuilderTest {
   ObjectsDb objectsDb = mock(ObjectsDb.class);
   BlobBuilder blobBuilder = new BlobBuilder(objectsDb);
   byte[] bytes = new byte[] { 1, 2, 3 };
-  CachedBlob blob = mock(CachedBlob.class);
+  BlobObject blob = mock(BlobObject.class);
 
   @Test
   public void opening_output_stream_twice_fails() throws Exception {

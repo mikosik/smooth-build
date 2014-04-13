@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.objects.instance.CachedArray;
+import org.smoothbuild.db.objects.instance.ArrayObject;
 import org.smoothbuild.db.objects.read.ReadValue;
 import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.lang.base.SArray;
@@ -38,7 +38,7 @@ public class ArrayBuilder<T extends SValue> {
 
   private SArray<T> array(List<T> elements, SType<?> type, ReadValue<T> valueReader) {
     HashCode hash = genericArray(elements);
-    return new CachedArray<T>(hashedDb, hash, type, valueReader);
+    return new ArrayObject<T>(hashedDb, hash, type, valueReader);
   }
 
   private HashCode genericArray(List<? extends Hashed> elements) {

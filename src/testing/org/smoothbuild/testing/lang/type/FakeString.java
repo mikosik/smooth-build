@@ -4,10 +4,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.base.STypes.STRING;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.objects.instance.CachedValue;
+import org.smoothbuild.db.objects.instance.AbstractObject;
 import org.smoothbuild.lang.base.SString;
 
-public class FakeString extends CachedValue implements SString {
+public class FakeString extends AbstractObject implements SString {
   private final String value;
 
   public FakeString(String value) {

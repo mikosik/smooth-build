@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.objects.instance.CachedValue;
+import org.smoothbuild.db.objects.instance.AbstractObject;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
@@ -12,7 +12,7 @@ import org.smoothbuild.lang.base.SValue;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class FakeArray<T extends SValue> extends CachedValue implements SArray<T> {
+public class FakeArray<T extends SValue> extends AbstractObject implements SArray<T> {
   private final List<T> files = Lists.newArrayList();
 
   @SuppressWarnings("unchecked")

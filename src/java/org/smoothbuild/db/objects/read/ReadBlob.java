@@ -1,7 +1,7 @@
 package org.smoothbuild.db.objects.read;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.CachedBlob;
+import org.smoothbuild.db.objects.instance.BlobObject;
 import org.smoothbuild.lang.base.SBlob;
 
 import com.google.common.hash.HashCode;
@@ -15,6 +15,6 @@ public class ReadBlob implements ReadValue<SBlob> {
 
   @Override
   public SBlob read(HashCode hash) {
-    return new CachedBlob(hashedDb, hash);
+    return new BlobObject(hashedDb, hash);
   }
 }

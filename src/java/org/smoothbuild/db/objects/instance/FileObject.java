@@ -9,11 +9,11 @@ import org.smoothbuild.lang.base.SFile;
 
 import com.google.common.hash.HashCode;
 
-public class CachedFile extends CachedValue implements SFile {
+public class FileObject extends AbstractObject implements SFile {
   private final Path path;
   private final SBlob content;
 
-  public CachedFile(Path path, SBlob content, HashCode hash) {
+  public FileObject(Path path, SBlob content, HashCode hash) {
     super(FILE, hash);
     this.path = checkNotNull(path);
     this.content = checkNotNull(content);
