@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.TaskResults;
-import org.smoothbuild.io.cache.hash.ValuesCache;
+import org.smoothbuild.io.cache.hash.Objects;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -32,7 +32,7 @@ public class CacheModule extends AbstractModule {
   }
 
   @Singleton
-  @ValuesCache
+  @Objects
   @Provides
   public HashedDb provideValuesCache(@SmoothDir FileSystem fileSystem) {
     FileSystem objectsFileSystem = new SubFileSystem(fileSystem, VALUE_DB_DIR);
