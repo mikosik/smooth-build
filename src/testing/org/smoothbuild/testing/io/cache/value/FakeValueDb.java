@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.io.cache.value;
 
-import static org.smoothbuild.cli.work.build.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothContants.CHARSET;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.value.ValueDb;

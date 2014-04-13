@@ -1,6 +1,6 @@
 package org.smoothbuild.util;
 
-import static org.smoothbuild.cli.work.build.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothContants.CHARSET;
 
 import java.io.IOException;
 import java.io.InputStream;

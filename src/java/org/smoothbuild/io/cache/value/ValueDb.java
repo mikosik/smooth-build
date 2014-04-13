@@ -1,6 +1,6 @@
 package org.smoothbuild.io.cache.value;
 
-import static org.smoothbuild.cli.work.build.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothContants.CHARSET;
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
