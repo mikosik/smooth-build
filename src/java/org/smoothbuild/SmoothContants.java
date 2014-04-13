@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.work.build;
+package org.smoothbuild;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 
