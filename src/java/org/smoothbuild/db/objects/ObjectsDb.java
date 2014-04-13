@@ -12,9 +12,9 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.Objects;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.hashed.Objects;
 import org.smoothbuild.db.objects.build.ArrayBuilder;
 import org.smoothbuild.db.objects.instance.CachedBlob;
 import org.smoothbuild.db.objects.instance.CachedFile;
