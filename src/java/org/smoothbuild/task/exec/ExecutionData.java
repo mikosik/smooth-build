@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import org.smoothbuild.command.CommandLineArguments;
+import org.smoothbuild.cli.work.build.CommandLineArguments;
 import org.smoothbuild.lang.function.base.Module;
 
 public class ExecutionData {

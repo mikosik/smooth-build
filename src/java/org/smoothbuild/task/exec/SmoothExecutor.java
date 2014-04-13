@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.command.CommandLineArguments;
+import org.smoothbuild.cli.work.build.CommandLineArguments;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;

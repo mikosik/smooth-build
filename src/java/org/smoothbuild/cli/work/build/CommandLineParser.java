@@ -1,6 +1,6 @@
-package org.smoothbuild.command;
+package org.smoothbuild.cli.work.build;
 
-import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
+import static org.smoothbuild.cli.work.build.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 
@@ -9,8 +9,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.command.err.DuplicatedFunctionNameWarning;
-import org.smoothbuild.command.err.IllegalFunctionNameError;
+import org.smoothbuild.cli.work.build.err.DuplicatedFunctionNameWarning;
+import org.smoothbuild.cli.work.build.err.IllegalFunctionNameError;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.util.DuplicatesDetector;

@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.command.CommandLineArguments;
+import org.smoothbuild.cli.work.build.CommandLineArguments;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
