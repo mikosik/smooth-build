@@ -2,7 +2,7 @@ package org.smoothbuild.testing.task.exec;
 
 import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
 
-import org.smoothbuild.db.objects.build.SValueBuildersImpl;
+import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SValueBuilders;
@@ -27,7 +27,7 @@ public class FakeNativeApi extends NativeApiImpl {
   }
 
   private FakeNativeApi(FakeFileSystem fileSystem, FakeObjectsDb valueDb) {
-    this(fileSystem, new SValueBuildersImpl(valueDb), valueDb);
+    this(fileSystem, new ObjectBuilders(valueDb), valueDb);
   }
 
   public FakeNativeApi(FakeFileSystem fileSystem, SValueBuilders sValueBuilders, FakeObjectsDb valueDb) {

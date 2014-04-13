@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Test;
-import org.smoothbuild.db.objects.build.SValueBuildersImpl;
+import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -29,7 +29,7 @@ public class TempDirectoryTest {
   Path path = path("my/path");
   String content = "content";
 
-  SValueBuilders valueBuilders = new SValueBuildersImpl(new FakeObjectsDb());
+  SValueBuilders valueBuilders = new ObjectBuilders(new FakeObjectsDb());
   java.nio.file.Path rootPath = Paths.get("/fake/path");
   FakeFileSystem fileSystem = new FakeFileSystem();
   TempDirectory tempDirectory = new TempDirectory(valueBuilders, rootPath, fileSystem);
