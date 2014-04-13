@@ -8,9 +8,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.TaskResults;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.hashed.TaskResults;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.SString;

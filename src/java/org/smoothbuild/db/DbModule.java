@@ -5,8 +5,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Objects;
-import org.smoothbuild.db.hashed.TaskResults;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
