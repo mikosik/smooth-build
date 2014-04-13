@@ -30,7 +30,7 @@ import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
-import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.value.ObjectsDb;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SString;
@@ -64,19 +64,19 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
-  private final ValueDb valueDb;
+  private final ObjectsDb objectsDb;
   private final ArgNodesCreator argNodesCreator;
 
   @Inject
-  public DefinedFunctionsCreator(ValueDb valueDb, ArgNodesCreator argNodesCreator) {
-    this.valueDb = valueDb;
+  public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgNodesCreator argNodesCreator) {
+    this.objectsDb = objectsDb;
     this.argNodesCreator = argNodesCreator;
   }
 
   public Map<Name, Function<?>> createDefinedFunctions(LoggedMessages messages,
       Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker =
-        new Worker(messages, builtinModule, functionContexts, sorted, valueDb, argNodesCreator);
+        new Worker(messages, builtinModule, functionContexts, sorted, objectsDb, argNodesCreator);
     Map<Name, Function<?>> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -87,19 +87,19 @@ public class DefinedFunctionsCreator {
     private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
-    private final ValueDb valueDb;
+    private final ObjectsDb objectsDb;
     private final ArgNodesCreator argNodesCreator;
 
     private final Map<Name, Function<?>> functions = Maps.newHashMap();
 
     public Worker(LoggedMessages messages, Module builtinModule,
-        Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValueDb valueDb,
+        Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
         ArgNodesCreator argNodesCreator) {
       this.messages = messages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
-      this.valueDb = valueDb;
+      this.objectsDb = objectsDb;
       this.argNodesCreator = argNodesCreator;
     }
 
@@ -307,7 +307,7 @@ public class DefinedFunctionsCreator {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
-        SString stringValue = valueDb.writeString(unescaped(string));
+        SString stringValue = objectsDb.writeString(unescaped(string));
         return new CachingNode<>(new StringNode(stringValue, locationOf(stringToken.getSymbol())));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());

@@ -3,19 +3,19 @@ package org.smoothbuild.io.cache.value.build;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.value.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 
 public class FileBuilder {
-  private final ValueDb valueDb;
+  private final ObjectsDb objectsDb;
 
   private Path path;
   private SBlob content;
 
-  public FileBuilder(ValueDb valueDb) {
-    this.valueDb = valueDb;
+  public FileBuilder(ObjectsDb objectsDb) {
+    this.objectsDb = objectsDb;
   }
 
   public void setPath(Path path) {
@@ -32,6 +32,6 @@ public class FileBuilder {
     checkState(content != null, "No content set");
     checkState(path != null, "No path set");
 
-    return valueDb.writeFile(path, content);
+    return objectsDb.writeFile(path, content);
   }
 }
