@@ -3,8 +3,6 @@ package org.smoothbuild.db;
 import static org.smoothbuild.SmoothContants.OBJECTS_DIR;
 import static org.smoothbuild.SmoothContants.TASK_RESULTS_DIR;
 
-import javax.inject.Singleton;
-
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -17,7 +15,6 @@ public class DbModule extends AbstractModule {
   @Override
   protected void configure() {}
 
-  @Singleton
   @TaskResults
   @Provides
   public HashedDb provideTasksCache(@SmoothDir FileSystem fileSystem) {
@@ -25,7 +22,6 @@ public class DbModule extends AbstractModule {
     return new HashedDb(objectsFileSystem);
   }
 
-  @Singleton
   @Objects
   @Provides
   public HashedDb provideValuesCache(@SmoothDir FileSystem fileSystem) {
