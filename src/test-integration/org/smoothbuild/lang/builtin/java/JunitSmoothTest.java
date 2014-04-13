@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.builtin.java;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     script(createScript());
 
     build("run");
-    userConsole.messages().assertNoProblems();
+    assertThat(userConsole.messages()).isEmpty();
   }
 
   @Test
@@ -60,10 +61,10 @@ public class JunitSmoothTest extends IntegrationTestCase {
     createSuccessfulTest();
     createFailingTest();
 
-    script(createScript(SUCCESS_TEST_CLASS));
+    script(createScript(SUCCESS_TEST_CLASS + ".class"));
 
     build("run");
-    userConsole.messages().assertNoProblems();
+    assertThat(userConsole.messages()).isEmpty();
   }
 
   private String createScript() {
