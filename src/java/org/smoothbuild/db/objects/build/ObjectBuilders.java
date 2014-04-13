@@ -8,11 +8,11 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.base.SValueBuilders;
 
-public class SValueBuildersImpl implements SValueBuilders {
+public class ObjectBuilders implements SValueBuilders {
   private final ObjectsDb objectsDb;
 
   @Inject
-  public SValueBuildersImpl(ObjectsDb objectsDb) {
+  public ObjectBuilders(ObjectsDb objectsDb) {
     this.objectsDb = objectsDb;
   }
 

@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.smoothbuild.db.objects.build.ArrayBuilder;
 import org.smoothbuild.db.objects.build.BlobBuilder;
 import org.smoothbuild.db.objects.build.FileBuilder;
-import org.smoothbuild.db.objects.build.SValueBuildersImpl;
+import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -31,13 +31,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class SValueBuildersImplTest {
+public class ObjectBuildersTest {
   String content = "content";
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
   FakeObjectsDb valueDb = new FakeObjectsDb();
 
-  SValueBuildersImpl sValueBuilders = new SValueBuildersImpl(valueDb);
+  ObjectBuilders sValueBuilders = new ObjectBuilders(valueDb);
 
   @Test
   public void file_array_builder_stores_files_in_value_db() throws Exception {
