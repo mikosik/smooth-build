@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.io.cache.task.TaskResult;
-import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.io.cache.task.TaskResultsDb;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.CallHasher;
 import org.smoothbuild.message.base.Message;
@@ -12,13 +12,13 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 import com.google.common.hash.HashCode;
 
 public class CachingTask<T extends SValue> extends Task<T> {
-  private final TaskDb taskDb;
+  private final TaskResultsDb taskResultsDb;
   private final CallHasher<T> callHasher;
   private final Task<T> task;
 
-  public CachingTask(TaskDb taskDb, CallHasher<T> callHasher, Task<T> task) {
+  public CachingTask(TaskResultsDb taskResultsDb, CallHasher<T> callHasher, Task<T> task) {
     super(task.resultType(), task.name(), task.isInternal(), task.codeLocation());
-    this.taskDb = checkNotNull(taskDb);
+    this.taskResultsDb = checkNotNull(taskResultsDb);
     this.callHasher = checkNotNull(callHasher);
     this.task = checkNotNull(task);
   }
@@ -26,7 +26,7 @@ public class CachingTask<T extends SValue> extends Task<T> {
   @Override
   public T execute(NativeApiImpl nativeApi) {
     HashCode hash = callHasher.hash();
-    if (taskDb.contains(hash)) {
+    if (taskResultsDb.contains(hash)) {
       return readFromCache(nativeApi, hash);
     } else {
       return executeAndCache(nativeApi, hash);
@@ -35,7 +35,7 @@ public class CachingTask<T extends SValue> extends Task<T> {
 
   private T readFromCache(NativeApiImpl nativeApi, HashCode hash) {
     nativeApi.setResultIsFromCache();
-    TaskResult<T> cachedResult = taskDb.read(hash, task.resultType());
+    TaskResult<T> cachedResult = taskResultsDb.read(hash, task.resultType());
     for (Message message : cachedResult.messages()) {
       nativeApi.log(message);
     }
@@ -44,7 +44,7 @@ public class CachingTask<T extends SValue> extends Task<T> {
 
   private T executeAndCache(NativeApiImpl nativeApi, HashCode hash) {
     T result = task.execute(nativeApi);
-    taskDb.store(hash, new TaskResult<T>(result, nativeApi.loggedMessages()));
+    taskResultsDb.store(hash, new TaskResult<T>(result, nativeApi.loggedMessages()));
     return result;
   }
 }
