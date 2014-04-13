@@ -34,9 +34,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class TaskDbTest {
-  HashedDb taskResultsDb = new HashedDb(new FakeFileSystem());
+  HashedDb hashedDb = new HashedDb(new FakeFileSystem());
   ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
-  TaskDb taskDb = new TaskDb(taskResultsDb, valueDb);
+  TaskDb taskDb = new TaskDb(hashedDb, valueDb);
   HashCode hash = Hash.string("abc");
 
   byte[] bytes = new byte[] {};

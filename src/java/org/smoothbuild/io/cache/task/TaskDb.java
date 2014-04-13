@@ -23,12 +23,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class TaskDb {
-  private final HashedDb taskResultsDb;
+  private final HashedDb hashedDb;
   private final ValueDb valueDb;
 
   @Inject
-  public TaskDb(@TasksCache HashedDb taskResultsDb, ValueDb valueDb) {
-    this.taskResultsDb = taskResultsDb;
+  public TaskDb(@TasksCache HashedDb hashedDb, ValueDb valueDb) {
+    this.hashedDb = hashedDb;
     this.valueDb = valueDb;
   }
 
@@ -52,15 +52,15 @@ public class TaskDb {
       marshaller.write(value.hash());
     }
 
-    taskResultsDb.store(taskHash, marshaller.getBytes());
+    hashedDb.store(taskHash, marshaller.getBytes());
   }
 
   public boolean contains(HashCode taskHash) {
-    return taskResultsDb.contains(taskHash);
+    return hashedDb.contains(taskHash);
   }
 
   public <T extends SValue> CachedResult<T> read(HashCode taskHash, SType<T> type) {
-    try (Unmarshaller unmarshaller = new Unmarshaller(taskResultsDb, taskHash);) {
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash);) {
       int size = unmarshaller.readInt();
       boolean hasErrors = false;
       List<Message> messages = newArrayList();
