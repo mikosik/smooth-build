@@ -10,7 +10,7 @@ import static org.testory.Testory.willReturn;
 import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.db.objects.build.FileBuilder;
-import org.smoothbuild.db.objects.instance.CachedFile;
+import org.smoothbuild.db.objects.instance.FileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.testing.lang.type.FakeBlob;
@@ -21,7 +21,7 @@ public class FileBuilderTest {
   Path path = Path.path("my/path");
   SBlob blob = new FakeBlob();
   byte[] bytes = new byte[] { 1, 2, 3 };
-  CachedFile file = mock(CachedFile.class);
+  FileObject file = mock(FileObject.class);
 
   @Test
   public void setting_null_path_fails() throws Exception {

@@ -12,10 +12,10 @@ import org.smoothbuild.lang.base.SString;
 
 import com.google.common.hash.HashCode;
 
-public class CachedString extends CachedValue implements SString {
+public class StringObject extends AbstractObject implements SString {
   private final HashedDb hashedDb;
 
-  public CachedString(HashedDb hashedDb, HashCode hash) {
+  public StringObject(HashedDb hashedDb, HashCode hash) {
     super(STRING, hash);
     this.hashedDb = checkNotNull(hashedDb);
   }

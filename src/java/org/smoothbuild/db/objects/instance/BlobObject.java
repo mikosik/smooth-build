@@ -10,10 +10,10 @@ import org.smoothbuild.lang.base.SBlob;
 
 import com.google.common.hash.HashCode;
 
-public class CachedBlob extends CachedValue implements SBlob {
+public class BlobObject extends AbstractObject implements SBlob {
   private final HashedDb hashedDb;
 
-  public CachedBlob(HashedDb hashedDb, HashCode hash) {
+  public BlobObject(HashedDb hashedDb, HashCode hash) {
     super(BLOB, hash);
     this.hashedDb = checkNotNull(hashedDb);
   }

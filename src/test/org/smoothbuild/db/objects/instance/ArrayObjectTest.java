@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.CachedArray;
+import org.smoothbuild.db.objects.instance.ArrayObject;
 import org.smoothbuild.db.objects.read.ReadValue;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
@@ -18,12 +18,12 @@ import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
 
-public class CachedArrayTest {
+public class ArrayObjectTest {
   HashedDb hashedDb = new HashedDb(new FakeFileSystem());
   HashCode hash = HashCode.fromInt(33);
   SBlob blob = mock(SBlob.class);
 
-  CachedArray<SFile> cachedFileArray;
+  ArrayObject<SFile> cachedFileArray;
 
   @Test
   public void null_value_db_is_forbidden() {
@@ -39,14 +39,14 @@ public class CachedArrayTest {
 
   @Test
   public void type() throws Exception {
-    given(cachedFileArray = cachedArray(hashedDb, hash));
+    given(cachedFileArray = arrayObject(hashedDb, hash));
     when(cachedFileArray.type());
     thenReturned(FILE);
   }
 
   @Test
   public void hash_passed_to_constructor_is_returned_from_hash_method() throws Exception {
-    given(cachedFileArray = cachedArray(hashedDb, hash));
+    given(cachedFileArray = arrayObject(hashedDb, hash));
     when(cachedFileArray.hash());
     thenReturned(hash);
   }
@@ -55,14 +55,14 @@ public class CachedArrayTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return cachedArray(hashedDb, hash);
+        return arrayObject(hashedDb, hash);
       }
     };
   }
 
-  private static CachedArray<SFile> cachedArray(HashedDb hashedDb, HashCode hash) {
+  private static ArrayObject<SFile> arrayObject(HashedDb hashedDb, HashCode hash) {
     @SuppressWarnings("unchecked")
     ReadValue<SFile> valueReader = mock(ReadValue.class);
-    return new CachedArray<SFile>(hashedDb, hash, FILE, valueReader);
+    return new ArrayObject<SFile>(hashedDb, hash, FILE, valueReader);
   }
 }

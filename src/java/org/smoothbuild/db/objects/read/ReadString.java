@@ -1,7 +1,7 @@
 package org.smoothbuild.db.objects.read;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.CachedString;
+import org.smoothbuild.db.objects.instance.StringObject;
 import org.smoothbuild.lang.base.SString;
 
 import com.google.common.hash.HashCode;
@@ -15,6 +15,6 @@ public class ReadString implements ReadValue<SString> {
 
   @Override
   public SString read(HashCode hash) {
-    return new CachedString(hashedDb, hash);
+    return new StringObject(hashedDb, hash);
   }
 }

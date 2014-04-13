@@ -3,7 +3,7 @@ package org.smoothbuild.db.objects.read;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.CachedArray;
+import org.smoothbuild.db.objects.instance.ArrayObject;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
@@ -23,6 +23,6 @@ public class ReadArray<T extends SValue> implements ReadValue<SArray<T>> {
 
   @Override
   public SArray<T> read(HashCode hash) {
-    return new CachedArray<T>(hashedDb, hash, arrayType, readValue);
+    return new ArrayObject<T>(hashedDb, hash, arrayType, readValue);
   }
 }

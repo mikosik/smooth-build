@@ -8,18 +8,18 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.objects.instance.CachedValue;
+import org.smoothbuild.db.objects.instance.AbstractObject;
 import org.smoothbuild.lang.base.SType;
 import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
 
-public class CachedValueTest {
+public class AbstractObjectTest {
   HashCode hash = HashCode.fromInt(123);
   HashCode hash2 = HashCode.fromInt(124);
 
-  CachedValue abstractValue;
-  CachedValue abstractValue2;
+  AbstractObject abstractValue;
+  AbstractObject abstractValue2;
 
   @Test
   public void null_type_is_forbidden() {
@@ -72,7 +72,7 @@ public class CachedValueTest {
     };
   }
 
-  private static class MyAbstractValue extends CachedValue {
+  private static class MyAbstractValue extends AbstractObject {
     public MyAbstractValue(SType<?> type, HashCode hash) {
       super(type, hash);
     }

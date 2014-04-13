@@ -15,11 +15,11 @@ import org.smoothbuild.lang.base.SValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class CachedArray<T extends SValue> extends CachedValue implements SArray<T> {
+public class ArrayObject<T extends SValue> extends AbstractObject implements SArray<T> {
   private final HashedDb hashedDb;
   private final ReadValue<T> readValue;
 
-  public CachedArray(HashedDb hashedDb, HashCode hash, SType<?> type, ReadValue<T> valueReader) {
+  public ArrayObject(HashedDb hashedDb, HashCode hash, SType<?> type, ReadValue<T> valueReader) {
     super(type, hash);
     this.readValue = checkNotNull(valueReader);
     this.hashedDb = checkNotNull(hashedDb);
