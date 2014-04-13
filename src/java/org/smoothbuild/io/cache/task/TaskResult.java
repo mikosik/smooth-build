@@ -5,11 +5,11 @@ import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableList;
 
-public class CachedResult<T extends SValue> {
+public class TaskResult<T extends SValue> {
   private final T value;
   private final ImmutableList<Message> messages;
 
-  public CachedResult(T result, Iterable<Message> messages) {
+  public TaskResult(T result, Iterable<Message> messages) {
     this.value = result;
     this.messages = ImmutableList.copyOf(messages);
   }

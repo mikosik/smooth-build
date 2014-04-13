@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.io.cache.task.CachedResult;
+import org.smoothbuild.io.cache.task.TaskResult;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.CallHasher;
@@ -35,7 +35,7 @@ public class CachingTask<T extends SValue> extends Task<T> {
 
   private T readFromCache(NativeApiImpl nativeApi, HashCode hash) {
     nativeApi.setResultIsFromCache();
-    CachedResult<T> cachedResult = taskDb.read(hash, task.resultType());
+    TaskResult<T> cachedResult = taskDb.read(hash, task.resultType());
     for (Message message : cachedResult.messages()) {
       nativeApi.log(message);
     }
@@ -44,7 +44,7 @@ public class CachingTask<T extends SValue> extends Task<T> {
 
   private T executeAndCache(NativeApiImpl nativeApi, HashCode hash) {
     T result = task.execute(nativeApi);
-    taskDb.store(hash, new CachedResult<T>(result, nativeApi.loggedMessages()));
+    taskDb.store(hash, new TaskResult<T>(result, nativeApi.loggedMessages()));
     return result;
   }
 }

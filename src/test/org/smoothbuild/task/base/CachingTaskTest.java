@@ -11,7 +11,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.io.cache.hash.Hash;
-import org.smoothbuild.io.cache.task.CachedResult;
+import org.smoothbuild.io.cache.task.TaskResult;
 import org.smoothbuild.io.cache.task.TaskDb;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
@@ -96,7 +96,7 @@ public class CachingTaskTest {
   public void task_is_not_executed_when_result_from_db_is_returned() throws Exception {
     given(willReturn(hash), callHasher).hash();
     given(willReturn(true), taskDb).contains(hash);
-    given(willReturn(new CachedResult<>(stringValue2, Empty.messageList())), taskDb).read(hash,
+    given(willReturn(new TaskResult<>(stringValue2, Empty.messageList())), taskDb).read(hash,
         STRING);
     given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
     assertThat(cachingTask.execute(nativeApi)).isEqualTo(stringValue2);
