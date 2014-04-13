@@ -8,7 +8,7 @@ import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.io.cache.task.TaskResultsDb;
+import org.smoothbuild.db.taskresults.TaskResultsDb;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Signature;

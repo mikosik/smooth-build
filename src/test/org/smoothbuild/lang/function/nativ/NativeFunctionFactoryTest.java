@@ -10,7 +10,7 @@ import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 import static org.testory.Testory.mock;
 
 import org.junit.Test;
-import org.smoothbuild.io.cache.task.TaskResultsDb;
+import org.smoothbuild.db.taskresults.TaskResultsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;

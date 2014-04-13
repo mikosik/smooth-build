@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import java.util.Map;
 
-import org.smoothbuild.io.cache.task.TaskResultsDb;
+import org.smoothbuild.db.taskresults.TaskResultsDb;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;

@@ -3,7 +3,7 @@ package org.smoothbuild.lang.builtin.file;
 import static org.smoothbuild.io.fs.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
-import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.db.objects.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.match.IllegalPathPatternException;
 import org.smoothbuild.lang.base.NativeApi;

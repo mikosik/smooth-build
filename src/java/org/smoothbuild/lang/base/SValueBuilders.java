@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base;
 
-import org.smoothbuild.io.cache.value.build.ArrayBuilder;
-import org.smoothbuild.io.cache.value.build.BlobBuilder;
-import org.smoothbuild.io.cache.value.build.FileBuilder;
-import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
+import org.smoothbuild.db.objects.build.ArrayBuilder;
+import org.smoothbuild.db.objects.build.BlobBuilder;
+import org.smoothbuild.db.objects.build.FileBuilder;
+import org.smoothbuild.db.objects.build.SValueBuildersImpl;
 
 import com.google.inject.ImplementedBy;
 

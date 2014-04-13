@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import java.util.List;
 
-import org.smoothbuild.io.cache.value.build.ArrayBuilder;
+import org.smoothbuild.db.objects.build.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;

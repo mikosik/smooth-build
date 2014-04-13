@@ -3,8 +3,8 @@ package org.smoothbuild.testing.lang.type;
 import java.util.Iterator;
 import java.util.List;
 
-import org.smoothbuild.io.cache.hash.Hash;
-import org.smoothbuild.io.cache.value.instance.CachedValue;
+import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.objects.instance.CachedValue;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;

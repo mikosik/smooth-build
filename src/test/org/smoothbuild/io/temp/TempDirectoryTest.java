@@ -11,13 +11,13 @@ import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Test;
-import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
+import org.smoothbuild.db.objects.build.SValueBuildersImpl;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueBuilders;
-import org.smoothbuild.testing.io.cache.value.FakeValueDb;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.BlobTester;
 import org.smoothbuild.testing.lang.type.FakeBlob;
@@ -29,7 +29,7 @@ public class TempDirectoryTest {
   Path path = path("my/path");
   String content = "content";
 
-  SValueBuilders valueBuilders = new SValueBuildersImpl(new FakeValueDb());
+  SValueBuilders valueBuilders = new SValueBuildersImpl(new FakeObjectsDb());
   java.nio.file.Path rootPath = Paths.get("/fake/path");
   FakeFileSystem fileSystem = new FakeFileSystem();
   TempDirectory tempDirectory = new TempDirectory(valueBuilders, rootPath, fileSystem);

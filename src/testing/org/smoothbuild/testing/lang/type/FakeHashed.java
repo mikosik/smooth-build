@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.lang.type;
 
-import org.smoothbuild.io.cache.hash.Hash;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Hashed;
 
 import com.google.common.hash.HashCode;

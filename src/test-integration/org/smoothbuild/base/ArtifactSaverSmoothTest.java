@@ -1,7 +1,7 @@
 package org.smoothbuild.base;
 
+import static org.smoothbuild.db.DbModule.RESULTS_DIR;
 import static org.smoothbuild.io.Constants.SMOOTH_DIR;
-import static org.smoothbuild.io.cache.CacheModule.RESULTS_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
