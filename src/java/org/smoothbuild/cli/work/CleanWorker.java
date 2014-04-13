@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.work;
 
-import static org.smoothbuild.io.Constants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
 
 import javax.inject.Inject;
 

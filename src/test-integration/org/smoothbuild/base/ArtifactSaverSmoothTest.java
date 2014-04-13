@@ -1,7 +1,7 @@
 package org.smoothbuild.base;
 
-import static org.smoothbuild.db.DbModule.RESULTS_DIR;
-import static org.smoothbuild.io.Constants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothContants.ARTIFACTS_DIR;
+import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
@@ -10,7 +10,7 @@ import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 public class ArtifactSaverSmoothTest extends IntegrationTestCase {
-  private static final Path RESULTS_PATH = SMOOTH_DIR.append(RESULTS_DIR);
+  private static final Path RESULTS_PATH = SMOOTH_DIR.append(ARTIFACTS_DIR);
 
   Path path1 = path("def/filename1.txt");
   Path path2 = path("def/filename2.txt");
