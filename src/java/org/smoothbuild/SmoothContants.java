@@ -13,7 +13,7 @@ public class SmoothContants {
   public static final Charset CHARSET = Charsets.UTF_8;
 
   public static final Path SMOOTH_DIR = path(".smooth");
-  public static final Path OBJECTS_DIR = path("values");
-  public static final Path TASK_RESULTS_DIR = path("tasks");
-  public static final Path ARTIFACTS_DIR = path("results");
+  public static final Path OBJECTS_DIR = path("objects");
+  public static final Path TASK_RESULTS_DIR = path("taskresults");
+  public static final Path ARTIFACTS_DIR = path("artifacts");
 }
