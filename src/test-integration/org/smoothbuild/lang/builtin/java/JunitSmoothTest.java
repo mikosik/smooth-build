@@ -5,7 +5,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.builtin.java.junit.err.JunitTestFailedError;
@@ -13,7 +12,6 @@ import org.smoothbuild.lang.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
-@Ignore("For strange reasons this test fails when run by ant")
 public class JunitSmoothTest extends IntegrationTestCase {
   private static final String FAILING_TEST_CLASS = "MyClassFailingTest";
   private static final String SUCCESS_TEST_CLASS = "MyClassTest";
