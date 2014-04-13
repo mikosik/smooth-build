@@ -1,6 +1,6 @@
 package org.smoothbuild.io.cache.hash;
 
-import static org.smoothbuild.command.SmoothContants.CHARSET;
+import static org.smoothbuild.cli.work.build.SmoothContants.CHARSET;
 import static org.smoothbuild.io.cache.hash.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.io.cache.hash.Constants.TRUE_AS_BYTE;
 import static org.smoothbuild.io.fs.base.Path.path;

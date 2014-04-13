@@ -1,12 +1,14 @@
-package org.smoothbuild.command;
+package org.smoothbuild.cli.work.build;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.command.SmoothContants.DEFAULT_SCRIPT;
+import static org.smoothbuild.cli.work.build.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import org.junit.Test;
-import org.smoothbuild.command.err.DuplicatedFunctionNameWarning;
-import org.smoothbuild.command.err.IllegalFunctionNameError;
+import org.smoothbuild.cli.work.build.CommandLineArguments;
+import org.smoothbuild.cli.work.build.CommandLineParser;
+import org.smoothbuild.cli.work.build.err.DuplicatedFunctionNameWarning;
+import org.smoothbuild.cli.work.build.err.IllegalFunctionNameError;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 import com.google.common.collect.ImmutableList;

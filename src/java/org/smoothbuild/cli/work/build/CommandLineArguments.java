@@ -1,4 +1,4 @@
-package org.smoothbuild.command;
+package org.smoothbuild.cli.work.build;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

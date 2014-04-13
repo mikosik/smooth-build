@@ -1,6 +1,6 @@
 package org.smoothbuild.io.cache.hash;
 
-import static org.smoothbuild.command.SmoothContants.CHARSET;
+import static org.smoothbuild.cli.work.build.SmoothContants.CHARSET;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
