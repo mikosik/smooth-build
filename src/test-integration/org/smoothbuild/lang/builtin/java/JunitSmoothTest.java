@@ -77,8 +77,7 @@ public class JunitSmoothTest extends IntegrationTestCase {
     builder.addLine("jarFile: sources | javac(libs=[fakeJunitJar]) | jar;");
     String include = pattern == null ? "" : ", include='" + pattern + "'";
     builder.addLine("run: junit(libs=[jarFile]" + include + ");");
-    String script = builder.build();
-    return script;
+    return builder.build();
   }
 
   // Creating fake @Test annotation class is the simplest way to compile junit
