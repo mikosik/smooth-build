@@ -10,9 +10,9 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.io.cache.hash.Hash;
-import org.smoothbuild.io.cache.task.TaskResult;
-import org.smoothbuild.io.cache.task.TaskResultsDb;
+import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskresults.TaskResultsDb;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.CallHasher;

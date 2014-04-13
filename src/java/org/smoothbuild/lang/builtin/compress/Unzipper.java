@@ -10,9 +10,9 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.smoothbuild.io.cache.value.build.ArrayBuilder;
-import org.smoothbuild.io.cache.value.build.BlobBuilder;
-import org.smoothbuild.io.cache.value.build.FileBuilder;
+import org.smoothbuild.db.objects.build.ArrayBuilder;
+import org.smoothbuild.db.objects.build.BlobBuilder;
+import org.smoothbuild.db.objects.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;

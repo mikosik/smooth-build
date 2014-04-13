@@ -7,17 +7,17 @@ import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.io.cache.value.build.SValueBuildersImpl;
+import org.smoothbuild.db.objects.build.SValueBuildersImpl;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.io.temp.TempDirectoryManager;
 import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.testing.io.cache.value.FakeValueDb;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 public class NativeApiImplTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
-  FakeValueDb valueDb = new FakeValueDb(fileSystem);
+  FakeObjectsDb valueDb = new FakeObjectsDb(fileSystem);
   SValueBuilders valueBuilders = new SValueBuildersImpl(valueDb);
   TempDirectoryManager tempDirectoryManager = mock(TempDirectoryManager.class);
 

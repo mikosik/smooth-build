@@ -30,7 +30,7 @@ import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
-import org.smoothbuild.io.cache.value.ObjectsDb;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SString;

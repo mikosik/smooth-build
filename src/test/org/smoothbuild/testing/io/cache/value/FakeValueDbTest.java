@@ -11,24 +11,25 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 public class FakeValueDbTest {
   Path path = Path.path("my/file");
-  FakeValueDb fakeValueDb = new FakeValueDb();
+  FakeObjectsDb fakeObjectsDb = new FakeObjectsDb();
 
   SFile file;
 
   @Test
   public void created_file_containing_its_path_can_be_read_from_db() {
-    given(file = fakeValueDb.createFileContainingItsPath(path));
-    when(fakeValueDb.read(FILE, file.hash()).path());
+    given(file = fakeObjectsDb.createFileContainingItsPath(path));
+    when(fakeObjectsDb.read(FILE, file.hash()).path());
     thenReturned(path);
   }
 
   @Test
   public void created_file_containing_its_path_can_be_read_from_db2() throws IOException {
-    given(file = fakeValueDb.createFileContainingItsPath(path));
-    when(inputStreamToString(fakeValueDb.read(FILE, file.hash()).content().openInputStream()));
+    given(file = fakeObjectsDb.createFileContainingItsPath(path));
+    when(inputStreamToString(fakeObjectsDb.read(FILE, file.hash()).content().openInputStream()));
     thenReturned(path.value());
   }
 }

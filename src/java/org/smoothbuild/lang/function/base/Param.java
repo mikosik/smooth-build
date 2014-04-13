@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.STypes.allowedForParam;
 
 import java.util.Set;
 
-import org.smoothbuild.io.cache.hash.Hash;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.util.LineBuilder;
 

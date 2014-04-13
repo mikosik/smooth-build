@@ -1,10 +1,10 @@
 package org.smoothbuild.task.exec.save;
 
-import static org.smoothbuild.io.cache.CacheModule.RESULTS_DIR;
-import static org.smoothbuild.io.cache.CacheModule.VALUE_DB_DIR;
+import static org.smoothbuild.db.DbModule.RESULTS_DIR;
+import static org.smoothbuild.db.DbModule.VALUE_DB_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 
-import org.smoothbuild.io.cache.hash.HashCodes;
+import org.smoothbuild.db.hashed.HashCodes;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.lang.function.base.Name;
