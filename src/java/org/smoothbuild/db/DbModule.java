@@ -1,23 +1,19 @@
 package org.smoothbuild.db;
 
-import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.SmoothContants.OBJECTS_DIR;
+import static org.smoothbuild.SmoothContants.TASK_RESULTS_DIR;
 
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SubFileSystem;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 public class DbModule extends AbstractModule {
-  public static final Path VALUE_DB_DIR = path("values");
-  public static final Path TASK_DB_DIR = path("tasks");
-  public static final Path RESULTS_DIR = path("results");
-
   @Override
   protected void configure() {}
 
@@ -25,7 +21,7 @@ public class DbModule extends AbstractModule {
   @TaskResults
   @Provides
   public HashedDb provideTasksCache(@SmoothDir FileSystem fileSystem) {
-    FileSystem objectsFileSystem = new SubFileSystem(fileSystem, TASK_DB_DIR);
+    FileSystem objectsFileSystem = new SubFileSystem(fileSystem, TASK_RESULTS_DIR);
     return new HashedDb(objectsFileSystem);
   }
 
@@ -33,7 +29,7 @@ public class DbModule extends AbstractModule {
   @Objects
   @Provides
   public HashedDb provideValuesCache(@SmoothDir FileSystem fileSystem) {
-    FileSystem objectsFileSystem = new SubFileSystem(fileSystem, VALUE_DB_DIR);
+    FileSystem objectsFileSystem = new SubFileSystem(fileSystem, OBJECTS_DIR);
     return new HashedDb(objectsFileSystem);
   }
 }

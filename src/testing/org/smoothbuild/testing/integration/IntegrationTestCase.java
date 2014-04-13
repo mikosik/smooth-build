@@ -1,9 +1,9 @@
 package org.smoothbuild.testing.integration;
 
 import static com.google.inject.Guice.createInjector;
+import static org.smoothbuild.SmoothContants.ARTIFACTS_DIR;
 import static org.smoothbuild.SmoothContants.DEFAULT_SCRIPT;
-import static org.smoothbuild.db.DbModule.RESULTS_DIR;
-import static org.smoothbuild.io.Constants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
 public class IntegrationTestCase extends AbstractModule {
-  public static final Path RESULTS_PATH = SMOOTH_DIR.append(RESULTS_DIR);
+  public static final Path RESULTS_PATH = SMOOTH_DIR.append(ARTIFACTS_DIR);
 
   protected FakeFileSystem fileSystem;
   protected FakeUserConsole userConsole;

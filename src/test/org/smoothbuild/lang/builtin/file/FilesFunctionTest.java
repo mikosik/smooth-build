@@ -2,7 +2,7 @@ package org.smoothbuild.lang.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.io.Constants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContainingItsPath;
 
