@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.Marshaller;
-import org.smoothbuild.io.cache.hash.TasksCache;
+import org.smoothbuild.io.cache.hash.TaskResults;
 import org.smoothbuild.io.cache.hash.Unmarshaller;
 import org.smoothbuild.io.cache.value.ValueDb;
 import org.smoothbuild.lang.base.SString;
@@ -27,7 +27,7 @@ public class TaskResultsDb {
   private final ValueDb valueDb;
 
   @Inject
-  public TaskResultsDb(@TasksCache HashedDb hashedDb, ValueDb valueDb) {
+  public TaskResultsDb(@TaskResults HashedDb hashedDb, ValueDb valueDb) {
     this.hashedDb = hashedDb;
     this.valueDb = valueDb;
   }
