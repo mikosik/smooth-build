@@ -12,7 +12,7 @@ import static org.testory.Testory.willReturn;
 import org.junit.Test;
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.task.TaskResult;
-import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.io.cache.task.TaskResultsDb;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.CallHasher;
@@ -31,7 +31,7 @@ public class CachingTaskTest {
   HashCode hash = Hash.string("abc");
   CodeLocation codeLocation = new FakeCodeLocation();
 
-  TaskDb taskDb = mock(TaskDb.class);
+  TaskResultsDb taskResultsDb = mock(TaskResultsDb.class);
   @SuppressWarnings("unchecked")
   CallHasher<SString> callHasher = mock(CallHasher.class);
   Task<SString> task = new StringTask(stringValue, codeLocation);
@@ -46,19 +46,19 @@ public class CachingTaskTest {
 
   @Test
   public void null_native_call_hasher_is_forbidden() throws Exception {
-    when($cachingTask(taskDb, null, task));
+    when($cachingTask(taskResultsDb, null, task));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_task_is_forbidden() throws Exception {
-    when($cachingTask(taskDb, callHasher, null));
+    when($cachingTask(taskResultsDb, callHasher, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void name_of_wrapped_task_is_returned() throws Exception {
-    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskResultsDb, callHasher, task));
     when(cachingTask.name());
     thenReturned(task.name());
   }
@@ -71,14 +71,14 @@ public class CachingTaskTest {
     given(willReturn(false), task).isInternal();
     given(willReturn(STRING), task).resultType();
     given(willReturn(codeLocation), task).codeLocation();
-    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskResultsDb, callHasher, task));
     when(cachingTask.isInternal());
     thenReturned(false);
   }
 
   @Test
   public void is_internal_forwards_positive_result_from_wrapped_task() throws Exception {
-    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskResultsDb, callHasher, task));
     when(cachingTask.isInternal());
     thenReturned(true);
   }
@@ -86,8 +86,8 @@ public class CachingTaskTest {
   @Test
   public void task_is_executed_when_result_db_does_not_contain_its_result() {
     given(willReturn(hash), callHasher).hash();
-    given(willReturn(false), taskDb).contains(hash);
-    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
+    given(willReturn(false), taskResultsDb).contains(hash);
+    given(cachingTask = new CachingTask<>(taskResultsDb, callHasher, task));
     when(cachingTask.execute(nativeApi));
     thenReturned(stringValue);
   }
@@ -95,19 +95,19 @@ public class CachingTaskTest {
   @Test
   public void task_is_not_executed_when_result_from_db_is_returned() throws Exception {
     given(willReturn(hash), callHasher).hash();
-    given(willReturn(true), taskDb).contains(hash);
-    given(willReturn(new TaskResult<>(stringValue2, Empty.messageList())), taskDb).read(hash,
+    given(willReturn(true), taskResultsDb).contains(hash);
+    given(willReturn(new TaskResult<>(stringValue2, Empty.messageList())), taskResultsDb).read(hash,
         STRING);
-    given(cachingTask = new CachingTask<>(taskDb, callHasher, task));
+    given(cachingTask = new CachingTask<>(taskResultsDb, callHasher, task));
     assertThat(cachingTask.execute(nativeApi)).isEqualTo(stringValue2);
   }
 
-  private static <T extends SValue> Closure $cachingTask(final TaskDb taskDb,
+  private static <T extends SValue> Closure $cachingTask(final TaskResultsDb taskResultsDb,
       final CallHasher<T> callHasher, final Task<T> task) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new CachingTask<>(taskDb, callHasher, task);
+        return new CachingTask<>(taskResultsDb, callHasher, task);
       }
     };
   }

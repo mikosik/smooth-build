@@ -8,7 +8,7 @@ import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.io.cache.task.TaskResultsDb;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Signature;
@@ -29,7 +29,7 @@ public class NativeFunctionTest {
   String name = "functionName";
   CodeLocation codeLocation = new FakeCodeLocation();
 
-  TaskDb taskDb = mock(TaskDb.class);
+  TaskResultsDb taskResultsDb = mock(TaskResultsDb.class);
   Signature<SString> signature = fakeSignature("functionName");
   @SuppressWarnings("unchecked")
   Invoker<SString> invoker = mock(Invoker.class);

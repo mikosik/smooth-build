@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.base;
 import java.util.Map;
 
 import org.smoothbuild.io.cache.hash.Hash;
-import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.io.cache.task.TaskResultsDb;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.task.base.Result;
@@ -13,7 +13,7 @@ import com.google.common.hash.Hasher;
 
 /**
  * Calculates hash of given function call (function + its arguments) so it can
- * be used as a key for referencing its cached result in {@link TaskDb}.
+ * be used as a key for referencing its cached result in {@link TaskResultsDb}.
  */
 public class CallHasher<T extends SValue> {
   private final Function<T> function;

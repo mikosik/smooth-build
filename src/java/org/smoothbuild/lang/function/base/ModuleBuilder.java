@@ -4,18 +4,18 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.io.cache.task.TaskResultsDb;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 
 import com.google.common.collect.Maps;
 
 public class ModuleBuilder {
-  private final TaskDb taskDb;
+  private final TaskResultsDb taskResultsDb;
   private final Map<Name, Function<?>> functions;
 
   @Inject
-  public ModuleBuilder(TaskDb taskDb) {
-    this.taskDb = taskDb;
+  public ModuleBuilder(TaskResultsDb taskResultsDb) {
+    this.taskResultsDb = taskResultsDb;
     this.functions = Maps.newHashMap();
   }
 
@@ -31,7 +31,7 @@ public class ModuleBuilder {
 
   private Function<?> makeCacheable(NativeFunction<?> function) {
     if (function.isCacheable()) {
-      return new CachableFunction<>(taskDb, function);
+      return new CachableFunction<>(taskResultsDb, function);
     } else {
       return function;
     }

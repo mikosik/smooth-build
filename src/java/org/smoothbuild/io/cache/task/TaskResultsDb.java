@@ -22,12 +22,12 @@ import org.smoothbuild.message.base.MessageType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class TaskDb {
+public class TaskResultsDb {
   private final HashedDb hashedDb;
   private final ValueDb valueDb;
 
   @Inject
-  public TaskDb(@TasksCache HashedDb hashedDb, ValueDb valueDb) {
+  public TaskResultsDb(@TasksCache HashedDb hashedDb, ValueDb valueDb) {
     this.hashedDb = hashedDb;
     this.valueDb = valueDb;
   }

@@ -10,7 +10,7 @@ import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 import static org.testory.Testory.mock;
 
 import org.junit.Test;
-import org.smoothbuild.io.cache.task.TaskDb;
+import org.smoothbuild.io.cache.task.TaskResultsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
@@ -49,7 +49,7 @@ public class NativeFunctionFactoryTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeNativeApi nativeApi = new FakeNativeApi();
   Path tempDir = path("tem/dir");
-  TaskDb taskDb = mock(TaskDb.class);
+  TaskResultsDb taskResultsDb = mock(TaskResultsDb.class);
   CodeLocation codeLocation = new FakeCodeLocation();
 
   // signature
