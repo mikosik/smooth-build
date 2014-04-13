@@ -39,7 +39,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.hash.HashCode;
 
-public class ValueDb {
+public class ObjectsDb {
   private final HashedDb hashedDb;
 
   private final ReadString readString;
@@ -53,7 +53,7 @@ public class ValueDb {
   private final ImmutableMap<SType<?>, ReadValue<?>> readersMap;
 
   @Inject
-  public ValueDb(@ValuesCache HashedDb hashedDb) {
+  public ObjectsDb(@ValuesCache HashedDb hashedDb) {
     this.hashedDb = hashedDb;
 
     this.readString = new ReadString(hashedDb);

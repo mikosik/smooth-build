@@ -37,7 +37,7 @@ import org.smoothbuild.testing.lang.type.FakeString;
 
 import com.google.common.hash.HashCode;
 
-public class ValueDbTest {
+public class ObjectsDbTest {
   byte[] bytes = new byte[] { 1, 2, 3, 4 };
   byte[] bytes2 = new byte[] { 1, 2, 3, 4, 5 };
   byte[] bytes3 = new byte[] { 1, 2, 3, 4, 5, 6 };
@@ -77,14 +77,14 @@ public class ValueDbTest {
   String string3 = "a string 3";
   String string4 = "a string 4";
 
-  ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
+  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(new FakeFileSystem()));
 
   // file vs blob
 
   @Test
   public void file_hash_is_different_from_file_content_hash() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
     when(file.hash());
     thenReturned(not(blob.hash()));
   }
@@ -93,7 +93,7 @@ public class ValueDbTest {
 
   @Test
   public void created_empty_array_is_empty() throws Exception {
-    when(valueDb.arrayBuilder(EMPTY_ARRAY).build());
+    when(objectsDb.arrayBuilder(EMPTY_ARRAY).build());
     thenReturned(Matchers.emptyIterable());
   }
 
@@ -101,25 +101,25 @@ public class ValueDbTest {
 
   @Test
   public void created_file_array_contains_file_that_was_added_to_it() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
+    given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
     then(fileArray, contains(new FakeFile(path, bytes)));
   }
 
   @Test
   public void created_file_array_contains_all_files_that_were_added_to_it() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blob2 = valueDb.writeBlob(bytes2));
-    given(blob3 = valueDb.writeBlob(bytes3));
-    given(blob4 = valueDb.writeBlob(bytes4));
-    given(file = valueDb.writeFile(path, blob));
-    given(file2 = valueDb.writeFile(path2, blob2));
-    given(file3 = valueDb.writeFile(path3, blob3));
-    given(file4 = valueDb.writeFile(path4, blob4));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blob2 = objectsDb.writeBlob(bytes2));
+    given(blob3 = objectsDb.writeBlob(bytes3));
+    given(blob4 = objectsDb.writeBlob(bytes4));
+    given(file = objectsDb.writeFile(path, blob));
+    given(file2 = objectsDb.writeFile(path2, blob2));
+    given(file3 = objectsDb.writeFile(path3, blob3));
+    given(file4 = objectsDb.writeFile(path4, blob4));
 
     given(fileArray =
-        valueDb.arrayBuilder(FILE_ARRAY).add(file).add(file2).add(file3).add(file4).build());
+        objectsDb.arrayBuilder(FILE_ARRAY).add(file).add(file2).add(file3).add(file4).build());
     then(fileArray, contains(new FakeFile(path, bytes), new FakeFile(path2, bytes2), new FakeFile(
         path3, bytes3), new FakeFile(path4, bytes4)));
   }
@@ -127,17 +127,17 @@ public class ValueDbTest {
   @Test
   public void created_file_array_with_one_file_added_when_queried_by_hash_contains_that_file()
       throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    then(valueDb.read(FILE_ARRAY, fileArray.hash()), contains(new FakeFile(path, bytes)));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
+    given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
+    then(objectsDb.read(FILE_ARRAY, fileArray.hash()), contains(new FakeFile(path, bytes)));
   }
 
   @Test
   public void file_array_with_one_file_has_different_hash_from_that_file() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
+    given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
 
     when(file.hash());
     thenReturned(not(equalTo(fileArray.hash())));
@@ -146,12 +146,12 @@ public class ValueDbTest {
   @Test
   public void file_array_with_one_element_has_different_hash_from_file_array_with_two_elements()
       throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blob2 = valueDb.writeBlob(bytes2));
-    given(file = valueDb.writeFile(path, blob));
-    given(file2 = valueDb.writeFile(path2, blob2));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    given(fileArray2 = valueDb.arrayBuilder(FILE_ARRAY).add(file).add(file2).build());
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blob2 = objectsDb.writeBlob(bytes2));
+    given(file = objectsDb.writeFile(path, blob));
+    given(file2 = objectsDb.writeFile(path2, blob2));
+    given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
+    given(fileArray2 = objectsDb.arrayBuilder(FILE_ARRAY).add(file).add(file2).build());
 
     when(fileArray.hash());
     thenReturned(not(equalTo(fileArray2.hash())));
@@ -159,7 +159,7 @@ public class ValueDbTest {
 
   @Test
   public void reading_elements_from_not_stored_file_array_fails() throws Exception {
-    given(fileArray = valueDb.read(FILE_ARRAY, HashCode.fromInt(33)));
+    given(fileArray = objectsDb.read(FILE_ARRAY, HashCode.fromInt(33)));
     when(fileArray).iterator();
     thenThrown(NoObjectWithGivenHashError.class);
   }
@@ -168,19 +168,19 @@ public class ValueDbTest {
 
   @Test
   public void created_blob_array_with_one_blob_added_contains_that_blob() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    when(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
+    given(blob = objectsDb.writeBlob(bytes));
+    when(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     then(blobArray, contains(new FakeBlob(bytes)));
   }
 
   @Test
   public void created_blob_array_with_blobs_added_contains_all_blobs() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blob2 = valueDb.writeBlob(bytes2));
-    given(blob3 = valueDb.writeBlob(bytes3));
-    given(blob4 = valueDb.writeBlob(bytes4));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blob2 = objectsDb.writeBlob(bytes2));
+    given(blob3 = objectsDb.writeBlob(bytes3));
+    given(blob4 = objectsDb.writeBlob(bytes4));
     when(blobArray =
-        valueDb.arrayBuilder(BLOB_ARRAY).add(blob).add(blob2).add(blob3).add(blob4).build());
+        objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).add(blob2).add(blob3).add(blob4).build());
     then(blobArray, contains(new FakeBlob(bytes), new FakeBlob(bytes2), new FakeBlob(bytes3),
         new FakeBlob(bytes4)));
   }
@@ -188,15 +188,15 @@ public class ValueDbTest {
   @Test
   public void created_blob_array_with_one_blob_added_when_queried_by_hash_contains_that_blob()
       throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    when(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    then(valueDb.read(BLOB_ARRAY, blobArray.hash()), contains(new FakeBlob(bytes)));
+    given(blob = objectsDb.writeBlob(bytes));
+    when(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
+    then(objectsDb.read(BLOB_ARRAY, blobArray.hash()), contains(new FakeBlob(bytes)));
   }
 
   @Test
   public void blob_array_with_one_blob_has_different_hash_from_that_blob() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     when(blob.hash());
     thenReturned(not(equalTo(blobArray.hash())));
   }
@@ -204,10 +204,10 @@ public class ValueDbTest {
   @Test
   public void blob_array_with_one_element_has_different_hash_from_blob_array_with_two_elements()
       throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blob2 = valueDb.writeBlob(bytes2));
-    given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    given(blobArray2 = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).add(blob2).build());
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blob2 = objectsDb.writeBlob(bytes2));
+    given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
+    given(blobArray2 = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).add(blob2).build());
 
     when(blobArray.hash());
     thenReturned(not(equalTo(blobArray2.hash())));
@@ -215,7 +215,7 @@ public class ValueDbTest {
 
   @Test
   public void reading_elements_from_not_stored_blob_array_fails() throws Exception {
-    given(blobArray = valueDb.read(BLOB_ARRAY, HashCode.fromInt(33)));
+    given(blobArray = objectsDb.read(BLOB_ARRAY, HashCode.fromInt(33)));
     when(blobArray).iterator();
     thenThrown(NoObjectWithGivenHashError.class);
   }
@@ -224,19 +224,19 @@ public class ValueDbTest {
 
   @Test
   public void created_string_array_with_one_string_added_contains_that_string() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    when(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
+    given(stringValue = objectsDb.writeString(string));
+    when(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     then(stringArray, contains(new FakeString(string)));
   }
 
   @Test
   public void created_string_array_with_strings_added_contains_all_strings() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringValue2 = valueDb.writeString(string2));
-    given(stringValue3 = valueDb.writeString(string3));
-    given(stringValue4 = valueDb.writeString(string4));
+    given(stringValue = objectsDb.writeString(string));
+    given(stringValue2 = objectsDb.writeString(string2));
+    given(stringValue3 = objectsDb.writeString(string3));
+    given(stringValue4 = objectsDb.writeString(string4));
     when(stringArray =
-        valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2).add(stringValue3)
+        objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2).add(stringValue3)
             .add(stringValue4).build());
     then(stringArray, contains(new FakeString(string), new FakeString(string2), new FakeString(
         string3), new FakeString(string4)));
@@ -245,15 +245,15 @@ public class ValueDbTest {
   @Test
   public void created_string_array_with_one_string_added_when_queried_by_hash_contains_that_string()
       throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    when(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    then(valueDb.read(STRING_ARRAY, stringArray.hash()), contains(new FakeString(string)));
+    given(stringValue = objectsDb.writeString(string));
+    when(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
+    then(objectsDb.read(STRING_ARRAY, stringArray.hash()), contains(new FakeString(string)));
   }
 
   @Test
   public void string_array_with_one_string_has_different_hash_from_that_string() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
+    given(stringValue = objectsDb.writeString(string));
+    given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
 
     when(stringValue.hash());
     thenReturned(not(equalTo(stringArray.hash())));
@@ -262,11 +262,11 @@ public class ValueDbTest {
   @Test
   public void string_array_with_one_element_has_different_hash_from_string_array_with_two_elements()
       throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringValue2 = valueDb.writeString(string2));
-    given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
+    given(stringValue = objectsDb.writeString(string));
+    given(stringValue2 = objectsDb.writeString(string2));
+    given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     given(stringArray2 =
-        valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2).build());
+        objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2).build());
 
     when(stringArray.hash());
     thenReturned(not(equalTo(stringArray2.hash())));
@@ -274,7 +274,7 @@ public class ValueDbTest {
 
   @Test
   public void reading_elements_from_not_stored_string_array_fails() throws Exception {
-    given(stringArray = valueDb.read(STRING_ARRAY, HashCode.fromInt(33)));
+    given(stringArray = objectsDb.read(STRING_ARRAY, HashCode.fromInt(33)));
     when(stringArray).iterator();
     thenThrown(NoObjectWithGivenHashError.class);
   }
@@ -283,68 +283,68 @@ public class ValueDbTest {
 
   @Test
   public void created_file_contains_stored_bytes() throws IOException {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
     when(inputStreamToBytes(file.content().openInputStream()));
     thenReturned(bytes);
   }
 
   @Test
   public void created_file_contains_stored_path() throws IOException {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
     when(file.path());
     thenReturned(path);
   }
 
   @Test
   public void files_with_different_bytes_have_different_hashes() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blob2 = valueDb.writeBlob(bytes2));
-    given(file = valueDb.writeFile(path, blob));
-    given(file2 = valueDb.writeFile(path, blob2));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blob2 = objectsDb.writeBlob(bytes2));
+    given(file = objectsDb.writeFile(path, blob));
+    given(file2 = objectsDb.writeFile(path, blob2));
     when(file.hash());
     thenReturned(not(file2.hash()));
   }
 
   @Test
   public void files_with_different_paths_have_different_hashes() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
-    given(file2 = valueDb.writeFile(path2, blob));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
+    given(file2 = objectsDb.writeFile(path2, blob));
     when(file.hash());
     thenReturned(not(file2.hash()));
   }
 
   @Test
   public void file_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
-    given(file2 = valueDb.read(FILE, file.hash()));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
+    given(file2 = objectsDb.read(FILE, file.hash()));
     when(file2.hash());
     thenReturned(file.hash());
   }
 
   @Test
   public void file_retrieved_via_hash_contains_path_that_were_stored() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
-    given(file2 = valueDb.read(FILE, file.hash()));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
+    given(file2 = objectsDb.read(FILE, file.hash()));
     when(file2.path());
     thenReturned(path);
   }
 
   @Test
   public void file_retrieved_via_hash_contains_blob_that_were_stored() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(file = valueDb.writeFile(path, blob));
-    when(valueDb.read(FILE, file.hash())).content();
+    given(blob = objectsDb.writeBlob(bytes));
+    given(file = objectsDb.writeFile(path, blob));
+    when(objectsDb.read(FILE, file.hash())).content();
     thenReturned(blob);
   }
 
   @Test
   public void reading_not_stored_file_fails() throws Exception {
-    when(valueDb).read(FILE, HashCode.fromInt(33));
+    when(objectsDb).read(FILE, HashCode.fromInt(33));
     thenThrown(NoObjectWithGivenHashError.class);
   }
 
@@ -352,37 +352,37 @@ public class ValueDbTest {
 
   @Test
   public void created_blob_contains_stored_bytes() throws IOException {
-    given(blob = valueDb.writeBlob(bytes));
+    given(blob = objectsDb.writeBlob(bytes));
     when(inputStreamToBytes(blob.openInputStream()));
     thenReturned(bytes);
   }
 
   @Test
   public void created_blob_contains_correct_hash() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
+    given(blob = objectsDb.writeBlob(bytes));
     when(blob.hash());
     thenReturned(Hash.bytes(bytes));
   }
 
   @Test
   public void blob_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blobRead = valueDb.read(BLOB, blob.hash()));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blobRead = objectsDb.read(BLOB, blob.hash()));
     when(blobRead.hash());
     thenReturned(blob.hash());
   }
 
   @Test
   public void blob_retrieved_via_hash_contains_bytes_that_were_stored() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blobRead = valueDb.read(BLOB, blob.hash()));
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blobRead = objectsDb.read(BLOB, blob.hash()));
     when(inputStreamToBytes(blobRead.openInputStream()));
     thenReturned(bytes);
   }
 
   @Test
   public void reading_not_stored_blob_fails() throws Exception {
-    given(blob = valueDb.read(BLOB, HashCode.fromInt(33)));
+    given(blob = objectsDb.read(BLOB, HashCode.fromInt(33)));
     when(blob).openInputStream();
     thenThrown(NoObjectWithGivenHashError.class);
   }
@@ -391,37 +391,37 @@ public class ValueDbTest {
 
   @Test
   public void created_string_object_contains_stored_string() throws IOException {
-    given(stringValue = valueDb.writeString(string));
+    given(stringValue = objectsDb.writeString(string));
     when(stringValue.value());
     thenReturned(string);
   }
 
   @Test
   public void created_string_contains_correct_hash() throws Exception {
-    given(stringValue = valueDb.writeString(string));
+    given(stringValue = objectsDb.writeString(string));
     when(stringValue.hash());
     thenReturned(Hash.string(string));
   }
 
   @Test
   public void string_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringValueRead = valueDb.read(STRING, stringValue.hash()));
+    given(stringValue = objectsDb.writeString(string));
+    given(stringValueRead = objectsDb.read(STRING, stringValue.hash()));
     when(stringValueRead.value());
     thenReturned(string);
   }
 
   @Test
   public void string_object_retrieved_via_hash_contains_string_that_was_stored() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringValueRead = valueDb.read(STRING, stringValue.hash()));
+    given(stringValue = objectsDb.writeString(string));
+    given(stringValueRead = objectsDb.read(STRING, stringValue.hash()));
     when(stringValueRead.value());
     thenReturned(string);
   }
 
   @Test
   public void reading_not_stored_string_object_fails() throws Exception {
-    given(stringValue = valueDb.read(STRING, HashCode.fromInt(33)));
+    given(stringValue = objectsDb.read(STRING, HashCode.fromInt(33)));
     when(stringValue).value();
     thenThrown(NoObjectWithGivenHashError.class);
   }

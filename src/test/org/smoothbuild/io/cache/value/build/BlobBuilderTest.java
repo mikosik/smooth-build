@@ -8,12 +8,12 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.value.ObjectsDb;
 import org.smoothbuild.io.cache.value.instance.CachedBlob;
 
 public class BlobBuilderTest {
-  ValueDb valueDb = mock(ValueDb.class);
-  BlobBuilder blobBuilder = new BlobBuilder(valueDb);
+  ObjectsDb objectsDb = mock(ObjectsDb.class);
+  BlobBuilder blobBuilder = new BlobBuilder(objectsDb);
   byte[] bytes = new byte[] { 1, 2, 3 };
   CachedBlob blob = mock(CachedBlob.class);
 
@@ -32,7 +32,7 @@ public class BlobBuilderTest {
 
   @Test
   public void build_returns_blob_stored_in_object_db_with_empty_content() throws Exception {
-    given(willReturn(blob), valueDb).writeBlob(new byte[] {});
+    given(willReturn(blob), objectsDb).writeBlob(new byte[] {});
     given(blobBuilder).openOutputStream();
     when(blobBuilder).build();
     thenReturned(blob);
@@ -40,7 +40,7 @@ public class BlobBuilderTest {
 
   @Test
   public void build_returns_blob_stored_in_object_db() throws Exception {
-    given(willReturn(blob), valueDb).writeBlob(bytes);
+    given(willReturn(blob), objectsDb).writeBlob(bytes);
     given(blobBuilder.openOutputStream()).write(bytes);
     when(blobBuilder).build();
     thenReturned(blob);

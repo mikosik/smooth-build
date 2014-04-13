@@ -3,14 +3,14 @@ package org.smoothbuild.testing.io.cache.value;
 import static org.smoothbuild.SmoothContants.CHARSET;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
-import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.value.ObjectsDb;
 import org.smoothbuild.io.cache.value.instance.CachedBlob;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
-public class FakeValueDb extends ValueDb {
+public class FakeValueDb extends ObjectsDb {
 
   public FakeValueDb() {
     this(new FakeFileSystem());

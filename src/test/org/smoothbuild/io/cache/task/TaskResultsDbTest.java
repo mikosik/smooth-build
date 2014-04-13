@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.smoothbuild.io.cache.hash.Hash;
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.err.NoObjectWithGivenHashError;
-import org.smoothbuild.io.cache.value.ValueDb;
+import org.smoothbuild.io.cache.value.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -35,8 +35,8 @@ import com.google.common.hash.HashCode;
 
 public class TaskResultsDbTest {
   HashedDb hashedDb = new HashedDb(new FakeFileSystem());
-  ValueDb valueDb = new ValueDb(new HashedDb(new FakeFileSystem()));
-  TaskResultsDb taskResultsDb = new TaskResultsDb(hashedDb, valueDb);
+  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(new FakeFileSystem()));
+  TaskResultsDb taskResultsDb = new TaskResultsDb(hashedDb, objectsDb);
   HashCode hash = Hash.string("abc");
 
   byte[] bytes = new byte[] {};
@@ -72,7 +72,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_messages_can_be_read_back() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
+    given(blob = objectsDb.writeBlob(bytes));
     given(message = new Message(ERROR, "message string"));
     given(taskResultsDb).store(hash, new TaskResult<>(blob, ImmutableList.of(message)));
     when(taskResultsDb.read(hash, BLOB).messages());
@@ -81,8 +81,8 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_file_array_can_be_read_back() throws Exception {
-    given(file = valueDb.writeFile(path, new FakeBlob(bytes)));
-    given(fileArray = valueDb.arrayBuilder(FILE_ARRAY).add(file).build());
+    given(file = objectsDb.writeFile(path, new FakeBlob(bytes)));
+    given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(taskResultsDb).store(hash, new TaskResult<>(fileArray, Empty.messageList()));
     when(taskResultsDb.read(hash, FILE_ARRAY).value().iterator().next());
     thenReturned(file);
@@ -90,8 +90,8 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_blob_array_can_be_read_back() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
-    given(blobArray = valueDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
+    given(blob = objectsDb.writeBlob(bytes));
+    given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     given(taskResultsDb).store(hash, new TaskResult<>(blobArray, Empty.messageList()));
     when(taskResultsDb.read(hash, BLOB_ARRAY).value().iterator().next());
     thenReturned(blob);
@@ -99,8 +99,8 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_string_array_can_be_read_back() throws Exception {
-    given(stringValue = valueDb.writeString(string));
-    given(stringArray = valueDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
+    given(stringValue = objectsDb.writeString(string));
+    given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     given(taskResultsDb).store(hash, new TaskResult<>(stringArray, Empty.messageList()));
     when(taskResultsDb.read(hash, STRING_ARRAY).value().iterator().next());
     thenReturned(stringValue);
@@ -108,7 +108,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_file_can_be_read_back() throws Exception {
-    given(file = valueDb.writeFile(path, new FakeBlob(bytes)));
+    given(file = objectsDb.writeFile(path, new FakeBlob(bytes)));
     given(taskResultsDb).store(hash, new TaskResult<>(file, Empty.messageList()));
     when(taskResultsDb.read(hash, FILE).value());
     thenReturned(file);
@@ -116,7 +116,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_blob_can_be_read_back() throws Exception {
-    given(blob = valueDb.writeBlob(bytes));
+    given(blob = objectsDb.writeBlob(bytes));
     given(taskResultsDb).store(hash, new TaskResult<>(blob, Empty.messageList()));
     when(taskResultsDb.read(hash, BLOB).value());
     thenReturned(blob);
@@ -124,7 +124,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_string_can_be_read_back() throws Exception {
-    given(stringValue = valueDb.writeString(string));
+    given(stringValue = objectsDb.writeString(string));
     given(taskResultsDb).store(hash, new TaskResult<>(stringValue, Empty.messageList()));
     when(taskResultsDb.read(hash, STRING).value().value());
     thenReturned(string);
