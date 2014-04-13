@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.io.cache.hash.HashedDb;
 import org.smoothbuild.io.cache.hash.Marshaller;
-import org.smoothbuild.io.cache.hash.ValuesCache;
+import org.smoothbuild.io.cache.hash.Objects;
 import org.smoothbuild.io.cache.value.build.ArrayBuilder;
 import org.smoothbuild.io.cache.value.instance.CachedBlob;
 import org.smoothbuild.io.cache.value.instance.CachedFile;
@@ -53,7 +53,7 @@ public class ObjectsDb {
   private final ImmutableMap<SType<?>, ReadValue<?>> readersMap;
 
   @Inject
-  public ObjectsDb(@ValuesCache HashedDb hashedDb) {
+  public ObjectsDb(@Objects HashedDb hashedDb) {
     this.hashedDb = hashedDb;
 
     this.readString = new ReadString(hashedDb);
