@@ -16,7 +16,7 @@ import org.smoothbuild.testing.message.FakeLoggedMessages;
 public class FakeNativeApi extends NativeApiImpl {
   private final FakeFileSystem fileSystem;
   private final FakeLoggedMessages messages;
-  private final FakeObjectsDb valueDb;
+  private final FakeObjectsDb objectsDb;
 
   public FakeNativeApi() {
     this(new FakeFileSystem());
@@ -26,15 +26,16 @@ public class FakeNativeApi extends NativeApiImpl {
     this(fileSystem, new FakeObjectsDb(fileSystem));
   }
 
-  private FakeNativeApi(FakeFileSystem fileSystem, FakeObjectsDb valueDb) {
-    this(fileSystem, new ObjectBuilders(valueDb), valueDb);
+  private FakeNativeApi(FakeFileSystem fileSystem, FakeObjectsDb objectsDb) {
+    this(fileSystem, new ObjectBuilders(objectsDb), objectsDb);
   }
 
-  public FakeNativeApi(FakeFileSystem fileSystem, SValueBuilders sValueBuilders, FakeObjectsDb valueDb) {
+  public FakeNativeApi(FakeFileSystem fileSystem, SValueBuilders sValueBuilders,
+      FakeObjectsDb objectsDb) {
     super(fileSystem, sValueBuilders, new FakeTempDirectoryManager(sValueBuilders));
     this.fileSystem = fileSystem;
     this.messages = new FakeLoggedMessages();
-    this.valueDb = valueDb;
+    this.objectsDb = objectsDb;
   }
 
   @Override
@@ -42,8 +43,8 @@ public class FakeNativeApi extends NativeApiImpl {
     return fileSystem;
   }
 
-  public FakeObjectsDb valueDb() {
-    return valueDb;
+  public FakeObjectsDb objectsDb() {
+    return objectsDb;
   }
 
   @Override

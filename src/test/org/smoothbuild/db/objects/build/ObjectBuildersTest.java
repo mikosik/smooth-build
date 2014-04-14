@@ -31,12 +31,12 @@ public class ObjectBuildersTest {
   String content = "content";
   Path path1 = path("my/path/file1.txt");
   Path path2 = path("my/path/file2.txt");
-  FakeObjectsDb valueDb = new FakeObjectsDb();
+  FakeObjectsDb objectsDb = new FakeObjectsDb();
 
-  ObjectBuilders sValueBuilders = new ObjectBuilders(valueDb);
+  ObjectBuilders sValueBuilders = new ObjectBuilders(objectsDb);
 
   @Test
-  public void file_array_builder_stores_files_in_value_db() throws Exception {
+  public void file_array_builder_stores_files_in_objects_db() throws Exception {
     BlobBuilder blobBuilder = sValueBuilders.blobBuilder();
     StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
     SBlob blob = blobBuilder.build();
@@ -50,7 +50,7 @@ public class ObjectBuildersTest {
     builder.add(file);
     HashCode hash = builder.build().hash();
 
-    SArray<SFile> fileArray = valueDb.read(FILE_ARRAY, hash);
+    SArray<SFile> fileArray = objectsDb.read(FILE_ARRAY, hash);
     MatcherAssert.assertThat(fileArray, FileArrayMatchers.containsFileContaining(path1, content));
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
   }
@@ -58,12 +58,12 @@ public class ObjectBuildersTest {
   @Test
   public void file_array_builder_can_store_empty_array() throws Exception {
     HashCode hash = sValueBuilders.arrayBuilder(FILE_ARRAY).build().hash();
-    SArray<SFile> fileArray = valueDb.read(FILE_ARRAY, hash);
+    SArray<SFile> fileArray = objectsDb.read(FILE_ARRAY, hash);
     assertThat(fileArray).isEmpty();
   }
 
   @Test
-  public void blob_array_builder_stores_blobs_in_value_db() throws Exception {
+  public void blob_array_builder_stores_blobs_in_objects_db() throws Exception {
     BlobBuilder blobBuilder = sValueBuilders.blobBuilder();
     StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
     SBlob blob = blobBuilder.build();
@@ -72,7 +72,7 @@ public class ObjectBuildersTest {
     builder.add(blob);
     HashCode hash = builder.build().hash();
 
-    SArray<SBlob> fileArray = valueDb.read(BLOB_ARRAY, hash);
+    SArray<SBlob> fileArray = objectsDb.read(BLOB_ARRAY, hash);
     assertThat(Iterables.size(fileArray)).isEqualTo(1);
     assertThat(inputStreamToString(fileArray.iterator().next().openInputStream())).isEqualTo(
         content);
@@ -81,12 +81,12 @@ public class ObjectBuildersTest {
   @Test
   public void blob_array_builder_can_store_empty_array() throws Exception {
     HashCode hash = sValueBuilders.arrayBuilder(BLOB_ARRAY).build().hash();
-    SArray<SBlob> fileArray = valueDb.read(BLOB_ARRAY, hash);
+    SArray<SBlob> fileArray = objectsDb.read(BLOB_ARRAY, hash);
     assertThat(fileArray).isEmpty();
   }
 
   @Test
-  public void string_array_builder_stores_files_in_value_db() throws Exception {
+  public void string_array_builder_stores_files_in_objects_db() throws Exception {
     String jdkString1 = "my string 1";
     String jdkString2 = "my string 2";
 
@@ -98,7 +98,7 @@ public class ObjectBuildersTest {
     builder.add(string2);
     SArray<SString> stringArray = builder.build();
 
-    SArray<SString> stringArrayRead = valueDb.read(STRING_ARRAY, stringArray.hash());
+    SArray<SString> stringArrayRead = objectsDb.read(STRING_ARRAY, stringArray.hash());
     List<String> strings = Lists.newArrayList();
     for (SString string : stringArrayRead) {
       strings.add(string.value());
@@ -110,12 +110,12 @@ public class ObjectBuildersTest {
   @Test
   public void string_array_builder_can_store_empty_array() throws Exception {
     HashCode hash = sValueBuilders.arrayBuilder(STRING_ARRAY).build().hash();
-    SArray<SString> stringArray = valueDb.read(STRING_ARRAY, hash);
+    SArray<SString> stringArray = objectsDb.read(STRING_ARRAY, hash);
     assertThat(stringArray).isEmpty();
   }
 
   @Test
-  public void file_builder_stores_file_in_value_db() throws Exception {
+  public void file_builder_stores_file_in_objects_db() throws Exception {
     BlobBuilder blobBuilder = sValueBuilders.blobBuilder();
     StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
     SBlob blob = blobBuilder.build();
@@ -125,27 +125,27 @@ public class ObjectBuildersTest {
     fileBuilder.setContent(blob);
     HashCode hash = fileBuilder.build().hash();
 
-    SFile file = valueDb.read(FILE, hash);
+    SFile file = objectsDb.read(FILE, hash);
     assertThat(file.path()).isEqualTo(path1);
     assertThat(inputStreamToString(file.content().openInputStream())).isEqualTo(content);
   }
 
   @Test
-  public void blob_builder_stores_blob_in_value_db() throws Exception {
+  public void blob_builder_stores_blob_in_objects_db() throws Exception {
     BlobBuilder blobBuilder = sValueBuilders.blobBuilder();
     StreamTester.writeAndClose(blobBuilder.openOutputStream(), content);
     HashCode hash = blobBuilder.build().hash();
 
-    SBlob blob = valueDb.read(BLOB, hash);
+    SBlob blob = objectsDb.read(BLOB, hash);
     assertThat(inputStreamToString(blob.openInputStream())).isEqualTo(content);
   }
 
   @Test
-  public void string_stores_its_content_in_value_db() throws Exception {
+  public void string_stores_its_content_in_objects_db() throws Exception {
     String jdkString = "my string";
     SString string = sValueBuilders.string(jdkString);
 
-    SString stringRead = valueDb.read(STRING, string.hash());
+    SString stringRead = objectsDb.read(STRING, string.hash());
 
     assertThat(stringRead.value()).isEqualTo(jdkString);
   }
