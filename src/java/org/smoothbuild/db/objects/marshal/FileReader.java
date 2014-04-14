@@ -1,18 +1,18 @@
-package org.smoothbuild.db.objects.read;
+package org.smoothbuild.db.objects.marshal;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.db.objects.instance.BlobObject;
-import org.smoothbuild.db.objects.instance.FileObject;
+import org.smoothbuild.db.objects.base.BlobObject;
+import org.smoothbuild.db.objects.base.FileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
 
 import com.google.common.hash.HashCode;
 
-public class ReadFile implements ReadValue<SFile> {
+public class FileReader implements ObjectReader<SFile> {
   private final HashedDb hashedDb;
 
-  public ReadFile(HashedDb hashedDb) {
+  public FileReader(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
   }
 

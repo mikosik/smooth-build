@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.objects.instance.AbstractObject;
+import org.smoothbuild.db.objects.base.AbstractObject;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;

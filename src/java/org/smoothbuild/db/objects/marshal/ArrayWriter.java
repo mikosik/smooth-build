@@ -1,11 +1,10 @@
-package org.smoothbuild.db.objects.build;
+package org.smoothbuild.db.objects.marshal;
 
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.objects.instance.ArrayObject;
-import org.smoothbuild.db.objects.read.ReadValue;
+import org.smoothbuild.db.objects.base.ArrayObject;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.lang.base.SArray;
@@ -18,13 +17,13 @@ import com.google.common.hash.HashCode;
 public class ArrayWriter<T extends SValue> implements ArrayBuilder<T> {
   private final HashedDb hashedDb;
   private final SType<?> arrayType;
-  private final ReadValue<T> readValue;
+  private final ObjectReader<T> elementReader;
   private final List<T> result;
 
-  public ArrayWriter(HashedDb hashedDb, SType<?> arrayType, ReadValue<T> valueReader) {
+  public ArrayWriter(HashedDb hashedDb, SType<?> arrayType, ObjectReader<T> elementReader) {
     this.hashedDb = hashedDb;
     this.arrayType = arrayType;
-    this.readValue = valueReader;
+    this.elementReader = elementReader;
     this.result = Lists.newArrayList();
   }
 
@@ -36,12 +35,12 @@ public class ArrayWriter<T extends SValue> implements ArrayBuilder<T> {
 
   @Override
   public SArray<T> build() {
-    return array(result, arrayType, readValue);
+    return array(result, arrayType, elementReader);
   }
 
-  private SArray<T> array(List<T> elements, SType<?> type, ReadValue<T> valueReader) {
+  private SArray<T> array(List<T> elements, SType<?> type, ObjectReader<T> elementReader) {
     HashCode hash = genericArray(elements);
-    return new ArrayObject<T>(hashedDb, hash, type, valueReader);
+    return new ArrayObject<T>(hashedDb, hash, type, elementReader);
   }
 
   private HashCode genericArray(List<? extends Hashed> elements) {

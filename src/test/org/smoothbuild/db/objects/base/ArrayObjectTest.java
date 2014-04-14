@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.instance;
+package org.smoothbuild.db.objects.base;
 
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.testory.Testory.given;
@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.read.ReadValue;
+import org.smoothbuild.db.objects.marshal.ObjectReader;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
@@ -61,7 +61,7 @@ public class ArrayObjectTest {
 
   private static ArrayObject<SFile> arrayObject(HashedDb hashedDb, HashCode hash) {
     @SuppressWarnings("unchecked")
-    ReadValue<SFile> valueReader = mock(ReadValue.class);
-    return new ArrayObject<SFile>(hashedDb, hash, FILE, valueReader);
+    ObjectReader<SFile> elementReader = mock(ObjectReader.class);
+    return new ArrayObject<SFile>(hashedDb, hash, FILE, elementReader);
   }
 }

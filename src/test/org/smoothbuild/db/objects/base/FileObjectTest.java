@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.instance;
+package org.smoothbuild.db.objects.base;
 
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.testory.Testory.given;

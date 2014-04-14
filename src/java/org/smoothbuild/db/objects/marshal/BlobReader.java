@@ -1,15 +1,15 @@
-package org.smoothbuild.db.objects.read;
+package org.smoothbuild.db.objects.marshal;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.BlobObject;
+import org.smoothbuild.db.objects.base.BlobObject;
 import org.smoothbuild.lang.base.SBlob;
 
 import com.google.common.hash.HashCode;
 
-public class ReadBlob implements ReadValue<SBlob> {
+public class BlobReader implements ObjectReader<SBlob> {
   private final HashedDb hashedDb;
 
-  public ReadBlob(HashedDb hashedDb) {
+  public BlobReader(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
   }
 

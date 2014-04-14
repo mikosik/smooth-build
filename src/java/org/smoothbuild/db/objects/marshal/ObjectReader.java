@@ -1,9 +1,9 @@
-package org.smoothbuild.db.objects.read;
+package org.smoothbuild.db.objects.marshal;
 
 import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.hash.HashCode;
 
-public interface ReadValue<T extends SValue> {
+public interface ObjectReader<T extends SValue> {
   public T read(HashCode hash);
 }

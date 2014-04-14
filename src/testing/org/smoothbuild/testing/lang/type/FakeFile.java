@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.base.STypes.FILE;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.objects.instance.AbstractObject;
+import org.smoothbuild.db.objects.base.AbstractObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
