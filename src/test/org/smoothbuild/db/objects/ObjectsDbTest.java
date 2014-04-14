@@ -224,17 +224,17 @@ public class ObjectsDbTest {
 
   @Test
   public void created_string_array_with_one_string_added_contains_that_string() throws Exception {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     when(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     then(stringArray, contains(new FakeString(string)));
   }
 
   @Test
   public void created_string_array_with_strings_added_contains_all_strings() throws Exception {
-    given(stringValue = objectsDb.writeString(string));
-    given(stringValue2 = objectsDb.writeString(string2));
-    given(stringValue3 = objectsDb.writeString(string3));
-    given(stringValue4 = objectsDb.writeString(string4));
+    given(stringValue = objectsDb.string(string));
+    given(stringValue2 = objectsDb.string(string2));
+    given(stringValue3 = objectsDb.string(string3));
+    given(stringValue4 = objectsDb.string(string4));
     when(stringArray =
         objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2).add(stringValue3)
             .add(stringValue4).build());
@@ -245,14 +245,14 @@ public class ObjectsDbTest {
   @Test
   public void created_string_array_with_one_string_added_when_queried_by_hash_contains_that_string()
       throws Exception {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     when(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     then(objectsDb.read(STRING_ARRAY, stringArray.hash()), contains(new FakeString(string)));
   }
 
   @Test
   public void string_array_with_one_string_has_different_hash_from_that_string() throws Exception {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
 
     when(stringValue.hash());
@@ -262,8 +262,8 @@ public class ObjectsDbTest {
   @Test
   public void string_array_with_one_element_has_different_hash_from_string_array_with_two_elements()
       throws Exception {
-    given(stringValue = objectsDb.writeString(string));
-    given(stringValue2 = objectsDb.writeString(string2));
+    given(stringValue = objectsDb.string(string));
+    given(stringValue2 = objectsDb.string(string2));
     given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     given(stringArray2 =
         objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).add(stringValue2).build());
@@ -391,21 +391,21 @@ public class ObjectsDbTest {
 
   @Test
   public void created_string_object_contains_stored_string() throws IOException {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     when(stringValue.value());
     thenReturned(string);
   }
 
   @Test
   public void created_string_contains_correct_hash() throws Exception {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     when(stringValue.hash());
     thenReturned(Hash.string(string));
   }
 
   @Test
   public void string_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     given(stringValueRead = objectsDb.read(STRING, stringValue.hash()));
     when(stringValueRead.value());
     thenReturned(string);
@@ -413,7 +413,7 @@ public class ObjectsDbTest {
 
   @Test
   public void string_object_retrieved_via_hash_contains_string_that_was_stored() throws Exception {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     given(stringValueRead = objectsDb.read(STRING, stringValue.hash()));
     when(stringValueRead.value());
     thenReturned(string);

@@ -25,8 +25,8 @@ public class ArrayNodeTest {
   TaskGenerator taskGenerator = mock(TaskGenerator.class);
   FakeNativeApi nativeApi = new FakeNativeApi();
   CodeLocation codeLocation = new FakeCodeLocation();
-  SString string1 = nativeApi.objectsDb().writeString("string1");
-  SString string2 = nativeApi.objectsDb().writeString("string2");
+  SString string1 = nativeApi.objectsDb().string("string1");
+  SString string2 = nativeApi.objectsDb().string("string2");
 
   @SuppressWarnings("unchecked")
   Node<SString> node1 = mock(Node.class);

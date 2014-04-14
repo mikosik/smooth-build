@@ -99,7 +99,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_string_array_can_be_read_back() throws Exception {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     given(taskResultsDb).store(hash, new TaskResult<>(stringArray, Empty.messageList()));
     when(taskResultsDb.read(hash, STRING_ARRAY).value().iterator().next());
@@ -124,7 +124,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_string_can_be_read_back() throws Exception {
-    given(stringValue = objectsDb.writeString(string));
+    given(stringValue = objectsDb.string(string));
     given(taskResultsDb).store(hash, new TaskResult<>(stringValue, Empty.messageList()));
     when(taskResultsDb.read(hash, STRING).value().value());
     thenReturned(string);

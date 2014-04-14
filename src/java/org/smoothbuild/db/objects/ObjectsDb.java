@@ -116,7 +116,7 @@ public class ObjectsDb {
     return new FileObject(path, content, hash);
   }
 
-  public SString writeString(String string) {
+  public SString string(String string) {
     HashCode hash = hashedDb.store(string.getBytes(CHARSET));
     return new StringObject(hashedDb, hash);
   }
