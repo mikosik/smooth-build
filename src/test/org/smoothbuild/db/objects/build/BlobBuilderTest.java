@@ -9,7 +9,6 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.objects.build.BlobBuilder;
 import org.smoothbuild.db.objects.instance.BlobObject;
 
 public class BlobBuilderTest {

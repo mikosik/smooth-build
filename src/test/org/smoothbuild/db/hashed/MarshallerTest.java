@@ -7,7 +7,6 @@ import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.testing.lang.type.FakeHashed;

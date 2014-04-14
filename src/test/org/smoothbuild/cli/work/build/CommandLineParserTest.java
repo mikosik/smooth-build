@@ -5,8 +5,6 @@ import static org.smoothbuild.SmoothContants.DEFAULT_SCRIPT;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import org.junit.Test;
-import org.smoothbuild.cli.work.build.CommandLineArguments;
-import org.smoothbuild.cli.work.build.CommandLineParser;
 import org.smoothbuild.cli.work.build.err.DuplicatedFunctionNameWarning;
 import org.smoothbuild.cli.work.build.err.IllegalFunctionNameError;
 import org.smoothbuild.testing.message.FakeLoggedMessages;

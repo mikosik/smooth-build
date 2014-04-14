@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.ArrayObject;
 import org.smoothbuild.db.objects.read.ReadValue;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;

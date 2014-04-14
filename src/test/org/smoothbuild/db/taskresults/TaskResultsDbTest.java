@@ -19,8 +19,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.taskresults.TaskResult;
-import org.smoothbuild.db.taskresults.TaskResultsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;

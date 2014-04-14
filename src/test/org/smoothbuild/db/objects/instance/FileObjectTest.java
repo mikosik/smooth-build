@@ -10,8 +10,6 @@ import static org.testory.Testory.when;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.smoothbuild.db.objects.instance.BlobObject;
-import org.smoothbuild.db.objects.instance.FileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.testory.Closure;
 

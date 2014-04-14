@@ -14,10 +14,6 @@ import java.util.List;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.smoothbuild.db.objects.build.ArrayBuilder;
-import org.smoothbuild.db.objects.build.BlobBuilder;
-import org.smoothbuild.db.objects.build.FileBuilder;
-import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;

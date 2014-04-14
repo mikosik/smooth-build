@@ -22,12 +22,6 @@ import static org.smoothbuild.lang.base.STypes.javaResultTypetoType;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.convert.Conversions;
 
 import com.google.common.collect.Sets;
