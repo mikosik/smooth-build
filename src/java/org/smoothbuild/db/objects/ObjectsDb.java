@@ -33,13 +33,14 @@ import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.hash.HashCode;
 
-public class ObjectsDb {
+public class ObjectsDb implements SValueBuilders {
   private final HashedDb hashedDb;
 
   private final ReadString readString;
@@ -75,6 +76,7 @@ public class ObjectsDb {
     this.readersMap = builder.build();
   }
 
+  @Override
   public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
     if (arrayType == FILE_ARRAY) {
       @SuppressWarnings("unchecked")
@@ -104,16 +106,17 @@ public class ObjectsDb {
     throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
   }
 
+  @Override
   public FileBuilder fileBuilder() {
     return new FileWriter(hashedDb);
   }
 
+  @Override
   public BlobBuilder blobBuilder() {
     return new BlobWriter(hashedDb);
   }
 
-  // writers
-
+  @Override
   public SString string(String string) {
     HashCode hash = hashedDb.store(string.getBytes(CHARSET));
     return new StringObject(hashedDb, hash);

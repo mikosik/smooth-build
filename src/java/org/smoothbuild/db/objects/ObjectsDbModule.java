@@ -6,13 +6,16 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.SubFileSystem;
+import org.smoothbuild.lang.base.SValueBuilders;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 public class ObjectsDbModule extends AbstractModule {
   @Override
-  protected void configure() {}
+  protected void configure() {
+    bind(SValueBuilders.class).to(ObjectsDb.class);
+  }
 
   @Objects
   @Provides
