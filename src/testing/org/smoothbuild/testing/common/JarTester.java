@@ -8,8 +8,8 @@ import java.io.OutputStreamWriter;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.db.objects.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;

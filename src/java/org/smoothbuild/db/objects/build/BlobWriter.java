@@ -6,23 +6,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SBlob;
 
-public class BlobBuilder {
+public class BlobWriter implements BlobBuilder {
   private final ObjectsDb objectsDb;
 
   private ByteArrayOutputStream outputStream;
 
-  public BlobBuilder(ObjectsDb objectsDb) {
+  public BlobWriter(ObjectsDb objectsDb) {
     this.objectsDb = objectsDb;
   }
 
+  @Override
   public OutputStream openOutputStream() {
     checkState(this.outputStream == null, "Cannot open output stream twice.");
     this.outputStream = new ByteArrayOutputStream();
     return outputStream;
   }
 
+  @Override
   public SBlob build() {
     checkState(outputStream != null, "No content available. Create one via openOutputStream()");
     return objectsDb.writeBlob(outputStream.toByteArray());

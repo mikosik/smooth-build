@@ -14,9 +14,9 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 
-public class FileBuilderTest {
+public class FileWriterTest {
   ObjectsDb objectsDb = mock(ObjectsDb.class);
-  FileBuilder fileBuilder = new FileBuilder(objectsDb);
+  FileWriter fileWriter = new FileWriter(objectsDb);
   Path path = Path.path("my/path");
   SBlob blob = new FakeBlob();
   byte[] bytes = new byte[] { 1, 2, 3 };
@@ -24,41 +24,41 @@ public class FileBuilderTest {
 
   @Test
   public void setting_null_path_fails() throws Exception {
-    when(fileBuilder).setPath(null);
+    when(fileWriter).setPath(null);
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void setting_path_twice_fails() throws Exception {
-    given(fileBuilder).setPath(path);
-    when(fileBuilder).setPath(path);
+    given(fileWriter).setPath(path);
+    when(fileWriter).setPath(path);
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void setting_null_content_fails() throws Exception {
-    when(fileBuilder).setContent(null);
+    when(fileWriter).setContent(null);
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void setting_content_twice_fails() throws Exception {
-    given(fileBuilder).setContent(blob);
-    when(fileBuilder).setContent(blob);
+    given(fileWriter).setContent(blob);
+    when(fileWriter).setContent(blob);
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void build_fails_when_no_content_was_provided() {
-    given(fileBuilder).setPath(path);
-    when(fileBuilder).build();
+    given(fileWriter).setPath(path);
+    when(fileWriter).build();
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void build_fails_when_no_path_was_provided() {
-    given(fileBuilder).setContent(blob);
-    when(fileBuilder).build();
+    given(fileWriter).setContent(blob);
+    when(fileWriter).build();
     thenThrown(IllegalStateException.class);
   }
 
@@ -66,9 +66,9 @@ public class FileBuilderTest {
   public void build_returns_file_stored_in_object_db() throws Exception {
     given(blob = new FakeBlob(bytes));
     given(willReturn(file), objectsDb).writeFile(path, blob);
-    given(fileBuilder).setContent(blob);
-    given(fileBuilder).setPath(path);
-    when(fileBuilder).build();
+    given(fileWriter).setContent(blob);
+    given(fileWriter).setPath(path);
+    when(fileWriter).build();
     thenReturned(file);
   }
 }

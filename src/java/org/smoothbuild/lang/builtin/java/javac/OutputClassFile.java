@@ -6,10 +6,10 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.db.objects.build.ArrayBuilder;
-import org.smoothbuild.db.objects.build.BlobBuilder;
-import org.smoothbuild.db.objects.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.ArrayBuilder;
+import org.smoothbuild.lang.base.BlobBuilder;
+import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.util.ForwardingOutputStream;

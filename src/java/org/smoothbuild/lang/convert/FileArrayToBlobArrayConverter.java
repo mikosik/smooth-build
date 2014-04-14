@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
-import org.smoothbuild.db.objects.build.ArrayBuilder;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
