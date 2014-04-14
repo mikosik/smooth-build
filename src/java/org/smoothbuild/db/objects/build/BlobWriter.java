@@ -5,17 +5,20 @@ import static com.google.common.base.Preconditions.checkState;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.objects.instance.BlobObject;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SBlob;
 
+import com.google.common.hash.HashCode;
+
 public class BlobWriter implements BlobBuilder {
-  private final ObjectsDb objectsDb;
+  private final HashedDb hashedDb;
 
   private ByteArrayOutputStream outputStream;
 
-  public BlobWriter(ObjectsDb objectsDb) {
-    this.objectsDb = objectsDb;
+  public BlobWriter(HashedDb hashedDb) {
+    this.hashedDb = hashedDb;
   }
 
   @Override
@@ -28,6 +31,11 @@ public class BlobWriter implements BlobBuilder {
   @Override
   public SBlob build() {
     checkState(outputStream != null, "No content available. Create one via openOutputStream()");
-    return objectsDb.writeBlob(outputStream.toByteArray());
+    return writeBlob(outputStream.toByteArray());
+  }
+
+  private BlobObject writeBlob(byte[] objectBytes) {
+    HashCode hash = hashedDb.store(objectBytes);
+    return new BlobObject(hashedDb, hash);
   }
 }

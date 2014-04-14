@@ -14,8 +14,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.build.ArrayWriter;
+import org.smoothbuild.db.objects.build.BlobWriter;
 import org.smoothbuild.db.objects.build.FileWriter;
-import org.smoothbuild.db.objects.instance.BlobObject;
 import org.smoothbuild.db.objects.instance.StringObject;
 import org.smoothbuild.db.objects.read.ReadArray;
 import org.smoothbuild.db.objects.read.ReadBlob;
@@ -24,6 +24,7 @@ import org.smoothbuild.db.objects.read.ReadNothing;
 import org.smoothbuild.db.objects.read.ReadString;
 import org.smoothbuild.db.objects.read.ReadValue;
 import org.smoothbuild.lang.base.ArrayBuilder;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SBlob;
@@ -107,16 +108,15 @@ public class ObjectsDb {
     return new FileWriter(hashedDb);
   }
 
+  public BlobBuilder blobBuilder() {
+    return new BlobWriter(hashedDb);
+  }
+
   // writers
 
   public SString string(String string) {
     HashCode hash = hashedDb.store(string.getBytes(CHARSET));
     return new StringObject(hashedDb, hash);
-  }
-
-  public BlobObject writeBlob(byte[] objectBytes) {
-    HashCode hash = hashedDb.store(objectBytes);
-    return new BlobObject(hashedDb, hash);
   }
 
   // readers

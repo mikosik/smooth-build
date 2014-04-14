@@ -14,12 +14,16 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
@@ -29,6 +33,7 @@ import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.util.Empty;
+import org.smoothbuild.util.Streams;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -59,7 +64,8 @@ public class TaskResultsDbTest {
 
   @Test
   public void result_cache_contains_stored_result() {
-    given(taskResultsDb).store(hash, new TaskResult<>(new FakeString("result"), Empty.messageList()));
+    given(taskResultsDb).store(hash,
+        new TaskResult<>(new FakeString("result"), Empty.messageList()));
     when(taskResultsDb.contains(hash));
     thenReturned(true);
   }
@@ -72,10 +78,10 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_messages_can_be_read_back() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(stringValue = objectsDb.string("abc"));
     given(message = new Message(ERROR, "message string"));
-    given(taskResultsDb).store(hash, new TaskResult<>(blob, ImmutableList.of(message)));
-    when(taskResultsDb.read(hash, BLOB).messages());
+    given(taskResultsDb).store(hash, new TaskResult<>(stringValue, ImmutableList.of(message)));
+    when(taskResultsDb.read(hash, STRING).messages());
     thenReturned(contains(message));
   }
 
@@ -90,7 +96,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_blob_array_can_be_read_back() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     given(taskResultsDb).store(hash, new TaskResult<>(blobArray, Empty.messageList()));
     when(taskResultsDb.read(hash, BLOB_ARRAY).value().iterator().next());
@@ -116,7 +122,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_blob_can_be_read_back() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(taskResultsDb).store(hash, new TaskResult<>(blob, Empty.messageList()));
     when(taskResultsDb.read(hash, BLOB).value());
     thenReturned(blob);
@@ -128,5 +134,11 @@ public class TaskResultsDbTest {
     given(taskResultsDb).store(hash, new TaskResult<>(stringValue, Empty.messageList()));
     when(taskResultsDb.read(hash, STRING).value().value());
     thenReturned(string);
+  }
+
+  private static SBlob writeBlob(ObjectsDb objectsDb, byte[] bytes) throws IOException {
+    BlobBuilder builder = objectsDb.blobBuilder();
+    Streams.copy(new ByteArrayInputStream(bytes), builder.openOutputStream());
+    return builder.build();
   }
 }
