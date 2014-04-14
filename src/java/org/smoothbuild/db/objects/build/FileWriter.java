@@ -20,15 +20,17 @@ public class FileWriter implements FileBuilder {
   }
 
   @Override
-  public void setPath(Path path) {
+  public FileWriter setPath(Path path) {
     checkState(this.path == null, "Path has been already set.");
     this.path = checkNotNull(path);
+    return this;
   }
 
   @Override
-  public void setContent(SBlob content) {
+  public FileWriter setContent(SBlob content) {
     checkState(this.content == null, "Content has been already set.");
     this.content = checkNotNull(content);
+    return this;
   }
 
   @Override
