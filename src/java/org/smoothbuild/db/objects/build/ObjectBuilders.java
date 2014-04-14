@@ -31,7 +31,7 @@ public class ObjectBuilders implements SValueBuilders {
 
   @Override
   public BlobBuilder blobBuilder() {
-    return new BlobWriter(objectsDb);
+    return objectsDb.blobBuilder();
   }
 
   @Override

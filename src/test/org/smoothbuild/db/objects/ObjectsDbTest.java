@@ -18,6 +18,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.hamcrest.Matchers;
@@ -26,6 +27,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
@@ -34,6 +36,7 @@ import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.util.Streams;
 
 import com.google.common.hash.HashCode;
 
@@ -83,7 +86,7 @@ public class ObjectsDbTest {
 
   @Test
   public void file_hash_is_different_from_file_content_hash() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     when(file.hash());
     thenReturned(not(blob.hash()));
@@ -101,7 +104,7 @@ public class ObjectsDbTest {
 
   @Test
   public void created_file_array_contains_file_that_was_added_to_it() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
     then(fileArray, contains(new FakeFile(path, bytes)));
@@ -109,10 +112,10 @@ public class ObjectsDbTest {
 
   @Test
   public void created_file_array_contains_all_files_that_were_added_to_it() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
-    given(blob2 = objectsDb.writeBlob(bytes2));
-    given(blob3 = objectsDb.writeBlob(bytes3));
-    given(blob4 = objectsDb.writeBlob(bytes4));
+    given(blob = writeBlob(objectsDb, bytes));
+    given(blob2 = writeBlob(objectsDb, bytes2));
+    given(blob3 = writeBlob(objectsDb, bytes3));
+    given(blob4 = writeBlob(objectsDb, bytes4));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(file2 = objectsDb.fileBuilder().setPath(path2).setContent(blob2).build());
     given(file3 = objectsDb.fileBuilder().setPath(path3).setContent(blob3).build());
@@ -127,7 +130,7 @@ public class ObjectsDbTest {
   @Test
   public void created_file_array_with_one_file_added_when_queried_by_hash_contains_that_file()
       throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
     then(objectsDb.read(FILE_ARRAY, fileArray.hash()), contains(new FakeFile(path, bytes)));
@@ -135,7 +138,7 @@ public class ObjectsDbTest {
 
   @Test
   public void file_array_with_one_file_has_different_hash_from_that_file() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
 
@@ -146,8 +149,8 @@ public class ObjectsDbTest {
   @Test
   public void file_array_with_one_element_has_different_hash_from_file_array_with_two_elements()
       throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
-    given(blob2 = objectsDb.writeBlob(bytes2));
+    given(blob = writeBlob(objectsDb, bytes));
+    given(blob2 = writeBlob(objectsDb, bytes2));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(file2 = objectsDb.fileBuilder().setPath(path2).setContent(blob2).build());
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
@@ -168,17 +171,17 @@ public class ObjectsDbTest {
 
   @Test
   public void created_blob_array_with_one_blob_added_contains_that_blob() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     when(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     then(blobArray, contains(new FakeBlob(bytes)));
   }
 
   @Test
   public void created_blob_array_with_blobs_added_contains_all_blobs() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
-    given(blob2 = objectsDb.writeBlob(bytes2));
-    given(blob3 = objectsDb.writeBlob(bytes3));
-    given(blob4 = objectsDb.writeBlob(bytes4));
+    given(blob = writeBlob(objectsDb, bytes));
+    given(blob2 = writeBlob(objectsDb, bytes2));
+    given(blob3 = writeBlob(objectsDb, bytes3));
+    given(blob4 = writeBlob(objectsDb, bytes4));
     when(blobArray =
         objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).add(blob2).add(blob3).add(blob4).build());
     then(blobArray, contains(new FakeBlob(bytes), new FakeBlob(bytes2), new FakeBlob(bytes3),
@@ -188,14 +191,14 @@ public class ObjectsDbTest {
   @Test
   public void created_blob_array_with_one_blob_added_when_queried_by_hash_contains_that_blob()
       throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     when(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     then(objectsDb.read(BLOB_ARRAY, blobArray.hash()), contains(new FakeBlob(bytes)));
   }
 
   @Test
   public void blob_array_with_one_blob_has_different_hash_from_that_blob() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     when(blob.hash());
     thenReturned(not(equalTo(blobArray.hash())));
@@ -204,8 +207,8 @@ public class ObjectsDbTest {
   @Test
   public void blob_array_with_one_element_has_different_hash_from_blob_array_with_two_elements()
       throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
-    given(blob2 = objectsDb.writeBlob(bytes2));
+    given(blob = writeBlob(objectsDb, bytes));
+    given(blob2 = writeBlob(objectsDb, bytes2));
     given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     given(blobArray2 = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).add(blob2).build());
 
@@ -283,7 +286,7 @@ public class ObjectsDbTest {
 
   @Test
   public void created_file_contains_stored_bytes() throws IOException {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     when(inputStreamToBytes(file.content().openInputStream()));
     thenReturned(bytes);
@@ -291,7 +294,7 @@ public class ObjectsDbTest {
 
   @Test
   public void created_file_contains_stored_path() throws IOException {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     when(file.path());
     thenReturned(path);
@@ -299,8 +302,8 @@ public class ObjectsDbTest {
 
   @Test
   public void files_with_different_bytes_have_different_hashes() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
-    given(blob2 = objectsDb.writeBlob(bytes2));
+    given(blob = writeBlob(objectsDb, bytes));
+    given(blob2 = writeBlob(objectsDb, bytes2));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(file2 = objectsDb.fileBuilder().setPath(path).setContent(blob2).build());
     when(file.hash());
@@ -309,7 +312,7 @@ public class ObjectsDbTest {
 
   @Test
   public void files_with_different_paths_have_different_hashes() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(file2 = objectsDb.fileBuilder().setPath(path2).setContent(blob).build());
     when(file.hash());
@@ -318,7 +321,7 @@ public class ObjectsDbTest {
 
   @Test
   public void file_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(file2 = objectsDb.read(FILE, file.hash()));
     when(file2.hash());
@@ -327,7 +330,7 @@ public class ObjectsDbTest {
 
   @Test
   public void file_retrieved_via_hash_contains_path_that_were_stored() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     given(file2 = objectsDb.read(FILE, file.hash()));
     when(file2.path());
@@ -336,7 +339,7 @@ public class ObjectsDbTest {
 
   @Test
   public void file_retrieved_via_hash_contains_blob_that_were_stored() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
     when(objectsDb.read(FILE, file.hash())).content();
     thenReturned(blob);
@@ -352,21 +355,21 @@ public class ObjectsDbTest {
 
   @Test
   public void created_blob_contains_stored_bytes() throws IOException {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     when(inputStreamToBytes(blob.openInputStream()));
     thenReturned(bytes);
   }
 
   @Test
   public void created_blob_contains_correct_hash() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     when(blob.hash());
     thenReturned(Hash.bytes(bytes));
   }
 
   @Test
   public void blob_retrieved_via_hash_contains_this_hash() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(blobRead = objectsDb.read(BLOB, blob.hash()));
     when(blobRead.hash());
     thenReturned(blob.hash());
@@ -374,7 +377,7 @@ public class ObjectsDbTest {
 
   @Test
   public void blob_retrieved_via_hash_contains_bytes_that_were_stored() throws Exception {
-    given(blob = objectsDb.writeBlob(bytes));
+    given(blob = writeBlob(objectsDb, bytes));
     given(blobRead = objectsDb.read(BLOB, blob.hash()));
     when(inputStreamToBytes(blobRead.openInputStream()));
     thenReturned(bytes);
@@ -424,5 +427,11 @@ public class ObjectsDbTest {
     given(stringValue = objectsDb.read(STRING, HashCode.fromInt(33)));
     when(stringValue).value();
     thenThrown(NoObjectWithGivenHashError.class);
+  }
+
+  private static SBlob writeBlob(ObjectsDb objectsDb, byte[] bytes) throws IOException {
+    BlobBuilder builder = objectsDb.blobBuilder();
+    Streams.copy(new ByteArrayInputStream(bytes), builder.openOutputStream());
+    return builder.build();
   }
 }
