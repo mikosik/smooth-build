@@ -15,7 +15,6 @@ import java.io.InputStream;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.StringObject;
 import org.testory.Closure;
 
 import com.google.common.hash.HashCode;

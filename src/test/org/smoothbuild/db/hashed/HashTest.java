@@ -5,7 +5,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.base.Name;
 
 public class HashTest {

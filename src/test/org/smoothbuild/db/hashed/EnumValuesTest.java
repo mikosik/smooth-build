@@ -6,7 +6,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.EnumValues;
 
 public class EnumValuesTest {
   String value1 = "value 1";

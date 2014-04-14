@@ -9,11 +9,6 @@ import java.io.DataOutputStream;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.EnumValues;
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.hashed.err.CorruptedBoolError;
 import org.smoothbuild.db.hashed.err.CorruptedEnumValue;
 import org.smoothbuild.db.hashed.err.IllegalPathInObjectError;

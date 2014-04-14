@@ -7,8 +7,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.testing.lang.type.FakeFile;
-import org.smoothbuild.testing.lang.type.FileMatchers;
 
 public class FileMatchersTest {
   byte[] bytes1 = new byte[] { 1, 2, 3 };

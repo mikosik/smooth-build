@@ -4,7 +4,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import org.junit.Test;
-import org.smoothbuild.cli.work.build.CommandLineArguments;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 

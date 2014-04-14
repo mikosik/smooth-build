@@ -8,7 +8,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.objects.instance.AbstractObject;
 import org.smoothbuild.lang.base.SType;
 import org.testory.Closure;
 

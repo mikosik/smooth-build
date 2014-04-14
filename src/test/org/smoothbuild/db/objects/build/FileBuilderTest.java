@@ -9,7 +9,6 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.objects.build.FileBuilder;
 import org.smoothbuild.db.objects.instance.FileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SBlob;

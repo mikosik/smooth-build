@@ -5,7 +5,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.HashCodes;
 import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.hash.HashCode;
