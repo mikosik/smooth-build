@@ -26,6 +26,8 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
+import org.smoothbuild.db.objects.marshal.ReadersFactory;
+import org.smoothbuild.db.objects.marshal.WritersFactory;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
@@ -80,7 +82,10 @@ public class ObjectsDbTest {
   String string3 = "a string 3";
   String string4 = "a string 4";
 
-  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(new FakeFileSystem()));
+  HashedDb hashedDb = new HashedDb(new FakeFileSystem());
+  ReadersFactory readersFactory = new ReadersFactory(hashedDb);
+  WritersFactory writersFactory = new WritersFactory(hashedDb, readersFactory);
+  ObjectsDb objectsDb = new ObjectsDb(hashedDb, readersFactory, writersFactory);
 
   // file vs blob
 
