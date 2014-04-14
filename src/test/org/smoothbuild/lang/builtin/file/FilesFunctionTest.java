@@ -2,9 +2,9 @@ package org.smoothbuild.lang.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.SmoothContants.CHARSET;
 import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.lang.type.FileArrayMatchers.containsFileContainingItsPath;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
@@ -18,6 +18,7 @@ import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
+import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
@@ -98,7 +99,8 @@ public class FilesFunctionTest {
 
     SArray<SFile> fileArray = runExecute(params(rootPath.value()));
 
-    assertThat(containsFileContainingItsPath(filePath).matches(fileArray));
+    FakeFile expectedFile = new FakeFile(filePath, filePath.value().getBytes(CHARSET));
+    assertThat(fileArray).containsExactly(expectedFile);
   }
 
   private static FilesFunction.Parameters params(final String dir) {
