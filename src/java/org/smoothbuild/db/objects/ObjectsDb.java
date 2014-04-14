@@ -79,42 +79,30 @@ public class ObjectsDb {
   public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
     if (arrayType == FILE_ARRAY) {
       @SuppressWarnings("unchecked")
-      ArrayBuilder<T> result = (ArrayBuilder<T>) fileArrayBuilder();
+      ArrayBuilder<T> result =
+          (ArrayBuilder<T>) new ArrayBuilder<SFile>(hashedDb, FILE_ARRAY, readFile);
       return result;
     }
     if (arrayType == BLOB_ARRAY) {
       @SuppressWarnings("unchecked")
-      ArrayBuilder<T> result = (ArrayBuilder<T>) blobArrayBuilder();
+      ArrayBuilder<T> result =
+          (ArrayBuilder<T>) new ArrayBuilder<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
       return result;
     }
     if (arrayType == STRING_ARRAY) {
       @SuppressWarnings("unchecked")
-      ArrayBuilder<T> result = (ArrayBuilder<T>) stringArrayBuilder();
+      ArrayBuilder<T> result =
+          (ArrayBuilder<T>) new ArrayBuilder<SString>(hashedDb, STRING_ARRAY, readString);
       return result;
     }
     if (arrayType == EMPTY_ARRAY) {
       @SuppressWarnings("unchecked")
-      ArrayBuilder<T> result = (ArrayBuilder<T>) emptyArrayBuilder();
+      ArrayBuilder<T> result =
+          (ArrayBuilder<T>) new ArrayBuilder<SNothing>(hashedDb, EMPTY_ARRAY, readNothing);
       return result;
     }
 
     throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
-  }
-
-  private ArrayBuilder<SFile> fileArrayBuilder() {
-    return new ArrayBuilder<SFile>(hashedDb, FILE_ARRAY, readFile);
-  }
-
-  private ArrayBuilder<SBlob> blobArrayBuilder() {
-    return new ArrayBuilder<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
-  }
-
-  private ArrayBuilder<SString> stringArrayBuilder() {
-    return new ArrayBuilder<SString>(hashedDb, STRING_ARRAY, readString);
-  }
-
-  private ArrayBuilder<SNothing> emptyArrayBuilder() {
-    return new ArrayBuilder<SNothing>(hashedDb, EMPTY_ARRAY, readNothing);
   }
 
   // writers
