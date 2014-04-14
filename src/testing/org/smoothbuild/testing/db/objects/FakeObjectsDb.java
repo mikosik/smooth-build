@@ -26,6 +26,6 @@ public class FakeObjectsDb extends ObjectsDb {
 
   public SFile createFileContainingItsPath(Path path) {
     BlobObject content = writeBlob(path.value().getBytes(CHARSET));
-    return writeFile(path, content);
+    return fileBuilder().setPath(path).setContent(content).build();
   }
 }
