@@ -29,6 +29,7 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.testing.lang.type.FakeString;
@@ -39,9 +40,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class TaskResultsDbTest {
-  HashedDb hashedDb = new HashedDb(new FakeFileSystem());
-  ObjectsDb objectsDb = new ObjectsDb(new HashedDb(new FakeFileSystem()));
-  TaskResultsDb taskResultsDb = new TaskResultsDb(hashedDb, objectsDb);
+  ObjectsDb objectsDb = new FakeObjectsDb();
+  HashedDb taskResultsHashedDb = new HashedDb(new FakeFileSystem());
+  TaskResultsDb taskResultsDb = new TaskResultsDb(taskResultsHashedDb, objectsDb);
   HashCode hash = Hash.string("abc");
 
   byte[] bytes = new byte[] {};
