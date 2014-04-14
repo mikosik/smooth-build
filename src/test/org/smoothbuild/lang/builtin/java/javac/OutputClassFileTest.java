@@ -6,8 +6,8 @@ import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.db.objects.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.StreamTester;

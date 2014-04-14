@@ -2,8 +2,8 @@ package org.smoothbuild.lang.builtin.blob;
 
 import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
 
-import org.smoothbuild.db.objects.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;

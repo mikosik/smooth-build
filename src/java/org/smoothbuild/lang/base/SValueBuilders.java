@@ -1,8 +1,5 @@
 package org.smoothbuild.lang.base;
 
-import org.smoothbuild.db.objects.build.ArrayBuilder;
-import org.smoothbuild.db.objects.build.BlobBuilder;
-import org.smoothbuild.db.objects.build.FileBuilder;
 import org.smoothbuild.db.objects.build.ObjectBuilders;
 
 import com.google.inject.ImplementedBy;

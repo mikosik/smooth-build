@@ -5,11 +5,11 @@ import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
-import org.smoothbuild.db.objects.build.ArrayBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;

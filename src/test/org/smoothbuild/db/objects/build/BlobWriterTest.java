@@ -11,38 +11,38 @@ import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.db.objects.instance.BlobObject;
 
-public class BlobBuilderTest {
+public class BlobWriterTest {
   ObjectsDb objectsDb = mock(ObjectsDb.class);
-  BlobBuilder blobBuilder = new BlobBuilder(objectsDb);
+  BlobWriter blobWriter = new BlobWriter(objectsDb);
   byte[] bytes = new byte[] { 1, 2, 3 };
   BlobObject blob = mock(BlobObject.class);
 
   @Test
   public void opening_output_stream_twice_fails() throws Exception {
-    given(blobBuilder).openOutputStream();
-    when(blobBuilder).openOutputStream();
+    given(blobWriter).openOutputStream();
+    when(blobWriter).openOutputStream();
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void build_fails_when_no_content_was_provided() {
-    when(blobBuilder).build();
+    when(blobWriter).build();
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void build_returns_blob_stored_in_object_db_with_empty_content() throws Exception {
     given(willReturn(blob), objectsDb).writeBlob(new byte[] {});
-    given(blobBuilder).openOutputStream();
-    when(blobBuilder).build();
+    given(blobWriter).openOutputStream();
+    when(blobWriter).build();
     thenReturned(blob);
   }
 
   @Test
   public void build_returns_blob_stored_in_object_db() throws Exception {
     given(willReturn(blob), objectsDb).writeBlob(bytes);
-    given(blobBuilder.openOutputStream()).write(bytes);
-    when(blobBuilder).build();
+    given(blobWriter.openOutputStream()).write(bytes);
+    when(blobWriter).build();
     thenReturned(blob);
   }
 }

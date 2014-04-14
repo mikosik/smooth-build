@@ -6,6 +6,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.objects.instance.ArrayObject;
 import org.smoothbuild.db.objects.read.ReadValue;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SType;
@@ -14,24 +15,26 @@ import org.smoothbuild.lang.base.SValue;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class ArrayBuilder<T extends SValue> {
+public class ArrayWriter<T extends SValue> implements ArrayBuilder<T> {
   private final HashedDb hashedDb;
   private final SType<?> arrayType;
   private final ReadValue<T> readValue;
   private final List<T> result;
 
-  public ArrayBuilder(HashedDb hashedDb, SType<?> arrayType, ReadValue<T> valueReader) {
+  public ArrayWriter(HashedDb hashedDb, SType<?> arrayType, ReadValue<T> valueReader) {
     this.hashedDb = hashedDb;
     this.arrayType = arrayType;
     this.readValue = valueReader;
     this.result = Lists.newArrayList();
   }
 
+  @Override
   public ArrayBuilder<T> add(T elem) {
     result.add(elem);
     return this;
   }
 
+  @Override
   public SArray<T> build() {
     return array(result, arrayType, readValue);
   }

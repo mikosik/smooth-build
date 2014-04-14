@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.db.objects.build.FileBuilder;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.lang.type.FakeBlob;

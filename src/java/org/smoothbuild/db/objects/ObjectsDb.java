@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.objects.build.ArrayBuilder;
+import org.smoothbuild.db.objects.build.ArrayWriter;
 import org.smoothbuild.db.objects.instance.BlobObject;
 import org.smoothbuild.db.objects.instance.FileObject;
 import org.smoothbuild.db.objects.instance.StringObject;
@@ -25,6 +25,7 @@ import org.smoothbuild.db.objects.read.ReadNothing;
 import org.smoothbuild.db.objects.read.ReadString;
 import org.smoothbuild.db.objects.read.ReadValue;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
@@ -80,25 +81,25 @@ public class ObjectsDb {
     if (arrayType == FILE_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result =
-          (ArrayBuilder<T>) new ArrayBuilder<SFile>(hashedDb, FILE_ARRAY, readFile);
+          (ArrayBuilder<T>) new ArrayWriter<SFile>(hashedDb, FILE_ARRAY, readFile);
       return result;
     }
     if (arrayType == BLOB_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result =
-          (ArrayBuilder<T>) new ArrayBuilder<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
+          (ArrayBuilder<T>) new ArrayWriter<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
       return result;
     }
     if (arrayType == STRING_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result =
-          (ArrayBuilder<T>) new ArrayBuilder<SString>(hashedDb, STRING_ARRAY, readString);
+          (ArrayBuilder<T>) new ArrayWriter<SString>(hashedDb, STRING_ARRAY, readString);
       return result;
     }
     if (arrayType == EMPTY_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result =
-          (ArrayBuilder<T>) new ArrayBuilder<SNothing>(hashedDb, EMPTY_ARRAY, readNothing);
+          (ArrayBuilder<T>) new ArrayWriter<SNothing>(hashedDb, EMPTY_ARRAY, readNothing);
       return result;
     }
 

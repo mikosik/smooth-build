@@ -5,8 +5,8 @@ import static org.smoothbuild.SmoothContants.CHARSET;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import org.smoothbuild.db.objects.build.BlobBuilder;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SString;
