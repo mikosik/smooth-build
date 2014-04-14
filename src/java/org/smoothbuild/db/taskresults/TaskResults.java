@@ -1,4 +1,4 @@
-package org.smoothbuild.db;
+package org.smoothbuild.db.taskresults;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -11,4 +11,4 @@ import com.google.inject.BindingAnnotation;
 @Retention(RUNTIME)
 @Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })
 @BindingAnnotation
-public @interface Objects {}
+public @interface TaskResults {}
