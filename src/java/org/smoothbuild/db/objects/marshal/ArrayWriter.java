@@ -8,6 +8,7 @@ import org.smoothbuild.db.objects.base.ArrayObject;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 
@@ -16,11 +17,11 @@ import com.google.common.hash.HashCode;
 
 public class ArrayWriter<T extends SValue> implements ArrayBuilder<T> {
   private final HashedDb hashedDb;
-  private final SType<?> arrayType;
+  private final SArrayType<T> arrayType;
   private final ObjectReader<T> elementReader;
   private final List<T> result;
 
-  public ArrayWriter(HashedDb hashedDb, SType<?> arrayType, ObjectReader<T> elementReader) {
+  public ArrayWriter(HashedDb hashedDb, SArrayType<T> arrayType, ObjectReader<T> elementReader) {
     this.hashedDb = hashedDb;
     this.arrayType = arrayType;
     this.elementReader = elementReader;
