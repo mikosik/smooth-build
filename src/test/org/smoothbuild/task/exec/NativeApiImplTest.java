@@ -7,10 +7,8 @@ import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.io.temp.TempDirectoryManager;
-import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
@@ -18,10 +16,9 @@ import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 public class NativeApiImplTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
   FakeObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
-  SValueBuilders valueBuilders = new ObjectBuilders(objectsDb);
   TempDirectoryManager tempDirectoryManager = mock(TempDirectoryManager.class);
 
-  NativeApiImpl nativeApi = new NativeApiImpl(fileSystem, valueBuilders, tempDirectoryManager);
+  NativeApiImpl nativeApi = new NativeApiImpl(fileSystem, objectsDb, tempDirectoryManager);
 
   @Test
   public void fileSystem() throws Exception {

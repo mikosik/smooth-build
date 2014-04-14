@@ -11,12 +11,11 @@ import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Test;
-import org.smoothbuild.db.objects.build.ObjectBuilders;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.BlobTester;
@@ -29,10 +28,10 @@ public class TempDirectoryTest {
   Path path = path("my/path");
   String content = "content";
 
-  SValueBuilders valueBuilders = new ObjectBuilders(new FakeObjectsDb());
+  ObjectsDb objectsDb = new FakeObjectsDb();
   java.nio.file.Path rootPath = Paths.get("/fake/path");
   FakeFileSystem fileSystem = new FakeFileSystem();
-  TempDirectory tempDirectory = new TempDirectory(valueBuilders, rootPath, fileSystem);
+  TempDirectory tempDirectory = new TempDirectory(objectsDb, rootPath, fileSystem);
 
   @After
   public void after() {
