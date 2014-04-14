@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.objects.marshal.ReadersFactory;
+import org.smoothbuild.db.objects.marshal.WritersFactory;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.BlobBuilder;
@@ -26,7 +28,11 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   public FakeObjectsDb(HashedDb hashedDb) {
-    super(hashedDb);
+    this(hashedDb, new ReadersFactory(hashedDb));
+  }
+
+  public FakeObjectsDb(HashedDb hashedDb, ReadersFactory readersFactory) {
+    super(hashedDb, readersFactory, new WritersFactory(hashedDb, readersFactory));
   }
 
   public SFile createFileContainingItsPath(Path path) {
