@@ -103,6 +103,12 @@ public class ObjectsDbTest {
   // file array
 
   @Test
+  public void created_empty_file_array_is_empty() throws Exception {
+    given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).build());
+    then(fileArray, Matchers.emptyIterable());
+  }
+
+  @Test
   public void created_file_array_contains_file_that_was_added_to_it() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
     given(file = objectsDb.fileBuilder().setPath(path).setContent(blob).build());
@@ -170,6 +176,12 @@ public class ObjectsDbTest {
   // blob array
 
   @Test
+  public void created_empty_blob_array_is_empty() throws Exception {
+    given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).build());
+    then(blobArray, Matchers.emptyIterable());
+  }
+
+  @Test
   public void created_blob_array_with_one_blob_added_contains_that_blob() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
     when(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
@@ -224,6 +236,12 @@ public class ObjectsDbTest {
   }
 
   // string array
+
+  @Test
+  public void created_empty_string_array_is_empty() throws Exception {
+    given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).build());
+    then(stringArray, Matchers.emptyIterable());
+  }
 
   @Test
   public void created_string_array_with_one_string_added_contains_that_string() throws Exception {
