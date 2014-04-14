@@ -26,7 +26,7 @@ public class ObjectBuilders implements SValueBuilders {
 
   @Override
   public FileBuilder fileBuilder() {
-    return new FileWriter(objectsDb);
+    return objectsDb.fileBuilder();
   }
 
   @Override

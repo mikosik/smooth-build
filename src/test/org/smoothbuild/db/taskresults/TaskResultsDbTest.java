@@ -81,7 +81,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_file_array_can_be_read_back() throws Exception {
-    given(file = objectsDb.writeFile(path, new FakeBlob(bytes)));
+    given(file = objectsDb.fileBuilder().setPath(path).setContent(new FakeBlob(bytes)).build());
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(taskResultsDb).store(hash, new TaskResult<>(fileArray, Empty.messageList()));
     when(taskResultsDb.read(hash, FILE_ARRAY).value().iterator().next());
@@ -108,7 +108,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void stored_file_can_be_read_back() throws Exception {
-    given(file = objectsDb.writeFile(path, new FakeBlob(bytes)));
+    given(file = objectsDb.fileBuilder().setPath(path).setContent(new FakeBlob(bytes)).build());
     given(taskResultsDb).store(hash, new TaskResult<>(file, Empty.messageList()));
     when(taskResultsDb.read(hash, FILE).value());
     thenReturned(file);

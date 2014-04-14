@@ -13,10 +13,9 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.objects.build.ArrayWriter;
+import org.smoothbuild.db.objects.build.FileWriter;
 import org.smoothbuild.db.objects.instance.BlobObject;
-import org.smoothbuild.db.objects.instance.FileObject;
 import org.smoothbuild.db.objects.instance.StringObject;
 import org.smoothbuild.db.objects.read.ReadArray;
 import org.smoothbuild.db.objects.read.ReadBlob;
@@ -24,8 +23,8 @@ import org.smoothbuild.db.objects.read.ReadFile;
 import org.smoothbuild.db.objects.read.ReadNothing;
 import org.smoothbuild.db.objects.read.ReadString;
 import org.smoothbuild.db.objects.read.ReadValue;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
+import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
@@ -75,8 +74,6 @@ public class ObjectsDb {
     this.readersMap = builder.build();
   }
 
-  // array builders
-
   public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
     if (arrayType == FILE_ARRAY) {
       @SuppressWarnings("unchecked")
@@ -106,16 +103,11 @@ public class ObjectsDb {
     throw new IllegalArgumentException("Cannot create ArrayBuilder for array type = " + arrayType);
   }
 
-  // writers
-
-  public SFile writeFile(Path path, SBlob content) {
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(content.hash());
-    marshaller.write(path);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
-
-    return new FileObject(path, content, hash);
+  public FileBuilder fileBuilder() {
+    return new FileWriter(hashedDb);
   }
+
+  // writers
 
   public SString string(String string) {
     HashCode hash = hashedDb.store(string.getBytes(CHARSET));

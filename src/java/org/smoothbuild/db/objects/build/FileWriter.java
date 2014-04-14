@@ -3,20 +3,24 @@ package org.smoothbuild.db.objects.build;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.db.objects.instance.FileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 
+import com.google.common.hash.HashCode;
+
 public class FileWriter implements FileBuilder {
-  private final ObjectsDb objectsDb;
+  private final HashedDb hashedDb;
 
   private Path path;
   private SBlob content;
 
-  public FileWriter(ObjectsDb objectsDb) {
-    this.objectsDb = objectsDb;
+  public FileWriter(HashedDb hashedDb) {
+    this.hashedDb = hashedDb;
   }
 
   @Override
@@ -38,6 +42,15 @@ public class FileWriter implements FileBuilder {
     checkState(content != null, "No content set");
     checkState(path != null, "No path set");
 
-    return objectsDb.writeFile(path, content);
+    return writeFile(path, content);
+  }
+
+  private SFile writeFile(Path path, SBlob content) {
+    Marshaller marshaller = new Marshaller();
+    marshaller.write(content.hash());
+    marshaller.write(path);
+
+    HashCode hash = hashedDb.store(marshaller.getBytes());
+    return new FileObject(path, content, hash);
   }
 }
