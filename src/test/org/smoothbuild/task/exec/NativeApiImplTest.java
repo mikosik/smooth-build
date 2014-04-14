@@ -17,8 +17,8 @@ import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 public class NativeApiImplTest {
   FakeFileSystem fileSystem = new FakeFileSystem();
-  FakeObjectsDb valueDb = new FakeObjectsDb(fileSystem);
-  SValueBuilders valueBuilders = new ObjectBuilders(valueDb);
+  FakeObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
+  SValueBuilders valueBuilders = new ObjectBuilders(objectsDb);
   TempDirectoryManager tempDirectoryManager = mock(TempDirectoryManager.class);
 
   NativeApiImpl nativeApi = new NativeApiImpl(fileSystem, valueBuilders, tempDirectoryManager);

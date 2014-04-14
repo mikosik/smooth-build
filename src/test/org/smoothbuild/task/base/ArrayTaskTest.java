@@ -20,8 +20,8 @@ import com.google.common.collect.ImmutableList;
 public class ArrayTaskTest {
   FakeNativeApi nativeApi = new FakeNativeApi();
   CodeLocation codeLocation = new FakeCodeLocation();
-  SString string1 = nativeApi.valueDb().writeString("string1");
-  SString string2 = nativeApi.valueDb().writeString("string2");
+  SString string1 = nativeApi.objectsDb().writeString("string1");
+  SString string2 = nativeApi.objectsDb().writeString("string2");
 
   Result<SString> result1 = new FakeResult<>(string1);
   Result<SString> result2 = new FakeResult<>(string2);
