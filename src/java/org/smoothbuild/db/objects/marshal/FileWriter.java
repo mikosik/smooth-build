@@ -1,11 +1,11 @@
-package org.smoothbuild.db.objects.build;
+package org.smoothbuild.db.objects.marshal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.objects.instance.FileObject;
+import org.smoothbuild.db.objects.base.FileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SBlob;

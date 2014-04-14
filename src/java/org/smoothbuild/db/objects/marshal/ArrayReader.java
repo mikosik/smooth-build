@@ -1,28 +1,28 @@
-package org.smoothbuild.db.objects.read;
+package org.smoothbuild.db.objects.marshal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.ArrayObject;
+import org.smoothbuild.db.objects.base.ArrayObject;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.hash.HashCode;
 
-public class ReadArray<T extends SValue> implements ReadValue<SArray<T>> {
-  private final ReadValue<T> readValue;
+public class ArrayReader<T extends SValue> implements ObjectReader<SArray<T>> {
+  private final ObjectReader<T> elementReader;
   private final SType<?> arrayType;
   private final HashedDb hashedDb;
 
-  public ReadArray(HashedDb hashedDb, SType<?> arrayType, ReadValue<T> valueReader) {
+  public ArrayReader(HashedDb hashedDb, SType<?> arrayType, ObjectReader<T> elementReader) {
     this.hashedDb = hashedDb;
     this.arrayType = checkNotNull(arrayType);
-    this.readValue = checkNotNull(valueReader);
+    this.elementReader = checkNotNull(elementReader);
   }
 
   @Override
   public SArray<T> read(HashCode hash) {
-    return new ArrayObject<T>(hashedDb, hash, arrayType, readValue);
+    return new ArrayObject<T>(hashedDb, hash, arrayType, elementReader);
   }
 }

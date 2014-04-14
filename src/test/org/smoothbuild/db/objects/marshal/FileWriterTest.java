@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.build;
+package org.smoothbuild.db.objects.marshal;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.FileObject;
+import org.smoothbuild.db.objects.base.FileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.base.SBlob;

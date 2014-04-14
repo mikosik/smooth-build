@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.instance;
+package org.smoothbuild.db.objects.base;
 
 import static org.smoothbuild.SmoothContants.CHARSET;
 import static org.smoothbuild.lang.base.STypes.STRING;

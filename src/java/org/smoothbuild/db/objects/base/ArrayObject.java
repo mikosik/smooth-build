@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.instance;
+package org.smoothbuild.db.objects.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.db.objects.read.ReadValue;
+import org.smoothbuild.db.objects.marshal.ObjectReader;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
@@ -17,11 +17,11 @@ import com.google.common.hash.HashCode;
 
 public class ArrayObject<T extends SValue> extends AbstractObject implements SArray<T> {
   private final HashedDb hashedDb;
-  private final ReadValue<T> readValue;
+  private final ObjectReader<T> elementReader;
 
-  public ArrayObject(HashedDb hashedDb, HashCode hash, SType<?> type, ReadValue<T> valueReader) {
+  public ArrayObject(HashedDb hashedDb, HashCode hash, SType<?> type, ObjectReader<T> elementReader) {
     super(type, hash);
-    this.readValue = checkNotNull(valueReader);
+    this.elementReader = checkNotNull(elementReader);
     this.hashedDb = checkNotNull(hashedDb);
   }
 
@@ -29,7 +29,7 @@ public class ArrayObject<T extends SValue> extends AbstractObject implements SAr
   public Iterator<T> iterator() {
     ImmutableList.Builder<T> builder = ImmutableList.builder();
     for (HashCode elemHash : readHashCodeList(hash())) {
-      builder.add(readValue.read(elemHash));
+      builder.add(elementReader.read(elemHash));
     }
     return builder.build().iterator();
   }

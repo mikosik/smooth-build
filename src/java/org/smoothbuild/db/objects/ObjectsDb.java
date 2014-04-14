@@ -13,16 +13,16 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.build.ArrayWriter;
-import org.smoothbuild.db.objects.build.BlobWriter;
-import org.smoothbuild.db.objects.build.FileWriter;
-import org.smoothbuild.db.objects.instance.StringObject;
-import org.smoothbuild.db.objects.read.ReadArray;
-import org.smoothbuild.db.objects.read.ReadBlob;
-import org.smoothbuild.db.objects.read.ReadFile;
-import org.smoothbuild.db.objects.read.ReadNothing;
-import org.smoothbuild.db.objects.read.ReadString;
-import org.smoothbuild.db.objects.read.ReadValue;
+import org.smoothbuild.db.objects.base.StringObject;
+import org.smoothbuild.db.objects.marshal.ArrayReader;
+import org.smoothbuild.db.objects.marshal.ArrayWriter;
+import org.smoothbuild.db.objects.marshal.BlobReader;
+import org.smoothbuild.db.objects.marshal.BlobWriter;
+import org.smoothbuild.db.objects.marshal.FileReader;
+import org.smoothbuild.db.objects.marshal.FileWriter;
+import org.smoothbuild.db.objects.marshal.NothingReader;
+import org.smoothbuild.db.objects.marshal.ObjectReader;
+import org.smoothbuild.db.objects.marshal.StringReader;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.FileBuilder;
@@ -43,35 +43,35 @@ import com.google.common.hash.HashCode;
 public class ObjectsDb implements SValueBuilders {
   private final HashedDb hashedDb;
 
-  private final ReadString readString;
-  private final ReadBlob readBlob;
-  private final ReadFile readFile;
-  private final ReadArray<SString> readStringArray;
-  private final ReadArray<SBlob> readBlobArray;
-  private final ReadArray<SFile> readFileArray;
-  private final ReadNothing readNothing;
+  private final StringReader stringReader;
+  private final BlobReader blobReader;
+  private final FileReader fileReader;
+  private final ArrayReader<SString> stringArrayReader;
+  private final ArrayReader<SBlob> blobArrayReader;
+  private final ArrayReader<SFile> fileArrayReader;
+  private final NothingReader nothingReader;
 
-  private final ImmutableMap<SType<?>, ReadValue<?>> readersMap;
+  private final ImmutableMap<SType<?>, ObjectReader<?>> readersMap;
 
   @Inject
   public ObjectsDb(@Objects HashedDb hashedDb) {
     this.hashedDb = hashedDb;
 
-    this.readString = new ReadString(hashedDb);
-    this.readBlob = new ReadBlob(hashedDb);
-    this.readFile = new ReadFile(hashedDb);
-    this.readStringArray = new ReadArray<SString>(hashedDb, STRING_ARRAY, readString);
-    this.readBlobArray = new ReadArray<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
-    this.readFileArray = new ReadArray<SFile>(hashedDb, FILE_ARRAY, readFile);
-    this.readNothing = new ReadNothing();
+    this.stringReader = new StringReader(hashedDb);
+    this.blobReader = new BlobReader(hashedDb);
+    this.fileReader = new FileReader(hashedDb);
+    this.stringArrayReader = new ArrayReader<SString>(hashedDb, STRING_ARRAY, stringReader);
+    this.blobArrayReader = new ArrayReader<SBlob>(hashedDb, BLOB_ARRAY, blobReader);
+    this.fileArrayReader = new ArrayReader<SFile>(hashedDb, FILE_ARRAY, fileReader);
+    this.nothingReader = new NothingReader();
 
-    Builder<SType<?>, ReadValue<?>> builder = ImmutableMap.builder();
-    builder.put(STRING, readString);
-    builder.put(BLOB, readBlob);
-    builder.put(FILE, readFile);
-    builder.put(STRING_ARRAY, readStringArray);
-    builder.put(BLOB_ARRAY, readBlobArray);
-    builder.put(FILE_ARRAY, readFileArray);
+    Builder<SType<?>, ObjectReader<?>> builder = ImmutableMap.builder();
+    builder.put(STRING, stringReader);
+    builder.put(BLOB, blobReader);
+    builder.put(FILE, fileReader);
+    builder.put(STRING_ARRAY, stringArrayReader);
+    builder.put(BLOB_ARRAY, blobArrayReader);
+    builder.put(FILE_ARRAY, fileArrayReader);
 
     this.readersMap = builder.build();
   }
@@ -81,25 +81,25 @@ public class ObjectsDb implements SValueBuilders {
     if (arrayType == FILE_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result =
-          (ArrayBuilder<T>) new ArrayWriter<SFile>(hashedDb, FILE_ARRAY, readFile);
+          (ArrayBuilder<T>) new ArrayWriter<SFile>(hashedDb, FILE_ARRAY, fileReader);
       return result;
     }
     if (arrayType == BLOB_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result =
-          (ArrayBuilder<T>) new ArrayWriter<SBlob>(hashedDb, BLOB_ARRAY, readBlob);
+          (ArrayBuilder<T>) new ArrayWriter<SBlob>(hashedDb, BLOB_ARRAY, blobReader);
       return result;
     }
     if (arrayType == STRING_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result =
-          (ArrayBuilder<T>) new ArrayWriter<SString>(hashedDb, STRING_ARRAY, readString);
+          (ArrayBuilder<T>) new ArrayWriter<SString>(hashedDb, STRING_ARRAY, stringReader);
       return result;
     }
     if (arrayType == EMPTY_ARRAY) {
       @SuppressWarnings("unchecked")
       ArrayBuilder<T> result =
-          (ArrayBuilder<T>) new ArrayWriter<SNothing>(hashedDb, EMPTY_ARRAY, readNothing);
+          (ArrayBuilder<T>) new ArrayWriter<SNothing>(hashedDb, EMPTY_ARRAY, nothingReader);
       return result;
     }
 
@@ -129,7 +129,7 @@ public class ObjectsDb implements SValueBuilders {
      * Cast is safe as readersMap is immutable and constructed in proper way.
      */
     @SuppressWarnings("unchecked")
-    ReadValue<T> reader = (ReadValue<T>) readersMap.get(typeLiteral);
+    ObjectReader<T> reader = (ObjectReader<T>) readersMap.get(typeLiteral);
     if (reader == null) {
       throw new Message(FATAL, "Bug in smooth binary: Unexpected value type " + typeLiteral);
     }

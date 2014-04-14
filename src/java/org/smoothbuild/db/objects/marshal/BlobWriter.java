@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.build;
+package org.smoothbuild.db.objects.marshal;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.instance.BlobObject;
+import org.smoothbuild.db.objects.base.BlobObject;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SBlob;
 

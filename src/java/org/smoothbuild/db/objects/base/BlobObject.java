@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.instance;
+package org.smoothbuild.db.objects.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.base.STypes.BLOB;

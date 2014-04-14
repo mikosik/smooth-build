@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 import org.smoothbuild.SmoothContants;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.objects.instance.AbstractObject;
+import org.smoothbuild.db.objects.base.AbstractObject;
 import org.smoothbuild.lang.base.SBlob;
 
 public class FakeBlob extends AbstractObject implements SBlob {

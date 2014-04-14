@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.build;
+package org.smoothbuild.db.objects.marshal;
 
 import static org.smoothbuild.SmoothContants.CHARSET;
 import static org.smoothbuild.util.Streams.inputStreamToString;

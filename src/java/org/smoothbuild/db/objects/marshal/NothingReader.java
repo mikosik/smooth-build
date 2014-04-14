@@ -1,11 +1,11 @@
-package org.smoothbuild.db.objects.read;
+package org.smoothbuild.db.objects.marshal;
 
 import org.smoothbuild.lang.base.SNothing;
 
 import com.google.common.hash.HashCode;
 
-public class ReadNothing implements ReadValue<SNothing> {
-  public ReadNothing() {}
+public class NothingReader implements ObjectReader<SNothing> {
+  public NothingReader() {}
 
   @Override
   public SNothing read(HashCode hash) {
