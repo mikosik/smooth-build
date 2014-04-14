@@ -40,7 +40,7 @@ public class TaskResultsDb {
     ImmutableList<Message> messages = cachedResult.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
-      SString messageString = objectsDb.writeString(message.message());
+      SString messageString = objectsDb.string(message.message());
 
       marshaller.write(AllMessageTypes.INSTANCE.valueToByte(message.type()));
       marshaller.write(messageString.hash());

@@ -33,6 +33,6 @@ public class ObjectBuilders implements SValueBuilders {
 
   @Override
   public SString string(String string) {
-    return objectsDb.writeString(string);
+    return objectsDb.string(string);
   }
 }

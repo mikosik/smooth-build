@@ -307,7 +307,7 @@ public class DefinedFunctionsCreator {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
-        SString stringValue = objectsDb.writeString(unescaped(string));
+        SString stringValue = objectsDb.string(unescaped(string));
         return new CachingNode<>(new StringNode(stringValue, locationOf(stringToken.getSymbol())));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
