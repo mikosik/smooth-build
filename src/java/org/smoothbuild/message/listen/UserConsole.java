@@ -31,15 +31,15 @@ public class UserConsole {
     this.messageStats = new MessageStats();
   }
 
-  public void print(String header, LoggedMessages loggedMessages) {
+  public void print(String header, Iterable<? extends Message> messages) {
     println(GROUP_PREFIX + header);
-    print(loggedMessages);
-    messageStats.add(loggedMessages.stats());
+    print(messages);
   }
 
-  private void print(LoggedMessages loggedMessages) {
-    for (Message message : loggedMessages) {
+  private void print(Iterable<? extends Message> messages) {
+    for (Message message : messages) {
       print(message);
+      messageStats.incCount(message.type());
     }
   }
 
