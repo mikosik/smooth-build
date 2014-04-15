@@ -35,10 +35,10 @@ public class ArtifactSaver {
     builder.put(STRING, new StringSaver(smoothFileSystem));
     builder.put(BLOB, new BlobSaver(smoothFileSystem));
     builder.put(FILE, new FileSaver(smoothFileSystem));
-    builder.put(STRING_ARRAY, new HashedArraySaver<SString>(smoothFileSystem));
-    builder.put(BLOB_ARRAY, new HashedArraySaver<SBlob>(smoothFileSystem));
+    builder.put(STRING_ARRAY, new ArraySaver<SString>(smoothFileSystem));
+    builder.put(BLOB_ARRAY, new ArraySaver<SBlob>(smoothFileSystem));
     builder.put(FILE_ARRAY, new FileArraySaver(smoothFileSystem, messages));
-    builder.put(EMPTY_ARRAY, new HashedArraySaver<SNothing>(smoothFileSystem));
+    builder.put(EMPTY_ARRAY, new ArraySaver<SNothing>(smoothFileSystem));
 
     this.saversMap = builder.build();
   }

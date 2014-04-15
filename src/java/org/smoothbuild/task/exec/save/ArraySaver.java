@@ -10,10 +10,10 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Name;
 
-public class HashedArraySaver<T extends SValue> implements Saver<SArray<T>> {
+public class ArraySaver<T extends SValue> implements Saver<SArray<T>> {
   private final FileSystem smoothFileSystem;
 
-  public HashedArraySaver(FileSystem smoothFileSystem) {
+  public ArraySaver(FileSystem smoothFileSystem) {
     this.smoothFileSystem = smoothFileSystem;
   }
 
