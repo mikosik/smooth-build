@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
+import static org.testory.Testory.spy;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -96,10 +97,21 @@ public class CachingTaskTest {
   public void task_is_not_executed_when_result_from_db_is_returned() throws Exception {
     given(willReturn(hash), callHasher).hash();
     given(willReturn(true), taskResultsDb).contains(hash);
-    given(willReturn(new TaskResult<>(stringValue2, Empty.messageList())), taskResultsDb).read(hash,
-        STRING);
+    given(willReturn(new TaskResult<>(stringValue2, Empty.messageList())), taskResultsDb).read(
+        hash, STRING);
     given(cachingTask = new CachingTask<>(taskResultsDb, callHasher, task));
     assertThat(cachingTask.execute(nativeApi)).isEqualTo(stringValue2);
+  }
+
+  @Test
+  public void null_result_is_returned() throws Exception {
+    given(willReturn(hash), callHasher).hash();
+    given(willReturn(false), taskResultsDb).contains(hash);
+    given(task = spy(task));
+    given(willReturn(null), task).execute(nativeApi);
+    given(cachingTask = new CachingTask<>(taskResultsDb, callHasher, task));
+    when(cachingTask.execute(nativeApi));
+    thenReturned(null);
   }
 
   private static <T extends SValue> Closure $cachingTask(final TaskResultsDb taskResultsDb,
