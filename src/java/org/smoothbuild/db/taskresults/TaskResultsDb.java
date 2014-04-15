@@ -2,7 +2,6 @@ package org.smoothbuild.db.taskresults;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.smoothbuild.lang.base.STypes.STRING;
-import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.util.List;
 
@@ -17,6 +16,7 @@ import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
+import org.smoothbuild.message.base.Messages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -36,7 +36,6 @@ public class TaskResultsDb {
 
     SValue value = taskResult.value();
 
-    boolean hasErrors = false;
     ImmutableList<Message> messages = taskResult.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
@@ -44,10 +43,9 @@ public class TaskResultsDb {
 
       marshaller.write(AllMessageTypes.INSTANCE.valueToByte(message.type()));
       marshaller.write(messageString.hash());
-      hasErrors = hasErrors || message.type() == ERROR;
     }
 
-    if (!hasErrors) {
+    if (!Messages.containsProblems(messages)) {
       marshaller.write(value.hash());
     }
 
@@ -61,17 +59,15 @@ public class TaskResultsDb {
   public <T extends SValue> TaskResult<T> read(HashCode taskHash, SType<T> type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash);) {
       int size = unmarshaller.readInt();
-      boolean hasErrors = false;
       List<Message> messages = newArrayList();
       for (int i = 0; i < size; i++) {
         MessageType messageType = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();
         String messageString = objectsDb.read(STRING, messageStringHash).value();
         messages.add(new Message(messageType, messageString));
-        hasErrors = hasErrors || messageType == ERROR;
       }
 
-      if (hasErrors) {
+      if (Messages.containsProblems(messages)) {
         return new TaskResult<T>(null, messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
