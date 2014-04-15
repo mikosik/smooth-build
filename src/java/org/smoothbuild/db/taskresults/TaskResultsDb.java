@@ -31,13 +31,13 @@ public class TaskResultsDb {
     this.objectsDb = objectsDb;
   }
 
-  public void store(HashCode taskHash, TaskResult<? extends SValue> cachedResult) {
+  public void store(HashCode taskHash, TaskResult<? extends SValue> taskResult) {
     Marshaller marshaller = new Marshaller();
 
-    SValue value = cachedResult.value();
+    SValue value = taskResult.value();
 
     boolean hasErrors = false;
-    ImmutableList<Message> messages = cachedResult.messages();
+    ImmutableList<Message> messages = taskResult.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
       SString messageString = objectsDb.string(message.message());

@@ -35,11 +35,11 @@ public class CachingTask<T extends SValue> extends Task<T> {
 
   private T readFromCache(NativeApiImpl nativeApi, HashCode hash) {
     nativeApi.setResultIsFromCache();
-    TaskResult<T> cachedResult = taskResultsDb.read(hash, task.resultType());
-    for (Message message : cachedResult.messages()) {
+    TaskResult<T> taskResult = taskResultsDb.read(hash, task.resultType());
+    for (Message message : taskResult.messages()) {
       nativeApi.log(message);
     }
-    return cachedResult.value();
+    return taskResult.value();
   }
 
   private T executeAndCache(NativeApiImpl nativeApi, HashCode hash) {
