@@ -31,7 +31,7 @@ public class TaskResultsDb {
     this.objectsDb = objectsDb;
   }
 
-  public void store(HashCode taskHash, TaskResult<? extends SValue> taskResult) {
+  public void write(HashCode taskHash, TaskResult<? extends SValue> taskResult) {
     Marshaller marshaller = new Marshaller();
 
     SValue value = taskResult.value();
@@ -49,7 +49,7 @@ public class TaskResultsDb {
       marshaller.write(value.hash());
     }
 
-    hashedDb.store(taskHash, marshaller.getBytes());
+    hashedDb.write(taskHash, marshaller.getBytes());
   }
 
   public boolean contains(HashCode taskHash) {

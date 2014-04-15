@@ -58,81 +58,81 @@ public class TaskResultsDbTest {
   String string = "some string";
 
   @Test
-  public void result_cache_does_not_contain_not_stored_result() {
+  public void result_cache_does_not_contain_not_written_result() {
     when(taskResultsDb.contains(hash));
     thenReturned(false);
   }
 
   @Test
-  public void result_cache_contains_stored_result() {
-    given(taskResultsDb).store(hash,
+  public void result_cache_contains_written_result() {
+    given(taskResultsDb).write(hash,
         new TaskResult<>(new FakeString("result"), Empty.messageList()));
     when(taskResultsDb.contains(hash));
     thenReturned(true);
   }
 
   @Test
-  public void reading_not_stored_value_fails() throws Exception {
+  public void reading_not_written_value_fails() throws Exception {
     when(taskResultsDb).read(hash, STRING);
     thenThrown(NoObjectWithGivenHashError.class);
   }
 
   @Test
-  public void stored_messages_can_be_read_back() throws Exception {
+  public void written_messages_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string("abc"));
     given(message = new Message(ERROR, "message string"));
-    given(taskResultsDb).store(hash, new TaskResult<>(stringValue, ImmutableList.of(message)));
+    given(taskResultsDb).write(hash, new TaskResult<>(stringValue, ImmutableList.of(message)));
     when(taskResultsDb.read(hash, STRING).messages());
     thenReturned(contains(message));
   }
 
   @Test
-  public void stored_file_array_can_be_read_back() throws Exception {
+  public void written_file_array_can_be_read_back() throws Exception {
     given(file = objectsDb.fileBuilder().setPath(path).setContent(new FakeBlob(bytes)).build());
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    given(taskResultsDb).store(hash, new TaskResult<>(fileArray, Empty.messageList()));
+    given(taskResultsDb).write(hash, new TaskResult<>(fileArray, Empty.messageList()));
     when(taskResultsDb.read(hash, FILE_ARRAY).value().iterator().next());
     thenReturned(file);
   }
 
   @Test
-  public void stored_blob_array_can_be_read_back() throws Exception {
+  public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
     given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    given(taskResultsDb).store(hash, new TaskResult<>(blobArray, Empty.messageList()));
+    given(taskResultsDb).write(hash, new TaskResult<>(blobArray, Empty.messageList()));
     when(taskResultsDb.read(hash, BLOB_ARRAY).value().iterator().next());
     thenReturned(blob);
   }
 
   @Test
-  public void stored_string_array_can_be_read_back() throws Exception {
+  public void written_string_array_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
     given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    given(taskResultsDb).store(hash, new TaskResult<>(stringArray, Empty.messageList()));
+    given(taskResultsDb).write(hash, new TaskResult<>(stringArray, Empty.messageList()));
     when(taskResultsDb.read(hash, STRING_ARRAY).value().iterator().next());
     thenReturned(stringValue);
   }
 
   @Test
-  public void stored_file_can_be_read_back() throws Exception {
+  public void written_file_can_be_read_back() throws Exception {
     given(file = objectsDb.fileBuilder().setPath(path).setContent(new FakeBlob(bytes)).build());
-    given(taskResultsDb).store(hash, new TaskResult<>(file, Empty.messageList()));
+    given(taskResultsDb).write(hash, new TaskResult<>(file, Empty.messageList()));
     when(taskResultsDb.read(hash, FILE).value());
     thenReturned(file);
   }
 
   @Test
-  public void stored_blob_can_be_read_back() throws Exception {
+  public void written_blob_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
-    given(taskResultsDb).store(hash, new TaskResult<>(blob, Empty.messageList()));
+    given(taskResultsDb).write(hash, new TaskResult<>(blob, Empty.messageList()));
     when(taskResultsDb.read(hash, BLOB).value());
     thenReturned(blob);
   }
 
   @Test
-  public void stored_string_can_be_read_back() throws Exception {
+  public void writtend_string_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
-    given(taskResultsDb).store(hash, new TaskResult<>(stringValue, Empty.messageList()));
+    given(taskResultsDb).write(hash, new TaskResult<>(stringValue, Empty.messageList()));
     when(taskResultsDb.read(hash, STRING).value().value());
     thenReturned(string);
   }

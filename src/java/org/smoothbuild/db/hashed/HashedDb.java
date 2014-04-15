@@ -35,11 +35,11 @@ public class HashedDb {
     }
   }
 
-  public HashCode store(byte[] bytes) {
-    return store(Hash.bytes(bytes), bytes);
+  public HashCode write(byte[] bytes) {
+    return write(Hash.bytes(bytes), bytes);
   }
 
-  public HashCode store(HashCode hash, byte[] bytes) {
+  public HashCode write(HashCode hash, byte[] bytes) {
     Path path = toPath(hash);
 
     if (dbFileSystem.pathState(path) == PathState.FILE) {
