@@ -34,8 +34,6 @@ public class TaskResultsDb {
   public void write(HashCode taskHash, TaskResult<? extends SValue> taskResult) {
     Marshaller marshaller = new Marshaller();
 
-    SValue value = taskResult.value();
-
     ImmutableList<Message> messages = taskResult.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
@@ -46,7 +44,7 @@ public class TaskResultsDb {
     }
 
     if (!Messages.containsProblems(messages)) {
-      marshaller.write(value.hash());
+      marshaller.write(taskResult.value().hash());
     }
 
     hashedDb.write(taskHash, marshaller.getBytes());
