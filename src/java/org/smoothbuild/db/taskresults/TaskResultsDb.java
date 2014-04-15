@@ -68,7 +68,7 @@ public class TaskResultsDb {
       }
 
       if (Messages.containsProblems(messages)) {
-        return new TaskResult<T>(null, messages);
+        return new TaskResult<>(null, messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
         T value = objectsDb.read(type, resultObjectHash);
