@@ -35,7 +35,7 @@ public class BlobWriter implements BlobBuilder {
   }
 
   private BlobObject writeBlob(byte[] objectBytes) {
-    HashCode hash = hashedDb.store(objectBytes);
+    HashCode hash = hashedDb.write(objectBytes);
     return new BlobObject(hashedDb, hash);
   }
 }

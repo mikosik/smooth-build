@@ -50,7 +50,7 @@ public class FileWriter implements FileBuilder {
     marshaller.write(content.hash());
     marshaller.write(path);
 
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
     return new FileObject(path, content, hash);
   }
 }

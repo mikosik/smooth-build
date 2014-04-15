@@ -47,6 +47,6 @@ public class ArrayWriter<T extends SValue> implements ArrayBuilder<T> {
   private HashCode genericArray(List<? extends Hashed> elements) {
     Marshaller marshaller = new Marshaller();
     marshaller.write(elements);
-    return hashedDb.store(marshaller.getBytes());
+    return hashedDb.write(marshaller.getBytes());
   }
 }

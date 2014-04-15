@@ -49,7 +49,7 @@ public class ObjectsDb implements SValueBuilders {
 
   @Override
   public SString string(String string) {
-    HashCode hash = hashedDb.store(string.getBytes(CHARSET));
+    HashCode hash = hashedDb.write(string.getBytes(CHARSET));
     return new StringObject(hashedDb, hash);
   }
 

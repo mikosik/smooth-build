@@ -33,7 +33,7 @@ public class UnmarshallerTest {
 
     Marshaller marshaller = new Marshaller();
     marshaller.write(ImmutableList.of(hashed1, hashed2));
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       List<HashCode> actual = unmarshaller.readHashCodeList();
@@ -47,7 +47,7 @@ public class UnmarshallerTest {
 
     Marshaller marshaller = new Marshaller();
     marshaller.write(path);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       Path actual = unmarshaller.readPath();
@@ -61,7 +61,7 @@ public class UnmarshallerTest {
 
     Marshaller marshaller = new Marshaller();
     marshaller.write(myHash);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       HashCode actual = unmarshaller.readHash();
@@ -74,7 +74,7 @@ public class UnmarshallerTest {
     boolean myBool = false;
     Marshaller marshaller = new Marshaller();
     marshaller.write(myBool);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       boolean actual = unmarshaller.readBool();
@@ -87,7 +87,7 @@ public class UnmarshallerTest {
     boolean myBool = true;
     Marshaller marshaller = new Marshaller();
     marshaller.write(myBool);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       boolean actual = unmarshaller.readBool();
@@ -99,7 +99,7 @@ public class UnmarshallerTest {
   public void unmarshalling_corrupted_bool_throws_exception() {
     Marshaller marshaller = new Marshaller();
     marshaller.write((byte) 7);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
       unmarshaller.readBool();
@@ -114,7 +114,7 @@ public class UnmarshallerTest {
     byte myByte = 123;
     Marshaller marshaller = new Marshaller();
     marshaller.write(myByte);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       byte actual = unmarshaller.readByte();
@@ -127,7 +127,7 @@ public class UnmarshallerTest {
     int myInt = 0x12345678;
     Marshaller marshaller = new Marshaller();
     marshaller.write(myInt);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       int actual = unmarshaller.readInt();
@@ -144,7 +144,7 @@ public class UnmarshallerTest {
 
     Marshaller marshaller = new Marshaller();
     marshaller.write(enumValues.valueToByte(value2));
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       String actual = unmarshaller.readEnum(enumValues);
@@ -162,7 +162,7 @@ public class UnmarshallerTest {
 
     Marshaller marshaller = new Marshaller();
     marshaller.write((byte) 100);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
       unmarshaller.readEnum(enumValues);
@@ -184,7 +184,7 @@ public class UnmarshallerTest {
     marshaller.write(path);
     marshaller.write(myByte);
     marshaller.write(myInt);
-    HashCode hash = hashedDb.store(marshaller.getBytes());
+    HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       HashCode actualHash = unmarshaller.readHash();
