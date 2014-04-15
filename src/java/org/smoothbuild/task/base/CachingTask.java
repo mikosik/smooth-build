@@ -44,7 +44,11 @@ public class CachingTask<T extends SValue> extends Task<T> {
 
   private T executeAndCache(NativeApiImpl nativeApi, HashCode hash) {
     T result = task.execute(nativeApi);
-    taskResultsDb.write(hash, new TaskResult<T>(result, nativeApi.loggedMessages()));
+    if (result == null) {
+      taskResultsDb.write(hash, new TaskResult<T>(nativeApi.loggedMessages()));
+    } else {
+      taskResultsDb.write(hash, new TaskResult<T>(result, nativeApi.loggedMessages()));
+    }
     return result;
   }
 }
