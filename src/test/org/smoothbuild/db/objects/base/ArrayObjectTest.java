@@ -1,6 +1,6 @@
 package org.smoothbuild.db.objects.base;
 
-import static org.smoothbuild.lang.base.STypes.FILE;
+import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -10,19 +10,16 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.marshal.ObjectReader;
-import org.smoothbuild.lang.base.SBlob;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
 
 public class ArrayObjectTest {
-  HashedDb hashedDb = new HashedDb(new FakeFileSystem());
-  HashCode hash = HashCode.fromInt(33);
-  SBlob blob = mock(SBlob.class);
-
-  ArrayObject<SFile> cachedFileArray;
+  private final HashedDb hashedDb = new HashedDb(new FakeFileSystem());
+  private final HashCode hash = HashCode.fromInt(33);
+  private ArrayObject<SString> arrayObject;
 
   @Test
   public void null_value_db_is_forbidden() {
@@ -38,15 +35,15 @@ public class ArrayObjectTest {
 
   @Test
   public void type() throws Exception {
-    given(cachedFileArray = arrayObject(hashedDb, hash));
-    when(cachedFileArray.type());
-    thenReturned(FILE);
+    given(arrayObject = arrayObject(hashedDb, hash));
+    when(arrayObject.type());
+    thenReturned(STRING);
   }
 
   @Test
   public void hash_passed_to_constructor_is_returned_from_hash_method() throws Exception {
-    given(cachedFileArray = arrayObject(hashedDb, hash));
-    when(cachedFileArray.hash());
+    given(arrayObject = arrayObject(hashedDb, hash));
+    when(arrayObject.hash());
     thenReturned(hash);
   }
 
@@ -59,9 +56,9 @@ public class ArrayObjectTest {
     };
   }
 
-  private static ArrayObject<SFile> arrayObject(HashedDb hashedDb, HashCode hash) {
+  private static ArrayObject<SString> arrayObject(HashedDb hashedDb, HashCode hash) {
     @SuppressWarnings("unchecked")
-    ObjectReader<SFile> elementReader = mock(ObjectReader.class);
-    return new ArrayObject<SFile>(hashedDb, hash, FILE, elementReader);
+    ObjectReader<SString> elementReader = mock(ObjectReader.class);
+    return new ArrayObject<SString>(hashedDb, hash, STRING, elementReader);
   }
 }
