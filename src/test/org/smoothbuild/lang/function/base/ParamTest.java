@@ -3,8 +3,8 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.allowedForParam;
 import static org.smoothbuild.lang.function.base.Param.param;
@@ -26,12 +26,12 @@ import com.google.common.testing.EqualsTester;
 public class ParamTest {
 
   @Test(expected = NullPointerException.class)
-  public void nullTypeIsForbidden() throws Exception {
+  public void null_type_is_forbidden() throws Exception {
     param(null, "name", true);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullNameIsForbidden() throws Exception {
+  public void null_name_is_forbidden() throws Exception {
     param(STRING, null, true);
   }
 
@@ -51,7 +51,7 @@ public class ParamTest {
   }
 
   @Test
-  public void isRequired() throws Exception {
+  public void is_required() throws Exception {
     assertThat(param(STRING, "name", true).isRequired()).isTrue();
   }
 
@@ -71,7 +71,7 @@ public class ParamTest {
   }
 
   @Test
-  public void equalsAndHashCode() throws Exception {
+  public void equals_and_hash_code() throws Exception {
     EqualsTester tester = new EqualsTester();
 
     tester.addEqualityGroup(param(STRING, "equal", false), param(STRING, "equal", false));
@@ -87,7 +87,7 @@ public class ParamTest {
   }
 
   @Test
-  public void toPaddedString() throws Exception {
+  public void to_padded_string() throws Exception {
     Node<?> abstractNode = mock(Node.class);
     given(willReturn(STRING), abstractNode).type();
 
@@ -98,7 +98,7 @@ public class ParamTest {
   }
 
   @Test
-  public void toPaddedStringForShortLimits() throws Exception {
+  public void to_padded_string_for_short_limits() throws Exception {
     Node<?> abstractNode = mock(Node.class);
     given(willReturn(STRING), abstractNode).type();
 
@@ -109,12 +109,12 @@ public class ParamTest {
   }
 
   @Test
-  public void testToString() throws Exception {
+  public void to_string() throws Exception {
     assertThat(param(STRING, "name", false).toString()).isEqualTo("Param(String: name)");
   }
 
   @Test
-  public void testParamsToString() throws Exception {
+  public void params_to_string() throws Exception {
     Set<Param> params = newHashSet();
     params.add(param(STRING, "param1", false));
     params.add(param(STRING, "param2-with-very-long", false));
