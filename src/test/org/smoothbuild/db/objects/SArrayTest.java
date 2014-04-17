@@ -210,6 +210,24 @@ public class SArrayTest {
     thenReturned(array.hash());
   }
 
+  @Test
+  public void to_string_contains_all_elements_in_square_brackets() throws Exception {
+    given(sstring = objectsDb.string("abc"));
+    given(sstring2 = objectsDb.string("def"));
+    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder).add(sstring);
+    given(arrayBuilder).add(sstring2);
+    given(array = arrayBuilder.build());
+    when(array).toString();
+    thenReturned("[abc, def]");
+  }
+
+  @Test
+  public void nil_to_string_contains_square_brackets() throws Exception {
+    when(objectsDb.arrayBuilder(NIL).build().toString());
+    thenReturned("[]");
+  }
+
   private static class MyNothing implements SNothing {
     @Override
     public HashCode hash() {

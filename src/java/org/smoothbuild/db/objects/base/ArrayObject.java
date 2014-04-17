@@ -12,6 +12,7 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
@@ -38,5 +39,10 @@ public class ArrayObject<T extends SValue> extends AbstractObject implements SAr
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
       return unmarshaller.readHashCodeList();
     }
+  }
+
+  @Override
+  public String toString() {
+    return "[" + Joiner.on(", ").join(this) + "]";
   }
 }

@@ -103,4 +103,11 @@ public class SStringTest {
     when(objectsDb.read(STRING, hash).value());
     thenReturned(string);
   }
+
+  @Test
+  public void to_string_contains_string_value() throws Exception {
+    given(sstring = objectsDb.string(string));
+    when(sstring).toString();
+    thenReturned(string);
+  }
 }

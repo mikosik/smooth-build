@@ -216,6 +216,13 @@ public class SFileTest {
     thenReturned(file.path());
   }
 
+  @Test
+  public void to_string_contains_type_name_path_and_bytes_count() throws Exception {
+    given(file = createFile(objectsDb, path, "abc"));
+    when(file).toString();
+    thenReturned("File(" + path + " Blob(3 bytes))");
+  }
+
   private static SFile createFile(ObjectsDb objectsDb, Path path, String content) throws Exception {
     FileBuilder fileBuilder = objectsDb.fileBuilder();
     fileBuilder.setPath(path);

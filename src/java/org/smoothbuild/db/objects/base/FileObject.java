@@ -28,4 +28,9 @@ public class FileObject extends AbstractObject implements SFile {
   public SBlob content() {
     return content;
   }
+
+  @Override
+  public String toString() {
+    return "File(" + path + " " + content.toString() + ")";
+  }
 }
