@@ -120,7 +120,8 @@ public class ConversionsTest {
 
     Converter<SArray<SNothing>, SArray<SString>> converter =
         Conversions.converter(NIL, STRING_ARRAY);
-    SArray<SString> array = converter.convert(nativeApi, nativeApi.emptyArray());
+    SArray<SNothing> nil = nativeApi.arrayBuilder(NIL).build();
+    SArray<SString> array = converter.convert(nativeApi, nil);
     assertThat(array).isEmpty();
   }
 
@@ -130,7 +131,8 @@ public class ConversionsTest {
 
     Converter<SArray<SNothing>, SArray<SBlob>> converter =
         Conversions.converter(NIL, BLOB_ARRAY);
-    SArray<SBlob> array = converter.convert(nativeApi, nativeApi.emptyArray());
+    SArray<SNothing> nil = nativeApi.arrayBuilder(NIL).build();
+    SArray<SBlob> array = converter.convert(nativeApi, nil);
     assertThat(array).isEmpty();
   }
 
@@ -140,7 +142,8 @@ public class ConversionsTest {
 
     Converter<SArray<SNothing>, SArray<SFile>> converter =
         Conversions.converter(NIL, FILE_ARRAY);
-    SArray<SFile> array = converter.convert(nativeApi, nativeApi.emptyArray());
+    SArray<SNothing> nil = nativeApi.arrayBuilder(NIL).build();
+    SArray<SFile> array = converter.convert(nativeApi, nil);
     assertThat(array).isEmpty();
   }
 }

@@ -1,9 +1,5 @@
 package org.smoothbuild.testing.task.exec;
 
-import static org.smoothbuild.lang.base.STypes.NIL;
-
-import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -48,9 +44,5 @@ public class FakeNativeApi extends NativeApiImpl {
   @Override
   public void log(Message message) {
     messages.log(message);
-  }
-
-  public SArray<SNothing> emptyArray() {
-    return arrayBuilder(NIL).build();
   }
 }
