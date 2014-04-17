@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Param.param;
@@ -149,13 +149,13 @@ public class ParamsPoolTest {
   }
 
   @Test
-  public void array_params_are_available_for_empty_array_argument() throws Exception {
+  public void array_params_are_available_for_nil_argument() throws Exception {
     paramsPool = new ParamsPool(params);
 
-    assertThat(paramsPool.availableForType(EMPTY_ARRAY).optionalParams()).containsOnly(stringArray,
+    assertThat(paramsPool.availableForType(NIL).optionalParams()).containsOnly(stringArray,
         blobArray, fileArray);
-    assertThat(paramsPool.availableForType(EMPTY_ARRAY).requiredParams()).containsOnly(
-        stringArrayRequired, blobArrayRequired, fileArrayRequired);
+    assertThat(paramsPool.availableForType(NIL).requiredParams()).containsOnly(stringArrayRequired,
+        blobArrayRequired, fileArrayRequired);
   }
 
   // availableRequiredParams()

@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.def.args.err;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.base.STypes.STRING;
@@ -45,7 +45,7 @@ public class AmbiguousNamelessArgsErrorTest {
     Param p3 = param(FILE, "param3");
     Arg a3 = pipedArg(node(FILE), codeLocation(14));
 
-    Arg a4 = namedArg(3, "arg4", node(EMPTY_ARRAY), codeLocation(7));
+    Arg a4 = namedArg(3, "arg4", node(NIL), codeLocation(7));
     Set<Arg> availableArgs = newHashSet();
     availableArgs.add(a4);
 

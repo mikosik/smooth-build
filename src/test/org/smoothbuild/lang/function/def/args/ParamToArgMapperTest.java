@@ -4,9 +4,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
@@ -60,9 +60,9 @@ public class ParamToArgMapperTest {
     do_test_converting_named_argument(BLOB, FILE);
     do_test_converting_named_argument(BLOB_ARRAY, FILE_ARRAY);
 
-    do_test_converting_named_argument(STRING_ARRAY, EMPTY_ARRAY);
-    do_test_converting_named_argument(BLOB_ARRAY, EMPTY_ARRAY);
-    do_test_converting_named_argument(FILE_ARRAY, EMPTY_ARRAY);
+    do_test_converting_named_argument(STRING_ARRAY, NIL);
+    do_test_converting_named_argument(BLOB_ARRAY, NIL);
+    do_test_converting_named_argument(FILE_ARRAY, NIL);
   }
 
   private void do_test_converting_named_argument(SType<?> paramType, SType<?> argType) {
@@ -93,9 +93,9 @@ public class ParamToArgMapperTest {
     // conversions
     do_test_duplicated_names(BLOB, FILE);
     do_test_duplicated_names(BLOB_ARRAY, FILE_ARRAY);
-    do_test_duplicated_names(STRING_ARRAY, EMPTY_ARRAY);
-    do_test_duplicated_names(BLOB_ARRAY, EMPTY_ARRAY);
-    do_test_duplicated_names(FILE_ARRAY, EMPTY_ARRAY);
+    do_test_duplicated_names(STRING_ARRAY, NIL);
+    do_test_duplicated_names(BLOB_ARRAY, NIL);
+    do_test_duplicated_names(FILE_ARRAY, NIL);
   }
 
   private void do_test_duplicated_names(SType<?> paramType, SType<?> argType) {
@@ -137,7 +137,7 @@ public class ParamToArgMapperTest {
     do_test_type_mismatch_for_param_problem(STRING, STRING_ARRAY);
     do_test_type_mismatch_for_param_problem(STRING, BLOB_ARRAY);
     do_test_type_mismatch_for_param_problem(STRING, FILE_ARRAY);
-    do_test_type_mismatch_for_param_problem(STRING, EMPTY_ARRAY);
+    do_test_type_mismatch_for_param_problem(STRING, NIL);
   }
 
   @Test
@@ -147,7 +147,7 @@ public class ParamToArgMapperTest {
     do_test_type_mismatch_for_param_problem(BLOB, STRING_ARRAY);
     do_test_type_mismatch_for_param_problem(BLOB, BLOB_ARRAY);
     do_test_type_mismatch_for_param_problem(BLOB, FILE_ARRAY);
-    do_test_type_mismatch_for_param_problem(BLOB, EMPTY_ARRAY);
+    do_test_type_mismatch_for_param_problem(BLOB, NIL);
   }
 
   @Test
@@ -158,7 +158,7 @@ public class ParamToArgMapperTest {
     do_test_type_mismatch_for_param_problem(FILE, STRING_ARRAY);
     do_test_type_mismatch_for_param_problem(FILE, BLOB_ARRAY);
     do_test_type_mismatch_for_param_problem(FILE, FILE_ARRAY);
-    do_test_type_mismatch_for_param_problem(FILE, EMPTY_ARRAY);
+    do_test_type_mismatch_for_param_problem(FILE, NIL);
   }
 
   // array types
@@ -295,24 +295,24 @@ public class ParamToArgMapperTest {
   // empty array
 
   @Test
-  public void converting_single_nameless_empty_array_argument_to_string_array() {
-    do_test_converting_single_nameless_argument(STRING_ARRAY, EMPTY_ARRAY, STRING);
-    do_test_converting_single_nameless_argument(STRING_ARRAY, EMPTY_ARRAY, BLOB);
-    do_test_converting_single_nameless_argument(STRING_ARRAY, EMPTY_ARRAY, FILE);
+  public void converting_single_nameless_nil_argument_to_string_array() {
+    do_test_converting_single_nameless_argument(STRING_ARRAY, NIL, STRING);
+    do_test_converting_single_nameless_argument(STRING_ARRAY, NIL, BLOB);
+    do_test_converting_single_nameless_argument(STRING_ARRAY, NIL, FILE);
   }
 
   @Test
-  public void converting_single_nameless_empty_array_argument_to_file_array() {
-    do_test_converting_single_nameless_argument(FILE_ARRAY, EMPTY_ARRAY, STRING);
-    do_test_converting_single_nameless_argument(FILE_ARRAY, EMPTY_ARRAY, BLOB);
-    do_test_converting_single_nameless_argument(FILE_ARRAY, EMPTY_ARRAY, FILE);
+  public void converting_single_nameless_nil_argument_to_file_array() {
+    do_test_converting_single_nameless_argument(FILE_ARRAY, NIL, STRING);
+    do_test_converting_single_nameless_argument(FILE_ARRAY, NIL, BLOB);
+    do_test_converting_single_nameless_argument(FILE_ARRAY, NIL, FILE);
   }
 
   @Test
-  public void converting_single_nameless_empty_array_argument_to_blob_array() throws Exception {
-    do_test_converting_single_nameless_argument(BLOB_ARRAY, EMPTY_ARRAY, BLOB);
-    do_test_converting_single_nameless_argument(BLOB_ARRAY, EMPTY_ARRAY, FILE);
-    do_test_converting_single_nameless_argument(BLOB_ARRAY, EMPTY_ARRAY, STRING);
+  public void converting_single_nameless_nil_argument_to_blob_array() throws Exception {
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, NIL, BLOB);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, NIL, FILE);
+    do_test_converting_single_nameless_argument(BLOB_ARRAY, NIL, STRING);
   }
 
   private void do_test_converting_single_nameless_argument(SType<?> paramType, SType<?> argType,
@@ -435,7 +435,7 @@ public class ParamToArgMapperTest {
     Param p3 = param(type, "name3");
 
     Arg a1 = arg(p1.name(), type);
-    Arg a2 = arg(EMPTY_ARRAY);
+    Arg a2 = arg(NIL);
     Arg a3 = arg(p3.name(), type);
 
     // when
@@ -447,18 +447,18 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void converting_nameless_empty_array_arg_with_other_named_array() throws Exception {
-    converting_nameless_empty_array_arg_with_other_named_array(STRING_ARRAY, BLOB_ARRAY);
-    converting_nameless_empty_array_arg_with_other_named_array(STRING_ARRAY, FILE_ARRAY);
+  public void converting_nameless_nil_arg_with_other_named_array() throws Exception {
+    converting_nameless_nil_arg_with_other_named_array(STRING_ARRAY, BLOB_ARRAY);
+    converting_nameless_nil_arg_with_other_named_array(STRING_ARRAY, FILE_ARRAY);
 
-    converting_nameless_empty_array_arg_with_other_named_array(BLOB_ARRAY, STRING_ARRAY);
-    converting_nameless_empty_array_arg_with_other_named_array(BLOB_ARRAY, FILE_ARRAY);
+    converting_nameless_nil_arg_with_other_named_array(BLOB_ARRAY, STRING_ARRAY);
+    converting_nameless_nil_arg_with_other_named_array(BLOB_ARRAY, FILE_ARRAY);
 
-    converting_nameless_empty_array_arg_with_other_named_array(FILE_ARRAY, STRING_ARRAY);
-    converting_nameless_empty_array_arg_with_other_named_array(FILE_ARRAY, BLOB_ARRAY);
+    converting_nameless_nil_arg_with_other_named_array(FILE_ARRAY, STRING_ARRAY);
+    converting_nameless_nil_arg_with_other_named_array(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void converting_nameless_empty_array_arg_with_other_named_array(SType<?> arrayType,
+  private void converting_nameless_nil_arg_with_other_named_array(SType<?> arrayType,
       SType<?> otherArrayType) {
     // given
     messages = new FakeLoggedMessages();
@@ -466,7 +466,7 @@ public class ParamToArgMapperTest {
     Param p2 = param(otherArrayType, "name2");
 
     Arg a1 = arg(p1.name(), arrayType);
-    Arg a2 = arg(EMPTY_ARRAY);
+    Arg a2 = arg(NIL);
 
     // when
     Map<Param, Arg> result = createMapping(params(p1, p2), list(a1, a2));
@@ -491,15 +491,15 @@ public class ParamToArgMapperTest {
     do_test_ambiguous_nameless_argument(BLOB, BLOB, FILE);
     do_test_ambiguous_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, FILE_ARRAY);
 
-    do_test_ambiguous_nameless_argument(STRING_ARRAY, STRING_ARRAY, EMPTY_ARRAY);
-    do_test_ambiguous_nameless_argument(STRING_ARRAY, BLOB_ARRAY, EMPTY_ARRAY);
-    do_test_ambiguous_nameless_argument(STRING_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
-    do_test_ambiguous_nameless_argument(BLOB_ARRAY, STRING_ARRAY, EMPTY_ARRAY);
-    do_test_ambiguous_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, EMPTY_ARRAY);
-    do_test_ambiguous_nameless_argument(BLOB_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
-    do_test_ambiguous_nameless_argument(FILE_ARRAY, STRING_ARRAY, EMPTY_ARRAY);
-    do_test_ambiguous_nameless_argument(FILE_ARRAY, BLOB_ARRAY, EMPTY_ARRAY);
-    do_test_ambiguous_nameless_argument(FILE_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
+    do_test_ambiguous_nameless_argument(STRING_ARRAY, STRING_ARRAY, NIL);
+    do_test_ambiguous_nameless_argument(STRING_ARRAY, BLOB_ARRAY, NIL);
+    do_test_ambiguous_nameless_argument(STRING_ARRAY, FILE_ARRAY, NIL);
+    do_test_ambiguous_nameless_argument(BLOB_ARRAY, STRING_ARRAY, NIL);
+    do_test_ambiguous_nameless_argument(BLOB_ARRAY, BLOB_ARRAY, NIL);
+    do_test_ambiguous_nameless_argument(BLOB_ARRAY, FILE_ARRAY, NIL);
+    do_test_ambiguous_nameless_argument(FILE_ARRAY, STRING_ARRAY, NIL);
+    do_test_ambiguous_nameless_argument(FILE_ARRAY, BLOB_ARRAY, NIL);
+    do_test_ambiguous_nameless_argument(FILE_ARRAY, FILE_ARRAY, NIL);
   }
 
   private void do_test_ambiguous_nameless_argument(SType<?> paramType, SType<?> paramType2,
@@ -579,10 +579,10 @@ public class ParamToArgMapperTest {
   }
 
   @Test
-  public void no_param_with_proper_type_for_nameless_empty_array_arg() throws Exception {
-    do_test_no_param_with_proper_type_for_nameless_arg(EMPTY_ARRAY, STRING);
-    do_test_no_param_with_proper_type_for_nameless_arg(EMPTY_ARRAY, BLOB);
-    do_test_no_param_with_proper_type_for_nameless_arg(EMPTY_ARRAY, FILE);
+  public void no_param_with_proper_type_for_nameless_nil_arg() throws Exception {
+    do_test_no_param_with_proper_type_for_nameless_arg(NIL, STRING);
+    do_test_no_param_with_proper_type_for_nameless_arg(NIL, BLOB);
+    do_test_no_param_with_proper_type_for_nameless_arg(NIL, FILE);
   }
 
   private void do_test_no_param_with_proper_type_for_nameless_arg(SType<?> type, SType<?> otherType) {

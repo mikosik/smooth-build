@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.allowedForParam;
@@ -36,8 +36,8 @@ public class ParamTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void creatingEmptyArrayParamIsForbidden() throws Exception {
-    param(EMPTY_ARRAY, "name", true);
+  public void creating_nil_param_is_forbidden() throws Exception {
+    param(NIL, "name", true);
   }
 
   @Test

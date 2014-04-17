@@ -2,7 +2,7 @@ package org.smoothbuild.lang.convert;
 
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.base.STypes.NOTHING;
@@ -65,11 +65,11 @@ public class Conversions {
     builder.put(BLOB_ARRAY, Empty.typeToConverterMap());
     builder.put(FILE_ARRAY, convertersMap(new FileArrayToBlobArrayConverter()));
 
-    Converter<?, ?> nilToStringArray = new EmptyArrayToTypedArrayConverter<SString>(STRING_ARRAY);
-    Converter<?, ?> nilToBlobArray = new EmptyArrayToTypedArrayConverter<SBlob>(BLOB_ARRAY);
-    Converter<?, ?> nilToFileArray = new EmptyArrayToTypedArrayConverter<SFile>(FILE_ARRAY);
+    Converter<?, ?> nilToStringArray = new NilToTypedArrayConverter<SString>(STRING_ARRAY);
+    Converter<?, ?> nilToBlobArray = new NilToTypedArrayConverter<SBlob>(BLOB_ARRAY);
+    Converter<?, ?> nilToFileArray = new NilToTypedArrayConverter<SFile>(FILE_ARRAY);
 
-    builder.put(EMPTY_ARRAY, convertersMap(nilToStringArray, nilToBlobArray, nilToFileArray));
+    builder.put(NIL, convertersMap(nilToStringArray, nilToBlobArray, nilToFileArray));
 
     return builder.build();
   }

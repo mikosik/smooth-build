@@ -228,7 +228,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void empty_array_can_be_saved() throws IOException {
+  public void nil_can_be_saved() throws IOException {
     // given
     script("run : [];");
 

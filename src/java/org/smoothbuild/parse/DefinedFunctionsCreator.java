@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING;
@@ -161,7 +161,7 @@ public class DefinedFunctionsCreator {
       if (elemType != null) {
         return buildArray(elemType, elemNodes, location);
       } else {
-        return new InvalidNode<>(EMPTY_ARRAY, location);
+        return new InvalidNode<>(NIL, location);
       }
     }
 

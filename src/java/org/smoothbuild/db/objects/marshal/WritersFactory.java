@@ -1,7 +1,7 @@
 package org.smoothbuild.db.objects.marshal;
 
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 
@@ -35,8 +35,8 @@ public class WritersFactory {
     if (arrayType == STRING_ARRAY) {
       return cast(createArrayBuilder(STRING_ARRAY));
     }
-    if (arrayType == EMPTY_ARRAY) {
-      return cast(createArrayBuilder(EMPTY_ARRAY));
+    if (arrayType == NIL) {
+      return cast(createArrayBuilder(NIL));
     }
 
     throw new IllegalArgumentException("Cannot create ArrayWriter for array type = " + arrayType);

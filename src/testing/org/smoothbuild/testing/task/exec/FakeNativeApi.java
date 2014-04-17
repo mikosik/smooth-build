@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.task.exec;
 
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SNothing;
@@ -51,6 +51,6 @@ public class FakeNativeApi extends NativeApiImpl {
   }
 
   public SArray<SNothing> emptyArray() {
-    return arrayBuilder(EMPTY_ARRAY).build();
+    return arrayBuilder(NIL).build();
   }
 }
