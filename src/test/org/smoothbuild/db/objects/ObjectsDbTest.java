@@ -6,9 +6,9 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
@@ -100,8 +100,8 @@ public class ObjectsDbTest {
   // empty array
 
   @Test
-  public void created_empty_array_is_empty() throws Exception {
-    when(objectsDb.arrayBuilder(EMPTY_ARRAY).build());
+  public void created_nil_is_empty() throws Exception {
+    when(objectsDb.arrayBuilder(NIL).build());
     thenReturned(Matchers.emptyIterable());
   }
 

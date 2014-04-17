@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.EMPTY_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.base.STypes.JAVA_PARAM_TO_SMOOTH;
@@ -35,7 +35,7 @@ public class STypesTest {
     assertThat(STRING_ARRAY.elemType()).isEqualTo(STRING);
     assertThat(BLOB_ARRAY.elemType()).isEqualTo(BLOB);
     assertThat(FILE_ARRAY.elemType()).isEqualTo(FILE);
-    assertThat(EMPTY_ARRAY.elemType()).isEqualTo(NOTHING);
+    assertThat(NIL.elemType()).isEqualTo(NOTHING);
   }
 
   @Test
@@ -48,7 +48,7 @@ public class STypesTest {
     tester.addEqualityGroup(STRING_ARRAY);
     tester.addEqualityGroup(BLOB_ARRAY);
     tester.addEqualityGroup(FILE_ARRAY);
-    tester.addEqualityGroup(EMPTY_ARRAY);
+    tester.addEqualityGroup(NIL);
 
     tester.testEquals();
   }
@@ -60,7 +60,7 @@ public class STypesTest {
 
   @Test
   public void testArrayTypes() throws Exception {
-    assertThat(arrayTypes()).containsExactly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
+    assertThat(arrayTypes()).containsExactly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
   }
 
   @Test
@@ -118,7 +118,7 @@ public class STypesTest {
     assertThat(arrayTypeContaining(STRING)).isEqualTo(STRING_ARRAY);
     assertThat(arrayTypeContaining(BLOB)).isEqualTo(BLOB_ARRAY);
     assertThat(arrayTypeContaining(FILE)).isEqualTo(FILE_ARRAY);
-    assertThat(arrayTypeContaining(NOTHING)).isEqualTo(EMPTY_ARRAY);
+    assertThat(arrayTypeContaining(NOTHING)).isEqualTo(NIL);
   }
 
   private static TypeLiteral<?> type(Class<?> klass) {

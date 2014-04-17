@@ -22,8 +22,7 @@ public class STypes {
       new TypeLiteral<SArray<SString>>() {};
   private static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
   private static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
-  private static final TypeLiteral<SArray<SNothing>> EMPTY_A_T =
-      new TypeLiteral<SArray<SNothing>>() {};
+  private static final TypeLiteral<SArray<SNothing>> NIL_T = new TypeLiteral<SArray<SNothing>>() {};
 
   /*
    * Names of smooth types.
@@ -46,7 +45,7 @@ public class STypes {
   public static final SArrayType<SString> STRING_ARRAY = sArrayType(STRING_A_T, STRING);
   public static final SArrayType<SBlob> BLOB_ARRAY = sArrayType(BLOB_A_T, BLOB);
   public static final SArrayType<SFile> FILE_ARRAY = sArrayType(FILE_A_T, FILE);
-  public static final SArrayType<SNothing> EMPTY_ARRAY = sArrayType(EMPTY_A_T, NOTHING);
+  public static final SArrayType<SNothing> NIL = sArrayType(NIL_T, NOTHING);
 
   /*
    * Not each type can be used in every place. Each set below represent one
@@ -60,7 +59,7 @@ public class STypes {
    */
   static final ImmutableSet<SType<?>> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
   static final ImmutableSet<SArrayType<?>> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY, BLOB_ARRAY,
-      FILE_ARRAY, EMPTY_ARRAY);
+      FILE_ARRAY, NIL);
 
   @SuppressWarnings("unchecked")
   static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
@@ -70,7 +69,7 @@ public class STypes {
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   @SuppressWarnings("unchecked")
   private static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
-      NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, EMPTY_ARRAY);
+      NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
 
   /*
    * Some of the set above converted to java types.
