@@ -28,4 +28,9 @@ public class StringObject extends AbstractObject implements SString {
       throw new ReadingHashedObjectFailedError(hash(), e);
     }
   }
+
+  @Override
+  public String toString() {
+    return value();
+  }
 }

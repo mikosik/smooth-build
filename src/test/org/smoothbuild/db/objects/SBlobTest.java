@@ -135,6 +135,13 @@ public class SBlobTest {
     thenReturned(inputStreamToString(blob.openInputStream()));
   }
 
+  @Test
+  public void to_string_contains_type_name_and_bytes_count() throws Exception {
+    given(blob = createBlob(objectsDb, "abc"));
+    when(blob).toString();
+    thenReturned("Blob(3 bytes)");
+  }
+
   private static SBlob createBlob(ObjectsDb objectsDb, String content) throws Exception {
     BlobBuilder blobBuilder = objectsDb.blobBuilder();
     writeAndClose(blobBuilder.openOutputStream(), content);
