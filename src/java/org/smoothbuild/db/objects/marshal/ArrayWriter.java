@@ -1,5 +1,8 @@
 package org.smoothbuild.db.objects.marshal;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
@@ -30,6 +33,8 @@ public class ArrayWriter<T extends SValue> implements ArrayBuilder<T> {
 
   @Override
   public ArrayBuilder<T> add(T elem) {
+    checkNotNull(elem);
+    checkArgument(elem.type().equals(arrayType.elemType()));
     result.add(elem);
     return this;
   }
@@ -45,8 +50,12 @@ public class ArrayWriter<T extends SValue> implements ArrayBuilder<T> {
   }
 
   private HashCode genericArray(List<? extends Hashed> elements) {
+    return hashedDb.write(marshalArray(elements));
+  }
+
+  public static byte[] marshalArray(List<? extends Hashed> elements) {
     Marshaller marshaller = new Marshaller();
     marshaller.write(elements);
-    return hashedDb.write(marshaller.getBytes());
+    return marshaller.getBytes();
   }
 }
