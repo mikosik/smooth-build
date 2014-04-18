@@ -1,15 +1,19 @@
 package org.smoothbuild.db.hashed;
 
+import static com.google.common.primitives.Ints.toByteArray;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.SmoothContants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Hashed;
-import org.smoothbuild.testing.lang.type.FakeHashed;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -17,38 +21,38 @@ import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;
 
 public class MarshallerTest {
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private Marshaller marshaller;
+  private Hashed hashed1;
+  private Hashed hashed2;
+  private final Path path = path("my/path");
+  private String string;
 
   @Test
   public void marshalling_list_of_hashed_objects() throws Exception {
-    byte[] hash1 = new byte[] { 1, 2, 3 };
-    Hashed hashed1 = new FakeHashed(hash1);
-    byte[] hash2 = new byte[] { 5, 6, 7 };
-    Hashed hashed2 = new FakeHashed(hash2);
-
-    marshaller = new Marshaller();
-    marshaller.write(ImmutableList.of(hashed1, hashed2));
-    assertThat(marshaller.getBytes()).isEqualTo(Bytes.concat(Ints.toByteArray(2), hash1, hash2));
+    given(hashed1 = objectsDb.string("abc"));
+    given(hashed2 = objectsDb.string("def"));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(ImmutableList.of(hashed1, hashed2));
+    when(marshaller).getBytes();
+    thenReturned(Bytes.concat(toByteArray(2), hashed1.hash().asBytes(), hashed2.hash().asBytes()));
   }
 
   @Test
   public void marshalling_single_path() {
-    Path path = path("my/path");
-
-    marshaller = new Marshaller();
-    marshaller.write(path);
-
-    assertThat(marshaller.getBytes()).isEqualTo(pathToBytes(path));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(path);
+    when(marshaller).getBytes();
+    thenReturned(pathToBytes(path));
   }
 
   @Test
   public void marshalling_single_string() {
-    String string = "some string";
-
-    marshaller = new Marshaller();
-    marshaller.write(string);
-
-    assertThat(marshaller.getBytes()).isEqualTo(stringToBytes(string));
+    given(marshaller = new Marshaller());
+    given(string = "some string");
+    given(marshaller).write(string);
+    when(marshaller).getBytes();
+    thenReturned(stringToBytes(string));
   }
 
   @Test

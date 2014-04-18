@@ -16,20 +16,21 @@ import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Hashed;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.type.FakeHashed;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
-  FakeFileSystem fileSystem = new FakeFileSystem();
-  HashedDb hashedDb = new HashedDb(fileSystem);
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final FakeFileSystem fileSystem = new FakeFileSystem();
+  private final HashedDb hashedDb = new HashedDb(fileSystem);
 
   @Test
   public void marshalled_hashed_list_can_be_unmarshalled() {
-    Hashed hashed1 = new FakeHashed("abc");
-    Hashed hashed2 = new FakeHashed("def");
+    Hashed hashed1 = objectsDb.string("abc");
+    Hashed hashed2 = objectsDb.string("def");
 
     Marshaller marshaller = new Marshaller();
     marshaller.write(ImmutableList.of(hashed1, hashed2));
