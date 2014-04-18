@@ -1,9 +1,11 @@
 package org.smoothbuild.lang.builtin.file;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
@@ -16,12 +18,12 @@ import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
-import org.smoothbuild.testing.lang.type.FileTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class FileFunctionTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private FakeNativeApi nativeApi = new FakeNativeApi();
+  private final Path path = path("file/path/file.txt");
 
   @Test
   public void accessToSmoothDirIsReported() throws Exception {
@@ -83,13 +85,9 @@ public class FileFunctionTest {
 
   @Test
   public void execute() throws Exception {
-    Path filePath = path("file/path/file.txt");
-    nativeApi.projectFileSystem().createFileContainingItsPath(filePath);
-
-    SFile file = runExecute(params(filePath.value()));
-
-    assertThat(file.path()).isEqualTo(filePath);
-    FileTester.assertContentContainsFilePath(file);
+    given(nativeApi.projectFileSystem()).createFileContainingItsPath(path);
+    when(runExecute(params(path.value())));
+    thenReturned(objectsDb.file(path));
   }
 
   private FileFunction.Parameters params(final String path) {
