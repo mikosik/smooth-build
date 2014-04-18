@@ -8,8 +8,8 @@ import java.io.IOException;
 import org.smoothbuild.SmoothContants;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.objects.marshal.ReadersFactory;
-import org.smoothbuild.db.objects.marshal.WritersFactory;
+import org.smoothbuild.db.objects.build.ObjectBuilders;
+import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
@@ -33,11 +33,11 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   public FakeObjectsDb(HashedDb hashedDb) {
-    this(hashedDb, new ReadersFactory(hashedDb));
+    this(hashedDb, new ObjectMarshallers(hashedDb));
   }
 
-  public FakeObjectsDb(HashedDb hashedDb, ReadersFactory readersFactory) {
-    super(hashedDb, readersFactory, new WritersFactory(hashedDb, readersFactory));
+  public FakeObjectsDb(HashedDb hashedDb, ObjectMarshallers objectMarshallers) {
+    super(objectMarshallers, new ObjectBuilders(hashedDb, objectMarshallers));
   }
 
   @SuppressWarnings("unchecked")

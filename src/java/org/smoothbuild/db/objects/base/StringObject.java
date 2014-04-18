@@ -2,31 +2,23 @@ package org.smoothbuild.db.objects.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.base.STypes.STRING;
-import static org.smoothbuild.util.Streams.inputStreamToString;
 
-import java.io.IOException;
-
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedError;
+import org.smoothbuild.db.objects.marshal.StringMarshaller;
 import org.smoothbuild.lang.base.SString;
 
 import com.google.common.hash.HashCode;
 
 public class StringObject extends AbstractObject implements SString {
-  private final HashedDb hashedDb;
+  private final StringMarshaller marshaller;
 
-  public StringObject(HashedDb hashedDb, HashCode hash) {
+  public StringObject(HashCode hash, StringMarshaller marshaller) {
     super(STRING, hash);
-    this.hashedDb = checkNotNull(hashedDb);
+    this.marshaller = checkNotNull(marshaller);
   }
 
   @Override
   public String value() {
-    try {
-      return inputStreamToString(hashedDb.openInputStream(hash()));
-    } catch (IOException e) {
-      throw new ReadingHashedObjectFailedError(hash(), e);
-    }
+    return marshaller.readValue(hash());
   }
 
   @Override

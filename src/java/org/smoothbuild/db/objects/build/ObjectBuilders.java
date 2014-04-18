@@ -1,30 +1,36 @@
-package org.smoothbuild.db.objects.marshal;
+package org.smoothbuild.db.objects.build;
 
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.base.STypes.NIL;
-import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.Objects;
+import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
+import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.lang.base.ArrayBuilder;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 
-public class WritersFactory {
+public class ObjectBuilders {
   private final HashedDb hashedDb;
-  private final ReadersFactory readersFactory;
+  private final ObjectMarshallers objectMarshallers;
 
   @Inject
-  public WritersFactory(@Objects HashedDb hashedDb, ReadersFactory readersFactory) {
+  public ObjectBuilders(@Objects HashedDb hashedDb, ObjectMarshallers objectMarshallers) {
     this.hashedDb = hashedDb;
-    this.readersFactory = readersFactory;
+    this.objectMarshallers = objectMarshallers;
   }
 
-  public <T extends SValue> ArrayBuilder<T> arrayWriter(SArrayType<T> arrayType) {
+  public BlobBuilder blobBuilder() {
+    return new BlobBuilderImpl(objectMarshallers.blobMarshaller());
+  }
+
+  public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
     /*
      * Each cast is safe as it is preceded by checking arrayType.
      */
@@ -38,7 +44,7 @@ public class WritersFactory {
       return cast(createArrayBuilder(STRING_ARRAY));
     }
     if (arrayType == NIL) {
-      return cast(new NilWriter(hashedDb, readersFactory.getReader(NOTHING)));
+      return cast(new NilBuilder(objectMarshallers.arrayMarshaller(NIL)));
     }
 
     throw new IllegalArgumentException("Cannot create ArrayWriter for array type = " + arrayType);
@@ -50,11 +56,7 @@ public class WritersFactory {
   }
 
   private <T extends SValue> ArrayBuilder<T> createArrayBuilder(SArrayType<T> arrayType) {
-    ObjectReader<T> reader = readersFactory.getReader(arrayType.elemType());
-    return new ArrayWriter<T>(hashedDb, arrayType, reader);
-  }
-
-  public BlobWriter blobWriter() {
-    return new BlobWriter(hashedDb);
+    ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(arrayType);
+    return new ArrayBuilderImpl<T>(hashedDb, arrayType, marshaller);
   }
 }

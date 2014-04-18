@@ -37,7 +37,7 @@ public class UnmarshallerTest {
     HashCode hash = hashedDb.write(marshaller.getBytes());
 
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      List<HashCode> actual = unmarshaller.readHashCodeList();
+      List<HashCode> actual = unmarshaller.readHashList();
       assertThat(actual).isEqualTo(ImmutableList.of(hashed1.hash(), hashed2.hash()));
     }
   }

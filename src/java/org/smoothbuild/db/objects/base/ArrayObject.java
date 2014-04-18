@@ -1,44 +1,26 @@
 package org.smoothbuild.db.objects.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Iterator;
-import java.util.List;
 
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.db.objects.marshal.ObjectReader;
+import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class ArrayObject<T extends SValue> extends AbstractObject implements SArray<T> {
-  private final HashedDb hashedDb;
-  private final ObjectReader<T> elementReader;
+  private final ArrayMarshaller<T> marshaller;
 
-  public ArrayObject(HashedDb hashedDb, HashCode hash, SType<?> type, ObjectReader<T> elementReader) {
-    super(type, hash);
-    this.elementReader = checkNotNull(elementReader);
-    this.hashedDb = checkNotNull(hashedDb);
+  public ArrayObject(HashCode hash, SArrayType<T> arrayType, ArrayMarshaller<T> marshaller) {
+    super(arrayType, hash);
+    this.marshaller = marshaller;
   }
 
   @Override
   public Iterator<T> iterator() {
-    ImmutableList.Builder<T> builder = ImmutableList.builder();
-    for (HashCode elemHash : readHashCodeList(hash())) {
-      builder.add(elementReader.read(elemHash));
-    }
-    return builder.build().iterator();
-  }
-
-  private List<HashCode> readHashCodeList(HashCode hash) {
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      return unmarshaller.readHashCodeList();
-    }
+    return marshaller.readElements(hash());
   }
 
   @Override
