@@ -1,24 +1,20 @@
-package org.smoothbuild.db.objects.marshal;
+package org.smoothbuild.db.objects.build;
 
 import static com.google.common.base.Preconditions.checkState;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.base.BlobObject;
+import org.smoothbuild.db.objects.marshal.BlobMarshaller;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SBlob;
 
-import com.google.common.hash.HashCode;
-
-public class BlobWriter implements BlobBuilder {
-  private final HashedDb hashedDb;
-
+public class BlobBuilderImpl implements BlobBuilder {
+  private final BlobMarshaller marshaller;
   private ByteArrayOutputStream outputStream;
 
-  public BlobWriter(HashedDb hashedDb) {
-    this.hashedDb = hashedDb;
+  public BlobBuilderImpl(BlobMarshaller marshaller) {
+    this.marshaller = marshaller;
   }
 
   @Override
@@ -31,11 +27,7 @@ public class BlobWriter implements BlobBuilder {
   @Override
   public SBlob build() {
     checkState(outputStream != null, "No content available. Create one via openOutputStream()");
-    return writeBlob(outputStream.toByteArray());
-  }
-
-  private BlobObject writeBlob(byte[] objectBytes) {
-    HashCode hash = hashedDb.write(objectBytes);
-    return new BlobObject(hashedDb, hash);
+    byte[] bytes = outputStream.toByteArray();
+    return marshaller.write(bytes);
   }
 }

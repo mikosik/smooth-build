@@ -1,15 +1,9 @@
 package org.smoothbuild.db.objects;
 
-import static org.smoothbuild.SmoothContants.CHARSET;
-
 import javax.inject.Inject;
 
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.objects.base.FileObject;
-import org.smoothbuild.db.objects.base.StringObject;
-import org.smoothbuild.db.objects.marshal.ReadersFactory;
-import org.smoothbuild.db.objects.marshal.WritersFactory;
+import org.smoothbuild.db.objects.build.ObjectBuilders;
+import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
@@ -24,48 +18,36 @@ import org.smoothbuild.lang.base.SValueBuilders;
 import com.google.common.hash.HashCode;
 
 public class ObjectsDb implements SValueBuilders {
-  private final HashedDb hashedDb;
-  private final ReadersFactory readersFactory;
-  private final WritersFactory writersFactory;
+  private final ObjectMarshallers objectMarshallers;
+  private final ObjectBuilders objectBuilders;
 
   @Inject
-  public ObjectsDb(@Objects HashedDb hashedDb, ReadersFactory readersFactory,
-      WritersFactory writersFactory) {
-    this.hashedDb = hashedDb;
-    this.readersFactory = readersFactory;
-    this.writersFactory = writersFactory;
+  public ObjectsDb(ObjectMarshallers objectMarshallers, ObjectBuilders objectBuilders) {
+    this.objectMarshallers = objectMarshallers;
+    this.objectBuilders = objectBuilders;
   }
 
   @Override
   public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
-    return writersFactory.arrayWriter(arrayType);
+    return objectBuilders.arrayBuilder(arrayType);
   }
 
   @Override
   public SFile file(Path path, SBlob content) {
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(content.hash());
-    marshaller.write(path);
-    byte[] bytes = marshaller.getBytes();
-
-    HashCode hash = hashedDb.write(bytes);
-    return new FileObject(path, content, hash);
+    return objectMarshallers.fileMarshaller().write(path, content);
   }
 
   @Override
   public BlobBuilder blobBuilder() {
-    return writersFactory.blobWriter();
+    return objectBuilders.blobBuilder();
   }
 
   @Override
   public SString string(String string) {
-    byte[] bytes = string.getBytes(CHARSET);
-
-    HashCode hash = hashedDb.write(bytes);
-    return new StringObject(hashedDb, hash);
+    return objectMarshallers.stringMarshaller().write(string);
   }
 
   public <T extends SValue> T read(SType<T> type, HashCode hash) {
-    return readersFactory.getReader(type).read(hash);
+    return objectMarshallers.marshaller(type).read(hash);
   }
 }

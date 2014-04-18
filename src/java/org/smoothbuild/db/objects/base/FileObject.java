@@ -13,7 +13,7 @@ public class FileObject extends AbstractObject implements SFile {
   private final Path path;
   private final SBlob content;
 
-  public FileObject(Path path, SBlob content, HashCode hash) {
+  public FileObject(HashCode hash, Path path, SBlob content) {
     super(FILE, hash);
     this.path = checkNotNull(path);
     this.content = checkNotNull(content);

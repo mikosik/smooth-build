@@ -4,8 +4,8 @@ import org.smoothbuild.lang.base.SNothing;
 
 import com.google.common.hash.HashCode;
 
-public class NothingReader implements ObjectReader<SNothing> {
-  public NothingReader() {}
+public class NothingMarshaller implements ObjectMarshaller<SNothing> {
+  public NothingMarshaller() {}
 
   @Override
   public SNothing read(HashCode hash) {

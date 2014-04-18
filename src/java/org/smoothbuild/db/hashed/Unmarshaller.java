@@ -31,7 +31,7 @@ public class Unmarshaller implements Closeable {
     this.inputStream = new DataInputStream(hashedDb.openInputStream(hash));
   }
 
-  public List<HashCode> readHashCodeList() {
+  public List<HashCode> readHashList() {
     ImmutableList.Builder<HashCode> builder = ImmutableList.builder();
     int size = readInt();
     for (int i = 0; i < size; i++) {
