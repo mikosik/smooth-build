@@ -11,18 +11,17 @@ import java.util.jar.JarOutputStream;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.type.FakeBlob;
-import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class JarTester {
-  public static FakeFile jaredFiles(String... fileNames) throws IOException {
+  public static SFile jaredFiles(String... fileNames) throws IOException {
     return jaredFiles(new FakeFileSystem(), fileNames);
   }
 
-  public static FakeFile jaredFiles(FakeFileSystem fileSystem, String... fileNames)
-      throws IOException {
+  public static SFile jaredFiles(FakeFileSystem fileSystem, String... fileNames) throws IOException {
     Path path = Path.path("input.jar");
     OutputStream outputStream = fileSystem.openOutputStream(path);
     try (JarOutputStream jarOutputStream = new JarOutputStream(outputStream);) {
@@ -31,8 +30,8 @@ public class JarTester {
       }
     }
 
-    FakeBlob blob = new FakeBlob(inputStreamToBytes(fileSystem.openInputStream(path)));
-    return new FakeFile(path, blob);
+    FakeObjectsDb objectsDb = new FakeObjectsDb();
+    return objectsDb.file(path, inputStreamToBytes(fileSystem.openInputStream(path)));
   }
 
   public static SBlob jar(String... fileNames) throws IOException {

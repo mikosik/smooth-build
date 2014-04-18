@@ -5,23 +5,20 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.testing.lang.type.FakeBlob;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class PathFunctionTest {
-  FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final FakeNativeApi nativeApi = new FakeNativeApi();
 
   @Test
   public void file_path_is_returned_as_string() throws Exception {
     Path path = path("some/path");
 
-    FileBuilder builder = nativeApi.fileBuilder();
-    builder.setPath(path);
-    builder.setContent(new FakeBlob());
-    SFile file = builder.build();
+    SFile file = objectsDb.file(path, "");
 
     SString actual = PathFunction.execute(nativeApi, params(file));
     assertThat(actual.value()).isEqualTo(path.value());

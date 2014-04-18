@@ -11,19 +11,20 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 public class FileArraySaverTest {
-  Name name = name("name");
-  SFile file1 = new FakeFile(path("abc"));
-  SFile file2 = new FakeFile(path("def"));
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final Name name = name("name");
+  private final SFile file1 = objectsDb.file(path("abc"));
+  private final SFile file2 = objectsDb.file(path("def"));
 
-  FakeFileSystem fileSystem = new FakeFileSystem();
-  FakeLoggedMessages messages = new FakeLoggedMessages();
+  private final FakeFileSystem fileSystem = new FakeFileSystem();
+  private final FakeLoggedMessages messages = new FakeLoggedMessages();
 
-  FileArraySaver fileArraySaver;
+  private FileArraySaver fileArraySaver;
 
   @Test
   public void duplicated_file_paths_causes_error() throws Exception {

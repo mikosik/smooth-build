@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.testing.lang.type.FakeArray.fakeArray;
@@ -17,11 +17,12 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.lang.type.FakeArray;
-import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class ConversionsTest {
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
 
   @Test
   public void testCanConvert() throws Exception {
@@ -91,21 +92,20 @@ public class ConversionsTest {
     assertThat(Conversions.superTypesOf(STRING_ARRAY)).containsOnly();
     assertThat(Conversions.superTypesOf(BLOB_ARRAY)).containsOnly();
     assertThat(Conversions.superTypesOf(FILE_ARRAY)).containsOnly(BLOB_ARRAY);
-    assertThat(Conversions.superTypesOf(NIL)).containsOnly(STRING_ARRAY, BLOB_ARRAY,
-        FILE_ARRAY);
+    assertThat(Conversions.superTypesOf(NIL)).containsOnly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   }
 
   @Test
   public void convertFileToBlob() throws Exception {
-    FakeFile file = new FakeFile(path("abc"));
-    Object blob = Conversions.converter(FILE, BLOB).convert(new FakeNativeApi(), file);
+    SFile file = objectsDb.file(path("abc"));
+    SBlob blob = Conversions.converter(FILE, BLOB).convert(new FakeNativeApi(), file);
     assertThat(blob).isSameAs(file.content());
   }
 
   @Test
   public void convertFileArrayToBlobArray() throws Exception {
-    FakeFile file1 = new FakeFile(path("abc"));
-    FakeFile file2 = new FakeFile(path("abc"));
+    SFile file1 = objectsDb.file(path("abc"));
+    SFile file2 = objectsDb.file(path("def"));
 
     FakeArray<SFile> fileArray = fakeArray(FILE_ARRAY, file1, file2);
     Converter<SArray<SFile>, SArray<SBlob>> converter =
@@ -129,8 +129,7 @@ public class ConversionsTest {
   public void convertEmptyArrayToBlobArray() throws Exception {
     FakeNativeApi nativeApi = new FakeNativeApi();
 
-    Converter<SArray<SNothing>, SArray<SBlob>> converter =
-        Conversions.converter(NIL, BLOB_ARRAY);
+    Converter<SArray<SNothing>, SArray<SBlob>> converter = Conversions.converter(NIL, BLOB_ARRAY);
     SArray<SNothing> nil = nativeApi.arrayBuilder(NIL).build();
     SArray<SBlob> array = converter.convert(nativeApi, nil);
     assertThat(array).isEmpty();
@@ -140,8 +139,7 @@ public class ConversionsTest {
   public void convertEmptyArrayToFileArray() throws Exception {
     FakeNativeApi nativeApi = new FakeNativeApi();
 
-    Converter<SArray<SNothing>, SArray<SFile>> converter =
-        Conversions.converter(NIL, FILE_ARRAY);
+    Converter<SArray<SNothing>, SArray<SFile>> converter = Conversions.converter(NIL, FILE_ARRAY);
     SArray<SNothing> nil = nativeApi.arrayBuilder(NIL).build();
     SArray<SFile> array = converter.convert(nativeApi, nil);
     assertThat(array).isEmpty();
