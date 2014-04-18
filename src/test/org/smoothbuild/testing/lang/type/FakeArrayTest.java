@@ -15,8 +15,9 @@ import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import com.google.common.collect.Iterables;
 
 public class FakeArrayTest {
-  FakeString sstring1;
-  FakeString sstring2;
+  FakeObjectsDb objectsDb = new FakeObjectsDb();
+  SString sstring1;
+  SString sstring2;
   FakeArray<SString> array;
 
   @Test
@@ -36,23 +37,23 @@ public class FakeArrayTest {
   @Test
   public void fake_array_contains_added_element() throws Exception {
     given(array = new FakeArray<>(STRING_ARRAY));
-    given(sstring1 = new FakeString("my string"));
+    given(sstring1 = objectsDb.string("my string"));
     when(array).add(sstring1);
     then(array, contains(sstring1));
   }
 
   @Test
   public void fake_array_contains_elements_passed_to_creation_method() throws Exception {
-    given(sstring1 = new FakeString("my string"));
-    given(sstring2 = new FakeString("my string B"));
+    given(sstring1 = objectsDb.string("my string"));
+    given(sstring2 = objectsDb.string("my string B"));
     when(FakeArray.fakeArray(STRING_ARRAY, sstring1, sstring2));
     thenReturned(contains(sstring1, sstring2));
   }
 
   @Test
   public void fake_array_hash_is_compatible_with_array_object_hash() throws Exception {
-    given(sstring1 = new FakeString("my string"));
-    given(sstring2 = new FakeString("my string B"));
+    given(sstring1 = objectsDb.string("my string"));
+    given(sstring2 = objectsDb.string("my string B"));
     given(array = FakeArray.fakeArray(STRING_ARRAY, sstring1, sstring2));
     when(array).hash();
     thenReturned(objectArray(sstring1, sstring2).hash());

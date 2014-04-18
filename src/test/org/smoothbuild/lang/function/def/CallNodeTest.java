@@ -10,12 +10,13 @@ import static org.testory.Testory.willReturn;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 
@@ -44,7 +45,8 @@ public class CallNodeTest {
     given(willReturn(name("function")), function).name();
     given(willReturn(STRING), function).type();
 
-    Result<?> result = new FakeResult<>(new FakeString("arg"));
+    SString sstring = new FakeObjectsDb().string("arg");
+    Result<?> result = new FakeResult<>(sstring);
 
     String name = "name";
     Map<String, ? extends Node<?>> argNodes = ImmutableMap.of(name, node);

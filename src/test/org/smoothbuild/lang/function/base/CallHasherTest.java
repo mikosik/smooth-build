@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.task.base.Result;
-import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.base.FakeResult;
 
 import com.google.common.collect.ImmutableList;
@@ -28,9 +28,10 @@ public class CallHasherTest {
   String string1 = "abc";
   String string2 = "def";
 
-  Result<SString> value1 = new FakeResult<SString>(new FakeString(string1));
-  Result<SString> value2 = new FakeResult<SString>(new FakeString(string2));
-  Result<SString> valueLong = new FakeResult<SString>(new FakeString(string1 + name2 + string2));
+  FakeObjectsDb objectsDb = new FakeObjectsDb();
+  Result<SString> value1 = new FakeResult<SString>(objectsDb.string(string1));
+  Result<SString> value2 = new FakeResult<SString>(objectsDb.string(string2));
+  Result<SString> valueLong = new FakeResult<SString>(objectsDb.string(string1 + name2 + string2));
 
   Param param1 = param(STRING, name1, false);
   Param param2 = param(STRING, name2, false);

@@ -9,12 +9,13 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableMap;
 
 public class InvokerTest {
-  NativeApi nativeApi = mock(NativeApi.class);
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final NativeApi nativeApi = mock(NativeApi.class);
 
   @Test(expected = NullPointerException.class)
   public void null_method_is_forbidden() throws Exception {
@@ -28,7 +29,7 @@ public class InvokerTest {
 
   @Test
   public void test() throws Exception {
-    SString value = new FakeString("stringParamValue");
+    SString value = objectsDb.string("stringParamValue");
     Method method = InvokerTest.class.getMethod("myMethod", NativeApi.class, Parameters.class);
 
     Invoker<?> invoker = new Invoker<>(method, new ArgsCreator(Parameters.class));

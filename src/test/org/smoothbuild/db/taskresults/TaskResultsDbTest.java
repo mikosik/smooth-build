@@ -32,7 +32,6 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.FakeBlob;
-import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.Streams;
 
@@ -40,22 +39,22 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class TaskResultsDbTest {
-  ObjectsDb objectsDb = new FakeObjectsDb();
-  HashedDb taskResultsHashedDb = new HashedDb(new FakeFileSystem());
-  TaskResultsDb taskResultsDb = new TaskResultsDb(taskResultsHashedDb, objectsDb);
-  HashCode hash = Hash.string("abc");
+  private final ObjectsDb objectsDb = new FakeObjectsDb();
+  private final HashedDb taskResultsHashedDb = new HashedDb(new FakeFileSystem());
+  private final TaskResultsDb taskResultsDb = new TaskResultsDb(taskResultsHashedDb, objectsDb);
+  private final HashCode hash = Hash.string("abc");
 
-  byte[] bytes = new byte[] {};
-  Path path = path("file/path");
+  private final byte[] bytes = new byte[] {};
+  private final Path path = path("file/path");
 
-  Message message;
-  SArray<SFile> fileArray;
-  SArray<SBlob> blobArray;
-  SArray<SString> stringArray;
-  SFile file;
-  SBlob blob;
-  SString stringValue;
-  String string = "some string";
+  private Message message;
+  private SArray<SFile> fileArray;
+  private SArray<SBlob> blobArray;
+  private SArray<SString> stringArray;
+  private SFile file;
+  private SBlob blob;
+  private SString stringValue;
+  private final String string = "some string";
 
   @Test
   public void result_cache_does_not_contain_not_written_result() {
@@ -66,7 +65,7 @@ public class TaskResultsDbTest {
   @Test
   public void result_cache_contains_written_result() {
     given(taskResultsDb).write(hash,
-        new TaskResult<>(new FakeString("result"), Empty.messageList()));
+        new TaskResult<>(objectsDb.string("result"), Empty.messageList()));
     when(taskResultsDb.contains(hash));
     thenReturned(true);
   }
