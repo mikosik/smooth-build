@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.lang.type.FileTester.assertContentContains;
 
 import java.nio.file.Paths;
@@ -16,7 +17,6 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.type.BlobTester;
 
 import com.google.common.collect.Iterables;
 
@@ -133,7 +133,7 @@ public class TempDirectoryTest {
   public void content_is_read_from_file_system() throws Exception {
     fileSystem.createFile(path, content);
     SBlob blobContent = tempDirectory.readContent(path);
-    BlobTester.assertContains(blobContent, content);
+    assertContent(blobContent.openInputStream(), content);
   }
 
   @Test
