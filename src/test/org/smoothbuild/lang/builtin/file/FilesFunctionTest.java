@@ -17,13 +17,14 @@ import org.smoothbuild.lang.builtin.file.FilesFunction.Parameters;
 import org.smoothbuild.lang.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.lang.type.FakeFile;
-import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class FilesFunctionTest {
-  FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private FakeNativeApi nativeApi = new FakeNativeApi();
 
   @Test
   public void listingFilesFromRootDirIsForbidden() throws Exception {
@@ -103,11 +104,11 @@ public class FilesFunctionTest {
     assertThat(fileArray).containsExactly(expectedFile);
   }
 
-  private static FilesFunction.Parameters params(final String dir) {
+  private FilesFunction.Parameters params(final String dir) {
     return new FilesFunction.Parameters() {
       @Override
       public SString dir() {
-        return new FakeString(dir);
+        return objectsDb.string(dir);
       }
     };
   }

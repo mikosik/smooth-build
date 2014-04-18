@@ -14,13 +14,14 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.builtin.file.FileFunction.Parameters;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
-import org.smoothbuild.testing.lang.type.FakeString;
 import org.smoothbuild.testing.lang.type.FileTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class FileFunctionTest {
-  FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private FakeNativeApi nativeApi = new FakeNativeApi();
 
   @Test
   public void accessToSmoothDirIsReported() throws Exception {
@@ -91,11 +92,11 @@ public class FileFunctionTest {
     FileTester.assertContentContainsFilePath(file);
   }
 
-  private static FileFunction.Parameters params(final String path) {
+  private FileFunction.Parameters params(final String path) {
     return new FileFunction.Parameters() {
       @Override
       public SString path() {
-        return new FakeString(path);
+        return objectsDb.string(path);
       }
     };
   }

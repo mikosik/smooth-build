@@ -2,7 +2,6 @@ package org.smoothbuild.lang.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
@@ -10,8 +9,6 @@ import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 import static org.testory.Testory.mock;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskresults.TaskResultsDb;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -37,7 +34,7 @@ import org.smoothbuild.task.base.Result;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.task.exec.TaskGenerator;
-import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
@@ -46,11 +43,10 @@ import org.smoothbuild.util.Empty;
 import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionFactoryTest {
-  TaskGenerator taskGenerator = mock(TaskGenerator.class);
-  FakeNativeApi nativeApi = new FakeNativeApi();
-  Path tempDir = path("tem/dir");
-  TaskResultsDb taskResultsDb = mock(TaskResultsDb.class);
-  CodeLocation codeLocation = new FakeCodeLocation();
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final TaskGenerator taskGenerator = mock(TaskGenerator.class);
+  private final FakeNativeApi nativeApi = new FakeNativeApi();
+  private final CodeLocation codeLocation = new FakeCodeLocation();
 
   // signature
 
@@ -74,8 +70,8 @@ public class NativeFunctionFactoryTest {
   @Test
   public void testInvokation() throws Exception {
     Function<?> function = NativeFunctionFactory.create(Func.class, false);
-    Result<?> result1 = new FakeResult<>(new FakeString("abc"));
-    Result<?> result2 = new FakeResult<>(new FakeString("def"));
+    Result<?> result1 = new FakeResult<>(objectsDb.string("abc"));
+    Result<?> result2 = new FakeResult<>(objectsDb.string("def"));
     ImmutableMap<String, ? extends Result<?>> dependencies =
         ImmutableMap.of("stringA", result1, "stringB", result2);
 
@@ -94,7 +90,7 @@ public class NativeFunctionFactoryTest {
   public static class Func {
     @SmoothFunction(name = "myFunction")
     public static SString execute(NativeApi nativeApi, Parameters params) {
-      return new FakeString(params.stringA().value() + params.stringB().value());
+      return new FakeObjectsDb().string(params.stringA().value() + params.stringB().value());
     }
   }
 
@@ -122,7 +118,7 @@ public class NativeFunctionFactoryTest {
   public static class FuncWithAllowedParamTypes {
     @SmoothFunction(name = "myFunction")
     public static SString execute(NativeApi nativeApi, AllowedParameters params) {
-      return new FakeString("string");
+      return new FakeObjectsDb().string("string");
     }
   }
 

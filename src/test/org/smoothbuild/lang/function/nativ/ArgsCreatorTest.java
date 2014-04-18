@@ -1,32 +1,36 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ArgsCreatorTest {
-  ArgsCreator argsCreator = new ArgsCreator(MyParametersInterface.class);
-  String name = "string";
-  SString value = new FakeString("value");
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ArgsCreator argsCreator = new ArgsCreator(MyParametersInterface.class);
+  private SString sstring;
+  private MyParametersInterface args;
 
   @Test
-  public void stringArgumentIsPassed() {
-    MyParametersInterface args = createArgs(ImmutableMap.<String, SValue> of(name, value));
-
-    assertThat(args.string()).isEqualTo(value);
+  public void sstring_argument_is_provided() {
+    given(sstring = objectsDb.string("my string"));
+    given(args = createArgs(ImmutableMap.<String, SValue> of("stringParam", sstring)));
+    when(args.stringParam());
+    thenReturned(sstring);
   }
 
   @Test
-  public void nullReturnedForNotArrayArguments() {
-    MyParametersInterface args = createArgs(ImmutableMap.<String, SValue> of(name, value));
-
-    assertThat(args.integer()).isNull();
-    assertThat(args.string2()).isNull();
+  public void not_set_arguments_are_provided_as_nulls() {
+    given(sstring = objectsDb.string("my string"));
+    given(args = createArgs(ImmutableMap.<String, SValue> of("stringParam", sstring)));
+    when(args.string2());
+    thenReturned(null);
   }
 
   private MyParametersInterface createArgs(ImmutableMap<String, SValue> map) {
@@ -34,7 +38,7 @@ public class ArgsCreatorTest {
   }
 
   public interface MyParametersInterface {
-    public SString string();
+    public SString stringParam();
 
     public SString string2();
 

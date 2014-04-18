@@ -10,15 +10,16 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.testory.Closure;
 
 import com.google.common.collect.ImmutableList;
 
 public class TaskResultTest {
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private TaskResult<SString> taskResult;
-  private final FakeString sstring = new FakeString("abc");
   private final ImmutableList<Message> messages = ImmutableList.of(new Message(ERROR, ""));
+  private SString sstring;
 
   @Test
   public void null_result_is_forbidden() {
@@ -28,12 +29,14 @@ public class TaskResultTest {
 
   @Test
   public void null_messages_are_forbidden() {
-    when(newTaskResult(new FakeString(""), null));
+    given(sstring = objectsDb.string("abc"));
+    when(newTaskResult(sstring, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void value_returns_result_value() throws Exception {
+    given(sstring = objectsDb.string("abc"));
     given(taskResult = new TaskResult<SString>(sstring, messages));
     when(taskResult).value();
     thenReturned(sstring);
@@ -41,6 +44,7 @@ public class TaskResultTest {
 
   @Test
   public void messages_returns_messages() throws Exception {
+    given(sstring = objectsDb.string("abc"));
     given(taskResult = new TaskResult<SString>(sstring, messages));
     when(taskResult).messages();
     thenReturned(messages);
@@ -55,6 +59,7 @@ public class TaskResultTest {
 
   @Test
   public void has_value_returns_true_when_value_is_present() throws Exception {
+    given(sstring = objectsDb.string("abc"));
     given(taskResult = new TaskResult<SString>(sstring, messages));
     when(taskResult).hasValue();
     thenReturned(true);

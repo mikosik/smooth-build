@@ -28,7 +28,7 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
-import org.smoothbuild.testing.lang.type.FakeString;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
@@ -41,6 +41,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class NativeCallTaskTest {
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   @SuppressWarnings("unchecked")
   Invoker<SString> invoker = mock(Invoker.class);
   FakeNativeApi nativeApi = new FakeNativeApi();
@@ -61,14 +62,14 @@ public class NativeCallTaskTest {
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
-    SString argValue = new FakeString("subTaskResult");
+    SString argValue = objectsDb.string("subTaskResult");
     Result<?> subTask = new FakeResult<>(argValue);
 
     String name = "param";
     NativeCallTask<?> nativeCallTask =
         new NativeCallTask<>(function1, ImmutableMap.of(name, subTask), codeLocation);
 
-    SString result = new FakeString("result");
+    SString result = objectsDb.string("result");
     given(willReturn(result), invoker).invoke(nativeApi,
         ImmutableMap.<String, SValue> of(name, argValue));
 
