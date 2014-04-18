@@ -1,11 +1,14 @@
 package org.smoothbuild.io.temp;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
-import static org.smoothbuild.testing.lang.type.FileTester.assertContentContains;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import java.nio.file.Paths;
 
@@ -18,8 +21,6 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
-import com.google.common.collect.Iterables;
-
 public class TempDirectoryTest {
   private final Path path = path("my/path");
   private final String content = "content";
@@ -27,7 +28,7 @@ public class TempDirectoryTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private final java.nio.file.Path rootPath = Paths.get("/fake/path");
   private final FakeFileSystem fileSystem = new FakeFileSystem();
-  private final TempDirectory tempDirectory = new TempDirectory(objectsDb, rootPath, fileSystem);
+  private TempDirectory tempDirectory = new TempDirectory(objectsDb, rootPath, fileSystem);
 
   @After
   public void after() {
@@ -110,11 +111,10 @@ public class TempDirectoryTest {
 
   @Test
   public void files_are_read_from_file_system() throws Exception {
-    fileSystem.createFile(path, content);
-
-    SArray<SFile> files = tempDirectory.readFiles();
-    assertThat(Iterables.size(files)).isEqualTo(1);
-    assertContentContains(files.iterator().next(), content);
+    given(fileSystem).createFile(path, content);
+    given(tempDirectory = new TempDirectory(objectsDb, rootPath, fileSystem));
+    when(tempDirectory.readFiles());
+    thenReturned(contains(objectsDb.file(path, content)));
   }
 
   @Test
