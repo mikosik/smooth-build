@@ -9,7 +9,6 @@ import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
-import static org.smoothbuild.testing.lang.type.FakeArray.fakeArray;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SArray;
@@ -18,7 +17,6 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.lang.type.FakeArray;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class ConversionsTest {
@@ -107,7 +105,7 @@ public class ConversionsTest {
     SFile file1 = objectsDb.file(path("abc"));
     SFile file2 = objectsDb.file(path("def"));
 
-    FakeArray<SFile> fileArray = fakeArray(FILE_ARRAY, file1, file2);
+    SArray<SFile> fileArray = objectsDb.array(FILE_ARRAY, file1, file2);
     Converter<SArray<SFile>, SArray<SBlob>> converter =
         Conversions.converter(FILE_ARRAY, BLOB_ARRAY);
     SArray<SBlob> blobArray = converter.convert(new FakeNativeApi(), fileArray);

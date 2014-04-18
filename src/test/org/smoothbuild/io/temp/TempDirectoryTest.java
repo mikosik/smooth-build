@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
-import static org.smoothbuild.testing.lang.type.FakeArray.fakeArray;
 import static org.smoothbuild.testing.lang.type.FileTester.assertContentContains;
 
 import java.nio.file.Paths;
@@ -87,7 +86,7 @@ public class TempDirectoryTest {
   @Test
   public void files_are_written_to_file_system() throws Exception {
     SFile file = objectsDb.file(path, content);
-    SArray<SFile> array = fakeArray(FILE_ARRAY, file);
+    SArray<SFile> array = objectsDb.array(FILE_ARRAY, file);
 
     tempDirectory.writeFiles(array);
 
@@ -99,7 +98,7 @@ public class TempDirectoryTest {
     tempDirectory.destroy();
 
     SFile file = objectsDb.file(path, content);
-    SArray<SFile> array = fakeArray(FILE_ARRAY, file);
+    SArray<SFile> array = objectsDb.array(FILE_ARRAY, file);
 
     try {
       tempDirectory.writeFiles(array);

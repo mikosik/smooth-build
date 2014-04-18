@@ -5,7 +5,6 @@ import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.task.exec.save.Savers.artifactPath;
 import static org.smoothbuild.task.exec.save.Savers.targetPath;
-import static org.smoothbuild.testing.lang.type.FakeArray.fakeArray;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SFile;
@@ -31,7 +30,7 @@ public class FileArraySaverTest {
     fileSystem.createFile(targetPath(file1.content()), "ignored");
 
     fileArraySaver = new FileArraySaver(fileSystem, messages);
-    fileArraySaver.save(name, fakeArray(FILE_ARRAY, file1, file1));
+    fileArraySaver.save(name, objectsDb.array(FILE_ARRAY, file1, file1));
     messages.assertContainsOnly(DuplicatePathsInFileArrayArtifactError.class);
   }
 
@@ -41,7 +40,7 @@ public class FileArraySaverTest {
     fileSystem.createFile(targetPath(file2.content()), file2.path().value());
 
     fileArraySaver = new FileArraySaver(fileSystem, messages);
-    fileArraySaver.save(name, fakeArray(FILE_ARRAY, file1, file2));
+    fileArraySaver.save(name, objectsDb.array(FILE_ARRAY, file1, file2));
 
     fileSystem.assertFileContains(artifactPath(name).append(file1.path()), file1.path().value());
     fileSystem.assertFileContains(artifactPath(name).append(file2.path()), file2.path().value());
