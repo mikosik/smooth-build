@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.task.exec.NativeApiImpl;
@@ -22,10 +21,7 @@ public class FileReader {
   }
 
   public SFile createFile(Path path, Path projectPath) {
-    FileBuilder fileBuilder = nativeApi.fileBuilder();
-    fileBuilder.setPath(path);
-    fileBuilder.setContent(createContent(projectPath));
-    return fileBuilder.build();
+    return nativeApi.file(path, createContent(projectPath));
   }
 
   private SBlob createContent(Path path) {

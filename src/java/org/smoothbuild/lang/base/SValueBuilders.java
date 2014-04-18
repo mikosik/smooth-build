@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.base;
 
+import org.smoothbuild.io.fs.base.Path;
 
 public interface SValueBuilders {
   public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType);
 
-  public FileBuilder fileBuilder();
+  public SFile file(Path path, SBlob content);
 
   public BlobBuilder blobBuilder();
 

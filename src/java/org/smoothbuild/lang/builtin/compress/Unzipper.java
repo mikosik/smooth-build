@@ -14,7 +14,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -67,10 +66,8 @@ public class Unzipper {
       throw new DuplicatePathInZipError(path);
     }
 
-    FileBuilder fileBuilder = nativeApi.fileBuilder();
-    fileBuilder.setPath(path);
-    fileBuilder.setContent(unzipEntryContent(zipInputStream));
-    return fileBuilder.build();
+    SBlob content = unzipEntryContent(zipInputStream);
+    return nativeApi.file(path, content);
   }
 
   private SBlob unzipEntryContent(ZipInputStream zipInputStream) {

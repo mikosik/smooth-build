@@ -4,13 +4,15 @@ import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.io.temp.TempDirectoryManager;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.base.SValueBuilders;
@@ -40,8 +42,8 @@ public class NativeApiImpl implements NativeApi {
   }
 
   @Override
-  public FileBuilder fileBuilder() {
-    return valueBuilders.fileBuilder();
+  public SFile file(Path path, SBlob content) {
+    return valueBuilders.file(path, content);
   }
 
   @Override

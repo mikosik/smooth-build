@@ -16,7 +16,6 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
@@ -111,16 +110,11 @@ public class TempDirectory {
   private SArray<SFile> readFilesImpl() throws IOException {
     ArrayBuilder<SFile> arrayBuilder = valueBuilders.arrayBuilder(FILE_ARRAY);
     for (Path path : fileSystem.filesFrom(Path.rootPath())) {
-      arrayBuilder.add(readFileImpl(path).build());
+      SBlob content = readContentImpl(path);
+      SFile file = valueBuilders.file(path, content);
+      arrayBuilder.add(file);
     }
     return arrayBuilder.build();
-  }
-
-  private FileBuilder readFileImpl(Path path) throws IOException {
-    FileBuilder fileBuilder = valueBuilders.fileBuilder();
-    fileBuilder.setPath(path);
-    fileBuilder.setContent(readContentImpl(path));
-    return fileBuilder;
   }
 
   public SBlob readContent(Path path) {
