@@ -54,10 +54,6 @@ public class WritersFactory {
     return new ArrayWriter<T>(hashedDb, arrayType, reader);
   }
 
-  public FileWriter fileWriter() {
-    return new FileWriter(hashedDb);
-  }
-
   public BlobWriter blobWriter() {
     return new BlobWriter(hashedDb);
   }

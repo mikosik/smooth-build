@@ -5,8 +5,9 @@ import static org.smoothbuild.SmoothContants.CHARSET;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.db.objects.base.FileObject;
 import org.smoothbuild.db.objects.base.StringObject;
-import org.smoothbuild.db.objects.marshal.FileWriter;
 import org.smoothbuild.db.objects.marshal.ReadersFactory;
 import org.smoothbuild.db.objects.marshal.WritersFactory;
 import org.smoothbuild.io.fs.base.Path;
@@ -41,11 +42,14 @@ public class ObjectsDb implements SValueBuilders {
   }
 
   @Override
-  public SFile file(Path path, SBlob blob) {
-    FileWriter writer = writersFactory.fileWriter();
-    writer.setPath(path);
-    writer.setContent(blob);
-    return writer.build();
+  public SFile file(Path path, SBlob content) {
+    Marshaller marshaller = new Marshaller();
+    marshaller.write(content.hash());
+    marshaller.write(path);
+    byte[] bytes = marshaller.getBytes();
+
+    HashCode hash = hashedDb.write(bytes);
+    return new FileObject(path, content, hash);
   }
 
   @Override
@@ -55,7 +59,9 @@ public class ObjectsDb implements SValueBuilders {
 
   @Override
   public SString string(String string) {
-    HashCode hash = hashedDb.write(string.getBytes(CHARSET));
+    byte[] bytes = string.getBytes(CHARSET);
+
+    HashCode hash = hashedDb.write(bytes);
     return new StringObject(hashedDb, hash);
   }
 
