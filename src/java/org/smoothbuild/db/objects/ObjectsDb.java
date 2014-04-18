@@ -6,12 +6,15 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.base.StringObject;
+import org.smoothbuild.db.objects.marshal.FileWriter;
 import org.smoothbuild.db.objects.marshal.ReadersFactory;
 import org.smoothbuild.db.objects.marshal.WritersFactory;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
@@ -38,8 +41,11 @@ public class ObjectsDb implements SValueBuilders {
   }
 
   @Override
-  public FileBuilder fileBuilder() {
-    return writersFactory.fileWriter();
+  public SFile file(Path path, SBlob blob) {
+    FileWriter writer = writersFactory.fileWriter();
+    writer.setPath(path);
+    writer.setContent(blob);
+    return writer.build();
   }
 
   @Override

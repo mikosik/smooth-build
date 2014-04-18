@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.task.exec.NativeApiImpl;
@@ -17,11 +16,7 @@ public class ContentFunctionTest {
 
   @Test
   public void content_of_file_is_returned_as_blob() throws Exception {
-    FileBuilder builder = objectsDb.fileBuilder();
-    builder.setPath(path("some/path"));
-    builder.setContent(objectsDb.blob("content"));
-    SFile file = builder.build();
-
+    SFile file = objectsDb.file(path("some/path"), objectsDb.blob("content"));
     SBlob actual = ContentFunction.execute(nativeApi, params(file));
     assertThat(actual).isSameAs(file.content());
   }

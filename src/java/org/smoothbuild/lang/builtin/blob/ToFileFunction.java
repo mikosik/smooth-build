@@ -3,7 +3,6 @@ package org.smoothbuild.lang.builtin.blob;
 import static org.smoothbuild.lang.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
@@ -37,14 +36,9 @@ public class ToFileFunction {
     }
 
     public SFile execute() {
-      return createFile(validatedPath("path", params.path()));
-    }
-
-    private SFile createFile(Path filePath) {
-      FileBuilder fileBuilder = nativeApi.fileBuilder();
-      fileBuilder.setPath(filePath);
-      fileBuilder.setContent(params.content());
-      return fileBuilder.build();
+      Path path = validatedPath("path", params.path());
+      SBlob content = params.content();
+      return nativeApi.file(path, content);
     }
   }
 }

@@ -16,7 +16,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -78,10 +77,9 @@ public class Unjarer {
       throw new IllegalPathInJarError(fileName);
     }
 
-    FileBuilder fileBuilder = nativeApi.fileBuilder();
-    fileBuilder.setPath(path(fileName));
-    fileBuilder.setContent(unjarEntryContent(jarInputStream));
-    return fileBuilder.build();
+    Path path = path(fileName);
+    SBlob content = unjarEntryContent(jarInputStream);
+    return nativeApi.file(path, content);
   }
 
   private SBlob unjarEntryContent(JarInputStream jarInputStream) {

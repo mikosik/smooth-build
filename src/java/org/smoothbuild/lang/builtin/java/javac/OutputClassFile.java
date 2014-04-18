@@ -9,7 +9,6 @@ import javax.tools.SimpleJavaFileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.util.ForwardingOutputStream;
@@ -35,12 +34,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         outputStream.close();
-
-        FileBuilder fileBuilder = nativeApi.fileBuilder();
-        fileBuilder.setPath(path);
-        fileBuilder.setContent(contentBuilder.build());
-        SFile file = fileBuilder.build();
-
+        SFile file = nativeApi.file(path, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
     };

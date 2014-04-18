@@ -14,7 +14,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SBlob;
@@ -59,15 +58,13 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   public SFile file(Path path, byte[] bytes) {
-    FileBuilder fileBuilder = fileBuilder();
-    fileBuilder.setPath(path);
-    fileBuilder.setContent(blob(bytes));
-    return fileBuilder.build();
+    SBlob blob = blob(bytes);
+    return file(path, blob);
   }
 
   public SFile createFileContainingItsPath(Path path) {
     SBlob content = blob(path.value().getBytes(CHARSET));
-    return fileBuilder().setPath(path).setContent(content).build();
+    return file(path, content);
   }
 
   public SBlob blob(String content) {

@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 
@@ -28,7 +27,6 @@ public class SFileTest {
   private final Path otherPath = path("other/path");
 
   private ObjectsDb objectsDb;
-  private FileBuilder fileBuilder;
   private SFile file;
   private SFile file2;
 
@@ -40,41 +38,14 @@ public class SFileTest {
 
   @Test
   public void null_path_is_forbidden() throws Exception {
-    given(fileBuilder = objectsDb.fileBuilder());
-    when(fileBuilder).setPath(null);
+    when(objectsDb).file(null, createBlob(objectsDb, string));
     thenThrown(NullPointerException.class);
   }
 
   @Test
-  public void creating_file_without_path_fails() throws Exception {
-    given(fileBuilder = objectsDb.fileBuilder());
-    given(fileBuilder).setContent(createBlob(objectsDb, string));
-    when(fileBuilder).build();
-    thenThrown(IllegalStateException.class);
-  }
-
-  @Test
-  public void creating_file_without_content_fails() throws Exception {
-    given(fileBuilder = objectsDb.fileBuilder());
-    given(fileBuilder).setPath(path);
-    when(fileBuilder).build();
-    thenThrown(IllegalStateException.class);
-  }
-
-  @Test
-  public void setting_path_twice_fails() throws Exception {
-    given(fileBuilder = objectsDb.fileBuilder());
-    given(fileBuilder).setPath(path);
-    when(fileBuilder).setPath(path);
-    thenThrown(IllegalStateException.class);
-  }
-
-  @Test
-  public void setting_content_twice_fails() throws Exception {
-    given(fileBuilder = objectsDb.fileBuilder());
-    given(fileBuilder).setContent(createBlob(objectsDb, string));
-    when(fileBuilder).setContent(createBlob(objectsDb, string));
-    thenThrown(IllegalStateException.class);
+  public void null_content_is_forbidden() throws Exception {
+    when(objectsDb).file(path, null);
+    thenThrown(NullPointerException.class);
   }
 
   @Test
@@ -224,10 +195,7 @@ public class SFileTest {
   }
 
   private static SFile createFile(ObjectsDb objectsDb, Path path, String content) throws Exception {
-    FileBuilder fileBuilder = objectsDb.fileBuilder();
-    fileBuilder.setPath(path);
-    fileBuilder.setContent(createBlob(objectsDb, content));
-    return fileBuilder.build();
+    return objectsDb.file(path, createBlob(objectsDb, content));
   }
 
   private static SBlob createBlob(ObjectsDb objectsDb, String content) throws Exception {
