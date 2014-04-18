@@ -11,9 +11,10 @@ import java.net.URI;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.testing.lang.type.FakeFile;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 public class InputClassFileTest {
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
 
   @Test(expected = IllegalArgumentException.class)
   public void filesWithoutClassExtensionCausesException() throws Exception {
@@ -52,7 +53,7 @@ public class InputClassFileTest {
   @Test
   public void openInputStream() throws Exception {
     String content = "some content";
-    SFile file = new FakeFile(path("my/package/Klass.class"), content);
+    SFile file = objectsDb.file(path("my/package/Klass.class"), content);
     InputClassFile inputClassFile = new InputClassFile(file);
 
     assertThat(inputStreamToString(inputClassFile.openInputStream())).isEqualTo(content);

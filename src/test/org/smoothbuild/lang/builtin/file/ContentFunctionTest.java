@@ -7,18 +7,19 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.testing.lang.type.FakeBlob;
+import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class ContentFunctionTest {
-  FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final NativeApiImpl nativeApi = new FakeNativeApi();
 
   @Test
   public void content_of_file_is_returned_as_blob() throws Exception {
-    FileBuilder builder = nativeApi.fileBuilder();
+    FileBuilder builder = objectsDb.fileBuilder();
     builder.setPath(path("some/path"));
-    FakeBlob blob = new FakeBlob();
-    builder.setContent(blob);
+    builder.setContent(objectsDb.blob("content"));
     SFile file = builder.build();
 
     SBlob actual = ContentFunction.execute(nativeApi, params(file));

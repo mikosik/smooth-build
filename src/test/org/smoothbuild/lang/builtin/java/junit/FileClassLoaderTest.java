@@ -10,11 +10,12 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.testing.lang.type.FakeFile;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableMap;
 
 public class FileClassLoaderTest {
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
 
   @Test
   public void testClassLoading() throws Exception {
@@ -25,8 +26,8 @@ public class FileClassLoaderTest {
 
     InputStream classByteCode = this.getClass().getClassLoader().getResourceAsStream(filePath);
 
-    FakeFile file = new FakeFile(path("this/path/is/ignored/anyway"),
-        inputStreamToBytes(classByteCode));
+    SFile file =
+        objectsDb.file(path("this/path/is/ignored/anyway"), inputStreamToBytes(classByteCode));
 
     Map<String, SFile> binaryNameToFile = ImmutableMap.<String, SFile> of(klassBinaryName, file);
     FileClassLoader fileClassLoader = new FileClassLoader(binaryNameToFile);

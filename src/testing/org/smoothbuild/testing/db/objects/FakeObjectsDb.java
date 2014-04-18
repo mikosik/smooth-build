@@ -5,6 +5,7 @@ import static org.smoothbuild.SmoothContants.CHARSET;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import org.smoothbuild.SmoothContants;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.db.objects.marshal.ReadersFactory;
@@ -12,6 +13,7 @@ import org.smoothbuild.db.objects.marshal.WritersFactory;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.BlobBuilder;
+import org.smoothbuild.lang.base.FileBuilder;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
@@ -35,12 +37,31 @@ public class FakeObjectsDb extends ObjectsDb {
     super(hashedDb, readersFactory, new WritersFactory(hashedDb, readersFactory));
   }
 
+  public SFile file(Path path) {
+    return file(path, path.value().getBytes(SmoothContants.CHARSET));
+  }
+
+  public SFile file(Path path, String content) {
+    return file(path, content.getBytes(SmoothContants.CHARSET));
+  }
+
+  public SFile file(Path path, byte[] bytes) {
+    FileBuilder fileBuilder = fileBuilder();
+    fileBuilder.setPath(path);
+    fileBuilder.setContent(blob(bytes));
+    return fileBuilder.build();
+  }
+
   public SFile createFileContainingItsPath(Path path) {
-    SBlob content = writeBlob(path.value().getBytes(CHARSET));
+    SBlob content = blob(path.value().getBytes(CHARSET));
     return fileBuilder().setPath(path).setContent(content).build();
   }
 
-  private SBlob writeBlob(byte[] bytes) {
+  public SBlob blob(String content) {
+    return blob(content.getBytes(SmoothContants.CHARSET));
+  }
+
+  public SBlob blob(byte[] bytes) {
     BlobBuilder builder = blobBuilder();
     try {
       Streams.copy(new ByteArrayInputStream(bytes), builder.openOutputStream());
@@ -49,4 +70,5 @@ public class FakeObjectsDb extends ObjectsDb {
     }
     return builder.build();
   }
+
 }

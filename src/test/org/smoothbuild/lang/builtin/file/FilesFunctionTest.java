@@ -2,7 +2,6 @@ package org.smoothbuild.lang.builtin.file;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.SmoothContants.CHARSET;
 import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 
@@ -19,7 +18,6 @@ import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
-import org.smoothbuild.testing.lang.type.FakeFile;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class FilesFunctionTest {
@@ -100,7 +98,7 @@ public class FilesFunctionTest {
 
     SArray<SFile> fileArray = runExecute(params(rootPath.value()));
 
-    FakeFile expectedFile = new FakeFile(filePath, filePath.value().getBytes(CHARSET));
+    SFile expectedFile = objectsDb.file(filePath);
     assertThat(fileArray).containsExactly(expectedFile);
   }
 

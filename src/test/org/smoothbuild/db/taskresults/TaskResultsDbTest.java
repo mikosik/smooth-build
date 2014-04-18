@@ -31,7 +31,6 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.lang.type.FakeBlob;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.Streams;
 
@@ -39,7 +38,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class TaskResultsDbTest {
-  private final ObjectsDb objectsDb = new FakeObjectsDb();
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private final HashedDb taskResultsHashedDb = new HashedDb(new FakeFileSystem());
   private final TaskResultsDb taskResultsDb = new TaskResultsDb(taskResultsHashedDb, objectsDb);
   private final HashCode hash = Hash.string("abc");
@@ -87,7 +86,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
-    given(file = objectsDb.fileBuilder().setPath(path).setContent(new FakeBlob(bytes)).build());
+    given(file = objectsDb.file(path, bytes));
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(taskResultsDb).write(hash, new TaskResult<>(fileArray, Empty.messageList()));
     when(taskResultsDb.read(hash, FILE_ARRAY).value().iterator().next());
@@ -114,7 +113,7 @@ public class TaskResultsDbTest {
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
-    given(file = objectsDb.fileBuilder().setPath(path).setContent(new FakeBlob(bytes)).build());
+    given(file = objectsDb.file(path, bytes));
     given(taskResultsDb).write(hash, new TaskResult<>(file, Empty.messageList()));
     when(taskResultsDb.read(hash, FILE).value());
     thenReturned(file);

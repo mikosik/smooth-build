@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Test;
-import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -19,19 +18,17 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.lang.type.BlobTester;
-import org.smoothbuild.testing.lang.type.FakeBlob;
-import org.smoothbuild.testing.lang.type.FakeFile;
 
 import com.google.common.collect.Iterables;
 
 public class TempDirectoryTest {
-  Path path = path("my/path");
-  String content = "content";
+  private final Path path = path("my/path");
+  private final String content = "content";
 
-  ObjectsDb objectsDb = new FakeObjectsDb();
-  java.nio.file.Path rootPath = Paths.get("/fake/path");
-  FakeFileSystem fileSystem = new FakeFileSystem();
-  TempDirectory tempDirectory = new TempDirectory(objectsDb, rootPath, fileSystem);
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final java.nio.file.Path rootPath = Paths.get("/fake/path");
+  private final FakeFileSystem fileSystem = new FakeFileSystem();
+  private final TempDirectory tempDirectory = new TempDirectory(objectsDb, rootPath, fileSystem);
 
   @After
   public void after() {
@@ -50,7 +47,7 @@ public class TempDirectoryTest {
 
   @Test
   public void file_is_written_to_file_system() throws Exception {
-    FakeFile file = new FakeFile(path, content);
+    SFile file = objectsDb.file(path, content);
     tempDirectory.writeFile(file);
     fileSystem.assertFileContains(path, content);
   }
@@ -59,7 +56,7 @@ public class TempDirectoryTest {
   public void writing_file_after_destroy_throws_exception() throws Exception {
     tempDirectory.destroy();
 
-    FakeFile file = new FakeFile(path, content);
+    SFile file = objectsDb.file(path, content);
 
     try {
       tempDirectory.writeFile(file);
@@ -71,7 +68,7 @@ public class TempDirectoryTest {
 
   @Test
   public void content_and_path_is_written_to_file_system() throws Exception {
-    tempDirectory.writeFile(path, new FakeBlob(content));
+    tempDirectory.writeFile(path, objectsDb.blob(content));
     fileSystem.assertFileContains(path, content);
   }
 
@@ -80,7 +77,7 @@ public class TempDirectoryTest {
     tempDirectory.destroy();
 
     try {
-      tempDirectory.writeFile(path, new FakeBlob(content));
+      tempDirectory.writeFile(path, objectsDb.blob(content));
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
       // expected
@@ -89,7 +86,7 @@ public class TempDirectoryTest {
 
   @Test
   public void files_are_written_to_file_system() throws Exception {
-    FakeFile file = new FakeFile(path, content);
+    SFile file = objectsDb.file(path, content);
     SArray<SFile> array = fakeArray(FILE_ARRAY, file);
 
     tempDirectory.writeFiles(array);
@@ -101,7 +98,7 @@ public class TempDirectoryTest {
   public void writing_files_after_destroy_throws_exception() throws Exception {
     tempDirectory.destroy();
 
-    FakeFile file = new FakeFile(path, content);
+    SFile file = objectsDb.file(path, content);
     SArray<SFile> array = fakeArray(FILE_ARRAY, file);
 
     try {
