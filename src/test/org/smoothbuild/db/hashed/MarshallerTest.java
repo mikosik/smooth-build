@@ -1,7 +1,6 @@
 package org.smoothbuild.db.hashed;
 
 import static com.google.common.primitives.Ints.toByteArray;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.SmoothContants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
@@ -27,6 +26,7 @@ public class MarshallerTest {
   private Hashed hashed2;
   private final Path path = path("my/path");
   private String string;
+  private HashCode hashCode;
 
   @Test
   public void marshalling_list_of_hashed_objects() throws Exception {
@@ -57,46 +57,43 @@ public class MarshallerTest {
 
   @Test
   public void marshalling_single_hash() {
-    HashCode hashCode = HashCode.fromInt(33);
-
-    marshaller = new Marshaller();
-    marshaller.write(hashCode);
-
-    assertThat(marshaller.getBytes()).isEqualTo(hashToBytes(hashCode));
+    given(hashCode = HashCode.fromInt(33));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(hashCode);
+    when(marshaller).getBytes();
+    thenReturned(hashCode.asBytes());
   }
 
   @Test
   public void marshalling_byte() throws Exception {
-    marshaller = new Marshaller();
-    marshaller.write((byte) 123);
-
-    assertThat(marshaller.getBytes()).isEqualTo(new byte[] { 123 });
+    given(marshaller = new Marshaller());
+    given(marshaller).write((byte) 123);
+    when(marshaller).getBytes();
+    thenReturned(new byte[] { 123 });
   }
 
   @Test
   public void marshalling_true_boolean() throws Exception {
-    marshaller = new Marshaller();
-    marshaller.write(true);
-
-    assertThat(marshaller.getBytes()).isEqualTo(new byte[] { TRUE_AS_BYTE });
+    given(marshaller = new Marshaller());
+    given(marshaller).write(true);
+    when(marshaller).getBytes();
+    thenReturned(new byte[] { TRUE_AS_BYTE });
   }
 
   @Test
   public void marshalling_false_boolean() throws Exception {
-    marshaller = new Marshaller();
-    marshaller.write(false);
-
-    assertThat(marshaller.getBytes()).isEqualTo(new byte[] { FALSE_AS_BYTE });
+    given(marshaller = new Marshaller());
+    given(marshaller).write(false);
+    when(marshaller).getBytes();
+    thenReturned(new byte[] { FALSE_AS_BYTE });
   }
 
   @Test
-  public void marshalling_int() throws Exception {
-    byte[] bytes = new byte[] { 0x12, 0x34, 0x56, 0x78 };
-
-    marshaller = new Marshaller();
-    marshaller.write(Ints.fromByteArray(bytes));
-
-    assertThat(marshaller.getBytes()).isEqualTo(bytes);
+  public void marshalling_ints() throws Exception {
+    given(marshaller = new Marshaller());
+    given(marshaller).write(0x12345678);
+    when(marshaller).getBytes();
+    thenReturned(Ints.toByteArray(0x12345678));
   }
 
   private static byte[] pathToBytes(Path path) {
@@ -107,9 +104,5 @@ public class MarshallerTest {
     byte[] sizeBytes = Ints.toByteArray(string.length());
     byte[] charBytes = string.getBytes(CHARSET);
     return Bytes.concat(sizeBytes, charBytes);
-  }
-
-  private static byte[] hashToBytes(HashCode hashCode) {
-    return hashCode.asBytes();
   }
 }
