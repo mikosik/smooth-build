@@ -1,7 +1,5 @@
 package org.smoothbuild.testing.db.objects;
 
-import static org.smoothbuild.SmoothContants.CHARSET;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -60,11 +58,6 @@ public class FakeObjectsDb extends ObjectsDb {
   public SFile file(Path path, byte[] bytes) {
     SBlob blob = blob(bytes);
     return file(path, blob);
-  }
-
-  public SFile createFileContainingItsPath(Path path) {
-    SBlob content = blob(path.value().getBytes(CHARSET));
-    return file(path, content);
   }
 
   public SBlob blob(String content) {
