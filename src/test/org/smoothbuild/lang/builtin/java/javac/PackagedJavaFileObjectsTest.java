@@ -1,49 +1,64 @@
 package org.smoothbuild.lang.builtin.java.javac;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.builtin.java.javac.PackagedJavaFileObjects.packagedJavaFileObjects;
-import static org.smoothbuild.testing.common.JarTester.jaredFiles;
+import static org.smoothbuild.testing.common.JarTester.jar;
+import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import javax.tools.JavaFileObject;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.testory.Closure;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjectsTest {
+  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private SFile file1;
+  private SFile file2;
+  private SBlob jar;
+  private Multimap<String, JavaFileObject> objects;
+  private JavaFileObject fileObject;
 
   @Test
-  public void test() throws Exception {
-    String fileName1 = "my/package/MyKlass.class";
-    String fileName2 = "my/package2/MyKlass2.class";
-    SFile file = jaredFiles(fileName1, fileName2);
+  public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
+    given(file1 = objectsDb.file(path("my/package/MyKlass.class")));
+    given(file2 = objectsDb.file(path("my/package/MyKlass2.class")));
+    given(jar = jar(file1, file2));
+    given(objects = packagedJavaFileObjects(new FakeNativeApi(), ImmutableList.of(jar)));
+    given(fileObject = objects.get("my.package").iterator().next());
 
-    Multimap<String, JavaFileObject> packageToJavaFileObjects =
-        packagedJavaFileObjects(new FakeNativeApi(), ImmutableList.of(file.content()));
+    when(inputStreamToString(fileObject.openInputStream()));
+    thenReturned("my/package/MyKlass2.class");
 
-    JavaFileObject fileObject = packageToJavaFileObjects.get("my.package").iterator().next();
-    StreamTester.assertContent(fileObject.openInputStream(), fileName1);
-    assertThat(fileObject.getName()).isEqualTo("/:my/package/MyKlass.class");
+    when(fileObject).getName();
+    thenReturned("/:my/package/MyKlass2.class");
   }
 
   @Test
   public void duplicateClassFileException() throws Exception {
-    String fileName = "my/package/MyKlass.class";
-    SFile file1 = jaredFiles(fileName);
-    SFile file2 = jaredFiles(fileName);
+    given(file1 = objectsDb.file(path("my/package/MyKlass.class")));
+    given(jar = jar(file1));
+    when(javaFileObjects(ImmutableList.of(jar, jar)));
+    thenThrown(DuplicateClassFileError.class);
+  }
 
-    try {
-      packagedJavaFileObjects(new FakeNativeApi(), ImmutableList.of(file1.content(), file2
-          .content()));
-      fail("exception should be thrown");
-    } catch (DuplicateClassFileError e) {
-      // expected
-    }
+  private Closure javaFileObjects(final ImmutableList<SBlob> libraryJars) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return packagedJavaFileObjects(new FakeNativeApi(), libraryJars);
+      }
+    };
   }
 }

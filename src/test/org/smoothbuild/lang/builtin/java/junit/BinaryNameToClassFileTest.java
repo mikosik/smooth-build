@@ -24,10 +24,10 @@ public class BinaryNameToClassFileTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
 
   @Test
-  public void binaryNamesAreMappedToProperClassFiles() throws IOException {
+  public void binary_names_are_mapped_to_proper_class_files() throws IOException {
     Path path1 = path("a/Klass.class");
     Path path2 = path("b/Klass.class");
-    SBlob blob = JarTester.jar(path1.value(), path2.value());
+    SBlob blob = JarTester.jar(objectsDb.file(path1), objectsDb.file(path2));
 
     when(binaryNameToClassFile(new FakeNativeApi(), ImmutableList.of(blob)));
     thenReturned(ImmutableMap
@@ -35,14 +35,14 @@ public class BinaryNameToClassFileTest {
   }
 
   @Test
-  public void nonClassFilesAreNotMapped() throws IOException {
-    String file1 = "a/Klass.txt";
-    String file2 = "b/Klass.java";
-    SBlob blob = JarTester.jar(file1, file2);
-    Map<String, SFile> x =
+  public void non_class_files_are_not_mapped() throws IOException {
+    Path path1 = path("a/Klass.txt");
+    Path path2 = path("b/Klass.java");
+    SBlob blob = JarTester.jar(objectsDb.file(path1), objectsDb.file(path2));
+    Map<String, SFile> map =
         binaryNameToClassFile(new FakeNativeApi(), ImmutableList.<SBlob> of(blob));
 
-    assertThat(x.size()).isEqualTo(0);
+    assertThat(map.size()).isEqualTo(0);
   }
 
 }
