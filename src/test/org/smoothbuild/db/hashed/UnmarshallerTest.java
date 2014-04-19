@@ -1,12 +1,10 @@
 package org.smoothbuild.db.hashed;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
-import static org.smoothbuild.db.hashed.HashCodes.toPath;
 import static org.smoothbuild.io.fs.base.Path.path;
-
-import java.io.DataOutputStream;
-import java.util.List;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.err.CorruptedBoolError;
@@ -15,7 +13,7 @@ import org.smoothbuild.db.hashed.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValue;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Hashed;
+import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
@@ -26,288 +24,207 @@ public class UnmarshallerTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private final FakeFileSystem fileSystem = new FakeFileSystem();
   private final HashedDb hashedDb = new HashedDb(fileSystem);
+  private SString hashed1;
+  private SString hashed2;
+  private Marshaller marshaller;
+  private Unmarshaller unmarshaller;
+  private Path path;
+  private HashCode hash;
+  private byte myByte;
+  private int myInt;
+  private EnumValues<String> enumValues;
 
   @Test
   public void marshalled_hashed_list_can_be_unmarshalled() {
-    Hashed hashed1 = objectsDb.string("abc");
-    Hashed hashed2 = objectsDb.string("def");
-
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(ImmutableList.of(hashed1, hashed2));
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      List<HashCode> actual = unmarshaller.readHashList();
-      assertThat(actual).isEqualTo(ImmutableList.of(hashed1.hash(), hashed2.hash()));
-    }
+    given(hashed1 = objectsDb.string("abc"));
+    given(hashed2 = objectsDb.string("def"));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(ImmutableList.of(hashed1, hashed2));
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller.readHashList());
+    thenReturned(ImmutableList.of(hashed1.hash(), hashed2.hash()));
+    unmarshaller.close();
   }
 
   @Test
   public void marshalled_path_can_be_unmarshalled() {
-    Path path = path("my/path");
+    given(path = path("my/path"));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(path);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readPath();
+    thenReturned(path);
+    unmarshaller.close();
+  }
 
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(path);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
+  @Test
+  public void too_short_path_in_db_causes_exception() throws Exception {
+    given(hash = Hash.function().hashInt(33));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(10);
+    given(marshaller).write(0x12345678);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readPath();
+    thenThrown(TooFewBytesToUnmarshallValue.class);
+    unmarshaller.close();
+  }
 
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      Path actual = unmarshaller.readPath();
-      assertThat(actual).isEqualTo(path);
-    }
+  @Test
+  public void halfed_size_of_path_in_db_causes_exception() throws Exception {
+    given(hash = Hash.function().hashInt(33));
+    given(marshaller = new Marshaller());
+    given(marshaller).write((byte) 1);
+    given(marshaller).write((byte) 1);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readPath();
+    thenThrown(TooFewBytesToUnmarshallValue.class);
+    unmarshaller.close();
+  }
+
+  @Test
+  public void illegal_path_causes_exception() throws Exception {
+    given(hash = Hash.function().hashInt(33));
+    given(marshaller = new Marshaller());
+    given(marshaller).write("/");
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readPath();
+    thenThrown(IllegalPathInObjectError.class);
+    unmarshaller.close();
   }
 
   @Test
   public void marshalled_hash_can_be_unmarshalled() {
-    HashCode myHash = Hash.function().hashInt(33);
+    given(hash = Hash.function().hashInt(33));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(hash);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readHash();
+    thenReturned(hash);
+    unmarshaller.close();
+  }
 
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(myHash);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      HashCode actual = unmarshaller.readHash();
-      assertThat(actual).isEqualTo(myHash);
-    }
+  @Test
+  public void too_short_hash_in_db_causes_exception() {
+    given(hash = Hash.function().hashInt(33));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(0x12345678);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readHash();
+    thenThrown(TooFewBytesToUnmarshallValue.class);
+    unmarshaller.close();
   }
 
   @Test
   public void marshalled_false_bool_value_can_be_unmarshalled() {
-    boolean myBool = false;
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(myBool);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      boolean actual = unmarshaller.readBool();
-      assertThat(actual).isEqualTo(myBool);
-    }
+    given(marshaller = new Marshaller());
+    given(marshaller).write(false);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readBool();
+    thenReturned(false);
+    unmarshaller.close();
   }
 
   @Test
   public void marshalled_true_bool_value_can_be_unmarshalled() {
-    boolean myBool = true;
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(myBool);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      boolean actual = unmarshaller.readBool();
-      assertThat(actual).isEqualTo(myBool);
-    }
+    given(marshaller = new Marshaller());
+    given(marshaller).write(true);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readBool();
+    thenReturned(true);
+    unmarshaller.close();
   }
 
   @Test
   public void unmarshalling_corrupted_bool_throws_exception() {
-    Marshaller marshaller = new Marshaller();
-    marshaller.write((byte) 7);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
-      unmarshaller.readBool();
-      fail("exception should be thrown");
-    } catch (CorruptedBoolError e) {
-      // expected
-    }
+    given(marshaller = new Marshaller());
+    given(marshaller).write(33);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readBool();
+    thenThrown(CorruptedBoolError.class);
+    unmarshaller.close();
   }
 
   @Test
   public void marshalled_byte_can_be_unmarshalled() {
-    byte myByte = 123;
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(myByte);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      byte actual = unmarshaller.readByte();
-      assertThat(actual).isEqualTo(myByte);
-    }
+    given(myByte = 123);
+    given(marshaller = new Marshaller());
+    given(marshaller).write(myByte);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readByte();
+    thenReturned((byte) 123);
+    unmarshaller.close();
   }
 
   @Test
   public void marshalled_int_can_be_unmarshalled() {
-    int myInt = 0x12345678;
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(myInt);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
+    given(myInt = 0x12345678);
+    given(marshaller = new Marshaller());
+    given(marshaller).write(myInt);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readInt();
+    thenReturned(myInt);
+    unmarshaller.close();
+  }
 
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      int actual = unmarshaller.readInt();
-      assertThat(actual).isEqualTo(myInt);
-    }
+  @Test
+  public void too_short_int_in_db_causes_exception() throws Exception {
+    given(hash = Hash.function().hashInt(33));
+    given(marshaller = new Marshaller());
+    given(marshaller).write((byte) 1);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readHash();
+    thenThrown(TooFewBytesToUnmarshallValue.class);
+    unmarshaller.close();
   }
 
   @Test
   public void marshalled_enum_can_be_unmarshalled() throws Exception {
-    String value1 = "abc";
-    String value2 = "def";
-    String value3 = "ghi";
-    EnumValues<String> enumValues = new EnumValues<String>(value1, value2, value3);
-
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(enumValues.valueToByte(value2));
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      String actual = unmarshaller.readEnum(enumValues);
-      assertThat(actual).isEqualTo(value2);
-    }
+    given(enumValues = new EnumValues<String>("abc", "def", "ghi"));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(enumValues.valueToByte("def"));
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readEnum(enumValues);
+    thenReturned("def");
+    unmarshaller.close();
   }
 
   @Test
   public void unmarshalling_enum_throws_corrupted_enum_exception_when_db_is_corrupted()
       throws Exception {
-    String value1 = "abc";
-    String value2 = "def";
-    String value3 = "ghi";
-    EnumValues<String> enumValues = new EnumValues<String>(value1, value2, value3);
-
-    Marshaller marshaller = new Marshaller();
-    marshaller.write((byte) 100);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
-      unmarshaller.readEnum(enumValues);
-      fail("exception should be thrown");
-    } catch (CorruptedEnumValue e) {
-      // expected
-    }
+    given(enumValues = new EnumValues<String>("abc", "def", "ghi"));
+    given(marshaller = new Marshaller());
+    given(marshaller).write((byte) 100);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readEnum(enumValues);
+    thenThrown(CorruptedEnumValue.class);
+    unmarshaller.close();
   }
 
   @Test
   public void marshalled_all_type_of_objects_can_be_unmarshalled() {
-    HashCode myHash = Hash.function().hashInt(33);
-    Path path = path("my/path");
-    byte myByte = 123;
-    int myInt = 0x12345667;
-
-    Marshaller marshaller = new Marshaller();
-    marshaller.write(myHash);
-    marshaller.write(path);
-    marshaller.write(myByte);
-    marshaller.write(myInt);
-    HashCode hash = hashedDb.write(marshaller.getBytes());
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
-      HashCode actualHash = unmarshaller.readHash();
-      Path actualPath = unmarshaller.readPath();
-      byte actualByte = unmarshaller.readByte();
-      int actualInt = unmarshaller.readInt();
-
-      assertThat(actualHash).isEqualTo(myHash);
-      assertThat(actualPath).isEqualTo(path);
-      assertThat(actualByte).isEqualTo(myByte);
-      assertThat(actualInt).isEqualTo(myInt);
-    }
+    given(myInt = 0x12345678);
+    given(myByte = 123);
+    given(path = path("my/path"));
+    given(hash = Hash.function().hashInt(33));
+    given(marshaller = new Marshaller());
+    given(marshaller).write(myInt);
+    given(marshaller).write(myByte);
+    given(marshaller).write(path);
+    given(marshaller).write(hash);
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
+    when(unmarshaller).readInt();
+    thenReturned(myInt);
+    when(unmarshaller).readByte();
+    thenReturned(myByte);
+    when(unmarshaller).readPath();
+    thenReturned(path);
+    when(unmarshaller).readHash();
+    thenReturned(hash);
   }
 
-  @Test
-  public void too_short_hash_in_db_causes_exception() throws Exception {
-    HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = toPath(objectHash);
-    try (DataOutputStream outputStream =
-        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
-      outputStream.write(new byte[Hash.size() - 1]);
-    }
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
-      try {
-        unmarshaller.readHash();
-        fail("exception should be thrown");
-      } catch (TooFewBytesToUnmarshallValue e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
-  public void too_short_path_in_db_causes_exception() throws Exception {
-    HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = toPath(objectHash);
-    try (DataOutputStream outputStream =
-        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
-      int size = 10;
-      outputStream.writeInt(size + 1);
-      outputStream.write(new byte[size]);
-    }
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
-      try {
-        unmarshaller.readPath();
-        fail("exception should be thrown");
-      } catch (TooFewBytesToUnmarshallValue e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
-  public void halfed_size_of_path_in_db_causes_exception() throws Exception {
-    HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = toPath(objectHash);
-    try (DataOutputStream outputStream =
-        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
-      outputStream.write(new byte[3]);
-    }
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
-      try {
-        unmarshaller.readPath();
-        fail("exception should be thrown");
-      } catch (TooFewBytesToUnmarshallValue e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
-  public void illegal_path_causes_exception() throws Exception {
-    HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = toPath(objectHash);
-    String illegalPathValue = "/";
-
-    try (DataOutputStream outputStream =
-        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
-      byte[] bytes = illegalPathValue.getBytes();
-      outputStream.writeInt(bytes.length);
-      outputStream.write(bytes);
-    }
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
-      try {
-        unmarshaller.readPath();
-        fail("exception should be thrown");
-      } catch (IllegalPathInObjectError e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
-  public void too_short_int_in_db_causes_exception() throws Exception {
-    HashCode objectHash = HashCode.fromInt(33);
-    Path objectPath = toPath(objectHash);
-    try (DataOutputStream outputStream =
-        new DataOutputStream(fileSystem.openOutputStream(objectPath))) {
-      outputStream.write(new byte[3]);
-    }
-
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, objectHash)) {
-      try {
-        unmarshaller.readInt();
-        fail("exception should be thrown");
-      } catch (TooFewBytesToUnmarshallValue e) {
-        // expected
-      }
-    }
-  }
-
-  @Test
+  @SuppressWarnings("resource")
+  @Test(expected = NoObjectWithGivenHashError.class)
   public void unmarshallling_not_stored_value_fails() throws Exception {
-    try {
-      new Unmarshaller(hashedDb, HashCode.fromInt(33));
-      fail("exception should be thrown");
-    } catch (NoObjectWithGivenHashError e) {
-      // expected
-    }
+    new Unmarshaller(hashedDb, Hash.string("abc"));
   }
 }
