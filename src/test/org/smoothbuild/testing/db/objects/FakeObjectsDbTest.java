@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.io.cache.value;
+package org.smoothbuild.testing.db.objects;
 
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.inputStreamToString;
