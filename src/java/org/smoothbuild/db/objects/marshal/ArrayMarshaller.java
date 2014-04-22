@@ -2,7 +2,6 @@ package org.smoothbuild.db.objects.marshal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
@@ -33,12 +32,12 @@ public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<SArra
     return new ArrayObject<T>(hash, arrayType, this);
   }
 
-  public Iterator<T> readElements(HashCode hash) {
+  public ImmutableList<T> readElements(HashCode hash) {
     ImmutableList.Builder<T> builder = ImmutableList.builder();
     for (HashCode elementHash : readElementHashes(hash)) {
       builder.add(elementMarshaller.read(elementHash));
     }
-    return builder.build().iterator();
+    return builder.build();
   }
 
   private List<HashCode> readElementHashes(HashCode hash) {
