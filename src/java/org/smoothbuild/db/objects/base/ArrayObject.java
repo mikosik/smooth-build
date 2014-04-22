@@ -20,7 +20,7 @@ public class ArrayObject<T extends SValue> extends AbstractObject implements SAr
 
   @Override
   public Iterator<T> iterator() {
-    return marshaller.readElements(hash());
+    return marshaller.readElements(hash()).iterator();
   }
 
   @Override
