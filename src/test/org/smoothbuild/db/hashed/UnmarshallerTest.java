@@ -6,6 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
+import org.junit.After;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.err.CorruptedBoolError;
 import org.smoothbuild.db.hashed.err.CorruptedEnumValue;
@@ -34,6 +35,13 @@ public class UnmarshallerTest {
   private int myInt;
   private EnumValues<String> enumValues;
 
+  @After
+  public void after() {
+    if (unmarshaller != null) {
+      unmarshaller.close();
+    }
+  }
+
   @Test
   public void marshalled_hashed_list_can_be_unmarshalled() {
     given(hashed1 = objectsDb.string("abc"));
@@ -43,7 +51,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller.readHashList());
     thenReturned(ImmutableList.of(hashed1.hash(), hashed2.hash()));
-    unmarshaller.close();
   }
 
   @Test
@@ -54,7 +61,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readPath();
     thenReturned(path);
-    unmarshaller.close();
   }
 
   @Test
@@ -66,7 +72,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readPath();
     thenThrown(TooFewBytesToUnmarshallValue.class);
-    unmarshaller.close();
   }
 
   @Test
@@ -78,7 +83,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readPath();
     thenThrown(TooFewBytesToUnmarshallValue.class);
-    unmarshaller.close();
   }
 
   @Test
@@ -89,7 +93,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readPath();
     thenThrown(IllegalPathInObjectError.class);
-    unmarshaller.close();
   }
 
   @Test
@@ -100,7 +103,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readHash();
     thenReturned(hash);
-    unmarshaller.close();
   }
 
   @Test
@@ -111,7 +113,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readHash();
     thenThrown(TooFewBytesToUnmarshallValue.class);
-    unmarshaller.close();
   }
 
   @Test
@@ -121,7 +122,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readBool();
     thenReturned(false);
-    unmarshaller.close();
   }
 
   @Test
@@ -131,7 +131,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readBool();
     thenReturned(true);
-    unmarshaller.close();
   }
 
   @Test
@@ -141,7 +140,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readBool();
     thenThrown(CorruptedBoolError.class);
-    unmarshaller.close();
   }
 
   @Test
@@ -152,7 +150,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readByte();
     thenReturned((byte) 123);
-    unmarshaller.close();
   }
 
   @Test
@@ -163,7 +160,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readInt();
     thenReturned(myInt);
-    unmarshaller.close();
   }
 
   @Test
@@ -174,7 +170,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readHash();
     thenThrown(TooFewBytesToUnmarshallValue.class);
-    unmarshaller.close();
   }
 
   @Test
@@ -185,7 +180,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readEnum(enumValues);
     thenReturned("def");
-    unmarshaller.close();
   }
 
   @Test
@@ -197,7 +191,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readEnum(enumValues);
     thenThrown(CorruptedEnumValue.class);
-    unmarshaller.close();
   }
 
   @Test
