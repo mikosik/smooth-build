@@ -1,10 +1,11 @@
 package org.smoothbuild.testing.parse;
 
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+
 import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.Dependency;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 
 import com.google.common.collect.Sets;
 
@@ -18,6 +19,6 @@ public class FakeDependency {
   }
 
   public static Dependency dependency(Name name) {
-    return new Dependency(new FakeCodeLocation(), name);
+    return new Dependency(codeLocation(1), name);
   }
 }

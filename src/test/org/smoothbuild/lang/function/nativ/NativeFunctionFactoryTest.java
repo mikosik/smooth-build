@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import org.junit.Test;
@@ -31,12 +32,10 @@ import org.smoothbuild.lang.function.nativ.err.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Messages;
 import org.smoothbuild.task.base.TaskWorker;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 
@@ -46,7 +45,6 @@ import com.google.common.collect.ImmutableMap;
 public class NativeFunctionFactoryTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private final FakeNativeApi nativeApi = new FakeNativeApi();
-  private final CodeLocation codeLocation = new FakeCodeLocation();
 
   // signature
 
@@ -74,11 +72,11 @@ public class NativeFunctionFactoryTest {
         (Function<SString>) NativeFunctionFactory.create(Func.class, false);
     SString string1 = objectsDb.string("abc");
     SString string2 = objectsDb.string("def");
-    StringExpr arg1 = new StringExpr(string1, codeLocation);
-    StringExpr arg2 = new StringExpr(string2, codeLocation);
+    StringExpr arg1 = new StringExpr(string1, codeLocation(1));
+    StringExpr arg2 = new StringExpr(string2, codeLocation(1));
 
     ImmutableMap<String, StringExpr> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
-    TaskWorker<SString> task = function.createWorker(args, codeLocation);
+    TaskWorker<SString> task = function.createWorker(args, codeLocation(1));
     TaskOutput<SString> output = task.execute(ImmutableList.of(string1, string2), nativeApi);
     assertThat(Messages.containsProblems(output.messages())).isFalse();
     assertThat(output.returnValue().value()).isEqualTo("abcdef");
@@ -347,7 +345,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
-    function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation).execute(
+    function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation(1)).execute(
         Empty.svalueList(), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
   }

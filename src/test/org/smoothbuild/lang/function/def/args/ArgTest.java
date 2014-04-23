@@ -9,6 +9,7 @@ import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -21,7 +22,6 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
 public class ArgTest {
   String name = "name";
   Expr<?> expr = mock(Expr.class);
-  CodeLocation codeLocation = new FakeCodeLocation();
+  CodeLocation codeLocation = codeLocation(1);
 
   @Test(expected = IllegalArgumentException.class)
   public void negativeIndexIsForbiddenInNamedArg() {
@@ -147,7 +147,7 @@ public class ArgTest {
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
     given(willReturn(STRING), expr).type();
-    when(namedArg(1, "myName", expr, new FakeCodeLocation())).toPaddedString(1, 1, 1);
+    when(namedArg(1, "myName", expr, codeLocation(1))).toPaddedString(1, 1, 1);
     thenReturned("String: myName #1 " + codeLocation.toString());
   }
 
@@ -185,7 +185,7 @@ public class ArgTest {
   }
 
   private static Arg named(String name) {
-    return Arg.namedArg(1, name, mock(Expr.class), new FakeCodeLocation());
+    return Arg.namedArg(1, name, mock(Expr.class), codeLocation(1));
   }
 
   private static Arg nameless() {
@@ -195,6 +195,6 @@ public class ArgTest {
   private static Arg nameless(SType<?> type) {
     Expr<?> expr = mock(Expr.class);
     given(willReturn(type), expr).type();
-    return Arg.namelessArg(1, expr, new FakeCodeLocation());
+    return Arg.namelessArg(1, expr, codeLocation(1));
   }
 }

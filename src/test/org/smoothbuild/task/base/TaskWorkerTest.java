@@ -1,5 +1,6 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -13,7 +14,6 @@ import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.NativeApiImpl;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
@@ -22,7 +22,7 @@ public class TaskWorkerTest {
   SType<?> type = STypes.STRING;
   HashCode hash = Hash.string("");
   String name = "name";
-  FakeCodeLocation codeLocation = new FakeCodeLocation();
+  CodeLocation codeLocation = codeLocation(1);
 
   TaskWorker<?> taskWorker;
 
@@ -80,7 +80,7 @@ public class TaskWorkerTest {
   }
 
   private static <T extends SValue> Closure $myTask(final SType<T> type, final String name,
-      final boolean isInternal, final FakeCodeLocation codeLocation) {
+      final boolean isInternal, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {

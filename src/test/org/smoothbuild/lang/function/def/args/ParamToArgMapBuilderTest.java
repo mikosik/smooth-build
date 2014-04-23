@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
@@ -14,7 +15,6 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -93,6 +93,6 @@ public class ParamToArgMapBuilderTest {
     Expr<?> expr = mock(Expr.class);
     given(willReturn(type), expr).type();
 
-    return namedArg(number, name, expr, new FakeCodeLocation());
+    return namedArg(number, name, expr, codeLocation(1));
   }
 }
