@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskresults;
+package org.smoothbuild.db.taskoutputs;
 
 import static org.smoothbuild.SmoothContants.TASK_RESULTS_DIR;
 
@@ -10,19 +10,19 @@ import org.smoothbuild.io.fs.base.SubFileSystem;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class TaskResultsDbModule extends AbstractModule {
+public class TaskOutputsDbModule extends AbstractModule {
   @Override
   protected void configure() {}
 
-  @TaskResults
+  @TaskOutputs
   @Provides
-  private FileSystem provideTaskResultsFileSystem(@SmoothDir FileSystem fileSystem) {
+  private FileSystem provideTaskOutputsFileSystem(@SmoothDir FileSystem fileSystem) {
     return new SubFileSystem(fileSystem, TASK_RESULTS_DIR);
   }
 
-  @TaskResults
+  @TaskOutputs
   @Provides
-  public HashedDb provideTaksResultsHashedDb(@TaskResults FileSystem fileSystem) {
+  public HashedDb provideTaksOutputsHashedDb(@TaskOutputs FileSystem fileSystem) {
     return new HashedDb(fileSystem);
   }
 }

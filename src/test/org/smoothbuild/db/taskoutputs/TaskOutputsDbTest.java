@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskresults;
+package org.smoothbuild.db.taskoutputs;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
@@ -22,6 +22,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
+import org.smoothbuild.db.taskoutputs.TaskOutputsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
@@ -37,10 +39,10 @@ import org.smoothbuild.util.Streams;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class TaskResultsDbTest {
+public class TaskOutputsDbTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final HashedDb taskResultsHashedDb = new HashedDb(new FakeFileSystem());
-  private final TaskResultsDb taskResultsDb = new TaskResultsDb(taskResultsHashedDb, objectsDb);
+  private final HashedDb taskOutputsHashedDb = new HashedDb(new FakeFileSystem());
+  private final TaskOutputsDb taskOutputsDb = new TaskOutputsDb(taskOutputsHashedDb, objectsDb);
   private final HashCode hash = Hash.string("abc");
 
   private final byte[] bytes = new byte[] {};
@@ -57,21 +59,21 @@ public class TaskResultsDbTest {
 
   @Test
   public void result_cache_does_not_contain_not_written_result() {
-    when(taskResultsDb.contains(hash));
+    when(taskOutputsDb.contains(hash));
     thenReturned(false);
   }
 
   @Test
   public void result_cache_contains_written_result() {
-    given(taskResultsDb).write(hash,
-        new TaskResult<>(objectsDb.string("result"), Empty.messageList()));
-    when(taskResultsDb.contains(hash));
+    given(taskOutputsDb).write(hash,
+        new TaskOutput<>(objectsDb.string("result"), Empty.messageList()));
+    when(taskOutputsDb.contains(hash));
     thenReturned(true);
   }
 
   @Test
   public void reading_not_written_value_fails() throws Exception {
-    when(taskResultsDb).read(hash, STRING);
+    when(taskOutputsDb).read(hash, STRING);
     thenThrown(NoObjectWithGivenHashError.class);
   }
 
@@ -79,8 +81,8 @@ public class TaskResultsDbTest {
   public void written_messages_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string("abc"));
     given(message = new Message(ERROR, "message string"));
-    given(taskResultsDb).write(hash, new TaskResult<>(stringValue, ImmutableList.of(message)));
-    when(taskResultsDb.read(hash, STRING).messages());
+    given(taskOutputsDb).write(hash, new TaskOutput<>(stringValue, ImmutableList.of(message)));
+    when(taskOutputsDb.read(hash, STRING).messages());
     thenReturned(contains(message));
   }
 
@@ -88,8 +90,8 @@ public class TaskResultsDbTest {
   public void written_file_array_can_be_read_back() throws Exception {
     given(file = objectsDb.file(path, bytes));
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    given(taskResultsDb).write(hash, new TaskResult<>(fileArray, Empty.messageList()));
-    when(taskResultsDb.read(hash, FILE_ARRAY).returnValue().iterator().next());
+    given(taskOutputsDb).write(hash, new TaskOutput<>(fileArray, Empty.messageList()));
+    when(taskOutputsDb.read(hash, FILE_ARRAY).returnValue().iterator().next());
     thenReturned(file);
   }
 
@@ -97,8 +99,8 @@ public class TaskResultsDbTest {
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
     given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    given(taskResultsDb).write(hash, new TaskResult<>(blobArray, Empty.messageList()));
-    when(taskResultsDb.read(hash, BLOB_ARRAY).returnValue().iterator().next());
+    given(taskOutputsDb).write(hash, new TaskOutput<>(blobArray, Empty.messageList()));
+    when(taskOutputsDb.read(hash, BLOB_ARRAY).returnValue().iterator().next());
     thenReturned(blob);
   }
 
@@ -106,32 +108,32 @@ public class TaskResultsDbTest {
   public void written_string_array_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
     given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    given(taskResultsDb).write(hash, new TaskResult<>(stringArray, Empty.messageList()));
-    when(taskResultsDb.read(hash, STRING_ARRAY).returnValue().iterator().next());
+    given(taskOutputsDb).write(hash, new TaskOutput<>(stringArray, Empty.messageList()));
+    when(taskOutputsDb.read(hash, STRING_ARRAY).returnValue().iterator().next());
     thenReturned(stringValue);
   }
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
     given(file = objectsDb.file(path, bytes));
-    given(taskResultsDb).write(hash, new TaskResult<>(file, Empty.messageList()));
-    when(taskResultsDb.read(hash, FILE).returnValue());
+    given(taskOutputsDb).write(hash, new TaskOutput<>(file, Empty.messageList()));
+    when(taskOutputsDb.read(hash, FILE).returnValue());
     thenReturned(file);
   }
 
   @Test
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
-    given(taskResultsDb).write(hash, new TaskResult<>(blob, Empty.messageList()));
-    when(taskResultsDb.read(hash, BLOB).returnValue());
+    given(taskOutputsDb).write(hash, new TaskOutput<>(blob, Empty.messageList()));
+    when(taskOutputsDb.read(hash, BLOB).returnValue());
     thenReturned(blob);
   }
 
   @Test
   public void writtend_string_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
-    given(taskResultsDb).write(hash, new TaskResult<>(stringValue, Empty.messageList()));
-    when(taskResultsDb.read(hash, STRING).returnValue().value());
+    given(taskOutputsDb).write(hash, new TaskOutput<>(stringValue, Empty.messageList()));
+    when(taskOutputsDb.read(hash, STRING).returnValue().value());
     thenReturned(string);
   }
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskresults;
+package org.smoothbuild.db.taskoutputs;
 
 import org.smoothbuild.db.hashed.EnumValues;
 import org.smoothbuild.message.base.MessageType;

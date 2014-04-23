@@ -16,7 +16,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
@@ -74,7 +74,7 @@ public class ExpressionExecutionTest {
     given(stringExpr = new StringExpr(sstring, location));
     given(task = taskGraph.createTasks(stringExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskResult<>(sstring));
+    thenEqual(task.output(), new TaskOutput<>(sstring));
   }
 
   @Test
@@ -92,7 +92,7 @@ public class ExpressionExecutionTest {
     given(converted = new ConvertExpr<>(stringExpr, new DoubleStringConverter(), location));
     given(task = taskGraph.createTasks(converted));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskResult<>(objectsDb.string(string + string)));
+    thenEqual(task.output(), new TaskOutput<>(objectsDb.string(string + string)));
   }
 
   @Test
@@ -100,7 +100,7 @@ public class ExpressionExecutionTest {
     given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.<Expr<SString>> of(), location));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskResult<>(array()));
+    thenEqual(task.output(), new TaskOutput<>(array()));
   }
 
   @Test
@@ -110,7 +110,7 @@ public class ExpressionExecutionTest {
     given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(stringExpr), location));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskResult<>(array(sstring)));
+    thenEqual(task.output(), new TaskOutput<>(array(sstring)));
   }
 
   @Test
@@ -122,7 +122,7 @@ public class ExpressionExecutionTest {
     given(callExpr = new CallExpr<>(function, location, Empty.stringExprMap()));
     given(task = taskGraph.createTasks(callExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskResult<>(sstring));
+    thenEqual(task.output(), new TaskOutput<>(sstring));
   }
 
   @SuppressWarnings("unchecked")
@@ -137,7 +137,7 @@ public class ExpressionExecutionTest {
     given(callExpr = new CallExpr<>(function, location, Empty.stringExprMap()));
     given(task = taskGraph.createTasks(callExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskResult<>(sstring));
+    thenEqual(task.output(), new TaskOutput<>(sstring));
   }
 
   private SArray<SString> array(SString... sstrings) {

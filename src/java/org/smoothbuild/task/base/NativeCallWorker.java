@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
@@ -48,7 +48,7 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
   }
 
   @Override
-  public TaskResult<T> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
+  public TaskOutput<T> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
     T result = null;
     try {
       result = function.invoke(nativeApi, calculateArguments(input));
@@ -66,9 +66,9 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
       }
     }
     if (result == null) {
-      return new TaskResult<>(nativeApi.loggedMessages());
+      return new TaskOutput<>(nativeApi.loggedMessages());
     } else {
-      return new TaskResult<>(result, nativeApi.loggedMessages());
+      return new TaskOutput<>(result, nativeApi.loggedMessages());
     }
   }
 

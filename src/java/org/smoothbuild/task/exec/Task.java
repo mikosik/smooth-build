@@ -3,7 +3,7 @@ package org.smoothbuild.task.exec;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
@@ -17,7 +17,7 @@ import com.google.common.hash.Hasher;
 public class Task<T extends SValue> {
   private final TaskWorker<T> worker;
   private final ImmutableList<Task<?>> dependencies;
-  private TaskResult<T> output;
+  private TaskOutput<T> output;
 
   public Task(TaskWorker<T> worker, ImmutableList<Task<?>> dependencies) {
     this.worker = worker;
@@ -57,13 +57,13 @@ public class Task<T extends SValue> {
     output = worker.execute(input(), nativeApi);
   }
 
-  public TaskResult<T> output() {
+  public TaskOutput<T> output() {
     checkState(output != null);
     return output;
   }
 
-  public void setOutput(TaskResult<T> taskResult) {
-    this.output = taskResult;
+  public void setOutput(TaskOutput<T> output) {
+    this.output = output;
   }
 
   public boolean hasOutput() {

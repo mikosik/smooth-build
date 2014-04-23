@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static org.smoothbuild.task.base.WorkerHashes.workerHash;
 
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
@@ -23,7 +23,7 @@ public class ArrayWorker<T extends SValue> extends TaskWorker<SArray<T>> {
   }
 
   @Override
-  public TaskResult<SArray<T>> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
+  public TaskOutput<SArray<T>> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
     @SuppressWarnings("unchecked")
     Iterable<T> castInput = (Iterable<T>) input;
     ArrayBuilder<T> builder = nativeApi.arrayBuilder(arrayType);
@@ -31,6 +31,6 @@ public class ArrayWorker<T extends SValue> extends TaskWorker<SArray<T>> {
       builder.add(value);
     }
     SArray<T> result = builder.build();
-    return new TaskResult<>(result);
+    return new TaskOutput<>(result);
   }
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.base.STypes.STRING;
 
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
@@ -24,7 +24,7 @@ public class StringWorker extends TaskWorker<SString> {
   }
 
   @Override
-  public TaskResult<SString> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
-    return new TaskResult<>(string);
+  public TaskOutput<SString> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
+    return new TaskOutput<>(string);
   }
 }

@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.Expr;
@@ -62,6 +62,6 @@ public class NativeFunctionTest {
     given(willReturn(sstring), invoker).invoke(nativeApi, Empty.stringValueMap());
     given(task = function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation));
     when(task).execute(ImmutableList.<SValue> of(), nativeApi);
-    thenReturned(new TaskResult<>(sstring));
+    thenReturned(new TaskOutput<>(sstring));
   }
 }

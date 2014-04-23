@@ -14,7 +14,7 @@ import static org.testory.Testory.willThrow;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
@@ -62,7 +62,7 @@ public class NativeCallWorkerTest {
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
-    SString argValue = objectsDb.string("subTaskResult");
+    SString argValue = objectsDb.string("subTaskOutput");
 
     String name = "param";
     NativeCallWorker<?> nativeCallTask =
@@ -72,8 +72,8 @@ public class NativeCallWorkerTest {
     given(willReturn(sstring), invoker).invoke(nativeApi,
         ImmutableMap.<String, SValue> of(name, argValue));
 
-    TaskResult<?> actual = nativeCallTask.execute(ImmutableList.of(argValue), nativeApi);
-    assertThat(actual).isEqualTo(new TaskResult<>(sstring));
+    TaskOutput<?> actual = nativeCallTask.execute(ImmutableList.of(argValue), nativeApi);
+    assertThat(actual).isEqualTo(new TaskOutput<>(sstring));
   }
 
   @Test
