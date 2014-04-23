@@ -17,10 +17,10 @@ public class FileArrayToBlobArrayConverter extends Converter<SArray<SFile>, SArr
   }
 
   @Override
-  public SArray<SBlob> convert(SValueFactory valueBuilders, SArray<SFile> value) {
+  public SArray<SBlob> convert(SValueFactory valueFactory, SArray<SFile> value) {
     checkArgument(value.type() == FILE_ARRAY);
 
-    ArrayBuilder<SBlob> blobArrayBuilder = valueBuilders.arrayBuilder(BLOB_ARRAY);
+    ArrayBuilder<SBlob> blobArrayBuilder = valueFactory.arrayBuilder(BLOB_ARRAY);
     for (SFile file : value) {
       blobArrayBuilder.add(file.content());
     }

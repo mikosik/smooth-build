@@ -21,15 +21,15 @@ import org.smoothbuild.message.listen.LoggedMessages;
 
 public class NativeApiImpl implements NativeApi {
   private final FileSystem projectFileSystem;
-  private final SValueFactory valueBuilders;
+  private final SValueFactory valueFactory;
   private final TempDirectoryManager tempDirectoryManager;
   private final LoggedMessages messages;
 
   @Inject
-  public NativeApiImpl(@ProjectDir FileSystem fileSystem, SValueFactory valueBuilders,
+  public NativeApiImpl(@ProjectDir FileSystem fileSystem, SValueFactory valueFactory,
       TempDirectoryManager tempDirectoryManager) {
     this.projectFileSystem = fileSystem;
-    this.valueBuilders = valueBuilders;
+    this.valueFactory = valueFactory;
     this.tempDirectoryManager = tempDirectoryManager;
     this.messages = new LoggedMessages();
   }
@@ -40,22 +40,22 @@ public class NativeApiImpl implements NativeApi {
 
   @Override
   public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
-    return valueBuilders.arrayBuilder(arrayType);
+    return valueFactory.arrayBuilder(arrayType);
   }
 
   @Override
   public SFile file(Path path, SBlob content) {
-    return valueBuilders.file(path, content);
+    return valueFactory.file(path, content);
   }
 
   @Override
   public BlobBuilder blobBuilder() {
-    return valueBuilders.blobBuilder();
+    return valueFactory.blobBuilder();
   }
 
   @Override
   public SString string(String string) {
-    return valueBuilders.string(string);
+    return valueFactory.string(string);
   }
 
   public FileSystem projectFileSystem() {

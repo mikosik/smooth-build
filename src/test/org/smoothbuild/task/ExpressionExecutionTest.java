@@ -154,9 +154,9 @@ public class ExpressionExecutionTest {
     }
 
     @Override
-    public SString convert(SValueFactory valueBuilders, SString sstring) {
+    public SString convert(SValueFactory valueFactory, SString sstring) {
       String value = sstring.value();
-      return valueBuilders.string(value + value);
+      return valueFactory.string(value + value);
     }
   }
 }

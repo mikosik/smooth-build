@@ -15,7 +15,7 @@ public class FileToBlobConverter extends Converter<SFile, SBlob> {
   }
 
   @Override
-  public SBlob convert(SValueFactory valueBuilders, SFile value) {
+  public SBlob convert(SValueFactory valueFactory, SFile value) {
     checkArgument(value.type() == FILE);
     return value.content();
   }
