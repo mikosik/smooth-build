@@ -27,7 +27,7 @@ public class UnknownFunctionCallsDetectorTest {
   Name name2 = name("function2");
 
   FakeLoggedMessages messages = new FakeLoggedMessages();
-  Module emptyBuiltinModule = new ImmutableModule(Empty.nameToFunctionMap());
+  Module emptyBuiltinModule = new ImmutableModule(Empty.nameFunctionMap());
 
   @Test
   public void emptyFunctionSetHasNoProblems() {

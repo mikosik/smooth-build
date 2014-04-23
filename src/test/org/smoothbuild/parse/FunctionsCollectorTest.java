@@ -62,7 +62,7 @@ public class FunctionsCollectorTest {
   }
 
   private Map<Name, FunctionContext> collectFunctions(FakeModuleContext moduleContext) {
-    ImmutableModule emptyBuiltinModule = new ImmutableModule(Empty.nameToFunctionMap());
+    ImmutableModule emptyBuiltinModule = new ImmutableModule(Empty.nameFunctionMap());
     return collectFunctions(moduleContext, emptyBuiltinModule);
   }
 

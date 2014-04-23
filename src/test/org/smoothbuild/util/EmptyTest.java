@@ -53,22 +53,22 @@ public class EmptyTest {
     assertThat(Empty.stringExprMap()).isSameAs(Empty.stringExprMap());
   }
 
-  // nameToFunctionMap();
+  // nameFunctionMap();
 
   @Test
   public void emptyNameToFunctionMapIsEmpty() {
-    assertThat(Empty.nameToFunctionMap()).isEmpty();
+    assertThat(Empty.nameFunctionMap()).isEmpty();
   }
 
   @Test
   public void emptyNameToFunctionMapIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<Name, Function<?>> map = Empty.nameToFunctionMap();
+    ImmutableMap<Name, Function<?>> map = Empty.nameFunctionMap();
   }
 
   @Test
   public void emptyNameToFunctionMapAlwaysReturnsTheSameObject() {
-    assertThat(Empty.nameToFunctionMap()).isSameAs(Empty.nameToFunctionMap());
+    assertThat(Empty.nameFunctionMap()).isSameAs(Empty.nameFunctionMap());
   }
 
   // nodeList()
