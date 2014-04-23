@@ -1,7 +1,8 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenCalled;
@@ -28,7 +29,8 @@ public class NativeFunctionTest {
   private SString sstring;
   private TaskWorker<SString> worker;
 
-  private final Signature<SString> signature = fakeSignature("functionName");
+  private final Signature<SString> signature = new Signature<>(STRING, name("name"), Empty
+      .paramList());
   @SuppressWarnings("unchecked")
   private final Invoker<SString> invoker = mock(Invoker.class);
 

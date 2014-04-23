@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
@@ -45,8 +44,11 @@ public class NativeCallWorkerTest {
   Invoker<SString> invoker = mock(Invoker.class);
   FakeNativeApi nativeApi = new FakeNativeApi();
   HashCode hash = HashCode.fromInt(33);
-  NativeFunction<?> function1 = new NativeFunction<>(fakeSignature(), invoker, true);
-  NativeFunction<?> function2 = new NativeFunction<>(fakeSignature(), invoker, true);
+
+  private final Signature<SString> signature = new Signature<>(STRING, name("name"), Empty
+      .paramList());
+  NativeFunction<?> function1 = new NativeFunction<>(signature, invoker, true);
+  NativeFunction<?> function2 = new NativeFunction<>(signature, invoker, true);
 
   String name1 = "name1";
   String name2 = "name2";
