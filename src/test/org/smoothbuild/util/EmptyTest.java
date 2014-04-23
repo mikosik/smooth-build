@@ -35,6 +35,24 @@ public class EmptyTest {
     assertThat(Empty.stringValueMap()).isSameAs(Empty.stringValueMap());
   }
 
+  // stringExprMap()
+
+  @Test
+  public void empty_string_expr_map_is_empty() {
+    assertThat(Empty.stringExprMap()).isEmpty();
+  }
+
+  @Test
+  public void empty_string_expr_map_is_immutable() {
+    @SuppressWarnings("unused")
+    ImmutableMap<String, Expr<?>> map = Empty.stringExprMap();
+  }
+
+  @Test
+  public void empty_string_expr_map_always_returns_the_same_object() {
+    assertThat(Empty.stringExprMap()).isSameAs(Empty.stringExprMap());
+  }
+
   // nameToFunctionMap();
 
   @Test
