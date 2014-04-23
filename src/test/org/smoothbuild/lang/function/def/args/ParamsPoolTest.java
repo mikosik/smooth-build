@@ -10,10 +10,10 @@ import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Params;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -34,7 +34,7 @@ public class ParamsPoolTest {
   Param blobArrayRequired = param(BLOB_ARRAY, "blobArrayRequired", true);
   Param fileArrayRequired = param(FILE_ARRAY, "fileArrayRequired", true);
 
-  ImmutableMap<String, Param> params = params(string, stringRequired, blob, blobRequired, file,
+  ImmutableMap<String, Param> params = Params.map(string, stringRequired, blob, blobRequired, file,
       fileRequired, stringArray, stringArrayRequired, blobArray, blobArrayRequired, fileArray,
       fileArrayRequired);
   ParamsPool paramsPool = new ParamsPool(params);
@@ -168,7 +168,7 @@ public class ParamsPoolTest {
 
   @Test
   public void available_required_params_does_not_contain_taken_param() throws Exception {
-    ImmutableMap<String, Param> params = params(stringRequired, fileRequired);
+    ImmutableMap<String, Param> params = Params.map(stringRequired, fileRequired);
     ParamsPool paramsPool = new ParamsPool(params);
 
     paramsPool.take(stringRequired);
