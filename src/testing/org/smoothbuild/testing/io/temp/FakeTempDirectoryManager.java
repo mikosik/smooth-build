@@ -7,18 +7,18 @@ import javax.inject.Provider;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.io.temp.TempDirectoryManager;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 
 public class FakeTempDirectoryManager extends TempDirectoryManager {
-  public FakeTempDirectoryManager(SValueBuilders valueBuilders) {
+  public FakeTempDirectoryManager(SValueFactory valueBuilders) {
     super(new FakeTempDirectoryProvider(valueBuilders));
   }
 
   private static class FakeTempDirectoryProvider implements Provider<TempDirectory> {
-    private final SValueBuilders valueBuilders;
+    private final SValueFactory valueBuilders;
     private int index;
 
-    public FakeTempDirectoryProvider(SValueBuilders valueBuilders) {
+    public FakeTempDirectoryProvider(SValueFactory valueBuilders) {
       this.valueBuilders = valueBuilders;
       this.index = 0;
     }

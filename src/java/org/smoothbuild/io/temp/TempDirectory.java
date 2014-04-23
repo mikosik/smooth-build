@@ -19,30 +19,30 @@ import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.Files;
 
 public class TempDirectory {
-  private final SValueBuilders valueBuilders;
+  private final SValueFactory valueBuilders;
   private final FileSystem fileSystem;
   private final java.nio.file.Path rootPath;
   private boolean isDestroyed;
 
   @Inject
-  public TempDirectory(SValueBuilders valueBuilders) {
+  public TempDirectory(SValueFactory valueBuilders) {
     this(valueBuilders, Paths.get(Files.createTempDir().getAbsolutePath()));
   }
 
   @VisibleForTesting
-  public TempDirectory(SValueBuilders valueBuilders, java.nio.file.Path path) {
+  public TempDirectory(SValueFactory valueBuilders, java.nio.file.Path path) {
     this(valueBuilders, path, new DiskFileSystem(path));
   }
 
   @VisibleForTesting
-  public TempDirectory(SValueBuilders valueBuilders, java.nio.file.Path rootPath,
+  public TempDirectory(SValueFactory valueBuilders, java.nio.file.Path rootPath,
       FileSystem fileSystem) {
     this.valueBuilders = valueBuilders;
     this.fileSystem = fileSystem;

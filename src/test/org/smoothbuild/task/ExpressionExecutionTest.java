@@ -21,7 +21,7 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
@@ -154,7 +154,7 @@ public class ExpressionExecutionTest {
     }
 
     @Override
-    public SString convert(SValueBuilders valueBuilders, SString sstring) {
+    public SString convert(SValueFactory valueBuilders, SString sstring) {
       String value = sstring.value();
       return valueBuilders.string(value + value);
     }

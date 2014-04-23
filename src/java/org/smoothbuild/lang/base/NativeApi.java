@@ -4,7 +4,7 @@ import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 
-public interface NativeApi extends SValueBuilders {
+public interface NativeApi extends SValueFactory {
   public void log(Message message);
 
   /**

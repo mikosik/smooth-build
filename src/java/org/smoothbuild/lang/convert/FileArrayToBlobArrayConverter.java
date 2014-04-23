@@ -8,7 +8,7 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 
 public class FileArrayToBlobArrayConverter extends Converter<SArray<SFile>, SArray<SBlob>> {
 
@@ -17,7 +17,7 @@ public class FileArrayToBlobArrayConverter extends Converter<SArray<SFile>, SArr
   }
 
   @Override
-  public SArray<SBlob> convert(SValueBuilders valueBuilders, SArray<SFile> value) {
+  public SArray<SBlob> convert(SValueFactory valueBuilders, SArray<SFile> value) {
     checkArgument(value.type() == FILE_ARRAY);
 
     ArrayBuilder<SBlob> blobArrayBuilder = valueBuilders.arrayBuilder(BLOB_ARRAY);

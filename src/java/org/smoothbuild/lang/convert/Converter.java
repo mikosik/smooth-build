@@ -3,7 +3,7 @@ package org.smoothbuild.lang.convert;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 
 import com.google.common.hash.HashCode;
 
@@ -26,7 +26,7 @@ public abstract class Converter<S extends SValue, T extends SValue> {
     return targetType;
   }
 
-  public abstract T convert(SValueBuilders valueBuilders, S value);
+  public abstract T convert(SValueFactory valueBuilders, S value);
 
   public HashCode hash() {
     return Hash.string(this.getClass().getCanonicalName());
