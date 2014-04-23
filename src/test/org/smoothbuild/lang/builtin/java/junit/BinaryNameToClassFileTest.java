@@ -15,7 +15,6 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -29,7 +28,7 @@ public class BinaryNameToClassFileTest {
     Path path2 = path("b/Klass.class");
     SBlob blob = JarTester.jar(objectsDb.file(path1), objectsDb.file(path2));
 
-    when(binaryNameToClassFile(new FakeNativeApi(), ImmutableList.of(blob)));
+    when(binaryNameToClassFile(objectsDb, ImmutableList.of(blob)));
     thenReturned(ImmutableMap
         .of("a.Klass", objectsDb.file(path1), "b.Klass", objectsDb.file(path2)));
   }
@@ -39,8 +38,7 @@ public class BinaryNameToClassFileTest {
     Path path1 = path("a/Klass.txt");
     Path path2 = path("b/Klass.java");
     SBlob blob = JarTester.jar(objectsDb.file(path1), objectsDb.file(path2));
-    Map<String, SFile> map =
-        binaryNameToClassFile(new FakeNativeApi(), ImmutableList.<SBlob> of(blob));
+    Map<String, SFile> map = binaryNameToClassFile(objectsDb, ImmutableList.<SBlob> of(blob));
 
     assertThat(map.size()).isEqualTo(0);
   }

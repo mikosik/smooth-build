@@ -12,18 +12,19 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.junit.Test;
+import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.lang.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManagerTest {
   StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  FakeNativeApi nativeApi = new FakeNativeApi();
+  SValueFactory valueFactory = new FakeObjectsDb();
   @SuppressWarnings("unchecked")
   Multimap<String, JavaFileObject> packagedJavaFileObjects = mock(Multimap.class);
 
-  SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, nativeApi,
+  SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, valueFactory,
       packagedJavaFileObjects);
 
   @Test

@@ -17,7 +17,6 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class ConversionsTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
@@ -96,7 +95,7 @@ public class ConversionsTest {
   @Test
   public void convertFileToBlob() throws Exception {
     SFile file = objectsDb.file(path("abc"));
-    SBlob blob = Conversions.converter(FILE, BLOB).convert(new FakeNativeApi(), file);
+    SBlob blob = Conversions.converter(FILE, BLOB).convert(new FakeObjectsDb(), file);
     assertThat(blob).isSameAs(file.content());
   }
 
@@ -108,38 +107,32 @@ public class ConversionsTest {
     SArray<SFile> fileArray = objectsDb.array(FILE_ARRAY, file1, file2);
     Converter<SArray<SFile>, SArray<SBlob>> converter =
         Conversions.converter(FILE_ARRAY, BLOB_ARRAY);
-    SArray<SBlob> blobArray = converter.convert(new FakeNativeApi(), fileArray);
+    SArray<SBlob> blobArray = converter.convert(new FakeObjectsDb(), fileArray);
     assertThat(blobArray).containsExactly(file1.content(), file2.content());
   }
 
   @Test
   public void convertEmptyArrayToStringArray() throws Exception {
-    FakeNativeApi nativeApi = new FakeNativeApi();
-
     Converter<SArray<SNothing>, SArray<SString>> converter =
         Conversions.converter(NIL, STRING_ARRAY);
-    SArray<SNothing> nil = nativeApi.arrayBuilder(NIL).build();
-    SArray<SString> array = converter.convert(nativeApi, nil);
+    SArray<SNothing> nil = objectsDb.arrayBuilder(NIL).build();
+    SArray<SString> array = converter.convert(objectsDb, nil);
     assertThat(array).isEmpty();
   }
 
   @Test
   public void convertEmptyArrayToBlobArray() throws Exception {
-    FakeNativeApi nativeApi = new FakeNativeApi();
-
     Converter<SArray<SNothing>, SArray<SBlob>> converter = Conversions.converter(NIL, BLOB_ARRAY);
-    SArray<SNothing> nil = nativeApi.arrayBuilder(NIL).build();
-    SArray<SBlob> array = converter.convert(nativeApi, nil);
+    SArray<SNothing> nil = objectsDb.arrayBuilder(NIL).build();
+    SArray<SBlob> array = converter.convert(objectsDb, nil);
     assertThat(array).isEmpty();
   }
 
   @Test
   public void convertEmptyArrayToFileArray() throws Exception {
-    FakeNativeApi nativeApi = new FakeNativeApi();
-
     Converter<SArray<SNothing>, SArray<SFile>> converter = Conversions.converter(NIL, FILE_ARRAY);
-    SArray<SNothing> nil = nativeApi.arrayBuilder(NIL).build();
-    SArray<SFile> array = converter.convert(nativeApi, nil);
+    SArray<SNothing> nil = objectsDb.arrayBuilder(NIL).build();
+    SArray<SFile> array = converter.convert(objectsDb, nil);
     assertThat(array).isEmpty();
   }
 }

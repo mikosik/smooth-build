@@ -15,11 +15,9 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.StreamTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class OutputClassFileTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final FakeNativeApi nativeApi = new FakeNativeApi();
   private final Path path = Path.path("my/path");
   private final String content = "content";
 
@@ -28,8 +26,8 @@ public class OutputClassFileTest {
 
   @Test
   public void openOutputStream() throws IOException {
-    given(fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY));
-    given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi));
+    given(fileArrayBuilder = objectsDb.arrayBuilder(FILE_ARRAY));
+    given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, objectsDb));
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
     when(fileArrayBuilder).build();
     thenReturned(Matchers.contains(objectsDb.file(path, content)));
@@ -38,9 +36,9 @@ public class OutputClassFileTest {
   @Test
   public void uri() throws Exception {
     Path path = Path.path("my/path");
-    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = objectsDb.arrayBuilder(FILE_ARRAY);
 
-    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi);
+    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, objectsDb);
 
     assertThat(outputClassFile.getName()).isEqualTo("/" + path.value());
   }

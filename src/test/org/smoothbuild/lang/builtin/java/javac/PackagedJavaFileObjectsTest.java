@@ -16,7 +16,6 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.testory.Closure;
 
 import com.google.common.collect.ImmutableList;
@@ -35,7 +34,7 @@ public class PackagedJavaFileObjectsTest {
     given(file1 = objectsDb.file(path("my/package/MyKlass.class")));
     given(file2 = objectsDb.file(path("my/package/MyKlass2.class")));
     given(jar = jar(file1, file2));
-    given(objects = packagedJavaFileObjects(new FakeNativeApi(), ImmutableList.of(jar)));
+    given(objects = packagedJavaFileObjects(objectsDb, ImmutableList.of(jar)));
     given(fileObject = objects.get("my.package").iterator().next());
 
     when(inputStreamToString(fileObject.openInputStream()));
@@ -57,7 +56,7 @@ public class PackagedJavaFileObjectsTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return packagedJavaFileObjects(new FakeNativeApi(), libraryJars);
+        return packagedJavaFileObjects(objectsDb, libraryJars);
       }
     };
   }

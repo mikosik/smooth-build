@@ -14,10 +14,10 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.lang.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -28,17 +28,17 @@ import com.google.common.base.Predicate;
 public class Unzipper {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer;
-  private final NativeApi nativeApi;
+  private final SValueFactory valueFactory;
   private DuplicatesDetector<Path> duplicatesDetector;
 
-  public Unzipper(NativeApi nativeApi) {
-    this.nativeApi = nativeApi;
+  public Unzipper(SValueFactory valueFactory) {
+    this.valueFactory = valueFactory;
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
   public SArray<SFile> unzip(SBlob zipBlob) {
     this.duplicatesDetector = new DuplicatesDetector<Path>();
-    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream());) {
         ZipEntry entry = null;
@@ -67,12 +67,12 @@ public class Unzipper {
     }
 
     SBlob content = unzipEntryContent(zipInputStream);
-    return nativeApi.file(path, content);
+    return valueFactory.file(path, content);
   }
 
   private SBlob unzipEntryContent(ZipInputStream zipInputStream) {
     try {
-      BlobBuilder contentBuilder = nativeApi.blobBuilder();
+      BlobBuilder contentBuilder = valueFactory.blobBuilder();
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len = 0;
         while ((len = zipInputStream.read(buffer)) > 0) {
