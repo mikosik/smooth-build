@@ -9,6 +9,7 @@ import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.NativeCallWorker;
 import org.smoothbuild.task.base.TaskWorker;
@@ -17,9 +18,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Function that is implemented completely in java (as opposed to
- * {@link org.smoothbuild.lang.function.def.DefinedFunction} which is defined in
- * Smooth script using Smooth language).
+ * Smooth Function implemented natively in java.
+ * 
+ * @see DefinedFunction
  */
 public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
   private final Invoker<T> invoker;
