@@ -3,7 +3,6 @@ package org.smoothbuild.lang.function.base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
@@ -43,7 +42,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void testParams() {
-    ImmutableMap<String, Param> params = params(param(STRING, "name"));
+    ImmutableMap<String, Param> params = Params.map(param(STRING, "name"));
     given(willReturn(params), signature).params();
 
     assertThat(function.params()).isEqualTo(params);

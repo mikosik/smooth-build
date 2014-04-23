@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import org.junit.Test;
 import org.smoothbuild.db.taskoutputs.TaskOutput;
@@ -18,6 +17,7 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Params;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
@@ -59,7 +59,7 @@ public class NativeFunctionFactoryTest {
     Param paramA = param(STRING, "stringA");
     Param paramB = param(STRING, "stringB");
 
-    assertThat(signature.params()).isEqualTo(params(paramA, paramB));
+    assertThat(signature.params()).isEqualTo(Params.map(paramA, paramB));
   }
 
   // invokation
