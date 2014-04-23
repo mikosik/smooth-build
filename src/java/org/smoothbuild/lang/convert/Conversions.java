@@ -56,13 +56,13 @@ public class Conversions {
   private static ImmutableMap<SType<?>, ImmutableMap<SType<?>, Converter<?, ?>>> createMap() {
     Builder<SType<?>, ImmutableMap<SType<?>, Converter<?, ?>>> builder = ImmutableMap.builder();
 
-    builder.put(STRING, Empty.typeToConverterMap());
-    builder.put(BLOB, Empty.typeToConverterMap());
+    builder.put(STRING, Empty.typeConverterMap());
+    builder.put(BLOB, Empty.typeConverterMap());
     builder.put(FILE, convertersMap(new FileToBlobConverter()));
-    builder.put(NOTHING, Empty.typeToConverterMap());
+    builder.put(NOTHING, Empty.typeConverterMap());
 
-    builder.put(STRING_ARRAY, Empty.typeToConverterMap());
-    builder.put(BLOB_ARRAY, Empty.typeToConverterMap());
+    builder.put(STRING_ARRAY, Empty.typeConverterMap());
+    builder.put(BLOB_ARRAY, Empty.typeConverterMap());
     builder.put(FILE_ARRAY, convertersMap(new FileArrayToBlobArrayConverter()));
 
     Converter<?, ?> nilToStringArray = new NilToTypedArrayConverter<SString>(STRING_ARRAY);
