@@ -1,20 +1,19 @@
 package org.smoothbuild.lang.function.def;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.function.def.err.CannotCreateTaskWorkerFromInvalidNodeError;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.task.base.TaskWorker;
+import org.smoothbuild.util.Empty;
 
 public class InvalidNode<T extends SValue> extends Node<T> {
   private final SType<T> type;
 
   public InvalidNode(SType<T> type, CodeLocation codeLocation) {
-    super(type, codeLocation);
+    super(type, Empty.nodeList(), codeLocation);
     this.type = checkNotNull(type);
   }
 
@@ -24,8 +23,7 @@ public class InvalidNode<T extends SValue> extends Node<T> {
   }
 
   @Override
-  public Task<T> generateTask(TaskGenerator taskGenerator) {
-    throw new Message(FATAL,
-        "Bug in smooth binary: InvalidNode.generateTask() should not be called.");
+  public TaskWorker<T> createWorker() {
+    throw new CannotCreateTaskWorkerFromInvalidNodeError();
   }
 }

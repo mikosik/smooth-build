@@ -3,18 +3,17 @@ package org.smoothbuild.lang.function.nativ;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.NativeCallTask;
-import org.smoothbuild.task.base.Result;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.task.base.NativeCallWorker;
+import org.smoothbuild.task.base.TaskWorker;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -28,8 +27,8 @@ public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
 
   public NativeFunction(Signature<T> signature, Invoker<T> invoker, boolean isCacheable) {
     super(signature);
-    this.invoker = checkNotNull(invoker);
     this.isCacheable = isCacheable;
+    this.invoker = checkNotNull(invoker);
   }
 
   public boolean isCacheable() {
@@ -37,9 +36,14 @@ public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
   }
 
   @Override
-  public Task<T> generateTask(TaskGenerator taskGenerator, Map<String, ? extends Result<?>> args,
+  public ImmutableList<? extends Node<?>> dependencies(ImmutableMap<String, ? extends Node<?>> args) {
+    return ImmutableList.copyOf(args.values());
+  }
+
+  @Override
+  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Node<?>> args,
       CodeLocation codeLocation) {
-    return new NativeCallTask<T>(this, args, codeLocation);
+    return new NativeCallWorker<T>(this, ImmutableList.copyOf(args.keySet()), codeLocation);
   }
 
   public T invoke(NativeApi nativeApi, ImmutableMap<String, SValue> args)

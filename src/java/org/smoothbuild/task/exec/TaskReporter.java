@@ -2,12 +2,12 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.message.listen.LoggedMessages;
+import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.task.base.Task;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 
 public class TaskReporter {
   private final UserConsole userConsole;
@@ -17,10 +17,10 @@ public class TaskReporter {
     this.userConsole = userConsole;
   }
 
-  public void report(Task<?> task, NativeApiImpl nativeApi) {
-    LoggedMessages messages = nativeApi.loggedMessages();
+  public void report(Task<?> task, boolean resultFromCache) {
+    ImmutableList<Message> messages = task.output().messages();
     if (!(task.isInternal() && messages.isEmpty())) {
-      String header = header(task, nativeApi.isResultFromCache());
+      String header = header(task, resultFromCache);
       userConsole.print(header, messages);
     }
   }

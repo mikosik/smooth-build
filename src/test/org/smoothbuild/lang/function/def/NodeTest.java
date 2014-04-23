@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.task.base.TaskWorker;
+import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 
 public class NodeTest {
@@ -64,11 +64,11 @@ public class NodeTest {
 
   public static class MyNode extends Node<SString> {
     public MyNode(SType<SString> type, CodeLocation codeLocation) {
-      super(type, codeLocation);
+      super(type, Empty.nodeList(), codeLocation);
     }
 
     @Override
-    public Task<SString> generateTask(TaskGenerator taskGenerator) {
+    public TaskWorker<SString> createWorker() {
       return null;
     }
   }

@@ -89,7 +89,7 @@ public class TaskResultsDbTest {
     given(file = objectsDb.file(path, bytes));
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(taskResultsDb).write(hash, new TaskResult<>(fileArray, Empty.messageList()));
-    when(taskResultsDb.read(hash, FILE_ARRAY).value().iterator().next());
+    when(taskResultsDb.read(hash, FILE_ARRAY).returnValue().iterator().next());
     thenReturned(file);
   }
 
@@ -98,7 +98,7 @@ public class TaskResultsDbTest {
     given(blob = writeBlob(objectsDb, bytes));
     given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     given(taskResultsDb).write(hash, new TaskResult<>(blobArray, Empty.messageList()));
-    when(taskResultsDb.read(hash, BLOB_ARRAY).value().iterator().next());
+    when(taskResultsDb.read(hash, BLOB_ARRAY).returnValue().iterator().next());
     thenReturned(blob);
   }
 
@@ -107,7 +107,7 @@ public class TaskResultsDbTest {
     given(stringValue = objectsDb.string(string));
     given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
     given(taskResultsDb).write(hash, new TaskResult<>(stringArray, Empty.messageList()));
-    when(taskResultsDb.read(hash, STRING_ARRAY).value().iterator().next());
+    when(taskResultsDb.read(hash, STRING_ARRAY).returnValue().iterator().next());
     thenReturned(stringValue);
   }
 
@@ -115,7 +115,7 @@ public class TaskResultsDbTest {
   public void written_file_can_be_read_back() throws Exception {
     given(file = objectsDb.file(path, bytes));
     given(taskResultsDb).write(hash, new TaskResult<>(file, Empty.messageList()));
-    when(taskResultsDb.read(hash, FILE).value());
+    when(taskResultsDb.read(hash, FILE).returnValue());
     thenReturned(file);
   }
 
@@ -123,7 +123,7 @@ public class TaskResultsDbTest {
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
     given(taskResultsDb).write(hash, new TaskResult<>(blob, Empty.messageList()));
-    when(taskResultsDb.read(hash, BLOB).value());
+    when(taskResultsDb.read(hash, BLOB).returnValue());
     thenReturned(blob);
   }
 
@@ -131,7 +131,7 @@ public class TaskResultsDbTest {
   public void writtend_string_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
     given(taskResultsDb).write(hash, new TaskResult<>(stringValue, Empty.messageList()));
-    when(taskResultsDb.read(hash, STRING).value().value());
+    when(taskResultsDb.read(hash, STRING).returnValue().value());
     thenReturned(string);
   }
 

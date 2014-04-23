@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SBlob;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 public class FakeObjectsDbTest {
   private final String string = "my string";

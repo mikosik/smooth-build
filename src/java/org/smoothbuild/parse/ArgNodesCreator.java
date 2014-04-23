@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 public class ArgNodesCreator {
 
-  public Map<String, Node<?>> createArgumentNodes(CodeLocation codeLocation,
+  public ImmutableMap<String, Node<?>> createArgumentNodes(CodeLocation codeLocation,
       LoggedMessages messages, Function<?> function, Collection<Arg> args) {
     ParamToArgMapper mapper = new ParamToArgMapper(codeLocation, messages, function, args);
     Map<Param, Arg> paramToArgMap = mapper.detectMapping();
@@ -24,7 +24,7 @@ public class ArgNodesCreator {
     return createArgumentNodes(paramToArgMap);
   }
 
-  private Map<String, Node<?>> createArgumentNodes(Map<Param, Arg> paramToArgMap) {
+  private ImmutableMap<String, Node<?>> createArgumentNodes(Map<Param, Arg> paramToArgMap) {
     Builder<String, Node<?>> builder = ImmutableMap.builder();
 
     for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {

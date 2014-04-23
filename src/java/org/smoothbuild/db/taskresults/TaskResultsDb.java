@@ -44,7 +44,7 @@ public class TaskResultsDb {
     }
 
     if (!Messages.containsProblems(messages)) {
-      marshaller.write(taskResult.value().hash());
+      marshaller.write(taskResult.returnValue().hash());
     }
 
     hashedDb.write(taskHash, marshaller.getBytes());

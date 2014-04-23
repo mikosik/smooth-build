@@ -11,7 +11,6 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.base.Result;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -34,24 +33,6 @@ public class EmptyTest {
   @Test
   public void emptyStringValueMapAlwaysReturnsTheSameObject() {
     assertThat(Empty.stringValueMap()).isSameAs(Empty.stringValueMap());
-  }
-
-  // stringTaskResultMap()
-
-  @Test
-  public void emptyStringTaskResultMapIsEmpty() {
-    assertThat(Empty.stringTaskResultMap()).isEmpty();
-  }
-
-  @Test
-  public void emptyStringTaskResultMapIsImmutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<String, Result<?>> map = Empty.stringTaskResultMap();
-  }
-
-  @Test
-  public void emptyStringTaskResultMapAlwaysReturnsTheSameObject() {
-    assertThat(Empty.stringTaskResultMap()).isSameAs(Empty.stringTaskResultMap());
   }
 
   // nameToFunctionMap();

@@ -1,8 +1,11 @@
 package org.smoothbuild.lang.convert;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.base.SValueBuilders;
+
+import com.google.common.hash.HashCode;
 
 public abstract class Converter<S extends SValue, T extends SValue> {
   private static final String ARROW_STRING = " => ";
@@ -24,4 +27,8 @@ public abstract class Converter<S extends SValue, T extends SValue> {
   }
 
   public abstract T convert(SValueBuilders valueBuilders, S value);
+
+  public HashCode hash() {
+    return Hash.string(this.getClass().getCanonicalName());
+  }
 }

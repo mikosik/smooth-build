@@ -14,6 +14,7 @@ import static org.testory.Testory.willThrow;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
+import org.smoothbuild.db.taskresults.TaskResult;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
@@ -30,7 +31,6 @@ import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.message.FakeCodeLocation;
-import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 import org.testory.proxy.Handler;
@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
-public class NativeCallTaskTest {
+public class NativeCallWorkerTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   @SuppressWarnings("unchecked")
   Invoker<SString> invoker = mock(Invoker.class);
@@ -57,31 +57,29 @@ public class NativeCallTaskTest {
 
   ImmutableList<Param> params = ImmutableList.of(param(STRING, name1), param(STRING, name2));
 
-  NativeCallTask<?> nativeCallTask = new NativeCallTask<>(function1, Empty.stringTaskResultMap(),
-      codeLocation);
+  NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList
+      .<String> of(), codeLocation);
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
     SString argValue = objectsDb.string("subTaskResult");
-    Result<?> subTask = new FakeResult<>(argValue);
 
     String name = "param";
-    NativeCallTask<?> nativeCallTask =
-        new NativeCallTask<>(function1, ImmutableMap.of(name, subTask), codeLocation);
+    NativeCallWorker<?> nativeCallTask =
+        new NativeCallWorker<>(function1, ImmutableList.of(name), codeLocation);
 
-    SString result = objectsDb.string("result");
-    given(willReturn(result), invoker).invoke(nativeApi,
+    SString sstring = objectsDb.string("result");
+    given(willReturn(sstring), invoker).invoke(nativeApi,
         ImmutableMap.<String, SValue> of(name, argValue));
 
-    assertThat(nativeCallTask.execute(nativeApi)).isSameAs(result);
+    TaskResult<?> actual = nativeCallTask.execute(ImmutableList.of(argValue), nativeApi);
+    assertThat(actual).isEqualTo(new TaskResult<>(sstring));
   }
 
   @Test
-  public void null_result_is_logged_when_functio_has_non_void_return_type() throws Exception {
+  public void null_result_is_logged_when_function_has_non_void_return_type() throws Exception {
     given(willReturn(null), invoker).invoke(nativeApi, Empty.stringValueMap());
-
-    nativeCallTask.execute(nativeApi);
-
+    nativeCallWorker.execute(ImmutableList.<SValue> of(), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(NullResultError.class);
   }
 
@@ -90,7 +88,7 @@ public class NativeCallTaskTest {
     ImmutableList<Param> params = ImmutableList.of();
     Signature<SString> signature = new Signature<>(STRING, name("name"), params);
     function1 = new NativeFunction<>(signature, invoker, true);
-    nativeCallTask = new NativeCallTask<>(function1, Empty.stringTaskResultMap(), codeLocation);
+    nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList.<String> of(), codeLocation);
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {
@@ -100,7 +98,7 @@ public class NativeCallTaskTest {
       }
     }, invoker).invoke(nativeApi, Empty.stringValueMap());
 
-    nativeCallTask.execute(nativeApi);
+    nativeCallWorker.execute(ImmutableList.<SValue> of(), nativeApi);
 
     nativeApi.loggedMessages().assertContainsOnly(CodeMessage.class);
   }
@@ -138,9 +136,7 @@ public class NativeCallTaskTest {
   private void assertExceptionIsLoggedAsProblem(Throwable thrown, Class<? extends Message> expected)
       throws Exception {
     given(willThrow(thrown), invoker).invoke(nativeApi, Empty.stringValueMap());
-
-    nativeCallTask.execute(nativeApi);
-
+    nativeCallWorker.execute(ImmutableList.<SValue> of(), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(expected);
   }
 }

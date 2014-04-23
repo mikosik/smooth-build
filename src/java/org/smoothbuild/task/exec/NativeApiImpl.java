@@ -24,7 +24,6 @@ public class NativeApiImpl implements NativeApi {
   private final SValueBuilders valueBuilders;
   private final TempDirectoryManager tempDirectoryManager;
   private final LoggedMessages messages;
-  private boolean isResultFromCache;
 
   @Inject
   public NativeApiImpl(@ProjectDir FileSystem fileSystem, SValueBuilders valueBuilders,
@@ -33,7 +32,10 @@ public class NativeApiImpl implements NativeApi {
     this.valueBuilders = valueBuilders;
     this.tempDirectoryManager = tempDirectoryManager;
     this.messages = new LoggedMessages();
-    this.isResultFromCache = false;
+  }
+
+  public LoggedMessages messages() {
+    return messages;
   }
 
   @Override
@@ -67,14 +69,6 @@ public class NativeApiImpl implements NativeApi {
 
   public LoggedMessages loggedMessages() {
     return messages;
-  }
-
-  public void setResultIsFromCache() {
-    isResultFromCache = true;
-  }
-
-  public boolean isResultFromCache() {
-    return isResultFromCache;
   }
 
   @Override

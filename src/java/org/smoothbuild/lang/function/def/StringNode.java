@@ -5,20 +5,20 @@ import static org.smoothbuild.lang.base.STypes.STRING;
 
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.StringTask;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.task.base.StringWorker;
+import org.smoothbuild.task.base.TaskWorker;
+import org.smoothbuild.util.Empty;
 
 public class StringNode extends Node<SString> {
   private final SString string;
 
   public StringNode(SString string, CodeLocation codeLocation) {
-    super(STRING, codeLocation);
+    super(STRING, Empty.nodeList(), codeLocation);
     this.string = checkNotNull(string);
   }
 
   @Override
-  public Task<SString> generateTask(TaskGenerator taskGenerator) {
-    return new StringTask(string, codeLocation());
+  public TaskWorker<SString> createWorker() {
+    return new StringWorker(string, codeLocation());
   }
 }
