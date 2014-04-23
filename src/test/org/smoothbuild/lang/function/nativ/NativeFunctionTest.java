@@ -35,6 +35,7 @@ public class NativeFunctionTest {
   private final Invoker<SString> invoker = mock(Invoker.class);
 
   private final NativeFunction<SString> function = new NativeFunction<>(signature, invoker, true);
+  private ImmutableMap<String, SValue> args;
 
   @Test(expected = NullPointerException.class)
   public void null_signature_is_forbidden() throws Exception {
@@ -46,11 +47,11 @@ public class NativeFunctionTest {
     new NativeFunction<>(signature, null, true);
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void invoke_is_forwarded_to_invoker() throws Exception {
-    @SuppressWarnings("unchecked")
-    ImmutableMap<String, SValue> args = mock(ImmutableMap.class);
-    function.invoke(nativeApi, args);
+    given(args = mock(ImmutableMap.class));
+    when(function).invoke(nativeApi, args);
     thenCalled(invoker).invoke(nativeApi, args);
   }
 
