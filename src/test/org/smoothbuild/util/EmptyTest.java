@@ -10,6 +10,7 @@ import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableList;
@@ -69,6 +70,24 @@ public class EmptyTest {
   @Test
   public void empty_name_function_map_always_returns_the_same_object() {
     assertThat(Empty.nameFunctionMap()).isSameAs(Empty.nameFunctionMap());
+  }
+
+  // paramList()
+
+  @Test
+  public void empty_param_list_is_empty() {
+    assertThat(Empty.paramList()).isEmpty();
+  }
+
+  @Test
+  public void empty_param_list_is_immutable() {
+    @SuppressWarnings("unused")
+    ImmutableList<Param> list = Empty.paramList();
+  }
+
+  @Test
+  public void empty_param_list_always_returns_the_same_object() {
+    assertThat(Empty.paramList()).isSameAs(Empty.paramList());
   }
 
   // svalueList()

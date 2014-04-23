@@ -6,6 +6,7 @@ import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableList;
@@ -23,6 +24,10 @@ public class Empty {
 
   public static ImmutableMap<Name, Function<?>> nameFunctionMap() {
     return ImmutableMap.of();
+  }
+
+  public static ImmutableList<Param> paramList() {
+    return ImmutableList.of();
   }
 
   public static ImmutableList<SValue> svalueList() {
