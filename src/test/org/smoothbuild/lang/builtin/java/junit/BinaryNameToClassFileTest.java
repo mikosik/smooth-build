@@ -1,16 +1,14 @@
 package org.smoothbuild.lang.builtin.java.junit;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
+import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
@@ -21,26 +19,25 @@ import com.google.common.collect.ImmutableMap;
 
 public class BinaryNameToClassFileTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private SBlob blob;
+  private SFile file1;
+  private SFile file2;
 
   @Test
   public void binary_names_are_mapped_to_proper_class_files() throws IOException {
-    Path path1 = path("a/Klass.class");
-    Path path2 = path("b/Klass.class");
-    SBlob blob = JarTester.jar(objectsDb.file(path1), objectsDb.file(path2));
-
+    given(file1 = objectsDb.file(path("a/Klass.class")));
+    given(file2 = objectsDb.file(path("b/Klass.class")));
+    given(blob = JarTester.jar(file1, file2));
     when(binaryNameToClassFile(objectsDb, ImmutableList.of(blob)));
-    thenReturned(ImmutableMap
-        .of("a.Klass", objectsDb.file(path1), "b.Klass", objectsDb.file(path2)));
+    thenReturned(ImmutableMap.of("a.Klass", file1, "b.Klass", file2));
   }
 
   @Test
   public void non_class_files_are_not_mapped() throws IOException {
-    Path path1 = path("a/Klass.txt");
-    Path path2 = path("b/Klass.java");
-    SBlob blob = JarTester.jar(objectsDb.file(path1), objectsDb.file(path2));
-    Map<String, SFile> map = binaryNameToClassFile(objectsDb, ImmutableList.<SBlob> of(blob));
-
-    assertThat(map.size()).isEqualTo(0);
+    given(file1 = objectsDb.file(path("a/Klass.txt")));
+    given(file2 = objectsDb.file(path("b/Klass.java")));
+    given(blob = JarTester.jar(file1, file2));
+    when(binaryNameToClassFile(objectsDb, ImmutableList.<SBlob> of(blob)));
+    thenReturned(ImmutableMap.of());
   }
-
 }
