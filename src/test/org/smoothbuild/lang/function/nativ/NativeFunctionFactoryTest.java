@@ -14,7 +14,6 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.function.base.Function;
@@ -39,6 +38,7 @@ import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -348,7 +348,7 @@ public class NativeFunctionFactoryTest {
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
     function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation).execute(
-        ImmutableList.<SValue> of(), nativeApi);
+        Empty.svalueList(), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
   }
 
