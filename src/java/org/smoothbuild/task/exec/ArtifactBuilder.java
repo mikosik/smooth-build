@@ -13,8 +13,8 @@ import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.task.exec.save.ArtifactSaver;
+import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 public class ArtifactBuilder {
@@ -30,8 +30,7 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function<?> function) {
-    ImmutableMap<String, Expr<?>> empty = ImmutableMap.<String, Expr<?>> of();
-    Expr<?> expr = new CallExpr<>(function, codeLocation(1), empty);
+    Expr<?> expr = new CallExpr<>(function, codeLocation(1), Empty.stringExprMap());
     artifacts.put(function.name(), taskGraph.createTasks(expr));
   }
 
