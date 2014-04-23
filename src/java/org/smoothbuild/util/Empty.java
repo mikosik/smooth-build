@@ -25,6 +25,10 @@ public class Empty {
     return ImmutableMap.of();
   }
 
+  public static ImmutableList<SValue> svalueList() {
+    return ImmutableList.of();
+  }
+
   public static ImmutableList<Expr<?>> exprList() {
     return ImmutableList.of();
   }
