@@ -57,7 +57,7 @@ public class NativeFunctionTest {
   }
 
   @Test
-  public void generated_task_uses_invoker_for_calculating_result() throws Exception {
+  public void task_worker_uses_invoker_for_calculating_result() throws Exception {
     given(sstring = objectsDb.string("result"));
     given(willReturn(sstring), invoker).invoke(nativeApi, Empty.stringValueMap());
     given(task = function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation));
