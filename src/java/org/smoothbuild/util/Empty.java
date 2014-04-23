@@ -17,6 +17,10 @@ public class Empty {
     return ImmutableMap.of();
   }
 
+  public static ImmutableMap<String, Expr<?>> stringExprMap() {
+    return ImmutableMap.of();
+  }
+
   public static ImmutableMap<Name, Function<?>> nameToFunctionMap() {
     return ImmutableMap.of();
   }
