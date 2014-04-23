@@ -65,18 +65,18 @@ import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
   private final ObjectsDb objectsDb;
-  private final ArgNodesCreator argNodesCreator;
+  private final ArgExprsCreator argExprsCreator;
 
   @Inject
-  public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgNodesCreator argNodesCreator) {
+  public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgExprsCreator argExprsCreator) {
     this.objectsDb = objectsDb;
-    this.argNodesCreator = argNodesCreator;
+    this.argExprsCreator = argExprsCreator;
   }
 
   public Map<Name, Function<?>> createDefinedFunctions(LoggedMessages messages,
       Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker =
-        new Worker(messages, builtinModule, functionContexts, sorted, objectsDb, argNodesCreator);
+        new Worker(messages, builtinModule, functionContexts, sorted, objectsDb, argExprsCreator);
     Map<Name, Function<?>> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -88,19 +88,19 @@ public class DefinedFunctionsCreator {
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
     private final ObjectsDb objectsDb;
-    private final ArgNodesCreator argNodesCreator;
+    private final ArgExprsCreator argExprsCreator;
 
     private final Map<Name, Function<?>> functions = Maps.newHashMap();
 
     public Worker(LoggedMessages messages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
-        ArgNodesCreator argNodesCreator) {
+        ArgExprsCreator argExprsCreator) {
       this.messages = messages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
       this.objectsDb = objectsDb;
-      this.argNodesCreator = argNodesCreator;
+      this.argExprsCreator = argExprsCreator;
     }
 
     public Map<Name, Function<?>> run() {
@@ -256,7 +256,7 @@ public class DefinedFunctionsCreator {
 
       CodeLocation codeLocation = locationOf(call.functionName());
       ImmutableMap<String, ? extends Expr<?>> namedArgs =
-          argNodesCreator.createArgumentNodes(codeLocation, messages, function, args);
+          argExprsCreator.createArgExprs(codeLocation, messages, function, args);
 
       if (namedArgs == null) {
         return new InvalidExpr<>(function.type(), locationOf(call.functionName()));

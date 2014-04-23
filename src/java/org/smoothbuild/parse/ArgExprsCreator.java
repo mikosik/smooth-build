@@ -14,17 +14,17 @@ import org.smoothbuild.message.listen.LoggedMessages;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class ArgNodesCreator {
+public class ArgExprsCreator {
 
-  public ImmutableMap<String, Expr<?>> createArgumentNodes(CodeLocation codeLocation,
+  public ImmutableMap<String, Expr<?>> createArgExprs(CodeLocation codeLocation,
       LoggedMessages messages, Function<?> function, Collection<Arg> args) {
     ParamToArgMapper mapper = new ParamToArgMapper(codeLocation, messages, function, args);
     Map<Param, Arg> paramToArgMap = mapper.detectMapping();
     messages.failIfContainsProblems();
-    return createArgumentNodes(paramToArgMap);
+    return convert(paramToArgMap);
   }
 
-  private ImmutableMap<String, Expr<?>> createArgumentNodes(Map<Param, Arg> paramToArgMap) {
+  private ImmutableMap<String, Expr<?>> convert(Map<Param, Arg> paramToArgMap) {
     Builder<String, Expr<?>> builder = ImmutableMap.builder();
 
     for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
