@@ -4,10 +4,10 @@ import static org.smoothbuild.lang.builtin.java.util.JavaNaming.isClassFilePredi
 
 import javax.tools.JavaFileObject;
 
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.lang.builtin.java.Unjarer;
 import org.smoothbuild.lang.builtin.java.javac.err.DuplicateClassFileError;
 
@@ -15,9 +15,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjects {
-  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(NativeApi nativeApi,
-      Iterable<SBlob> libraryJars) {
-    Unjarer unjarer = new Unjarer(nativeApi);
+  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(
+      SValueFactory valueFactory, Iterable<SBlob> libraryJars) {
+    Unjarer unjarer = new Unjarer(valueFactory);
     Multimap<String, JavaFileObject> result = HashMultimap.create();
 
     for (SBlob jarBlob : libraryJars) {

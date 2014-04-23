@@ -17,7 +17,6 @@ import org.smoothbuild.lang.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.Iterables;
 
@@ -27,8 +26,8 @@ public class UnzipperTest {
   private final String fileName2 = "file/path/file2.txt";
   private final String directoryName = "my/directory/";
 
-  private final FakeNativeApi nativeApi = new FakeNativeApi();
-  private final Unzipper unzipper = new Unzipper(nativeApi);
+  private final FakeObjectsDb valueFactory = new FakeObjectsDb();
+  private final Unzipper unzipper = new Unzipper(valueFactory);
 
   @Test
   public void unzipping() throws Exception {

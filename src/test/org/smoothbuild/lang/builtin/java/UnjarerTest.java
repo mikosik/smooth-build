@@ -12,7 +12,6 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.base.Predicates;
 
@@ -21,8 +20,7 @@ public class UnjarerTest {
   private final Path path2 = path("file/path/file2.txt");
 
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final FakeNativeApi nativeApi = new FakeNativeApi();
-  private final Unjarer unjarer = new Unjarer(nativeApi);
+  private final Unjarer unjarer = new Unjarer(objectsDb);
   private SBlob blob;
   private SFile file1;
   private SFile file2;

@@ -16,10 +16,10 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.lang.builtin.compress.Constants;
 import org.smoothbuild.lang.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.lang.builtin.java.err.IllegalPathInJarError;
@@ -32,12 +32,12 @@ import com.google.common.base.Predicates;
 public class Unjarer {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
 
-  private final NativeApi nativeApi;
+  private final SValueFactory valueFactory;
   private final byte[] buffer;
   private DuplicatesDetector<Path> duplicatesDetector;
 
-  public Unjarer(NativeApi nativeApi) {
-    this.nativeApi = nativeApi;
+  public Unjarer(SValueFactory valueFactory) {
+    this.valueFactory = valueFactory;
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
@@ -47,7 +47,7 @@ public class Unjarer {
 
   public SArray<SFile> unjar(SBlob jarBlob, Predicate<String> nameFilter) {
     this.duplicatesDetector = new DuplicatesDetector<Path>();
-    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream());) {
@@ -79,11 +79,11 @@ public class Unjarer {
 
     Path path = path(fileName);
     SBlob content = unjarEntryContent(jarInputStream);
-    return nativeApi.file(path, content);
+    return valueFactory.file(path, content);
   }
 
   private SBlob unjarEntryContent(JarInputStream jarInputStream) {
-    BlobBuilder contentBuilder = nativeApi.blobBuilder();
+    BlobBuilder contentBuilder = valueFactory.blobBuilder();
     try {
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len = 0;
