@@ -22,7 +22,6 @@ import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionTest {
@@ -61,7 +60,7 @@ public class NativeFunctionTest {
     given(sstring = objectsDb.string("result"));
     given(willReturn(sstring), invoker).invoke(nativeApi, Empty.stringValueMap());
     given(task = function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation));
-    when(task).execute(ImmutableList.<SValue> of(), nativeApi);
+    when(task).execute(Empty.svalueList(), nativeApi);
     thenReturned(new TaskOutput<>(sstring));
   }
 }
