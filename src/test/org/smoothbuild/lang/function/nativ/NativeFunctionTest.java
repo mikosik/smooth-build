@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -14,11 +15,9 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskWorker;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 
@@ -27,7 +26,6 @@ import com.google.common.collect.ImmutableMap;
 public class NativeFunctionTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private final NativeApiImpl nativeApi = new FakeNativeApi();
-  private final CodeLocation codeLocation = new FakeCodeLocation();
   private SString sstring;
   private TaskWorker<SString> worker;
 
@@ -59,7 +57,7 @@ public class NativeFunctionTest {
   public void task_worker_uses_invoker_for_calculating_result() throws Exception {
     given(sstring = objectsDb.string("result"));
     given(willReturn(sstring), invoker).invoke(nativeApi, Empty.stringValueMap());
-    given(worker = function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation));
+    given(worker = function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation(1)));
     when(worker).execute(Empty.svalueList(), nativeApi);
     thenReturned(new TaskOutput<>(sstring));
   }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.testing.lang.function.base.FakeSignature.fakeSignature;
 import static org.testory.Testory.given;
@@ -23,14 +24,12 @@ import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.err.NullResultError;
 import org.smoothbuild.task.base.err.ReflexiveInternalError;
 import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 import org.testory.proxy.Handler;
@@ -45,7 +44,6 @@ public class NativeCallWorkerTest {
   @SuppressWarnings("unchecked")
   Invoker<SString> invoker = mock(Invoker.class);
   FakeNativeApi nativeApi = new FakeNativeApi();
-  CodeLocation codeLocation = new FakeCodeLocation();
   HashCode hash = HashCode.fromInt(33);
   NativeFunction<?> function1 = new NativeFunction<>(fakeSignature(), invoker, true);
   NativeFunction<?> function2 = new NativeFunction<>(fakeSignature(), invoker, true);
@@ -58,7 +56,7 @@ public class NativeCallWorkerTest {
   ImmutableList<Param> params = ImmutableList.of(param(STRING, name1), param(STRING, name2));
 
   NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList
-      .<String> of(), codeLocation);
+      .<String> of(), codeLocation(1));
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
@@ -66,7 +64,7 @@ public class NativeCallWorkerTest {
 
     String name = "param";
     NativeCallWorker<?> nativeCallTask =
-        new NativeCallWorker<>(function1, ImmutableList.of(name), codeLocation);
+        new NativeCallWorker<>(function1, ImmutableList.of(name), codeLocation(1));
 
     SString sstring = objectsDb.string("result");
     given(willReturn(sstring), invoker).invoke(nativeApi,
@@ -88,12 +86,13 @@ public class NativeCallWorkerTest {
     ImmutableList<Param> params = ImmutableList.of();
     Signature<SString> signature = new Signature<>(STRING, name("name"), params);
     function1 = new NativeFunction<>(signature, invoker, true);
-    nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList.<String> of(), codeLocation);
+    nativeCallWorker =
+        new NativeCallWorker<>(function1, ImmutableList.<String> of(), codeLocation(1));
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {
         NativeApi nativeApi = (NativeApi) invocation.arguments.get(0);
-        nativeApi.log(new CodeMessage(ERROR, new FakeCodeLocation(), "message"));
+        nativeApi.log(new CodeMessage(ERROR, codeLocation(1), "message"));
         return null;
       }
     }, invoker).invoke(nativeApi, Empty.stringValueMap());

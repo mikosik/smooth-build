@@ -13,6 +13,7 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
@@ -35,7 +36,6 @@ import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 import com.google.common.collect.ImmutableMap;
@@ -599,11 +599,11 @@ public class ParamToArgMapperTest {
   }
 
   private static Arg arg(SType<?> type) {
-    return namelessArg(1, expr(type), new FakeCodeLocation());
+    return namelessArg(1, expr(type), codeLocation(1));
   }
 
   private static Arg arg(String name, SType<?> type) {
-    return namedArg(1, name, expr(type), new FakeCodeLocation());
+    return namedArg(1, name, expr(type), codeLocation(1));
   }
 
   private static Expr<?> expr(SType<?> type) {
@@ -613,9 +613,8 @@ public class ParamToArgMapperTest {
   }
 
   private Map<Param, Arg> createMapping(Iterable<Param> params, List<Arg> args) {
-    FakeCodeLocation codeLocation = new FakeCodeLocation();
     Function<?> function = function(params);
-    return new ParamToArgMapper(codeLocation, messages, function, args).detectMapping();
+    return new ParamToArgMapper(codeLocation(1), messages, function, args).detectMapping();
   }
 
   private static Function<?> function(Iterable<Param> params) {

@@ -1,5 +1,6 @@
 package org.smoothbuild.testing.message;
 
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.message.base.MessageType.INFO;
@@ -10,7 +11,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 
 public class FakeLoggedMessagesTest {
-  CodeLocation location = new FakeCodeLocation();
+  CodeLocation location = codeLocation(1);
   FakeLoggedMessages fakeLoggedMessages = new FakeLoggedMessages();
 
   // assertContainsOnly()
