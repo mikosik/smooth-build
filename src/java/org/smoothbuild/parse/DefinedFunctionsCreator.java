@@ -45,7 +45,6 @@ import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.def.args.Arg;
@@ -55,6 +54,7 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.ForbiddenArrayElemError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
+import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
@@ -119,7 +119,7 @@ public class DefinedFunctionsCreator {
     private <T extends SValue> DefinedFunction<T> buildDefinedFunction(FunctionContext function,
         Expr<T> expr) {
       Name name = name(function.functionName().getText());
-      Signature<T> signature = new Signature<>(expr.type(), name, ImmutableList.<Param> of());
+      Signature<T> signature = new Signature<>(expr.type(), name, Empty.paramList());
       return new DefinedFunction<>(signature, expr);
     }
 
