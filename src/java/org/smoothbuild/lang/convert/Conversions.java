@@ -2,9 +2,9 @@ package org.smoothbuild.lang.convert;
 
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;

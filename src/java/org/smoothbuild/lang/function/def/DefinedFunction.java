@@ -1,18 +1,16 @@
 package org.smoothbuild.lang.function.def;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Map;
 
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.Result;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.task.base.TaskWorker;
 
-import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Function that is defined completely in Smooth script using Smooth language
@@ -28,10 +26,17 @@ public class DefinedFunction<T extends SValue> extends AbstractFunction<T> {
   }
 
   @Override
-  public Task<T> generateTask(TaskGenerator taskGenerator,
-      Map<String, ? extends Result<?>> arguments, CodeLocation codeLocation) {
-    Preconditions.checkArgument(arguments.isEmpty(),
-        "DefinedFunction.generateTask() cannot accept non-empty arguments");
-    return root.generateTask(taskGenerator);
+  public ImmutableList<? extends Node<?>> dependencies(ImmutableMap<String, ? extends Node<?>> args) {
+    checkArgument(args.isEmpty(),
+        "DefinedFunction.dependencies() cannot accept non-empty arguments");
+    return root.dependencies();
+  }
+
+  @Override
+  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Node<?>> args,
+      CodeLocation codeLocation) {
+    checkArgument(args.isEmpty(),
+        "DefinedFunction.createWorker() cannot accept non-empty arguments");
+    return root.createWorker();
   }
 }

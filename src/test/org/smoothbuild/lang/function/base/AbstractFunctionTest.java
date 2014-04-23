@@ -8,15 +8,13 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
 
-import java.util.Map;
-
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.Result;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.task.base.TaskWorker;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class AbstractFunctionTest {
@@ -57,8 +55,14 @@ public class AbstractFunctionTest {
     }
 
     @Override
-    public Task<SString> generateTask(TaskGenerator taskGenerator,
-        Map<String, ? extends Result<?>> arguments, CodeLocation codeLocation) {
+    public ImmutableList<? extends Node<?>> dependencies(
+        ImmutableMap<String, ? extends Node<?>> args) {
+      return null;
+    }
+
+    @Override
+    public TaskWorker<SString> createWorker(ImmutableMap<String, ? extends Node<?>> args,
+        CodeLocation codeLocation) {
       return null;
     }
   }

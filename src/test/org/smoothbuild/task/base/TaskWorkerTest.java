@@ -6,6 +6,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.taskresults.TaskResult;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.base.SValue;
@@ -14,12 +16,15 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 import org.testory.Closure;
 
-public class TaskTest {
+import com.google.common.hash.HashCode;
+
+public class TaskWorkerTest {
   SType<?> type = STypes.STRING;
+  HashCode hash = Hash.string("");
   String name = "name";
   FakeCodeLocation codeLocation = new FakeCodeLocation();
 
-  Task<?> task;
+  TaskWorker<?> taskWorker;
 
   @Test
   public void null_type_is_forbidden() throws Exception {
@@ -41,36 +46,36 @@ public class TaskTest {
 
   @Test
   public void type() throws Exception {
-    given(task = new MyTask<>(type, name, false, codeLocation));
-    when(task.resultType());
+    given(taskWorker = new MyTask<>(hash, type, name, false, codeLocation));
+    when(taskWorker.resultType());
     thenReturned(type);
   }
 
   @Test
   public void name() throws Exception {
-    given(task = new MyTask<>(type, name, false, codeLocation));
-    when(task.name());
+    given(taskWorker = new MyTask<>(hash, type, name, false, codeLocation));
+    when(taskWorker.name());
     thenReturned(name);
   }
 
   @Test
   public void is_internal_return_true_when_true_passed_to_constructor() throws Exception {
-    given(task = new MyTask<>(type, name, true, codeLocation));
-    when(task.isInternal());
+    given(taskWorker = new MyTask<>(hash, type, name, true, codeLocation));
+    when(taskWorker.isInternal());
     thenReturned(true);
   }
 
   @Test
   public void is_internal_return_false_when_false_passed_to_constructor() throws Exception {
-    given(task = new MyTask<>(type, name, false, codeLocation));
-    when(task.isInternal());
+    given(taskWorker = new MyTask<>(hash, type, name, false, codeLocation));
+    when(taskWorker.isInternal());
     thenReturned(false);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(task = new MyTask<>(type, name, false, codeLocation));
-    when(task.codeLocation());
+    given(taskWorker = new MyTask<>(hash, type, name, false, codeLocation));
+    when(taskWorker.codeLocation());
     thenReturned(codeLocation);
   }
 
@@ -79,18 +84,19 @@ public class TaskTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new MyTask<>(type, name, isInternal, codeLocation);
+        return new MyTask<>(Hash.string(""), type, name, isInternal, codeLocation);
       }
     };
   }
 
-  public static class MyTask<T extends SValue> extends Task<T> {
-    public MyTask(SType<T> type, String name, boolean isInternal, CodeLocation codeLocation) {
-      super(type, name, isInternal, codeLocation);
+  public static class MyTask<T extends SValue> extends TaskWorker<T> {
+    public MyTask(HashCode hash, SType<T> type, String name, boolean isInternal,
+        CodeLocation codeLocation) {
+      super(hash, type, name, isInternal, true, codeLocation);
     }
 
     @Override
-    public T execute(NativeApiImpl nativeApi) {
+    public TaskResult<T> execute(Iterable<? extends SValue> dependencies, NativeApiImpl nativeApi) {
       return null;
     }
   }

@@ -5,16 +5,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.Taskable;
-import org.smoothbuild.task.exec.TaskGenerator;
+import org.smoothbuild.task.base.TaskWorker;
 
-public abstract class Node<T extends SValue> implements Taskable<T> {
+import com.google.common.collect.ImmutableList;
+
+public abstract class Node<T extends SValue> {
   private final SType<T> type;
   private final CodeLocation codeLocation;
+  private final ImmutableList<? extends Node<?>> dependencies;
 
-  public Node(SType<T> type, CodeLocation codeLocation) {
+  public Node(SType<T> type, ImmutableList<? extends Node<?>> dependencies,
+      CodeLocation codeLocation) {
     this.type = checkNotNull(type);
+    this.dependencies = checkNotNull(dependencies);
     this.codeLocation = checkNotNull(codeLocation);
   }
 
@@ -26,6 +29,9 @@ public abstract class Node<T extends SValue> implements Taskable<T> {
     return codeLocation;
   }
 
-  @Override
-  public abstract Task<T> generateTask(TaskGenerator taskGenerator);
+  public ImmutableList<? extends Node<?>> dependencies() {
+    return dependencies;
+  }
+
+  public abstract TaskWorker<T> createWorker();
 }

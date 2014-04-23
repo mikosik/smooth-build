@@ -1,30 +1,42 @@
 package org.smoothbuild.task.exec;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import static org.smoothbuild.message.base.Messages.containsProblems;
 
+import javax.inject.Inject;
+
+import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskresults.TaskResultsDb;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.task.base.Task;
+
+import com.google.common.hash.HashCode;
 
 public class TaskExecutor {
-  private final Provider<NativeApiImpl> nativeApiProvider;
-  private final TaskReporter taskReporter;
+  private final NativeApiImpl nativeApi;
+  private final TaskResultsDb taskResultsDb;
+  private final TaskReporter reporter;
 
   @Inject
-  public TaskExecutor(Provider<NativeApiImpl> nativeApiProvider, TaskReporter taskReporter) {
-    this.nativeApiProvider = nativeApiProvider;
-    this.taskReporter = taskReporter;
+  public TaskExecutor(NativeApiImpl nativeApi, TaskResultsDb taskResultsDb, TaskReporter reporter) {
+    this.nativeApi = nativeApi;
+    this.taskResultsDb = taskResultsDb;
+    this.reporter = reporter;
   }
 
-  public <T extends SValue> T execute(Task<T> task) {
-    NativeApiImpl nativeApi = nativeApiProvider.get();
-    T result = task.execute(nativeApi);
-    taskReporter.report(task, nativeApi);
-
-    if (nativeApi.loggedMessages().containsProblems()) {
+  public <T extends SValue> void execute(Task<T> task) {
+    HashCode hash = task.hash();
+    boolean isAlreadyCached = taskResultsDb.contains(hash);
+    if (isAlreadyCached) {
+      TaskResult<T> output = taskResultsDb.read(hash, task.resultType());
+      task.setOutput(output);
+    } else {
+      task.execute(nativeApi);
+      if (task.isCacheable()) {
+        taskResultsDb.write(hash, task.output());
+      }
+    }
+    reporter.report(task, isAlreadyCached);
+    if (containsProblems(task.output().messages())) {
       throw new BuildInterruptedException();
     }
-
-    return result;
   }
 }

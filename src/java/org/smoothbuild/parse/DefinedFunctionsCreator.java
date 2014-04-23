@@ -1,8 +1,8 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.FILE;
+import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.basicTypes;
@@ -43,7 +43,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.ArrayNode;
-import org.smoothbuild.lang.function.def.CachingNode;
 import org.smoothbuild.lang.function.def.CallNode;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.def.InvalidNode;
@@ -60,6 +59,7 @@ import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -169,7 +169,7 @@ public class DefinedFunctionsCreator {
         ImmutableList<Node<?>> elemNodes, CodeLocation location) {
       SArrayType<T> arrayType = STypes.arrayTypeContaining(elemType);
       ImmutableList<Node<T>> convertedNodes = Convert.ifNeeded(elemType, elemNodes);
-      return new CachingNode<>(new ArrayNode<>(arrayType, convertedNodes, location));
+      return new ArrayNode<>(arrayType, convertedNodes, location);
     }
 
     private ImmutableList<Node<?>> build(List<ArrayElemContext> elems) {
@@ -255,14 +255,13 @@ public class DefinedFunctionsCreator {
       Function<?> function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, Node<?>> namedArgs =
+      ImmutableMap<String, ? extends Node<?>> namedArgs =
           argNodesCreator.createArgumentNodes(codeLocation, messages, function, args);
 
       if (namedArgs == null) {
-        InvalidNode<?> node = new InvalidNode<>(function.type(), locationOf(call.functionName()));
-        return new CachingNode<>(node);
+        return new InvalidNode<>(function.type(), locationOf(call.functionName()));
       } else {
-        return new CachingNode<>(new CallNode<>(function, codeLocation, namedArgs));
+        return new CallNode<>(function, codeLocation, namedArgs);
       }
     }
 
@@ -308,11 +307,11 @@ public class DefinedFunctionsCreator {
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         SString stringValue = objectsDb.string(unescaped(string));
-        return new CachingNode<>(new StringNode(stringValue, locationOf(stringToken.getSymbol())));
+        return new StringNode(stringValue, locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.log(new CodeMessage(ERROR, location, e.getMessage()));
-        return new CachingNode<>(new InvalidNode<>(STRING, locationOf(stringToken.getSymbol())));
+        return new InvalidNode<>(STRING, locationOf(stringToken.getSymbol()));
       }
     }
   }

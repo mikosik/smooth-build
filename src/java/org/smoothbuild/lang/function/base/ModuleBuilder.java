@@ -4,18 +4,15 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.taskresults.TaskResultsDb;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 
 import com.google.common.collect.Maps;
 
 public class ModuleBuilder {
-  private final TaskResultsDb taskResultsDb;
   private final Map<Name, Function<?>> functions;
 
   @Inject
-  public ModuleBuilder(TaskResultsDb taskResultsDb) {
-    this.taskResultsDb = taskResultsDb;
+  public ModuleBuilder() {
     this.functions = Maps.newHashMap();
   }
 
@@ -25,15 +22,7 @@ public class ModuleBuilder {
       throw new IllegalArgumentException("Function " + name
           + " has been already added to this module.");
     } else {
-      functions.put(name, makeCacheable(function));
-    }
-  }
-
-  private Function<?> makeCacheable(NativeFunction<?> function) {
-    if (function.isCacheable()) {
-      return new CachableFunction<>(taskResultsDb, function);
-    } else {
-      return function;
+      functions.put(name, function);
     }
   }
 

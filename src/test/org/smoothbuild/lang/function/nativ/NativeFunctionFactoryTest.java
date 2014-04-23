@@ -6,17 +6,20 @@ import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
-import static org.testory.Testory.mock;
 
 import org.junit.Test;
+import org.smoothbuild.db.taskresults.TaskResult;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.function.def.StringNode;
 import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
@@ -30,21 +33,18 @@ import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.Result;
-import org.smoothbuild.task.base.Task;
+import org.smoothbuild.message.base.Messages;
+import org.smoothbuild.task.base.TaskWorker;
 import org.smoothbuild.task.base.err.UnexpectedError;
-import org.smoothbuild.task.exec.TaskGenerator;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.message.FakeCodeLocation;
-import org.smoothbuild.testing.task.base.FakeResult;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
-import org.smoothbuild.util.Empty;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionFactoryTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final TaskGenerator taskGenerator = mock(TaskGenerator.class);
   private final FakeNativeApi nativeApi = new FakeNativeApi();
   private final CodeLocation codeLocation = new FakeCodeLocation();
 
@@ -69,16 +69,19 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void testInvokation() throws Exception {
-    Function<?> function = NativeFunctionFactory.create(Func.class, false);
-    Result<?> result1 = new FakeResult<>(objectsDb.string("abc"));
-    Result<?> result2 = new FakeResult<>(objectsDb.string("def"));
-    ImmutableMap<String, ? extends Result<?>> dependencies =
-        ImmutableMap.of("stringA", result1, "stringB", result2);
+    @SuppressWarnings("unchecked")
+    Function<SString> function =
+        (Function<SString>) NativeFunctionFactory.create(Func.class, false);
+    SString string1 = objectsDb.string("abc");
+    SString string2 = objectsDb.string("def");
+    StringNode arg1 = new StringNode(string1, codeLocation);
+    StringNode arg2 = new StringNode(string2, codeLocation);
 
-    Task<?> task = function.generateTask(taskGenerator, dependencies, codeLocation);
-    SString result = (SString) task.execute(nativeApi);
-    nativeApi.loggedMessages().assertNoProblems();
-    assertThat(result.value()).isEqualTo("abcdef");
+    ImmutableMap<String, StringNode> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
+    TaskWorker<SString> task = function.createWorker(args, codeLocation);
+    TaskResult<SString> output = task.execute(ImmutableList.of(string1, string2), nativeApi);
+    assertThat(Messages.containsProblems(output.messages())).isFalse();
+    assertThat(output.returnValue().value()).isEqualTo("abcdef");
   }
 
   public interface Parameters {
@@ -344,8 +347,8 @@ public class NativeFunctionFactoryTest {
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
-    function.generateTask(taskGenerator, Empty.stringTaskResultMap(), codeLocation).execute(
-        nativeApi);
+    function.createWorker(ImmutableMap.<String, Node<?>> of(), codeLocation).execute(
+        ImmutableList.<SValue> of(), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
   }
 
