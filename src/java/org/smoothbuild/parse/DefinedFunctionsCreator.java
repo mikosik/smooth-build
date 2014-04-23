@@ -37,17 +37,17 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.expr.ArrayExpr;
+import org.smoothbuild.lang.expr.CallExpr;
+import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.InvalidExpr;
+import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.def.ArrayNode;
-import org.smoothbuild.lang.function.def.CallNode;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.function.def.InvalidNode;
-import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.function.def.StringNode;
 import org.smoothbuild.lang.function.def.args.Arg;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
@@ -112,19 +112,19 @@ public class DefinedFunctionsCreator {
     }
 
     public DefinedFunction<?> build(FunctionContext function) {
-      Node<?> node = build(function.pipe());
+      Expr<?> node = build(function.pipe());
       return buildDefinedFunction(function, node);
     }
 
     private <T extends SValue> DefinedFunction<T> buildDefinedFunction(FunctionContext function,
-        Node<T> node) {
+        Expr<T> node) {
       Name name = name(function.functionName().getText());
       Signature<T> signature = new Signature<>(node.type(), name, ImmutableList.<Param> of());
       return new DefinedFunction<>(signature, node);
     }
 
-    private Node<?> build(PipeContext pipe) {
-      Node<?> result = build(pipe.expression());
+    private Expr<?> build(PipeContext pipe) {
+      Expr<?> result = build(pipe.expression());
       List<CallContext> elements = pipe.call();
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
@@ -137,7 +137,7 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
-    private Node<?> build(ExpressionContext expression) {
+    private Expr<?> build(ExpressionContext expression) {
       if (expression.array() != null) {
         return build(expression.array());
       }
@@ -151,9 +151,9 @@ public class DefinedFunctionsCreator {
           + ExpressionContext.class.getSimpleName() + " without children.");
     }
 
-    private Node<?> build(ArrayContext list) {
+    private Expr<?> build(ArrayContext list) {
       List<ArrayElemContext> elems = list.arrayElem();
-      ImmutableList<Node<?>> elemNodes = build(elems);
+      ImmutableList<Expr<?>> elemNodes = build(elems);
 
       CodeLocation location = locationOf(list);
       SType<?> elemType = commonSuperType(elems, elemNodes, location);
@@ -161,25 +161,25 @@ public class DefinedFunctionsCreator {
       if (elemType != null) {
         return buildArray(elemType, elemNodes, location);
       } else {
-        return new InvalidNode<>(NIL, location);
+        return new InvalidExpr<>(NIL, location);
       }
     }
 
-    private <T extends SValue> Node<SArray<T>> buildArray(SType<T> elemType,
-        ImmutableList<Node<?>> elemNodes, CodeLocation location) {
+    private <T extends SValue> Expr<SArray<T>> buildArray(SType<T> elemType,
+        ImmutableList<Expr<?>> elemNodes, CodeLocation location) {
       SArrayType<T> arrayType = STypes.arrayTypeContaining(elemType);
-      ImmutableList<Node<T>> convertedNodes = Convert.ifNeeded(elemType, elemNodes);
-      return new ArrayNode<>(arrayType, convertedNodes, location);
+      ImmutableList<Expr<T>> convertedNodes = Convert.ifNeeded(elemType, elemNodes);
+      return new ArrayExpr<>(arrayType, convertedNodes, location);
     }
 
-    private ImmutableList<Node<?>> build(List<ArrayElemContext> elems) {
-      Builder<Node<?>> builder = ImmutableList.builder();
+    private ImmutableList<Expr<?>> build(List<ArrayElemContext> elems) {
+      Builder<Expr<?>> builder = ImmutableList.builder();
       for (ArrayElemContext elem : elems) {
-        Node<?> node = build(elem);
+        Expr<?> node = build(elem);
         if (!basicTypes().contains(node.type())) {
           CodeLocation location = locationOf(elem);
           messages.log(new ForbiddenArrayElemError(location, node.type()));
-          builder.add(new InvalidNode<>(NOTHING, location));
+          builder.add(new InvalidExpr<>(NOTHING, location));
         } else {
           builder.add(node);
         }
@@ -187,7 +187,7 @@ public class DefinedFunctionsCreator {
       return builder.build();
     }
 
-    private Node<?> build(ArrayElemContext elem) {
+    private Expr<?> build(ArrayElemContext elem) {
       if (elem.STRING() != null) {
         return buildStringNode(elem.STRING());
       }
@@ -200,7 +200,7 @@ public class DefinedFunctionsCreator {
     }
 
     private SType<?> commonSuperType(List<ArrayElemContext> elems,
-        ImmutableList<Node<?>> elemNodes, CodeLocation location) {
+        ImmutableList<Expr<?>> elemNodes, CodeLocation location) {
       if (elems.size() == 0) {
         return NOTHING;
       }
@@ -244,24 +244,24 @@ public class DefinedFunctionsCreator {
       return null;
     }
 
-    private Node<?> build(CallContext call) {
+    private Expr<?> build(CallContext call) {
       List<Arg> args = build(call.argList());
       return build(call, args);
     }
 
-    private Node<?> build(CallContext call, List<Arg> args) {
+    private Expr<?> build(CallContext call, List<Arg> args) {
       String functionName = call.functionName().getText();
 
       Function<?> function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      ImmutableMap<String, ? extends Node<?>> namedArgs =
+      ImmutableMap<String, ? extends Expr<?>> namedArgs =
           argNodesCreator.createArgumentNodes(codeLocation, messages, function, args);
 
       if (namedArgs == null) {
-        return new InvalidNode<>(function.type(), locationOf(call.functionName()));
+        return new InvalidExpr<>(function.type(), locationOf(call.functionName()));
       } else {
-        return new CallNode<>(function, codeLocation, namedArgs);
+        return new CallExpr<>(function, codeLocation, namedArgs);
       }
     }
 
@@ -291,7 +291,7 @@ public class DefinedFunctionsCreator {
     }
 
     private Arg build(int index, ArgContext arg) {
-      Node<?> node = build(arg.expression());
+      Expr<?> node = build(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
@@ -302,16 +302,16 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private Node<?> buildStringNode(TerminalNode stringToken) {
+    private Expr<?> buildStringNode(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         SString stringValue = objectsDb.string(unescaped(string));
-        return new StringNode(stringValue, locationOf(stringToken.getSymbol()));
+        return new StringExpr(stringValue, locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.log(new CodeMessage(ERROR, location, e.getMessage()));
-        return new InvalidNode<>(STRING, locationOf(stringToken.getSymbol()));
+        return new InvalidExpr<>(STRING, locationOf(stringToken.getSymbol()));
       }
     }
   }

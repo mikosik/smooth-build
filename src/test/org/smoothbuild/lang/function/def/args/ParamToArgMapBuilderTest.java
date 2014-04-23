@@ -12,8 +12,8 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
 import com.google.common.collect.ImmutableMap;
@@ -90,7 +90,7 @@ public class ParamToArgMapBuilderTest {
   }
 
   private static Arg arg(int number, SType<?> type, String name) {
-    Node<?> node = mock(Node.class);
+    Expr<?> node = mock(Expr.class);
     given(willReturn(type), node).type();
 
     return namedArg(number, name, node, new FakeCodeLocation());

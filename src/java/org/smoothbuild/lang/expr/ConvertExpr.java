@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.convert.Converter;
@@ -8,10 +8,10 @@ import org.smoothbuild.task.base.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 
-public class ConvertNode<S extends SValue, T extends SValue> extends Node<T> {
+public class ConvertExpr<S extends SValue, T extends SValue> extends Expr<T> {
   private final Converter<S, T> converter;
 
-  public ConvertNode(Node<S> node, Converter<S, T> converter, CodeLocation codeLocation) {
+  public ConvertExpr(Expr<S> node, Converter<S, T> converter, CodeLocation codeLocation) {
     super(converter.targetType(), ImmutableList.of(node), codeLocation);
     this.converter = converter;
   }

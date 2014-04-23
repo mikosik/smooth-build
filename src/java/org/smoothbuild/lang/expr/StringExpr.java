@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.base.STypes.STRING;
@@ -9,10 +9,10 @@ import org.smoothbuild.task.base.StringWorker;
 import org.smoothbuild.task.base.TaskWorker;
 import org.smoothbuild.util.Empty;
 
-public class StringNode extends Node<SString> {
+public class StringExpr extends Expr<SString> {
   private final SString string;
 
-  public StringNode(SString string, CodeLocation codeLocation) {
+  public StringExpr(SString string, CodeLocation codeLocation) {
     super(STRING, Empty.nodeList(), codeLocation);
     this.string = checkNotNull(string);
   }

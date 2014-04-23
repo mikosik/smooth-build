@@ -6,9 +6,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.NativeCallWorker;
 import org.smoothbuild.task.base.TaskWorker;
@@ -36,12 +36,12 @@ public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
   }
 
   @Override
-  public ImmutableList<? extends Node<?>> dependencies(ImmutableMap<String, ? extends Node<?>> args) {
+  public ImmutableList<? extends Expr<?>> dependencies(ImmutableMap<String, ? extends Expr<?>> args) {
     return ImmutableList.copyOf(args.values());
   }
 
   @Override
-  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Node<?>> args,
+  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
       CodeLocation codeLocation) {
     return new NativeCallWorker<T>(this, ImmutableList.copyOf(args.keySet()), codeLocation);
   }

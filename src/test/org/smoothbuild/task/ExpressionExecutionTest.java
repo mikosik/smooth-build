@@ -16,12 +16,12 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValueBuilders;
 import org.smoothbuild.lang.convert.Converter;
-import org.smoothbuild.lang.function.def.ArrayNode;
-import org.smoothbuild.lang.function.def.ConvertNode;
-import org.smoothbuild.lang.function.def.InvalidNode;
-import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.function.def.StringNode;
-import org.smoothbuild.lang.function.def.err.CannotCreateTaskWorkerFromInvalidNodeError;
+import org.smoothbuild.lang.expr.ArrayExpr;
+import org.smoothbuild.lang.expr.ConvertExpr;
+import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.InvalidExpr;
+import org.smoothbuild.lang.expr.StringExpr;
+import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidNodeError;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.Task;
 import org.smoothbuild.task.exec.TaskGraph;
@@ -35,12 +35,12 @@ public class ExpressionExecutionTest {
   private final CodeLocation location = CodeLocation.codeLocation(33);
   private ObjectsDb objectsDb;
   private SString sstring;
-  private Node<SString> stringExpr;
-  private Node<?> expression;
-  private Node<?> arrayExpr;
+  private Expr<SString> stringExpr;
+  private Expr<?> expression;
+  private Expr<?> arrayExpr;
   private TaskGraph taskGraph;
   private Task<?> task;
-  private ConvertNode<SString, SString> converted;
+  private ConvertExpr<SString, SString> converted;
 
   @Before
   public void before() {
@@ -52,7 +52,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_string_literal_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpr = new StringNode(sstring, location));
+    given(stringExpr = new StringExpr(sstring, location));
     given(task = taskGraph.createTasks(stringExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskResult<>(sstring));
@@ -61,7 +61,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_invalid_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(expression = new InvalidNode<>(STRING, location));
+    given(expression = new InvalidExpr<>(STRING, location));
     when(taskGraph).createTasks(expression);
     thenThrown(new CannotCreateTaskWorkerFromInvalidNodeError());
   }
@@ -69,8 +69,8 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_convert_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpr = new StringNode(sstring, location));
-    given(converted = new ConvertNode<>(stringExpr, new DoubleStringConverter(), location));
+    given(stringExpr = new StringExpr(sstring, location));
+    given(converted = new ConvertExpr<>(stringExpr, new DoubleStringConverter(), location));
     given(task = taskGraph.createTasks(converted));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskResult<>(objectsDb.string(string + string)));
@@ -78,7 +78,7 @@ public class ExpressionExecutionTest {
 
   @Test
   public void executes_empty_array_expression() throws Exception {
-    given(arrayExpr = new ArrayNode<>(STRING_ARRAY, ImmutableList.<Node<SString>> of(), location));
+    given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.<Expr<SString>> of(), location));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskResult<>(array()));
@@ -87,8 +87,8 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_array_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpr = new StringNode(sstring, location));
-    given(arrayExpr = new ArrayNode<>(STRING_ARRAY, ImmutableList.of(stringExpr), location));
+    given(stringExpr = new StringExpr(sstring, location));
+    given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(stringExpr), location));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskResult<>(array(sstring)));

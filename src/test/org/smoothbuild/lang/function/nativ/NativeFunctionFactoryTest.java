@@ -15,11 +15,11 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.def.Node;
-import org.smoothbuild.lang.function.def.StringNode;
 import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
@@ -74,10 +74,10 @@ public class NativeFunctionFactoryTest {
         (Function<SString>) NativeFunctionFactory.create(Func.class, false);
     SString string1 = objectsDb.string("abc");
     SString string2 = objectsDb.string("def");
-    StringNode arg1 = new StringNode(string1, codeLocation);
-    StringNode arg2 = new StringNode(string2, codeLocation);
+    StringExpr arg1 = new StringExpr(string1, codeLocation);
+    StringExpr arg2 = new StringExpr(string2, codeLocation);
 
-    ImmutableMap<String, StringNode> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
+    ImmutableMap<String, StringExpr> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
     TaskWorker<SString> task = function.createWorker(args, codeLocation);
     TaskResult<SString> output = task.execute(ImmutableList.of(string1, string2), nativeApi);
     assertThat(Messages.containsProblems(output.messages())).isFalse();
@@ -347,7 +347,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
-    function.createWorker(ImmutableMap.<String, Node<?>> of(), codeLocation).execute(
+    function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation).execute(
         ImmutableList.<SValue> of(), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
   }

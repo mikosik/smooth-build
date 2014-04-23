@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.message.base.CodeLocation;
@@ -18,22 +19,22 @@ import com.google.common.collect.ImmutableMap;
  * which is implemented completely in java language).
  */
 public class DefinedFunction<T extends SValue> extends AbstractFunction<T> {
-  private final Node<T> root;
+  private final Expr<T> root;
 
-  public DefinedFunction(Signature<T> signature, Node<T> root) {
+  public DefinedFunction(Signature<T> signature, Expr<T> root) {
     super(signature);
     this.root = checkNotNull(root);
   }
 
   @Override
-  public ImmutableList<? extends Node<?>> dependencies(ImmutableMap<String, ? extends Node<?>> args) {
+  public ImmutableList<? extends Expr<?>> dependencies(ImmutableMap<String, ? extends Expr<?>> args) {
     checkArgument(args.isEmpty(),
         "DefinedFunction.dependencies() cannot accept non-empty arguments");
     return root.dependencies();
   }
 
   @Override
-  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Node<?>> args,
+  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
       CodeLocation codeLocation) {
     checkArgument(args.isEmpty(),
         "DefinedFunction.createWorker() cannot accept non-empty arguments");

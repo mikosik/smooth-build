@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.testory.Testory.given;
@@ -16,11 +16,11 @@ import org.smoothbuild.task.base.TaskWorker;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 
-public class NodeTest {
+public class ExprTest {
   SType<SString> type = STRING;
   CodeLocation codeLocation;
 
-  MyNode node;
+  MyExpr node;
 
   @Before
   public void before() {
@@ -41,14 +41,14 @@ public class NodeTest {
 
   @Test
   public void type() throws Exception {
-    given(node = new MyNode(type, codeLocation));
+    given(node = new MyExpr(type, codeLocation));
     when(node.type());
     thenReturned(type);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(node = new MyNode(type, codeLocation));
+    given(node = new MyExpr(type, codeLocation));
     when(node.codeLocation());
     thenReturned(codeLocation);
   }
@@ -57,13 +57,13 @@ public class NodeTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new MyNode(type, codeLocation);
+        return new MyExpr(type, codeLocation);
       }
     };
   }
 
-  public static class MyNode extends Node<SString> {
-    public MyNode(SType<SString> type, CodeLocation codeLocation) {
+  public static class MyExpr extends Expr<SString> {
+    public MyExpr(SType<SString> type, CodeLocation codeLocation) {
       super(type, Empty.nodeList(), codeLocation);
     }
 

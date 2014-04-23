@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
@@ -9,10 +9,10 @@ import org.smoothbuild.task.base.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 
-public class ArrayNode<T extends SValue> extends Node<SArray<T>> {
+public class ArrayExpr<T extends SValue> extends Expr<SArray<T>> {
   private final SArrayType<T> arrayType;
 
-  public ArrayNode(SArrayType<T> arrayType, ImmutableList<? extends Node<T>> elements,
+  public ArrayExpr(SArrayType<T> arrayType, ImmutableList<? extends Expr<T>> elements,
       CodeLocation codeLocation) {
     super(arrayType, elements, codeLocation);
     this.arrayType = arrayType;

@@ -10,7 +10,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskWorker;
 
@@ -55,13 +55,13 @@ public class AbstractFunctionTest {
     }
 
     @Override
-    public ImmutableList<? extends Node<?>> dependencies(
-        ImmutableMap<String, ? extends Node<?>> args) {
+    public ImmutableList<? extends Expr<?>> dependencies(
+        ImmutableMap<String, ? extends Expr<?>> args) {
       return null;
     }
 
     @Override
-    public TaskWorker<SString> createWorker(ImmutableMap<String, ? extends Node<?>> args,
+    public TaskWorker<SString> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
         CodeLocation codeLocation) {
       return null;
     }

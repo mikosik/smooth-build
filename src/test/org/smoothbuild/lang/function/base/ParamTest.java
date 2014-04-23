@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.hash.HashCode;
@@ -88,7 +88,7 @@ public class ParamTest {
 
   @Test
   public void to_padded_string() throws Exception {
-    Node<?> abstractNode = mock(Node.class);
+    Expr<?> abstractNode = mock(Expr.class);
     given(willReturn(STRING), abstractNode).type();
 
     Param param = param(STRING, "myName", false);
@@ -99,7 +99,7 @@ public class ParamTest {
 
   @Test
   public void to_padded_string_for_short_limits() throws Exception {
-    Node<?> abstractNode = mock(Node.class);
+    Expr<?> abstractNode = mock(Expr.class);
     given(willReturn(STRING), abstractNode).type();
 
     Param param = param(STRING, "myName", false);

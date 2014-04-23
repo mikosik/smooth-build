@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -9,12 +9,15 @@ import org.smoothbuild.task.base.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class Node<T extends SValue> {
+/**
+ * Expression in smooth language.
+ */
+public abstract class Expr<T extends SValue> {
   private final SType<T> type;
   private final CodeLocation codeLocation;
-  private final ImmutableList<? extends Node<?>> dependencies;
+  private final ImmutableList<? extends Expr<?>> dependencies;
 
-  public Node(SType<T> type, ImmutableList<? extends Node<?>> dependencies,
+  public Expr(SType<T> type, ImmutableList<? extends Expr<?>> dependencies,
       CodeLocation codeLocation) {
     this.type = checkNotNull(type);
     this.dependencies = checkNotNull(dependencies);
@@ -29,7 +32,7 @@ public abstract class Node<T extends SValue> {
     return codeLocation;
   }
 
-  public ImmutableList<? extends Node<?>> dependencies() {
+  public ImmutableList<? extends Expr<?>> dependencies() {
     return dependencies;
   }
 
