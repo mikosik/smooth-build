@@ -19,12 +19,12 @@ import org.testory.Closure;
 import com.google.common.hash.HashCode;
 
 public class TaskWorkerTest {
-  SType<?> type = STypes.STRING;
-  HashCode hash = Hash.string("");
-  String name = "name";
-  CodeLocation codeLocation = codeLocation(1);
+  private final SType<?> type = STypes.STRING;
+  private final HashCode hash = Hash.string("");
+  private final String name = "name";
+  private final CodeLocation codeLocation = codeLocation(1);
 
-  TaskWorker<?> taskWorker;
+  private TaskWorker<?> taskWorker;
 
   @Test
   public void null_type_is_forbidden() throws Exception {
