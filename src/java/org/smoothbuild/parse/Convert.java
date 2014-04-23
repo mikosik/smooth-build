@@ -16,35 +16,35 @@ import com.google.common.collect.ImmutableList.Builder;
 public class Convert {
 
   public static <T extends SValue> ImmutableList<Expr<T>> ifNeeded(SType<T> destinationType,
-      Iterable<Expr<?>> nodes) {
+      Iterable<Expr<?>> exprs) {
     Builder<Expr<T>> builder = ImmutableList.builder();
-    for (Expr<?> node : nodes) {
-      builder.add(Convert.ifNeeded(destinationType, node));
+    for (Expr<?> expr : exprs) {
+      builder.add(Convert.ifNeeded(destinationType, expr));
     }
     return builder.build();
   }
 
-  public static <T extends SValue> Expr<T> ifNeeded(SType<T> destinationType, Expr<?> node) {
-    if (destinationType == node.type()) {
+  public static <T extends SValue> Expr<T> ifNeeded(SType<T> destinationType, Expr<?> expr) {
+    if (destinationType == expr.type()) {
 
       /*
        * This is safe as we've just checked types.
        */
       @SuppressWarnings("unchecked")
-      Expr<T> result = (Expr<T>) node;
+      Expr<T> result = (Expr<T>) expr;
 
       return result;
-    } else if (Conversions.canConvert(node.type(), destinationType)) {
-      return convert(destinationType, node);
+    } else if (Conversions.canConvert(expr.type(), destinationType)) {
+      return convert(destinationType, expr);
     } else {
-      throw new Message(FATAL, "Bug in smooth binary: Cannot convert from " + node.type() + " to "
+      throw new Message(FATAL, "Bug in smooth binary: Cannot convert from " + expr.type() + " to "
           + destinationType + ".");
     }
   }
 
   private static <S extends SValue, T extends SValue> Expr<T> convert(SType<T> destinationType,
-      Expr<S> node) {
-    Converter<S, T> converter = Conversions.converter(node.type(), destinationType);
-    return new ConvertExpr<>(node, converter, node.codeLocation());
+      Expr<S> expr) {
+    Converter<S, T> converter = Conversions.converter(expr.type(), destinationType);
+    return new ConvertExpr<>(expr, converter, expr.codeLocation());
   }
 }

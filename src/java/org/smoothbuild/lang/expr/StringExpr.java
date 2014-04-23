@@ -13,7 +13,7 @@ public class StringExpr extends Expr<SString> {
   private final SString string;
 
   public StringExpr(SString string, CodeLocation codeLocation) {
-    super(STRING, Empty.nodeList(), codeLocation);
+    super(STRING, Empty.exprList(), codeLocation);
     this.string = checkNotNull(string);
   }
 

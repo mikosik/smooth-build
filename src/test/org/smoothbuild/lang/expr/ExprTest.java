@@ -20,7 +20,7 @@ public class ExprTest {
   SType<SString> type = STRING;
   CodeLocation codeLocation;
 
-  MyExpr node;
+  MyExpr expr;
 
   @Before
   public void before() {
@@ -29,31 +29,31 @@ public class ExprTest {
 
   @Test
   public void null_type_is_forbidden() {
-    when($myNode(null, codeLocation));
+    when($myExpr(null, codeLocation));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_code_location_is_forbidden() {
-    when($myNode(type, null));
+    when($myExpr(type, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void type() throws Exception {
-    given(node = new MyExpr(type, codeLocation));
-    when(node.type());
+    given(expr = new MyExpr(type, codeLocation));
+    when(expr.type());
     thenReturned(type);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(node = new MyExpr(type, codeLocation));
-    when(node.codeLocation());
+    given(expr = new MyExpr(type, codeLocation));
+    when(expr.codeLocation());
     thenReturned(codeLocation);
   }
 
-  private static Closure $myNode(final SType<SString> type, final CodeLocation codeLocation) {
+  private static Closure $myExpr(final SType<SString> type, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
@@ -64,7 +64,7 @@ public class ExprTest {
 
   public static class MyExpr extends Expr<SString> {
     public MyExpr(SType<SString> type, CodeLocation codeLocation) {
-      super(type, Empty.nodeList(), codeLocation);
+      super(type, Empty.exprList(), codeLocation);
     }
 
     @Override

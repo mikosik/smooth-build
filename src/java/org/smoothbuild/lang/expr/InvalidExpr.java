@@ -13,7 +13,7 @@ public class InvalidExpr<T extends SValue> extends Expr<T> {
   private final SType<T> type;
 
   public InvalidExpr(SType<T> type, CodeLocation codeLocation) {
-    super(type, Empty.nodeList(), codeLocation);
+    super(type, Empty.exprList(), codeLocation);
     this.type = checkNotNull(type);
   }
 

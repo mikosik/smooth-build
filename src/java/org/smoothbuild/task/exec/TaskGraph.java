@@ -21,21 +21,21 @@ public class TaskGraph {
     this.rootTasks = Lists.newArrayList();
   }
 
-  public <T extends SValue> Task<T> createTasks(Expr<T> node) {
-    Task<T> root = createTasksImpl(node);
+  public <T extends SValue> Task<T> createTasks(Expr<T> expr) {
+    Task<T> root = createTasksImpl(expr);
     rootTasks.add(root);
     return root;
   }
 
-  public <T extends SValue> Task<T> createTasksImpl(Expr<T> node) {
-    ImmutableList<Task<?>> dependencies = createTasksImpl(node.dependencies());
-    return new Task<>(node.createWorker(), dependencies);
+  public <T extends SValue> Task<T> createTasksImpl(Expr<T> expr) {
+    ImmutableList<Task<?>> dependencies = createTasksImpl(expr.dependencies());
+    return new Task<>(expr.createWorker(), dependencies);
   }
 
-  private ImmutableList<Task<?>> createTasksImpl(ImmutableList<? extends Expr<?>> nodes) {
+  private ImmutableList<Task<?>> createTasksImpl(ImmutableList<? extends Expr<?>> exprs) {
     Builder<Task<?>> builder = ImmutableList.builder();
-    for (Expr<?> node : nodes) {
-      Task<?> executor = createTasksImpl(node);
+    for (Expr<?> expr : exprs) {
+      Task<?> executor = createTasksImpl(expr);
       builder.add(executor);
     }
     return builder.build();
