@@ -37,8 +37,8 @@ public class Convert {
     } else if (Conversions.canConvert(expr.type(), destinationType)) {
       return convert(destinationType, expr);
     } else {
-      throw new Message(FATAL, "Bug in smooth binary: Cannot convert from " + expr.type() + " to "
-          + destinationType + ".");
+      throw new Message(FATAL, "Cannot convert from " + expr.type() + " to " + destinationType
+          + ".");
     }
   }
 

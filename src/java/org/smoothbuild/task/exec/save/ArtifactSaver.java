@@ -56,8 +56,7 @@ public class ArtifactSaver {
     if (saver != null) {
       saver.save(name, value);
     } else {
-      throw new Message(FATAL, "Bug in smooth binary.\nUnknown value type "
-          + value.getClass().getName());
+      throw new Message(FATAL, "Unknown value type: " + value.getClass().getName());
     }
   }
 }

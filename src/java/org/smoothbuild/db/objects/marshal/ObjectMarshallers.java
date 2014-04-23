@@ -90,7 +90,7 @@ public class ObjectMarshallers {
     @SuppressWarnings("unchecked")
     ArrayMarshaller<T> reader = (ArrayMarshaller<T>) arrayMarshallersMap.get(arrayType);
     if (reader == null) {
-      throw new Message(FATAL, "Unexpected value type " + arrayType);
+      throw new Message(FATAL, "Unexpected value type: " + arrayType);
     }
     return reader;
   }
@@ -102,7 +102,7 @@ public class ObjectMarshallers {
     @SuppressWarnings("unchecked")
     ObjectMarshaller<T> reader = (ObjectMarshaller<T>) marshallersMap.get(type);
     if (reader == null) {
-      throw new Message(FATAL, "Bug in smooth binary: Unexpected value type " + type);
+      throw new Message(FATAL, "Unexpected value type: " + type);
     }
     return reader;
   }

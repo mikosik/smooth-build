@@ -22,9 +22,8 @@ public class StreamTester {
     try {
       writeAndClose(stream, content);
     } catch (IOException e) {
-      throw new Message(FATAL,
-          "Bug in smooth binary: IOException should never be thrown by ByteArrayOutputStream.\n"
-              + "Java stack trace is:\n" + getStackTraceAsString(e));
+      throw new Message(FATAL, "IOException should never be thrown by ByteArrayOutputStream.\n"
+          + "Java stack trace is:\n" + getStackTraceAsString(e));
     }
     return new ByteArrayInputStream(stream.toByteArray());
   }
