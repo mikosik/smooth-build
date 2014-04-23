@@ -42,14 +42,14 @@ public class Conversions {
 
   public static <S extends SValue, T extends SValue> Converter<S, T> converter(SType<S> from,
       SType<T> to) {
-    ImmutableMap<SType<?>, Converter<?, ?>> x = map.get(from);
+    ImmutableMap<SType<?>, Converter<?, ?>> availableConverters = map.get(from);
 
     /*
      * This is safe as we created map in correct way and do not allow changing
      * it.
      */
     @SuppressWarnings("unchecked")
-    Converter<S, T> result = (Converter<S, T>) x.get(to);
+    Converter<S, T> result = (Converter<S, T>) availableConverters.get(to);
     return result;
   }
 
