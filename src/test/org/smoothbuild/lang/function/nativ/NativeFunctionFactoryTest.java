@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.testing.lang.function.base.ParamTester.params;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -79,7 +79,7 @@ public class NativeFunctionFactoryTest {
 
     ImmutableMap<String, StringExpr> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
     TaskWorker<SString> task = function.createWorker(args, codeLocation);
-    TaskResult<SString> output = task.execute(ImmutableList.of(string1, string2), nativeApi);
+    TaskOutput<SString> output = task.execute(ImmutableList.of(string1, string2), nativeApi);
     assertThat(Messages.containsProblems(output.messages())).isFalse();
     assertThat(output.returnValue().value()).isEqualTo("abcdef");
   }

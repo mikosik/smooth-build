@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskresults;
+package org.smoothbuild.db.taskoutputs;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -9,20 +9,20 @@ import org.smoothbuild.message.base.Message;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
-public class TaskResult<T extends SValue> {
+public class TaskOutput<T extends SValue> {
   private final T returnValue;
   private final ImmutableList<Message> messages;
 
-  public TaskResult(T returnValue) {
+  public TaskOutput(T returnValue) {
     this(returnValue, ImmutableList.<Message> of());
   }
 
-  public TaskResult(T returnValue, Iterable<Message> messages) {
+  public TaskOutput(T returnValue, Iterable<Message> messages) {
     this.returnValue = checkNotNull(returnValue);
     this.messages = ImmutableList.copyOf(messages);
   }
 
-  public TaskResult(Iterable<Message> messages) {
+  public TaskOutput(Iterable<Message> messages) {
     this.returnValue = null;
     this.messages = ImmutableList.copyOf(messages);
   }
@@ -32,7 +32,7 @@ public class TaskResult<T extends SValue> {
   }
 
   public T returnValue() {
-    checkState(hasReturnValue(), "TaskResult does not contain any value.");
+    checkState(hasReturnValue(), "TaskOutput does not contain any value.");
     return returnValue;
   }
 
@@ -42,10 +42,10 @@ public class TaskResult<T extends SValue> {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof TaskResult)) {
+    if (!(object instanceof TaskOutput)) {
       return false;
     }
-    TaskResult<?> that = (TaskResult<?>) object;
+    TaskOutput<?> that = (TaskOutput<?>) object;
     return Objects.equal(this.returnValue, that.returnValue) && this.messages.equals(that.messages);
   }
 
@@ -56,6 +56,6 @@ public class TaskResult<T extends SValue> {
 
   @Override
   public String toString() {
-    return "TaskResult(" + returnValue + ", " + messages + ")";
+    return "TaskOutput(" + returnValue + ", " + messages + ")";
   }
 }

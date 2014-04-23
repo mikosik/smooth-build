@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskresults;
+package org.smoothbuild.db.taskoutputs;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.smoothbuild.lang.base.STypes.STRING;
@@ -21,20 +21,20 @@ import org.smoothbuild.message.base.Messages;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class TaskResultsDb {
+public class TaskOutputsDb {
   private final HashedDb hashedDb;
   private final ObjectsDb objectsDb;
 
   @Inject
-  public TaskResultsDb(@TaskResults HashedDb hashedDb, ObjectsDb objectsDb) {
+  public TaskOutputsDb(@TaskOutputs HashedDb hashedDb, ObjectsDb objectsDb) {
     this.hashedDb = hashedDb;
     this.objectsDb = objectsDb;
   }
 
-  public void write(HashCode taskHash, TaskResult<? extends SValue> taskResult) {
+  public void write(HashCode taskHash, TaskOutput<? extends SValue> taskOutput) {
     Marshaller marshaller = new Marshaller();
 
-    ImmutableList<Message> messages = taskResult.messages();
+    ImmutableList<Message> messages = taskOutput.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
       SString messageString = objectsDb.string(message.message());
@@ -44,7 +44,7 @@ public class TaskResultsDb {
     }
 
     if (!Messages.containsProblems(messages)) {
-      marshaller.write(taskResult.returnValue().hash());
+      marshaller.write(taskOutput.returnValue().hash());
     }
 
     hashedDb.write(taskHash, marshaller.getBytes());
@@ -54,7 +54,7 @@ public class TaskResultsDb {
     return hashedDb.contains(taskHash);
   }
 
-  public <T extends SValue> TaskResult<T> read(HashCode taskHash, SType<T> type) {
+  public <T extends SValue> TaskOutput<T> read(HashCode taskHash, SType<T> type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash);) {
       int size = unmarshaller.readInt();
       List<Message> messages = newArrayList();
@@ -66,11 +66,11 @@ public class TaskResultsDb {
       }
 
       if (Messages.containsProblems(messages)) {
-        return new TaskResult<>(messages);
+        return new TaskOutput<>(messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
         T value = objectsDb.read(type, resultObjectHash);
-        return new TaskResult<>(value, messages);
+        return new TaskOutput<>(value, messages);
       }
     }
   }

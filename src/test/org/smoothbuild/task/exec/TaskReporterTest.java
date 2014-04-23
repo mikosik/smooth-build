@@ -12,7 +12,7 @@ import static org.testory.Testory.thenCalledTimes;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.Message;
@@ -31,7 +31,7 @@ public class TaskReporterTest {
   public void internal_task_with_message_is_printed() {
     given(task = createTask(true));
     given(messages = ImmutableList.of(new Message(WARNING, "message")));
-    given(task).setOutput(new TaskResult<SString>(messages));
+    given(task).setOutput(new TaskOutput<SString>(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -47,7 +47,7 @@ public class TaskReporterTest {
   public void non_internal_task_with_message_is_printed() {
     given(messages = ImmutableList.of(new Message(WARNING, "message")));
     given(task = createTask(false));
-    given(task).setOutput(new TaskResult<SString>(messages));
+    given(task).setOutput(new TaskOutput<SString>(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -56,7 +56,7 @@ public class TaskReporterTest {
   public void non_internal_task_without_message_is_printed() {
     given(task = createTask(false));
     given(messages = ImmutableList.of());
-    given(task).setOutput(new TaskResult<SString>(messages));
+    given(task).setOutput(new TaskOutput<SString>(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -65,7 +65,7 @@ public class TaskReporterTest {
     TaskWorker<SString> worker =
         new TaskWorker<SString>(null, STRING, "name", isInternal, true, codeLocation(13)) {
           @Override
-          public TaskResult<SString> execute(Iterable<? extends SValue> input,
+          public TaskOutput<SString> execute(Iterable<? extends SValue> input,
               NativeApiImpl nativeApi) {
             return null;
           }

@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskresults;
+package org.smoothbuild.db.taskoutputs;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
@@ -9,6 +9,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.taskoutputs.AllMessageTypes;
 
 public class AllMessageTypesTest {
 

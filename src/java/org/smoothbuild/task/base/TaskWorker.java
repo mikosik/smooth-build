@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
@@ -52,5 +52,5 @@ public abstract class TaskWorker<T extends SValue> {
     return hash;
   }
 
-  public abstract TaskResult<T> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi);
+  public abstract TaskOutput<T> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi);
 }

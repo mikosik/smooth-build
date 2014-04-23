@@ -7,7 +7,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.taskresults.TaskResult;
+import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.base.SValue;
@@ -96,7 +96,7 @@ public class TaskWorkerTest {
     }
 
     @Override
-    public TaskResult<T> execute(Iterable<? extends SValue> dependencies, NativeApiImpl nativeApi) {
+    public TaskOutput<T> execute(Iterable<? extends SValue> dependencies, NativeApiImpl nativeApi) {
       return null;
     }
   }
