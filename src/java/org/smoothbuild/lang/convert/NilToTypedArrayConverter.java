@@ -19,8 +19,8 @@ public class NilToTypedArrayConverter<T extends SValue> extends
   }
 
   @Override
-  public SArray<T> convert(SValueFactory valueBuilders, SArray<SNothing> value) {
+  public SArray<T> convert(SValueFactory valueFactory, SArray<SNothing> value) {
     checkArgument(value.type() == NIL);
-    return valueBuilders.arrayBuilder(arrayType).build();
+    return valueFactory.arrayBuilder(arrayType).build();
   }
 }

@@ -26,25 +26,25 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.Files;
 
 public class TempDirectory {
-  private final SValueFactory valueBuilders;
+  private final SValueFactory valueFactory;
   private final FileSystem fileSystem;
   private final java.nio.file.Path rootPath;
   private boolean isDestroyed;
 
   @Inject
-  public TempDirectory(SValueFactory valueBuilders) {
-    this(valueBuilders, Paths.get(Files.createTempDir().getAbsolutePath()));
+  public TempDirectory(SValueFactory valueFactory) {
+    this(valueFactory, Paths.get(Files.createTempDir().getAbsolutePath()));
   }
 
   @VisibleForTesting
-  public TempDirectory(SValueFactory valueBuilders, java.nio.file.Path path) {
-    this(valueBuilders, path, new DiskFileSystem(path));
+  public TempDirectory(SValueFactory valueFactory, java.nio.file.Path path) {
+    this(valueFactory, path, new DiskFileSystem(path));
   }
 
   @VisibleForTesting
-  public TempDirectory(SValueFactory valueBuilders, java.nio.file.Path rootPath,
+  public TempDirectory(SValueFactory valueFactory, java.nio.file.Path rootPath,
       FileSystem fileSystem) {
-    this.valueBuilders = valueBuilders;
+    this.valueFactory = valueFactory;
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
     this.isDestroyed = false;
@@ -108,10 +108,10 @@ public class TempDirectory {
   }
 
   private SArray<SFile> readFilesImpl() throws IOException {
-    ArrayBuilder<SFile> arrayBuilder = valueBuilders.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> arrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     for (Path path : fileSystem.filesFrom(Path.rootPath())) {
       SBlob content = readContentImpl(path);
-      SFile file = valueBuilders.file(path, content);
+      SFile file = valueFactory.file(path, content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();
@@ -127,7 +127,7 @@ public class TempDirectory {
   }
 
   private SBlob readContentImpl(Path path) throws IOException {
-    BlobBuilder blobBuilder = valueBuilders.blobBuilder();
+    BlobBuilder blobBuilder = valueFactory.blobBuilder();
     Streams.copy(fileSystem.openInputStream(path), blobBuilder.openOutputStream());
     return blobBuilder.build();
   }

@@ -26,7 +26,7 @@ public abstract class Converter<S extends SValue, T extends SValue> {
     return targetType;
   }
 
-  public abstract T convert(SValueFactory valueBuilders, S value);
+  public abstract T convert(SValueFactory valueFactory, S value);
 
   public HashCode hash() {
     return Hash.string(this.getClass().getCanonicalName());
