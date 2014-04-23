@@ -2,13 +2,10 @@ package org.smoothbuild.lang.function.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Set;
-
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
 
 /**
  * Function's signature.
@@ -21,7 +18,7 @@ public class Signature<T extends SValue> {
   public Signature(SType<T> type, Name name, Iterable<Param> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
-    this.params = createParamsMap(params);
+    this.params = Params.map(params);
   }
 
   public SType<T> type() {
@@ -39,24 +36,5 @@ public class Signature<T extends SValue> {
    */
   public ImmutableMap<String, Param> params() {
     return params;
-  }
-
-  private static ImmutableMap<String, Param> createParamsMap(Iterable<Param> params) {
-    Set<String> names = Sets.newHashSet();
-
-    /*
-     * ImmutableMap keeps order of elements.
-     */
-    ImmutableMap.Builder<String, Param> builder = ImmutableMap.builder();
-
-    for (Param param : ParamOrdering.PARAM_ORDERING.sortedCopy(params)) {
-      String name = param.name();
-      if (names.contains(name)) {
-        throw new IllegalArgumentException("Duplicate param name = '" + name + "'");
-      }
-      builder.put(name, param);
-      names.add(name);
-    }
-    return builder.build();
   }
 }
