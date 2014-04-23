@@ -20,18 +20,18 @@ public class EmptyTest {
   // stringValueMap()
 
   @Test
-  public void emptyStringValueMapIsEmpty() {
+  public void empty_string_value_map_is_empty() {
     assertThat(Empty.stringValueMap()).isEmpty();
   }
 
   @Test
-  public void emptyStringValueMapIsImmutable() {
+  public void empty_string_value_map_is_immutable() {
     @SuppressWarnings("unused")
     ImmutableMap<String, SValue> map = Empty.stringValueMap();
   }
 
   @Test
-  public void emptyStringValueMapAlwaysReturnsTheSameObject() {
+  public void empty_string_value_map_always_returns_the_same_object() {
     assertThat(Empty.stringValueMap()).isSameAs(Empty.stringValueMap());
   }
 
@@ -56,66 +56,66 @@ public class EmptyTest {
   // nameFunctionMap();
 
   @Test
-  public void emptyNameToFunctionMapIsEmpty() {
+  public void empty_name_function_map_is_empty() {
     assertThat(Empty.nameFunctionMap()).isEmpty();
   }
 
   @Test
-  public void emptyNameToFunctionMapIsImmutable() {
+  public void empty_name_function_map_is_immutable() {
     @SuppressWarnings("unused")
     ImmutableMap<Name, Function<?>> map = Empty.nameFunctionMap();
   }
 
   @Test
-  public void emptyNameToFunctionMapAlwaysReturnsTheSameObject() {
+  public void empty_name_function_map_always_returns_the_same_object() {
     assertThat(Empty.nameFunctionMap()).isSameAs(Empty.nameFunctionMap());
   }
 
   // nodeList()
 
   @Test
-  public void nodeListIsEmpty() {
+  public void empty_node_list_is_empty() {
     assertThat(Empty.nodeList()).isEmpty();
   }
 
   @Test
-  public void emptyNodeListIsImmutable() {
+  public void empty_node_list_is_immutable() {
     @SuppressWarnings("unused")
     ImmutableList<Expr<?>> list = Empty.nodeList();
   }
 
   @Test
-  public void emptyNodeAlwaysReturnsTheSameObject() {
+  public void empty_node_list_always_returns_the_same_object() {
     assertThat(Empty.nodeList()).isSameAs(Empty.nodeList());
   }
 
   // messageList()
 
   @Test
-  public void messageListIsEmpty() {
+  public void empty_message_list_is_empty() {
     assertThat(Empty.messageList()).isEmpty();
   }
 
   @Test
-  public void emptyMessageListIsImmutable() {
+  public void empty_message_list_is_immutable() {
     @SuppressWarnings("unused")
     ImmutableList<Message> list = Empty.messageList();
   }
 
   @Test
-  public void emptyMessageListAlwaysReturnsTheSameObject() {
+  public void empty_message_list_always_returns_the_same_object() {
     assertThat(Empty.messageList()).isSameAs(Empty.messageList());
   }
 
   // nullToEmpty
 
   @Test
-  public void nullIsChangedIntoEmptyIterable() throws Exception {
+  public void null_is_changed_into_empty_iterable() throws Exception {
     assertThat(Empty.nullToEmpty(null)).isEmpty();
   }
 
   @Test
-  public void nullToEmptyDoesNotChangeNonNullIterable() throws Exception {
+  public void null_to_empty_does_not_change_non_empty_iterable() throws Exception {
     @SuppressWarnings("unchecked")
     Iterable<String> iterable = mock(Iterable.class);
     assertThat(Empty.nullToEmpty(iterable)).isSameAs(iterable);
@@ -124,18 +124,18 @@ public class EmptyTest {
   // typeConverterMap()
 
   @Test
-  public void typeToConverterMapIsEmpty() {
+  public void empty_type_converter_map_is_empty() {
     assertThat(Empty.typeConverterMap()).isEmpty();
   }
 
   @Test
-  public void typeToConverterMapIsImmutable() {
+  public void empty_type_converter_map_is_immutable() {
     @SuppressWarnings("unused")
     ImmutableMap<SType<?>, Converter<?, ?>> map = Empty.typeConverterMap();
   }
 
   @Test
-  public void typeToConverterMapAlwaysReturnsTheSameObject() {
+  public void empty_type_converter_map_always_returns_the_same_object() {
     assertThat(Empty.typeConverterMap()).isSameAs(Empty.typeConverterMap());
   }
 }
