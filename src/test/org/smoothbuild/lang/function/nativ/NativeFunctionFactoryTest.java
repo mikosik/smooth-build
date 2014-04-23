@@ -15,7 +15,6 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
@@ -345,8 +344,8 @@ public class NativeFunctionFactoryTest {
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
-    function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation(1)).execute(
-        Empty.svalueList(), nativeApi);
+    function.createWorker(Empty.stringExprMap(), codeLocation(1)).execute(Empty.svalueList(),
+        nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
   }
 
