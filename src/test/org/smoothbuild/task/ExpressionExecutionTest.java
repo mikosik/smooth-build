@@ -31,7 +31,6 @@ import org.smoothbuild.lang.expr.InvalidExpr;
 import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidNodeError;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.Invoker;
@@ -117,7 +116,7 @@ public class ExpressionExecutionTest {
   public void executes_call_expression_using_defined_function() throws Exception {
     given(sstring = objectsDb.string(string));
     given(stringExpr = new StringExpr(sstring, location));
-    given(signature = new Signature<>(STRING, name("name"), ImmutableList.<Param> of()));
+    given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction<>(signature, stringExpr));
     given(callExpr = new CallExpr<>(function, location, Empty.stringExprMap()));
     given(task = taskGraph.createTasks(callExpr));
@@ -130,7 +129,7 @@ public class ExpressionExecutionTest {
   public void executes_call_expression_using_native_function() throws Exception {
     given(sstring = objectsDb.string(string));
     given(stringExpr = new StringExpr(sstring, location));
-    given(signature = new Signature<>(STRING, name("name"), ImmutableList.<Param> of()));
+    given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
     given(invoker = mock(Invoker.class));
     given(willReturn(sstring), invoker).invoke(any(NativeApi.class), any(Map.class));
     given(function = new NativeFunction<>(signature, invoker, true));

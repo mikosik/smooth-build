@@ -5,10 +5,8 @@ import static org.smoothbuild.lang.function.base.Name.name;
 
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.util.Empty;
 
 public class FakeSignature {
   public static Signature<SString> fakeSignature() {
@@ -20,6 +18,6 @@ public class FakeSignature {
   }
 
   public static Signature<SString> fakeSignature(Name name) {
-    return new Signature<>(STRING, name, ImmutableList.<Param> of());
+    return new Signature<>(STRING, name, Empty.paramList());
   }
 }
