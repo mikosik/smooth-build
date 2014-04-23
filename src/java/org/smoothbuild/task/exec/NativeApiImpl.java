@@ -15,18 +15,18 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 
 public class NativeApiImpl implements NativeApi {
   private final FileSystem projectFileSystem;
-  private final SValueBuilders valueBuilders;
+  private final SValueFactory valueBuilders;
   private final TempDirectoryManager tempDirectoryManager;
   private final LoggedMessages messages;
 
   @Inject
-  public NativeApiImpl(@ProjectDir FileSystem fileSystem, SValueBuilders valueBuilders,
+  public NativeApiImpl(@ProjectDir FileSystem fileSystem, SValueFactory valueBuilders,
       TempDirectoryManager tempDirectoryManager) {
     this.projectFileSystem = fileSystem;
     this.valueBuilders = valueBuilders;

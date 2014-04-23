@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 
 public class NilToTypedArrayConverter<T extends SValue> extends
     Converter<SArray<SNothing>, SArray<T>> {
@@ -19,7 +19,7 @@ public class NilToTypedArrayConverter<T extends SValue> extends
   }
 
   @Override
-  public SArray<T> convert(SValueBuilders valueBuilders, SArray<SNothing> value) {
+  public SArray<T> convert(SValueFactory valueBuilders, SArray<SNothing> value) {
     checkArgument(value.type() == NIL);
     return valueBuilders.arrayBuilder(arrayType).build();
   }

@@ -6,7 +6,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.SubFileSystem;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -14,7 +14,7 @@ import com.google.inject.Provides;
 public class ObjectsDbModule extends AbstractModule {
   @Override
   protected void configure() {
-    bind(SValueBuilders.class).to(ObjectsDb.class);
+    bind(SValueFactory.class).to(ObjectsDb.class);
   }
 
   @Objects

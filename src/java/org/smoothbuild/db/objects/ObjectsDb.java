@@ -13,11 +13,11 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.base.SValueBuilders;
+import org.smoothbuild.lang.base.SValueFactory;
 
 import com.google.common.hash.HashCode;
 
-public class ObjectsDb implements SValueBuilders {
+public class ObjectsDb implements SValueFactory {
   private final ObjectMarshallers objectMarshallers;
   private final ObjectBuilders objectBuilders;
 
