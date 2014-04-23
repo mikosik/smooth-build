@@ -5,7 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.expr.Expr;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -21,20 +21,20 @@ public class TaskGraph {
     this.rootTasks = Lists.newArrayList();
   }
 
-  public <T extends SValue> Task<T> createTasks(Node<T> node) {
+  public <T extends SValue> Task<T> createTasks(Expr<T> node) {
     Task<T> root = createTasksImpl(node);
     rootTasks.add(root);
     return root;
   }
 
-  public <T extends SValue> Task<T> createTasksImpl(Node<T> node) {
+  public <T extends SValue> Task<T> createTasksImpl(Expr<T> node) {
     ImmutableList<Task<?>> dependencies = createTasksImpl(node.dependencies());
     return new Task<>(node.createWorker(), dependencies);
   }
 
-  private ImmutableList<Task<?>> createTasksImpl(ImmutableList<? extends Node<?>> nodes) {
+  private ImmutableList<Task<?>> createTasksImpl(ImmutableList<? extends Expr<?>> nodes) {
     Builder<Task<?>> builder = ImmutableList.builder();
-    for (Node<?> node : nodes) {
+    for (Expr<?> node : nodes) {
       Task<?> executor = createTasksImpl(node);
       builder.add(executor);
     }

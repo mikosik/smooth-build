@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.smoothbuild.db.taskresults.TaskResult;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskWorker;
 import org.smoothbuild.task.exec.NativeApiImpl;
@@ -60,7 +60,7 @@ public class NativeFunctionTest {
   public void generated_task_uses_invoker_for_calculating_result() throws Exception {
     given(sstring = objectsDb.string("result"));
     given(willReturn(sstring), invoker).invoke(nativeApi, Empty.stringValueMap());
-    given(task = function.createWorker(ImmutableMap.<String, Node<?>> of(), codeLocation));
+    given(task = function.createWorker(ImmutableMap.<String, Expr<?>> of(), codeLocation));
     when(task).execute(ImmutableList.<SValue> of(), nativeApi);
     thenReturned(new TaskResult<>(sstring));
   }

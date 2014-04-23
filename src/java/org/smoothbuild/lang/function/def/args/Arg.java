@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
@@ -19,28 +19,28 @@ import com.google.common.collect.Ordering;
 public class Arg {
   private final int number;
   private final String name;
-  private final Node<?> node;
+  private final Expr<?> expr;
   private final CodeLocation codeLocation;
 
-  public static Arg namedArg(int number, String name, Node<?> node, CodeLocation codeLocation) {
+  public static Arg namedArg(int number, String name, Expr<?> node, CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Arg(number, checkNotNull(name), node, codeLocation);
   }
 
-  public static Arg namelessArg(int number, Node<?> node, CodeLocation codeLocation) {
+  public static Arg namelessArg(int number, Expr<?> node, CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Arg(number, null, node, codeLocation);
   }
 
-  public static Arg pipedArg(Node<?> node, CodeLocation codeLocation) {
+  public static Arg pipedArg(Expr<?> node, CodeLocation codeLocation) {
     return new Arg(0, null, node, codeLocation);
   }
 
-  private Arg(int number, String name, Node<?> node, CodeLocation codeLocation) {
+  private Arg(int number, String name, Expr<?> node, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
-    this.node = checkNotNull(node);
+    this.expr = checkNotNull(node);
     this.codeLocation = checkNotNull(codeLocation);
   }
 
@@ -64,11 +64,11 @@ public class Arg {
   }
 
   public SType<?> type() {
-    return node.type();
+    return expr.type();
   }
 
-  public Node<?> node() {
-    return node;
+  public Expr<?> expr() {
+    return expr;
   }
 
   public CodeLocation codeLocation() {
@@ -110,7 +110,7 @@ public class Arg {
     ImmutableMap<SType<?>, Set<Arg>> result = Helpers.createMap(allTypes());
     for (Arg arg : args) {
       if (!arg.hasName()) {
-        SType<?> type = arg.node().type();
+        SType<?> type = arg.expr().type();
         result.get(type).add(arg);
       }
     }

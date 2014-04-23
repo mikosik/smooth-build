@@ -25,10 +25,10 @@ import java.util.Map;
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
@@ -599,15 +599,15 @@ public class ParamToArgMapperTest {
   }
 
   private static Arg arg(SType<?> type) {
-    return namelessArg(1, node(type), new FakeCodeLocation());
+    return namelessArg(1, expr(type), new FakeCodeLocation());
   }
 
   private static Arg arg(String name, SType<?> type) {
-    return namedArg(1, name, node(type), new FakeCodeLocation());
+    return namedArg(1, name, expr(type), new FakeCodeLocation());
   }
 
-  private static Node<?> node(SType<?> type) {
-    Node<?> node = mock(Node.class);
+  private static Expr<?> expr(SType<?> type) {
+    Expr<?> node = mock(Expr.class);
     given(willReturn(type), node).type();
     return node;
   }

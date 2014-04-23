@@ -8,10 +8,10 @@ import java.util.Map.Entry;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.expr.CallExpr;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.def.CallNode;
-import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.task.exec.save.ArtifactSaver;
 
 import com.google.common.collect.ImmutableMap;
@@ -30,8 +30,8 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function<?> function) {
-    ImmutableMap<String, Node<?>> empty = ImmutableMap.<String, Node<?>> of();
-    CallNode<?> node = new CallNode<>(function, codeLocation(1), empty);
+    ImmutableMap<String, Expr<?>> empty = ImmutableMap.<String, Expr<?>> of();
+    CallExpr<?> node = new CallExpr<>(function, codeLocation(1), empty);
     artifacts.put(function.name(), taskGraph.createTasks(node));
   }
 

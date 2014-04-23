@@ -19,7 +19,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.function.def.Node;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.message.FakeCodeLocation;
 
@@ -28,22 +28,22 @@ import com.google.common.collect.ImmutableMap;
 
 public class ArgTest {
   String name = "name";
-  Node<?> node = mock(Node.class);
+  Expr<?> expr = mock(Expr.class);
   CodeLocation codeLocation = new FakeCodeLocation();
 
   @Test(expected = IllegalArgumentException.class)
   public void negativeIndexIsForbiddenInNamedArg() {
-    namedArg(-1, name, node, codeLocation);
+    namedArg(-1, name, expr, codeLocation);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void zeroIndexIsForbiddenInNamedArg() {
-    namedArg(0, name, node, codeLocation);
+    namedArg(0, name, expr, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbiddenInNamedArg() {
-    namedArg(1, null, node, codeLocation);
+    namedArg(1, null, expr, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
@@ -53,17 +53,17 @@ public class ArgTest {
 
   @Test(expected = NullPointerException.class)
   public void nullSourceLocationIsForbiddenInNamedArg() {
-    namedArg(1, name, node, null);
+    namedArg(1, name, expr, null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void negativeIndexIsForbiddenInNamelessArg() {
-    namelessArg(-1, node, codeLocation);
+    namelessArg(-1, expr, codeLocation);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void zeroIndexIsForbiddenInNamelessArg() {
-    namelessArg(0, node, codeLocation);
+    namelessArg(0, expr, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
@@ -73,7 +73,7 @@ public class ArgTest {
 
   @Test(expected = NullPointerException.class)
   public void nullSourceLocationIsForbiddenInNamelessArg() {
-    namelessArg(1, node, null);
+    namelessArg(1, expr, null);
   }
 
   @Test(expected = NullPointerException.class)
@@ -83,13 +83,13 @@ public class ArgTest {
 
   @Test(expected = NullPointerException.class)
   public void nullSourceLocationIsForbiddenInPipedArg() {
-    pipedArg(node, null);
+    pipedArg(expr, null);
   }
 
   @Test
   public void typeReturnsTypeOfNode() throws Exception {
-    given(willReturn(FILE), node).type();
-    when(namedArg(1, name, node, codeLocation)).type();
+    given(willReturn(FILE), expr).type();
+    when(namedArg(1, name, expr, codeLocation)).type();
     thenReturned(FILE);
   }
 
@@ -100,17 +100,17 @@ public class ArgTest {
 
   @Test
   public void namedArgHasName() throws Exception {
-    assertThat(namedArg(1, name, node, codeLocation).hasName()).isTrue();
+    assertThat(namedArg(1, name, expr, codeLocation).hasName()).isTrue();
   }
 
   @Test
   public void namelessArgDoesNotHaveName() throws Exception {
-    assertThat(namelessArg(1, node, codeLocation).hasName()).isFalse();
+    assertThat(namelessArg(1, expr, codeLocation).hasName()).isFalse();
   }
 
   @Test
   public void pipedArgDoesNotHaveName() throws Exception {
-    assertThat(pipedArg(node, codeLocation).hasName()).isFalse();
+    assertThat(pipedArg(expr, codeLocation).hasName()).isFalse();
   }
 
   @Test
@@ -125,29 +125,29 @@ public class ArgTest {
 
   @Test
   public void namedArgToString() throws Exception {
-    given(willReturn(STRING), node).type();
-    when(namedArg(1, name, node, codeLocation)).toString();
+    given(willReturn(STRING), expr).type();
+    when(namedArg(1, name, expr, codeLocation)).toString();
     thenReturned("String:" + name);
   }
 
   @Test
   public void namelessArgToString() throws Exception {
-    given(willReturn(STRING), node).type();
-    when(namelessArg(1, node, codeLocation)).toString();
+    given(willReturn(STRING), expr).type();
+    when(namelessArg(1, expr, codeLocation)).toString();
     thenReturned("String:<nameless>");
   }
 
   @Test
   public void toPaddedString() throws Exception {
-    given(willReturn(STRING), node).type();
-    when(namedArg(1, "myName", node, codeLocation)).toPaddedString(10, 13, 7);
+    given(willReturn(STRING), expr).type();
+    when(namedArg(1, "myName", expr, codeLocation)).toPaddedString(10, 13, 7);
     thenReturned("String    : myName        #1       " + codeLocation.toString());
   }
 
   @Test
   public void toPaddedStringForShortLimits() throws Exception {
-    given(willReturn(STRING), node).type();
-    when(namedArg(1, "myName", node, new FakeCodeLocation())).toPaddedString(1, 1, 1);
+    given(willReturn(STRING), expr).type();
+    when(namedArg(1, "myName", expr, new FakeCodeLocation())).toPaddedString(1, 1, 1);
     thenReturned("String: myName #1 " + codeLocation.toString());
   }
 
@@ -185,7 +185,7 @@ public class ArgTest {
   }
 
   private static Arg named(String name) {
-    return Arg.namedArg(1, name, mock(Node.class), new FakeCodeLocation());
+    return Arg.namedArg(1, name, mock(Expr.class), new FakeCodeLocation());
   }
 
   private static Arg nameless() {
@@ -193,7 +193,7 @@ public class ArgTest {
   }
 
   private static Arg nameless(SType<?> type) {
-    Node<?> node = mock(Node.class);
+    Expr<?> node = mock(Expr.class);
     given(willReturn(type), node).type();
     return Arg.namelessArg(1, node, new FakeCodeLocation());
   }

@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.convert.Converter;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableList;
@@ -63,7 +63,7 @@ public class EmptyTest {
   @Test
   public void emptyNodeListIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableList<Node<?>> list = Empty.nodeList();
+    ImmutableList<Expr<?>> list = Empty.nodeList();
   }
 
   @Test

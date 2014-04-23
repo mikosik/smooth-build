@@ -22,8 +22,8 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.def.Node;
 import org.smoothbuild.lang.function.def.args.Arg;
 import org.smoothbuild.lang.function.def.args.TypedParamsPool;
 import org.smoothbuild.util.LineBuilder;
@@ -37,15 +37,15 @@ public class AmbiguousNamelessArgsErrorTest {
   public void test() {
 
     Param p1 = param(STRING, "param1");
-    Arg a1 = namedArg(12, "arg1", node(STRING), codeLocation(2));
+    Arg a1 = namedArg(12, "arg1", expr(STRING), codeLocation(2));
 
     Param p2 = param(STRING_ARRAY, "param2");
-    Arg a2 = namelessArg(7, node(STRING_ARRAY), codeLocation(12));
+    Arg a2 = namelessArg(7, expr(STRING_ARRAY), codeLocation(12));
 
     Param p3 = param(FILE, "param3");
-    Arg a3 = pipedArg(node(FILE), codeLocation(14));
+    Arg a3 = pipedArg(expr(FILE), codeLocation(14));
 
-    Arg a4 = namedArg(3, "arg4", node(NIL), codeLocation(7));
+    Arg a4 = namedArg(3, "arg4", expr(NIL), codeLocation(7));
     Set<Arg> availableArgs = newHashSet();
     availableArgs.add(a4);
 
@@ -75,8 +75,8 @@ public class AmbiguousNamelessArgsErrorTest {
     assertThat(error.toString()).isEqualTo(builder.build());
   }
 
-  private Node<?> node(SType<?> type) {
-    Node<?> result = mock(Node.class);
+  private Expr<?> expr(SType<?> type) {
+    Expr<?> result = mock(Expr.class);
     given(willReturn(type), result).type();
     return result;
   }

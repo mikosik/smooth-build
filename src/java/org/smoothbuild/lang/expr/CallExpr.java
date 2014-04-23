@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
@@ -9,12 +9,12 @@ import org.smoothbuild.task.base.TaskWorker;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class CallNode<T extends SValue> extends Node<T> {
+public class CallExpr<T extends SValue> extends Expr<T> {
   private final Function<T> function;
-  private final ImmutableMap<String, ? extends Node<?>> args;
+  private final ImmutableMap<String, ? extends Expr<?>> args;
 
-  public CallNode(Function<T> function, CodeLocation codeLocation,
-      ImmutableMap<String, ? extends Node<?>> args) {
+  public CallExpr(Function<T> function, CodeLocation codeLocation,
+      ImmutableMap<String, ? extends Expr<?>> args) {
     super(function.type(), ImmutableList.copyOf(args.values()), codeLocation);
     this.function = function;
     this.args = args;
@@ -26,7 +26,7 @@ public class CallNode<T extends SValue> extends Node<T> {
   }
 
   @Override
-  public ImmutableList<? extends Node<?>> dependencies() {
+  public ImmutableList<? extends Expr<?>> dependencies() {
     return function.dependencies(args);
   }
 

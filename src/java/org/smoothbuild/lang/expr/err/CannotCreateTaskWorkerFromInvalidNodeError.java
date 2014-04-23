@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.err;
+package org.smoothbuild.lang.expr.err;
 
 import static org.smoothbuild.message.base.MessageType.FATAL;
 

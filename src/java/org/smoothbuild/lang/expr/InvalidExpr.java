@@ -1,18 +1,18 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.function.def.err.CannotCreateTaskWorkerFromInvalidNodeError;
+import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidNodeError;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskWorker;
 import org.smoothbuild.util.Empty;
 
-public class InvalidNode<T extends SValue> extends Node<T> {
+public class InvalidExpr<T extends SValue> extends Expr<T> {
   private final SType<T> type;
 
-  public InvalidNode(SType<T> type, CodeLocation codeLocation) {
+  public InvalidExpr(SType<T> type, CodeLocation codeLocation) {
     super(type, Empty.nodeList(), codeLocation);
     this.type = checkNotNull(type);
   }
