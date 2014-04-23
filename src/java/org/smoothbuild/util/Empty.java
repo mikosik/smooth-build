@@ -41,7 +41,7 @@ public class Empty {
     }
   }
 
-  public static ImmutableMap<SType<?>, Converter<?, ?>> typeToConverterMap() {
+  public static ImmutableMap<SType<?>, Converter<?, ?>> typeConverterMap() {
     return ImmutableMap.of();
   }
 }

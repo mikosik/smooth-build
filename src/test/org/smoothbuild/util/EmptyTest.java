@@ -121,21 +121,21 @@ public class EmptyTest {
     assertThat(Empty.nullToEmpty(iterable)).isSameAs(iterable);
   }
 
-  // typeToConverterMap()
+  // typeConverterMap()
 
   @Test
   public void typeToConverterMapIsEmpty() {
-    assertThat(Empty.typeToConverterMap()).isEmpty();
+    assertThat(Empty.typeConverterMap()).isEmpty();
   }
 
   @Test
   public void typeToConverterMapIsImmutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<SType<?>, Converter<?, ?>> map = Empty.typeToConverterMap();
+    ImmutableMap<SType<?>, Converter<?, ?>> map = Empty.typeConverterMap();
   }
 
   @Test
   public void typeToConverterMapAlwaysReturnsTheSameObject() {
-    assertThat(Empty.typeToConverterMap()).isSameAs(Empty.typeToConverterMap());
+    assertThat(Empty.typeConverterMap()).isSameAs(Empty.typeConverterMap());
   }
 }
