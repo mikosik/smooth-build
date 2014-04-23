@@ -22,25 +22,25 @@ public class Arg {
   private final Expr<?> expr;
   private final CodeLocation codeLocation;
 
-  public static Arg namedArg(int number, String name, Expr<?> node, CodeLocation codeLocation) {
+  public static Arg namedArg(int number, String name, Expr<?> expr, CodeLocation codeLocation) {
     checkArgument(0 < number);
-    return new Arg(number, checkNotNull(name), node, codeLocation);
+    return new Arg(number, checkNotNull(name), expr, codeLocation);
   }
 
-  public static Arg namelessArg(int number, Expr<?> node, CodeLocation codeLocation) {
+  public static Arg namelessArg(int number, Expr<?> expr, CodeLocation codeLocation) {
     checkArgument(0 < number);
-    return new Arg(number, null, node, codeLocation);
+    return new Arg(number, null, expr, codeLocation);
   }
 
-  public static Arg pipedArg(Expr<?> node, CodeLocation codeLocation) {
-    return new Arg(0, null, node, codeLocation);
+  public static Arg pipedArg(Expr<?> expr, CodeLocation codeLocation) {
+    return new Arg(0, null, expr, codeLocation);
   }
 
-  private Arg(int number, String name, Expr<?> node, CodeLocation codeLocation) {
+  private Arg(int number, String name, Expr<?> expr, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
-    this.expr = checkNotNull(node);
+    this.expr = checkNotNull(expr);
     this.codeLocation = checkNotNull(codeLocation);
   }
 

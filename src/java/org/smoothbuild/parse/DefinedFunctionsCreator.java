@@ -112,15 +112,15 @@ public class DefinedFunctionsCreator {
     }
 
     public DefinedFunction<?> build(FunctionContext function) {
-      Expr<?> node = build(function.pipe());
-      return buildDefinedFunction(function, node);
+      Expr<?> expr = build(function.pipe());
+      return buildDefinedFunction(function, expr);
     }
 
     private <T extends SValue> DefinedFunction<T> buildDefinedFunction(FunctionContext function,
-        Expr<T> node) {
+        Expr<T> expr) {
       Name name = name(function.functionName().getText());
-      Signature<T> signature = new Signature<>(node.type(), name, ImmutableList.<Param> of());
-      return new DefinedFunction<>(signature, node);
+      Signature<T> signature = new Signature<>(expr.type(), name, ImmutableList.<Param> of());
+      return new DefinedFunction<>(signature, expr);
     }
 
     private Expr<?> build(PipeContext pipe) {
@@ -145,7 +145,7 @@ public class DefinedFunctionsCreator {
         return build(expression.call());
       }
       if (expression.STRING() != null) {
-        return buildStringNode(expression.STRING());
+        return buildStringExpr(expression.STRING());
       }
       throw new Message(FATAL, "Bug in smooth binary: Illegal parse tree: "
           + ExpressionContext.class.getSimpleName() + " without children.");
@@ -153,35 +153,35 @@ public class DefinedFunctionsCreator {
 
     private Expr<?> build(ArrayContext list) {
       List<ArrayElemContext> elems = list.arrayElem();
-      ImmutableList<Expr<?>> elemNodes = build(elems);
+      ImmutableList<Expr<?>> elemExprs = build(elems);
 
       CodeLocation location = locationOf(list);
-      SType<?> elemType = commonSuperType(elems, elemNodes, location);
+      SType<?> elemType = commonSuperType(elems, elemExprs, location);
 
       if (elemType != null) {
-        return buildArray(elemType, elemNodes, location);
+        return buildArray(elemType, elemExprs, location);
       } else {
         return new InvalidExpr<>(NIL, location);
       }
     }
 
     private <T extends SValue> Expr<SArray<T>> buildArray(SType<T> elemType,
-        ImmutableList<Expr<?>> elemNodes, CodeLocation location) {
+        ImmutableList<Expr<?>> elemExpr, CodeLocation location) {
       SArrayType<T> arrayType = STypes.arrayTypeContaining(elemType);
-      ImmutableList<Expr<T>> convertedNodes = Convert.ifNeeded(elemType, elemNodes);
-      return new ArrayExpr<>(arrayType, convertedNodes, location);
+      ImmutableList<Expr<T>> convertedExpr = Convert.ifNeeded(elemType, elemExpr);
+      return new ArrayExpr<>(arrayType, convertedExpr, location);
     }
 
     private ImmutableList<Expr<?>> build(List<ArrayElemContext> elems) {
       Builder<Expr<?>> builder = ImmutableList.builder();
       for (ArrayElemContext elem : elems) {
-        Expr<?> node = build(elem);
-        if (!basicTypes().contains(node.type())) {
+        Expr<?> expr = build(elem);
+        if (!basicTypes().contains(expr.type())) {
           CodeLocation location = locationOf(elem);
-          messages.log(new ForbiddenArrayElemError(location, node.type()));
+          messages.log(new ForbiddenArrayElemError(location, expr.type()));
           builder.add(new InvalidExpr<>(NOTHING, location));
         } else {
-          builder.add(node);
+          builder.add(expr);
         }
       }
       return builder.build();
@@ -189,7 +189,7 @@ public class DefinedFunctionsCreator {
 
     private Expr<?> build(ArrayElemContext elem) {
       if (elem.STRING() != null) {
-        return buildStringNode(elem.STRING());
+        return buildStringExpr(elem.STRING());
       }
       if (elem.call() != null) {
         return build(elem.call());
@@ -200,15 +200,15 @@ public class DefinedFunctionsCreator {
     }
 
     private SType<?> commonSuperType(List<ArrayElemContext> elems,
-        ImmutableList<Expr<?>> elemNodes, CodeLocation location) {
+        ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
       if (elems.size() == 0) {
         return NOTHING;
       }
-      SType<?> firstType = elemNodes.get(0).type();
+      SType<?> firstType = elemExprs.get(0).type();
       SType<?> commonSuperType = firstType;
 
-      for (int i = 1; i < elemNodes.size(); i++) {
-        SType<?> currentType = elemNodes.get(i).type();
+      for (int i = 1; i < elemExprs.size(); i++) {
+        SType<?> currentType = elemExprs.get(i).type();
         commonSuperType = commonSuperType(commonSuperType, currentType);
 
         if (commonSuperType == null) {
@@ -291,18 +291,18 @@ public class DefinedFunctionsCreator {
     }
 
     private Arg build(int index, ArgContext arg) {
-      Expr<?> node = build(arg.expression());
+      Expr<?> expr = build(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
       if (paramName == null) {
-        return namelessArg(index + 1, node, location);
+        return namelessArg(index + 1, expr, location);
       } else {
-        return namedArg(index + 1, paramName.getText(), node, location);
+        return namedArg(index + 1, paramName.getText(), expr, location);
       }
     }
 
-    private Expr<?> buildStringNode(TerminalNode stringToken) {
+    private Expr<?> buildStringExpr(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {

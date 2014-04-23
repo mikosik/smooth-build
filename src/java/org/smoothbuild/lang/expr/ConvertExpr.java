@@ -11,8 +11,8 @@ import com.google.common.collect.ImmutableList;
 public class ConvertExpr<S extends SValue, T extends SValue> extends Expr<T> {
   private final Converter<S, T> converter;
 
-  public ConvertExpr(Expr<S> node, Converter<S, T> converter, CodeLocation codeLocation) {
-    super(converter.targetType(), ImmutableList.of(node), codeLocation);
+  public ConvertExpr(Expr<S> expr, Converter<S, T> converter, CodeLocation codeLocation) {
+    super(converter.targetType(), ImmutableList.of(expr), codeLocation);
     this.converter = converter;
   }
 

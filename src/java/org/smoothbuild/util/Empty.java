@@ -25,7 +25,7 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableList<Expr<?>> nodeList() {
+  public static ImmutableList<Expr<?>> exprList() {
     return ImmutableList.of();
   }
 

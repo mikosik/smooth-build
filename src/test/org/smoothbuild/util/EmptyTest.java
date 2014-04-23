@@ -71,22 +71,22 @@ public class EmptyTest {
     assertThat(Empty.nameFunctionMap()).isSameAs(Empty.nameFunctionMap());
   }
 
-  // nodeList()
+  // exprList()
 
   @Test
-  public void empty_node_list_is_empty() {
-    assertThat(Empty.nodeList()).isEmpty();
+  public void empty_expr_list_is_empty() {
+    assertThat(Empty.exprList()).isEmpty();
   }
 
   @Test
-  public void empty_node_list_is_immutable() {
+  public void empty_expr_list_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableList<Expr<?>> list = Empty.nodeList();
+    ImmutableList<Expr<?>> list = Empty.exprList();
   }
 
   @Test
-  public void empty_node_list_always_returns_the_same_object() {
-    assertThat(Empty.nodeList()).isSameAs(Empty.nodeList());
+  public void empty_expr_list_always_returns_the_same_object() {
+    assertThat(Empty.exprList()).isSameAs(Empty.exprList());
   }
 
   // messageList()

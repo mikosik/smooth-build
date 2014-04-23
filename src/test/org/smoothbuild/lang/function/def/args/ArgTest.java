@@ -47,7 +47,7 @@ public class ArgTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullNodeIsForbiddenInNamedArg() {
+  public void nullExprIsForbiddenInNamedArg() {
     namedArg(1, name, null, codeLocation);
   }
 
@@ -67,7 +67,7 @@ public class ArgTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullNodeIsForbiddenInNamelessArg() {
+  public void nullExprIsForbiddenInNamelessArg() {
     namelessArg(1, null, codeLocation);
   }
 
@@ -77,7 +77,7 @@ public class ArgTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullNodeIsForbiddenInPipedArg() {
+  public void nullExprIsForbiddenInPipedArg() {
     pipedArg(null, codeLocation);
   }
 
@@ -87,7 +87,7 @@ public class ArgTest {
   }
 
   @Test
-  public void typeReturnsTypeOfNode() throws Exception {
+  public void typeReturnsTypeOfExpr() throws Exception {
     given(willReturn(FILE), expr).type();
     when(namedArg(1, name, expr, codeLocation)).type();
     thenReturned(FILE);
@@ -193,8 +193,8 @@ public class ArgTest {
   }
 
   private static Arg nameless(SType<?> type) {
-    Expr<?> node = mock(Expr.class);
-    given(willReturn(type), node).type();
-    return Arg.namelessArg(1, node, new FakeCodeLocation());
+    Expr<?> expr = mock(Expr.class);
+    given(willReturn(type), expr).type();
+    return Arg.namelessArg(1, expr, new FakeCodeLocation());
   }
 }

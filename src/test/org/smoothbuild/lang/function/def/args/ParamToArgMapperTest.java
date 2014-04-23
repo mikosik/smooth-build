@@ -607,9 +607,9 @@ public class ParamToArgMapperTest {
   }
 
   private static Expr<?> expr(SType<?> type) {
-    Expr<?> node = mock(Expr.class);
-    given(willReturn(type), node).type();
-    return node;
+    Expr<?> expr = mock(Expr.class);
+    given(willReturn(type), expr).type();
+    return expr;
   }
 
   private Map<Param, Arg> createMapping(Iterable<Param> params, List<Arg> args) {

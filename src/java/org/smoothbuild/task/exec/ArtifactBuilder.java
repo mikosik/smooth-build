@@ -31,8 +31,8 @@ public class ArtifactBuilder {
 
   public void addArtifact(Function<?> function) {
     ImmutableMap<String, Expr<?>> empty = ImmutableMap.<String, Expr<?>> of();
-    CallExpr<?> node = new CallExpr<>(function, codeLocation(1), empty);
-    artifacts.put(function.name(), taskGraph.createTasks(node));
+    Expr<?> expr = new CallExpr<>(function, codeLocation(1), empty);
+    artifacts.put(function.name(), taskGraph.createTasks(expr));
   }
 
   public void runBuild() {
