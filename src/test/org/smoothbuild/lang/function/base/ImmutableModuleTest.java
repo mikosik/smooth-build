@@ -22,7 +22,7 @@ public class ImmutableModuleTest {
 
   @Test
   public void empty_immutable_module_does_not_contain_function() throws Exception {
-    given(module = new ImmutableModule(Empty.nameToFunctionMap()));
+    given(module = new ImmutableModule(Empty.nameFunctionMap()));
     when(module.containsFunction(name1));
     thenReturned(false);
   }

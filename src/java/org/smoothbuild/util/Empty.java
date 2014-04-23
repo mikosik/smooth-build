@@ -21,7 +21,7 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<Name, Function<?>> nameToFunctionMap() {
+  public static ImmutableMap<Name, Function<?>> nameFunctionMap() {
     return ImmutableMap.of();
   }
 

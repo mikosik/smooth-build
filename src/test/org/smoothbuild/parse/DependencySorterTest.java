@@ -83,7 +83,7 @@ public class DependencySorterTest {
 
   private List<Name> sort(Map<Name, Set<Dependency>> map) {
     try {
-      ImmutableModule builtinModule = new ImmutableModule(Empty.nameToFunctionMap());
+      ImmutableModule builtinModule = new ImmutableModule(Empty.nameFunctionMap());
       return DependencySorter.sortDependencies(builtinModule, map);
     } catch (Message e) {
       messages.log(e);
