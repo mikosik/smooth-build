@@ -71,6 +71,24 @@ public class EmptyTest {
     assertThat(Empty.nameFunctionMap()).isSameAs(Empty.nameFunctionMap());
   }
 
+  // svalueList()
+
+  @Test
+  public void empty_svalue_list_is_empty() {
+    assertThat(Empty.svalueList()).isEmpty();
+  }
+
+  @Test
+  public void empty_svalue_list_is_immutable() {
+    @SuppressWarnings("unused")
+    ImmutableList<SValue> list = Empty.svalueList();
+  }
+
+  @Test
+  public void empty_svalue_list_always_returns_the_same_object() {
+    assertThat(Empty.svalueList()).isSameAs(Empty.svalueList());
+  }
+
   // exprList()
 
   @Test
