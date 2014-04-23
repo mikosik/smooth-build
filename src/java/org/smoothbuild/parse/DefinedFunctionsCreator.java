@@ -147,8 +147,8 @@ public class DefinedFunctionsCreator {
       if (expression.STRING() != null) {
         return buildStringExpr(expression.STRING());
       }
-      throw new Message(FATAL, "Bug in smooth binary: Illegal parse tree: "
-          + ExpressionContext.class.getSimpleName() + " without children.");
+      throw new Message(FATAL, "Illegal parse tree: " + ExpressionContext.class.getSimpleName()
+          + " without children.");
     }
 
     private Expr<?> build(ArrayContext list) {
@@ -195,8 +195,8 @@ public class DefinedFunctionsCreator {
         return build(elem.call());
       }
 
-      throw new Message(FATAL, "Bug in smooth binary: Illegal parse tree: "
-          + ArrayElemContext.class.getSimpleName() + " without children.");
+      throw new Message(FATAL, "Illegal parse tree: " + ArrayElemContext.class.getSimpleName()
+          + " without children.");
     }
 
     private SType<?> commonSuperType(List<ArrayElemContext> elems,

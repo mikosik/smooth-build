@@ -55,11 +55,10 @@ public class RecursiveFilesIterator implements Iterator<Path> {
             directoryStack.push(file);
             break;
           case NOTHING:
-            throw new Message(FATAL, "Bug in smooth binary: Unexpected case " + NOTHING + " in "
+            throw new Message(FATAL, "Unexpected case " + NOTHING + " in "
                 + RecursiveFilesIterator.class.getSimpleName());
           default:
-            throw new Message(FATAL, "Bug in smooth binary: Unhandled case "
-                + fileSystem.pathState(file) + " in "
+            throw new Message(FATAL, "Unknown PathState: " + fileSystem.pathState(file) + " in "
                 + RecursiveFilesIterator.class.getSimpleName());
 
         }

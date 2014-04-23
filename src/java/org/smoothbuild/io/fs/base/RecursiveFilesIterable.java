@@ -20,8 +20,7 @@ public class RecursiveFilesIterable implements Iterable<Path> {
       case NOTHING:
         return ImmutableList.of();
       default:
-        throw new Message(FATAL, "Bug in smooth binary: Unhandled case "
-            + fileSystem.pathState(directory) + " in "
+        throw new Message(FATAL, "Unknown PathState: " + fileSystem.pathState(directory) + " in "
             + RecursiveFilesIterable.class.getSimpleName());
     }
   }
