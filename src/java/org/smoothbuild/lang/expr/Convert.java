@@ -47,7 +47,17 @@ public class Convert {
   }
 
   public static <T extends SValue> Expr<T> convertExpr(SType<T> destinationType, Expr<?> source) {
-    ImmutableMap<SType<?>, Function<?>> availableFunctions = FUNCTIONS.get(source.type());
+    SType<?> sourceType = source.type();
+    if (sourceType == destinationType) {
+      /*
+       * Cast is safe as 'if' above checked that source has proper type.
+       */
+      @SuppressWarnings("unchecked")
+      Expr<T> expr = (Expr<T>) source;
+      return expr;
+    }
+
+    ImmutableMap<SType<?>, Function<?>> availableFunctions = FUNCTIONS.get(sourceType);
 
     /*
      * Cast is safe as FUNCTIONS map is immutable and constructed properly.
