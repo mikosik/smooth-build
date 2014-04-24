@@ -26,6 +26,10 @@ public class Empty {
     return ImmutableMap.of();
   }
 
+  public static ImmutableMap<SType<?>, Function<?>> typeFunctionMap() {
+    return ImmutableMap.of();
+  }
+
   public static ImmutableList<Param> paramList() {
     return ImmutableList.of();
   }
