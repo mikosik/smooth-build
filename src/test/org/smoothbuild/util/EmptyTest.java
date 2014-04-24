@@ -72,6 +72,24 @@ public class EmptyTest {
     assertThat(Empty.nameFunctionMap()).isSameAs(Empty.nameFunctionMap());
   }
 
+  // typeFunctionMap();
+
+  @Test
+  public void empty_type_function_map_is_empty() {
+    assertThat(Empty.typeFunctionMap()).isEmpty();
+  }
+
+  @Test
+  public void empty_type_function_map_is_immutable() {
+    @SuppressWarnings("unused")
+    ImmutableMap<SType<?>, Function<?>> map = Empty.typeFunctionMap();
+  }
+
+  @Test
+  public void empty_type_function_map_always_returns_the_same_object() {
+    assertThat(Empty.typeFunctionMap()).isSameAs(Empty.typeFunctionMap());
+  }
+
   // paramList()
 
   @Test
