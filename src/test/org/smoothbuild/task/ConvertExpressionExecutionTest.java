@@ -57,6 +57,7 @@ public class ConvertExpressionExecutionTest {
   private SArray<SBlob> blobArray;
   private SArray<SFile> fileArray;
   private SArray<SNothing> nil;
+  private ImmutableList<Expr<SBlob>> expressions;
 
   @Before
   public void before() {
@@ -204,6 +205,21 @@ public class ConvertExpressionExecutionTest {
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(FILE_ARRAY).build()));
     thenEqual(task.resultType(), FILE_ARRAY);
+  }
+
+  @Test
+  public void converts_iterable_of_expressions() throws Exception {
+    given(blob = createBlob());
+    given(file = objectsDb.file(path("file.txt"), blob));
+    given(blobExpr = new ConstantExpr<>(BLOB, blob, codeLocation(2)));
+    given(fileExpr = new ConstantExpr<>(FILE, file, codeLocation(2)));
+    given(expressions = Convert.convertExprs(BLOB, ImmutableList.of(blobExpr, fileExpr)));
+    given(blobArrayExpr = new ArrayExpr<>(BLOB_ARRAY, expressions, codeLocation(2)));
+    given(task = taskGraph.createTasks(blobArrayExpr));
+    when(taskGraph).executeAll();
+    thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(BLOB_ARRAY).add(blob)
+        .add(blob).build()));
+    thenEqual(task.resultType(), BLOB_ARRAY);
   }
 
   private SBlob createBlob() throws IOException {

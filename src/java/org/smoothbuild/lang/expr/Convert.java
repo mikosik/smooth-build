@@ -22,6 +22,7 @@ import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.util.Empty;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
@@ -34,6 +35,15 @@ public class Convert {
 
   private static final ImmutableMap<SType<?>, ImmutableMap<SType<?>, Function<?>>> FUNCTIONS =
       createFunctions();
+
+  public static <T extends SValue> ImmutableList<Expr<T>> convertExprs(SType<T> type,
+      Iterable<? extends Expr<?>> expressions) {
+    ImmutableList.Builder<Expr<T>> builder = ImmutableList.builder();
+    for (Expr<?> expr : expressions) {
+      builder.add(convertExpr(type, expr));
+    }
+    return builder.build();
+  }
 
   public static boolean isAssignable(SType<?> from, SType<?> to) {
     if (from == to) {
