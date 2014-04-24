@@ -66,7 +66,7 @@ public class STypes {
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   @SuppressWarnings("unchecked")
   static final ImmutableSet<SType<?>> PARAM_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
-      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
+      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
   @SuppressWarnings("unchecked")
   private static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
