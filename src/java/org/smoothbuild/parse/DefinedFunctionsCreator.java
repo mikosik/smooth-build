@@ -39,9 +39,9 @@ import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
+import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.expr.InvalidExpr;
-import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
@@ -307,7 +307,7 @@ public class DefinedFunctionsCreator {
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         SString stringValue = objectsDb.string(unescaped(string));
-        return new StringExpr(stringValue, locationOf(stringToken.getSymbol()));
+        return new ConstantExpr<>(STRING, stringValue, locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.log(new CodeMessage(ERROR, location, e.getMessage()));

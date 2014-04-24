@@ -14,7 +14,7 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.expr.StringExpr;
+import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Params;
@@ -71,10 +71,10 @@ public class NativeFunctionFactoryTest {
         (Function<SString>) NativeFunctionFactory.create(Func.class, false);
     SString string1 = objectsDb.string("abc");
     SString string2 = objectsDb.string("def");
-    StringExpr arg1 = new StringExpr(string1, codeLocation(1));
-    StringExpr arg2 = new StringExpr(string2, codeLocation(1));
+    ConstantExpr<?> arg1 = new ConstantExpr<>(STRING, string1, codeLocation(1));
+    ConstantExpr<?> arg2 = new ConstantExpr<>(STRING, string2, codeLocation(1));
 
-    ImmutableMap<String, StringExpr> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
+    ImmutableMap<String, ConstantExpr<?>> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
     TaskWorker<SString> task = function.createWorker(args, codeLocation(1));
     TaskOutput<SString> output = task.execute(ImmutableList.of(string1, string2), nativeApi);
     assertThat(Messages.containsProblems(output.messages())).isFalse();

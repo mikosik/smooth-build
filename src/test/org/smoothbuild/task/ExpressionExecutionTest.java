@@ -25,10 +25,10 @@ import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
+import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.ConvertExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.expr.InvalidExpr;
-import org.smoothbuild.lang.expr.StringExpr;
 import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidNodeError;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
@@ -70,7 +70,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_string_literal_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpr = new StringExpr(sstring, location));
+    given(stringExpr = new ConstantExpr<>(STRING, sstring, location));
     given(task = taskGraph.createTasks(stringExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));
@@ -87,7 +87,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_convert_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpr = new StringExpr(sstring, location));
+    given(stringExpr = new ConstantExpr<>(STRING, sstring, location));
     given(converted = new ConvertExpr<>(stringExpr, new DoubleStringConverter(), location));
     given(task = taskGraph.createTasks(converted));
     when(taskGraph).executeAll();
@@ -105,7 +105,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_array_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpr = new StringExpr(sstring, location));
+    given(stringExpr = new ConstantExpr<>(STRING, sstring, location));
     given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(stringExpr), location));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
@@ -115,7 +115,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_call_expression_using_defined_function() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpr = new StringExpr(sstring, location));
+    given(stringExpr = new ConstantExpr<>(STRING, sstring, location));
     given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction<>(signature, stringExpr));
     given(callExpr = new CallExpr<>(function, location, Empty.stringExprMap()));
@@ -128,7 +128,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_call_expression_using_native_function() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpr = new StringExpr(sstring, location));
+    given(stringExpr = new ConstantExpr<>(STRING, sstring, location));
     given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
     given(invoker = mock(Invoker.class));
     given(willReturn(sstring), invoker).invoke(any(NativeApi.class), any(Map.class));
