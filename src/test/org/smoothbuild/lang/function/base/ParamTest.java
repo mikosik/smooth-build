@@ -4,7 +4,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.allowedForParam;
 import static org.smoothbuild.lang.function.base.Param.param;
@@ -33,11 +32,6 @@ public class ParamTest {
   @Test(expected = NullPointerException.class)
   public void null_name_is_forbidden() throws Exception {
     param(STRING, null, true);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void creating_nil_param_is_forbidden() throws Exception {
-    param(NIL, "name", true);
   }
 
   @Test
