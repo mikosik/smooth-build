@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.convert.Conversions;
+import org.smoothbuild.lang.expr.Convert;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
@@ -89,7 +89,7 @@ public class ParamToArgMapper {
         String name = arg.name();
         Param param = paramsPool.takeByName(name);
         SType<?> paramType = param.type();
-        if (!Conversions.canConvert(arg.type(), paramType)) {
+        if (!Convert.isAssignable(arg.type(), paramType)) {
           messages.log(new TypeMismatchError(arg, paramType));
         } else {
           paramToArgMapBuilder.add(param, arg);

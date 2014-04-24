@@ -4,9 +4,6 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.convert.Conversions;
-import org.smoothbuild.lang.convert.Converter;
-import org.smoothbuild.lang.expr.ConvertExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.Message;
 
@@ -34,17 +31,11 @@ public class Convert {
       Expr<T> result = (Expr<T>) expr;
 
       return result;
-    } else if (Conversions.canConvert(expr.type(), destinationType)) {
-      return convert(destinationType, expr);
+    } else if (org.smoothbuild.lang.expr.Convert.isAssignable(expr.type(), destinationType)) {
+      return org.smoothbuild.lang.expr.Convert.convertExpr(destinationType, expr);
     } else {
       throw new Message(FATAL, "Cannot convert from " + expr.type() + " to " + destinationType
           + ".");
     }
-  }
-
-  private static <S extends SValue, T extends SValue> Expr<T> convert(SType<T> destinationType,
-      Expr<S> expr) {
-    Converter<S, T> converter = Conversions.converter(expr.type(), destinationType);
-    return new ConvertExpr<>(expr, converter, expr.codeLocation());
   }
 }

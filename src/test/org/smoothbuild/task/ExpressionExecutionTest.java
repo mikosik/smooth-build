@@ -21,12 +21,9 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValueFactory;
-import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
-import org.smoothbuild.lang.expr.ConvertExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.expr.InvalidExpr;
 import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidNodeError;
@@ -54,7 +51,6 @@ public class ExpressionExecutionTest {
   private Expr<?> arrayExpr;
   private TaskGraph taskGraph;
   private Task<?> task;
-  private ConvertExpr<SString, SString> converted;
   private CallExpr<?> callExpr;
   private Function<?> function;
   private Signature<SString> signature;
@@ -82,16 +78,6 @@ public class ExpressionExecutionTest {
     given(expression = new InvalidExpr<>(STRING, location));
     when(taskGraph).createTasks(expression);
     thenThrown(new CannotCreateTaskWorkerFromInvalidNodeError());
-  }
-
-  @Test
-  public void executes_convert_expression() throws Exception {
-    given(sstring = objectsDb.string(string));
-    given(stringExpr = new ConstantExpr<>(STRING, sstring, location));
-    given(converted = new ConvertExpr<>(stringExpr, new DoubleStringConverter(), location));
-    given(task = taskGraph.createTasks(converted));
-    when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(objectsDb.string(string + string)));
   }
 
   @Test
@@ -145,17 +131,5 @@ public class ExpressionExecutionTest {
       arrayBuilder.add(sstring);
     }
     return arrayBuilder.build();
-  }
-
-  private static class DoubleStringConverter extends Converter<SString, SString> {
-    public DoubleStringConverter() {
-      super(STRING, STRING);
-    }
-
-    @Override
-    public SString convert(SValueFactory valueFactory, SString sstring) {
-      String value = sstring.value();
-      return valueFactory.string(value + value);
-    }
   }
 }

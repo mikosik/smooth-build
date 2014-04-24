@@ -22,7 +22,7 @@ import static org.smoothbuild.lang.base.STypes.javaResultTypetoType;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.convert.Conversions;
+import org.smoothbuild.lang.expr.Convert;
 
 import com.google.common.collect.Sets;
 import com.google.common.testing.EqualsTester;
@@ -69,10 +69,10 @@ public class STypesTest {
   }
 
   @Test
-  public void testAllTypes() throws Exception {
+  public void all_types_returns_list_sorted_by_super_type_dependency() throws Exception {
     Set<SType<?>> visited = Sets.newHashSet();
     for (SType<?> type : STypes.allTypes()) {
-      for (SType<?> superType : Conversions.superTypesOf(type)) {
+      for (SType<?> superType : Convert.superTypesOf(type)) {
         assertThat(visited).contains(superType);
       }
       visited.add(type);
