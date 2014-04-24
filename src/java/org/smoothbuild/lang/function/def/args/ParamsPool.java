@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.convert.Conversions;
+import org.smoothbuild.lang.expr.Convert;
 import org.smoothbuild.lang.function.base.Param;
 
 import com.google.common.collect.ImmutableMap;
@@ -70,7 +70,7 @@ public class ParamsPool {
       Set<Param> optional = optionalParamsMap.get(type);
       Set<Param> required = requiredParamsMap.get(type);
 
-      for (SType<?> superType : Conversions.superTypesOf(type)) {
+      for (SType<?> superType : Convert.superTypesOf(type)) {
         optional = Sets.union(optional, optionalParamsMap.get(superType));
         required = Sets.union(required, requiredParamsMap.get(superType));
       }
