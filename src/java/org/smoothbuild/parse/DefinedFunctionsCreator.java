@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.basicTypes;
+import static org.smoothbuild.lang.expr.Convert.convertExprs;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
@@ -168,7 +169,7 @@ public class DefinedFunctionsCreator {
     private <T extends SValue> Expr<SArray<T>> buildArray(SType<T> elemType,
         ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
       SArrayType<T> arrayType = STypes.arrayTypeContaining(elemType);
-      ImmutableList<Expr<T>> convertedExpr = Convert.ifNeeded(elemType, elemExprs);
+      ImmutableList<Expr<T>> convertedExpr = convertExprs(elemType, elemExprs);
       return new ArrayExpr<>(arrayType, convertedExpr, location);
     }
 

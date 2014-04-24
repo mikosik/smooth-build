@@ -1,5 +1,7 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.lang.expr.Convert.convertExpr;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -30,8 +32,8 @@ public class ArgExprsCreator {
     for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
       Param param = entry.getKey();
       Arg arg = entry.getValue();
-      Expr<?> node = Convert.ifNeeded(param.type(), arg.expr());
-      builder.put(param.name(), node);
+      Expr<?> expr = convertExpr(param.type(), arg.expr());
+      builder.put(param.name(), expr);
     }
 
     return builder.build();
