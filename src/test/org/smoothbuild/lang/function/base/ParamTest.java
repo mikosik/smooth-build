@@ -82,8 +82,8 @@ public class ParamTest {
 
   @Test
   public void to_padded_string() throws Exception {
-    Expr<?> abstractNode = mock(Expr.class);
-    given(willReturn(STRING), abstractNode).type();
+    Expr<?> expr = mock(Expr.class);
+    given(willReturn(STRING), expr).type();
 
     Param param = param(STRING, "myName", false);
     String actual = param.toPaddedString(10, 13);
@@ -93,8 +93,8 @@ public class ParamTest {
 
   @Test
   public void to_padded_string_for_short_limits() throws Exception {
-    Expr<?> abstractNode = mock(Expr.class);
-    given(willReturn(STRING), abstractNode).type();
+    Expr<?> expr = mock(Expr.class);
+    given(willReturn(STRING), expr).type();
 
     Param param = param(STRING, "myName", false);
     String actual = param.toPaddedString(1, 1);

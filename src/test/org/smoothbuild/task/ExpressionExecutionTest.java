@@ -26,7 +26,7 @@ import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.expr.InvalidExpr;
-import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidNodeError;
+import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExprError;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -77,7 +77,7 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string(string));
     given(expression = new InvalidExpr<>(STRING, location));
     when(taskGraph).createTasks(expression);
-    thenThrown(new CannotCreateTaskWorkerFromInvalidNodeError());
+    thenThrown(new CannotCreateTaskWorkerFromInvalidExprError());
   }
 
   @Test
