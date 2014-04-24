@@ -2,7 +2,6 @@ package org.smoothbuild.util;
 
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
@@ -52,9 +51,5 @@ public class Empty {
     } else {
       return iterable;
     }
-  }
-
-  public static ImmutableMap<SType<?>, Converter<?, ?>> typeConverterMap() {
-    return ImmutableMap.of();
   }
 }

@@ -6,7 +6,6 @@ import static org.testory.Testory.mock;
 import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.convert.Converter;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
@@ -174,23 +173,5 @@ public class EmptyTest {
     @SuppressWarnings("unchecked")
     Iterable<String> iterable = mock(Iterable.class);
     assertThat(Empty.nullToEmpty(iterable)).isSameAs(iterable);
-  }
-
-  // typeConverterMap()
-
-  @Test
-  public void empty_type_converter_map_is_empty() {
-    assertThat(Empty.typeConverterMap()).isEmpty();
-  }
-
-  @Test
-  public void empty_type_converter_map_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<SType<?>, Converter<?, ?>> map = Empty.typeConverterMap();
-  }
-
-  @Test
-  public void empty_type_converter_map_always_returns_the_same_object() {
-    assertThat(Empty.typeConverterMap()).isSameAs(Empty.typeConverterMap());
   }
 }
