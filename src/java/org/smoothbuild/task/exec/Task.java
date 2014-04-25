@@ -71,7 +71,7 @@ public class Task<T extends SValue> {
   }
 
   public HashCode hash() {
-    Hasher hasher = Hash.function().newHasher();
+    Hasher hasher = Hash.newHasher();
     hasher.putBytes(worker.hash().asBytes());
     for (SValue sValue : input()) {
       hasher.putBytes(sValue.hash().asBytes());
