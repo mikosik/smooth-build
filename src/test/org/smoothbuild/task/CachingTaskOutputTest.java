@@ -16,12 +16,12 @@ import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.task.exec.TaskGraph;
@@ -126,7 +126,7 @@ public class CachingTaskOutputTest {
     }
 
     @Override
-    public TaskOutput<SString> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
+    public TaskOutput<SString> execute(TaskInput input, NativeApiImpl nativeApi) {
       SString sstring = nativeApi.string(Integer.toString(counter.incrementAndGet()));
       return new TaskOutput<SString>(sstring);
     }

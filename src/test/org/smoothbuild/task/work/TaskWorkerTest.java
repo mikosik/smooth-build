@@ -12,6 +12,7 @@ import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.testory.Closure;
@@ -96,7 +97,7 @@ public class TaskWorkerTest {
     }
 
     @Override
-    public TaskOutput<T> execute(Iterable<? extends SValue> dependencies, NativeApiImpl nativeApi) {
+    public TaskOutput<T> execute(TaskInput input, NativeApiImpl nativeApi) {
       return null;
     }
   }

@@ -13,10 +13,10 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.work.TaskWorker;
 
@@ -66,8 +66,7 @@ public class TaskReporterTest {
     TaskWorker<SString> worker =
         new TaskWorker<SString>(null, STRING, "name", isInternal, true, codeLocation(13)) {
           @Override
-          public TaskOutput<SString> execute(Iterable<? extends SValue> input,
-              NativeApiImpl nativeApi) {
+          public TaskOutput<SString> execute(TaskInput input, NativeApiImpl nativeApi) {
             return null;
           }
 

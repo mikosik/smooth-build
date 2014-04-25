@@ -7,6 +7,7 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
@@ -23,9 +24,9 @@ public class ArrayWorker<T extends SValue> extends TaskWorker<SArray<T>> {
   }
 
   @Override
-  public TaskOutput<SArray<T>> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
+  public TaskOutput<SArray<T>> execute(TaskInput input, NativeApiImpl nativeApi) {
     @SuppressWarnings("unchecked")
-    Iterable<T> castInput = (Iterable<T>) input;
+    Iterable<T> castInput = (Iterable<T>) input.values();
     ArrayBuilder<T> builder = nativeApi.arrayBuilder(arrayType);
     for (T value : castInput) {
       builder.add(value);

@@ -10,7 +10,6 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
@@ -73,17 +72,11 @@ public class Task<T extends SValue> {
   public HashCode hash() {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(worker.hash().asBytes());
-    for (SValue sValue : input()) {
-      hasher.putBytes(sValue.hash().asBytes());
-    }
+    hasher.putBytes(input().hash().asBytes());
     return hasher.hash();
   }
 
-  private Iterable<? extends SValue> input() {
-    Builder<SValue> builder = ImmutableList.builder();
-    for (Task<?> task : dependencies) {
-      builder.add(task.output().returnValue());
-    }
-    return builder.build();
+  private TaskInput input() {
+    return TaskInput.fromTaskReturnValues(dependencies);
   }
 }
