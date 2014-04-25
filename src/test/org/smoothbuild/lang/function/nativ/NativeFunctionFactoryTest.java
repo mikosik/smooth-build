@@ -31,6 +31,7 @@ import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Messages;
+import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.task.work.err.UnexpectedError;
@@ -75,8 +76,9 @@ public class NativeFunctionFactoryTest {
     ConstantExpr<?> arg2 = new ConstantExpr<>(STRING, string2, codeLocation(1));
 
     ImmutableMap<String, ConstantExpr<?>> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
-    TaskWorker<SString> task = function.createWorker(args, codeLocation(1));
-    TaskOutput<SString> output = task.execute(ImmutableList.of(string1, string2), nativeApi);
+    TaskWorker<SString> worker = function.createWorker(args, codeLocation(1));
+    TaskInput input = TaskInput.fromValues(ImmutableList.of(string1, string2));
+    TaskOutput<SString> output = worker.execute(input, nativeApi);
     assertThat(Messages.containsProblems(output.messages())).isFalse();
     assertThat(output.returnValue().value()).isEqualTo("abcdef");
   }
@@ -344,8 +346,8 @@ public class NativeFunctionFactoryTest {
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
-    function.createWorker(Empty.stringExprMap(), codeLocation(1)).execute(Empty.svalueList(),
-        nativeApi);
+    TaskInput input = TaskInput.fromTaskReturnValues(Empty.taskList());
+    function.createWorker(Empty.stringExprMap(), codeLocation(1)).execute(input, nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
   }
 

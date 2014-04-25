@@ -24,6 +24,7 @@ import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.work.err.NullResultError;
 import org.smoothbuild.task.work.err.ReflexiveInternalError;
@@ -72,14 +73,15 @@ public class NativeCallWorkerTest {
     given(willReturn(sstring), invoker).invoke(nativeApi,
         ImmutableMap.<String, SValue> of(name, argValue));
 
-    TaskOutput<?> actual = nativeCallTask.execute(ImmutableList.of(argValue), nativeApi);
+    TaskInput taskInput = TaskInput.fromValues(ImmutableList.of(argValue));
+    TaskOutput<?> actual = nativeCallTask.execute(taskInput, nativeApi);
     assertThat(actual).isEqualTo(new TaskOutput<>(sstring));
   }
 
   @Test
   public void null_result_is_logged_when_function_has_non_void_return_type() throws Exception {
     given(willReturn(null), invoker).invoke(nativeApi, Empty.stringValueMap());
-    nativeCallWorker.execute(Empty.svalueList(), nativeApi);
+    nativeCallWorker.execute(TaskInput.fromValues(Empty.svalueList()), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(NullResultError.class);
   }
 
@@ -99,7 +101,7 @@ public class NativeCallWorkerTest {
       }
     }, invoker).invoke(nativeApi, Empty.stringValueMap());
 
-    nativeCallWorker.execute(Empty.svalueList(), nativeApi);
+    nativeCallWorker.execute(TaskInput.fromValues(Empty.svalueList()), nativeApi);
 
     nativeApi.loggedMessages().assertContainsOnly(CodeMessage.class);
   }
@@ -137,7 +139,7 @@ public class NativeCallWorkerTest {
   private void assertExceptionIsLoggedAsProblem(Throwable thrown, Class<? extends Message> expected)
       throws Exception {
     given(willThrow(thrown), invoker).invoke(nativeApi, Empty.stringValueMap());
-    nativeCallWorker.execute(Empty.svalueList(), nativeApi);
+    nativeCallWorker.execute(TaskInput.fromValues(Empty.svalueList()), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(expected);
   }
 }

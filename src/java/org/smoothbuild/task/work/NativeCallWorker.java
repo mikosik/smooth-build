@@ -10,6 +10,7 @@ import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.task.work.err.NullResultError;
@@ -48,7 +49,7 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
   }
 
   @Override
-  public TaskOutput<T> execute(Iterable<? extends SValue> input, NativeApiImpl nativeApi) {
+  public TaskOutput<T> execute(TaskInput input, NativeApiImpl nativeApi) {
     T result = null;
     try {
       result = function.invoke(nativeApi, calculateArguments(input));
@@ -72,10 +73,10 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
     }
   }
 
-  private ImmutableMap<String, SValue> calculateArguments(Iterable<? extends SValue> dependencies) {
+  private ImmutableMap<String, SValue> calculateArguments(TaskInput input) {
     Builder<String, SValue> builder = ImmutableMap.builder();
     Iterator<String> names = paramNames.iterator();
-    Iterator<? extends SValue> values = dependencies.iterator();
+    Iterator<? extends SValue> values = input.values().iterator();
     while (names.hasNext()) {
       String name = names.next();
       SValue value = values.next();
