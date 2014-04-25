@@ -1,7 +1,5 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -12,6 +10,7 @@ import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.save.ArtifactSaver;
 import org.smoothbuild.util.Empty;
 
@@ -30,7 +29,7 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function<?> function) {
-    Expr<?> expr = new CallExpr<>(function, codeLocation(1), Empty.stringExprMap());
+    Expr<?> expr = new CallExpr<>(function, CodeLocation.commandLine(), Empty.stringExprMap());
     artifacts.put(function.name(), taskGraph.createTasks(expr));
   }
 

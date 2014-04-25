@@ -5,12 +5,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class CodeLocation {
   private final int line;
 
+  public static CodeLocation commandLine() {
+    return new CodeLocation(-1);
+  }
+
   public static CodeLocation codeLocation(int line) {
+    checkArgument(0 < line);
     return new CodeLocation(line);
   }
 
-  protected CodeLocation(int line) {
-    checkArgument(0 < line);
+  private CodeLocation(int line) {
     this.line = line;
   }
 
