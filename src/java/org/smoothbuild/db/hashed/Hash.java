@@ -11,6 +11,10 @@ public class Hash {
     return Hash.function().hashString(string, CHARSET);
   }
 
+  public static HashCode integer(int value) {
+    return Hash.function().hashInt(value);
+  }
+
   public static HashCode bytes(byte[] bytes) {
     return Hash.function().hashBytes(bytes);
   }
@@ -22,4 +26,5 @@ public class Hash {
   public static HashFunction function() {
     return Hashing.sha1();
   }
+
 }

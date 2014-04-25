@@ -28,6 +28,20 @@ public class HashTest {
     thenReturned(not(Hash.string(string2)));
   }
 
+  // Hash.integer()
+
+  @Test
+  public void hash_of_given_integer_is_always_the_same() {
+    when(Hash.integer(33));
+    thenReturned(Hash.integer(33));
+  }
+
+  @Test
+  public void hashes_of_different_integers_are_different() {
+    when(Hash.integer(33));
+    thenReturned(not(Hash.integer(34)));
+  }
+
   // Hash.bytes()
 
   @Test
