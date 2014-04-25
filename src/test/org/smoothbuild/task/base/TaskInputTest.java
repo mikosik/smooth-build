@@ -11,6 +11,7 @@ import static org.testory.Testory.willReturn;
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
 
@@ -82,7 +83,7 @@ public class TaskInputTest {
     given(sstring1 = objectsDb.string("abc"));
     given(willReturn(new TaskOutput<>(sstring1)), depTask1).output();
     given(taskInput = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask1)));
-    given(taskInput2 = TaskInput.fromTaskReturnValues(ImmutableList.<Task<?>> of()));
+    given(taskInput2 = TaskInput.fromTaskReturnValues(Empty.taskList()));
     when(taskInput).hash();
     thenReturned(not(taskInput2.hash()));
   }

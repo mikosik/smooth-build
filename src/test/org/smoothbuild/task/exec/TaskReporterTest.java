@@ -19,6 +19,7 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
 
@@ -71,6 +72,6 @@ public class TaskReporterTest {
           }
 
         };
-    return new Task<>(worker, ImmutableList.<Task<?>> of());
+    return new Task<>(worker, Empty.taskList());
   }
 }
