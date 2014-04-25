@@ -9,7 +9,7 @@ import com.google.common.hash.Hasher;
 
 public class WorkerHashes {
   public static HashCode workerHash(Class<?> workerClass) {
-    return workerHash(workerClass, Hash.function().hashInt(0));
+    return workerHash(workerClass, Hash.integer(0));
   }
 
   public static HashCode workerHash(Class<?> workerClass, HashCode workerTypeHash) {
