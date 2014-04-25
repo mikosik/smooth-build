@@ -12,11 +12,12 @@ import static org.testory.Testory.thenCalledTimes;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;

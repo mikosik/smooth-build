@@ -11,10 +11,10 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;

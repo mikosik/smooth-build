@@ -18,7 +18,6 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -29,7 +28,8 @@ import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Convert;
 import org.smoothbuild.lang.expr.Expr;
-import org.smoothbuild.task.exec.Task;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.testing.common.StreamTester;
 

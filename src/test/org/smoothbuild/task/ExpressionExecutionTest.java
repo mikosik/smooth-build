@@ -16,7 +16,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
@@ -33,7 +32,8 @@ import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.Task;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.util.Empty;
 

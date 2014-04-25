@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskoutputs;
+package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;

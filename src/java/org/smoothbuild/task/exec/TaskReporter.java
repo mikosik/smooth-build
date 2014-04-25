@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;

@@ -1,12 +1,12 @@
-package org.smoothbuild.task.exec;
+package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;

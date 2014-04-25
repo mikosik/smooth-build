@@ -8,11 +8,11 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.testory.Closure;
 
