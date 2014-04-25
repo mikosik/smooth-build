@@ -1,6 +1,6 @@
-package org.smoothbuild.task.base;
+package org.smoothbuild.task.work;
 
-import static org.smoothbuild.task.base.WorkerHashes.workerHash;
+import static org.smoothbuild.task.work.WorkerHashes.workerHash;
 
 import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.ArrayBuilder;

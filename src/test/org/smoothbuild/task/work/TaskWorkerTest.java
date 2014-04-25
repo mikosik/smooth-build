@@ -1,4 +1,4 @@
-package org.smoothbuild.task.base;
+package org.smoothbuild.task.work;
 
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;

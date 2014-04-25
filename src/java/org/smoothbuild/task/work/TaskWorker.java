@@ -1,4 +1,4 @@
-package org.smoothbuild.task.base;
+package org.smoothbuild.task.work;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

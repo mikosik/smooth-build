@@ -1,4 +1,4 @@
-package org.smoothbuild.task.base.err;
+package org.smoothbuild.task.work.err;
 
 @SuppressWarnings("serial")
 public class ReflexiveInternalError extends InvocationError {

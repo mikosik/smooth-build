@@ -9,7 +9,7 @@ import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.TaskWorker;
+import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

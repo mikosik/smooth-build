@@ -32,8 +32,8 @@ import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Messages;
-import org.smoothbuild.task.base.TaskWorker;
-import org.smoothbuild.task.base.err.UnexpectedError;
+import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.task.work.err.UnexpectedError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
