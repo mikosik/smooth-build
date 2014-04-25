@@ -54,7 +54,7 @@ public class HashedDbTest {
 
   @Test
   public void bytes_written_at_given_hash_can_be_read_back() throws IOException {
-    given(hash = Hash.function().hashInt(33));
+    given(hash = Hash.integer(33));
     given(hashedDb.write(hash, bytes1));
     when(inputStreamToBytes(hashedDb.openInputStream(hash)));
     thenReturned(bytes1);
@@ -71,7 +71,7 @@ public class HashedDbTest {
   @Test
   public void storing_bytes_at_already_used_hash_is_ignored() throws IOException {
     given(hash = hashedDb.write(bytes1));
-    given(hashedDb.write(Hash.function().hashInt(33), bytes2));
+    given(hashedDb.write(Hash.integer(33), bytes2));
     when(inputStreamToBytes(hashedDb.openInputStream(hash)));
     thenReturned(bytes1);
   }

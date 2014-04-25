@@ -65,7 +65,7 @@ public class UnmarshallerTest {
 
   @Test
   public void too_short_path_in_db_causes_exception() throws Exception {
-    given(hash = Hash.function().hashInt(33));
+    given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
     given(marshaller).write(10);
     given(marshaller).write(0x12345678);
@@ -76,7 +76,7 @@ public class UnmarshallerTest {
 
   @Test
   public void halfed_size_of_path_in_db_causes_exception() throws Exception {
-    given(hash = Hash.function().hashInt(33));
+    given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
     given(marshaller).write((byte) 1);
     given(marshaller).write((byte) 1);
@@ -87,7 +87,7 @@ public class UnmarshallerTest {
 
   @Test
   public void illegal_path_causes_exception() throws Exception {
-    given(hash = Hash.function().hashInt(33));
+    given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
     given(marshaller).write("/");
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
@@ -97,7 +97,7 @@ public class UnmarshallerTest {
 
   @Test
   public void marshalled_hash_can_be_unmarshalled() {
-    given(hash = Hash.function().hashInt(33));
+    given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
     given(marshaller).write(hash);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
@@ -107,7 +107,7 @@ public class UnmarshallerTest {
 
   @Test
   public void too_short_hash_in_db_causes_exception() {
-    given(hash = Hash.function().hashInt(33));
+    given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
     given(marshaller).write(0x12345678);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
@@ -164,7 +164,7 @@ public class UnmarshallerTest {
 
   @Test
   public void too_short_int_in_db_causes_exception() throws Exception {
-    given(hash = Hash.function().hashInt(33));
+    given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
     given(marshaller).write((byte) 1);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
@@ -198,7 +198,7 @@ public class UnmarshallerTest {
     given(myInt = 0x12345678);
     given(myByte = 123);
     given(path = path("my/path"));
-    given(hash = Hash.function().hashInt(33));
+    given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
     given(marshaller).write(myInt);
     given(marshaller).write(myByte);
