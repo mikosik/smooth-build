@@ -14,7 +14,6 @@ import static org.testory.Testory.willThrow;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
@@ -25,6 +24,7 @@ import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.work.err.NullResultError;
 import org.smoothbuild.task.work.err.ReflexiveInternalError;
 import org.smoothbuild.task.work.err.UnexpectedError;

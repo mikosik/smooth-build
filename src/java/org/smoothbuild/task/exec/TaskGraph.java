@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

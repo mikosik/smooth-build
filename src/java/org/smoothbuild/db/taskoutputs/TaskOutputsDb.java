@@ -17,6 +17,7 @@ import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 import org.smoothbuild.message.base.Messages;
+import org.smoothbuild.task.base.TaskOutput;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

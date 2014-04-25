@@ -8,7 +8,6 @@ import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 
 import org.junit.Test;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -32,6 +31,7 @@ import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Messages;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.task.work.err.UnexpectedError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;

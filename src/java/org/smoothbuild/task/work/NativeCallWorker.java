@@ -6,11 +6,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.task.work.err.NullResultError;
 import org.smoothbuild.task.work.err.ReflexiveInternalError;

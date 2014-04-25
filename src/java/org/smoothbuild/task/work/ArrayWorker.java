@@ -2,12 +2,12 @@ package org.smoothbuild.task.work;
 
 import static org.smoothbuild.task.work.WorkerHashes.workerHash;
 
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.hash.HashCode;

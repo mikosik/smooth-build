@@ -4,9 +4,10 @@ import static org.smoothbuild.message.base.Messages.containsProblems;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.taskoutputs.TaskOutput;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDb;
 import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskOutput;
 
 import com.google.common.hash.HashCode;
 
