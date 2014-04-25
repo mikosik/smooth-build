@@ -4,7 +4,7 @@ import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.TaskWorker;
+import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

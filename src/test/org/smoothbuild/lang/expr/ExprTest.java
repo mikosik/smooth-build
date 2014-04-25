@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.TaskWorker;
+import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 

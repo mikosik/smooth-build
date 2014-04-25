@@ -4,8 +4,8 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.ArrayWorker;
-import org.smoothbuild.task.base.TaskWorker;
+import org.smoothbuild.task.work.ArrayWorker;
+import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 

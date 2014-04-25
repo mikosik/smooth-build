@@ -1,4 +1,4 @@
-package org.smoothbuild.task.base;
+package org.smoothbuild.task.work;
 
 import static org.smoothbuild.SmoothContants.CHARSET;
 
@@ -11,10 +11,10 @@ import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.base.err.NullResultError;
-import org.smoothbuild.task.base.err.ReflexiveInternalError;
-import org.smoothbuild.task.base.err.UnexpectedError;
 import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.work.err.NullResultError;
+import org.smoothbuild.task.work.err.ReflexiveInternalError;
+import org.smoothbuild.task.work.err.UnexpectedError;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

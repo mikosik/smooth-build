@@ -22,10 +22,10 @@ import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.TaskWorker;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.task.exec.Task;
 import org.smoothbuild.task.exec.TaskGraph;
+import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;

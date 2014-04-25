@@ -1,4 +1,4 @@
-package org.smoothbuild.task.base;
+package org.smoothbuild.task.work;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.STRING;
@@ -25,9 +25,9 @@ import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.base.err.NullResultError;
-import org.smoothbuild.task.base.err.ReflexiveInternalError;
-import org.smoothbuild.task.base.err.UnexpectedError;
+import org.smoothbuild.task.work.err.NullResultError;
+import org.smoothbuild.task.work.err.ReflexiveInternalError;
+import org.smoothbuild.task.work.err.UnexpectedError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;

@@ -3,7 +3,7 @@ package org.smoothbuild.lang.expr;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.TaskWorker;
+import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableMap;
 
