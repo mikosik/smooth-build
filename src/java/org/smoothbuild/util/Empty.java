@@ -7,6 +7,7 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -42,6 +43,10 @@ public class Empty {
   }
 
   public static ImmutableList<Message> messageList() {
+    return ImmutableList.of();
+  }
+
+  public static ImmutableList<Task<?>> taskList() {
     return ImmutableList.of();
   }
 

@@ -11,6 +11,7 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -159,6 +160,24 @@ public class EmptyTest {
   @Test
   public void empty_message_list_always_returns_the_same_object() {
     assertThat(Empty.messageList()).isSameAs(Empty.messageList());
+  }
+
+  // taskList()
+
+  @Test
+  public void empty_task_list_is_empty() {
+    assertThat(Empty.taskList()).isEmpty();
+  }
+
+  @Test
+  public void empty_task_list_is_immutable() {
+    @SuppressWarnings("unused")
+    ImmutableList<Task<?>> list = Empty.taskList();
+  }
+
+  @Test
+  public void empty_task_list_always_returns_the_same_object() {
+    assertThat(Empty.taskList()).isSameAs(Empty.taskList());
   }
 
   // nullToEmpty
