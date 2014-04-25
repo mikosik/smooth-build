@@ -36,7 +36,7 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
   }
 
   private static HashCode workerHash(NativeFunction<?> function, ImmutableList<String> paramNames) {
-    Hasher hasher = Hash.function().newHasher();
+    Hasher hasher = Hash.newHasher();
     hasher.putBytes(function.name().value().getBytes(CHARSET));
     for (String string : Ordering.natural().sortedCopy(paramNames)) {
       byte[] stringHash = Hash.string(string).asBytes();

@@ -13,7 +13,7 @@ public class WorkerHashes {
   }
 
   public static HashCode workerHash(Class<?> workerClass, HashCode workerTypeHash) {
-    Hasher hasher = Hash.function().newHasher();
+    Hasher hasher = Hash.newHasher();
     hasher.putString(workerClass.getCanonicalName(), CHARSET);
     hasher.putBytes(workerTypeHash.asBytes());
     return hasher.hash();
