@@ -1,0 +1,51 @@
+package org.smoothbuild.task.base;
+
+import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.base.SValue;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hasher;
+
+public class TaskInput {
+  private final ImmutableList<SValue> values;
+  private final HashCode hash;
+
+  public static TaskInput fromTaskReturnValues(Iterable<? extends Task<?>> deps) {
+    return fromValues(toReturnedValues(deps));
+  }
+
+  public static TaskInput fromValues(Iterable<? extends SValue> values) {
+    return new TaskInput(values, calculateHash(values));
+  }
+
+  private TaskInput(Iterable<? extends SValue> values, HashCode hash) {
+    this.values = ImmutableList.copyOf(values);
+    this.hash = hash;
+  }
+
+  public ImmutableList<SValue> values() {
+    return values;
+  }
+
+  public HashCode hash() {
+    return hash;
+  }
+
+  private static ImmutableList<SValue> toReturnedValues(Iterable<? extends Task<?>> deps) {
+    Builder<SValue> builder = ImmutableList.builder();
+    for (Task<?> task : deps) {
+      builder.add(task.output().returnValue());
+    }
+    return builder.build();
+  }
+
+  private static HashCode calculateHash(Iterable<? extends SValue> values) {
+    Hasher hasher = Hash.newHasher();
+    for (SValue value : values) {
+      hasher.putBytes(value.hash().asBytes());
+    }
+    return hasher.hash();
+  }
+}
