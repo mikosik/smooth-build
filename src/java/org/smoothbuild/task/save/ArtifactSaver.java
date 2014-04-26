@@ -1,4 +1,4 @@
-package org.smoothbuild.task.exec.save;
+package org.smoothbuild.task.save;
 
 import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;

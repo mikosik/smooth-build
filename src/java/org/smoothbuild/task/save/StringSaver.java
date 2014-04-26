@@ -1,7 +1,7 @@
-package org.smoothbuild.task.exec.save;
+package org.smoothbuild.task.save;
 
-import static org.smoothbuild.task.exec.save.ArtifactPaths.artifactPath;
-import static org.smoothbuild.task.exec.save.ArtifactPaths.targetPath;
+import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
+import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;

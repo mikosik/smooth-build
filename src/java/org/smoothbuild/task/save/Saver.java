@@ -1,4 +1,4 @@
-package org.smoothbuild.task.exec.save;
+package org.smoothbuild.task.save;
 
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Name;

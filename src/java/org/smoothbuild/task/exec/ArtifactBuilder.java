@@ -12,7 +12,7 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.exec.save.ArtifactSaver;
+import org.smoothbuild.task.save.ArtifactSaver;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.Maps;

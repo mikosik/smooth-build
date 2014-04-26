@@ -6,7 +6,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
+import org.smoothbuild.task.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.testing.integration.IntegrationTestCase;
 
 public class ArtifactSaverSmoothTest extends IntegrationTestCase {
