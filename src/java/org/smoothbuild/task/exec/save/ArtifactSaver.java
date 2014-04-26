@@ -43,16 +43,13 @@ public class ArtifactSaver {
     this.saversMap = builder.build();
   }
 
-  public void save(Name name, SValue value) {
+  public <T extends SValue> void save(Name name, T value) {
     /*
-     * We have to cast to Saver<SValue> to avoid compilation warning. Generic
-     * type of object being cast is not actually Saver<SValue> but Saver<Xxx>
-     * where Xxx is subtype of SValue. As saversMap is immutable and constructed
-     * properly in constructor then cast added by erasure in Saver class will
-     * succeed.
+     * Cast is safe as saversMap is constructed in proper way and it is
+     * immutable.
      */
     @SuppressWarnings("unchecked")
-    Saver<SValue> saver = (Saver<SValue>) saversMap.get(value.type());
+    Saver<T> saver = (Saver<T>) saversMap.get(value.type());
     if (saver != null) {
       saver.save(name, value);
     } else {
