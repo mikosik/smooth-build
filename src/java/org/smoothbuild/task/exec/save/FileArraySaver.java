@@ -1,7 +1,7 @@
 package org.smoothbuild.task.exec.save;
 
-import static org.smoothbuild.task.exec.save.Savers.artifactPath;
-import static org.smoothbuild.task.exec.save.Savers.targetPath;
+import static org.smoothbuild.task.exec.save.ArtifactPaths.artifactPath;
+import static org.smoothbuild.task.exec.save.ArtifactPaths.targetPath;
 
 import java.util.Set;
 

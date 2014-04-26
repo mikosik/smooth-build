@@ -3,8 +3,8 @@ package org.smoothbuild.task.exec.save;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.task.exec.save.Savers.artifactPath;
-import static org.smoothbuild.task.exec.save.Savers.targetPath;
+import static org.smoothbuild.task.exec.save.ArtifactPaths.artifactPath;
+import static org.smoothbuild.task.exec.save.ArtifactPaths.targetPath;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SFile;
