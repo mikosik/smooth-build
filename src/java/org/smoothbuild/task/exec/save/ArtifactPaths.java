@@ -9,7 +9,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.lang.function.base.Name;
 
-public class Savers {
+public class ArtifactPaths {
   public static Path targetPath(Hashed hashed) {
     return OBJECTS_DIR.append(HashCodes.toPath(hashed.hash()));
   }
