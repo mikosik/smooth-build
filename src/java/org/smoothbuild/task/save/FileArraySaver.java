@@ -1,7 +1,7 @@
-package org.smoothbuild.task.exec.save;
+package org.smoothbuild.task.save;
 
-import static org.smoothbuild.task.exec.save.ArtifactPaths.artifactPath;
-import static org.smoothbuild.task.exec.save.ArtifactPaths.targetPath;
+import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
+import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
 import java.util.Set;
 
@@ -11,7 +11,7 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
+import org.smoothbuild.task.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class FileArraySaver implements Saver<SArray<SFile>> {

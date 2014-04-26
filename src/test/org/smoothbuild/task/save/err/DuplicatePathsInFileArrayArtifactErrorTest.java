@@ -1,4 +1,4 @@
-package org.smoothbuild.task.exec.save.err;
+package org.smoothbuild.task.save.err;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.task.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableList;

@@ -1,4 +1,4 @@
-package org.smoothbuild.task.exec.save;
+package org.smoothbuild.task.save;
 
 import static org.smoothbuild.SmoothContants.ARTIFACTS_DIR;
 import static org.smoothbuild.SmoothContants.OBJECTS_DIR;

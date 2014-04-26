@@ -1,15 +1,16 @@
-package org.smoothbuild.task.exec.save;
+package org.smoothbuild.task.save;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.task.exec.save.ArtifactPaths.artifactPath;
-import static org.smoothbuild.task.exec.save.ArtifactPaths.targetPath;
+import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
+import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.task.exec.save.err.DuplicatePathsInFileArrayArtifactError;
+import org.smoothbuild.task.save.FileArraySaver;
+import org.smoothbuild.task.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
