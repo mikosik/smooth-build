@@ -6,8 +6,8 @@ import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.Closeable;
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.err.CorruptedBoolError;
@@ -24,11 +24,11 @@ import com.google.common.primitives.Ints;
 
 public class Unmarshaller implements Closeable {
   private final HashCode hash;
-  private final DataInputStream inputStream;
+  private final InputStream inputStream;
 
   public Unmarshaller(HashedDb hashedDb, HashCode hash) {
     this.hash = hash;
-    this.inputStream = new DataInputStream(hashedDb.openInputStream(hash));
+    this.inputStream = hashedDb.openInputStream(hash);
   }
 
   public List<HashCode> readHashList() {
