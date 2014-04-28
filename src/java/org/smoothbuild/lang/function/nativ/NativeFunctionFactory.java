@@ -9,7 +9,6 @@ import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.MissingNameException;
-import org.smoothbuild.lang.function.nativ.err.MoreThanOneSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NoSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
@@ -49,10 +48,8 @@ public class NativeFunctionFactory {
 
   private static Method getExecuteMethod(Class<?> klass, boolean builtin)
       throws NativeImplementationException {
-    Class<SmoothFunction> executeAnnotation = SmoothFunction.class;
-    Method result = null;
     for (Method method : klass.getDeclaredMethods()) {
-      if (method.isAnnotationPresent(executeAnnotation)) {
+      if (method.isAnnotationPresent(SmoothFunction.class)) {
         if (!isPublic(method)) {
           throw new NonPublicSmoothFunctionException(method);
         }
@@ -68,17 +65,10 @@ public class NativeFunctionFactory {
           throw new WrongParamsInSmoothFunctionException(method);
         }
 
-        if (result == null) {
-          result = method;
-        } else {
-          throw new MoreThanOneSmoothFunctionException(klass);
-        }
+        return method;
       }
     }
-    if (result == null) {
-      throw new NoSmoothFunctionException(klass);
-    }
-    return result;
+    throw new NoSmoothFunctionException(klass);
   }
 
   private static boolean isCacheable(Method method) throws MissingNameException {

@@ -21,7 +21,6 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
-import org.smoothbuild.lang.function.nativ.err.MoreThanOneSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NoSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
@@ -356,21 +355,6 @@ public class NativeFunctionFactoryTest {
     public static SString execute(NativeApi nativeApi, EmptyParameters params) {
       throw new RuntimeException();
     }
-  }
-
-  // only_one_smooth_function_pre_class_is_allowed
-
-  @Test
-  public void only_one_smooth_function_per_class_is_allowed() throws Exception {
-    assertExceptionThrown(FuncWithTwoSmoothMethods.class, MoreThanOneSmoothFunctionException.class);
-  }
-
-  public static class FuncWithTwoSmoothMethods {
-    @SmoothFunction(name = "myFunction")
-    public static void execute(NativeApi nativeApi, EmptyParameters params) {}
-
-    @SmoothFunction(name = "myFunction2")
-    public static void execute2(NativeApi nativeApi, EmptyParameters params) {}
   }
 
   @Test
