@@ -1,409 +1,409 @@
 <project name="smooth-build" basedir=".">
 
-  <property name="dir.lib" location="lib" />
-  <property name="dir.src" location="src" />
-  <property name="dir.src.main.java" location="${dir.src}/main/java" />
-  <property name="dir.src.main.test" location="${dir.src}/main/test" />
-  <property name="dir.src.func.java" location="${dir.src}/func/java" />
-  <property name="dir.src.func.test" location="${dir.src}/func/test" />
-  <property name="dir.src.testing.java" location="${dir.src}/testing/java" />
-  <property name="dir.src.testing.test" location="${dir.src}/testing/test" />
-  <property name="dir.src.test-integration" location="${dir.src}/test-integration" />
-  <property name="dir.src.script" location="${dir.src}/script" />
-  <property name="dir.build" location="build" />
-  <property name="dir.build.java" location="${dir.build}/java" />
-  <property name="dir.build.java.parser" location="${dir.build.java}/org/smoothbuild/antlr" />
-  <property name="dir.build.class" location="${dir.build}/class" />
-  <property name="dir.build.class.main.java" location="${dir.build.class}/main/java" />
-  <property name="dir.build.class.main.test" location="${dir.build.class}/main/test" />
-  <property name="dir.build.class.func.java" location="${dir.build.class}/func/java" />
-  <property name="dir.build.class.func.test" location="${dir.build.class}/func/test" />
-  <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java" />
-  <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test" />
-  <property name="dir.build.class.test-integration" location="${dir.build.class}/test-integration" />
-  <property name="dir.build.jar" location="${dir.build}/jar" />
-  <property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth-all.jar" />
-  <property name="dir.build.jar.file" location="${dir.build.jar}/smooth-all.jar" />
-  <property name="dir.build.release" location="${dir.build}/release" />
-  <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip" />
+	<property name="dir.lib" location="lib" />
+	<property name="dir.src" location="src" />
+	<property name="dir.src.main.java" location="${dir.src}/main/java" />
+	<property name="dir.src.main.test" location="${dir.src}/main/test" />
+	<property name="dir.src.func.java" location="${dir.src}/func/java" />
+	<property name="dir.src.func.test" location="${dir.src}/func/test" />
+	<property name="dir.src.testing.java" location="${dir.src}/testing/java" />
+	<property name="dir.src.testing.test" location="${dir.src}/testing/test" />
+	<property name="dir.src.test-integration" location="${dir.src}/test-integration" />
+	<property name="dir.src.script" location="${dir.src}/script" />
+	<property name="dir.build" location="build" />
+	<property name="dir.build.java" location="${dir.build}/java" />
+	<property name="dir.build.java.parser" location="${dir.build.java}/org/smoothbuild/antlr" />
+	<property name="dir.build.class" location="${dir.build}/class" />
+	<property name="dir.build.class.main.java" location="${dir.build.class}/main/java" />
+	<property name="dir.build.class.main.test" location="${dir.build.class}/main/test" />
+	<property name="dir.build.class.func.java" location="${dir.build.class}/func/java" />
+	<property name="dir.build.class.func.test" location="${dir.build.class}/func/test" />
+	<property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java" />
+	<property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test" />
+	<property name="dir.build.class.test-integration" location="${dir.build.class}/test-integration" />
+	<property name="dir.build.jar" location="${dir.build}/jar" />
+	<property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth-all.jar" />
+	<property name="dir.build.jar.file" location="${dir.build.jar}/smooth-all.jar" />
+	<property name="dir.build.release" location="${dir.build}/release" />
+	<property name="dir.build.release.file" location="${dir.build.release}/smooth.zip" />
 
-  <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar" />
-  <property name="lib.antlr.license" value="${dir.lib}/antlr.LICENSE" />
-  <property name="lib.aopalliance" value="${dir.lib}/aopalliance.jar" />
-  <property name="lib.argparse4j" value="${dir.lib}/argparse4j-0.4.3.jar" />
-  <property name="lib.argparse4j.license" value="${dir.lib}/argparse4j.LICENSE" />
-  <property name="lib.assertj-core" value="${dir.lib}/assertj-core-1.4.0-SNAPSHOT.jar" />
-  <property name="lib.guava" value="${dir.lib}/guava-17.0.jar" />
-  <property name="lib.guava.license" value="${dir.lib}/guava.LICENSE" />
-  <property name="lib.guava-testlib" value="${dir.lib}/guava-testlib-17.0.jar" />
-  <property name="lib.guice" value="${dir.lib}/guice-3.0.jar" />
-  <property name="lib.guice.license" value="${dir.lib}/guice.LICENSE" />
-  <property name="lib.hamcrest" value="${dir.lib}/hamcrest-core-1.3.jar" />
-  <property name="lib.hamcrest.license" value="${dir.lib}/hamcrest-core.LICENSE" />
-  <property name="lib.hamcrest-library" value="${dir.lib}/hamcrest-library-1.3.jar" />
-  <property name="lib.javax.inject" value="${dir.lib}/javax.inject.jar" />
-  <property name="lib.jarjar" value="${dir.lib}/jarjar-1.4.jar" />
-  <property name="lib.jarjar.license" value="${dir.lib}/jarjar.LICENSE" />
-  <property name="lib.junit" value="${dir.lib}/junit-4.11.jar" />
-  <property name="lib.junit.license" value="${dir.lib}/junit.LICENSE" />
-  <property name="lib.testory" value="${dir.lib}/testory-0.15.0.jar" />
+	<property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar" />
+	<property name="lib.antlr.license" value="${dir.lib}/antlr.LICENSE" />
+	<property name="lib.aopalliance" value="${dir.lib}/aopalliance.jar" />
+	<property name="lib.argparse4j" value="${dir.lib}/argparse4j-0.4.3.jar" />
+	<property name="lib.argparse4j.license" value="${dir.lib}/argparse4j.LICENSE" />
+	<property name="lib.assertj-core" value="${dir.lib}/assertj-core-1.4.0-SNAPSHOT.jar" />
+	<property name="lib.guava" value="${dir.lib}/guava-17.0.jar" />
+	<property name="lib.guava.license" value="${dir.lib}/guava.LICENSE" />
+	<property name="lib.guava-testlib" value="${dir.lib}/guava-testlib-17.0.jar" />
+	<property name="lib.guice" value="${dir.lib}/guice-3.0.jar" />
+	<property name="lib.guice.license" value="${dir.lib}/guice.LICENSE" />
+	<property name="lib.hamcrest" value="${dir.lib}/hamcrest-core-1.3.jar" />
+	<property name="lib.hamcrest.license" value="${dir.lib}/hamcrest-core.LICENSE" />
+	<property name="lib.hamcrest-library" value="${dir.lib}/hamcrest-library-1.3.jar" />
+	<property name="lib.javax.inject" value="${dir.lib}/javax.inject.jar" />
+	<property name="lib.jarjar" value="${dir.lib}/jarjar-1.4.jar" />
+	<property name="lib.jarjar.license" value="${dir.lib}/jarjar.LICENSE" />
+	<property name="lib.junit" value="${dir.lib}/junit-4.11.jar" />
+	<property name="lib.junit.license" value="${dir.lib}/junit.LICENSE" />
+	<property name="lib.testory" value="${dir.lib}/testory-0.15.0.jar" />
 
-  <target name="init">
-    <mkdir dir="${dir.build.java.parser}" />
-    <mkdir dir="${dir.build.class.main.java}" />
-    <mkdir dir="${dir.build.class.main.test}" />
-    <mkdir dir="${dir.build.class.func.java}" />
-    <mkdir dir="${dir.build.class.func.test}" />
-  	<mkdir dir="${dir.build.class.testing.java}" />
-  	<mkdir dir="${dir.build.class.testing.test}" />
-    <mkdir dir="${dir.build.class.test-integration}" />
-    <mkdir dir="${dir.build.jar}" />
-    <mkdir dir="${dir.build.release}" />
-  </target>
+	<target name="init">
+		<mkdir dir="${dir.build.java.parser}" />
+		<mkdir dir="${dir.build.class.main.java}" />
+		<mkdir dir="${dir.build.class.main.test}" />
+		<mkdir dir="${dir.build.class.func.java}" />
+		<mkdir dir="${dir.build.class.func.test}" />
+		<mkdir dir="${dir.build.class.testing.java}" />
+		<mkdir dir="${dir.build.class.testing.test}" />
+		<mkdir dir="${dir.build.class.test-integration}" />
+		<mkdir dir="${dir.build.jar}" />
+		<mkdir dir="${dir.build.release}" />
+	</target>
 
-  <target name="generate-java-grammar" depends="init">
-    <java classname="org.antlr.v4.Tool" fork="true" failonerror="true">
-      <arg line="-o ${dir.build.java.parser}" />
-      <arg line="-package org.smoothbuild.antlr" />
-      <arg line="-visitor" />
-      <arg line="-Werror" />
-      <arg line="Smooth.g4" />
-      <classpath>
-        <pathelement location="${dir.lib}/antlr-4.1-complete.jar" />
-      </classpath>
-    </java>
-  </target>
+	<target name="generate-java-grammar" depends="init">
+		<java classname="org.antlr.v4.Tool" fork="true" failonerror="true">
+			<arg line="-o ${dir.build.java.parser}" />
+			<arg line="-package org.smoothbuild.antlr" />
+			<arg line="-visitor" />
+			<arg line="-Werror" />
+			<arg line="Smooth.g4" />
+			<classpath>
+				<pathelement location="${dir.lib}/antlr-4.1-complete.jar" />
+			</classpath>
+		</java>
+	</target>
 
-  <!-- build main.java -->
-        
-  <path id="classpath.for.main.java">
-    <pathelement location="${lib.antlr}" />
-    <pathelement location="${lib.aopalliance}" />
-    <pathelement location="${lib.argparse4j}" />
-    <pathelement location="${lib.guava}" />
-    <pathelement location="${lib.guice}" />
-    <pathelement location="${lib.javax.inject}" />
-  </path>
+	<!-- build main.java -->
 
-  <target name="compile-main.java" depends="generate-java-grammar">
-    <javac destdir="${dir.build.class.main.java}"
+	<path id="classpath.for.main.java">
+		<pathelement location="${lib.antlr}" />
+		<pathelement location="${lib.aopalliance}" />
+		<pathelement location="${lib.argparse4j}" />
+		<pathelement location="${lib.guava}" />
+		<pathelement location="${lib.guice}" />
+		<pathelement location="${lib.javax.inject}" />
+	</path>
+
+	<target name="compile-main.java" depends="generate-java-grammar">
+		<javac destdir="${dir.build.class.main.java}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
-      <compilerarg value="-Xlint:all" />
-      <compilerarg value="-Werror" />
-      <src path="${dir.src.main.java}" />
-      <src path="${dir.build.java.parser}" />
-      <classpath>
-        <path refid="classpath.for.main.java" />
-      </classpath>
-    </javac>
-  </target>
+			<compilerarg value="-Xlint:all" />
+			<compilerarg value="-Werror" />
+			<src path="${dir.src.main.java}" />
+			<src path="${dir.build.java.parser}" />
+			<classpath>
+				<path refid="classpath.for.main.java" />
+			</classpath>
+		</javac>
+	</target>
 
-  <path id="classpath.with.main.java">
-    <path refid="classpath.for.main.java" />
-    <pathelement location="${dir.build.class.main.java}" />
-  </path>
+	<path id="classpath.with.main.java">
+		<path refid="classpath.for.main.java" />
+		<pathelement location="${dir.build.class.main.java}" />
+	</path>
 
-	
-  <!-- build func.java -->
-	        
-  <path id="classpath.for.func.java">
-  	<path refid="classpath.with.main.java" />
-    <!-- TODO can be removed once junit function becomes separate plugin --> 
-    <pathelement location="${lib.junit}" />
-    <!-- TODO can be removed once jarjar function becomes separate plugin -->
-    <pathelement location="${lib.jarjar}" />
-  </path>
 
-  <target name="compile-func.java" depends="compile-main.java">
-    <javac destdir="${dir.build.class.func.java}"
+	<!-- build func.java -->
+
+	<path id="classpath.for.func.java">
+		<path refid="classpath.with.main.java" />
+		<!-- TODO can be removed once junit function becomes separate plugin -->
+		<pathelement location="${lib.junit}" />
+		<!-- TODO can be removed once jarjar function becomes separate plugin -->
+		<pathelement location="${lib.jarjar}" />
+	</path>
+
+	<target name="compile-func.java" depends="compile-main.java">
+		<javac destdir="${dir.build.class.func.java}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
-      <compilerarg value="-Xlint:all" />
-      <compilerarg value="-Werror" />
-      <src path="${dir.src.func.java}" />
-      <classpath>
-        <path refid="classpath.for.func.java" />
-      </classpath>
-    </javac>
-  </target>
+			<compilerarg value="-Xlint:all" />
+			<compilerarg value="-Werror" />
+			<src path="${dir.src.func.java}" />
+			<classpath>
+				<path refid="classpath.for.func.java" />
+			</classpath>
+		</javac>
+	</target>
 
-  <path id="classpath.with.func.java">
-    <path refid="classpath.for.func.java" />
-    <pathelement location="${dir.build.class.func.java}" />
-  </path>
-	
-  <!-- build testing.java -->
-        
-  <path id="classpath.for.main.testing.java">
-    <path refid="classpath.with.main.java" />
-    <pathelement location="${lib.assertj-core}" />
-  	<pathelement location="${lib.hamcrest}" />
-    <pathelement location="${lib.junit}" />
-  </path>
+	<path id="classpath.with.func.java">
+		<path refid="classpath.for.func.java" />
+		<pathelement location="${dir.build.class.func.java}" />
+	</path>
 
-  <target name="compile-testing.java" depends="compile-main.java">
-    <javac destdir="${dir.build.class.testing.java}"
+	<!-- build testing.java -->
+
+	<path id="classpath.for.main.testing.java">
+		<path refid="classpath.with.main.java" />
+		<pathelement location="${lib.assertj-core}" />
+		<pathelement location="${lib.hamcrest}" />
+		<pathelement location="${lib.junit}" />
+	</path>
+
+	<target name="compile-testing.java" depends="compile-main.java">
+		<javac destdir="${dir.build.class.testing.java}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
-      <compilerarg value="-Xlint:all" />
-      <compilerarg value="-Werror" />
-      <src path="${dir.src.testing.java}" />
-      <classpath>
-        <path refid="classpath.for.main.testing.java" />
-      </classpath>
-    </javac>
-  </target>
+			<compilerarg value="-Xlint:all" />
+			<compilerarg value="-Werror" />
+			<src path="${dir.src.testing.java}" />
+			<classpath>
+				<path refid="classpath.for.main.testing.java" />
+			</classpath>
+		</javac>
+	</target>
 
-  <path id="classpath.with.testing.java">
-    <path refid="classpath.for.main.testing.java" />
-    <pathelement location="${dir.build.class.testing.java}" />
-  </path>
+	<path id="classpath.with.testing.java">
+		<path refid="classpath.for.main.testing.java" />
+		<pathelement location="${dir.build.class.testing.java}" />
+	</path>
 
-  <!-- build main.test -->
+	<!-- build main.test -->
 
-  <path id="classpath.for.main.test">
-    <path refid="classpath.with.testing.java" />
-    <pathelement location="${lib.assertj-core}" />
-    <pathelement location="${lib.guava-testlib}" />
-    <pathelement location="${lib.hamcrest-library}" />
-    <pathelement location="${lib.junit}" />
-    <pathelement location="${lib.testory}" />
-  </path>
+	<path id="classpath.for.main.test">
+		<path refid="classpath.with.testing.java" />
+		<pathelement location="${lib.assertj-core}" />
+		<pathelement location="${lib.guava-testlib}" />
+		<pathelement location="${lib.hamcrest-library}" />
+		<pathelement location="${lib.junit}" />
+		<pathelement location="${lib.testory}" />
+	</path>
 
-  <target name="compile-main.test" depends="compile-testing.java">
-    <javac destdir="${dir.build.class.main.test}"
+	<target name="compile-main.test" depends="compile-testing.java">
+		<javac destdir="${dir.build.class.main.test}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
-      <compilerarg value="-Xlint:all" />
-      <compilerarg value="-Werror" />
-      <src path="${dir.src.main.test}" />
-      <classpath>
-        <path refid="classpath.for.main.test" />
-      </classpath>
-    </javac>
-  </target>
+			<compilerarg value="-Xlint:all" />
+			<compilerarg value="-Werror" />
+			<src path="${dir.src.main.test}" />
+			<classpath>
+				<path refid="classpath.for.main.test" />
+			</classpath>
+		</javac>
+	</target>
 
-  <path id="classpath.with.main.test">
-    <path refid="classpath.for.main.test" />
-    <pathelement location="${dir.build.class.main.test}" />
-  </path>
+	<path id="classpath.with.main.test">
+		<path refid="classpath.for.main.test" />
+		<pathelement location="${dir.build.class.main.test}" />
+	</path>
 
-  <!-- build func.test -->
+	<!-- build func.test -->
 
-  <path id="classpath.for.func.test">
-    <path refid="classpath.with.testing.java" />
-  	<path refid="classpath.with.func.java" />
-    <pathelement location="${lib.assertj-core}" />
-    <pathelement location="${lib.guava-testlib}" />
-    <pathelement location="${lib.hamcrest-library}" />
-    <pathelement location="${lib.junit}" />
-    <pathelement location="${lib.testory}" />
-  </path>
+	<path id="classpath.for.func.test">
+		<path refid="classpath.with.testing.java" />
+		<path refid="classpath.with.func.java" />
+		<pathelement location="${lib.assertj-core}" />
+		<pathelement location="${lib.guava-testlib}" />
+		<pathelement location="${lib.hamcrest-library}" />
+		<pathelement location="${lib.junit}" />
+		<pathelement location="${lib.testory}" />
+	</path>
 
-  <target name="compile-func.test" depends="compile-func.java, compile-testing.java">
-    <javac destdir="${dir.build.class.func.test}"
+	<target name="compile-func.test" depends="compile-func.java, compile-testing.java">
+		<javac destdir="${dir.build.class.func.test}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
-      <compilerarg value="-Xlint:all" />
-      <compilerarg value="-Werror" />
-      <src path="${dir.src.func.test}" />
-      <classpath>
-        <path refid="classpath.for.func.test" />
-      </classpath>
-    </javac>
-  </target>
+			<compilerarg value="-Xlint:all" />
+			<compilerarg value="-Werror" />
+			<src path="${dir.src.func.test}" />
+			<classpath>
+				<path refid="classpath.for.func.test" />
+			</classpath>
+		</javac>
+	</target>
 
-  <path id="classpath.with.func.test">
-    <path refid="classpath.for.func.test" />
-    <pathelement location="${dir.build.class.func.test}" />
-  </path>
+	<path id="classpath.with.func.test">
+		<path refid="classpath.for.func.test" />
+		<pathelement location="${dir.build.class.func.test}" />
+	</path>
 
-  <!-- build testing.test -->
+	<!-- build testing.test -->
 
-  <path id="classpath.for.testing.test">
-    <path refid="classpath.with.testing.java" />
-    <pathelement location="${lib.assertj-core}" />
-    <pathelement location="${lib.guava-testlib}" />
-    <pathelement location="${lib.hamcrest-library}" />
-    <pathelement location="${lib.junit}" />
-    <pathelement location="${lib.testory}" />
-  </path>
+	<path id="classpath.for.testing.test">
+		<path refid="classpath.with.testing.java" />
+		<pathelement location="${lib.assertj-core}" />
+		<pathelement location="${lib.guava-testlib}" />
+		<pathelement location="${lib.hamcrest-library}" />
+		<pathelement location="${lib.junit}" />
+		<pathelement location="${lib.testory}" />
+	</path>
 
-  <target name="compile-testing.test" depends="compile-testing.java">
-    <javac destdir="${dir.build.class.testing.test}"
+	<target name="compile-testing.test" depends="compile-testing.java">
+		<javac destdir="${dir.build.class.testing.test}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
-      <compilerarg value="-Xlint:all" />
-      <compilerarg value="-Werror" />
-      <src path="${dir.src.testing.test}" />
-      <classpath>
-        <path refid="classpath.for.testing.test" />
-      </classpath>
-    </javac>
-  </target>
+			<compilerarg value="-Xlint:all" />
+			<compilerarg value="-Werror" />
+			<src path="${dir.src.testing.test}" />
+			<classpath>
+				<path refid="classpath.for.testing.test" />
+			</classpath>
+		</javac>
+	</target>
 
-  <path id="classpath.with.testing.test">
-    <path refid="classpath.for.testing.test" />
-    <pathelement location="${dir.build.class.testing.test}" />
-  </path>
-	
-  <!-- build integration-tests -->
+	<path id="classpath.with.testing.test">
+		<path refid="classpath.for.testing.test" />
+		<pathelement location="${dir.build.class.testing.test}" />
+	</path>
 
-  <path id="classpath.for.test-integration">
-  	<path refid="classpath.with.testing.java" />
-  	<path refid="classpath.with.func.java" />
-  </path>
+	<!-- build integration-tests -->
 
-  <target name="compile-integration-tests" depends="compile-testing.java">
-    <javac destdir="${dir.build.class.test-integration}"
+	<path id="classpath.for.test-integration">
+		<path refid="classpath.with.testing.java" />
+		<path refid="classpath.with.func.java" />
+	</path>
+
+	<target name="compile-integration-tests" depends="compile-testing.java">
+		<javac destdir="${dir.build.class.test-integration}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
-      <compilerarg value="-Xlint:all" />
-      <compilerarg value="-Werror" />
-      <src path="${dir.src.test-integration}" />
-      <classpath>
-        <path refid="classpath.for.test-integration" />
-      </classpath>
-    </javac>
-  </target>
+			<compilerarg value="-Xlint:all" />
+			<compilerarg value="-Werror" />
+			<src path="${dir.src.test-integration}" />
+			<classpath>
+				<path refid="classpath.for.test-integration" />
+			</classpath>
+		</javac>
+	</target>
 
-  <path id="classpath.with.test-integration">
-    <path refid="classpath.for.test-integration" />
-    <pathelement location="${dir.build.class.test-integration}" />
-  </path>
+	<path id="classpath.with.test-integration">
+		<path refid="classpath.for.test-integration" />
+		<pathelement location="${dir.build.class.test-integration}" />
+	</path>
 
-  <!-- run testing.test -->
+	<!-- run testing.test -->
 
-  <target name="run-testing.test" depends="compile-testing.test">
-    <junit haltonfailure="yes" reloading="false">
-      <classpath>
-        <path refid="classpath.with.testing.test" />
-      </classpath>
-      <formatter type="brief" usefile="false" />
-      <batchtest fork="no" todir="${dir.build}" >
-        <fileset dir="${dir.build.class.testing.test}" includes="**/*Test.class"/>
-      </batchtest>
-    </junit>
-  </target>
+	<target name="run-testing.test" depends="compile-testing.test">
+		<junit haltonfailure="yes" reloading="false">
+			<classpath>
+				<path refid="classpath.with.testing.test" />
+			</classpath>
+			<formatter type="brief" usefile="false" />
+			<batchtest fork="no" todir="${dir.build}" >
+				<fileset dir="${dir.build.class.testing.test}" includes="**/*Test.class"/>
+			</batchtest>
+		</junit>
+	</target>
 
-  <!-- run main.test -->
+	<!-- run main.test -->
 
-  <target name="run-main.test" depends="compile-main.test" description="runs main.test">
-    <junit haltonfailure="yes" reloading="false">
-      <classpath>
-        <path refid="classpath.with.main.test" />
-      </classpath>
-      <formatter type="brief" usefile="false" />
-      <batchtest fork="no" todir="${dir.build}" >
-        <fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
-      </batchtest>
-    </junit>
-  </target>
+	<target name="run-main.test" depends="compile-main.test" description="runs main.test">
+		<junit haltonfailure="yes" reloading="false">
+			<classpath>
+				<path refid="classpath.with.main.test" />
+			</classpath>
+			<formatter type="brief" usefile="false" />
+			<batchtest fork="no" todir="${dir.build}" >
+				<fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
+			</batchtest>
+		</junit>
+	</target>
 
-  <!-- run func.test -->
+	<!-- run func.test -->
 
-  <target name="run-func.test" depends="compile-func.test">
-    <junit haltonfailure="yes" reloading="false">
-      <classpath>
-        <path refid="classpath.with.func.test" />
-      </classpath>
-      <formatter type="brief" usefile="false" />
-      <batchtest fork="no" todir="${dir.build}" >
-        <fileset dir="${dir.build.class.func.test}" includes="**/*Test.class"/>
-      </batchtest>
-    </junit>
-  </target>
+	<target name="run-func.test" depends="compile-func.test">
+		<junit haltonfailure="yes" reloading="false">
+			<classpath>
+				<path refid="classpath.with.func.test" />
+			</classpath>
+			<formatter type="brief" usefile="false" />
+			<batchtest fork="no" todir="${dir.build}" >
+				<fileset dir="${dir.build.class.func.test}" includes="**/*Test.class"/>
+			</batchtest>
+		</junit>
+	</target>
 
-  <!-- run test-integration -->
+	<!-- run test-integration -->
 
-  <target name="test-integration" depends="compile-integration-tests" description="runs integration tests">
-    <junit haltonfailure="yes" reloading="false">
-      <classpath>
-        <path refid="classpath.with.test-integration" />
-      </classpath>
-      <formatter type="brief" usefile="false" />
-      <batchtest fork="no" todir="${dir.build}" >
-        <fileset dir="${dir.build.class.test-integration}" includes="**/*Test.class"/>
-      </batchtest>
-    </junit>
-  </target>
+	<target name="test-integration" depends="compile-integration-tests" description="runs integration tests">
+		<junit haltonfailure="yes" reloading="false">
+			<classpath>
+				<path refid="classpath.with.test-integration" />
+			</classpath>
+			<formatter type="brief" usefile="false" />
+			<batchtest fork="no" todir="${dir.build}" >
+				<fileset dir="${dir.build.class.test-integration}" includes="**/*Test.class"/>
+			</batchtest>
+		</junit>
+	</target>
 
-  <target name="test" depends="run-testing.test, run-main.test, run-func.test, test-integration">
-  </target>
+	<target name="test" depends="run-testing.test, run-main.test, run-func.test, test-integration">
+	</target>
 
-  <!-- jar file -->
+	<!-- jar file -->
 
-  <target name="jar-file" depends="compile-main.java">
-    <jarjar destfile="${dir.build.jar.polluted-file}">
-      <!--
-      'excludes' make sure that manifest files
-      and other files from top directories
-      in dependent jars are not copied
-      -->
-      <zipfileset excludes="* META-INF/**" src="${lib.antlr}"/>
-      <zipfileset excludes="* META-INF/**" src="${lib.aopalliance}"/>
-      <zipfileset excludes="* META-INF/**" src="${lib.argparse4j}"/>
-      <zipfileset excludes="* META-INF/**" src="${lib.guava}"/>
-      <zipfileset excludes="* META-INF/**" src="${lib.guice}"/>
-      <zipfileset excludes="* META-INF/**" src="${lib.javax.inject}"/>
-      <!-- TODO can be removed once jarjar function becomes separate plugin -->
-      <zipfileset excludes="* META-INF/**" src="${lib.jarjar}"/>
-      <!-- TODO can be removed once junit function becomes separate plugin -->
-      <zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
-      <zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
+	<target name="jar-file" depends="compile-main.java">
+		<jarjar destfile="${dir.build.jar.polluted-file}">
+			<!--
+            'excludes' make sure that manifest files
+            and other files from top directories
+            in dependent jars are not copied
+            -->
+			<zipfileset excludes="* META-INF/**" src="${lib.antlr}"/>
+			<zipfileset excludes="* META-INF/**" src="${lib.aopalliance}"/>
+			<zipfileset excludes="* META-INF/**" src="${lib.argparse4j}"/>
+			<zipfileset excludes="* META-INF/**" src="${lib.guava}"/>
+			<zipfileset excludes="* META-INF/**" src="${lib.guice}"/>
+			<zipfileset excludes="* META-INF/**" src="${lib.javax.inject}"/>
+			<!-- TODO can be removed once jarjar function becomes separate plugin -->
+			<zipfileset excludes="* META-INF/**" src="${lib.jarjar}"/>
+			<!-- TODO can be removed once junit function becomes separate plugin -->
+			<zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
+			<zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
 
-      <zipfileset dir="${dir.build.class.main.java}"/>
-      <zipfileset file="LICENSE"/>
+			<zipfileset dir="${dir.build.class.main.java}"/>
+			<zipfileset file="LICENSE"/>
 
-      <zipfileset file="${lib.antlr.license}"/>
-      <zipfileset file="${lib.argparse4j.license}"/>
-      <zipfileset file="${lib.guava.license}"/>
-      <zipfileset file="${lib.guice.license}"/>
-      <!-- TODO can be removed once jarjar function becomes separate plugin -->
-      <zipfileset file="${lib.jarjar.license}"/>
-      <!-- TODO can be removed once junit function becomes separate plugin -->
-      <zipfileset file="${lib.junit.license}"/>
-      <zipfileset file="${lib.hamcrest.license}"/>
-  
-      <rule pattern="net.sourceforge.argparse4j.**" result="org.smoothbuild.argparse4j.@1"/>
-      <rule pattern="com.google.inject.**" result="org.smoothbuild.guice.@1"/>
-      <rule pattern="com.google.common.**" result="org.smoothbuild.guava.@1"/>
-      <rule pattern="org.aopalliance.**" result="org.smoothbuild.aop.@1"/>
-      <!-- antlr -->
-      <rule pattern="org.abego.**" result="org.smoothbuild.abego.@1"/>
-      <rule pattern="org.antlr.**" result="org.smoothbuild.antlr.@1"/>
-      <rule pattern="org.stringtemplate.**" result="org.smoothbuild.stringtemplate.@1"/>
-    </jarjar>
+			<zipfileset file="${lib.antlr.license}"/>
+			<zipfileset file="${lib.argparse4j.license}"/>
+			<zipfileset file="${lib.guava.license}"/>
+			<zipfileset file="${lib.guice.license}"/>
+			<!-- TODO can be removed once jarjar function becomes separate plugin -->
+			<zipfileset file="${lib.jarjar.license}"/>
+			<!-- TODO can be removed once junit function becomes separate plugin -->
+			<zipfileset file="${lib.junit.license}"/>
+			<zipfileset file="${lib.hamcrest.license}"/>
 
-    <!--
-    Due to a bug https://code.google.com/p/jarjar/issues/detail?id=60
-    we need to get rid of empty directories left by jarjar.
-    We just repackage everthing once again.
-    -->
-    <jarjar destfile="${dir.build.jar.file}">
-      <!-- TODO help.txt can be removed once jarjar function becomes separate plugin -->
-      <zipfileset includes="* **/*.class com/tonicsystems/jarjar/help.txt" src="${dir.build.jar.polluted-file}"/>
-    </jarjar>
-  </target>
+			<rule pattern="net.sourceforge.argparse4j.**" result="org.smoothbuild.argparse4j.@1"/>
+			<rule pattern="com.google.inject.**" result="org.smoothbuild.guice.@1"/>
+			<rule pattern="com.google.common.**" result="org.smoothbuild.guava.@1"/>
+			<rule pattern="org.aopalliance.**" result="org.smoothbuild.aop.@1"/>
+			<!-- antlr -->
+			<rule pattern="org.abego.**" result="org.smoothbuild.abego.@1"/>
+			<rule pattern="org.antlr.**" result="org.smoothbuild.antlr.@1"/>
+			<rule pattern="org.stringtemplate.**" result="org.smoothbuild.stringtemplate.@1"/>
+		</jarjar>
 
-  <!-- release -->
-  <target name="release" depends="jar-file">
-    <zip destfile="${dir.build.release.file}" level="9">
-      <zipfileset prefix="smooth" file="${dir.build.jar.file}"/>
-      <zipfileset prefix="smooth" file="${dir.src.script}/smooth" filemode="755"/>
-      <zipfileset prefix="smooth" file="${dir.src.script}/smooth.bat"/>
-    </zip>
-  </target>
+		<!--
+        Due to a bug https://code.google.com/p/jarjar/issues/detail?id=60
+        we need to get rid of empty directories left by jarjar.
+        We just repackage everthing once again.
+        -->
+		<jarjar destfile="${dir.build.jar.file}">
+			<!-- TODO help.txt can be removed once jarjar function becomes separate plugin -->
+			<zipfileset includes="* **/*.class com/tonicsystems/jarjar/help.txt" src="${dir.build.jar.polluted-file}"/>
+		</jarjar>
+	</target>
 
-  <taskdef name="jarjar"
+	<!-- release -->
+	<target name="release" depends="jar-file">
+		<zip destfile="${dir.build.release.file}" level="9">
+			<zipfileset prefix="smooth" file="${dir.build.jar.file}"/>
+			<zipfileset prefix="smooth" file="${dir.src.script}/smooth" filemode="755"/>
+			<zipfileset prefix="smooth" file="${dir.src.script}/smooth.bat"/>
+		</zip>
+	</target>
+
+	<taskdef name="jarjar"
     classname="com.tonicsystems.jarjar.JarJarTask"
     classpath="${lib.jarjar}" />
 
