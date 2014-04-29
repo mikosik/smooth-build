@@ -3,15 +3,12 @@ package org.smoothbuild.task;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.testory.Testory.any;
+import static org.smoothbuild.lang.function.nativ.NativeModuleFactory.createNativeModule;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
-import static org.testory.Testory.willReturn;
-
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +26,7 @@ import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExprError;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.function.nativ.Invoker;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskOutput;
@@ -38,6 +34,7 @@ import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -54,7 +51,6 @@ public class ExpressionExecutionTest {
   private CallExpr<?> callExpr;
   private Function<?> function;
   private Signature<SString> signature;
-  private Invoker<SString> invoker;
 
   @Before
   public void before() {
@@ -110,19 +106,26 @@ public class ExpressionExecutionTest {
     thenEqual(task.output(), new TaskOutput<>(sstring));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
-  public void executes_call_expression_using_native_function() throws Exception {
-    given(sstring = objectsDb.string(string));
-    given(stringExpr = new ConstantExpr<>(STRING, sstring, location));
-    given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
-    given(invoker = mock(Invoker.class));
-    given(willReturn(sstring), invoker).invoke(any(NativeApi.class), any(Map.class));
-    given(function = new NativeFunction<>(signature, invoker, true));
-    given(callExpr = new CallExpr<>(function, location, Empty.stringExprMap()));
+  public void executes_native_function_that_returns_its_argument() throws Exception {
+    given(sstring = objectsDb.string("abc"));
+    given(function = createNativeModule(SmoothModule.class, false).getFunction(name("func")));
+    given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
+    given(callExpr = new CallExpr<>(function, location, ImmutableMap.of("param", stringExpr)));
     given(task = taskGraph.createTasks(callExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));
+  }
+
+  public static class SmoothModule {
+    public interface Parameters {
+      SString param();
+    }
+
+    @SmoothFunction(name = "func")
+    public static SString execute(NativeApi nativeApi, Parameters params) {
+      return params.param();
+    }
   }
 
   private SArray<SString> array(SString... sstrings) {
