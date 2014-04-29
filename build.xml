@@ -2,9 +2,9 @@
 
   <property name="dir.lib" location="lib" />
   <property name="dir.src" location="src" />
-  <property name="dir.src.java" location="${dir.src}/java" />
+  <property name="dir.src.main.java" location="${dir.src}/main/java" />
+  <property name="dir.src.main.test" location="${dir.src}/main/test" />
   <property name="dir.src.testing.java" location="${dir.src}/testing/java" />
-  <property name="dir.src.test-unit" location="${dir.src}/test" />
   <property name="dir.src.test-integration" location="${dir.src}/test-integration" />
   <property name="dir.src.script" location="${dir.src}/script" />
   <property name="dir.build" location="build" />
@@ -88,7 +88,7 @@
            debuglevel="lines,vars,source">
       <compilerarg value="-Xlint:all" />
       <compilerarg value="-Werror" />
-      <src path="${dir.src.java}" />
+      <src path="${dir.src.main.java}" />
       <src path="${dir.build.java.parser}" />
       <classpath>
         <path refid="classpath.for.java" />
@@ -148,7 +148,7 @@
            debuglevel="lines,vars,source">
       <compilerarg value="-Xlint:all" />
       <compilerarg value="-Werror" />
-      <src path="${dir.src.test-unit}" />
+      <src path="${dir.src.main.test}" />
       <classpath>
         <path refid="classpath.for.test" />
       </classpath>
