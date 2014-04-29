@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.builtin;
+package org.smoothbuild.parse;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

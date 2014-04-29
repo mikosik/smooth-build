@@ -4,6 +4,8 @@
   <property name="dir.src" location="src" />
   <property name="dir.src.main.java" location="${dir.src}/main/java" />
   <property name="dir.src.main.test" location="${dir.src}/main/test" />
+  <property name="dir.src.func.java" location="${dir.src}/func/java" />
+  <property name="dir.src.func.test" location="${dir.src}/func/test" />
   <property name="dir.src.testing.java" location="${dir.src}/testing/java" />
   <property name="dir.src.testing.test" location="${dir.src}/testing/test" />
   <property name="dir.src.test-integration" location="${dir.src}/test-integration" />
@@ -14,6 +16,8 @@
   <property name="dir.build.class" location="${dir.build}/class" />
   <property name="dir.build.class.main.java" location="${dir.build.class}/main/java" />
   <property name="dir.build.class.main.test" location="${dir.build.class}/main/test" />
+  <property name="dir.build.class.func.java" location="${dir.build.class}/func/java" />
+  <property name="dir.build.class.func.test" location="${dir.build.class}/func/test" />
   <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java" />
   <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test" />
   <property name="dir.build.class.test-integration" location="${dir.build.class}/test-integration" />
@@ -48,6 +52,8 @@
     <mkdir dir="${dir.build.java.parser}" />
     <mkdir dir="${dir.build.class.main.java}" />
     <mkdir dir="${dir.build.class.main.test}" />
+    <mkdir dir="${dir.build.class.func.java}" />
+    <mkdir dir="${dir.build.class.func.test}" />
   	<mkdir dir="${dir.build.class.testing.java}" />
   	<mkdir dir="${dir.build.class.testing.test}" />
     <mkdir dir="${dir.build.class.test-integration}" />
@@ -77,10 +83,6 @@
     <pathelement location="${lib.guava}" />
     <pathelement location="${lib.guice}" />
     <pathelement location="${lib.javax.inject}" />
-    <!-- TODO can be removed once junit function becomes separate plugin --> 
-    <pathelement location="${lib.junit}" />
-    <!-- TODO can be removed once jarjar function becomes separate plugin -->
-    <pathelement location="${lib.jarjar}" />
   </path>
 
   <target name="compile-main.java" depends="generate-java-grammar">
@@ -103,6 +105,36 @@
     <pathelement location="${dir.build.class.main.java}" />
   </path>
 
+	
+  <!-- build func.java -->
+	        
+  <path id="classpath.for.func.java">
+  	<path refid="classpath.with.main.java" />
+    <!-- TODO can be removed once junit function becomes separate plugin --> 
+    <pathelement location="${lib.junit}" />
+    <!-- TODO can be removed once jarjar function becomes separate plugin -->
+    <pathelement location="${lib.jarjar}" />
+  </path>
+
+  <target name="compile-func.java" depends="compile-main.java">
+    <javac destdir="${dir.build.class.func.java}"
+           debug="true"
+           includeantruntime="false"
+           debuglevel="lines,vars,source">
+      <compilerarg value="-Xlint:all" />
+      <compilerarg value="-Werror" />
+      <src path="${dir.src.func.java}" />
+      <classpath>
+        <path refid="classpath.for.func.java" />
+      </classpath>
+    </javac>
+  </target>
+
+  <path id="classpath.with.func.java">
+    <path refid="classpath.for.func.java" />
+    <pathelement location="${dir.build.class.func.java}" />
+  </path>
+	
   <!-- build testing.java -->
         
   <path id="classpath.for.main.testing.java">
@@ -160,7 +192,38 @@
     <path refid="classpath.for.main.test" />
     <pathelement location="${dir.build.class.main.test}" />
   </path>
-	
+
+  <!-- build func.test -->
+
+  <path id="classpath.for.func.test">
+    <path refid="classpath.with.testing.java" />
+  	<path refid="classpath.with.func.java" />
+    <pathelement location="${lib.assertj-core}" />
+    <pathelement location="${lib.guava-testlib}" />
+    <pathelement location="${lib.hamcrest-library}" />
+    <pathelement location="${lib.junit}" />
+    <pathelement location="${lib.testory}" />
+  </path>
+
+  <target name="compile-func.test" depends="compile-func.java, compile-testing.java">
+    <javac destdir="${dir.build.class.func.test}"
+           debug="true"
+           includeantruntime="false"
+           debuglevel="lines,vars,source">
+      <compilerarg value="-Xlint:all" />
+      <compilerarg value="-Werror" />
+      <src path="${dir.src.func.test}" />
+      <classpath>
+        <path refid="classpath.for.func.test" />
+      </classpath>
+    </javac>
+  </target>
+
+  <path id="classpath.with.func.test">
+    <path refid="classpath.for.func.test" />
+    <pathelement location="${dir.build.class.func.test}" />
+  </path>
+
   <!-- build testing.test -->
 
   <path id="classpath.for.testing.test">
@@ -193,6 +256,11 @@
 	
   <!-- build integration-tests -->
 
+  <path id="classpath.for.test-integration">
+  	<path refid="classpath.with.testing.java" />
+  	<path refid="classpath.with.func.java" />
+  </path>
+
   <target name="compile-integration-tests" depends="compile-testing.java">
     <javac destdir="${dir.build.class.test-integration}"
            debug="true"
@@ -202,13 +270,13 @@
       <compilerarg value="-Werror" />
       <src path="${dir.src.test-integration}" />
       <classpath>
-        <path refid="classpath.for.main.test" />
+        <path refid="classpath.for.test-integration" />
       </classpath>
     </javac>
   </target>
 
   <path id="classpath.with.test-integration">
-    <path refid="classpath.for.main.test" />
+    <path refid="classpath.for.test-integration" />
     <pathelement location="${dir.build.class.test-integration}" />
   </path>
 
@@ -240,6 +308,20 @@
     </junit>
   </target>
 
+  <!-- run func.test -->
+
+  <target name="run-func.test" depends="compile-func.test">
+    <junit haltonfailure="yes" reloading="false">
+      <classpath>
+        <path refid="classpath.with.func.test" />
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <batchtest fork="no" todir="${dir.build}" >
+        <fileset dir="${dir.build.class.func.test}" includes="**/*Test.class"/>
+      </batchtest>
+    </junit>
+  </target>
+
   <!-- run test-integration -->
 
   <target name="test-integration" depends="compile-integration-tests" description="runs integration tests">
@@ -254,7 +336,7 @@
     </junit>
   </target>
 
-  <target name="test" depends="run-testing.test, run-main.test, test-integration">
+  <target name="test" depends="run-testing.test, run-main.test, run-func.test, test-integration">
   </target>
 
   <!-- jar file -->
