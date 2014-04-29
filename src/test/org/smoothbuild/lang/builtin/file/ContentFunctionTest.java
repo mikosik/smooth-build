@@ -6,6 +6,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import org.junit.Test;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
@@ -21,8 +22,8 @@ public class ContentFunctionTest {
     assertThat(actual).isSameAs(file.content());
   }
 
-  private static ContentFunction.Parameters params(final SFile file) {
-    return new ContentFunction.Parameters() {
+  private static BuiltinSmoothModule.ContentParameters params(final SFile file) {
+    return new BuiltinSmoothModule.ContentParameters() {
       @Override
       public SFile file() {
         return file;

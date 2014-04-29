@@ -9,36 +9,26 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.lang.builtin.compress.err.CannotAddDuplicatePathError;
-import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
 
-  public interface Parameters {
-    @Required
-    public SArray<SFile> files();
-
-    // add missing parameters: level, comment, method
-  }
-
-  @SmoothFunction(name = "zip")
-  public static SBlob execute(NativeApi nativeApi, Parameters params) {
+  public static SBlob execute(NativeApi nativeApi, BuiltinSmoothModule.ZipParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
     private final NativeApi nativeApi;
-    private final Parameters params;
+    private final BuiltinSmoothModule.ZipParameters params;
 
     private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
     private final DuplicatesDetector<Path> duplicatesDetector;
 
-    public Worker(NativeApi nativeApi, Parameters params) {
+    public Worker(NativeApi nativeApi, BuiltinSmoothModule.ZipParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
       this.duplicatesDetector = new DuplicatesDetector<Path>();

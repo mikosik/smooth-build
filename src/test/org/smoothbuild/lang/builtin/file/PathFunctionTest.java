@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
@@ -24,8 +25,8 @@ public class PathFunctionTest {
     assertThat(actual.value()).isEqualTo(path.value());
   }
 
-  private static PathFunction.Parameters params(final SFile file) {
-    return new PathFunction.Parameters() {
+  private static BuiltinSmoothModule.PathParameters params(final SFile file) {
+    return new BuiltinSmoothModule.PathParameters() {
       @Override
       public SFile file() {
         return file;

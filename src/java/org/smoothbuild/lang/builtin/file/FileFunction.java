@@ -9,31 +9,23 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
-import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class FileFunction {
 
-  public interface Parameters {
-    @Required
-    public SString path();
-  }
-
-  @SmoothFunction(name = "file", cacheable = false)
-  public static SFile execute(NativeApiImpl nativeApi, Parameters params) {
+  public static SFile execute(NativeApiImpl nativeApi, BuiltinSmoothModule.FileParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
     private final NativeApiImpl nativeApi;
-    private final Parameters params;
+    private final BuiltinSmoothModule.FileParameters params;
     private final FileReader reader;
 
-    public Worker(NativeApiImpl nativeApi, Parameters params) {
+    public Worker(NativeApiImpl nativeApi, BuiltinSmoothModule.FileParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
       this.reader = new FileReader(nativeApi);

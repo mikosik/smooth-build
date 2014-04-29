@@ -7,11 +7,10 @@ import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.lang.builtin.android.err.AidlBinaryReturnedNonZeroCodeError;
 import org.smoothbuild.lang.builtin.android.err.AidlShouldOutputExactlyOneFileError;
 import org.smoothbuild.lang.builtin.android.err.RunningAidlBinaryFailedError;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.util.CommandExecutor;
 
@@ -19,19 +18,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class AidlFunction {
-  public interface Parameters {
-    @Required
-    public SString apiLevel();
-
-    @Required
-    public SString buildToolsVersion();
-
-    @Required
-    public SFile interfaceFile();
-  }
-
   @SmoothFunction(name = "aidl")
-  public static SFile execute(NativeApi nativeApi, Parameters params) throws InterruptedException {
+  public static SFile execute(NativeApi nativeApi, BuiltinSmoothModule.AidlParameters params)
+      throws InterruptedException {
     String buildToolsVersion = params.buildToolsVersion().value();
     String apiLevel = params.apiLevel().value();
     SFile interfaceFile = params.interfaceFile();

@@ -16,17 +16,14 @@ import javax.tools.ToolProvider;
 
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.lang.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.lang.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.lang.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.lang.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
-import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Function;
@@ -38,19 +35,8 @@ import com.google.common.collect.Multimap;
 
 public class JavacFunction {
 
-  public interface Parameters {
-    @Required
-    SArray<SFile> sources();
-
-    SArray<SBlob> libs();
-
-    SString source();
-
-    SString target();
-  }
-
-  @SmoothFunction(name = "javac")
-  public static SArray<SFile> execute(NativeApiImpl nativeApi, Parameters params) {
+  public static SArray<SFile> execute(NativeApiImpl nativeApi,
+      BuiltinSmoothModule.JavacParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
@@ -62,9 +48,9 @@ public class JavacFunction {
 
     private final JavaCompiler compiler;
     private final NativeApiImpl nativeApi;
-    private final Parameters params;
+    private final BuiltinSmoothModule.JavacParameters params;
 
-    public Worker(NativeApiImpl nativeApi, Parameters params) {
+    public Worker(NativeApiImpl nativeApi, BuiltinSmoothModule.JavacParameters params) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.params = params;

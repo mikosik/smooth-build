@@ -6,29 +6,20 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
-import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 
 public class ConcatenateBlobsFunction {
 
-  public interface Parameters {
-    @Required
-    public SArray<SBlob> blobs();
-
-    @Required
-    public SArray<SBlob> with();
-  }
-
-  @SmoothFunction(name = "concatenateBlobs")
-  public static SArray<SBlob> execute(NativeApi nativeApi, Parameters params) {
+  public static SArray<SBlob> execute(NativeApi nativeApi,
+      BuiltinSmoothModule.ConcatenateBlobsParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
   public static class Worker {
     private final NativeApi nativeApi;
-    private final Parameters params;
+    private final BuiltinSmoothModule.ConcatenateBlobsParameters params;
 
-    public Worker(NativeApi nativeApi, Parameters params) {
+    public Worker(NativeApi nativeApi, BuiltinSmoothModule.ConcatenateBlobsParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
     }
