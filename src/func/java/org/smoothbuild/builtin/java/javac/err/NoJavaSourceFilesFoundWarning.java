@@ -1,0 +1,12 @@
+package org.smoothbuild.builtin.java.javac.err;
+
+import static org.smoothbuild.message.base.MessageType.WARNING;
+
+import org.smoothbuild.message.base.Message;
+
+@SuppressWarnings("serial")
+public class NoJavaSourceFilesFoundWarning extends Message {
+  public NoJavaSourceFilesFoundWarning() {
+    super(WARNING, "Param 'sources' is empty list.");
+  }
+}
