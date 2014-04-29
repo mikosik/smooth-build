@@ -11,9 +11,9 @@
   <property name="dir.build.java" location="${dir.build}/java" />
   <property name="dir.build.java.parser" location="${dir.build.java}/org/smoothbuild/antlr" />
   <property name="dir.build.class" location="${dir.build}/class" />
-  <property name="dir.build.class.java" location="${dir.build.class}/java" />
-  <property name="dir.build.class.testing" location="${dir.build.class}/testing" />
-  <property name="dir.build.class.test-unit" location="${dir.build.class}/test-unit" />
+  <property name="dir.build.class.main.java" location="${dir.build.class}/main/java" />
+  <property name="dir.build.class.main.test" location="${dir.build.class}/main/test" />
+  <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java" />
   <property name="dir.build.class.test-integration" location="${dir.build.class}/test-integration" />
   <property name="dir.build.jar" location="${dir.build}/jar" />
   <property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth-all.jar" />
@@ -44,9 +44,9 @@
 
   <target name="init">
     <mkdir dir="${dir.build.java.parser}" />
-    <mkdir dir="${dir.build.class.java}" />
-    <mkdir dir="${dir.build.class.testing}" />
-    <mkdir dir="${dir.build.class.test-unit}" />
+    <mkdir dir="${dir.build.class.main.java}" />
+    <mkdir dir="${dir.build.class.main.test}" />
+    <mkdir dir="${dir.build.class.testing.java}" />
     <mkdir dir="${dir.build.class.test-integration}" />
     <mkdir dir="${dir.build.jar}" />
     <mkdir dir="${dir.build.release}" />
@@ -65,9 +65,9 @@
     </java>
   </target>
 
-  <!-- compile-java -->
+  <!-- build main.java -->
         
-  <path id="classpath.for.java">
+  <path id="classpath.for.main.java">
     <pathelement location="${lib.antlr}" />
     <pathelement location="${lib.aopalliance}" />
     <pathelement location="${lib.argparse4j}" />
@@ -80,8 +80,8 @@
     <pathelement location="${lib.jarjar}" />
   </path>
 
-  <target name="compile-java" depends="generate-java-grammar">
-    <javac destdir="${dir.build.class.java}"
+  <target name="compile-main.java" depends="generate-java-grammar">
+    <javac destdir="${dir.build.class.main.java}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
@@ -90,27 +90,27 @@
       <src path="${dir.src.main.java}" />
       <src path="${dir.build.java.parser}" />
       <classpath>
-        <path refid="classpath.for.java" />
+        <path refid="classpath.for.main.java" />
       </classpath>
     </javac>
   </target>
 
-  <path id="classpath.with.java">
-    <path refid="classpath.for.java" />
-    <pathelement location="${dir.build.class.java}" />
+  <path id="classpath.with.main.java">
+    <path refid="classpath.for.main.java" />
+    <pathelement location="${dir.build.class.main.java}" />
   </path>
 
-  <!-- compile-testing -->
+  <!-- build testing.java -->
         
-  <path id="classpath.for.testing">
-    <path refid="classpath.with.java" />
+  <path id="classpath.for.main.testing.java">
+    <path refid="classpath.with.main.java" />
     <pathelement location="${lib.assertj-core}" />
   	<pathelement location="${lib.hamcrest}" />
     <pathelement location="${lib.junit}" />
   </path>
 
-  <target name="compile-testing" depends="compile-java">
-    <javac destdir="${dir.build.class.testing}"
+  <target name="compile-testing.java" depends="compile-main.java">
+    <javac destdir="${dir.build.class.testing.java}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
@@ -118,20 +118,20 @@
       <compilerarg value="-Werror" />
       <src path="${dir.src.testing.java}" />
       <classpath>
-        <path refid="classpath.for.testing" />
+        <path refid="classpath.for.main.testing.java" />
       </classpath>
     </javac>
   </target>
 
-  <path id="classpath.with.testing">
-    <path refid="classpath.for.testing" />
-    <pathelement location="${dir.build.class.testing}" />
+  <path id="classpath.with.testing.java">
+    <path refid="classpath.for.main.testing.java" />
+    <pathelement location="${dir.build.class.testing.java}" />
   </path>
 
-  <!-- classpath-for-all-tests -->
+  <!-- build main.test -->
 
-  <path id="classpath.for.test">
-    <path refid="classpath.with.testing" />
+  <path id="classpath.for.main.test">
+    <path refid="classpath.with.testing.java" />
     <pathelement location="${lib.assertj-core}" />
     <pathelement location="${lib.guava-testlib}" />
     <pathelement location="${lib.hamcrest-library}" />
@@ -139,10 +139,8 @@
     <pathelement location="${lib.testory}" />
   </path>
 
-  <!-- compile-test-unit -->
-
-  <target name="compile-test-unit" depends="compile-testing">
-    <javac destdir="${dir.build.class.test-unit}"
+  <target name="compile-main.test" depends="compile-testing.java">
+    <javac destdir="${dir.build.class.main.test}"
            debug="true"
            includeantruntime="false"
            debuglevel="lines,vars,source">
@@ -150,33 +148,33 @@
       <compilerarg value="-Werror" />
       <src path="${dir.src.main.test}" />
       <classpath>
-        <path refid="classpath.for.test" />
+        <path refid="classpath.for.main.test" />
       </classpath>
     </javac>
   </target>
 
-  <path id="classpath.with.test-unit">
-    <path refid="classpath.for.test" />
-    <pathelement location="${dir.build.class.test-unit}" />
+  <path id="classpath.with.main.test">
+    <path refid="classpath.for.main.test" />
+    <pathelement location="${dir.build.class.main.test}" />
   </path>
 
-  <!-- test-unit -->
+  <!-- run main.test -->
 
-  <target name="test-unit" depends="compile-test-unit" description="runs unit tests">
+  <target name="run-main.test" depends="compile-main.test" description="runs main.test">
     <junit haltonfailure="yes" reloading="false">
       <classpath>
-        <path refid="classpath.with.test-unit" />
+        <path refid="classpath.with.main.test" />
       </classpath>
       <formatter type="brief" usefile="false" />
       <batchtest fork="no" todir="${dir.build}" >
-        <fileset dir="${dir.build.class.test-unit}" includes="**/*Test.class"/>
+        <fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
       </batchtest>
     </junit>
   </target>
 
-  <!-- compile-test-integration -->
+  <!-- build integration-tests -->
 
-  <target name="compile-test-integration" depends="compile-testing">
+  <target name="compile-integration-tests" depends="compile-testing.java">
     <javac destdir="${dir.build.class.test-integration}"
            debug="true"
            includeantruntime="false"
@@ -185,19 +183,19 @@
       <compilerarg value="-Werror" />
       <src path="${dir.src.test-integration}" />
       <classpath>
-        <path refid="classpath.for.test" />
+        <path refid="classpath.for.main.test" />
       </classpath>
     </javac>
   </target>
 
   <path id="classpath.with.test-integration">
-    <path refid="classpath.for.test" />
+    <path refid="classpath.for.main.test" />
     <pathelement location="${dir.build.class.test-integration}" />
   </path>
 
-  <!-- test-integration -->
+  <!-- run test-integration -->
 
-  <target name="test-integration" depends="compile-test-integration" description="runs integration tests">
+  <target name="test-integration" depends="compile-integration-tests" description="runs integration tests">
     <junit haltonfailure="yes" reloading="false">
       <classpath>
         <path refid="classpath.with.test-integration" />
@@ -209,12 +207,12 @@
     </junit>
   </target>
 
-  <target name="test" depends="test-unit, test-integration">
+  <target name="test" depends="run-main.test, test-integration">
   </target>
 
   <!-- jar file -->
 
-  <target name="jar-file" depends="compile-java">
+  <target name="jar-file" depends="compile-main.java">
     <jarjar destfile="${dir.build.jar.polluted-file}">
       <!--
       'excludes' make sure that manifest files
@@ -233,7 +231,7 @@
       <zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
       <zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
 
-      <zipfileset dir="${dir.build.class.java}"/>
+      <zipfileset dir="${dir.build.class.main.java}"/>
       <zipfileset file="LICENSE"/>
 
       <zipfileset file="${lib.antlr.license}"/>
