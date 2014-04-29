@@ -6,6 +6,7 @@ import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.ModuleBuilder;
 import org.smoothbuild.lang.function.nativ.NativeModuleFactory;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
+import org.smoothbuild.parse.Builtin;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
