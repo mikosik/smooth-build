@@ -22,8 +22,8 @@
 	<property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test" />
 	<property name="dir.build.class.test-integration" location="${dir.build.class}/test-integration" />
 	<property name="dir.build.jar" location="${dir.build}/jar" />
-	<property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth-all.jar" />
-	<property name="dir.build.jar.file" location="${dir.build.jar}/smooth-all.jar" />
+	<property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth.jar" />
+	<property name="dir.build.jar.file" location="${dir.build.jar}/smooth.jar" />
 	<property name="dir.build.release" location="${dir.build}/release" />
 	<property name="dir.build.release.file" location="${dir.build.release}/smooth.zip" />
 
