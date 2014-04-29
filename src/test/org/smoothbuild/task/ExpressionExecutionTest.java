@@ -128,6 +128,28 @@ public class ExpressionExecutionTest {
     }
   }
 
+  @Test
+  public void execution_fails_when_native_function_throws_runtime_exception() throws Exception {
+    given(sstring = objectsDb.string("abc"));
+    given(function = createNativeModule(SmoothModule2.class, false).getFunction(name("func")));
+    given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
+    given(callExpr = new CallExpr<>(function, location, ImmutableMap.of("param", stringExpr)));
+    given(task = taskGraph.createTasks(callExpr));
+    when(taskGraph).executeAll();
+    thenEqual(task.output().hasReturnValue(), false);
+  }
+
+  public static class SmoothModule2 {
+    public interface Parameters {
+      SString param();
+    }
+
+    @SmoothFunction(name = "func")
+    public static SString execute(NativeApi nativeApi, Parameters params) {
+      throw new RuntimeException();
+    }
+  }
+
   private SArray<SString> array(SString... sstrings) {
     ArrayBuilder<SString> arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY);
     for (SString sstring : sstrings) {
