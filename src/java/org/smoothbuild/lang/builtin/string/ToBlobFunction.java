@@ -10,17 +10,10 @@ import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 
 public class ToBlobFunction {
-  public interface Parameters {
-    @Required
-    public SString string();
-  }
-
-  @SmoothFunction(name = "toBlob")
-  public static SBlob execute(NativeApi nativeApi, Parameters params) {
+  public static SBlob execute(NativeApi nativeApi, BuiltinSmoothModule.ToBlobParameters params) {
     return stringToBlob(nativeApi, params.string());
   }
 

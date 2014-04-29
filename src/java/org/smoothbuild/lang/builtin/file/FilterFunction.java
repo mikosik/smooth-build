@@ -9,33 +9,23 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathPatternError;
-import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Predicate;
 
 public class FilterFunction {
-  public interface Parameters {
-    @Required
-    public SArray<SFile> files();
-
-    @Required
-    public SString include();
-  }
-
-  @SmoothFunction(name = "filter")
-  public static SArray<SFile> execute(NativeApiImpl nativeApi, Parameters params) {
+  public static SArray<SFile> execute(NativeApiImpl nativeApi,
+      BuiltinSmoothModule.FilterParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
     private final NativeApi nativeApi;
-    private final Parameters params;
+    private final BuiltinSmoothModule.FilterParameters params;
 
-    public Worker(NativeApi nativeApi, Parameters params) {
+    public Worker(NativeApi nativeApi, BuiltinSmoothModule.FilterParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
     }

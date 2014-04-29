@@ -13,7 +13,7 @@ import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.builtin.file.FileFunction.Parameters;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.lang.builtin.file.err.IllegalPathError;
 import org.smoothbuild.lang.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -90,8 +90,8 @@ public class FileFunctionTest {
     thenReturned(objectsDb.file(path));
   }
 
-  private FileFunction.Parameters params(final String path) {
-    return new FileFunction.Parameters() {
+  private BuiltinSmoothModule.FileParameters params(final String path) {
+    return new BuiltinSmoothModule.FileParameters() {
       @Override
       public SString path() {
         return objectsDb.string(path);
@@ -99,7 +99,7 @@ public class FileFunctionTest {
     };
   }
 
-  private SFile runExecute(Parameters params) {
+  private SFile runExecute(BuiltinSmoothModule.FileParameters params) {
     return FileFunction.execute(nativeApi, params);
   }
 }

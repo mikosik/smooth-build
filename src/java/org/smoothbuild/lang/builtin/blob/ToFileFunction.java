@@ -6,31 +6,20 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.builtin.BuiltinSmoothModule;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class ToFileFunction {
 
-  public interface Parameters {
-    @Required
-    public SString path();
-
-    @Required
-    public SBlob content();
-  }
-
-  @SmoothFunction(name = "toFile")
-  public static SFile execute(NativeApiImpl nativeApi, Parameters params) {
+  public static SFile execute(NativeApiImpl nativeApi, BuiltinSmoothModule.ToFileParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
     private final NativeApi nativeApi;
-    private final Parameters params;
+    private final BuiltinSmoothModule.ToFileParameters params;
 
-    public Worker(NativeApi nativeApi, Parameters params) {
+    public Worker(NativeApi nativeApi, BuiltinSmoothModule.ToFileParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
     }

@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.ModuleBuilder;
-import org.smoothbuild.lang.function.nativ.NativeFunctionFactory;
+import org.smoothbuild.lang.function.nativ.NativeModuleFactory;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 
 import com.google.inject.AbstractModule;
@@ -18,9 +18,6 @@ public class BuiltinModule extends AbstractModule {
   @Singleton
   @Builtin
   public Module provideBuiltinModule(ModuleBuilder builder) throws NativeImplementationException {
-    for (Class<?> klass : BuiltinFunctions.BUILTIN_FUNCTION_CLASSES) {
-      builder.addFunction(NativeFunctionFactory.create(klass, true));
-    }
-    return builder.build();
+    return NativeModuleFactory.createNativeModule(BuiltinSmoothModule.class, true);
   }
 }
