@@ -78,7 +78,6 @@
     <pathelement location="${lib.junit}" />
     <!-- TODO can be removed once jarjar function becomes separate plugin -->
     <pathelement location="${lib.jarjar}" />
-    <pathelement location="${lib.hamcrest}" />
   </path>
 
   <target name="compile-java" depends="generate-java-grammar">
@@ -106,6 +105,7 @@
   <path id="classpath.for.testing">
     <path refid="classpath.with.java" />
     <pathelement location="${lib.assertj-core}" />
+  	<pathelement location="${lib.hamcrest}" />
     <pathelement location="${lib.junit}" />
   </path>
 
