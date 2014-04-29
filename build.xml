@@ -158,20 +158,6 @@
     <pathelement location="${dir.build.class.main.test}" />
   </path>
 
-  <!-- run main.test -->
-
-  <target name="run-main.test" depends="compile-main.test" description="runs main.test">
-    <junit haltonfailure="yes" reloading="false">
-      <classpath>
-        <path refid="classpath.with.main.test" />
-      </classpath>
-      <formatter type="brief" usefile="false" />
-      <batchtest fork="no" todir="${dir.build}" >
-        <fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
-      </batchtest>
-    </junit>
-  </target>
-
   <!-- build integration-tests -->
 
   <target name="compile-integration-tests" depends="compile-testing.java">
@@ -192,6 +178,20 @@
     <path refid="classpath.for.main.test" />
     <pathelement location="${dir.build.class.test-integration}" />
   </path>
+	
+  <!-- run main.test -->
+
+  <target name="run-main.test" depends="compile-main.test" description="runs main.test">
+    <junit haltonfailure="yes" reloading="false">
+      <classpath>
+        <path refid="classpath.with.main.test" />
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <batchtest fork="no" todir="${dir.build}" >
+        <fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
+      </batchtest>
+    </junit>
+  </target>
 
   <!-- run test-integration -->
 
