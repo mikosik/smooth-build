@@ -5,6 +5,7 @@
   <property name="dir.src.main.java" location="${dir.src}/main/java" />
   <property name="dir.src.main.test" location="${dir.src}/main/test" />
   <property name="dir.src.testing.java" location="${dir.src}/testing/java" />
+  <property name="dir.src.testing.test" location="${dir.src}/testing/test" />
   <property name="dir.src.test-integration" location="${dir.src}/test-integration" />
   <property name="dir.src.script" location="${dir.src}/script" />
   <property name="dir.build" location="build" />
@@ -14,6 +15,7 @@
   <property name="dir.build.class.main.java" location="${dir.build.class}/main/java" />
   <property name="dir.build.class.main.test" location="${dir.build.class}/main/test" />
   <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java" />
+  <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test" />
   <property name="dir.build.class.test-integration" location="${dir.build.class}/test-integration" />
   <property name="dir.build.jar" location="${dir.build}/jar" />
   <property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth-all.jar" />
@@ -46,7 +48,8 @@
     <mkdir dir="${dir.build.java.parser}" />
     <mkdir dir="${dir.build.class.main.java}" />
     <mkdir dir="${dir.build.class.main.test}" />
-    <mkdir dir="${dir.build.class.testing.java}" />
+  	<mkdir dir="${dir.build.class.testing.java}" />
+  	<mkdir dir="${dir.build.class.testing.test}" />
     <mkdir dir="${dir.build.class.test-integration}" />
     <mkdir dir="${dir.build.jar}" />
     <mkdir dir="${dir.build.release}" />
@@ -157,7 +160,37 @@
     <path refid="classpath.for.main.test" />
     <pathelement location="${dir.build.class.main.test}" />
   </path>
+	
+  <!-- build testing.test -->
 
+  <path id="classpath.for.testing.test">
+    <path refid="classpath.with.testing.java" />
+    <pathelement location="${lib.assertj-core}" />
+    <pathelement location="${lib.guava-testlib}" />
+    <pathelement location="${lib.hamcrest-library}" />
+    <pathelement location="${lib.junit}" />
+    <pathelement location="${lib.testory}" />
+  </path>
+
+  <target name="compile-testing.test" depends="compile-testing.java">
+    <javac destdir="${dir.build.class.testing.test}"
+           debug="true"
+           includeantruntime="false"
+           debuglevel="lines,vars,source">
+      <compilerarg value="-Xlint:all" />
+      <compilerarg value="-Werror" />
+      <src path="${dir.src.testing.test}" />
+      <classpath>
+        <path refid="classpath.for.testing.test" />
+      </classpath>
+    </javac>
+  </target>
+
+  <path id="classpath.with.testing.test">
+    <path refid="classpath.for.testing.test" />
+    <pathelement location="${dir.build.class.testing.test}" />
+  </path>
+	
   <!-- build integration-tests -->
 
   <target name="compile-integration-tests" depends="compile-testing.java">
@@ -178,7 +211,21 @@
     <path refid="classpath.for.main.test" />
     <pathelement location="${dir.build.class.test-integration}" />
   </path>
-	
+
+  <!-- run testing.test -->
+
+  <target name="run-testing.test" depends="compile-testing.test">
+    <junit haltonfailure="yes" reloading="false">
+      <classpath>
+        <path refid="classpath.with.testing.test" />
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <batchtest fork="no" todir="${dir.build}" >
+        <fileset dir="${dir.build.class.testing.test}" includes="**/*Test.class"/>
+      </batchtest>
+    </junit>
+  </target>
+
   <!-- run main.test -->
 
   <target name="run-main.test" depends="compile-main.test" description="runs main.test">
@@ -207,7 +254,7 @@
     </junit>
   </target>
 
-  <target name="test" depends="run-main.test, test-integration">
+  <target name="test" depends="run-testing.test, run-main.test, test-integration">
   </target>
 
   <!-- jar file -->
