@@ -341,7 +341,7 @@
 
 	<!-- jar file -->
 
-	<target name="jar-file" depends="compile-main.java">
+	<target name="jar-file" depends="compile-main.java, compile-func.java">
 		<jarjar destfile="${dir.build.jar.polluted-file}">
 			<!--
             'excludes' make sure that manifest files
@@ -360,7 +360,8 @@
 			<zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
 			<zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
 
-			<zipfileset dir="${dir.build.class.main.java}"/>
+			<zipfileset dir="${dir.build.class.main.java}"/> 
+			<zipfileset dir="${dir.build.class.func.java}"/> 
 			<zipfileset file="LICENSE"/>
 
 			<zipfileset file="${lib.antlr.license}"/>
