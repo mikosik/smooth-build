@@ -22,8 +22,8 @@
 	<property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test" />
 	<property name="dir.build.class.test-integration" location="${dir.build.class}/test-integration" />
 	<property name="dir.build.jar" location="${dir.build}/jar" />
-	<property name="dir.build.jar.polluted-file" location="${dir.build.jar}/polluted-smooth.jar" />
-	<property name="dir.build.jar.file" location="${dir.build.jar}/smooth.jar" />
+	<property name="dir.build.smooth-polluted.jar" location="${dir.build.jar}/smooth-polluted.jar" />
+	<property name="dir.build.smooth.jar" location="${dir.build.jar}/smooth.jar" />
 	<property name="dir.build.release" location="${dir.build}/release" />
 	<property name="dir.build.release.file" location="${dir.build.release}/smooth.zip" />
 
@@ -339,10 +339,10 @@
 	<target name="test" depends="run-testing.test, run-main.test, run-func.test, test-integration">
 	</target>
 
-	<!-- jar file -->
+	<!-- smooth.jar file -->
 
-	<target name="jar-file" depends="compile-main.java, compile-func.java">
-		<jarjar destfile="${dir.build.jar.polluted-file}">
+	<target name="smooth-jar-file" depends="compile-main.java, compile-func.java">
+		<jarjar destfile="${dir.build.smooth-polluted.jar}">
 			<!--
             'excludes' make sure that manifest files
             and other files from top directories
@@ -360,8 +360,8 @@
 			<zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
 			<zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
 
-			<zipfileset dir="${dir.build.class.main.java}"/> 
-			<zipfileset dir="${dir.build.class.func.java}"/> 
+			<zipfileset dir="${dir.build.class.main.java}"/>
+			<zipfileset dir="${dir.build.class.func.java}"/>
 			<zipfileset file="LICENSE"/>
 
 			<zipfileset file="${lib.antlr.license}"/>
@@ -389,16 +389,17 @@
         we need to get rid of empty directories left by jarjar.
         We just repackage everthing once again.
         -->
-		<jarjar destfile="${dir.build.jar.file}">
+		<jarjar destfile="${dir.build.smooth.jar}">
 			<!-- TODO help.txt can be removed once jarjar function becomes separate plugin -->
-			<zipfileset includes="* **/*.class com/tonicsystems/jarjar/help.txt" src="${dir.build.jar.polluted-file}"/>
+			<zipfileset includes="* **/*.class com/tonicsystems/jarjar/help.txt" src="${dir.build.smooth-polluted.jar}"/>
 		</jarjar>
 	</target>
 
-	<!-- release -->
-	<target name="release" depends="jar-file">
+	<!-- smooth.zip release -->
+
+	<target name="release" depends="smooth-jar-file">
 		<zip destfile="${dir.build.release.file}" level="9">
-			<zipfileset prefix="smooth" file="${dir.build.jar.file}"/>
+			<zipfileset prefix="smooth" file="${dir.build.smooth.jar}"/>
 			<zipfileset prefix="smooth" file="${dir.src.script}/smooth" filemode="755"/>
 			<zipfileset prefix="smooth" file="${dir.src.script}/smooth.bat"/>
 		</zip>
