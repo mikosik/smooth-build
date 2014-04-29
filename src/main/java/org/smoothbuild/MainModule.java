@@ -25,7 +25,7 @@ public class MainModule extends AbstractModule {
    */
   private Module createBuiltinModule() {
     try {
-      return (Module) Class.forName("org.smoothbuild.lang.builtin.BuiltinModule").newInstance();
+      return (Module) Class.forName("org.smoothbuild.builtin.BuiltinModule").newInstance();
     } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
