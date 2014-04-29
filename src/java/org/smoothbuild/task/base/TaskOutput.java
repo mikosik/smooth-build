@@ -17,12 +17,12 @@ public class TaskOutput<T extends SValue> {
     this(returnValue, ImmutableList.<Message> of());
   }
 
-  public TaskOutput(T returnValue, Iterable<Message> messages) {
+  public TaskOutput(T returnValue, Iterable<? extends Message> messages) {
     this.returnValue = checkNotNull(returnValue);
     this.messages = ImmutableList.copyOf(messages);
   }
 
-  public TaskOutput(Iterable<Message> messages) {
+  public TaskOutput(Iterable<? extends Message> messages) {
     this.returnValue = null;
     this.messages = ImmutableList.copyOf(messages);
   }
