@@ -20,10 +20,29 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 public class NativeFunctionFactory {
   public static NativeFunction<?> create(Class<?> klass, boolean builtin)
       throws NativeImplementationException {
-    Method method = getExecuteMethod(klass, builtin);
+    Method method = getExecuteMethod(klass);
+    return createNativeFunction(method, builtin);
+  }
+
+  public static NativeFunction<?> createNativeFunction(Method method, boolean builtin)
+      throws NativeImplementationException, MissingNameException {
+    if (!isPublic(method)) {
+      throw new NonPublicSmoothFunctionException(method);
+    }
+    if (!isStatic(method)) {
+      throw new NonStaticSmoothFunctionException(method);
+    }
+    Class<?>[] paramTypes = method.getParameterTypes();
+    if (paramTypes.length != 2) {
+      throw new WrongParamsInSmoothFunctionException(method);
+    }
+    Class<?> first = paramTypes[0];
+    if (!(first.equals(NativeApi.class) || (builtin && first.equals(NativeApiImpl.class)))) {
+      throw new WrongParamsInSmoothFunctionException(method);
+    }
+
     Class<?> paramsInterface = method.getParameterTypes()[1];
     Signature<? extends SValue> signature = SignatureFactory.create(method, paramsInterface);
-
     return createNativeFunction(method, signature, paramsInterface);
   }
 
@@ -46,25 +65,9 @@ public class NativeFunctionFactory {
     return new Invoker<>(method, argsCreator);
   }
 
-  private static Method getExecuteMethod(Class<?> klass, boolean builtin)
-      throws NativeImplementationException {
+  private static Method getExecuteMethod(Class<?> klass) throws NativeImplementationException {
     for (Method method : klass.getDeclaredMethods()) {
       if (method.isAnnotationPresent(SmoothFunction.class)) {
-        if (!isPublic(method)) {
-          throw new NonPublicSmoothFunctionException(method);
-        }
-        if (!isStatic(method)) {
-          throw new NonStaticSmoothFunctionException(method);
-        }
-        Class<?>[] paramTypes = method.getParameterTypes();
-        if (paramTypes.length != 2) {
-          throw new WrongParamsInSmoothFunctionException(method);
-        }
-        Class<?> first = paramTypes[0];
-        if (!(first.equals(NativeApi.class) || (builtin && first.equals(NativeApiImpl.class)))) {
-          throw new WrongParamsInSmoothFunctionException(method);
-        }
-
         return method;
       }
     }
