@@ -24,6 +24,8 @@
 	<property name="dir.build.jar" location="${dir.build}/jar" />
 	<property name="dir.build.smooth-polluted.jar" location="${dir.build.jar}/smooth-polluted.jar" />
 	<property name="dir.build.smooth.jar" location="${dir.build.jar}/smooth.jar" />
+	<property name="dir.build.funcs-polluted.jar" location="${dir.build.jar}/funcs-polluted.jar" />
+	<property name="dir.build.funcs.jar" location="${dir.build.jar}/funcs.jar" />   
 	<property name="dir.build.release" location="${dir.build}/release" />
 	<property name="dir.build.release.file" location="${dir.build.release}/smooth.zip" />
 
@@ -339,9 +341,48 @@
 	<target name="test" depends="run-testing.test, run-main.test, run-func.test, test-integration">
 	</target>
 
+    <!-- funcs.jar file -->
+
+    <target name="funcs-jar-file" depends="compile-func.java">
+        <jarjar destfile="${dir.build.funcs-polluted.jar}">
+            <!--
+            'excludes' make sure that manifest files
+            and other files from top directories
+            in dependent jars are not copied
+            -->
+            <!-- TODO can be removed once jarjar function becomes separate plugin -->
+            <zipfileset excludes="* META-INF/**" src="${lib.jarjar}"/>
+            <!-- TODO can be removed once junit function becomes separate plugin -->
+            <zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
+            <zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
+
+            <zipfileset dir="${dir.build.class.func.java}"/>
+            <zipfileset file="LICENSE"/>
+        	<zipfileset src="${lib.guava}" />
+
+            <!-- TODO can be removed once jarjar function becomes separate plugin -->
+            <zipfileset file="${lib.jarjar.license}"/>
+            <!-- TODO can be removed once junit function becomes separate plugin -->
+            <zipfileset file="${lib.junit.license}"/>
+            <zipfileset file="${lib.hamcrest.license}"/>
+        	
+        	<rule pattern="com.google.**" result="org.smoothbuild.builtin.guava.@1"/>
+        </jarjar>
+
+        <!--
+        Due to a bug https://code.google.com/p/jarjar/issues/detail?id=60
+        we need to get rid of empty directories left by jarjar.
+        We just repackage everthing once again.
+        -->
+        <jarjar destfile="${dir.build.funcs.jar}">
+            <!-- TODO help.txt can be removed once jarjar function becomes separate plugin -->
+            <zipfileset includes="* **/*.class com/tonicsystems/jarjar/help.txt" src="${dir.build.funcs-polluted.jar}"/>
+        </jarjar>
+    </target>
+
 	<!-- smooth.jar file -->
 
-	<target name="smooth-jar-file" depends="compile-main.java, compile-func.java">
+	<target name="smooth-jar-file" depends="compile-main.java">
 		<jarjar destfile="${dir.build.smooth-polluted.jar}">
 			<!--
             'excludes' make sure that manifest files
@@ -354,25 +395,14 @@
 			<zipfileset excludes="* META-INF/**" src="${lib.guava}"/>
 			<zipfileset excludes="* META-INF/**" src="${lib.guice}"/>
 			<zipfileset excludes="* META-INF/**" src="${lib.javax.inject}"/>
-			<!-- TODO can be removed once jarjar function becomes separate plugin -->
-			<zipfileset excludes="* META-INF/**" src="${lib.jarjar}"/>
-			<!-- TODO can be removed once junit function becomes separate plugin -->
-			<zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
-			<zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
 
 			<zipfileset dir="${dir.build.class.main.java}"/>
-			<zipfileset dir="${dir.build.class.func.java}"/>
 			<zipfileset file="LICENSE"/>
 
 			<zipfileset file="${lib.antlr.license}"/>
 			<zipfileset file="${lib.argparse4j.license}"/>
 			<zipfileset file="${lib.guava.license}"/>
 			<zipfileset file="${lib.guice.license}"/>
-			<!-- TODO can be removed once jarjar function becomes separate plugin -->
-			<zipfileset file="${lib.jarjar.license}"/>
-			<!-- TODO can be removed once junit function becomes separate plugin -->
-			<zipfileset file="${lib.junit.license}"/>
-			<zipfileset file="${lib.hamcrest.license}"/>
 
 			<rule pattern="net.sourceforge.argparse4j.**" result="org.smoothbuild.argparse4j.@1"/>
 			<rule pattern="com.google.inject.**" result="org.smoothbuild.guice.@1"/>
@@ -391,15 +421,16 @@
         -->
 		<jarjar destfile="${dir.build.smooth.jar}">
 			<!-- TODO help.txt can be removed once jarjar function becomes separate plugin -->
-			<zipfileset includes="* **/*.class com/tonicsystems/jarjar/help.txt" src="${dir.build.smooth-polluted.jar}"/>
+			<zipfileset includes="* **/*.class" src="${dir.build.smooth-polluted.jar}"/>
 		</jarjar>
 	</target>
 
 	<!-- smooth.zip release -->
 
-	<target name="release" depends="smooth-jar-file">
+	<target name="release" depends="smooth-jar-file, funcs-jar-file">
 		<zip destfile="${dir.build.release.file}" level="9">
 			<zipfileset prefix="smooth" file="${dir.build.smooth.jar}"/>
+			<zipfileset prefix="smooth" file="${dir.build.funcs.jar}"/>
 			<zipfileset prefix="smooth" file="${dir.src.script}/smooth" filemode="755"/>
 			<zipfileset prefix="smooth" file="${dir.src.script}/smooth.bat"/>
 		</zip>

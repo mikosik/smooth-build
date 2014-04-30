@@ -1,11 +1,17 @@
 package org.smoothbuild;
 
+import javax.inject.Singleton;
+
 import org.smoothbuild.db.objects.ObjectsDbModule;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
 import org.smoothbuild.io.fs.FileSystemModule;
+import org.smoothbuild.lang.function.base.Module;
+import org.smoothbuild.lang.function.nativ.NativeModuleFactory;
+import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
+import org.smoothbuild.parse.Builtin;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Module;
+import com.google.inject.Provides;
 
 public class MainModule extends AbstractModule {
   @Override
@@ -13,20 +19,19 @@ public class MainModule extends AbstractModule {
     install(new TaskOutputsDbModule());
     install(new ObjectsDbModule());
     install(new FileSystemModule());
-    install(createBuiltinModule());
   }
 
-  /**
-   * Workaround: Class BuiltinModule that provides BuiltinSmoothModule with core
-   * smooth functions is placed in different source folder than main smooth so
-   * we cannot reference it directly. After a few refactorings when plugin
-   * system is in place that builtin module will be placed in proper directory
-   * along smooth.jar and will be loaded automatically.
-   */
-  private Module createBuiltinModule() {
+  @Provides
+  @Singleton
+  @Builtin
+  public Module provideBuiltinModule() throws NativeImplementationException {
+    return NativeModuleFactory.createNativeModule(builtinModuleClass(), true);
+  }
+
+  private Class<?> builtinModuleClass() {
     try {
-      return (Module) Class.forName("org.smoothbuild.builtin.BuiltinModule").newInstance();
-    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+      return Class.forName("org.smoothbuild.builtin.BuiltinSmoothModule");
+    } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
   }
