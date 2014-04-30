@@ -28,4 +28,11 @@ public class Utils {
 
     return Collections.unmodifiableSet(set);
   }
+
+  public static <T> T checkNotNull(T object) {
+    if (object == null) {
+      throw new NullPointerException();
+    }
+    return object;
+  }
 }
