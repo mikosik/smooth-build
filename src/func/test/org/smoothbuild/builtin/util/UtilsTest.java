@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.util.Utils;
 
 public class UtilsTest {
   private ArrayList<Object> iterable;
@@ -71,4 +70,16 @@ public class UtilsTest {
     when(Utils.immutableSet(object1, object2));
     thenReturned(containsInAnyOrder(object1, object2));
   }
+
+  @Test(expected = NullPointerException.class)
+  public void check_not_null_throws_exception_for_null_argument() throws Exception {
+    Utils.checkNotNull(null);
+  }
+
+  public void check_not_null_returns_non_null_argument() throws Exception {
+    given(object1 = new Object());
+    when(Utils.checkNotNull(object1));
+    thenReturned(object1);
+  }
+
 }
