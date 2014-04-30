@@ -12,6 +12,7 @@ import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
+import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.ArrayBuilder;
@@ -21,7 +22,6 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.util.DuplicatesDetector;
-import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
 
