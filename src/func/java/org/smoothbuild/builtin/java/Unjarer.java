@@ -15,6 +15,7 @@ import java.util.jar.JarInputStream;
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
+import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.ArrayBuilder;
@@ -24,7 +25,6 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.util.DuplicatesDetector;
-import org.smoothbuild.util.EndsWithPredicate;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
