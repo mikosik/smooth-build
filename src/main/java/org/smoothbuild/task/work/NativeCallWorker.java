@@ -1,6 +1,6 @@
 package org.smoothbuild.task.work;
 
-import static org.smoothbuild.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;

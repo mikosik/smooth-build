@@ -1,7 +1,7 @@
 package org.smoothbuild.task.save;
 
-import static org.smoothbuild.SmoothContants.ARTIFACTS_DIR;
-import static org.smoothbuild.SmoothContants.OBJECTS_DIR;
+import static org.smoothbuild.SmoothConstants.ARTIFACTS_DIR;
+import static org.smoothbuild.SmoothConstants.OBJECTS_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.smoothbuild.db.hashed.HashCodes;

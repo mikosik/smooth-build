@@ -1,6 +1,6 @@
 package org.smoothbuild.io.fs;
 
-import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;

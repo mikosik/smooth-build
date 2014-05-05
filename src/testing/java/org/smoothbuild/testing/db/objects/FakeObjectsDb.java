@@ -3,7 +3,7 @@ package org.smoothbuild.testing.db.objects;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import org.smoothbuild.SmoothContants;
+import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.db.objects.build.ObjectBuilders;
@@ -48,11 +48,11 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   public SFile file(Path path) {
-    return file(path, path.value().getBytes(SmoothContants.CHARSET));
+    return file(path, path.value().getBytes(SmoothConstants.CHARSET));
   }
 
   public SFile file(Path path, String content) {
-    return file(path, content.getBytes(SmoothContants.CHARSET));
+    return file(path, content.getBytes(SmoothConstants.CHARSET));
   }
 
   public SFile file(Path path, byte[] bytes) {
@@ -61,7 +61,7 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   public SBlob blob(String content) {
-    return blob(content.getBytes(SmoothContants.CHARSET));
+    return blob(content.getBytes(SmoothConstants.CHARSET));
   }
 
   public SBlob blob(byte[] bytes) {

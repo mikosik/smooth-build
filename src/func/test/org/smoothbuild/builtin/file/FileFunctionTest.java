@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.junit.Assert.fail;
-import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;

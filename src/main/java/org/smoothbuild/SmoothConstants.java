@@ -8,7 +8,7 @@ import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.base.Charsets;
 
-public class SmoothContants {
+public class SmoothConstants {
   public static final Path DEFAULT_SCRIPT = path("build.smooth");
   public static final Charset CHARSET = Charsets.UTF_8;
 
