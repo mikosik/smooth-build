@@ -1,6 +1,6 @@
-package org.smoothbuild.io.fs.match;
+package org.smoothbuild.builtin.file.match;
 
-import static org.smoothbuild.io.fs.match.PathPattern.pathPattern;
+import static org.smoothbuild.builtin.file.match.PathPattern.pathPattern;
 import static org.smoothbuild.testing.io.fs.match.PathPatternGenerator.generatePatterns;
 
 import org.junit.Test;

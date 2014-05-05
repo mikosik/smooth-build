@@ -1,4 +1,4 @@
-package org.smoothbuild.io.fs.match;
+package org.smoothbuild.builtin.file.match;
 
 public class Constants {
   public static final char SINGLE_STAR_CHAR = '*';

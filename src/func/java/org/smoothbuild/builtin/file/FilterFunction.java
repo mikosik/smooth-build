@@ -1,12 +1,12 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.io.fs.match.PathMatcher.pathMatcher;
+import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
 import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
+import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.match.IllegalPathPatternException;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;

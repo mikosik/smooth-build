@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.junit;
 
+import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
-import static org.smoothbuild.io.fs.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.util.Empty.nullToEmpty;
 
@@ -12,10 +12,10 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
+import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.match.IllegalPathPatternException;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.Message;

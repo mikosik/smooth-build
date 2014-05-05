@@ -1,8 +1,9 @@
-package org.smoothbuild.io.fs.match;
+package org.smoothbuild.builtin.file.match;
 
 import static org.smoothbuild.testing.io.fs.match.NamePatternGenerator.generatePatterns;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.file.match.NamePattern;
 
 import com.google.common.base.Function;
 

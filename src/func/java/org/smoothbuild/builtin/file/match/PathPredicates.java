@@ -1,4 +1,4 @@
-package org.smoothbuild.io.fs.match;
+package org.smoothbuild.builtin.file.match;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

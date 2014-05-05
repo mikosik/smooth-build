@@ -1,9 +1,9 @@
-package org.smoothbuild.io.fs.match;
+package org.smoothbuild.builtin.file.match;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.io.fs.match.Constants.DOUBLE_STAR;
-import static org.smoothbuild.io.fs.match.Constants.SINGLE_STAR;
-import static org.smoothbuild.io.fs.match.Constants.SINGLE_STAR_CHAR;
+import static org.smoothbuild.builtin.file.match.Constants.DOUBLE_STAR;
+import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
+import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR_CHAR;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
