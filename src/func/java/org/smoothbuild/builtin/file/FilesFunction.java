@@ -7,7 +7,7 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
-import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
@@ -29,7 +29,7 @@ public class FilesFunction {
     }
 
     if (path.firstPart().equals(SMOOTH_DIR)) {
-      throw new ReadFromSmoothDirError(path);
+      throw new IllegalReadFromSmoothDirError(path);
     }
 
     switch (fileSystem.pathState(path)) {

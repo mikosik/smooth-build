@@ -7,9 +7,9 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.Message;
 
 @SuppressWarnings("serial")
-public class ReadFromSmoothDirError extends Message {
-  public ReadFromSmoothDirError(Path path) {
-    super(ERROR, "Reading from " + SMOOTH_DIR + " dir is forbidden.\n"
+public class IllegalReadFromSmoothDirError extends Message {
+  public IllegalReadFromSmoothDirError(Path path) {
+    super(ERROR, "Reading from " + SMOOTH_DIR + " dir is illegal.\n"
         + "Smooth keeps internal data there so don't mess with it.\n" + "Faulty path = " + path);
   }
 }

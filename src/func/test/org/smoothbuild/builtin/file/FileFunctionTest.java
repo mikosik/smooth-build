@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
-import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
@@ -30,7 +30,7 @@ public class FileFunctionTest {
     try {
       runExecute(params(SMOOTH_DIR.value()));
       fail("exception should be thrown");
-    } catch (ReadFromSmoothDirError e) {
+    } catch (IllegalReadFromSmoothDirError e) {
       // expected
     }
   }
@@ -40,7 +40,7 @@ public class FileFunctionTest {
     try {
       runExecute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
       fail("exception should be thrown");
-    } catch (ReadFromSmoothDirError e) {
+    } catch (IllegalReadFromSmoothDirError e) {
       // expected
     }
   }
