@@ -22,9 +22,9 @@ import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
@@ -35,7 +35,7 @@ import com.google.common.collect.Multimap;
 
 public class JavacFunction {
 
-  public static SArray<SFile> execute(NativeApiImpl nativeApi,
+  public static SArray<SFile> execute(NativeApi nativeApi,
       BuiltinSmoothModule.JavacParameters params) {
     return new Worker(nativeApi, params).execute();
   }
@@ -47,10 +47,10 @@ public class JavacFunction {
         "1.4", "1.5", "5", "1.6", "6", "1.7", "7");
 
     private final JavaCompiler compiler;
-    private final NativeApiImpl nativeApi;
+    private final NativeApi nativeApi;
     private final BuiltinSmoothModule.JavacParameters params;
 
-    public Worker(NativeApiImpl nativeApi, BuiltinSmoothModule.JavacParameters params) {
+    public Worker(NativeApi nativeApi, BuiltinSmoothModule.JavacParameters params) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.params = params;

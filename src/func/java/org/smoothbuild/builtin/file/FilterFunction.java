@@ -11,12 +11,11 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Predicate;
 
 public class FilterFunction {
-  public static SArray<SFile> execute(NativeApiImpl nativeApi,
+  public static SArray<SFile> execute(NativeApi nativeApi,
       BuiltinSmoothModule.FilterParameters params) {
     return new Worker(nativeApi, params).execute();
   }

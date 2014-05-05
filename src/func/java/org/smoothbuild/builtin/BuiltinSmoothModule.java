@@ -65,7 +65,7 @@ public class BuiltinSmoothModule {
   }
 
   @SmoothFunction(name = "toFile")
-  public static SFile execute(NativeApiImpl nativeApi, ToFileParameters params) {
+  public static SFile execute(NativeApi nativeApi, ToFileParameters params) {
     return ToFileFunction.execute(nativeApi, params);
   }
 
@@ -75,7 +75,7 @@ public class BuiltinSmoothModule {
   }
 
   @SmoothFunction(name = "toString")
-  public static SString execute(NativeApiImpl nativeApi, ToStringParameters params) {
+  public static SString execute(NativeApi nativeApi, ToStringParameters params) {
     return ToStringFunction.execute(nativeApi, params);
   }
 
@@ -107,7 +107,7 @@ public class BuiltinSmoothModule {
   }
 
   @SmoothFunction(name = "content")
-  public static SBlob execute(NativeApiImpl nativeApi, ContentParameters params) {
+  public static SBlob execute(NativeApi nativeApi, ContentParameters params) {
     return ContentFunction.execute(nativeApi, params);
   }
 
@@ -117,7 +117,7 @@ public class BuiltinSmoothModule {
   }
 
   @SmoothFunction(name = "path")
-  public static SString execute(NativeApiImpl nativeApi, PathParameters params) {
+  public static SString execute(NativeApi nativeApi, PathParameters params) {
     return PathFunction.execute(nativeApi, params);
   }
 
@@ -143,7 +143,7 @@ public class BuiltinSmoothModule {
   }
 
   @SmoothFunction(name = "filter")
-  public static SArray<SFile> execute(NativeApiImpl nativeApi, FilterParameters params) {
+  public static SArray<SFile> execute(NativeApi nativeApi, FilterParameters params) {
     return FilterFunction.execute(nativeApi, params);
   }
 
@@ -161,7 +161,7 @@ public class BuiltinSmoothModule {
   }
 
   @SmoothFunction(name = "javac")
-  public static SArray<SFile> execute(NativeApiImpl nativeApi, JavacParameters params) {
+  public static SArray<SFile> execute(NativeApi nativeApi, JavacParameters params) {
     return JavacFunction.execute(nativeApi, params);
   }
 
@@ -207,7 +207,7 @@ public class BuiltinSmoothModule {
   }
 
   @SmoothFunction(name = "junit")
-  public static SString execute(NativeApiImpl nativeApi, JunitParameters params) {
+  public static SString execute(NativeApi nativeApi, JunitParameters params) {
     return JunitFunction.execute(nativeApi, params);
   }
 
