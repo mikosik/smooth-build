@@ -404,9 +404,9 @@
 			<zipfileset file="${lib.guava.license}"/>
 			<zipfileset file="${lib.guice.license}"/>
 
+			<rule pattern="javax.inject.**" result="org.smoothbuild.javax.inject.@1"/>
 			<rule pattern="net.sourceforge.argparse4j.**" result="org.smoothbuild.argparse4j.@1"/>
-			<rule pattern="com.google.inject.**" result="org.smoothbuild.guice.@1"/>
-			<rule pattern="com.google.common.**" result="org.smoothbuild.guava.@1"/>
+			<rule pattern="com.google.**" result="org.smoothbuild.google.@1"/>
 			<rule pattern="org.aopalliance.**" result="org.smoothbuild.aop.@1"/>
 			<!-- antlr -->
 			<rule pattern="org.abego.**" result="org.smoothbuild.abego.@1"/>
