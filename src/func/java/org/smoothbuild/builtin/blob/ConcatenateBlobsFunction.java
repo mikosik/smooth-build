@@ -12,29 +12,15 @@ public class ConcatenateBlobsFunction {
 
   public static SArray<SBlob> execute(NativeApi nativeApi,
       BuiltinSmoothModule.ConcatenateBlobsParameters params) {
-    return new Worker(nativeApi, params).execute();
-  }
+    ArrayBuilder<SBlob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
 
-  public static class Worker {
-    private final NativeApi nativeApi;
-    private final BuiltinSmoothModule.ConcatenateBlobsParameters params;
-
-    public Worker(NativeApi nativeApi, BuiltinSmoothModule.ConcatenateBlobsParameters params) {
-      this.nativeApi = nativeApi;
-      this.params = params;
+    for (SBlob blob : params.blobs()) {
+      builder.add(blob);
+    }
+    for (SBlob blob : params.with()) {
+      builder.add(blob);
     }
 
-    public SArray<SBlob> execute() {
-      ArrayBuilder<SBlob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
-
-      for (SBlob blob : params.blobs()) {
-        builder.add(blob);
-      }
-      for (SBlob blob : params.with()) {
-        builder.add(blob);
-      }
-
-      return builder.build();
-    }
+    return builder.build();
   }
 }

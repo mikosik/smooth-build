@@ -9,24 +9,9 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 
 public class ToFileFunction {
-
   public static SFile execute(NativeApi nativeApi, BuiltinSmoothModule.ToFileParameters params) {
-    return new Worker(nativeApi, params).execute();
-  }
-
-  private static class Worker {
-    private final NativeApi nativeApi;
-    private final BuiltinSmoothModule.ToFileParameters params;
-
-    public Worker(NativeApi nativeApi, BuiltinSmoothModule.ToFileParameters params) {
-      this.nativeApi = nativeApi;
-      this.params = params;
-    }
-
-    public SFile execute() {
-      Path path = validatedPath("path", params.path());
-      SBlob content = params.content();
-      return nativeApi.file(path, content);
-    }
+    Path path = validatedPath("path", params.path());
+    SBlob content = params.content();
+    return nativeApi.file(path, content);
   }
 }

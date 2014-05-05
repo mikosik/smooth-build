@@ -12,30 +12,17 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class ConcatenateFilesFunction {
 
   @SmoothFunction(name = "concatenateFiles")
-  public static SArray<SFile> execute(NativeApi nativeApi, BuiltinSmoothModule.ConcatenateFilesParameters params) {
-    return new Worker(nativeApi, params).execute();
-  }
+  public static SArray<SFile> execute(NativeApi nativeApi,
+      BuiltinSmoothModule.ConcatenateFilesParameters params) {
+    ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);
 
-  public static class Worker {
-    private final NativeApi nativeApi;
-    private final BuiltinSmoothModule.ConcatenateFilesParameters params;
-
-    public Worker(NativeApi nativeApi, BuiltinSmoothModule.ConcatenateFilesParameters params) {
-      this.nativeApi = nativeApi;
-      this.params = params;
+    for (SFile file : params.files()) {
+      builder.add(file);
+    }
+    for (SFile file : params.with()) {
+      builder.add(file);
     }
 
-    public SArray<SFile> execute() {
-      ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);
-
-      for (SFile file : params.files()) {
-        builder.add(file);
-      }
-      for (SFile file : params.with()) {
-        builder.add(file);
-      }
-
-      return builder.build();
-    }
+    return builder.build();
   }
 }

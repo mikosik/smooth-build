@@ -21,49 +21,35 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 public class FilesFunction {
   public static SArray<SFile> execute(NativeApiImpl nativeApi,
       BuiltinSmoothModule.FilesParameters params) {
-    return new Worker(nativeApi, params).execute();
+    Path path = validatedPath("dir", params.dir());
+    FileSystem fileSystem = nativeApi.projectFileSystem();
+
+    if (path.isRoot()) {
+      throw new CannotListRootDirError();
+    }
+
+    if (path.firstPart().equals(SMOOTH_DIR)) {
+      throw new ReadFromSmoothDirError(path);
+    }
+
+    switch (fileSystem.pathState(path)) {
+      case DIR:
+        return readFiles(nativeApi, fileSystem, path);
+      case FILE:
+        throw new NoSuchDirButFileError(path);
+      case NOTHING:
+        throw new NoSuchDirError(path);
+      default:
+        throw new Message(FATAL, "Broken 'files' function implementation: unreachable case");
+    }
   }
 
-  private static class Worker {
-    private final NativeApiImpl nativeApi;
-    private final BuiltinSmoothModule.FilesParameters params;
-    private final FileReader reader;
-
-    public Worker(NativeApiImpl nativeApi, BuiltinSmoothModule.FilesParameters params) {
-      this.nativeApi = nativeApi;
-      this.params = params;
-      this.reader = new FileReader(nativeApi);
+  private static SArray<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem, Path path) {
+    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
+    FileReader reader = new FileReader(nativeApi);
+    for (Path filePath : fileSystem.filesFrom(path)) {
+      fileArrayBuilder.add(reader.createFile(filePath, path.append(filePath)));
     }
-
-    public SArray<SFile> execute() {
-      return createFiles(validatedPath("dir", params.dir()));
-    }
-
-    private SArray<SFile> createFiles(Path dirPath) {
-      FileSystem fileSystem = nativeApi.projectFileSystem();
-
-      if (dirPath.isRoot()) {
-        throw new CannotListRootDirError();
-      }
-
-      if (dirPath.firstPart().equals(SMOOTH_DIR)) {
-        throw new ReadFromSmoothDirError(dirPath);
-      }
-
-      switch (fileSystem.pathState(dirPath)) {
-        case DIR:
-          ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
-          for (Path filePath : fileSystem.filesFrom(dirPath)) {
-            fileArrayBuilder.add(reader.createFile(filePath, dirPath.append(filePath)));
-          }
-          return fileArrayBuilder.build();
-        case FILE:
-          throw new NoSuchDirButFileError(dirPath);
-        case NOTHING:
-          throw new NoSuchDirError(dirPath);
-        default:
-          throw new Message(FATAL, "Broken 'files' function implementation: unreachable case");
-      }
-    }
+    return fileArrayBuilder.build();
   }
 }
