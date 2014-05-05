@@ -7,11 +7,10 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class ToFileFunction {
 
-  public static SFile execute(NativeApiImpl nativeApi, BuiltinSmoothModule.ToFileParameters params) {
+  public static SFile execute(NativeApi nativeApi, BuiltinSmoothModule.ToFileParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 

@@ -16,23 +16,23 @@ import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.base.Predicate;
 
 public class JunitFunction {
-  public static SString execute(NativeApiImpl nativeApi, BuiltinSmoothModule.JunitParameters params) {
+  public static SString execute(NativeApi nativeApi, BuiltinSmoothModule.JunitParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
-    private final NativeApiImpl nativeApi;
+    private final NativeApi nativeApi;
     private final BuiltinSmoothModule.JunitParameters params;
 
-    public Worker(NativeApiImpl nativeApi, BuiltinSmoothModule.JunitParameters params) {
+    public Worker(NativeApi nativeApi, BuiltinSmoothModule.JunitParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
     }
