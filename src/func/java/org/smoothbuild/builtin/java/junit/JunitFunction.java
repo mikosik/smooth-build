@@ -25,69 +25,54 @@ import com.google.common.base.Predicate;
 
 public class JunitFunction {
   public static SString execute(NativeApi nativeApi, BuiltinSmoothModule.JunitParameters params) {
-    return new Worker(nativeApi, params).execute();
-  }
+    Map<String, SFile> binaryNameToClassFile =
+        binaryNameToClassFile(nativeApi, nullToEmpty(params.libs()));
+    FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
+    JUnitCore jUnitCore = new JUnitCore();
 
-  private static class Worker {
-    private final NativeApi nativeApi;
-    private final BuiltinSmoothModule.JunitParameters params;
-
-    public Worker(NativeApi nativeApi, BuiltinSmoothModule.JunitParameters params) {
-      this.nativeApi = nativeApi;
-      this.params = params;
-    }
-
-    public SString execute() {
-      Map<String, SFile> binaryNameToClassFile =
-          binaryNameToClassFile(nativeApi, nullToEmpty(params.libs()));
-      FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
-      JUnitCore jUnitCore = new JUnitCore();
-
-      Predicate<Path> filter = createFilter();
-      int testCount = 0;
-      for (String binaryName : binaryNameToClassFile.keySet()) {
-        Path filePath = binaryNameToClassFile.get(binaryName).path();
-        if (filter.apply(filePath)) {
-          testCount++;
-          Class<?> testClass = loadClass(classLoader, binaryName);
-          Result result = jUnitCore.run(testClass);
-          if (!result.wasSuccessful()) {
-            for (Failure failure : result.getFailures()) {
-              nativeApi.log(new JunitTestFailedError(failure));
-            }
-            return nativeApi.string("FAILURE");
+    Predicate<Path> filter = createFilter(params.include());
+    int testCount = 0;
+    for (String binaryName : binaryNameToClassFile.keySet()) {
+      Path filePath = binaryNameToClassFile.get(binaryName).path();
+      if (filter.apply(filePath)) {
+        testCount++;
+        Class<?> testClass = loadClass(classLoader, binaryName);
+        Result result = jUnitCore.run(testClass);
+        if (!result.wasSuccessful()) {
+          for (Failure failure : result.getFailures()) {
+            nativeApi.log(new JunitTestFailedError(failure));
           }
+          return nativeApi.string("FAILURE");
         }
       }
-      if (testCount == 0) {
-        nativeApi.log(new NoJunitTestFoundWarning());
-      }
-      return nativeApi.string("SUCCESS");
     }
-
-    private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {
-      try {
-        return classLoader.loadClass(binaryName);
-      } catch (ClassNotFoundException e) {
-        throw new Message(ERROR, "Couldn't find class for binaryName = " + binaryName);
-      }
+    if (testCount == 0) {
+      nativeApi.log(new NoJunitTestFoundWarning());
     }
+    return nativeApi.string("SUCCESS");
+  }
 
-    private Predicate<Path> createFilter() {
-      SString includeParam = params.include();
-      if (includeParam == null) {
-        return createFilter("**/*Test.class");
-      } else {
-        return createFilter(includeParam.value());
-      }
+  private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {
+    try {
+      return classLoader.loadClass(binaryName);
+    } catch (ClassNotFoundException e) {
+      throw new Message(ERROR, "Couldn't find class for binaryName = " + binaryName);
     }
+  }
 
-    private Predicate<Path> createFilter(String includeExpression) {
-      try {
-        return pathMatcher(includeExpression);
-      } catch (IllegalPathPatternException e) {
-        throw new IllegalPathPatternError("include", e.getMessage());
-      }
+  private static Predicate<Path> createFilter(SString includeParam) {
+    if (includeParam == null) {
+      return createFilter("**/*Test.class");
+    } else {
+      return createFilter(includeParam.value());
+    }
+  }
+
+  private static Predicate<Path> createFilter(String includeExpression) {
+    try {
+      return pathMatcher(includeExpression);
+    } catch (IllegalPathPatternException e) {
+      throw new IllegalPathPatternError("include", e.getMessage());
     }
   }
 }

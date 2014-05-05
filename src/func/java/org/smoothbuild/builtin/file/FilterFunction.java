@@ -17,37 +17,23 @@ import com.google.common.base.Predicate;
 public class FilterFunction {
   public static SArray<SFile> execute(NativeApi nativeApi,
       BuiltinSmoothModule.FilterParameters params) {
-    return new Worker(nativeApi, params).execute();
+    Predicate<Path> filter = createFilter(params.include().value());
+    ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);
+
+    for (SFile file : params.files()) {
+      if (filter.apply(file.path())) {
+        builder.add(file);
+      }
+    }
+
+    return builder.build();
   }
 
-  private static class Worker {
-    private final NativeApi nativeApi;
-    private final BuiltinSmoothModule.FilterParameters params;
-
-    public Worker(NativeApi nativeApi, BuiltinSmoothModule.FilterParameters params) {
-      this.nativeApi = nativeApi;
-      this.params = params;
-    }
-
-    public SArray<SFile> execute() {
-      Predicate<Path> filter = createFilter();
-      ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);
-
-      for (SFile file : params.files()) {
-        if (filter.apply(file.path())) {
-          builder.add(file);
-        }
-      }
-
-      return builder.build();
-    }
-
-    private Predicate<Path> createFilter() {
-      try {
-        return pathMatcher(params.include().value());
-      } catch (IllegalPathPatternException e) {
-        throw new IllegalPathPatternError("include", e.getMessage());
-      }
+  private static Predicate<Path> createFilter(String pattern) {
+    try {
+      return pathMatcher(pattern);
+    } catch (IllegalPathPatternException e) {
+      throw new IllegalPathPatternError("include", e.getMessage());
     }
   }
 }
