@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.io.fs.match;
+package org.smoothbuild.builtin.file.match.testing;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,18 +1,20 @@
-package org.smoothbuild.testing.io.fs.match;
+package org.smoothbuild.builtin.file.match.testing;
 
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
-import static org.smoothbuild.testing.io.fs.match.HelpTester.endsWithThreeLetters;
+import static org.smoothbuild.builtin.file.match.testing.HelpTester.endsWithThreeLetters;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 
-public class NamePatternGenerator {
+public class PathPatternGenerator {
 
   /**
-   * Generates all name patterns containing 'size' or less elements and pass it
-   * to given 'consumer'.
+   * Generates all patterns containing 'size' or less elements and pass it to
+   * given 'consumer'.
    * 
-   * Element is either "*" wildcard or one of the letters {a, b, b}.
+   * Element is either "**" wildcard, "*" wildcard, one of the letters {a, b, b}
+   * or separator "/" (which is not taken into account when calculating pattern
+   * size).
    */
   public static void generatePatterns(int maxSize, Function<String, Void> consumer) {
     for (int i = 1; i <= maxSize; i++) {
@@ -34,7 +36,7 @@ public class NamePatternGenerator {
 
         /*
          * To reduce number of generated patterns by merging equivalent patterns
-         * (in terms of NameMatcher). This is done by making sure that each
+         * (in terms of PathMatcher). This is done by making sure that each
          * generated pattern, the first occurrence of a letter is letter 'a' and
          * first occurrence of a letter different than 'a' is letter 'b'. This
          * way pattern like "bcb*aa" won't be generated as it is equivalent to
@@ -47,9 +49,19 @@ public class NamePatternGenerator {
           }
         }
       }
+      if (pattern.length() != 0 && !pattern.endsWith("/")) {
+        // slash "/" is not counted as element
+        generatePatterns(pattern + "/", size, consumer);
+      }
 
       if (!pattern.endsWith(SINGLE_STAR)) {
         generatePatterns(pattern + SINGLE_STAR, size - 1, consumer);
+      }
+
+      if (!pattern.endsWith("/")) {
+        String start = pattern.isEmpty() ? "" : "/";
+        String end = size == 1 ? "" : "/";
+        generatePatterns(pattern + start + "**" + end, size - 1, consumer);
       }
     }
   }

@@ -1,8 +1,8 @@
-package org.smoothbuild.testing.io.fs.match;
+package org.smoothbuild.builtin.file.match.testing;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.testing.io.fs.match.NamePatternGenerator.generatePatternsImpl;
+import static org.smoothbuild.builtin.file.match.testing.NamePatternGenerator.generatePatternsImpl;
 
 import java.util.List;
 

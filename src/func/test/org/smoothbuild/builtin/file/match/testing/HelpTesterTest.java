@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.io.fs.match;
+package org.smoothbuild.builtin.file.match.testing;
 
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
