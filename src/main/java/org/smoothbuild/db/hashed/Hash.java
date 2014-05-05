@@ -13,19 +13,19 @@ public class Hash {
   }
 
   public static HashCode string(String string) {
-    return Hash.function().hashString(string, CHARSET);
+    return function().hashString(string, CHARSET);
   }
 
   public static HashCode integer(int value) {
-    return Hash.function().hashInt(value);
+    return function().hashInt(value);
   }
 
   public static HashCode bytes(byte[] bytes) {
-    return Hash.function().hashBytes(bytes);
+    return function().hashBytes(bytes);
   }
 
   public static int size() {
-    return Hash.function().bits() / 8;
+    return function().bits() / 8;
   }
 
   private static HashFunction function() {
