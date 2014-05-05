@@ -7,7 +7,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;

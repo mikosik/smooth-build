@@ -9,7 +9,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.match.PathPredicates;
 import org.smoothbuild.io.fs.base.Path;
 import org.testory.Closure;
 

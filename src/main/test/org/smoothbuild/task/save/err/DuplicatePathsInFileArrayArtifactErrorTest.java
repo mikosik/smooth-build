@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableList;

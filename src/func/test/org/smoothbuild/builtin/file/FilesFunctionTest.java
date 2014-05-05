@@ -7,7 +7,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.BuiltinSmoothModule;
-import org.smoothbuild.builtin.file.FilesFunction;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;

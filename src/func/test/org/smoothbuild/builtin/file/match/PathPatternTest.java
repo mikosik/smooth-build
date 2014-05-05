@@ -3,8 +3,6 @@ package org.smoothbuild.builtin.file.match;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
-import org.smoothbuild.builtin.file.match.PathPattern;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;

@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.junit.FileClassLoader;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 

@@ -5,7 +5,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.BuiltinSmoothModule;
-import org.smoothbuild.builtin.file.PathFunction;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;

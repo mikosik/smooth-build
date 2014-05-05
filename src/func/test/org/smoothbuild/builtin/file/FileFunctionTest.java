@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.BuiltinSmoothModule;
-import org.smoothbuild.builtin.file.FileFunction;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.Path;

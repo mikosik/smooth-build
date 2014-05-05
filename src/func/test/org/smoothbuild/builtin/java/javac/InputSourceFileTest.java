@@ -6,7 +6,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.javac.InputSourceFile;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
