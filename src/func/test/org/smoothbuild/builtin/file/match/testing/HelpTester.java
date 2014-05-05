@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.io.fs.match;
+package org.smoothbuild.builtin.file.match.testing;
 
 import static com.google.common.base.CharMatcher.JAVA_LETTER;
 

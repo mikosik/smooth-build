@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file.match;
 
-import static org.smoothbuild.testing.io.fs.match.NamePatternGenerator.generatePatterns;
+import static org.smoothbuild.builtin.file.match.testing.NamePatternGenerator.generatePatterns;
 
 import org.junit.Test;
 

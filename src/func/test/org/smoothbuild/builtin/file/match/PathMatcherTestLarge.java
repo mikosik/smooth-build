@@ -1,9 +1,9 @@
 package org.smoothbuild.builtin.file.match;
 
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
+import static org.smoothbuild.builtin.file.match.testing.MatchingPathsGenerator.generatePaths;
+import static org.smoothbuild.builtin.file.match.testing.PathPatternGenerator.generatePatterns;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.io.fs.match.MatchingPathsGenerator.generatePaths;
-import static org.smoothbuild.testing.io.fs.match.PathPatternGenerator.generatePatterns;
 
 import org.junit.Ignore;
 import org.junit.Test;
