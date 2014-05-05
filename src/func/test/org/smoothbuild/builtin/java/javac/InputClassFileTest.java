@@ -10,7 +10,6 @@ import static org.testory.Testory.willReturn;
 import java.net.URI;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.javac.InputClassFile;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 

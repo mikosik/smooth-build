@@ -9,7 +9,6 @@ import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.compress.Unzipper;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;

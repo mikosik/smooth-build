@@ -8,8 +8,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.match.NameMatcher;
-import org.smoothbuild.builtin.file.match.NamePattern;
 import org.testory.Closure;
 
 public class NameMatcherTest {

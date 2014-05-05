@@ -6,7 +6,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.io.fs.match.MatchingNamesGenerator.generateNames;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.match.NameMatcher;
 import org.smoothbuild.testing.io.fs.match.NamePatternGenerator;
 
 import com.google.common.base.Function;

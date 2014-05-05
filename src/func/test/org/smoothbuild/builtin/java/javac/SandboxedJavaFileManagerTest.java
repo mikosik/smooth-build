@@ -13,7 +13,6 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.javac.SandboxedJavaFileManager;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
 import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;

@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.file;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.PathArgValidator;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;

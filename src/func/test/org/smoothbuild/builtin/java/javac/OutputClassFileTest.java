@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.smoothbuild.builtin.java.javac.OutputClassFile;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SFile;
