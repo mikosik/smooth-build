@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.io.fs.match;
 
-import static org.smoothbuild.io.fs.match.Constants.SINGLE_STAR;
-import static org.smoothbuild.io.fs.match.NamePattern.namePattern;
+import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
+import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
 
 import java.util.List;
 

@@ -1,13 +1,15 @@
-package org.smoothbuild.io.fs.match;
+package org.smoothbuild.builtin.file.match;
 
+import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.match.NamePattern.namePattern;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.file.match.NameMatcher;
+import org.smoothbuild.builtin.file.match.NamePattern;
 import org.testory.Closure;
 
 public class NameMatcherTest {

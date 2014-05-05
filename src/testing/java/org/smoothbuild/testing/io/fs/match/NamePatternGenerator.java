@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.io.fs.match;
 
-import static org.smoothbuild.io.fs.match.Constants.SINGLE_STAR;
+import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.testing.io.fs.match.HelpTester.endsWithThreeLetters;
 
 import com.google.common.annotations.VisibleForTesting;

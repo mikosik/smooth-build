@@ -1,7 +1,7 @@
-package org.smoothbuild.io.fs.match;
+package org.smoothbuild.builtin.file.match;
 
+import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.testing.io.fs.match.MatchingPathsGenerator.generatePaths;
 import static org.smoothbuild.testing.io.fs.match.PathPatternGenerator.generatePatterns;
 
