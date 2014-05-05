@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
-import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
@@ -39,7 +39,7 @@ public class FilesFunctionTest {
     try {
       runExecute(params(SMOOTH_DIR.value()));
       fail("exception should be thrown");
-    } catch (ReadFromSmoothDirError e) {
+    } catch (IllegalReadFromSmoothDirError e) {
       // expected
     }
   }
@@ -49,7 +49,7 @@ public class FilesFunctionTest {
     try {
       runExecute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
       fail("exception should be thrown");
-    } catch (ReadFromSmoothDirError e) {
+    } catch (IllegalReadFromSmoothDirError e) {
       // expected
     }
   }

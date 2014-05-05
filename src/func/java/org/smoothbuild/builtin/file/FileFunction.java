@@ -5,7 +5,7 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import org.smoothbuild.builtin.BuiltinSmoothModule;
-import org.smoothbuild.builtin.file.err.ReadFromSmoothDirError;
+import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
@@ -19,7 +19,7 @@ public class FileFunction {
   public static SFile execute(NativeApiImpl nativeApi, BuiltinSmoothModule.FileParameters params) {
     Path path = validatedPath("path", params.path());
     if (!path.isRoot() && path.firstPart().equals(SMOOTH_DIR)) {
-      throw new ReadFromSmoothDirError(path);
+      throw new IllegalReadFromSmoothDirError(path);
     }
 
     FileSystem fileSystem = nativeApi.projectFileSystem();
