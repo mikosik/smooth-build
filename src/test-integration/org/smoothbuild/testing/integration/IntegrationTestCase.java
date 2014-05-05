@@ -1,9 +1,9 @@
 package org.smoothbuild.testing.integration;
 
 import static com.google.inject.Guice.createInjector;
-import static org.smoothbuild.SmoothContants.ARTIFACTS_DIR;
-import static org.smoothbuild.SmoothContants.DEFAULT_SCRIPT;
-import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothConstants.ARTIFACTS_DIR;
+import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
+import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 
 import java.io.IOException;
 

@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;

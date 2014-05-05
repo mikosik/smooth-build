@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.ByteArrayOutputStream;

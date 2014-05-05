@@ -1,6 +1,6 @@
 package org.smoothbuild.db.taskoutputs;
 
-import static org.smoothbuild.SmoothContants.TASK_RESULTS_DIR;
+import static org.smoothbuild.SmoothConstants.TASK_RESULTS_DIR;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.SmoothDir;

@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.work.build;
 
-import static org.smoothbuild.SmoothContants.DEFAULT_SCRIPT;
+import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 

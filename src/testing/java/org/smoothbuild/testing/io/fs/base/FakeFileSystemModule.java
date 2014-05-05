@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.io.fs.base;
 
-import static org.smoothbuild.SmoothContants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 
 import javax.inject.Singleton;
 

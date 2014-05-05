@@ -1,6 +1,6 @@
 package org.smoothbuild.db.objects;
 
-import static org.smoothbuild.SmoothContants.OBJECTS_DIR;
+import static org.smoothbuild.SmoothConstants.OBJECTS_DIR;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.SmoothDir;

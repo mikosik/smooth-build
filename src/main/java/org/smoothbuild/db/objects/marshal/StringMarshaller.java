@@ -1,6 +1,6 @@
 package org.smoothbuild.db.objects.marshal;
 
-import static org.smoothbuild.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.IOException;

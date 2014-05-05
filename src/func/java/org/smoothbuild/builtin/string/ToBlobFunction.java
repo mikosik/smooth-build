@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.string;
 
-import static org.smoothbuild.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

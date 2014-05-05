@@ -1,6 +1,6 @@
 package org.smoothbuild.db.hashed;
 
-import static org.smoothbuild.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;

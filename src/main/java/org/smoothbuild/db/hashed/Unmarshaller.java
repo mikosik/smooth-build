@@ -1,6 +1,6 @@
 package org.smoothbuild.db.hashed;
 
-import static org.smoothbuild.SmoothContants.CHARSET;
+import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
 import static org.smoothbuild.io.fs.base.Path.path;
