@@ -18,7 +18,7 @@ public class ArgsCreator {
   }
 
   public Object create(Map<String, SValue> arguments) {
-    ClassLoader classLoader = this.getClass().getClassLoader();
+    ClassLoader classLoader = paramsInterface.getClassLoader();
     Class<?>[] args = new Class<?>[] { paramsInterface };
     InvocationHandler invocationHandler = new MapInvocationHandler(arguments);
 
