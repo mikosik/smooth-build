@@ -1,5 +1,5 @@
 @ECHO OFF
 
-SET SMOOTH_DIR=%~dp
-java -cp %SMOOTH_DIR%/smooth.jar;%SMOOTH_DIR%/funcs.jar org.smoothbuild.Main %*
+SET SMOOTH_HOME=%~dp
+java -cp %SMOOTH_HOME%/smooth.jar;%SMOOTH_HOME%/funcs.jar org.smoothbuild.Main %*
 
