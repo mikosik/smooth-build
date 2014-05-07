@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.ImmutableModule;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.testing.message.FakeLoggedMessages;

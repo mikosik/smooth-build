@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.nativ;
+package org.smoothbuild.lang.module;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.base.STypes.BLOB;
@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.nativ.NativeModuleFactory.createNativeModule;
+import static org.smoothbuild.lang.module.NativeModuleFactory.createNativeModule;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -22,7 +22,6 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Params;
 import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
@@ -30,6 +29,7 @@ import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
+import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 

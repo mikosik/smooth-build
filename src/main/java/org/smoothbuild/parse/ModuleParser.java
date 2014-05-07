@@ -21,9 +21,9 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.ImmutableModule;
-import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.module.ImmutableModule;
+import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 

@@ -3,7 +3,7 @@ package org.smoothbuild.task;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.nativ.NativeModuleFactory.createNativeModule;
+import static org.smoothbuild.lang.module.NativeModuleFactory.createNativeModule;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;

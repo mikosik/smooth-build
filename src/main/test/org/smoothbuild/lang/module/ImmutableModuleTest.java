@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.base;
+package org.smoothbuild.lang.module;
 
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.testory.Testory.given;
@@ -7,6 +7,9 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;

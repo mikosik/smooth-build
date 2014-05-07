@@ -5,9 +5,9 @@ import javax.inject.Singleton;
 import org.smoothbuild.db.objects.ObjectsDbModule;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
 import org.smoothbuild.io.fs.FileSystemModule;
-import org.smoothbuild.lang.function.base.Module;
-import org.smoothbuild.lang.function.nativ.NativeModuleFactory;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
+import org.smoothbuild.lang.module.Module;
+import org.smoothbuild.lang.module.NativeModuleFactory;
 import org.smoothbuild.parse.Builtin;
 
 import com.google.inject.AbstractModule;
