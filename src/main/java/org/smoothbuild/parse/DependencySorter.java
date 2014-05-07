@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.module.Module;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

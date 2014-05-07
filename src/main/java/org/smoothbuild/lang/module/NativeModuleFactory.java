@@ -1,11 +1,9 @@
-package org.smoothbuild.lang.function.nativ;
+package org.smoothbuild.lang.module;
 
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
 
 import java.lang.reflect.Method;
 
-import org.smoothbuild.lang.function.base.Module;
-import org.smoothbuild.lang.function.base.ModuleBuilder;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 

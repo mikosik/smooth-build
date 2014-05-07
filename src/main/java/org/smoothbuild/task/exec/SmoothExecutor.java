@@ -4,8 +4,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.work.build.CommandLineArguments;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.task.exec.err.NoFunctionSpecifiedError;
 import org.smoothbuild.task.exec.err.UnknownFunctionError;
 

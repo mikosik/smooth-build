@@ -11,9 +11,9 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.ImmutableModule;
-import org.smoothbuild.lang.function.base.Module;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.module.ImmutableModule;
+import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.UnknownFunctionCallError;
 import org.smoothbuild.testing.message.FakeLoggedMessages;

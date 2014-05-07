@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.work.build.CommandLineArguments;
-import org.smoothbuild.lang.function.base.Module;
+import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.listen.MessageCatchingExecutor;
 import org.smoothbuild.message.listen.UserConsole;
 

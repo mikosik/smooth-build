@@ -1,9 +1,11 @@
-package org.smoothbuild.lang.function.base;
+package org.smoothbuild.lang.module;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 
 import com.google.common.collect.Maps;
