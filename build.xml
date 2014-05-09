@@ -48,7 +48,7 @@
 	<property name="lib.jarjar.license" value="${dir.lib}/jarjar.LICENSE" />
 	<property name="lib.junit" value="${dir.lib}/junit-4.11.jar" />
 	<property name="lib.junit.license" value="${dir.lib}/junit.LICENSE" />
-	<property name="lib.testory" value="${dir.lib}/testory-0.15.0.jar" />
+	<property name="lib.testory" value="${dir.lib}/testory-0.16.0.jar" />
 
 	<target name="init">
 		<mkdir dir="${dir.build.java.parser}" />
