@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.android;
 
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isRegularFile;
-import static org.smoothbuild.util.EnvironmentVariable.environmentVariable;
+import static org.smoothbuild.builtin.android.EnvironmentVariable.environmentVariable;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import org.smoothbuild.builtin.android.err.AndroidSdkLacksFileError;
 import org.smoothbuild.builtin.android.err.AndroidSdkRootDoesNotExistError;
 import org.smoothbuild.builtin.android.err.AndroidSdkVariableNotSetError;
-import org.smoothbuild.util.EnvironmentVariable;
 
 public class AndroidSdk {
   private static final EnvironmentVariable ANDROID_SDK_ROOT = environmentVariable("ANDROID_SDK");
