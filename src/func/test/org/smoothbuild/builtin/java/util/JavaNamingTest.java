@@ -1,45 +1,68 @@
 package org.smoothbuild.builtin.java.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.builtin.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 
 public class JavaNamingTest {
 
   @Test
-  public void testToBinaryName() {
-    assertToBinaryNameResult("MyClass.class", "MyClass");
-    assertToBinaryNameResult("my/package/MyClass.class", "my.package.MyClass");
-    assertToBinaryNameResult("my/package/MyClass$InnerClass.class", "my.package.MyClass$InnerClass");
-    assertToBinaryNameResult("my/package/MyClass.class", "my.package.MyClass");
-  }
-
-  private void assertToBinaryNameResult(String path, String expected) {
-    assertThat(toBinaryName(path(path))).isEqualTo(expected);
+  public void binary_name_of_class_in_default_package_is_class_name() throws Exception {
+    when(toBinaryName(path("MyClass.class")));
+    thenReturned("MyClass");
   }
 
   @Test
-  public void testBinaryNameToPackage() throws Exception {
-    assertBinaryNameToPackageResult("MyClass", "");
-    assertBinaryNameToPackageResult("my.package.MyClass", "my.package");
-    assertBinaryNameToPackageResult("my.package.MyClass$Inner", "my.package");
-  }
-
-  private void assertBinaryNameToPackageResult(String binaryName, String expected) {
-    assertThat(binaryNameToPackage(binaryName)).isEqualTo(expected);
+  public void binary_name_of_class_in_package_is_package_plus_class_name() throws Exception {
+    when(toBinaryName(path("my/package/MyClass.class")));
+    thenReturned("my.package.MyClass");
   }
 
   @Test
-  public void testIsClassFilePredicate() throws Exception {
-    assertThat(isClassFilePredicate().apply("abc")).isFalse();
-    assertThat(isClassFilePredicate().apply("Klass.java")).isFalse();
-    assertThat(isClassFilePredicate().apply("abc/Klass.java")).isFalse();
+  public void binary_name_of_inner_class_is_package_plus_outer_class_name_plus_inner_class_name()
+      throws Exception {
+    when(toBinaryName(path("my/package/MyClass$Inner.class")));
+    thenReturned("my.package.MyClass$Inner");
+  }
 
-    assertThat(isClassFilePredicate().apply("Klass.class")).isTrue();
-    assertThat(isClassFilePredicate().apply("abc/Klass.class")).isTrue();
+  @Test
+  public void package_of_class_in_default_package_is_empty() throws Exception {
+    when(binaryNameToPackage("MyClass"));
+    thenReturned("");
+  }
+
+  @Test
+  public void package_of_class() throws Exception {
+    when(binaryNameToPackage("my.package.MyClass"));
+    thenReturned("my.package");
+  }
+
+  @Test
+  public void package_of_inner_class_is_equal_to_package_of_outer_class() throws Exception {
+    when(binaryNameToPackage("my.package.Outer$Inner"));
+    thenReturned("my.package");
+  }
+
+  @Test
+  public void file_without_extension_is_not_class_file() throws Exception {
+    when(isClassFilePredicate()).apply("file");
+    thenReturned(false);
+  }
+
+  @Test
+  public void file_with_java_extension_is_not_class_file() throws Exception {
+    when(isClassFilePredicate()).apply("file.java");
+    thenReturned(false);
+  }
+
+  @Test
+  public void file_with_class_extension_is_class_file() throws Exception {
+    when(isClassFilePredicate()).apply("file.class");
+    thenReturned(true);
   }
 }
