@@ -3,9 +3,6 @@ package org.smoothbuild.builtin.java.javac;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.util.Streams.inputStreamToString;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.willReturn;
 
 import java.net.URI;
 
@@ -46,7 +43,7 @@ public class InputClassFileTest {
 
   @Test
   public void uri() throws Exception {
-    InputClassFile inputClassFile = new InputClassFile(file("my/package/MyKlass.class"));
+    InputClassFile inputClassFile = inputClassFile("my/package/MyKlass.class");
     assertThat(inputClassFile.toUri()).isEqualTo(URI.create("jar:///:my/package/MyKlass.class"));
   }
 
@@ -60,12 +57,6 @@ public class InputClassFileTest {
   }
 
   private InputClassFile inputClassFile(String path) {
-    return new InputClassFile(file(path));
-  }
-
-  private SFile file(String path) {
-    SFile file = mock(SFile.class);
-    given(willReturn(path(path)), file).path();
-    return file;
+    return new InputClassFile(objectsDb.file(path(path)));
   }
 }
