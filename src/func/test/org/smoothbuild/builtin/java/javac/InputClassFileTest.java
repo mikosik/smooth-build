@@ -1,59 +1,100 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import java.net.URI;
 
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 public class InputClassFileTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private InputClassFile inputClassFile;
+  private final Path path = path("a/b/MyClass.class");
+  private String content;
+  private SFile file;
 
   @Test(expected = IllegalArgumentException.class)
-  public void filesWithoutClassExtensionCausesException() throws Exception {
+  public void file_without_class_extension_is_forbidden() throws Exception {
     inputClassFile("abc");
   }
 
   @Test
-  public void testEquals() {
-    assertThat(inputClassFile("abc.class")).isEqualTo(inputClassFile("abc.class"));
-    assertThat(inputClassFile("a/b/c.class")).isEqualTo(inputClassFile("a/b/c.class"));
-
-    assertThat(inputClassFile("abc.class")).isNotEqualTo(inputClassFile("a/b/c.class"));
+  public void input_class_files_with_equal_paths_are_equal() throws Exception {
+    when(new InputClassFile(objectsDb.file(path, "content")));
+    thenReturned(new InputClassFile(objectsDb.file(path, "other content")));
   }
 
   @Test
-  public void aPackage() throws Exception {
-    assertThat(inputClassFile("Klass.class").aPackage()).isEqualTo("");
-    assertThat(inputClassFile("my/package/Klass.class").aPackage()).isEqualTo("my.package");
-    assertThat(inputClassFile("my/package/Klass$Inner.class").aPackage()).isEqualTo("my.package");
+  public void input_class_files_with_different_paths_are_not_equal() throws Exception {
+    when(new InputClassFile(objectsDb.file(path("a/b/MyClass.class"), "content")));
+    thenReturned(not(new InputClassFile(objectsDb.file(path("a/b/OtherClass.class"), "content"))));
   }
 
   @Test
-  public void binaryName() throws Exception {
-    assertThat(inputClassFile("Klass.class").binaryName()).isEqualTo("Klass");
-    assertThat(inputClassFile("my/package/Klass.class").binaryName()).isEqualTo("my.package.Klass");
-    assertThat(inputClassFile("my/package/Klass$Inner.class").binaryName()).isEqualTo(
-        "my.package.Klass$Inner");
+  public void class_in_default_package_has_empty_package() throws Exception {
+    given(inputClassFile = new InputClassFile(objectsDb.file(path("Myclass.class"))));
+    when(inputClassFile).aPackage();
+    thenReturned("");
   }
 
   @Test
-  public void uri() throws Exception {
-    InputClassFile inputClassFile = inputClassFile("my/package/MyKlass.class");
-    assertThat(inputClassFile.toUri()).isEqualTo(URI.create("jar:///:my/package/MyKlass.class"));
+  public void aPackage_returns_class_package() throws Exception {
+    given(inputClassFile = new InputClassFile(objectsDb.file(path("a/b/Myclass.class"))));
+    when(inputClassFile).aPackage();
+    thenReturned("a.b");
   }
 
   @Test
-  public void openInputStream() throws Exception {
-    String content = "some content";
-    SFile file = objectsDb.file(path("my/package/Klass.class"), content);
-    InputClassFile inputClassFile = new InputClassFile(file);
+  public void aPackage_for_inner_class_returns_package_of_enclosing_class() throws Exception {
+    given(inputClassFile = new InputClassFile(objectsDb.file(path("a/b/MyClass$Inner.class"))));
+    when(inputClassFile).aPackage();
+    thenReturned("a.b");
+  }
 
-    assertThat(inputStreamToString(inputClassFile.openInputStream())).isEqualTo(content);
+  @Test
+  public void binary_name_for_default_class_returns_class_name() throws Exception {
+    given(inputClassFile = new InputClassFile(objectsDb.file(path("MyClass.class"))));
+    when(inputClassFile).binaryName();
+    thenReturned("MyClass");
+  }
+
+  @Test
+  public void binary_name_for_class_returns_package_plus_class_name() throws Exception {
+    given(inputClassFile = new InputClassFile(objectsDb.file(path("a/b/MyClass.class"))));
+    when(inputClassFile).binaryName();
+    thenReturned("a.b.MyClass");
+  }
+
+  @Test
+  public void binary_name_for_inner_class_returns_package_plus_outer_class_plus_inner_class_name()
+      throws Exception {
+    given(inputClassFile = new InputClassFile(objectsDb.file(path("a/b/MyClass$Inner.class"))));
+    when(inputClassFile).binaryName();
+    thenReturned("a.b.MyClass$Inner");
+  }
+
+  @Test
+  public void to_uri() throws Exception {
+    given(inputClassFile = new InputClassFile(objectsDb.file(path("a/b/MyClass.class"))));
+    when(inputClassFile).toUri();
+    thenReturned(URI.create("jar:///:a/b/MyClass.class"));
+  }
+
+  @Test
+  public void open_input_stream_returns_file_content() throws Exception {
+    given(content = "some content");
+    given(file = objectsDb.file(path, content));
+    given(inputClassFile = new InputClassFile(file));
+    when(inputStreamToString(inputClassFile.openInputStream()));
+    thenReturned(content);
   }
 
   private InputClassFile inputClassFile(String path) {
