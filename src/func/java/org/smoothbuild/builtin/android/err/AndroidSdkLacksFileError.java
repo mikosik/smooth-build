@@ -4,8 +4,8 @@ import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.nio.file.Path;
 
+import org.smoothbuild.builtin.android.EnvironmentVariable;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.util.EnvironmentVariable;
 import org.smoothbuild.util.LineBuilder;
 
 @SuppressWarnings("serial")

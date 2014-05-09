@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.builtin.android;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;

@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.builtin.android;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
