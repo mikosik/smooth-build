@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -34,12 +33,10 @@ public class OutputClassFileTest {
   }
 
   @Test
-  public void uri() throws Exception {
-    Path path = Path.path("my/path");
-    ArrayBuilder<SFile> fileArrayBuilder = objectsDb.arrayBuilder(FILE_ARRAY);
-
-    OutputClassFile outputClassFile = new OutputClassFile(fileArrayBuilder, path, objectsDb);
-
-    assertThat(outputClassFile.getName()).isEqualTo("/" + path.value());
+  public void get_name_returns_file_path() throws Exception {
+    given(outputClassFile =
+        new OutputClassFile(objectsDb.arrayBuilder(FILE_ARRAY), path, objectsDb));
+    when(outputClassFile.getName());
+    thenReturned("/" + path.value());
   }
 }
