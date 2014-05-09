@@ -1,12 +1,15 @@
 package org.smoothbuild.builtin.file.match.testing;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.builtin.file.match.testing.MatchingNamesGenerator.generateNames;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import java.util.List;
 
 import org.junit.Test;
+import org.testory.Closure;
 
 import com.google.common.base.Function;
 
@@ -14,19 +17,6 @@ public class MatchingNamesGeneratorTest {
 
   @Test
   public void test() {
-    // given
-    final List<String> generatedNames = newArrayList();
-    Function<String, Void> collectingConsumer = new Function<String, Void>() {
-      public Void apply(String name) {
-        generatedNames.add(name);
-        return null;
-      }
-    };
-
-    // when
-    generateNames("x*z", collectingConsumer);
-
-    // then
     List<String> expected = newArrayList();
     expected.add("xz");
 
@@ -46,6 +36,26 @@ public class MatchingNamesGeneratorTest {
     expected.add("xcbz");
     expected.add("xccz");
 
-    assertThat(generatedNames).containsOnly(expected.toArray(new String[] {}));
+    String[] expectedNames = expected.toArray(new String[] {});
+
+    when(new Closure() {
+      @Override
+      public List<String> invoke() throws Throwable {
+        CollectingConsumer collectingConsumer = new CollectingConsumer();
+        generateNames("x*z", collectingConsumer);
+        return collectingConsumer.generatedNames;
+      }
+    });
+    thenReturned(contains(expectedNames));
+  }
+
+  private static class CollectingConsumer implements Function<String, Void> {
+    private final List<String> generatedNames = newArrayList();
+
+    @Override
+    public Void apply(String name) {
+      generatedNames.add(name);
+      return null;
+    }
   }
 }
