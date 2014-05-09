@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.testory.Testory.any;
 import static org.testory.Testory.given;
@@ -21,9 +20,9 @@ import org.smoothbuild.message.base.Message;
 
 public class LoggingDiagnosticListenerTest {
   @SuppressWarnings("unchecked")
-  Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
-  NativeApi nativeApi = mock(NativeApi.class);
-  LoggingDiagnosticListener listener = new LoggingDiagnosticListener(nativeApi);
+  private final Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
+  private final NativeApi nativeApi = mock(NativeApi.class);
+  private LoggingDiagnosticListener listener;
 
   @Before
   public void before() {
@@ -33,17 +32,21 @@ public class LoggingDiagnosticListenerTest {
 
   @Test
   public void diagnosticIsReportedAsError() {
+    given(listener = new LoggingDiagnosticListener(nativeApi));
     when(listener).report(diagnostic);
     thenCalled(nativeApi).log(any(Message.class, instanceOf(JavaCompilerMessage.class)));
   }
 
   @Test
   public void initiallyNoErrorsReported() throws Exception {
-    assertThat(listener.errorReported()).isFalse();
+    given(listener = new LoggingDiagnosticListener(nativeApi));
+    when(listener).errorReported();
+    thenReturned(false);
   }
 
   @Test
   public void diagnosticMakesErrorReportedReturnsTrue() throws Exception {
+    given(listener = new LoggingDiagnosticListener(nativeApi));
     given(listener).report(diagnostic);
     when(listener).errorReported();
     thenReturned(true);
