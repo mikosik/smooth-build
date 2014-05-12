@@ -3,19 +3,17 @@ package org.smoothbuild.lang.function.def.args;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
-import static org.smoothbuild.lang.base.STypes.allTypes;
 
 import java.util.Collection;
-import java.util.Set;
 
 import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
 
 public class Arg {
   private final int number;
@@ -107,21 +105,13 @@ public class Arg {
     return builder.build();
   }
 
-  public static ImmutableMap<SType<?>, Set<Arg>> filterNameless(Collection<Arg> args) {
-    ImmutableMap<SType<?>, Set<Arg>> result = createMap();
+  public static ImmutableMultimap<SType<?>, Arg> filterNameless(Collection<Arg> args) {
+    ImmutableMultimap.Builder<SType<? extends SValue>, Arg> builder = ImmutableMultimap.builder();
     for (Arg arg : args) {
       if (!arg.hasName()) {
         SType<?> type = arg.expr().type();
-        result.get(type).add(arg);
+        builder.put(type, arg);
       }
-    }
-    return result;
-  }
-
-  public static <T> ImmutableMap<SType<?>, Set<T>> createMap() {
-    ImmutableMap.Builder<SType<?>, Set<T>> builder = ImmutableMap.builder();
-    for (SType<?> type : allTypes()) {
-      builder.put(type, Sets.<T> newHashSet());
     }
     return builder.build();
   }

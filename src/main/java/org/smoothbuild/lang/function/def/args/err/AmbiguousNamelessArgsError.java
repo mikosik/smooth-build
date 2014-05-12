@@ -2,9 +2,9 @@ package org.smoothbuild.lang.function.def.args.err;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
@@ -18,7 +18,7 @@ import org.smoothbuild.util.LineBuilder;
 public class AmbiguousNamelessArgsError extends CodeMessage {
 
   public AmbiguousNamelessArgsError(Name functionName, Map<Param, Arg> paramToArgMap,
-      Set<Arg> availableArgs, TypedParamsPool availableTypedParams) {
+      Collection<Arg> availableArgs, TypedParamsPool availableTypedParams) {
     this(functionName, paramToArgMap, Arg.NUMBER_ORDERING.sortedCopy(availableArgs),
         availableTypedParams);
   }
