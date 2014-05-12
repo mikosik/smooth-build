@@ -16,15 +16,13 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
-import java.util.Set;
-
 import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
 
 public class ArgTest {
   String name = "name";
@@ -178,8 +176,7 @@ public class ArgTest {
     Arg named2 = named("name2");
     Arg nameless = nameless(type);
 
-    ImmutableMap<SType<?>, Set<Arg>> actual =
-        Arg.filterNameless(ImmutableList.of(named1, named2, nameless));
+    Multimap<SType<?>, Arg> actual = Arg.filterNameless(ImmutableList.of(named1, named2, nameless));
 
     assertThat(actual.get(type)).containsOnly(nameless);
   }

@@ -19,6 +19,7 @@ import org.smoothbuild.message.listen.LoggedMessages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
 public class ParamToArgMapper {
@@ -99,10 +100,10 @@ public class ParamToArgMapper {
   }
 
   private void processNamelessArguments(ParamToArgMapBuilder paramToArgMapBuilder) {
-    ImmutableMap<SType<?>, Set<Arg>> namelessArgs = Arg.filterNameless(allArguments);
+    ImmutableMultimap<SType<?>, Arg> namelessArgs = Arg.filterNameless(allArguments);
 
     for (SType<?> type : allTypes()) {
-      Set<Arg> availableArgs = namelessArgs.get(type);
+      Collection<Arg> availableArgs = namelessArgs.get(type);
       int argsSize = availableArgs.size();
       if (0 < argsSize) {
         TypedParamsPool availableTypedParams = paramsPool.availableForType(type);
