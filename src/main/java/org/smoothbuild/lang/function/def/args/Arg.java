@@ -15,6 +15,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
 
 public class Arg {
   private final int number;
@@ -107,7 +108,7 @@ public class Arg {
   }
 
   public static ImmutableMap<SType<?>, Set<Arg>> filterNameless(Collection<Arg> args) {
-    ImmutableMap<SType<?>, Set<Arg>> result = Helpers.createMap(allTypes());
+    ImmutableMap<SType<?>, Set<Arg>> result = createMap();
     for (Arg arg : args) {
       if (!arg.hasName()) {
         SType<?> type = arg.expr().type();
@@ -115,6 +116,14 @@ public class Arg {
       }
     }
     return result;
+  }
+
+  public static <T> ImmutableMap<SType<?>, Set<T>> createMap() {
+    ImmutableMap.Builder<SType<?>, Set<T>> builder = ImmutableMap.builder();
+    for (SType<?> type : allTypes()) {
+      builder.put(type, Sets.<T> newHashSet());
+    }
+    return builder.build();
   }
 
   public static final Ordering<Arg> NUMBER_ORDERING = new Ordering<Arg>() {
