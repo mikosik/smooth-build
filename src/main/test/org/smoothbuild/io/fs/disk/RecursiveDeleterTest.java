@@ -112,7 +112,8 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_recursively_directory_that_contains_symbolic_link() throws Exception {
+  public void deleting_recursively_directory_with_symbolic_link_does_not_delete_link_target()
+      throws Exception {
     File file = createEmptyFile(root, "file");
     File dir = createDir(root, "dir");
     File link = new File(dir, "link");
@@ -123,11 +124,6 @@ public class RecursiveDeleterTest {
     assertThat(file.exists()).isTrue();
     assertThat(dir.exists()).isFalse();
     assertThat(link.exists()).isFalse();
-  }
-
-  @Test
-  public void deleting_directory_recursively_does_not_follow_symbolic_links() throws Exception {
-
   }
 
   private File createDir(File root, String dirName) {
