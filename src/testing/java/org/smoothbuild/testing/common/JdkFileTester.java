@@ -1,7 +1,6 @@
 package org.smoothbuild.testing.common;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -26,9 +25,5 @@ public class JdkFileTester {
     FileOutputStream outputStream = new FileOutputStream(file);
     StreamTester.writeAndClose(outputStream, content);
     return file;
-  }
-
-  public static void assertContent(File root, String fileName, String content) throws IOException {
-    StreamTester.assertContent(new FileInputStream(new File(root, fileName)), content);
   }
 }
