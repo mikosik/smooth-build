@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 
@@ -82,10 +83,10 @@ public abstract class GenericFileSystemTestCase {
     thenThrown(NoSuchDirError.class);
   }
 
-  public void child_names_throws_exception_when_path_is_a_dir() throws Exception {
+  public void child_names_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).childNames(path);
-    thenThrown(NoSuchDirError.class);
+    thenThrown(NoSuchDirButFileError.class);
   }
 
   @Test
@@ -101,13 +102,6 @@ public abstract class GenericFileSystemTestCase {
   public void child_names_throws_exception_when_path_does_not_exist() throws Exception {
     when(fileSystem).childNames(path("abc"));
     thenThrown(FileSystemError.class);
-  }
-
-  @Test
-  public void child_names_throws_exception_when_path_is_a_file() throws Exception {
-    given(this).createEmptyFile(path);
-    when(fileSystem).childNames(path("abc"));
-    thenThrown(NoSuchDirError.class);
   }
 
   // filesFrom()
@@ -168,7 +162,7 @@ public abstract class GenericFileSystemTestCase {
     thenThrown(FileSystemError.class);
   }
 
-  public void createInputStreamThrowsExceptionWhenDirDoesNotExist() throws Exception {
+  public void create_input_stream_throws_exception_when_file_does_not_exist() throws Exception {
     when(fileSystem).openInputStream(path("dir/file"));
     thenThrown(NoSuchFileError.class);
   }

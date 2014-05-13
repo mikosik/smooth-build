@@ -1,5 +1,8 @@
 package org.smoothbuild.io.fs.disk;
 
+import static org.smoothbuild.io.fs.base.AssertPath.assertPathExists;
+import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsDir;
+import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsFile;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
@@ -19,9 +22,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchPathError;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -52,7 +52,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public Iterable<String> childNames(Path directory) {
-    assertDirExists(directory);
+    assertPathIsDir(this, directory);
     try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(directory))) {
       Builder<String> builder = ImmutableList.builder();
       for (java.nio.file.Path path : stream) {
@@ -66,13 +66,13 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public Iterable<Path> filesFrom(Path directory) {
-    assertDirExists(directory);
+    assertPathIsDir(this, directory);
     return recursiveFilesIterable(this, directory);
   }
 
   @Override
   public InputStream openInputStream(Path path) {
-    assertFileExists(path);
+    assertPathIsFile(this, path);
     try {
       return new BufferedInputStream(Files.newInputStream(jdkPath(path)));
     } catch (IOException e) {
@@ -117,7 +117,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public void createLink(Path link, Path target) {
-    assertPathExists(target);
+    assertPathExists(this, target);
 
     if (link.isRoot()) {
       throw new FileSystemError("Cannot create link " + link + " as it is directory.");
@@ -137,24 +137,6 @@ public class DiskFileSystem implements FileSystem {
     String[] escapeElements = new String[length - 1];
     Arrays.fill(escapeElements, "..");
     return Joiner.on('/').join(escapeElements);
-  }
-
-  private void assertDirExists(Path directory) {
-    if (pathState(directory) != DIR) {
-      throw new NoSuchDirError(directory);
-    }
-  }
-
-  private void assertFileExists(Path path) {
-    if (pathState(path) != FILE) {
-      throw new NoSuchFileError(path);
-    }
-  }
-
-  private void assertPathExists(Path path) {
-    if (pathState(path) == NOTHING) {
-      throw new NoSuchPathError(path);
-    }
   }
 
   private java.nio.file.Path jdkPath(Path path) {
