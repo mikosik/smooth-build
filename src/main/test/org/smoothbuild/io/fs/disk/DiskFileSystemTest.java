@@ -7,6 +7,7 @@ import static org.testory.Testory.when;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -15,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.GenericFileSystemTestCase;
-import org.smoothbuild.testing.common.JdkFileTester;
+import org.smoothbuild.testing.common.StreamTester;
 
 public class DiskFileSystemTest extends GenericFileSystemTestCase {
   private File tempDirectory;
@@ -58,7 +59,8 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   private void createFile(String stringPath, String content) throws IOException {
     File file = stringPathToFile(stringPath);
     file.getParentFile().mkdirs();
-    JdkFileTester.createFileContent(file, content);
+    FileOutputStream outputStream = new FileOutputStream(file);
+    StreamTester.writeAndClose(outputStream, content);
   }
 
   private File stringPathToFile(String stringPath) {
