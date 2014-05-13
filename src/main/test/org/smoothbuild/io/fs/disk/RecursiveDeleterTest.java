@@ -3,6 +3,7 @@ package org.smoothbuild.io.fs.disk;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.testing.common.JdkFileTester;
 
 import com.google.common.collect.Lists;
 
@@ -127,13 +127,15 @@ public class RecursiveDeleterTest {
   }
 
   private File createDir(File root, String dirName) {
-    File file = JdkFileTester.createDir(root, dirName);
-    files.add(file);
-    return file;
+    File dir = new File(root, dirName);
+    dir.mkdirs();
+    files.add(dir);
+    return dir;
   }
 
   private File createEmptyFile(File root, String fileName) throws IOException {
-    File file = JdkFileTester.createEmptyFile(root, fileName);
+    File file = new File(root, fileName);
+    new FileOutputStream(file).close();
     files.add(file);
     return file;
   }
