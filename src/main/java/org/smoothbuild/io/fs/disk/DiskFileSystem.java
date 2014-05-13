@@ -66,6 +66,7 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public Iterable<Path> filesFrom(Path directory) {
+    assertDirExists(directory);
     return recursiveFilesIterable(this, directory);
   }
 
