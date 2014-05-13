@@ -1,17 +1,21 @@
 package org.smoothbuild.io.fs.mem;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.rootPath;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
-import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenEqual;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -20,336 +24,270 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 
-import com.google.common.io.LineReader;
-
 public abstract class GenericFileSystemTestCase {
   protected FileSystem fileSystem;
-
   protected String content = "file content";
-  protected Path path = path("my/dir/myFile");
+  protected Path path = path("some/dir/myFile");
+  protected Path path2 = path("other/dir/otherFile");
+
+  private final Path dir = path("my/dir");
+  private final Path linkPath = path("my/link");
 
   // pathKind()
 
   @Test
-  public void rootPathIsADir() throws Exception {
-    assertThat(fileSystem.pathState(Path.rootPath())).isEqualTo(DIR);
+  public void rooth_path_is_a_dir() throws Exception {
+    when(fileSystem.pathState(Path.rootPath()));
+    thenReturned(DIR);
   }
 
   @Test
-  public void nonRootPathsAreInitiallyNothing() throws Exception {
-    assertThat(fileSystem.pathState(path("abc"))).isEqualTo(NOTHING);
-    assertThat(fileSystem.pathState(path("abc/def"))).isEqualTo(NOTHING);
+  public void non_root_path_are_initially_nothing_state() throws Exception {
+    when(fileSystem.pathState(path("abc")));
+    thenReturned(NOTHING);
   }
 
   @Test
-  public void pathKindOfAFile() throws Exception {
-    createEmptyFile("abc/def/ghi/file.txt");
-    assertThat(fileSystem.pathState(path("abc/def/ghi/file.txt"))).isEqualTo(FILE);
+  public void file_path_has_file_state() throws Exception {
+    given(this).createEmptyFile(path);
+    when(fileSystem).pathState(path);
+    thenReturned(FILE);
   }
 
   @Test
-  public void pathKindOfADir() throws Exception {
-    createEmptyFile("abc/file.txt");
-    assertThat(fileSystem.pathState(path("abc"))).isEqualTo(DIR);
+  public void dir_path_has_dir_state() throws Exception {
+    given(this).createEmptyFile(dir.append(path));
+    when(fileSystem).pathState(dir);
+    thenReturned(DIR);
   }
 
   @Test
-  public void pathKindIsNothingWhenFirstPartOfItIsExistingFile() throws Exception {
-    createEmptyFile("abc/def");
-    assertThat(fileSystem.pathState(path("abc/def/ghi"))).isEqualTo(NOTHING);
+  public void path_state_is_nothing_even_when_its_first_part_is_a_file() throws Exception {
+    given(this).createEmptyFile(path);
+    when(fileSystem).pathState(path.append(path("something")));
+    thenReturned(NOTHING);
+  }
+
+  @Test
+  public void creating_file_twice_is_possible() throws Exception {
+    given(this).createEmptyFile(path);
+    when(this).createEmptyFile(path);
+    thenReturned();
   }
 
   // childeNames()
 
   @Test
-  public void creatingFileTwiceIsPossible() throws Exception {
-    createEmptyFile("abc/def/ghi/text.txt");
-    createEmptyFile("abc/def/ghi/text.txt");
+  public void child_names_throws_exception_when_dir_does_not_exist() throws Exception {
+    when(fileSystem).childNames(path("abc"));
+    thenThrown(NoSuchDirError.class);
   }
 
-  @Test(expected = NoSuchDirError.class)
-  public void childNamesThrowsExceptionWhenDirDoesNotExist() throws Exception {
-    fileSystem.childNames(path("abc"));
-  }
-
-  @Test(expected = NoSuchDirError.class)
-  public void childNamesThrowsExceptionForFilePassedAsDir() throws Exception {
-    createEmptyFile(path);
-    fileSystem.childNames(path);
+  public void child_names_throws_exception_when_path_is_a_dir() throws Exception {
+    given(this).createEmptyFile(path);
+    when(fileSystem).childNames(path);
+    thenThrown(NoSuchDirError.class);
   }
 
   @Test
-  public void childNamesThatAreDirectories() throws Exception {
-    createEmptyFile("abc/dir1/text.txt");
-    createEmptyFile("abc/dir2/text.txt");
-    createEmptyFile("abc/dir3/text.txt");
-    assertThat(fileSystem.childNames(path("abc"))).containsOnly("dir1", "dir2", "dir3");
+  public void child_names_returns_all_children() throws Exception {
+    given(this).createEmptyFile("abc/dir1/text.txt");
+    given(this).createEmptyFile("abc/dir2/text.txt");
+    given(this).createEmptyFile("abc/text.txt");
+    when(fileSystem).childNames(path("abc"));
+    thenReturned(containsInAnyOrder("dir1", "dir2", "text.txt"));
+  }
+
+  @Test
+  public void child_names_throws_exception_when_path_does_not_exist() throws Exception {
+    when(fileSystem).childNames(path("abc"));
+    thenThrown(FileSystemError.class);
+  }
+
+  @Test
+  public void child_names_throws_exception_when_path_is_a_file() throws Exception {
+    given(this).createEmptyFile(path);
+    when(fileSystem).childNames(path("abc"));
+    thenThrown(NoSuchDirError.class);
   }
 
   // filesFrom()
 
-  @Test
-  public void childNamesThatAreFiles() throws Exception {
-    createEmptyFile("abc/text1.txt");
-    createEmptyFile("abc/text2.txt");
-    createEmptyFile("abc/text3.txt");
-
-    assertThat(fileSystem.childNames(path("abc"))).containsOnly("text1.txt", "text2.txt",
-        "text3.txt");
+  public void files_from_does_not_throw_exception_when_dir_does_not_exist() throws Exception {
+    when(fileSystem).filesFrom(path("abc"));
+    thenReturned();
   }
 
   @Test
-  public void childNamesThrowsExceptionWhenPathDoesNotExist() throws Exception {
-    try {
-      fileSystem.childNames(path("abc"));
-      fail("exception expected");
-    } catch (FileSystemError e) {
-      // expected
-    }
+  public void files_from_returns_all_files_recursively() throws Exception {
+    given(this).createEmptyFile("abc/dir1/file1");
+    given(this).createEmptyFile("abc/dir2/file2");
+    given(this).createEmptyFile("abc/text.txt");
+    when(fileSystem).filesFrom(path("abc"));
+    thenReturned(containsInAnyOrder(path("dir1/file1"), path("dir2/file2"), path("text.txt")));
   }
 
   @Test
-  public void childNamesThrowsExceptionWhenPathIsAFile() throws Exception {
-    createEmptyFile(path);
-    try {
-      fileSystem.childNames(path("abc"));
-      fail("exception expected");
-    } catch (NoSuchDirError e) {
-      // expected
-    }
+  public void files_from_is_empty_for_nonexistent_directory() throws Exception {
+    when(fileSystem).filesFrom(path);
+    thenReturned(empty());
   }
 
   // openInputStream()
 
-  public void filesFromDoesNotThrowExceptionWhenDirDoesNotExist() throws Exception {
-    fileSystem.filesFrom(path("abc"));
+  @Test
+  public void open_input_stream_reads_file_content() throws Exception {
+    given(this).createFile(path, content);
+    when(inputStreamToString(fileSystem.openInputStream(path)));
+    thenReturned(content);
   }
 
   @Test
-  public void filesFrom() throws Exception {
-    createEmptyFile("abc/text1.txt");
-    createEmptyFile("abc/text2.txt");
-    createEmptyFile("abc/def/text3.txt");
-    assertThat(fileSystem.filesFrom(path("abc"))).containsOnly(path("text1.txt"),
-        path("text2.txt"), path("def/text3.txt"));
-  }
-
-  @Test
-  public void filesFromReturnsEmptyIterableForNonexistentDir() throws Exception {
-    assertThat(fileSystem.filesFrom(path("nonexistent"))).isEmpty();
-  }
-
-  @Test
-  public void writingAndReading() throws Exception {
-    createFile(path, content);
-
-    LineReader reader = new LineReader(new InputStreamReader(fileSystem.openInputStream(path)));
-
-    assertThat(reader.readLine()).isEqualTo(content);
-    assertThat(reader.readLine()).isNull();
-  }
-
-  @Test
-  public void cannotCreateOutputStreamWhenFileIsADirectory() throws Exception {
-    createEmptyFile("abc/def/file.txt");
-    try {
-      fileSystem.openOutputStream(path("abc/def"));
-      fail("exception should be thrown");
-    } catch (FileSystemError e) {
-      // expected
-    }
+  public void cannot_open_output_stream_when_path_is_directory() throws Exception {
+    given(this).createEmptyFile(path);
+    when(fileSystem).openOutputStream(path.parent());
+    thenThrown(FileSystemError.class);
   }
 
   // openOutputStream()
 
   @Test
-  public void openOutputStream() throws Exception {
+  public void data_written_via_open_output_stream_can_be_read_by_open_input_stream()
+      throws Exception {
     writeAndClose(fileSystem.openOutputStream(path), content);
-    assertThat(inputStreamToString(fileSystem.openInputStream(path))).isEqualTo(content);
+    when(inputStreamToString(fileSystem.openInputStream(path)));
+    thenReturned(content);
   }
 
   @Test
-  public void openOutputStreamOverwritesExistingFile() throws Exception {
+  public void open_output_stream_overwrites_existing_file() throws Exception {
     writeAndClose(fileSystem.openOutputStream(path), "different " + content);
     writeAndClose(fileSystem.openOutputStream(path), content);
-    assertThat(inputStreamToString(fileSystem.openInputStream(path))).isEqualTo(content);
+    when(inputStreamToString(fileSystem.openInputStream(path)));
+    thenReturned(content);
   }
 
   @Test
-  public void openOutputStreamThrowsExceptionForDirectory() throws Exception {
-    Path dir = path("my/directory");
-    createEmptyFile(dir.append(path));
-
-    try {
-      fileSystem.openOutputStream(dir);
-      fail("exception should be thrown");
-    } catch (FileSystemError e) {
-      // expected
-    }
+  public void open_output_stream_returns() throws Exception {
+    given(this).createEmptyFile(dir.append(path));
+    when(fileSystem).openOutputStream(dir);
+    thenThrown(FileSystemError.class);
   }
 
-  @Test(expected = NoSuchFileError.class)
   public void createInputStreamThrowsExceptionWhenDirDoesNotExist() throws Exception {
-    fileSystem.openInputStream(path("abc"));
+    when(fileSystem).openInputStream(path("dir/file"));
+    thenThrown(NoSuchFileError.class);
   }
 
   @Test
-  public void cannotCreateInputStreamWhenFileIsADirectory() throws Exception {
-    createEmptyFile("abc/def/file.txt");
-    try {
-      fileSystem.openInputStream(path("abc/def"));
-      fail("exception should be thrown");
-    } catch (FileSystemError e) {
-      // expected
-    }
+  public void cannot_open_input_stream_when_file_is_a_directory() throws Exception {
+    given(this).createEmptyFile("abc/def/file.txt");
+    when(fileSystem).openInputStream(path("abc/def"));
+    thenThrown(FileSystemError.class);
   }
 
   // delete()
 
   @Test
-  public void delete_directory() throws Exception {
-    // given
-    Path fileOutsideMain = path("fileOutsideMain");
-    Path mainDir = path("mainDir");
-
-    Path directFile = mainDir.append(path("directFile"));
-    Path directDir = mainDir.append(path("directDir"));
-
-    Path notDirectFile = directDir.append(path("notDirectFile"));
-    Path notDirectDir = directDir.append(path("notDirectDir"));
-
-    createEmptyFile(fileOutsideMain);
-    createEmptyFile(directFile);
-    createEmptyFile(notDirectFile);
-
-    // when
-    fileSystem.delete(mainDir);
-
-    // then
-    assertThat(fileSystem.pathState(fileOutsideMain)).isEqualTo(FILE);
-
-    assertThat(fileSystem.pathState(directFile)).isEqualTo(NOTHING);
-    assertThat(fileSystem.pathState(directDir)).isEqualTo(NOTHING);
-
-    assertThat(fileSystem.pathState(notDirectFile)).isEqualTo(NOTHING);
-    assertThat(fileSystem.pathState(notDirectDir)).isEqualTo(NOTHING);
+  public void deleting_directory_removes_its_files() throws Exception {
+    given(this).createEmptyFile(path);
+    when(fileSystem).delete(path.parent());
+    thenEqual(fileSystem.pathState(path), NOTHING);
   }
 
   @Test
   public void delete_file() throws Exception {
-    createEmptyFile(path);
-    fileSystem.delete(path);
-    assertThat(fileSystem.pathState(path)).isEqualTo(NOTHING);
+    given(this).createEmptyFile(path);
+    given(fileSystem).delete(path);
+    when(fileSystem).pathState(path);
+    thenReturned(NOTHING);
   }
 
   @Test
   public void delete_does_nothing_for_nonexistet_path() throws Exception {
-    fileSystem.delete(path("nonexistent"));
+    when(fileSystem).delete(path);
+    thenReturned();
   }
 
   @Test
   public void deleting_root_path_removes_all_files() throws Exception {
-    // given
-    Path file1 = path("dir1/file1");
-    Path file2 = path("dir2/file2");
-
-    createEmptyFile(file1);
-    createEmptyFile(file2);
-
-    // when
-    fileSystem.delete(Path.rootPath());
-
-    // then
-    assertThat(fileSystem.pathState(file1)).isEqualTo(NOTHING);
-    assertThat(fileSystem.pathState(file2)).isEqualTo(NOTHING);
+    given(this).createEmptyFile(path);
+    given(this).createEmptyFile(path2);
+    when(fileSystem).delete(rootPath());
+    thenEqual(fileSystem.pathState(path), NOTHING);
+    thenEqual(fileSystem.pathState(path2), NOTHING);
   }
 
   // links
 
   @Test
   public void link_contains_data_from_target() throws Exception {
-    createFile(path, content);
-    Path linkPath = path("my/link");
-
-    fileSystem.createLink(linkPath, path);
-
-    assertContent(fileSystem.openInputStream(linkPath), content);
+    given(this).createFile(path, content);
+    when(fileSystem).createLink(linkPath, path);
+    thenEqual(inputStreamToString(fileSystem.openInputStream(linkPath)), content);
   }
 
   @Test
   public void creating_links_creates_missing_directories() throws Exception {
-    writeAndClose(fileSystem.openOutputStream(path), content);
-    Path linkPath = path("very/long/directory/name/link");
+    given(this).createFile(path, content);
+    when(fileSystem).createLink(linkPath, path);
+    thenEqual(fileSystem.pathState(linkPath), FILE);
+  }
 
-    fileSystem.createLink(linkPath, path);
-
-    assertThat(fileSystem.pathState(linkPath)).isEqualTo(FILE);
+  @Test
+  public void deleted_link_is_removed() throws Exception {
+    given(this).createFile(path, content);
+    given(fileSystem).createLink(linkPath, path);
+    when(fileSystem).delete(linkPath);
+    thenEqual(fileSystem.pathState(linkPath), NOTHING);
   }
 
   @Test
   public void deleting_link_to_file_does_not_delete_target() throws Exception {
-    createFile(path, content);
-    Path linkPath = path("my/link");
-    fileSystem.createLink(linkPath, path);
-
-    fileSystem.delete(linkPath);
-
-    assertThat(fileSystem.pathState(path)).isEqualTo(FILE);
-    assertThat(fileSystem.pathState(linkPath)).isEqualTo(NOTHING);
+    given(this).createFile(path, content);
+    given(fileSystem).createLink(linkPath, path);
+    when(fileSystem).delete(linkPath);
+    thenEqual(fileSystem.pathState(path), FILE);
   }
 
   @Test
-  public void link_to_a_directory() throws Exception {
-    Path dir = path("dir1");
-    Path file = path("file");
-    Path targetPath = dir.append(file);
-
-    Path dirLink = path("dir2");
-    Path linkPath = dirLink.append(file);
-
-    createFile(targetPath, content);
-
-    fileSystem.createLink(linkPath, targetPath);
-
-    assertContent(fileSystem.openInputStream(linkPath), content);
+  public void link_to_a_directory_can_be_used_to_access_its_file() throws Exception {
+    given(this).createFile(path, content);
+    when(fileSystem).createLink(linkPath, path.parent());
+    thenEqual(inputStreamToString(fileSystem.openInputStream(linkPath.append(path.lastPart()))),
+        content);
   }
 
   @Test
   public void deleting_link_to_directory_does_not_delete_target() throws Exception {
-    Path dir = path("dir1");
-    Path dirLink = path("dir2");
-    createEmptyFile(dir.append(path("ignore")));
-
-    fileSystem.createLink(dirLink, dir);
-    fileSystem.delete(dirLink);
-
-    assertThat(fileSystem.pathState(dirLink)).isEqualTo(NOTHING);
-    assertThat(fileSystem.pathState(dir)).isEqualTo(DIR);
+    given(this).createEmptyFile(dir.append(path("ignore")));
+    given(fileSystem).createLink(path, dir);
+    when(fileSystem).delete(path);
+    thenEqual(fileSystem.pathState(path), NOTHING);
+    thenEqual(fileSystem.pathState(dir), DIR);
   }
 
   // createDir()
 
   @Test
   public void created_dir_exists() throws Exception {
-    fileSystem.createDir(path);
-    assertThat(fileSystem.pathState(path)).isEqualTo(DIR);
+    given(fileSystem).createDir(path);
+    when(fileSystem).pathState(path);
+    thenReturned(DIR);
   }
 
   @Test
   public void creating_existing_dir_does_not_cause_errors() throws Exception {
-    fileSystem.createDir(path);
-    fileSystem.createDir(path);
+    given(fileSystem).createDir(path);
+    when(fileSystem).createDir(path);
+    thenReturned();
   }
 
   @Test
   public void cannot_create_dir_if_such_file_already_exists() throws Exception {
-    createEmptyFile(path);
-    try {
-      fileSystem.createDir(path);
-      fail("exception should be thrown");
-    } catch (FileSystemError e) {
-      // expected
-    }
+    given(this).createEmptyFile(path);
+    when(fileSystem).createDir(path);
+    thenThrown(FileSystemError.class);
   }
 
   // helpers
