@@ -1,5 +1,6 @@
 package org.smoothbuild.io.fs.mem;
 
+import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
@@ -44,14 +45,8 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public Iterable<Path> filesFrom(Path directory) {
-    assertDirExists(directory);
+    assertPathIsDir(this, directory);
     return recursiveFilesIterable(this, directory);
-  }
-
-  private void assertDirExists(Path directory) {
-    if (pathState(directory) != DIR) {
-      throw new NoSuchDirError(directory);
-    }
   }
 
   @Override
