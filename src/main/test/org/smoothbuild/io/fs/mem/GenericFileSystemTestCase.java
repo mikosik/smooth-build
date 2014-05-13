@@ -1,7 +1,6 @@
 package org.smoothbuild.io.fs.mem;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
@@ -113,9 +112,10 @@ public abstract class GenericFileSystemTestCase {
 
   // filesFrom()
 
-  public void files_from_does_not_throw_exception_when_dir_does_not_exist() throws Exception {
+  @Test
+  public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
     when(fileSystem).filesFrom(path("abc"));
-    thenReturned();
+    thenThrown(NoSuchDirError.class);
   }
 
   @Test
@@ -125,12 +125,6 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile("abc/text.txt");
     when(fileSystem).filesFrom(path("abc"));
     thenReturned(containsInAnyOrder(path("dir1/file1"), path("dir2/file2"), path("text.txt")));
-  }
-
-  @Test
-  public void files_from_is_empty_for_nonexistent_directory() throws Exception {
-    when(fileSystem).filesFrom(path);
-    thenReturned(empty());
   }
 
   // openInputStream()

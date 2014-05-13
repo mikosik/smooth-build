@@ -44,7 +44,14 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public Iterable<Path> filesFrom(Path directory) {
+    assertDirExists(directory);
     return recursiveFilesIterable(this, directory);
+  }
+
+  private void assertDirExists(Path directory) {
+    if (pathState(directory) != DIR) {
+      throw new NoSuchDirError(directory);
+    }
   }
 
   @Override
