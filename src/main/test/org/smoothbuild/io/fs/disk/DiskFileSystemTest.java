@@ -1,7 +1,9 @@
 package org.smoothbuild.io.fs.disk;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -34,7 +36,8 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
 
   @Test
   public void openOutputStreamReturnsBufferedStream() throws Exception {
-    assertThat(fileSystem.openOutputStream(path)).isInstanceOf(BufferedOutputStream.class);
+    when(fileSystem.openOutputStream(path));
+    thenReturned(instanceOf(BufferedOutputStream.class));
   }
 
   @Override
@@ -52,7 +55,7 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
     createFile(path.value(), content);
   }
 
-  protected void createFile(String stringPath, String content) throws IOException {
+  private void createFile(String stringPath, String content) throws IOException {
     File file = stringPathToFile(stringPath);
     file.getParentFile().mkdirs();
     JdkFileTester.createFileContent(file, content);
