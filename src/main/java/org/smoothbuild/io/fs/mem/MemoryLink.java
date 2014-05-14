@@ -4,19 +4,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import org.smoothbuild.io.fs.base.Path;
+
 public class MemoryLink implements MemoryElement {
   private final MemoryDirectory parent;
-  private final String name;
+  private final Path name;
   private final MemoryElement target;
 
-  public MemoryLink(MemoryDirectory parent, String name, MemoryElement target) {
+  public MemoryLink(MemoryDirectory parent, Path name, MemoryElement target) {
     this.parent = parent;
     this.name = name;
     this.target = target;
   }
 
   @Override
-  public String name() {
+  public Path name() {
     return name;
   }
 
@@ -36,17 +38,17 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public boolean hasChild(String name) {
+  public boolean hasChild(Path name) {
     return target.hasChild(name);
   }
 
   @Override
-  public MemoryElement child(String name) {
+  public MemoryElement child(Path name) {
     return target.child(name);
   }
 
   @Override
-  public List<String> childNames() {
+  public List<Path> childNames() {
     return target.childNames();
   }
 

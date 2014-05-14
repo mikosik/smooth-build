@@ -11,7 +11,7 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 public interface FileSystem {
   public PathState pathState(Path path);
 
-  public Iterable<String> childNames(Path directory);
+  public Iterable<Path> childNames(Path directory);
 
   public Iterable<Path> filesFrom(Path directory);
 

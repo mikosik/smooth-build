@@ -94,11 +94,11 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void child_names_returns_all_children() throws Exception {
-    given(this).createEmptyFile("abc/dir1/text.txt");
-    given(this).createEmptyFile("abc/dir2/text.txt");
+    given(this).createEmptyFile("abc/dir1/file1.txt");
+    given(this).createEmptyFile("abc/dir2/file2.txt");
     given(this).createEmptyFile("abc/text.txt");
     when(fileSystem).childNames(path("abc"));
-    thenReturned(containsInAnyOrder("dir1", "dir2", "text.txt"));
+    thenReturned(containsInAnyOrder(path("dir1"), path("dir2"), path("text.txt")));
   }
 
   @Test

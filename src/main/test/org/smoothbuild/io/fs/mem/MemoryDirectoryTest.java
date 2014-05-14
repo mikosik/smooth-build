@@ -2,26 +2,28 @@ package org.smoothbuild.io.fs.mem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.collect.ImmutableList;
 
 public class MemoryDirectoryTest {
-  private static final String NAME1 = "childName1";
-  private static final String NAME2 = "childName2";
+  private static final Path NAME1 = path("childName1");
+  private static final Path NAME2 = path("childName2");
 
   MemoryElement child = createChild(NAME1);
   MemoryElement child2 = createChild(NAME2);
   MemoryDirectory parent = mock(MemoryDirectory.class);
-  MemoryDirectory dir = new MemoryDirectory(parent, "name");
+  MemoryDirectory dir = new MemoryDirectory(parent, path("name"));
 
   @Test
   public void name() {
-    assertThat(dir.name()).isEqualTo("name");
+    assertThat(dir.name()).isEqualTo(path("name"));
   }
 
   @Test
@@ -106,7 +108,7 @@ public class MemoryDirectoryTest {
     }
   }
 
-  private static MemoryElement createChild(String name) {
+  private static MemoryElement createChild(Path name) {
     MemoryElement childMock = mock(MemoryElement.class);
     given(willReturn(name), childMock).name();
     return childMock;

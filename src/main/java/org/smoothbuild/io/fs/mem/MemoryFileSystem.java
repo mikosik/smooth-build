@@ -25,7 +25,7 @@ import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileError;
  * In memory implementation of FileSystem.
  */
 public class MemoryFileSystem implements FileSystem {
-  private final MemoryDirectory root = new MemoryDirectory(null, "");
+  private final MemoryDirectory root = new MemoryDirectory(null, Path.rootPath());
 
   @Override
   public PathState pathState(Path path) {
@@ -40,7 +40,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public List<String> childNames(Path directory) {
+  public List<Path> childNames(Path directory) {
     return getDirectory(directory).childNames();
   }
 
@@ -78,7 +78,7 @@ public class MemoryFileSystem implements FileSystem {
 
     MemoryDirectory dir = createDirImpl(path.parent());
 
-    String name = path.lastPart().value();
+    Path name = path.lastPart();
     if (dir.hasChild(name)) {
       return dir.child(name).createOutputStream();
     } else {
@@ -93,7 +93,7 @@ public class MemoryFileSystem implements FileSystem {
     assertPathExists(this, target);
     assertPathIsUnused(this, link);
 
-    String name = link.lastPart().value();
+    Path name = link.lastPart();
     MemoryDirectory dir = createDirImpl(link.parent());
     MemoryElement targetElement = findElement(target);
     dir.addChild(new MemoryLink(dir, name, targetElement));
@@ -108,7 +108,7 @@ public class MemoryFileSystem implements FileSystem {
     Iterator<Path> it = directory.parts().iterator();
     MemoryDirectory currentDir = root;
     while (it.hasNext()) {
-      String name = it.next().value();
+      Path name = it.next();
       if (currentDir.hasChild(name)) {
         MemoryElement child = currentDir.child(name);
         if (child.isDirectory()) {
@@ -147,7 +147,7 @@ public class MemoryFileSystem implements FileSystem {
     Iterator<Path> it = path.parts().iterator();
     MemoryElement current = root;
     while (it.hasNext()) {
-      String name = it.next().value();
+      Path name = it.next();
       if (current.hasChild(name)) {
         current = current.child(name);
       } else {
