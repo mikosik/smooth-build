@@ -16,6 +16,7 @@ import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchPathError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenError;
 import org.testory.Closure;
 
 public class AssertPathTest {
@@ -119,6 +120,40 @@ public class AssertPathTest {
       @Override
       public Void invoke() throws Throwable {
         AssertPath.assertPathExists(fileSystem, path);
+        return null;
+      }
+    };
+  }
+
+  @Test
+  public void assert_path_is_unused_throws_exception_for_file_path() {
+    given(fileSystem = mock(FileSystem.class));
+    given(willReturn(FILE), fileSystem).pathState(path);
+    when(assertPathIsUnused(fileSystem, path));
+    thenThrown(PathIsAlreadyTakenError.class);
+  }
+
+  @Test
+  public void assert_path_is_unused_throws_exception_for_dir_path() {
+    given(fileSystem = mock(FileSystem.class));
+    given(willReturn(DIR), fileSystem).pathState(path);
+    when(assertPathIsUnused(fileSystem, path));
+    thenThrown(PathIsAlreadyTakenError.class);
+  }
+
+  @Test
+  public void assert_path_is_unused_returns_normally_when_path_does_not_exist() {
+    given(fileSystem = mock(FileSystem.class));
+    given(willReturn(NOTHING), fileSystem).pathState(path);
+    when(assertPathIsUnused(fileSystem, path));
+    thenReturned();
+  }
+
+  private Closure assertPathIsUnused(final FileSystem fileSystem, final Path path) {
+    return new Closure() {
+      @Override
+      public Void invoke() throws Throwable {
+        AssertPath.assertPathIsUnused(fileSystem, path);
         return null;
       }
     };
