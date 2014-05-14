@@ -17,7 +17,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.io.fs.base.err.IllegalPathForFileError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 
@@ -73,7 +73,7 @@ public class MemoryFileSystem implements FileSystem {
   @Override
   public OutputStream openOutputStream(Path path) {
     if (pathState(path) == DIR) {
-      throw new IllegalPathForFileError(path);
+      throw new PathIsAlreadyTakenByDirError(path);
     }
 
     MemoryDirectory dir = createDirImpl(path.parent());
