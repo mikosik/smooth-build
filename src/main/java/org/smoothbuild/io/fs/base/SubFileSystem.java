@@ -23,8 +23,8 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<Path> filesFrom(Path directory) {
-    return fileSystem.filesFrom(absolutePath(directory));
+  public Iterable<Path> filesFromRecursive(Path directory) {
+    return fileSystem.filesFromRecursive(absolutePath(directory));
   }
 
   @Override
