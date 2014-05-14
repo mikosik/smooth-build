@@ -240,7 +240,7 @@ public class ArraysSmoothTest extends IntegrationTestCase {
 
     Path artifactPath = RESULTS_PATH.append(path("run"));
     assertThat(fileSystem.pathState(artifactPath)).isEqualTo(PathState.DIR);
-    assertThat(fileSystem.childNames(artifactPath)).isEmpty();
+    assertThat(fileSystem.filesFrom(artifactPath)).isEmpty();
   }
 
   @Test
@@ -258,6 +258,6 @@ public class ArraysSmoothTest extends IntegrationTestCase {
 
     Path artifactPath = RESULTS_PATH.append(path("run"));
     assertThat(fileSystem.pathState(artifactPath)).isEqualTo(PathState.DIR);
-    assertThat(fileSystem.childNames(artifactPath)).isEmpty();
+    assertThat(fileSystem.filesFrom(artifactPath)).isEmpty();
   }
 }

@@ -40,7 +40,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public List<Path> childNames(Path directory) {
+  public List<Path> filesFrom(Path directory) {
     return getDirectory(directory).childNames();
   }
 
