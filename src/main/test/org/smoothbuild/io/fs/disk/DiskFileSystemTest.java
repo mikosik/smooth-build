@@ -14,8 +14,8 @@ import java.nio.file.Files;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.GenericFileSystemTestCase;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.mem.GenericFileSystemTestCase;
 import org.smoothbuild.testing.common.StreamTester;
 
 public class DiskFileSystemTest extends GenericFileSystemTestCase {
