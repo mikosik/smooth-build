@@ -23,7 +23,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.io.fs.base.err.IllegalPathForFileError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -85,7 +85,7 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public OutputStream openOutputStream(Path path) {
     if (pathState(path) == DIR) {
-      throw new IllegalPathForFileError(path);
+      throw new PathIsAlreadyTakenByDirError(path);
     }
 
     createDir(path.parent());
