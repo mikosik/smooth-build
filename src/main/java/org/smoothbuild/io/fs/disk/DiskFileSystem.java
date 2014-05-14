@@ -22,6 +22,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.IllegalPathForFileError;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -82,9 +83,10 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public OutputStream openOutputStream(Path path) {
-    if (path.isRoot()) {
-      throw new FileSystemError("Cannot open file " + path + " as it is directory.");
+    if (pathState(path) == DIR) {
+      throw new IllegalPathForFileError(path);
     }
+
     createDir(path.parent());
 
     try {

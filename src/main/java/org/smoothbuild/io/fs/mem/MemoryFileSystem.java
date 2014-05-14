@@ -15,8 +15,8 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.IllegalPathForFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchPathError;
 
@@ -71,24 +71,20 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public OutputStream openOutputStream(Path path) {
-    if (path.isRoot()) {
-      throw new NoSuchFileButDirError(path);
+    if (pathState(path) == DIR) {
+      throw new IllegalPathForFileError(path);
     }
+
     MemoryDirectory dir = createDirImpl(path.parent());
 
     String name = path.lastPart().value();
     if (dir.hasChild(name)) {
-      MemoryElement child = dir.child(name);
-      if (child.isFile()) {
-        return child.createOutputStream();
-      } else {
-        throw new NoSuchFileButDirError(path);
-      }
+      return dir.child(name).createOutputStream();
+    } else {
+      MemoryFile child = new MemoryFile(dir, name);
+      dir.addChild(child);
+      return child.createOutputStream();
     }
-
-    MemoryFile child = new MemoryFile(dir, name);
-    dir.addChild(child);
-    return child.createOutputStream();
   }
 
   @Override

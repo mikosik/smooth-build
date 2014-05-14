@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.IllegalPathForFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
@@ -134,7 +135,7 @@ public abstract class GenericFileSystemTestCase {
   public void cannot_open_output_stream_when_path_is_directory() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).openOutputStream(path.parent());
-    thenThrown(FileSystemError.class);
+    thenThrown(IllegalPathForFileError.class);
   }
 
   // openOutputStream()
