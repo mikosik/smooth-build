@@ -58,12 +58,12 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public InputStream createInputStream() {
-    return target.createInputStream();
+  public InputStream openInputStream() {
+    return target.openInputStream();
   }
 
   @Override
-  public OutputStream createOutputStream() {
-    return target.createOutputStream();
+  public OutputStream openOutputStream() {
+    return target.openOutputStream();
   }
 }

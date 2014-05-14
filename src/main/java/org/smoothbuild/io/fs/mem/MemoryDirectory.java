@@ -78,12 +78,12 @@ public class MemoryDirectory implements MemoryElement {
   }
 
   @Override
-  public InputStream createInputStream() {
+  public InputStream openInputStream() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public OutputStream createOutputStream() {
+  public OutputStream openOutputStream() {
     throw new UnsupportedOperationException();
   }
 }

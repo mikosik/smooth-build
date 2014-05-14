@@ -23,7 +23,7 @@ public interface MemoryElement {
 
   public void addChild(MemoryElement element);
 
-  public InputStream createInputStream();
+  public InputStream openInputStream();
 
-  public OutputStream createOutputStream();
+  public OutputStream openOutputStream();
 }

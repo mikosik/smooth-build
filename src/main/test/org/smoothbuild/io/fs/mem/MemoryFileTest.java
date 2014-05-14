@@ -85,15 +85,15 @@ public class MemoryFileTest {
 
   @Test
   public void readingFromNonexistentFileFails() throws Exception {
-    when(file).createInputStream();
+    when(file).openInputStream();
     thenThrown(FileSystemError.class);
   }
 
   @Test
   public void writingAndReading() throws Exception {
-    given(writer = new OutputStreamWriter(file.createOutputStream()));
+    given(writer = new OutputStreamWriter(file.openOutputStream()));
     given(writer).write(line);
     given(writer).close();
-    thenEqual(line, inputStreamToString(file.createInputStream()));
+    thenEqual(line, inputStreamToString(file.openInputStream()));
   }
 }
