@@ -18,8 +18,8 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<Path> childNames(Path directory) {
-    return fileSystem.childNames(absolutePath(directory));
+  public Iterable<Path> filesFrom(Path directory) {
+    return fileSystem.filesFrom(absolutePath(directory));
   }
 
   @Override

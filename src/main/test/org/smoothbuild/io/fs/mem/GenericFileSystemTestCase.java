@@ -78,32 +78,32 @@ public abstract class GenericFileSystemTestCase {
     thenReturned();
   }
 
-  // childeNames()
+  // filesFrom()
 
   @Test
-  public void child_names_throws_exception_when_dir_does_not_exist() throws Exception {
-    when(fileSystem).childNames(path("abc"));
+  public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
+    when(fileSystem).filesFrom(path("abc"));
     thenThrown(NoSuchDirError.class);
   }
 
-  public void child_names_throws_exception_when_path_is_a_file() throws Exception {
+  public void files_from_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
-    when(fileSystem).childNames(path);
+    when(fileSystem).filesFrom(path);
     thenThrown(NoSuchDirButFileError.class);
   }
 
   @Test
-  public void child_names_returns_all_children() throws Exception {
+  public void files_from_returns_all_children() throws Exception {
     given(this).createEmptyFile("abc/dir1/file1.txt");
     given(this).createEmptyFile("abc/dir2/file2.txt");
     given(this).createEmptyFile("abc/text.txt");
-    when(fileSystem).childNames(path("abc"));
+    when(fileSystem).filesFrom(path("abc"));
     thenReturned(containsInAnyOrder(path("dir1"), path("dir2"), path("text.txt")));
   }
 
   @Test
-  public void child_names_throws_exception_when_path_does_not_exist() throws Exception {
-    when(fileSystem).childNames(path("abc"));
+  public void files_from_throws_exception_when_path_does_not_exist() throws Exception {
+    when(fileSystem).filesFrom(path("abc"));
     thenThrown(FileSystemError.class);
   }
 

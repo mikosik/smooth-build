@@ -38,8 +38,8 @@ public class SubFileSystemTest {
   @Test
   public void childNames() {
     given(strings = ImmutableList.of("abc"));
-    given(willReturn(strings), fileSystem).childNames(absolutePath);
-    when(subFileSystem).childNames(path);
+    given(willReturn(strings), fileSystem).filesFrom(absolutePath);
+    when(subFileSystem).filesFrom(path);
     thenReturned(sameInstance(strings));
   }
 
