@@ -138,6 +138,12 @@ public abstract class GenericFileSystemTestCase {
     thenThrown(IllegalPathForFileError.class);
   }
 
+  @Test
+  public void cannot_open_output_stream_when_path_is_root_directory() throws Exception {
+    when(fileSystem).openOutputStream(Path.rootPath());
+    thenThrown(IllegalPathForFileError.class);
+  }
+
   // openOutputStream()
 
   @Test
