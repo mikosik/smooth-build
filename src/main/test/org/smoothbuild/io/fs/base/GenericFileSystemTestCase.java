@@ -1,4 +1,4 @@
-package org.smoothbuild.io.fs.mem;
+package org.smoothbuild.io.fs.base;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.io.fs.base.Path.path;
