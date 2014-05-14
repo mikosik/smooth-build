@@ -14,15 +14,16 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 
 public class MemoryFileTest {
-  MemoryDirectory parent = mock(MemoryDirectory.class);
-  String name;
-  String otherName;
-  MemoryFile file;
-  OutputStreamWriter writer;
-  String line;
+  private final MemoryDirectory parent = mock(MemoryDirectory.class);
+  private final Path name = Path.path("some/path");
+  private final Path otherName = Path.path("other/path");
+  private MemoryFile file;
+  private OutputStreamWriter writer;
+  private String line;
 
   @Before
   public void before() {

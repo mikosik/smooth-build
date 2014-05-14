@@ -5,21 +5,23 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.io.fs.base.Path;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 public class MemoryDirectory implements MemoryElement {
   private final MemoryDirectory parent;
-  private final String name;
-  private final Map<String, MemoryElement> map = Maps.newHashMap();
+  private final Path name;
+  private final Map<Path, MemoryElement> map = Maps.newHashMap();
 
-  public MemoryDirectory(MemoryDirectory parent, String name) {
+  public MemoryDirectory(MemoryDirectory parent, Path name) {
     this.parent = parent;
     this.name = name;
   }
 
   @Override
-  public String name() {
+  public Path name() {
     return name;
   }
 
@@ -39,12 +41,12 @@ public class MemoryDirectory implements MemoryElement {
   }
 
   @Override
-  public boolean hasChild(String name) {
+  public boolean hasChild(Path name) {
     return map.containsKey(name);
   }
 
   @Override
-  public MemoryElement child(String name) {
+  public MemoryElement child(Path name) {
     MemoryElement result = map.get(name);
     if (result == null) {
       throw new IllegalArgumentException("Element '" + name + "' does not exist.");
@@ -53,13 +55,13 @@ public class MemoryDirectory implements MemoryElement {
   }
 
   @Override
-  public List<String> childNames() {
+  public List<Path> childNames() {
     return ImmutableList.copyOf(map.keySet());
   }
 
   @Override
   public void addChild(MemoryElement element) {
-    String elementName = element.name();
+    Path elementName = element.name();
     if (map.containsKey(elementName)) {
       throw new IllegalStateException("Directory already contains child with name '" + elementName
           + "'.");

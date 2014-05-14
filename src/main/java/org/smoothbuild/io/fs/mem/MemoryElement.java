@@ -4,8 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import org.smoothbuild.io.fs.base.Path;
+
 public interface MemoryElement {
-  public String name();
+  public Path name();
 
   public MemoryDirectory parent();
 
@@ -13,11 +15,11 @@ public interface MemoryElement {
 
   public boolean isDirectory();
 
-  public boolean hasChild(String name);
+  public boolean hasChild(Path name);
 
-  public MemoryElement child(String name);
+  public MemoryElement child(Path name);
 
-  public List<String> childNames();
+  public List<Path> childNames();
 
   public void addChild(MemoryElement element);
 

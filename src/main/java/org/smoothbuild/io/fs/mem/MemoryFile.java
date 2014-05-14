@@ -6,20 +6,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 
 public class MemoryFile implements MemoryElement {
   private final MemoryDirectory parent;
-  private final String name;
+  private final Path name;
   private byte data[];
 
-  public MemoryFile(MemoryDirectory parent, String name) {
+  public MemoryFile(MemoryDirectory parent, Path name) {
     this.parent = parent;
     this.name = name;
   }
 
   @Override
-  public String name() {
+  public Path name() {
     return name;
   }
 
@@ -39,17 +40,17 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public boolean hasChild(String name) {
+  public boolean hasChild(Path name) {
     return false;
   }
 
   @Override
-  public MemoryElement child(String name) {
+  public MemoryElement child(Path name) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public List<String> childNames() {
+  public List<Path> childNames() {
     throw new UnsupportedOperationException();
   }
 

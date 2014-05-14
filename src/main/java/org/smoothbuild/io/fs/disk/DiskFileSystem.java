@@ -4,6 +4,7 @@ import static org.smoothbuild.io.fs.base.AssertPath.assertPathExists;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsFile;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsUnused;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
@@ -55,12 +56,12 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<String> childNames(Path directory) {
+  public Iterable<Path> childNames(Path directory) {
     assertPathIsDir(this, directory);
     try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(directory))) {
-      Builder<String> builder = ImmutableList.builder();
+      Builder<Path> builder = ImmutableList.builder();
       for (java.nio.file.Path path : stream) {
-        builder.add(path.getFileName().toString());
+        builder.add(path(path.getFileName().toString()));
       }
       return builder.build();
     } catch (IOException e) {
