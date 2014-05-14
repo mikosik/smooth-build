@@ -20,10 +20,11 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileError;
 import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenError;
 
 public abstract class GenericFileSystemTestCase {
@@ -299,7 +300,7 @@ public abstract class GenericFileSystemTestCase {
   public void cannot_create_dir_if_such_file_already_exists() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).createDir(path);
-    thenThrown(FileSystemError.class);
+    thenThrown(PathIsAlreadyTakenByFileError.class);
   }
 
   // helpers

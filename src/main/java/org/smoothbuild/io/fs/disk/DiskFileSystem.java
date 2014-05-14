@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileError;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -101,6 +103,8 @@ public class DiskFileSystem implements FileSystem {
   public void createDir(Path path) {
     try {
       Files.createDirectories(jdkPath(path));
+    } catch (FileAlreadyExistsException e) {
+      throw new PathIsAlreadyTakenByFileError(path);
     } catch (IOException e) {
       throw new FileSystemError(e);
     }
