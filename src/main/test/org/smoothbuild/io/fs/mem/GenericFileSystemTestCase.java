@@ -24,6 +24,7 @@ import org.smoothbuild.io.fs.base.err.IllegalPathForFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenError;
 
 public abstract class GenericFileSystemTestCase {
   protected FileSystem fileSystem;
@@ -260,6 +261,22 @@ public abstract class GenericFileSystemTestCase {
     when(fileSystem).delete(path);
     thenEqual(fileSystem.pathState(path), NOTHING);
     thenEqual(fileSystem.pathState(dir), DIR);
+  }
+
+  @Test
+  public void cannot_create_link_when_path_is_taken_by_file() throws Exception {
+    given(this).createEmptyFile(path);
+    given(this).createEmptyFile(linkPath);
+    when(fileSystem).createLink(linkPath, path);
+    thenThrown(PathIsAlreadyTakenError.class);
+  }
+
+  @Test
+  public void cannot_create_link_when_path_is_taken_by_dir() throws Exception {
+    given(this).createEmptyFile(path);
+    given(this).createEmptyFile(linkPath);
+    when(fileSystem).createLink(linkPath.parent(), path);
+    thenThrown(PathIsAlreadyTakenError.class);
   }
 
   // createDir()
