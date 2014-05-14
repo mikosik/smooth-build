@@ -16,10 +16,10 @@ import java.util.List;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileError;
 
 /**
  * In memory implementation of FileSystem.
@@ -114,8 +114,7 @@ public class MemoryFileSystem implements FileSystem {
         if (child.isDirectory()) {
           currentDir = (MemoryDirectory) child;
         } else {
-          throw new FileSystemError("Path (or subpath) of to be created directory (" + directory
-              + ") is taken by some file.");
+          throw new PathIsAlreadyTakenByFileError(directory);
         }
       } else {
         MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
