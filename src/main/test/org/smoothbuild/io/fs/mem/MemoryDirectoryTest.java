@@ -1,111 +1,123 @@
 package org.smoothbuild.io.fs.mem;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
+import static org.testory.Testory.then;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
+import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 
-import com.google.common.collect.ImmutableList;
-
 public class MemoryDirectoryTest {
-  private static final Path NAME1 = path("childName1");
-  private static final Path NAME2 = path("childName2");
-
-  MemoryElement child = createChild(NAME1);
-  MemoryElement child2 = createChild(NAME2);
-  MemoryDirectory parent = mock(MemoryDirectory.class);
-  MemoryDirectory dir = new MemoryDirectory(parent, path("name"));
+  private final MemoryElement child = createChild(path("childName1"));
+  private final MemoryElement child2 = createChild(path("childName2"));
+  private final Path path = path("name");
+  private final MemoryDirectory parent = mock(MemoryDirectory.class);
+  private MemoryDirectory memoryDirectory;
 
   @Test
   public void name() {
-    assertThat(dir.name()).isEqualTo(path("name"));
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    when(memoryDirectory).name();
+    thenReturned(path);
   }
 
   @Test
   public void parent() throws Exception {
-    assertThat(dir.parent()).isSameAs(parent);
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    when(memoryDirectory).parent();
+    thenReturned(parent);
   }
 
   @Test
-  public void isFile() throws Exception {
-    assertThat(dir.isFile()).isFalse();
+  public void memory_directory_is_not_file() throws Exception {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    when(memoryDirectory).isFile();
+    thenReturned(false);
   }
 
   @Test
-  public void isDirectory() throws Exception {
-    assertThat(dir.isDirectory()).isTrue();
+  public void memory_directory_is_file() throws Exception {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    when(memoryDirectory).isDirectory();
+    thenReturned(true);
   }
 
   @Test
-  public void doesNotHaveChildThatIsNotAdded() {
-    assertThat(dir.hasChild(NAME1)).isFalse();
+  public void does_not_have_not_added_child() {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    when(memoryDirectory).hasChild(child.name());
+    thenReturned(false);
   }
 
   @Test
-  public void hasChildAfterAdding() {
-    dir.addChild(child);
-    assertThat(dir.hasChild(NAME1)).isTrue();
+  public void has_child_that_has_been_added_to_it() {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    given(memoryDirectory).addChild(child);
+    when(memoryDirectory).hasChild(child.name());
+    thenReturned(true);
   }
 
   @Test
-  public void addingAndRetrievingChild() throws Exception {
-    dir.addChild(child);
-    assertThat(dir.child(NAME1)).isSameAs(child);
+  public void returns_child_added_to_it_with_given_name() throws Exception {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    given(memoryDirectory).addChild(child);
+    when(memoryDirectory).child(child.name());
+    thenReturned(same(child));
   }
 
   @Test
-  public void cannotAddTheSameChildTwice() throws Exception {
-    dir.addChild(child);
-    try {
-      dir.addChild(child);
-      fail("exception should be thrown");
-    } catch (IllegalStateException e) {
-      // expected
-    }
+  public void cannot_add_the_same_child_twice() throws Exception {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    given(memoryDirectory).addChild(child);
+    when(memoryDirectory).addChild(child);
+    thenThrown(IllegalStateException.class);
   }
 
   @Test
-  public void childNamesAreInitiallyEmpty() {
-    assertThat(dir.childNames()).isEmpty();
+  public void child_names_is_empty_when_no_child_was_added() {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    when(memoryDirectory).childNames();
+    thenReturned(empty());
   }
 
   @Test
-  public void childNamesReturnsAddedChildren() throws Exception {
-    dir.addChild(child);
-    assertThat(dir.childNames()).isEqualTo(ImmutableList.of(NAME1));
+  public void child_names_returns_all_added_children() throws Exception {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    given(memoryDirectory).addChild(child);
+    given(memoryDirectory).addChild(child2);
+    when(memoryDirectory).childNames();
+    thenReturned(containsInAnyOrder(child.name(), child2.name()));
   }
 
   @Test
-  public void removeAllChildren() throws Exception {
-    dir.addChild(child);
-    dir.addChild(child2);
-    dir.removeAllChildren();
-    assertThat(dir.childNames()).isEmpty();
+  public void has_no_children_after_removing_all_children() throws Exception {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    given(memoryDirectory).addChild(child);
+    given(memoryDirectory).addChild(child2);
+    when(memoryDirectory).removeAllChildren();
+    then(memoryDirectory.childNames(), empty());
   }
 
   @Test
-  public void createInputStreamThrowsException() throws Exception {
-    try {
-      dir.createInputStream();
-      fail("exception should be thrown");
-    } catch (UnsupportedOperationException e) {
-      // expected
-    }
+  public void create_input_stream_throws_exception() throws Exception {
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    when(memoryDirectory).createInputStream();
+    thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
   public void createOutputStreamThrowsException() throws Exception {
-    try {
-      dir.createOutputStream();
-      fail("exception should be thrown");
-    } catch (UnsupportedOperationException e) {
-      // expected
-    }
+    given(memoryDirectory = new MemoryDirectory(parent, path));
+    when(memoryDirectory).createOutputStream();
+    thenThrown(UnsupportedOperationException.class);
   }
 
   private static MemoryElement createChild(Path name) {
