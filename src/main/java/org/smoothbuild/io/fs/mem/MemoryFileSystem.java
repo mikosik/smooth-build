@@ -1,6 +1,8 @@
 package org.smoothbuild.io.fs.mem;
 
+import static org.smoothbuild.io.fs.base.AssertPath.assertPathExists;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsDir;
+import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsUnused;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
@@ -18,7 +20,6 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.fs.base.err.IllegalPathForFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchPathError;
 
 /**
  * In memory implementation of FileSystem.
@@ -89,16 +90,12 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public void createLink(Path link, Path target) {
-    MemoryElement targetElement = findElement(target);
-    if (targetElement == null) {
-      throw new NoSuchPathError(target);
-    }
+    assertPathExists(this, target);
+    assertPathIsUnused(this, link);
 
     String name = link.lastPart().value();
     MemoryDirectory dir = createDirImpl(link.parent());
-    if (dir.hasChild(name)) {
-      throw new FileSystemError("Cannot create link as path " + link + " exists.");
-    }
+    MemoryElement targetElement = findElement(target);
     dir.addChild(new MemoryLink(dir, name, targetElement));
   }
 

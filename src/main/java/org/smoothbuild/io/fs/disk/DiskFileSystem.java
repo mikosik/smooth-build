@@ -3,6 +3,7 @@ package org.smoothbuild.io.fs.disk;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathExists;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsFile;
+import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsUnused;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
@@ -120,10 +121,8 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public void createLink(Path link, Path target) {
     assertPathExists(this, target);
+    assertPathIsUnused(this, link);
 
-    if (link.isRoot()) {
-      throw new FileSystemError("Cannot create link " + link + " as it is directory.");
-    }
     createDir(link.parent());
 
     try {
