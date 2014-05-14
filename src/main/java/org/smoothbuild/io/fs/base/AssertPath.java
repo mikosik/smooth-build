@@ -5,6 +5,7 @@ import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchPathError;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenError;
 
 public class AssertPath {
 
@@ -45,6 +46,20 @@ public class AssertPath {
         return;
       case NOTHING:
         throw new NoSuchPathError(path);
+      default:
+        throw newUnknownPathState(state);
+    }
+  }
+
+  public static void assertPathIsUnused(FileSystem fileSystem, Path path) {
+    PathState state = fileSystem.pathState(path);
+    switch (state) {
+      case FILE:
+        throw new PathIsAlreadyTakenError(path);
+      case DIR:
+        throw new PathIsAlreadyTakenError(path);
+      case NOTHING:
+        return;
       default:
         throw newUnknownPathState(state);
     }
