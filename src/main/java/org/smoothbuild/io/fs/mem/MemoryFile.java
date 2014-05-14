@@ -60,7 +60,7 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public InputStream createInputStream() {
+  public InputStream openInputStream() {
     if (data == null) {
       throw new FileSystemError("File does not exist");
     }
@@ -68,7 +68,7 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public OutputStream createOutputStream() {
+  public OutputStream openOutputStream() {
     return new MemoryOutputStream();
   }
 

@@ -67,7 +67,7 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public InputStream openInputStream(Path path) {
-    return getFile(path).createInputStream();
+    return getFile(path).openInputStream();
   }
 
   @Override
@@ -80,11 +80,11 @@ public class MemoryFileSystem implements FileSystem {
 
     Path name = path.lastPart();
     if (dir.hasChild(name)) {
-      return dir.child(name).createOutputStream();
+      return dir.child(name).openOutputStream();
     } else {
       MemoryFile child = new MemoryFile(dir, name);
       dir.addChild(child);
-      return child.createOutputStream();
+      return child.openOutputStream();
     }
   }
 
