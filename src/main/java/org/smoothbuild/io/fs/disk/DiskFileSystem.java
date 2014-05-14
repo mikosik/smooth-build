@@ -70,7 +70,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<Path> filesFrom(Path directory) {
+  public Iterable<Path> filesFromRecursive(Path directory) {
     assertPathIsDir(this, directory);
     return recursiveFilesIterable(this, directory);
   }

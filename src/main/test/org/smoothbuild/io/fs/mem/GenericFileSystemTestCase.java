@@ -107,20 +107,20 @@ public abstract class GenericFileSystemTestCase {
     thenThrown(FileSystemError.class);
   }
 
-  // filesFrom()
+  // filesFromRecursive()
 
   @Test
-  public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
-    when(fileSystem).filesFrom(path("abc"));
+  public void files_from_recursive_throws_exception_when_dir_does_not_exist() throws Exception {
+    when(fileSystem).filesFromRecursive(path("abc"));
     thenThrown(NoSuchDirError.class);
   }
 
   @Test
-  public void files_from_returns_all_files_recursively() throws Exception {
+  public void files_from_recursive_returns_all_files_recursively() throws Exception {
     given(this).createEmptyFile("abc/dir1/file1");
     given(this).createEmptyFile("abc/dir2/file2");
     given(this).createEmptyFile("abc/text.txt");
-    when(fileSystem).filesFrom(path("abc"));
+    when(fileSystem).filesFromRecursive(path("abc"));
     thenReturned(containsInAnyOrder(path("dir1/file1"), path("dir2/file2"), path("text.txt")));
   }
 

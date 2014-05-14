@@ -13,7 +13,7 @@ public interface FileSystem {
 
   public Iterable<Path> childNames(Path directory);
 
-  public Iterable<Path> filesFrom(Path directory);
+  public Iterable<Path> filesFromRecursive(Path directory);
 
   public void delete(Path path);
 

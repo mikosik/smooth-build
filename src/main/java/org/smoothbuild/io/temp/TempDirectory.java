@@ -109,7 +109,7 @@ public class TempDirectory {
 
   private SArray<SFile> readFilesImpl() throws IOException {
     ArrayBuilder<SFile> arrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
-    for (Path path : fileSystem.filesFrom(Path.rootPath())) {
+    for (Path path : fileSystem.filesFromRecursive(Path.rootPath())) {
       SBlob content = readContentImpl(path);
       SFile file = valueFactory.file(path, content);
       arrayBuilder.add(file);

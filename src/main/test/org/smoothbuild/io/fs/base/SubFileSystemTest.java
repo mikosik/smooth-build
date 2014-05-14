@@ -46,8 +46,8 @@ public class SubFileSystemTest {
   @Test
   public void filesFrom() {
     given(pathList = ImmutableList.of(path("some/path")));
-    given(willReturn(pathList), fileSystem).filesFrom(absolutePath);
-    when(subFileSystem).filesFrom(path);
+    given(willReturn(pathList), fileSystem).filesFromRecursive(absolutePath);
+    when(subFileSystem).filesFromRecursive(path);
     thenReturned(sameInstance(pathList));
   }
 

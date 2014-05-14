@@ -47,7 +47,7 @@ public class FilesFunction {
   private static SArray<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem, Path path) {
     ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
     FileReader reader = new FileReader(nativeApi);
-    for (Path filePath : fileSystem.filesFrom(path)) {
+    for (Path filePath : fileSystem.filesFromRecursive(path)) {
       fileArrayBuilder.add(reader.createFile(filePath, path.append(filePath)));
     }
     return fileArrayBuilder.build();
