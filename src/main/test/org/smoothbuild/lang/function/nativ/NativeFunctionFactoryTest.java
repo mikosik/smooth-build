@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
@@ -14,7 +15,9 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
@@ -42,8 +45,10 @@ import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
+import org.testory.common.Matcher;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class NativeFunctionFactoryTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
@@ -51,6 +56,47 @@ public class NativeFunctionFactoryTest {
   private NativeFunction<?> function;
   private Function<SString> stringFunction;
   private TaskWorker<?> worker;
+
+  @Test
+  public void function_is_created_for_each_annotated_java_method() throws Exception {
+    when(NativeFunctionFactory.createNativeFunctions(ClassWithManyFunctions.class));
+    thenReturned(new Matcher() {
+      @Override
+      public boolean matches(Object object) {
+        @SuppressWarnings("unchecked")
+        List<NativeFunction<?>> functions = (List<NativeFunction<?>>) object;
+        List<String> names = Lists.newArrayList();
+        for (NativeFunction<?> function : functions) {
+          names.add(function.name().value());
+        }
+        return Matchers.containsInAnyOrder("aFunction", "bFunction").matches(names);
+      }
+    });
+  }
+
+  public static class ClassWithManyFunctions {
+    @SmoothFunction(name = "aFunction")
+    public static SString aFunc(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+
+    @SmoothFunction(name = "bFunction")
+    public static SString bFunc(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+  }
+
+  @Test
+  public void no_function_is_created_for_not_annotated_java_method() throws Exception {
+    when(createNativeFunctions(ClassWithZeroFunctions.class));
+    thenReturned(Matchers.empty());
+  }
+
+  public static class ClassWithZeroFunctions {
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+  }
 
   @Test
   public void function_name_is_equal_to_declared_via_annotation() throws Exception {
@@ -411,8 +457,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
-    given(function =
-        createNativeFunction(FuncWithThrowingSmoothMethod.class.getMethods()[0]));
+    given(function = createNativeFunction(FuncWithThrowingSmoothMethod.class.getMethods()[0]));
     given(worker = function.createWorker(Empty.stringExprMap(), codeLocation(1)));
     when(worker).execute(TaskInput.fromTaskReturnValues(Empty.taskList()), nativeApi);
     then(nativeApi.loggedMessages().containsProblems());
