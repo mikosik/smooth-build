@@ -109,7 +109,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_native_function_that_returns_its_argument() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(function = createNativeModule(SmoothModule.class, false).getFunction(name("func")));
+    given(function = createNativeModule(SmoothModule.class).getFunction(name("func")));
     given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
     given(callExpr = new CallExpr<>(function, location, ImmutableMap.of("param", stringExpr)));
     given(task = taskGraph.createTasks(callExpr));
@@ -131,7 +131,7 @@ public class ExpressionExecutionTest {
   @Test
   public void execution_fails_when_native_function_throws_runtime_exception() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(function = createNativeModule(SmoothModule2.class, false).getFunction(name("func")));
+    given(function = createNativeModule(SmoothModule2.class).getFunction(name("func")));
     given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
     given(callExpr = new CallExpr<>(function, location, ImmutableMap.of("param", stringExpr)));
     given(task = taskGraph.createTasks(callExpr));

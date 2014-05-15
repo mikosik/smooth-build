@@ -29,6 +29,6 @@ public class IntegrationTestModule extends AbstractModule {
   @Singleton
   @Builtin
   public Module provideBuiltinModule(ModuleBuilder builder) throws NativeImplementationException {
-    return NativeModuleFactory.createNativeModule(BuiltinSmoothModule.class, true);
+    return NativeModuleFactory.createNativeModule(BuiltinSmoothModule.class);
   }
 }

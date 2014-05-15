@@ -109,7 +109,7 @@ public class Convert {
 
   private static NativeFunction<?> function(Method functionMethod) {
     try {
-      return NativeFunctionFactory.createNativeFunction(functionMethod, true);
+      return NativeFunctionFactory.createNativeFunction(functionMethod);
     } catch (NativeImplementationException e) {
       throw new RuntimeException(e);
     }

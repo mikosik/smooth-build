@@ -39,7 +39,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void module_available_names_contains_smooth_function_names() throws Exception {
-    given(module = createNativeModule(ModuleWithOneFunction.class, false));
+    given(module = createNativeModule(ModuleWithOneFunction.class));
     when(module.availableNames());
     thenReturned(contains(name("func")));
   }
@@ -55,12 +55,12 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void two_functions_with_same_name_are_forbidden() throws Exception {
-    createNativeModule(ModuleWithTwoFunctionsWithSameName.class, false);
+    createNativeModule(ModuleWithTwoFunctionsWithSameName.class);
   }
 
   @Test
   public void module_with_more_than_one_function_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithTwoFunctions.class, false));
+    given(module = createNativeModule(ModuleWithTwoFunctions.class));
     when(module.availableNames());
     thenReturned(contains(name("func1"), name("func2")));
   }
@@ -95,7 +95,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_type_equals_java_function_type() throws Exception {
-    given(module = createNativeModule(ModuleWithSStringFunction.class, false));
+    given(module = createNativeModule(ModuleWithSStringFunction.class));
     when(module.getFunction(name("func")).type());
     thenReturned(STRING);
   }
@@ -111,7 +111,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_signature_contains_all_params() throws Exception {
-    given(module = createNativeModule(ModuleWithTwoParamFunction.class, false));
+    given(module = createNativeModule(ModuleWithTwoParamFunction.class));
     when(module.getFunction(name("func")).params());
     thenReturned(Params.map(param(STRING, "param1"), param(STRING, "param2")));
   }
@@ -131,7 +131,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void allowed_param_types_are_accepted() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionWithParametersOfAllTypes.class, false));
+    given(module = createNativeModule(ModuleWithFunctionWithParametersOfAllTypes.class));
     when(module.getFunction(name("func")));
     thenReturned();
   }
@@ -159,7 +159,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void params_annotated_as_required_are_required() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionWithRequiredParam.class, false));
+    given(module = createNativeModule(ModuleWithFunctionWithRequiredParam.class));
     given(function = module.getFunction(name("func")));
     when(function.params().get("param").isRequired());
     thenReturned(true);
@@ -179,7 +179,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void params_not_annotated_as_required_are_not_required() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionWithNotRequiredParam.class, false));
+    given(module = createNativeModule(ModuleWithFunctionWithNotRequiredParam.class));
     given(function = module.getFunction(name("func")));
     when(function.params().get("param").isRequired());
     thenReturned(false);
@@ -198,7 +198,7 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = ForbiddenParamTypeException.class)
   public void array_of_array_is_forbidden_as_param_type() throws Exception {
-    module = createNativeModule(ModuleWithFunctionWithArrayOfArraysParameter.class, false);
+    module = createNativeModule(ModuleWithFunctionWithArrayOfArraysParameter.class);
   }
 
   public static class ModuleWithFunctionWithArrayOfArraysParameter {
@@ -214,7 +214,7 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = ForbiddenParamTypeException.class)
   public void non_smooth_type_is_forbidden_as_param_type() throws Exception {
-    module = createNativeModule(ModuleWithFunctionWithNonSmoothParameter.class, false);
+    module = createNativeModule(ModuleWithFunctionWithNonSmoothParameter.class);
   }
 
   public static class ModuleWithFunctionWithNonSmoothParameter {
@@ -230,7 +230,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_without_parameters_is_allowed() throws Exception {
-    when(createNativeModule(ModuleWithFunctionWithNoParameter.class, false));
+    when(createNativeModule(ModuleWithFunctionWithNoParameter.class));
     thenReturned();
   }
 
@@ -245,7 +245,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_with_string_result_type_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionReturningString.class, false));
+    given(module = createNativeModule(ModuleWithFunctionReturningString.class));
     given(function = module.getFunction(name("func")));
     when(function).type();
     thenReturned(STRING);
@@ -262,7 +262,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_with_blob_result_type_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionReturningBlob.class, false));
+    given(module = createNativeModule(ModuleWithFunctionReturningBlob.class));
     given(function = module.getFunction(name("func")));
     when(function).type();
     thenReturned(BLOB);
@@ -279,7 +279,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_with_file_result_type_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionReturningFile.class, false));
+    given(module = createNativeModule(ModuleWithFunctionReturningFile.class));
     given(function = module.getFunction(name("func")));
     when(function).type();
     thenReturned(FILE);
@@ -296,7 +296,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_with_string_aray_result_type_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionReturningStringArray.class, false));
+    given(module = createNativeModule(ModuleWithFunctionReturningStringArray.class));
     given(function = module.getFunction(name("func")));
     when(function).type();
     thenReturned(STRING_ARRAY);
@@ -313,7 +313,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_with_blob_aray_result_type_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionReturningBlobArray.class, false));
+    given(module = createNativeModule(ModuleWithFunctionReturningBlobArray.class));
     given(function = module.getFunction(name("func")));
     when(function).type();
     thenReturned(BLOB_ARRAY);
@@ -330,7 +330,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void function_with_file_aray_result_type_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithFunctionReturningFileArray.class, false));
+    given(module = createNativeModule(ModuleWithFunctionReturningFileArray.class));
     given(function = module.getFunction(name("func")));
     when(function).type();
     thenReturned(FILE_ARRAY);
@@ -347,7 +347,7 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = IllegalReturnTypeException.class)
   public void array_of_arrays_is_not_allowed_for_return_type() throws Exception {
-    createNativeModule(ModuleWithFunctionReturningArrayOfArrays.class, false);
+    createNativeModule(ModuleWithFunctionReturningArrayOfArrays.class);
   }
 
   public static class ModuleWithFunctionReturningArrayOfArrays {
@@ -361,7 +361,7 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = IllegalReturnTypeException.class)
   public void non_smooth_type_is_not_allowed_for_return_type() throws Exception {
-    createNativeModule(ModuleWithFunctionReturningNonSmoothType.class, false);
+    createNativeModule(ModuleWithFunctionReturningNonSmoothType.class);
   }
 
   public static class ModuleWithFunctionReturningNonSmoothType {
@@ -375,7 +375,7 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = IllegalFunctionNameException.class)
   public void function_with_illegal_smooth_names_are_not_allowed() throws Exception {
-    createNativeModule(ModuleWithFunctionWithIllegalName.class, false);
+    createNativeModule(ModuleWithFunctionWithIllegalName.class);
   }
 
   public static class ModuleWithFunctionWithIllegalName {
@@ -389,7 +389,7 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = NonPublicSmoothFunctionException.class)
   public void non_public_functions_are_forbidden() throws Exception {
-    createNativeModule(ModuleWithNonPublicFunction.class, false);
+    createNativeModule(ModuleWithNonPublicFunction.class);
   }
 
   public static class ModuleWithNonPublicFunction {
@@ -403,7 +403,7 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = NonStaticSmoothFunctionException.class)
   public void non_static_function_is_forbidden() throws Exception {
-    createNativeModule(ModuleWithNonStaticFunction.class, false);
+    createNativeModule(ModuleWithNonStaticFunction.class);
   }
 
   public static class ModuleWithNonStaticFunction {
@@ -417,7 +417,7 @@ public class NativeModuleFactoryTest {
 
   @Test(expected = ParamMethodHasArgumentsException.class)
   public void method_in_params_interface_cannot_have_parameters() throws Exception {
-    createNativeModule(ModuleWithFunctionWhithParamsInterfaceWithMethodWithParams.class, false);
+    createNativeModule(ModuleWithFunctionWhithParamsInterfaceWithMethodWithParams.class);
   }
 
   public static class ModuleWithFunctionWhithParamsInterfaceWithMethodWithParams {
@@ -433,7 +433,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void module_with_zero_functions_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithNoFunctions.class, false));
+    given(module = createNativeModule(ModuleWithNoFunctions.class));
     when(module).availableNames();
     thenReturned(Matchers.emptyIterable());
   }

@@ -18,7 +18,7 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class NativeFunctionFactory {
 
-  public static NativeFunction<?> createNativeFunction(Method method, boolean builtin)
+  public static NativeFunction<?> createNativeFunction(Method method)
       throws NativeImplementationException, MissingNameException {
     if (!isPublic(method)) {
       throw new NonPublicSmoothFunctionException(method);
@@ -31,7 +31,7 @@ public class NativeFunctionFactory {
       throw new WrongParamsInSmoothFunctionException(method);
     }
     Class<?> first = paramTypes[0];
-    if (!(first.equals(NativeApi.class) || (builtin && first.equals(NativeApiImpl.class)))) {
+    if (!(first.equals(NativeApi.class) || first.equals(NativeApiImpl.class))) {
       throw new WrongParamsInSmoothFunctionException(method);
     }
 
