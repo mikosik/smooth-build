@@ -7,11 +7,9 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.plugin.SmoothFunction;
 
 public class ConcatenateFilesFunction {
 
-  @SmoothFunction(name = "concatenateFiles")
   public static SArray<SFile> execute(NativeApi nativeApi,
       BuiltinSmoothModule.ConcatenateFilesParameters params) {
     ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);

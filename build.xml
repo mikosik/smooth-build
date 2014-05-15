@@ -351,7 +351,9 @@
             in dependent jars are not copied
             -->
             <!-- TODO can be removed once jarjar function becomes separate plugin -->
-            <zipfileset excludes="* META-INF/**" src="${lib.jarjar}"/>
+        	<!-- some classes have to be removed as they reference Ant classes and
+        	     cause NoClassDefFoundError when smooth searches jar for functions -->
+            <zipfileset excludes="* META-INF/** com/tonicsystems/jarjar/JarJarTask.class com/tonicsystems/jarjar/ext_util/AntJarProcessor.class" src="${lib.jarjar}"/>
             <!-- TODO can be removed once junit function becomes separate plugin -->
             <zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
             <zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>

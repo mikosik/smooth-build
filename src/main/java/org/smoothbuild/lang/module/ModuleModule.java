@@ -2,7 +2,6 @@ package org.smoothbuild.lang.module;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
-import static org.smoothbuild.util.ClassLoaders.loadClassFromJar;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,16 +23,8 @@ public class ModuleModule extends AbstractModule {
   @Singleton
   @Builtin
   public Module provideBuiltinModule() throws NativeImplementationException {
-    return NativeModuleFactory.createNativeModule(builtinModuleClass());
-  }
-
-  private Class<?> builtinModuleClass() {
     Path funcsJarPath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, "funcs.jar");
-    try {
-      return loadClassFromJar(funcsJarPath, "org.smoothbuild.builtin.BuiltinSmoothModule");
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
+    return NativeModuleFactory.createNativeModule(funcsJarPath.toFile());
   }
 
   private static String smoothHomeDir() {

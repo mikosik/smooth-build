@@ -7,17 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ClassLoaders {
-  public static Class<?> loadClassFromJar(Path jarPath, String className)
-      throws ClassNotFoundException {
-    return jarClassLoader(jarPath).loadClass(className);
-  }
-
-  private static URLClassLoader jarClassLoader(Path jarPath) {
+  public static URLClassLoader jarClassLoader(ClassLoader parent, Path jarPath) {
     if (!Files.exists(jarPath)) {
       throw new RuntimeException("Cannot find '" + jarPath + "' file");
     }
 
-    return new URLClassLoader(new URL[] { toUrl(jarPath) });
+    return new URLClassLoader(new URL[] { toUrl(jarPath) }, parent);
   }
 
   private static URL toUrl(Path funcsJarPath) {
