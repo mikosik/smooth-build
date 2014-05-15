@@ -16,10 +16,23 @@ import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+
 public class NativeFunctionFactory {
+  public static ImmutableList<NativeFunction<?>> createNativeFunctions(Class<?> clazz)
+      throws NativeImplementationException {
+    Builder<NativeFunction<?>> builder = ImmutableList.builder();
+    for (Method method : clazz.getDeclaredMethods()) {
+      if (method.isAnnotationPresent(SmoothFunction.class)) {
+        builder.add(createNativeFunction(method));
+      }
+    }
+    return builder.build();
+  }
 
   public static NativeFunction<?> createNativeFunction(Method method)
-      throws NativeImplementationException, MissingNameException {
+      throws NativeImplementationException {
     if (!isPublic(method)) {
       throw new NonPublicSmoothFunctionException(method);
     }
