@@ -37,4 +37,23 @@ public class Signature<T extends SValue> {
   public ImmutableMap<String, Param> params() {
     return params;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append(type.name() + " " + name.value() + "(");
+    int count = 0;
+    for (Param param : params.values()) {
+      if (count != 0) {
+        builder.append(", ");
+      }
+      count++;
+      builder.append(param.type().name());
+      builder.append(" ");
+      builder.append(param.name());
+    }
+
+    builder.append(")");
+    return builder.toString();
+  }
 }

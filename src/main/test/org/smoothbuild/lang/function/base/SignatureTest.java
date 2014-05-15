@@ -1,9 +1,14 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.lang.base.STypes.BLOB;
+import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
@@ -12,9 +17,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class SignatureTest {
-  SType<?> type = STRING;
-  Name name = name("name");
-  ImmutableList<Param> params = ImmutableList.of();
+  private final SType<?> type = STRING;
+  private final Name name = name("name");
+  private final ImmutableList<Param> params = ImmutableList.of();
+  private Param param;
+  private Param param2;
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() {
@@ -53,5 +60,14 @@ public class SignatureTest {
     ImmutableMap<String, Param> map = signature.params();
     assertThat(map.values()).containsExactly(param1, param2, param3, param4, param5, param6);
     assertThat(map.keySet()).containsExactly(name1, name2, name3, name4, name5, name6);
+  }
+
+  @Test
+  public void test_to_string() throws Exception {
+    given(param = param(BLOB, "blob"));
+    given(param2 = param(FILE, "file"));
+    when(new Signature<>(STRING, name, ImmutableList.of(param, param2))).toString();
+    thenReturned(STRING.name() + " " + name.value() + "(" + param.type().name() + " "
+        + param.name() + ", " + param2.type().name() + " " + param2.name() + ")");
   }
 }
