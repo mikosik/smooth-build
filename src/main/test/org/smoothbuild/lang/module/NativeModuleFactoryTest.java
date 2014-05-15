@@ -29,7 +29,6 @@ import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
-import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 
@@ -53,11 +52,6 @@ public class NativeModuleFactoryTest {
     }
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void two_functions_with_same_name_are_forbidden() throws Exception {
-    createNativeModule(ModuleWithTwoFunctionsWithSameName.class);
-  }
-
   @Test
   public void module_with_more_than_one_function_is_allowed() throws Exception {
     given(module = createNativeModule(ModuleWithTwoFunctions.class));
@@ -77,6 +71,11 @@ public class NativeModuleFactoryTest {
     public static SString execute2(NativeApi nativeApi, Parameters params) {
       return null;
     }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void two_functions_with_same_name_are_forbidden() throws Exception {
+    createNativeModule(ModuleWithTwoFunctionsWithSameName.class);
   }
 
   public static class ModuleWithTwoFunctionsWithSameName {
