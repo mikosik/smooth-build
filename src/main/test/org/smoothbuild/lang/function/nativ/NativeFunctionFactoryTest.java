@@ -1,12 +1,19 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.smoothbuild.lang.base.STypes.BLOB;
 import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.testory.Testory.given;
+import static org.testory.Testory.then;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
+
+import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.NativeApi;
@@ -14,9 +21,8 @@ import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.expr.ConstantExpr;
+import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Params;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
@@ -29,77 +35,142 @@ import org.smoothbuild.lang.function.nativ.err.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.message.base.Messages;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.work.TaskWorker;
-import org.smoothbuild.task.work.err.UnexpectedError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
+import org.testory.Closure;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class NativeFunctionFactoryTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private final FakeNativeApi nativeApi = new FakeNativeApi();
-
-  // signature
-
-  @Test
-  public void testSignature() throws Exception {
-    Function<?> function = createNativeFunction(Func.class.getMethods()[0], false);
-
-    assertThat(function.name()).isEqualTo(name("myFunction"));
-    Signature<?> signature = function.signature();
-    assertThat(signature.name()).isEqualTo(name("myFunction"));
-    assertThat(signature.type()).isEqualTo(STRING);
-
-    Param paramA = param(STRING, "stringA");
-    Param paramB = param(STRING, "stringB");
-
-    assertThat(signature.params()).isEqualTo(Params.map(paramA, paramB));
-  }
-
-  // invokation
+  private NativeFunction<?> function;
+  private Function<SString> stringFunction;
+  private TaskWorker<?> worker;
 
   @Test
-  public void testInvokation() throws Exception {
-    @SuppressWarnings("unchecked")
-    Function<SString> function =
-        (Function<SString>) createNativeFunction(Func.class.getMethods()[0], false);
-    SString string1 = objectsDb.string("abc");
-    SString string2 = objectsDb.string("def");
-    ConstantExpr<?> arg1 = new ConstantExpr<>(STRING, string1, codeLocation(1));
-    ConstantExpr<?> arg2 = new ConstantExpr<>(STRING, string2, codeLocation(1));
-
-    ImmutableMap<String, ConstantExpr<?>> args = ImmutableMap.of("stringA", arg1, "stringB", arg2);
-    TaskWorker<SString> worker = function.createWorker(args, codeLocation(1));
-    TaskInput input = TaskInput.fromValues(ImmutableList.of(string1, string2));
-    TaskOutput<SString> output = worker.execute(input, nativeApi);
-    assertThat(Messages.containsProblems(output.messages())).isFalse();
-    assertThat(output.returnValue().value()).isEqualTo("abcdef");
+  public void function_name_is_equal_to_declared_via_annotation() throws Exception {
+    given(function = createNativeFunction(NamedFunc.class.getMethods()[0], false));
+    when(function).name();
+    thenReturned(name("myFunction"));
   }
 
-  public interface Parameters {
-    public SString stringA();
-
-    public SString stringB();
-  }
-
-  public static class Func {
+  public static class NamedFunc {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
-      return new FakeObjectsDb().string(params.stringA().value() + params.stringB().value());
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+      return null;
     }
   }
 
-  // allowed_param_types_are_accepted
+  @Test
+  public void function_return_type_is_equal_to_java_method_return_type() throws Exception {
+    given(function = createNativeFunction(FunctionReturningSString.class.getMethods()[0], false));
+    when(function).type();
+    thenReturned(STRING);
+  }
+
+  public static class FunctionReturningSString {
+    @SmoothFunction(name = "myFunction")
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+  }
 
   @Test
-  public void allowed_param_types_are_accepted() throws Exception {
-    createNativeFunction(FuncWithAllowedParamTypes.class.getMethods()[0], false);
+  public void function_params_are_equal_to_params_of_java_method() throws Exception {
+    given(function = createNativeFunction(FunctionWithDifferentParams.class.getMethods()[0], false));
+    when(function).params();
+    thenReturned(Params.map(param(STRING, "string"), param(STRING_ARRAY, "array")));
+  }
+
+  public interface DifferentParams {
+    public SString string();
+
+    public SArray<SString> array();
+  }
+
+  public static class FunctionWithDifferentParams {
+    @SmoothFunction(name = "myFunction")
+    public static SString execute(NativeApi nativeApi, DifferentParams params) {
+      return null;
+    }
+  }
+
+  @Test
+  public void function_is_cacheable_when_cacheable_is_missing_from_java_method_annotation()
+      throws Exception {
+    given(function = createNativeFunction(NonCacheableFunction.class.getMethods()[0], false));
+    when(function).isCacheable();
+    thenReturned(true);
+  }
+
+  public static class NonCacheableFunction {
+    @SmoothFunction(name = "myFunction")
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+  }
+
+  @Test
+  public void function_is_not_cacheable_when_java_method_annotation_is_annotated_as_not_cacheable()
+      throws Exception {
+    given(function = createNativeFunction(CacheableFunction.class.getMethods()[0], false));
+    when(function).isCacheable();
+    thenReturned(false);
+  }
+
+  public static class CacheableFunction {
+    @SmoothFunction(name = "myFunction", cacheable = false)
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+  }
+
+  @Test
+  public void function_signature_is_determined_by_java_method() throws Exception {
+    given(function = createNativeFunction(SignatureTestFunction.class.getMethods()[0], false));
+    when(function.signature().toString());
+    thenReturned(new Signature<>(BLOB, name("func"), ImmutableList.of(param(STRING, "string")))
+        .toString());
+  }
+
+  public interface SignatureTestParameters {
+    public SString string();
+  }
+
+  public static class SignatureTestFunction {
+    @SmoothFunction(name = "func")
+    public static SBlob execute(NativeApi nativeApi, SignatureTestParameters params) {
+      return null;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testInvokation() throws Exception {
+    given(stringFunction =
+        (Function<SString>) createNativeFunction(ConstantStringFunction.class.getMethods()[0],
+            false));
+    given(worker = stringFunction.createWorker(Empty.stringExprMap(), codeLocation(1)));
+    when(worker).execute(TaskInput.fromValues(ImmutableList.<SValue> of()), nativeApi);
+    thenReturned(new TaskOutput<>(objectsDb.string("constant string")));
+  }
+
+  public static class ConstantStringFunction {
+    @SmoothFunction(name = "constantStringFunction")
+    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+      return new FakeObjectsDb().string("constant string");
+    }
+  }
+
+  @Test
+  public void all_allowed_param_types_are_accepted() throws Exception {
+    when(createNativeFunction(FuncWithAllowedParamTypes.class.getMethods()[0], false));
+    thenReturned();
   }
 
   public interface AllowedParameters {
@@ -119,39 +190,51 @@ public class NativeFunctionFactoryTest {
   public static class FuncWithAllowedParamTypes {
     @SmoothFunction(name = "myFunction")
     public static SString execute(NativeApi nativeApi, AllowedParameters params) {
-      return new FakeObjectsDb().string("string");
-    }
-  }
-
-  // params_annotated_as_required_are_required
-
-  @Test
-  public void params_annotated_as_required_are_required() throws Exception {
-    Function<?> f = createNativeFunction(FuncWithAnnotatedParams.class.getMethods()[0], false);
-    ImmutableMap<String, Param> params = f.params();
-    assertThat(params.get("string1").isRequired()).isTrue();
-    assertThat(params.get("string2").isRequired()).isFalse();
-  }
-
-  public interface AnnotatedParameters {
-    @Required
-    public SString string1();
-
-    public SString string2();
-  }
-
-  public static class FuncWithAnnotatedParams {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, AnnotatedParameters params) {
       return null;
     }
   }
 
-  // array_of_array_is_forbidden_as_param_type
+  @Test
+  public void param_annotated_as_required_is_required() throws Exception {
+    given(function = createNativeFunction(FuncWithRequiredParam.class.getMethods()[0], false));
+    when(function.params().get("param").isRequired());
+    thenReturned(true);
+  }
+
+  public interface RequiredParam {
+    @Required
+    public SString param();
+  }
+
+  public static class FuncWithRequiredParam {
+    @SmoothFunction(name = "myFunction")
+    public static SString execute(NativeApi nativeApi, RequiredParam params) {
+      return null;
+    }
+  }
+
+  @Test
+  public void param_not_annotated_as_required_is_not_required() throws Exception {
+    given(function = createNativeFunction(FuncWithNotRequiredParam.class.getMethods()[0], false));
+    when(function.params().get("param").isRequired());
+    thenReturned(false);
+  }
+
+  public interface NotRequiredParam {
+    public SString param();
+  }
+
+  public static class FuncWithNotRequiredParam {
+    @SmoothFunction(name = "myFunction")
+    public static SString execute(NativeApi nativeApi, NotRequiredParam params) {
+      return null;
+    }
+  }
 
   @Test
   public void array_of_array_is_forbidden_as_param_type() throws Exception {
-    assertExceptionThrown(FuncWithArrayOfArrayParamType.class, ForbiddenParamTypeException.class);
+    when($createNativeFunction(FuncWithArrayOfArrayParamType.class.getDeclaredMethods()[0], false));
+    thenThrown(ForbiddenParamTypeException.class);
   }
 
   public interface ArrayOfArrayParams {
@@ -165,11 +248,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // non_smooth_types_are_forbidden_as_param_types
-
   @Test
   public void non_smooth_types_are_forbidden_as_param_types() throws Exception {
-    assertExceptionThrown(FuncWithForbiddenParamType.class, ForbiddenParamTypeException.class);
+    when($createNativeFunction(FuncWithForbiddenParamType.class.getDeclaredMethods()[0], false));
+    thenThrown(ForbiddenParamTypeException.class);
   }
 
   public interface ForbiddenParams {
@@ -183,12 +265,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // empty_parameters_are_accepted
-
   @Test
   public void empty_parameters_are_accepted() throws Exception {
-    NativeFunctionFactory
-        .createNativeFunction(FuncWithEmptyParameters.class.getMethods()[0], false);
+    when($createNativeFunction(FuncWithEmptyParameters.class.getMethods()[0], false));
+    thenReturned();
   }
 
   public interface EmptyParameters {}
@@ -200,11 +280,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // string_result_type_is_accepted
-
   @Test
   public void string_result_type_is_accepted() throws Exception {
-    createNativeFunction(FuncWithStringResult.class.getMethods()[0], false);
+    when($createNativeFunction(FuncWithStringResult.class.getMethods()[0], false));
+    thenReturned();
   }
 
   public static class FuncWithStringResult {
@@ -214,11 +293,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // blob_result_type_is_accepted
-
   @Test
   public void blob_result_type_is_accepted() throws Exception {
-    createNativeFunction(FuncWithBlobResult.class.getMethods()[0], false);
+    when($createNativeFunction(FuncWithBlobResult.class.getMethods()[0], false));
+    thenReturned();
   }
 
   public static class FuncWithBlobResult {
@@ -228,11 +306,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // file_result_type_is_accepted
-
   @Test
   public void file_result_type_is_accepted() throws Exception {
-    createNativeFunction(FuncWithFileResult.class.getMethods()[0], false);
+    when($createNativeFunction(FuncWithFileResult.class.getMethods()[0], false));
+    thenReturned();
   }
 
   public static class FuncWithFileResult {
@@ -242,11 +319,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // string_array_result_type_is_accepted
-
   @Test
   public void string_array_result_type_is_accepted() throws Exception {
-    createNativeFunction(FuncWithStringArrayResult.class.getMethods()[0], false);
+    when($createNativeFunction(FuncWithStringArrayResult.class.getMethods()[0], false));
+    thenReturned();
   }
 
   public static class FuncWithStringArrayResult {
@@ -256,12 +332,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // blob_array_result_type_is_accepted
-
   @Test
   public void blob_array_result_type_is_accepted() throws Exception {
-    NativeFunctionFactory
-        .createNativeFunction(FuncWithBlobArrayResult.class.getMethods()[0], false);
+    when($createNativeFunction(FuncWithBlobArrayResult.class.getMethods()[0], false));
+    thenReturned();
   }
 
   public static class FuncWithBlobArrayResult {
@@ -271,12 +345,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // file_array_result_type_is_accepted
-
   @Test
   public void file_array_result_type_is_accepted() throws Exception {
-    NativeFunctionFactory
-        .createNativeFunction(FuncWithFileArrayResult.class.getMethods()[0], false);
+    when($createNativeFunction(FuncWithFileArrayResult.class.getMethods()[0], false));
+    thenReturned();
   }
 
   public static class FuncWithFileArrayResult {
@@ -286,11 +358,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // non_smooth_type_is_not_allowed_as_return_type
-
   @Test
   public void non_smooth_type_is_not_allowed_as_return_type() throws Exception {
-    assertExceptionThrown(FuncWithIllegalReturnType.class, IllegalReturnTypeException.class);
+    when($createNativeFunction(FuncWithIllegalReturnType.class.getDeclaredMethods()[0], false));
+    thenThrown(IllegalReturnTypeException.class);
   }
 
   public static class FuncWithIllegalReturnType {
@@ -300,11 +371,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // array_of_array_result_type_is_not_allowed
-
   @Test
   public void array_of_array_result_type_is_not_allowed() throws Exception {
-    assertExceptionThrown(FuncWithArrayOfArrayReturnType.class, IllegalReturnTypeException.class);
+    when($createNativeFunction(FuncWithArrayOfArrayReturnType.class.getDeclaredMethods()[0], false));
+    thenThrown(IllegalReturnTypeException.class);
   }
 
   public static class FuncWithArrayOfArrayReturnType {
@@ -314,12 +384,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // non_interface_is_not_allowed_as_params_interface
-
   @Test
   public void non_interface_is_not_allowed_as_params_interface() throws Exception {
-    assertExceptionThrown(FuncWithParamThatIsNotInterface.class,
-        ParamsIsNotInterfaceException.class);
+    when($createNativeFunction(FuncWithParamThatIsNotInterface.class.getDeclaredMethods()[0], false));
+    thenThrown(ParamsIsNotInterfaceException.class);
   }
 
   public static class FuncWithParamThatIsNotInterface {
@@ -329,11 +397,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // illegal_smooth_function_names_are_not_allowed
-
   @Test
   public void illegal_smooth_function_names_are_not_allowed() throws Exception {
-    assertExceptionThrown(FuncWithIllegalFunctionName.class, IllegalFunctionNameException.class);
+    when($createNativeFunction(FuncWithIllegalFunctionName.class.getDeclaredMethods()[0], false));
+    thenThrown(IllegalFunctionNameException.class);
   }
 
   public static class FuncWithIllegalFunctionName {
@@ -343,15 +410,13 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // runtime_exception_thrown_from_native_function_is_logged
-
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
-    Function<?> function =
-        createNativeFunction(FuncWithThrowingSmoothMethod.class.getMethods()[0], false);
-    TaskInput input = TaskInput.fromTaskReturnValues(Empty.taskList());
-    function.createWorker(Empty.stringExprMap(), codeLocation(1)).execute(input, nativeApi);
-    nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
+    given(function =
+        createNativeFunction(FuncWithThrowingSmoothMethod.class.getMethods()[0], false));
+    given(worker = function.createWorker(Empty.stringExprMap(), codeLocation(1)));
+    when(worker).execute(TaskInput.fromTaskReturnValues(Empty.taskList()), nativeApi);
+    then(nativeApi.loggedMessages().containsProblems());
   }
 
   public static class FuncWithThrowingSmoothMethod {
@@ -361,13 +426,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  public static class FuncWithZeroSmoothMethods {}
-
-  // non_public_smooth_method_is_not_allowed
-
   @Test
   public void non_public_smooth_method_is_not_allowed() throws Exception {
-    assertExceptionThrown(FuncWithPrivateSmoothMethod.class, NonPublicSmoothFunctionException.class);
+    when($createNativeFunction(FuncWithPrivateSmoothMethod.class.getDeclaredMethods()[0], false));
+    thenThrown(NonPublicSmoothFunctionException.class);
   }
 
   public static class FuncWithPrivateSmoothMethod {
@@ -375,12 +437,11 @@ public class NativeFunctionFactoryTest {
     private static void execute(NativeApi nativeApi, EmptyParameters params) {}
   }
 
-  // method_in_params_interface_cannot_have_parameters
-
   @Test
   public void method_in_params_interface_cannot_have_parameters() throws Exception {
-    assertExceptionThrown(FuncWithParamMethodThatHasParameters.class,
-        ParamMethodHasArgumentsException.class);
+    when($createNativeFunction(FuncWithParamMethodThatHasParameters.class.getDeclaredMethods()[0],
+        false));
+    thenThrown(ParamMethodHasArgumentsException.class);
   }
 
   public interface ParametersWithMethodWithParameters {
@@ -394,12 +455,10 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  // native_smooth_method_cannot_be_static
-
   @Test
   public void native_smooth_method_cannot_be_static() throws Exception {
-    assertExceptionThrown(FuncWithNonStaticSmoothMethod.class,
-        NonStaticSmoothFunctionException.class);
+    when($createNativeFunction(FuncWithNonStaticSmoothMethod.class.getDeclaredMethods()[0], false));
+    thenThrown(NonStaticSmoothFunctionException.class);
   }
 
   public static class FuncWithNonStaticSmoothMethod {
@@ -407,12 +466,11 @@ public class NativeFunctionFactoryTest {
     public void execute(NativeApi nativeApi, EmptyParameters params) {}
   }
 
-  // native_smooth_method_cannot_have_zero_parameters
-
   @Test
   public void native_smooth_method_cannot_have_zero_parameters() throws Exception {
-    assertExceptionThrown(FuncWithSmoothMethodWithZeroParams.class,
-        WrongParamsInSmoothFunctionException.class);
+    when($createNativeFunction(FuncWithSmoothMethodWithZeroParams.class.getDeclaredMethods()[0],
+        false));
+    thenThrown(WrongParamsInSmoothFunctionException.class);
   }
 
   public static class FuncWithSmoothMethodWithZeroParams {
@@ -420,12 +478,11 @@ public class NativeFunctionFactoryTest {
     public static void execute() {}
   }
 
-  // native_smooth_method_cannot_have_one_parameter
-
   @Test
   public void native_smooth_method_cannot_have_one_parameter() throws Exception {
-    assertExceptionThrown(FuncWithSmoothMethodWithOneParam.class,
-        WrongParamsInSmoothFunctionException.class);
+    when($createNativeFunction(FuncWithSmoothMethodWithOneParam.class.getDeclaredMethods()[0],
+        false));
+    thenThrown(WrongParamsInSmoothFunctionException.class);
   }
 
   public static class FuncWithSmoothMethodWithOneParam {
@@ -433,25 +490,23 @@ public class NativeFunctionFactoryTest {
     public static void execute() {}
   }
 
-  // wrong_first_parameter_in_native_smooth_function
-
   @Test
   public void wrong_first_parameter_in_native_smooth_function() throws Exception {
-    assertExceptionThrown(FuncWithSmoothMethodWithWrongFirstParam.class,
-        WrongParamsInSmoothFunctionException.class);
+    when($createNativeFunction(
+        FuncWithSmoothMethodWithWrongFirstParam.class.getDeclaredMethods()[0], false));
+    thenThrown(WrongParamsInSmoothFunctionException.class);
   }
 
   public static class FuncWithSmoothMethodWithWrongFirstParam {
     @SmoothFunction(name = "myFunction")
-    public static void execute(Parameters wrong, Parameters params) {}
+    public static void execute(EmptyParameters wrong, EmptyParameters params) {}
   }
-
-  // wrong_second_parameter_in_native_smooth_function
 
   @Test
   public void wrong_second_parameter_in_native_smooth_function() throws Exception {
-    assertExceptionThrown(FuncWithSmoothMethodWithWrongSecondParam.class,
-        ParamsIsNotInterfaceException.class);
+    when($createNativeFunction(
+        FuncWithSmoothMethodWithWrongSecondParam.class.getDeclaredMethods()[0], false));
+    thenThrown(ParamsIsNotInterfaceException.class);
   }
 
   public static class FuncWithSmoothMethodWithWrongSecondParam {
@@ -463,13 +518,12 @@ public class NativeFunctionFactoryTest {
 
   // helpers
 
-  private void assertExceptionThrown(Class<?> klass, Class<?> exception) {
-    try {
-      createNativeFunction(klass.getDeclaredMethods()[0], false);
-      fail("exception should be thrown");
-    } catch (Throwable e) {
-      // expected
-      assertThat(e).isInstanceOf(exception);
-    }
+  private static Closure $createNativeFunction(final Method method, final boolean builtin) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return NativeFunctionFactory.createNativeFunction(method, builtin);
+      }
+    };
   }
 }
