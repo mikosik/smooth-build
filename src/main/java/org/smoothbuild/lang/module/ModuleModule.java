@@ -24,7 +24,7 @@ public class ModuleModule extends AbstractModule {
   @Singleton
   @Builtin
   public Module provideBuiltinModule() throws NativeImplementationException {
-    return NativeModuleFactory.createNativeModule(builtinModuleClass(), true);
+    return NativeModuleFactory.createNativeModule(builtinModuleClass());
   }
 
   private Class<?> builtinModuleClass() {
