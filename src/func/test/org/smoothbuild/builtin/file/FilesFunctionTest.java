@@ -6,7 +6,7 @@ import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.BuiltinSmoothModule;
+import org.smoothbuild.builtin.file.FilesFunction.FilesParameters;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
@@ -102,8 +102,8 @@ public class FilesFunctionTest {
     assertThat(fileArray).containsExactly(expectedFile);
   }
 
-  private BuiltinSmoothModule.FilesParameters params(final String dir) {
-    return new BuiltinSmoothModule.FilesParameters() {
+  private FilesParameters params(final String dir) {
+    return new FilesParameters() {
       @Override
       public SString dir() {
         return objectsDb.string(dir);
@@ -111,7 +111,7 @@ public class FilesFunctionTest {
     };
   }
 
-  private SArray<SFile> runExecute(BuiltinSmoothModule.FilesParameters params) {
+  private SArray<SFile> runExecute(FilesParameters params) {
     return FilesFunction.execute(nativeApi, params);
   }
 }

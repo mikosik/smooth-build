@@ -55,10 +55,12 @@ public class NativeModuleFactory {
     return new JarInputStream(new BufferedInputStream(new FileInputStream(jar)));
   }
 
-  public static Module createNativeModule(Class<?> clazz) throws NativeImplementationException {
+  public static Module createNativeModule(Class<?>... classes) throws NativeImplementationException {
     ModuleBuilder builder = new ModuleBuilder();
-    for (NativeFunction<?> function : createNativeFunctions(clazz)) {
-      builder.addFunction(function);
+    for (Class<?> clazz : classes) {
+      for (NativeFunction<?> function : createNativeFunctions(clazz)) {
+        builder.addFunction(function);
+      }
     }
     return builder.build();
   }

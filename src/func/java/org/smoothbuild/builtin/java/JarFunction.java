@@ -7,31 +7,40 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.CannotAddDuplicatePathError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
+import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.plugin.Required;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
+  public interface JarParameters {
+    @Required
+    public SArray<SFile> files();
 
-  public static SBlob execute(NativeApi nativeApi, BuiltinSmoothModule.JarParameters params) {
+    public SBlob manifest();
+  }
+
+  @SmoothFunction(name = "jar")
+  public static SBlob execute(NativeApi nativeApi, JarParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
   private static class Worker {
     private final NativeApi nativeApi;
-    private final BuiltinSmoothModule.JarParameters params;
+    private final JarParameters params;
 
     private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
     private final DuplicatesDetector<Path> duplicatesDetector;
 
-    public Worker(NativeApi nativeApi, BuiltinSmoothModule.JarParameters params) {
+    public Worker(NativeApi nativeApi, JarParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
       this.duplicatesDetector = new DuplicatesDetector<Path>();

@@ -6,17 +6,28 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import java.io.File;
 import java.io.IOException;
 
-import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.plugin.Required;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 
 import com.tonicsystems.jarjar.Main;
 
 public class JarjarFunction {
-  public static SBlob execute(NativeApi nativeApi, BuiltinSmoothModule.JarjarParameters params) {
+  public interface JarjarParameters {
+    @Required
+    public SString rules();
+
+    @Required
+    public SBlob in();
+  }
+
+  @SmoothFunction(name = "jarjar")
+  public static SBlob execute(NativeApi nativeApi, JarjarParameters params) {
     TempDirectory tempDir = nativeApi.createTempDirectory();
 
     Path rulesPath = path("rules");

@@ -14,7 +14,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
 import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
 import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
@@ -24,7 +23,11 @@ import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.plugin.Required;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
@@ -35,8 +38,19 @@ import com.google.common.collect.Multimap;
 
 public class JavacFunction {
 
-  public static SArray<SFile> execute(NativeApi nativeApi,
-      BuiltinSmoothModule.JavacParameters params) {
+  public interface JavacParameters {
+    @Required
+    SArray<SFile> sources();
+
+    SArray<SBlob> libs();
+
+    SString source();
+
+    SString target();
+  }
+
+  @SmoothFunction(name = "javac")
+  public static SArray<SFile> execute(NativeApi nativeApi, JavacParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
@@ -48,9 +62,9 @@ public class JavacFunction {
 
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
-    private final BuiltinSmoothModule.JavacParameters params;
+    private final JavacParameters params;
 
-    public Worker(NativeApi nativeApi, BuiltinSmoothModule.JavacParameters params) {
+    public Worker(NativeApi nativeApi, JavacParameters params) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.params = params;

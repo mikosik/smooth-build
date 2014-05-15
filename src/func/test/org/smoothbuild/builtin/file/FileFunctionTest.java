@@ -8,7 +8,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.BuiltinSmoothModule;
+import org.smoothbuild.builtin.file.FileFunction.FileParameters;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.Path;
@@ -90,8 +90,8 @@ public class FileFunctionTest {
     thenReturned(objectsDb.file(path));
   }
 
-  private BuiltinSmoothModule.FileParameters params(final String path) {
-    return new BuiltinSmoothModule.FileParameters() {
+  private FileParameters params(final String path) {
+    return new FileParameters() {
       @Override
       public SString path() {
         return objectsDb.string(path);
@@ -99,7 +99,7 @@ public class FileFunctionTest {
     };
   }
 
-  private SFile runExecute(BuiltinSmoothModule.FileParameters params) {
+  private SFile runExecute(FileParameters params) {
     return FileFunction.execute(nativeApi, params);
   }
 }
