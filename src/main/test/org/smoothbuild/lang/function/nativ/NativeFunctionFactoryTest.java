@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 
 import org.junit.Test;
@@ -21,7 +22,6 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
-import org.smoothbuild.lang.function.nativ.err.NoSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
@@ -49,7 +49,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void testSignature() throws Exception {
-    Function<?> function = NativeFunctionFactory.create(Func.class, false);
+    Function<?> function = createNativeFunction(Func.class.getMethods()[0], false);
 
     assertThat(function.name()).isEqualTo(name("myFunction"));
     Signature<?> signature = function.signature();
@@ -68,7 +68,7 @@ public class NativeFunctionFactoryTest {
   public void testInvokation() throws Exception {
     @SuppressWarnings("unchecked")
     Function<SString> function =
-        (Function<SString>) NativeFunctionFactory.create(Func.class, false);
+        (Function<SString>) createNativeFunction(Func.class.getMethods()[0], false);
     SString string1 = objectsDb.string("abc");
     SString string2 = objectsDb.string("def");
     ConstantExpr<?> arg1 = new ConstantExpr<>(STRING, string1, codeLocation(1));
@@ -99,7 +99,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void allowed_param_types_are_accepted() throws Exception {
-    NativeFunctionFactory.create(FuncWithAllowedParamTypes.class, false);
+    createNativeFunction(FuncWithAllowedParamTypes.class.getMethods()[0], false);
   }
 
   public interface AllowedParameters {
@@ -127,7 +127,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void params_annotated_as_required_are_required() throws Exception {
-    Function<?> f = NativeFunctionFactory.create(FuncWithAnnotatedParams.class, false);
+    Function<?> f = createNativeFunction(FuncWithAnnotatedParams.class.getMethods()[0], false);
     ImmutableMap<String, Param> params = f.params();
     assertThat(params.get("string1").isRequired()).isTrue();
     assertThat(params.get("string2").isRequired()).isFalse();
@@ -187,7 +187,8 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void empty_parameters_are_accepted() throws Exception {
-    NativeFunctionFactory.create(FuncWithEmptyParameters.class, false);
+    NativeFunctionFactory
+        .createNativeFunction(FuncWithEmptyParameters.class.getMethods()[0], false);
   }
 
   public interface EmptyParameters {}
@@ -203,7 +204,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void string_result_type_is_accepted() throws Exception {
-    NativeFunctionFactory.create(FuncWithStringResult.class, false);
+    createNativeFunction(FuncWithStringResult.class.getMethods()[0], false);
   }
 
   public static class FuncWithStringResult {
@@ -217,7 +218,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void blob_result_type_is_accepted() throws Exception {
-    NativeFunctionFactory.create(FuncWithBlobResult.class, false);
+    createNativeFunction(FuncWithBlobResult.class.getMethods()[0], false);
   }
 
   public static class FuncWithBlobResult {
@@ -231,7 +232,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void file_result_type_is_accepted() throws Exception {
-    NativeFunctionFactory.create(FuncWithFileResult.class, false);
+    createNativeFunction(FuncWithFileResult.class.getMethods()[0], false);
   }
 
   public static class FuncWithFileResult {
@@ -245,7 +246,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void string_array_result_type_is_accepted() throws Exception {
-    NativeFunctionFactory.create(FuncWithStringArrayResult.class, false);
+    createNativeFunction(FuncWithStringArrayResult.class.getMethods()[0], false);
   }
 
   public static class FuncWithStringArrayResult {
@@ -259,7 +260,8 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void blob_array_result_type_is_accepted() throws Exception {
-    NativeFunctionFactory.create(FuncWithBlobArrayResult.class, false);
+    NativeFunctionFactory
+        .createNativeFunction(FuncWithBlobArrayResult.class.getMethods()[0], false);
   }
 
   public static class FuncWithBlobArrayResult {
@@ -273,7 +275,8 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void file_array_result_type_is_accepted() throws Exception {
-    NativeFunctionFactory.create(FuncWithFileArrayResult.class, false);
+    NativeFunctionFactory
+        .createNativeFunction(FuncWithFileArrayResult.class.getMethods()[0], false);
   }
 
   public static class FuncWithFileArrayResult {
@@ -344,7 +347,8 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
-    Function<?> function = NativeFunctionFactory.create(FuncWithThrowingSmoothMethod.class, false);
+    Function<?> function =
+        createNativeFunction(FuncWithThrowingSmoothMethod.class.getMethods()[0], false);
     TaskInput input = TaskInput.fromTaskReturnValues(Empty.taskList());
     function.createWorker(Empty.stringExprMap(), codeLocation(1)).execute(input, nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(UnexpectedError.class);
@@ -355,11 +359,6 @@ public class NativeFunctionFactoryTest {
     public static SString execute(NativeApi nativeApi, EmptyParameters params) {
       throw new RuntimeException();
     }
-  }
-
-  @Test
-  public void zero_smooth_method_per_class_is_forbidden() throws Exception {
-    assertExceptionThrown(FuncWithZeroSmoothMethods.class, NoSmoothFunctionException.class);
   }
 
   public static class FuncWithZeroSmoothMethods {}
@@ -466,7 +465,7 @@ public class NativeFunctionFactoryTest {
 
   private void assertExceptionThrown(Class<?> klass, Class<?> exception) {
     try {
-      NativeFunctionFactory.create(klass, false);
+      createNativeFunction(klass.getDeclaredMethods()[0], false);
       fail("exception should be thrown");
     } catch (Throwable e) {
       // expected

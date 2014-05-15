@@ -10,7 +10,6 @@ import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.MissingNameException;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
-import org.smoothbuild.lang.function.nativ.err.NoSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionException;
@@ -18,11 +17,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class NativeFunctionFactory {
-  public static NativeFunction<?> create(Class<?> klass, boolean builtin)
-      throws NativeImplementationException {
-    Method method = getExecuteMethod(klass);
-    return createNativeFunction(method, builtin);
-  }
 
   public static NativeFunction<?> createNativeFunction(Method method, boolean builtin)
       throws NativeImplementationException, MissingNameException {
@@ -63,15 +57,6 @@ public class NativeFunctionFactory {
       throws NativeImplementationException {
     ArgsCreator argsCreator = new ArgsCreator(paramsInterface);
     return new Invoker<>(method, argsCreator);
-  }
-
-  private static Method getExecuteMethod(Class<?> klass) throws NativeImplementationException {
-    for (Method method : klass.getDeclaredMethods()) {
-      if (method.isAnnotationPresent(SmoothFunction.class)) {
-        return method;
-      }
-    }
-    throw new NoSmoothFunctionException(klass);
   }
 
   private static boolean isCacheable(Method method) throws MissingNameException {
