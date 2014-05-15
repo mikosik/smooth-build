@@ -9,10 +9,15 @@ import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.module.NativeModuleFactory.createNativeModule;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.jar.JarOutputStream;
+import java.util.zip.ZipEntry;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -31,6 +36,8 @@ import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+
+import com.google.common.io.ByteStreams;
 
 public class NativeModuleFactoryTest {
   private Module module;
@@ -438,4 +445,26 @@ public class NativeModuleFactoryTest {
   }
 
   public static class ModuleWithNoFunctions {}
+
+  public static Module createNativeModule(Class<?> clazz) throws Exception {
+    File tempJarFile = File.createTempFile("tmp", ".jar");
+    try (JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(tempJarFile))) {
+      jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
+      try (InputStream byteCodeInputStream = classByteCodeInputStream(clazz)) {
+        ByteStreams.copy(byteCodeInputStream, jarOutputStream);
+      }
+    }
+
+    return NativeModuleFactory.createNativeModule(tempJarFile);
+  }
+
+  private static InputStream classByteCodeInputStream(Class<?> clazz) {
+    String binaryPath = binaryPath(clazz);
+    return clazz.getClassLoader().getResourceAsStream(binaryPath);
+  }
+
+  private static String binaryPath(Class<?> clazz) {
+    String binaryName = clazz.getName();
+    return binaryName.replace('.', '/') + ".class";
+  }
 }

@@ -11,14 +11,12 @@ import org.smoothbuild.io.temp.TempDirectory;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.util.CommandExecutor;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class AidlFunction {
-  @SmoothFunction(name = "aidl")
   public static SFile execute(NativeApi nativeApi, BuiltinSmoothModule.AidlParameters params)
       throws InterruptedException {
     String buildToolsVersion = params.buildToolsVersion().value();
