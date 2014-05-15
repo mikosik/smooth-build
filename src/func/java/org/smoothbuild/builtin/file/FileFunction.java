@@ -4,19 +4,26 @@ import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
-import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.plugin.Required;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class FileFunction {
+  public interface FileParameters {
+    @Required
+    public SString path();
+  }
 
-  public static SFile execute(NativeApiImpl nativeApi, BuiltinSmoothModule.FileParameters params) {
+  @SmoothFunction(name = "file", cacheable = false)
+  public static SFile execute(NativeApiImpl nativeApi, FileParameters params) {
     Path path = validatedPath("path", params.path());
     if (!path.isRoot() && path.firstPart().equals(SMOOTH_DIR)) {
       throw new IllegalReadFromSmoothDirError(path);

@@ -10,21 +10,31 @@ import java.util.Map;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.NativeApi;
+import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.base.Predicate;
 
 public class JunitFunction {
-  public static SString execute(NativeApi nativeApi, BuiltinSmoothModule.JunitParameters params) {
+
+  public interface JunitParameters {
+    SArray<SBlob> libs();
+
+    SString include();
+  }
+
+  @SmoothFunction(name = "junit")
+  public static SString execute(NativeApi nativeApi, JunitParameters params) {
     Map<String, SFile> binaryNameToClassFile =
         binaryNameToClassFile(nativeApi, nullToEmpty(params.libs()));
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);

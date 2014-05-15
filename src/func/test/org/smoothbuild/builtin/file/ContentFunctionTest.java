@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.BuiltinSmoothModule;
+import org.smoothbuild.builtin.file.ContentFunction.ContentParameters;
 import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.task.exec.NativeApiImpl;
@@ -22,8 +22,8 @@ public class ContentFunctionTest {
     assertThat(actual).isSameAs(file.content());
   }
 
-  private static BuiltinSmoothModule.ContentParameters params(final SFile file) {
-    return new BuiltinSmoothModule.ContentParameters() {
+  private static ContentParameters params(final SFile file) {
+    return new ContentParameters() {
       @Override
       public SFile file() {
         return file;

@@ -5,7 +5,6 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
-import org.smoothbuild.builtin.BuiltinSmoothModule;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -15,12 +14,21 @@ import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.plugin.Required;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class FilesFunction {
-  public static SArray<SFile> execute(NativeApiImpl nativeApi,
-      BuiltinSmoothModule.FilesParameters params) {
+
+  public interface FilesParameters {
+    @Required
+    public SString dir();
+  }
+
+  @SmoothFunction(name = "files", cacheable = false)
+  public static SArray<SFile> execute(NativeApiImpl nativeApi, FilesParameters params) {
     Path path = validatedPath("dir", params.dir());
     FileSystem fileSystem = nativeApi.projectFileSystem();
 
