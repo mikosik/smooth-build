@@ -9,6 +9,8 @@ import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 
+import java.lang.reflect.Method;
+
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.builtin.convert.FileArrayToBlobArrayFunction;
@@ -99,15 +101,15 @@ public class Convert {
   private static ImmutableMap<SType<?>, Function<?>> functionsMap(Class<?>... functionClasses) {
     Builder<SType<?>, Function<?>> builder = ImmutableMap.builder();
     for (Class<?> functionClass : functionClasses) {
-      NativeFunction<?> function = function(functionClass);
+      NativeFunction<?> function = function(functionClass.getMethods()[0]);
       builder.put(function.signature().type(), function);
     }
     return builder.build();
   }
 
-  private static NativeFunction<?> function(Class<?> functionClass) {
+  private static NativeFunction<?> function(Method functionMethod) {
     try {
-      return NativeFunctionFactory.create(functionClass, true);
+      return NativeFunctionFactory.createNativeFunction(functionMethod, true);
     } catch (NativeImplementationException e) {
       throw new RuntimeException(e);
     }
