@@ -278,7 +278,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void array_of_array_is_forbidden_as_param_type() throws Exception {
-    when($createNativeFunction(FuncWithArrayOfArrayParamType.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithArrayOfArrayParamType.class.getDeclaredMethods()[0]));
     thenThrown(ForbiddenParamTypeException.class);
   }
 
@@ -295,7 +295,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void non_smooth_types_are_forbidden_as_param_types() throws Exception {
-    when($createNativeFunction(FuncWithForbiddenParamType.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithForbiddenParamType.class.getDeclaredMethods()[0]));
     thenThrown(ForbiddenParamTypeException.class);
   }
 
@@ -312,7 +312,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void empty_parameters_are_accepted() throws Exception {
-    when($createNativeFunction(FuncWithEmptyParameters.class.getMethods()[0], false));
+    when($createNativeFunction(FuncWithEmptyParameters.class.getMethods()[0]));
     thenReturned();
   }
 
@@ -327,7 +327,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void string_result_type_is_accepted() throws Exception {
-    when($createNativeFunction(FuncWithStringResult.class.getMethods()[0], false));
+    when($createNativeFunction(FuncWithStringResult.class.getMethods()[0]));
     thenReturned();
   }
 
@@ -340,7 +340,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void blob_result_type_is_accepted() throws Exception {
-    when($createNativeFunction(FuncWithBlobResult.class.getMethods()[0], false));
+    when($createNativeFunction(FuncWithBlobResult.class.getMethods()[0]));
     thenReturned();
   }
 
@@ -353,7 +353,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void file_result_type_is_accepted() throws Exception {
-    when($createNativeFunction(FuncWithFileResult.class.getMethods()[0], false));
+    when($createNativeFunction(FuncWithFileResult.class.getMethods()[0]));
     thenReturned();
   }
 
@@ -366,7 +366,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void string_array_result_type_is_accepted() throws Exception {
-    when($createNativeFunction(FuncWithStringArrayResult.class.getMethods()[0], false));
+    when($createNativeFunction(FuncWithStringArrayResult.class.getMethods()[0]));
     thenReturned();
   }
 
@@ -379,7 +379,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void blob_array_result_type_is_accepted() throws Exception {
-    when($createNativeFunction(FuncWithBlobArrayResult.class.getMethods()[0], false));
+    when($createNativeFunction(FuncWithBlobArrayResult.class.getMethods()[0]));
     thenReturned();
   }
 
@@ -392,7 +392,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void file_array_result_type_is_accepted() throws Exception {
-    when($createNativeFunction(FuncWithFileArrayResult.class.getMethods()[0], false));
+    when($createNativeFunction(FuncWithFileArrayResult.class.getMethods()[0]));
     thenReturned();
   }
 
@@ -405,7 +405,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void non_smooth_type_is_not_allowed_as_return_type() throws Exception {
-    when($createNativeFunction(FuncWithIllegalReturnType.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithIllegalReturnType.class.getDeclaredMethods()[0]));
     thenThrown(IllegalReturnTypeException.class);
   }
 
@@ -418,7 +418,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void array_of_array_result_type_is_not_allowed() throws Exception {
-    when($createNativeFunction(FuncWithArrayOfArrayReturnType.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithArrayOfArrayReturnType.class.getDeclaredMethods()[0]));
     thenThrown(IllegalReturnTypeException.class);
   }
 
@@ -431,7 +431,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void non_interface_is_not_allowed_as_params_interface() throws Exception {
-    when($createNativeFunction(FuncWithParamThatIsNotInterface.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithParamThatIsNotInterface.class.getDeclaredMethods()[0]));
     thenThrown(ParamsIsNotInterfaceException.class);
   }
 
@@ -444,7 +444,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void illegal_smooth_function_names_are_not_allowed() throws Exception {
-    when($createNativeFunction(FuncWithIllegalFunctionName.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithIllegalFunctionName.class.getDeclaredMethods()[0]));
     thenThrown(IllegalFunctionNameException.class);
   }
 
@@ -472,7 +472,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void non_public_smooth_method_is_not_allowed() throws Exception {
-    when($createNativeFunction(FuncWithPrivateSmoothMethod.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithPrivateSmoothMethod.class.getDeclaredMethods()[0]));
     thenThrown(NonPublicSmoothFunctionException.class);
   }
 
@@ -483,8 +483,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void method_in_params_interface_cannot_have_parameters() throws Exception {
-    when($createNativeFunction(FuncWithParamMethodThatHasParameters.class.getDeclaredMethods()[0],
-        false));
+    when($createNativeFunction(FuncWithParamMethodThatHasParameters.class.getDeclaredMethods()[0]));
     thenThrown(ParamMethodHasArgumentsException.class);
   }
 
@@ -501,7 +500,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void native_smooth_method_cannot_be_static() throws Exception {
-    when($createNativeFunction(FuncWithNonStaticSmoothMethod.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithNonStaticSmoothMethod.class.getDeclaredMethods()[0]));
     thenThrown(NonStaticSmoothFunctionException.class);
   }
 
@@ -512,8 +511,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void native_smooth_method_cannot_have_zero_parameters() throws Exception {
-    when($createNativeFunction(FuncWithSmoothMethodWithZeroParams.class.getDeclaredMethods()[0],
-        false));
+    when($createNativeFunction(FuncWithSmoothMethodWithZeroParams.class.getDeclaredMethods()[0]));
     thenThrown(WrongParamsInSmoothFunctionException.class);
   }
 
@@ -524,8 +522,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void native_smooth_method_cannot_have_one_parameter() throws Exception {
-    when($createNativeFunction(FuncWithSmoothMethodWithOneParam.class.getDeclaredMethods()[0],
-        false));
+    when($createNativeFunction(FuncWithSmoothMethodWithOneParam.class.getDeclaredMethods()[0]));
     thenThrown(WrongParamsInSmoothFunctionException.class);
   }
 
@@ -536,8 +533,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void wrong_first_parameter_in_native_smooth_function() throws Exception {
-    when($createNativeFunction(
-        FuncWithSmoothMethodWithWrongFirstParam.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithSmoothMethodWithWrongFirstParam.class.getDeclaredMethods()[0]));
     thenThrown(WrongParamsInSmoothFunctionException.class);
   }
 
@@ -548,8 +544,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void wrong_second_parameter_in_native_smooth_function() throws Exception {
-    when($createNativeFunction(
-        FuncWithSmoothMethodWithWrongSecondParam.class.getDeclaredMethods()[0], false));
+    when($createNativeFunction(FuncWithSmoothMethodWithWrongSecondParam.class.getDeclaredMethods()[0]));
     thenThrown(ParamsIsNotInterfaceException.class);
   }
 
@@ -562,7 +557,7 @@ public class NativeFunctionFactoryTest {
 
   // helpers
 
-  private static Closure $createNativeFunction(final Method method, final boolean builtin) {
+  private static Closure $createNativeFunction(final Method method) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
