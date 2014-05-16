@@ -30,13 +30,14 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
 
   public NativeCallWorker(NativeFunction<T> function, ImmutableList<String> paramNames,
       CodeLocation codeLocation) {
-    super(workerHash(function, paramNames), function.type(), function.name().value(), false,
-        function.isCacheable(), codeLocation);
+    super(nativeCallWorkerHash(function, paramNames), function.type(), function.name().value(),
+        false, function.isCacheable(), codeLocation);
     this.function = function;
     this.paramNames = paramNames;
   }
 
-  private static HashCode workerHash(NativeFunction<?> function, ImmutableList<String> paramNames) {
+  private static HashCode nativeCallWorkerHash(NativeFunction<?> function,
+      ImmutableList<String> paramNames) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(function.name().value().getBytes(CHARSET));
     for (String string : Ordering.natural().sortedCopy(paramNames)) {
