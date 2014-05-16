@@ -6,14 +6,18 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 
 import org.junit.Test;
+
+import com.google.common.io.Files;
 
 public class HashTest {
   private final String string = "some string";
   private final String string2 = "some other string";
   private byte[] bytes;
   private ByteArrayInputStream inputStream;
+  private File file;
 
   // Hash.string()
 
@@ -55,6 +59,17 @@ public class HashTest {
   public void hashes_of_different_bytes_are_different() {
     when(Hash.bytes(string.getBytes()));
     thenReturned(not(Hash.bytes(string2.getBytes())));
+  }
+
+  // Hash.file()
+
+  @Test
+  public void hash_of_file_is_equal_to_hash_of_its_bytes() throws Exception {
+    given(bytes = new byte[] { 1, 2, 3, 4, 5 });
+    given(file = File.createTempFile("tmp", ".tmp"));
+    Files.write(bytes, file);
+    when(Hash.file(file));
+    thenReturned(Hash.bytes(bytes));
   }
 
   // Hash.stream()
