@@ -1,7 +1,6 @@
 package org.smoothbuild.task.exec;
 
 import static org.smoothbuild.lang.base.STypes.STRING;
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 import static org.smoothbuild.task.exec.TaskReporter.header;
 import static org.testory.Testory.given;
@@ -13,6 +12,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
@@ -64,14 +64,17 @@ public class TaskReporterTest {
   }
 
   private static Task<SString> createTask(boolean isInternal) {
-    TaskWorker<SString> worker =
-        new TaskWorker<SString>(null, STRING, "name", isInternal, true, codeLocation(13)) {
-          @Override
-          public TaskOutput<SString> execute(TaskInput input, NativeApiImpl nativeApi) {
-            return null;
-          }
+    return new Task<>(new MyTaskWorker(isInternal), Empty.taskList());
+  }
 
-        };
-    return new Task<>(worker, Empty.taskList());
+  private static final class MyTaskWorker extends TaskWorker<SString> {
+    private MyTaskWorker(boolean isInternal) {
+      super(null, STRING, "name", isInternal, true, CodeLocation.codeLocation(2));
+    }
+
+    @Override
+    public TaskOutput<SString> execute(TaskInput input, NativeApiImpl nativeApi) {
+      return null;
+    }
   }
 }
