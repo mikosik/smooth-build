@@ -2,6 +2,7 @@ package org.smoothbuild.lang.module;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
+import static org.smoothbuild.lang.module.NativeModuleFactory.createNativeModule;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +25,7 @@ public class ModuleModule extends AbstractModule {
   @Builtin
   public Module provideBuiltinModule() throws NativeImplementationException {
     Path funcsJarPath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, "funcs.jar");
-    return NativeModuleFactory.createNativeModule(funcsJarPath.toFile());
+    return createNativeModule(funcsJarPath);
   }
 
   private static String smoothHomeDir() {

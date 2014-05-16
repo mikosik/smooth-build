@@ -457,6 +457,6 @@ public class NativeModuleFactoryTest {
       }
     }
 
-    return NativeModuleFactory.createNativeModule(tempJarFile);
+    return NativeModuleFactory.createNativeModule(tempJarFile.toPath());
   }
 }
