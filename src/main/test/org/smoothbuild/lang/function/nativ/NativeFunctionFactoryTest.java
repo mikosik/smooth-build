@@ -5,7 +5,6 @@ import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
@@ -19,6 +18,7 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SBlob;
@@ -31,6 +31,7 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
+import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
@@ -59,7 +60,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void function_is_created_for_each_annotated_java_method() throws Exception {
-    when(NativeFunctionFactory.createNativeFunctions(ClassWithManyFunctions.class));
+    when(createNativeFunctions(Hash.integer(33), ClassWithManyFunctions.class));
     thenReturned(new Matcher() {
       @Override
       public boolean matches(Object object) {
@@ -88,7 +89,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void no_function_is_created_for_not_annotated_java_method() throws Exception {
-    when(createNativeFunctions(ClassWithZeroFunctions.class));
+    when(createNativeFunctions(Hash.integer(33), ClassWithZeroFunctions.class));
     thenReturned(Matchers.empty());
   }
 
@@ -561,8 +562,13 @@ public class NativeFunctionFactoryTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return NativeFunctionFactory.createNativeFunction(method);
+        return createNativeFunction(method);
       }
     };
+  }
+
+  private static NativeFunction<?> createNativeFunction(Method method)
+      throws NativeImplementationException {
+    return NativeFunctionFactory.createNativeFunction(Hash.integer(33), method);
   }
 }

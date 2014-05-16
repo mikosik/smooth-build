@@ -22,6 +22,7 @@ import org.smoothbuild.builtin.java.UnjarFunction;
 import org.smoothbuild.builtin.java.javac.JavacFunction;
 import org.smoothbuild.builtin.java.junit.JunitFunction;
 import org.smoothbuild.builtin.string.ToBlobFunction;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDbModule;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
@@ -32,6 +33,7 @@ import org.smoothbuild.parse.Builtin;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystemModule;
 import org.smoothbuild.testing.message.FakeUserConsoleModule;
 
+import com.google.common.hash.HashCode;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
@@ -72,9 +74,10 @@ public class IntegrationTestModule extends AbstractModule {
   }
 
   public static Module createNativeModule(Class<?>... classes) throws NativeImplementationException {
+    HashCode jarHash = Hash.integer(33);
     ModuleBuilder builder = new ModuleBuilder();
     for (Class<?> clazz : classes) {
-      for (NativeFunction<?> function : createNativeFunctions(clazz)) {
+      for (NativeFunction<?> function : createNativeFunctions(jarHash, clazz)) {
         builder.addFunction(function);
       }
     }

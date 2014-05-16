@@ -14,6 +14,7 @@ import static org.testory.Testory.willThrow;
 import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
@@ -48,8 +49,8 @@ public class NativeCallWorkerTest {
 
   private final Signature<SString> signature = new Signature<>(STRING, name("name"), Empty
       .paramList());
-  NativeFunction<?> function1 = new NativeFunction<>(signature, invoker, true);
-  NativeFunction<?> function2 = new NativeFunction<>(signature, invoker, true);
+  NativeFunction<?> function1 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
+  NativeFunction<?> function2 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
 
   String name1 = "name1";
   String name2 = "name2";
@@ -89,7 +90,7 @@ public class NativeCallWorkerTest {
   public void null_can_be_returned_when_function_logged_errors() throws Exception {
     ImmutableList<Param> params = ImmutableList.of();
     Signature<SString> signature = new Signature<>(STRING, name("name"), params);
-    function1 = new NativeFunction<>(signature, invoker, true);
+    function1 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
     nativeCallWorker =
         new NativeCallWorker<>(function1, ImmutableList.<String> of(), codeLocation(1));
     given(new Handler() {

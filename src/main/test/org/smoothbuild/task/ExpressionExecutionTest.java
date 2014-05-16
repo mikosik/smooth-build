@@ -12,6 +12,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
@@ -109,7 +110,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_native_function_that_returns_its_argument() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(function = createNativeFunction(SmoothModule.class.getMethods()[0]));
+    given(function = createNativeFunction(Hash.integer(33), SmoothModule.class.getMethods()[0]));
     given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
     given(callExpr = new CallExpr<>(function, location, ImmutableMap.of("param", stringExpr)));
     given(task = taskGraph.createTasks(callExpr));
@@ -131,7 +132,7 @@ public class ExpressionExecutionTest {
   @Test
   public void execution_fails_when_native_function_throws_runtime_exception() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(function = createNativeFunction(SmoothModule2.class.getMethods()[0]));
+    given(function = createNativeFunction(Hash.integer(33), SmoothModule2.class.getMethods()[0]));
     given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
     given(callExpr = new CallExpr<>(function, location, ImmutableMap.of("param", stringExpr)));
     given(task = taskGraph.createTasks(callExpr));
