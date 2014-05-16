@@ -1,5 +1,7 @@
 package org.smoothbuild.testing.integration;
 
+import static org.smoothbuild.lang.module.NativeModuleFactory.createNativeModule;
+
 import javax.inject.Singleton;
 
 import org.smoothbuild.builtin.android.AidlFunction;
@@ -25,7 +27,6 @@ import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.module.ModuleBuilder;
-import org.smoothbuild.lang.module.NativeModuleFactory;
 import org.smoothbuild.parse.Builtin;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystemModule;
 import org.smoothbuild.testing.message.FakeUserConsoleModule;
@@ -46,11 +47,26 @@ public class IntegrationTestModule extends AbstractModule {
   @Singleton
   @Builtin
   public Module provideBuiltinModule(ModuleBuilder builder) throws NativeImplementationException {
-    return NativeModuleFactory.createNativeModule(AidlFunction.class, ToBlobFunction.class,
-        JavacFunction.class, JarjarFunction.class, JunitFunction.class, UnjarFunction.class,
-        JarFunction.class, UnzipFunction.class, ZipFunction.class, FilesFunction.class,
-        PathFunction.class, FileFunction.class, ConcatenateBlobsFunction.class,
-        FilterFunction.class, ContentFunction.class, ToFileFunction.class,
-        ConcatenateFilesFunction.class, ToStringFunction.class);
+    // @formatter:off
+    return createNativeModule(
+        AidlFunction.class,
+        ConcatenateBlobsFunction.class,
+        ConcatenateFilesFunction.class,
+        ContentFunction.class,
+        FileFunction.class,
+        FilesFunction.class,
+        FilterFunction.class,
+        JarjarFunction.class,
+        JavacFunction.class,
+        JarFunction.class,
+        JunitFunction.class,
+        PathFunction.class,
+        ToBlobFunction.class,
+        ToFileFunction.class,
+        ToStringFunction.class,
+        UnjarFunction.class,
+        UnzipFunction.class,
+        ZipFunction.class);
+    // @formatter:on
   }
 }
