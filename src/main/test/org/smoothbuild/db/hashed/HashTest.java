@@ -1,18 +1,19 @@
 package org.smoothbuild.db.hashed;
 
 import static org.hamcrest.Matchers.not;
+import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import java.io.ByteArrayInputStream;
+
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Name;
 
 public class HashTest {
-  String string = "some string";
-  String string2 = "some other string";
-
-  Name name;
-  Name name2;
+  private final String string = "some string";
+  private final String string2 = "some other string";
+  private byte[] bytes;
+  private ByteArrayInputStream inputStream;
 
   // Hash.string()
 
@@ -54,5 +55,23 @@ public class HashTest {
   public void hashes_of_different_bytes_are_different() {
     when(Hash.bytes(string.getBytes()));
     thenReturned(not(Hash.bytes(string2.getBytes())));
+  }
+
+  // Hash.stream()
+
+  @Test
+  public void hash_of_input_stream_is_equal_to_hash_of_its_bytes() throws Exception {
+    given(bytes = new byte[] { 1, 2, 3, 4, 5 });
+    given(inputStream = new ByteArrayInputStream(bytes));
+    when(Hash.stream(inputStream));
+    thenReturned(Hash.bytes(bytes));
+  }
+
+  @Test
+  public void hash_of_empty_input_stream_is_equal_to_hash_of_zero_bytes() throws Exception {
+    given(bytes = new byte[] {});
+    given(inputStream = new ByteArrayInputStream(bytes));
+    when(Hash.stream(inputStream));
+    thenReturned(Hash.bytes(bytes));
   }
 }
