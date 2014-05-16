@@ -11,20 +11,23 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.util.ClassLoaders;
 
+import com.google.common.hash.HashCode;
+
 public class NativeModuleFactory {
   public static Module createNativeModule(File jar) throws NativeImplementationException {
     try {
-      return createNativeModuleImpl(jar);
+      return createNativeModuleImpl(jar, Hash.file(jar));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private static Module createNativeModuleImpl(File jar) throws IOException,
+  private static Module createNativeModuleImpl(File jar, HashCode jarHash) throws IOException,
       NativeImplementationException {
     ModuleBuilder builder = new ModuleBuilder();
     ClassLoader classLoader = classLoader(jar);
@@ -34,7 +37,7 @@ public class NativeModuleFactory {
         String fileName = entry.getName();
         if (fileName.endsWith(CLASS_FILE_EXTENSION)) {
           Class<?> clazz = load(classLoader, binaryPathToBinaryName(fileName));
-          for (NativeFunction<?> function : createNativeFunctions(clazz)) {
+          for (NativeFunction<?> function : createNativeFunctions(jarHash, clazz)) {
             builder.addFunction(function);
           }
         }

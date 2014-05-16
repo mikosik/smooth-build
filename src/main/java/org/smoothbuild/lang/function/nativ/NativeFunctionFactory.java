@@ -18,20 +18,21 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.hash.HashCode;
 
 public class NativeFunctionFactory {
-  public static ImmutableList<NativeFunction<?>> createNativeFunctions(Class<?> clazz)
-      throws NativeImplementationException {
+  public static ImmutableList<NativeFunction<?>> createNativeFunctions(HashCode jarHash,
+      Class<?> clazz) throws NativeImplementationException {
     Builder<NativeFunction<?>> builder = ImmutableList.builder();
     for (Method method : clazz.getDeclaredMethods()) {
       if (method.isAnnotationPresent(SmoothFunction.class)) {
-        builder.add(createNativeFunction(method));
+        builder.add(createNativeFunction(jarHash, method));
       }
     }
     return builder.build();
   }
 
-  public static NativeFunction<?> createNativeFunction(Method method)
+  public static NativeFunction<?> createNativeFunction(HashCode jarHash, Method method)
       throws NativeImplementationException {
     if (!isPublic(method)) {
       throw new NonPublicSmoothFunctionException(method);
@@ -50,12 +51,12 @@ public class NativeFunctionFactory {
 
     Class<?> paramsInterface = method.getParameterTypes()[1];
     Signature<? extends SValue> signature = SignatureFactory.create(method, paramsInterface);
-    return createNativeFunction(method, signature, paramsInterface);
+    return createNativeFunction(jarHash, method, signature, paramsInterface);
   }
 
-  private static <T extends SValue> NativeFunction<T> createNativeFunction(Method method,
-      Signature<T> signature, Class<?> paramsInterface) throws NativeImplementationException,
-      MissingNameException {
+  private static <T extends SValue> NativeFunction<T> createNativeFunction(HashCode jarHash,
+      Method method, Signature<T> signature, Class<?> paramsInterface)
+      throws NativeImplementationException, MissingNameException {
 
     /*
      * Cast is safe as T is return type of 'method'.
@@ -63,7 +64,7 @@ public class NativeFunctionFactory {
     @SuppressWarnings("unchecked")
     Invoker<T> invoker = (Invoker<T>) createInvoker(method, paramsInterface);
 
-    return new NativeFunction<>(signature, invoker, isCacheable(method));
+    return new NativeFunction<>(jarHash, signature, invoker, isCacheable(method));
   }
 
   private static Invoker<?> createInvoker(Method method, Class<?> paramsInterface)

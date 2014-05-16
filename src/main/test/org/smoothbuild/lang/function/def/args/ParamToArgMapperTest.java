@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.expr.Expr;
@@ -621,7 +622,7 @@ public class ParamToArgMapperTest {
     Signature<SString> signature = new Signature<>(STRING, name("name"), params);
     @SuppressWarnings("unchecked")
     Invoker<SString> invoker = mock(Invoker.class);
-    return new NativeFunction<>(signature, invoker, true);
+    return new NativeFunction<>(Hash.integer(33), signature, invoker, true);
   }
 
   private static ArrayList<Arg> list(Arg... args) {

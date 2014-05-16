@@ -11,6 +11,7 @@ import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 
 import java.lang.reflect.Method;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.builtin.convert.FileArrayToBlobArrayFunction;
@@ -28,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.hash.HashCode;
 
 public class Convert {
   /**
@@ -109,7 +111,10 @@ public class Convert {
 
   private static NativeFunction<?> function(Method functionMethod) {
     try {
-      return NativeFunctionFactory.createNativeFunction(functionMethod);
+      // TODO This artificial hash won't be needed once convert functions become
+      // part of funcs.jar
+      HashCode jarHash = Hash.integer(123);
+      return NativeFunctionFactory.createNativeFunction(jarHash, functionMethod);
     } catch (NativeImplementationException e) {
       throw new RuntimeException(e);
     }
