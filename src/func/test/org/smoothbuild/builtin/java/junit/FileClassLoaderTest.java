@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java.junit;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
+import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -32,8 +33,7 @@ public class FileClassLoaderTest {
   }
 
   private SFile createByteCodeFile(Class<?> klass) throws IOException {
-    String binaryName = klass.getName();
-    String binaryPath = binaryName.replace('.', '/') + ".class";
+    String binaryPath = binaryPath(klass);
     InputStream is = klass.getClassLoader().getResourceAsStream(binaryPath);
     byte[] byteCode = inputStreamToBytes(is);
     return objectsDb.file(path(binaryPath), byteCode);
