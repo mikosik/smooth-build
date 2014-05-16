@@ -59,14 +59,4 @@ public class NativeModuleFactory {
   private static JarInputStream newJarInputStream(File jar) throws IOException {
     return new JarInputStream(new BufferedInputStream(new FileInputStream(jar)));
   }
-
-  public static Module createNativeModule(Class<?>... classes) throws NativeImplementationException {
-    ModuleBuilder builder = new ModuleBuilder();
-    for (Class<?> clazz : classes) {
-      for (NativeFunction<?> function : createNativeFunctions(clazz)) {
-        builder.addFunction(function);
-      }
-    }
-    return builder.build();
-  }
 }

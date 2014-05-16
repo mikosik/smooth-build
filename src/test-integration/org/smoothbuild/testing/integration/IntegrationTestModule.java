@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.integration;
 
-import static org.smoothbuild.lang.module.NativeModuleFactory.createNativeModule;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
 
 import javax.inject.Singleton;
 
@@ -24,6 +24,7 @@ import org.smoothbuild.builtin.java.junit.JunitFunction;
 import org.smoothbuild.builtin.string.ToBlobFunction;
 import org.smoothbuild.db.objects.ObjectsDbModule;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
+import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.module.ModuleBuilder;
@@ -68,5 +69,15 @@ public class IntegrationTestModule extends AbstractModule {
         UnzipFunction.class,
         ZipFunction.class);
     // @formatter:on
+  }
+
+  public static Module createNativeModule(Class<?>... classes) throws NativeImplementationException {
+    ModuleBuilder builder = new ModuleBuilder();
+    for (Class<?> clazz : classes) {
+      for (NativeFunction<?> function : createNativeFunctions(clazz)) {
+        builder.addFunction(function);
+      }
+    }
+    return builder.build();
   }
 }
