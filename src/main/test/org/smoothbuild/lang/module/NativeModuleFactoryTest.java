@@ -37,6 +37,7 @@ import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.util.Classes;
 
 import com.google.common.io.ByteStreams;
 
@@ -451,15 +452,11 @@ public class NativeModuleFactoryTest {
     File tempJarFile = File.createTempFile("tmp", ".jar");
     try (JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(tempJarFile))) {
       jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
-      try (InputStream byteCodeInputStream = classByteCodeInputStream(clazz)) {
+      try (InputStream byteCodeInputStream = Classes.byteCodeAsInputStream(clazz)) {
         ByteStreams.copy(byteCodeInputStream, jarOutputStream);
       }
     }
 
     return NativeModuleFactory.createNativeModule(tempJarFile);
-  }
-
-  private static InputStream classByteCodeInputStream(Class<?> clazz) {
-    return clazz.getClassLoader().getResourceAsStream(binaryPath(clazz));
   }
 }
