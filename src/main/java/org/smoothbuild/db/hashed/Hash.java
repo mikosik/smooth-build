@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 import com.google.common.hash.Funnels;
 import com.google.common.hash.HashCode;
@@ -29,6 +30,10 @@ public class Hash {
 
   public static HashCode bytes(byte[] bytes) {
     return function().hashBytes(bytes);
+  }
+
+  public static HashCode file(Path path) throws IOException {
+    return file(path.toFile());
   }
 
   public static HashCode file(File file) throws IOException {
