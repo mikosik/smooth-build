@@ -9,11 +9,11 @@ import static org.testory.Testory.when;
 import static org.testory.common.Matchers.same;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
+import org.smoothbuild.util.Classes;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -33,10 +33,8 @@ public class FileClassLoaderTest {
   }
 
   private SFile createByteCodeFile(Class<?> klass) throws IOException {
-    String binaryPath = binaryPath(klass);
-    InputStream is = klass.getClassLoader().getResourceAsStream(binaryPath);
-    byte[] byteCode = inputStreamToBytes(is);
-    return objectsDb.file(path(binaryPath), byteCode);
+    byte[] byteCode = inputStreamToBytes(Classes.byteCodeAsInputStream(klass));
+    return objectsDb.file(path(binaryPath(klass)), byteCode);
   }
 
   public static class MyClass {
