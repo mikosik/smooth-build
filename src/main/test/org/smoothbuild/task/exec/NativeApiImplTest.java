@@ -12,8 +12,8 @@ import static org.testory.common.Matchers.same;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.io.temp.TempDirectory;
-import org.smoothbuild.io.temp.TempDirectoryManager;
+import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;

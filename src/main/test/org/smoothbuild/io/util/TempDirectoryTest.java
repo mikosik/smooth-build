@@ -1,4 +1,4 @@
-package org.smoothbuild.io.temp;
+package org.smoothbuild.io.util;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;

@@ -5,8 +5,8 @@ import java.nio.file.Paths;
 import javax.inject.Provider;
 
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.io.temp.TempDirectory;
-import org.smoothbuild.io.temp.TempDirectoryManager;
+import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.base.SValueFactory;
 
 public class FakeTempDirectoryManager extends TempDirectoryManager {

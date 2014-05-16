@@ -1,4 +1,4 @@
-package org.smoothbuild.io.temp;
+package org.smoothbuild.io.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testory.Testory.given;
