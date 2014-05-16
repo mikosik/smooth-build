@@ -15,11 +15,11 @@ public class ConstantWorker<T extends SValue> extends TaskWorker<T> {
   private final T value;
 
   public ConstantWorker(SType<T> type, T value, CodeLocation codeLocation) {
-    super(workerHash(value), type, type.name(), true, false, codeLocation);
+    super(constantWorkerHash(value), type, type.name(), true, false, codeLocation);
     this.value = checkNotNull(value);
   }
 
-  private static HashCode workerHash(SValue value) {
+  private static HashCode constantWorkerHash(SValue value) {
     return WorkerHashes.workerHash(ConstantWorker.class, value.hash());
   }
 

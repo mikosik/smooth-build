@@ -14,12 +14,12 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 import com.google.common.hash.HashCode;
 
 public class ArrayWorker<T extends SValue> extends TaskWorker<SArray<T>> {
-  private static final HashCode HASH = workerHash(ArrayWorker.class);
+  private static final HashCode ARRAY_WORKER_HASH = workerHash(ArrayWorker.class);
 
   private final SArrayType<T> arrayType;
 
   public ArrayWorker(SArrayType<T> arrayType, CodeLocation codeLocation) {
-    super(HASH, arrayType, arrayType.name(), true, true, codeLocation);
+    super(ARRAY_WORKER_HASH, arrayType, arrayType.name(), true, true, codeLocation);
     this.arrayType = arrayType;
   }
 
