@@ -25,8 +25,7 @@ public class NativeModuleFactory {
   private static Module createNativeModuleImpl(File jar) throws IOException,
       NativeImplementationException {
     ModuleBuilder builder = new ModuleBuilder();
-    ClassLoader parentClassLoader = NativeModuleFactory.class.getClassLoader();
-    ClassLoader classLoader = ClassLoaders.jarClassLoader(parentClassLoader, jar.toPath());
+    ClassLoader classLoader = classLoader(jar);
     try (JarInputStream jarInputStream = newJarInputStream(jar)) {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {
@@ -41,6 +40,11 @@ public class NativeModuleFactory {
       }
     }
     return builder.build();
+  }
+
+  private static ClassLoader classLoader(File jar) {
+    ClassLoader parentClassLoader = NativeModuleFactory.class.getClassLoader();
+    return ClassLoaders.jarClassLoader(parentClassLoader, jar.toPath());
   }
 
   private static Class<?> load(ClassLoader classLoader, String binaryName) {
