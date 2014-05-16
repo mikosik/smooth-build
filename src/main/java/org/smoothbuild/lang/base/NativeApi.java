@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base;
 
-import org.smoothbuild.io.temp.TempDirectory;
+import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 

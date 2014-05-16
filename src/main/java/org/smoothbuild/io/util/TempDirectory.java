@@ -1,4 +1,4 @@
-package org.smoothbuild.io.temp;
+package org.smoothbuild.io.util;
 
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;

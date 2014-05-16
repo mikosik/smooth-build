@@ -1,4 +1,4 @@
-package org.smoothbuild.io.temp;
+package org.smoothbuild.io.util;
 
 import java.util.List;
 
