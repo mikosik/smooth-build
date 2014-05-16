@@ -9,6 +9,7 @@ import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -459,12 +460,6 @@ public class NativeModuleFactoryTest {
   }
 
   private static InputStream classByteCodeInputStream(Class<?> clazz) {
-    String binaryPath = binaryPath(clazz);
-    return clazz.getClassLoader().getResourceAsStream(binaryPath);
-  }
-
-  private static String binaryPath(Class<?> clazz) {
-    String binaryName = clazz.getName();
-    return binaryName.replace('.', '/') + ".class";
+    return clazz.getClassLoader().getResourceAsStream(binaryPath(clazz));
   }
 }
