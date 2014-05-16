@@ -112,14 +112,14 @@ public class CachingTaskOutputTest {
 
     @Override
     public TaskWorker<SString> createWorker() {
-      return new CountingTaskWorker(counter, isCacheable);
+      return new MyCountingTaskWorker(counter, isCacheable);
     }
   }
 
-  private static class CountingTaskWorker extends TaskWorker<SString> {
+  private static class MyCountingTaskWorker extends TaskWorker<SString> {
     private final AtomicInteger counter;
 
-    public CountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
+    public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
       super(Hash.string("hash"), STRING, "counting", false, isCacheable, CodeLocation
           .codeLocation(2));
       this.counter = counter;
