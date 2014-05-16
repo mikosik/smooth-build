@@ -1,7 +1,5 @@
 package org.smoothbuild.task.work;
 
-import static org.smoothbuild.SmoothConstants.CHARSET;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
@@ -39,7 +37,7 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
   private static HashCode nativeCallWorkerHash(NativeFunction<?> function,
       ImmutableList<String> paramNames) {
     Hasher hasher = Hash.newHasher();
-    hasher.putBytes(function.name().value().getBytes(CHARSET));
+    hasher.putBytes(function.hash().asBytes());
     for (String string : Ordering.natural().sortedCopy(paramNames)) {
       byte[] stringHash = Hash.string(string).asBytes();
       hasher.putBytes(stringHash);
