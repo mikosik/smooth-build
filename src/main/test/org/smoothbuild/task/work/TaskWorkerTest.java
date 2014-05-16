@@ -47,35 +47,35 @@ public class TaskWorkerTest {
 
   @Test
   public void type() throws Exception {
-    given(taskWorker = new MyTask<>(hash, type, name, false, codeLocation));
+    given(taskWorker = new MyTaskWorker<>(hash, type, name, false, codeLocation));
     when(taskWorker.resultType());
     thenReturned(type);
   }
 
   @Test
   public void name() throws Exception {
-    given(taskWorker = new MyTask<>(hash, type, name, false, codeLocation));
+    given(taskWorker = new MyTaskWorker<>(hash, type, name, false, codeLocation));
     when(taskWorker.name());
     thenReturned(name);
   }
 
   @Test
   public void is_internal_return_true_when_true_passed_to_constructor() throws Exception {
-    given(taskWorker = new MyTask<>(hash, type, name, true, codeLocation));
+    given(taskWorker = new MyTaskWorker<>(hash, type, name, true, codeLocation));
     when(taskWorker.isInternal());
     thenReturned(true);
   }
 
   @Test
   public void is_internal_return_false_when_false_passed_to_constructor() throws Exception {
-    given(taskWorker = new MyTask<>(hash, type, name, false, codeLocation));
+    given(taskWorker = new MyTaskWorker<>(hash, type, name, false, codeLocation));
     when(taskWorker.isInternal());
     thenReturned(false);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(taskWorker = new MyTask<>(hash, type, name, false, codeLocation));
+    given(taskWorker = new MyTaskWorker<>(hash, type, name, false, codeLocation));
     when(taskWorker.codeLocation());
     thenReturned(codeLocation);
   }
@@ -85,13 +85,13 @@ public class TaskWorkerTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new MyTask<>(Hash.string(""), type, name, isInternal, codeLocation);
+        return new MyTaskWorker<>(Hash.string(""), type, name, isInternal, codeLocation);
       }
     };
   }
 
-  public static class MyTask<T extends SValue> extends TaskWorker<T> {
-    public MyTask(HashCode hash, SType<T> type, String name, boolean isInternal,
+  public static class MyTaskWorker<T extends SValue> extends TaskWorker<T> {
+    public MyTaskWorker(HashCode hash, SType<T> type, String name, boolean isInternal,
         CodeLocation codeLocation) {
       super(hash, type, name, isInternal, true, codeLocation);
     }
