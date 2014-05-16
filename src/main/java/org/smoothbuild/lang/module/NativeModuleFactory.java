@@ -1,6 +1,8 @@
 package org.smoothbuild.lang.module;
 
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
+import static org.smoothbuild.util.Classes.CLASS_FILE_EXTENSION;
+import static org.smoothbuild.util.Classes.binaryPathToBinaryName;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -30,10 +32,9 @@ public class NativeModuleFactory {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {
         String fileName = entry.getName();
-        if (fileName.endsWith(".class")) {
-          String binaryName =
-              fileName.substring(0, fileName.length() - ".class".length()).replace("/", ".");
-          for (NativeFunction<?> function : createNativeFunctions(load(classLoader, binaryName))) {
+        if (fileName.endsWith(CLASS_FILE_EXTENSION)) {
+          Class<?> clazz = load(classLoader, binaryPathToBinaryName(fileName));
+          for (NativeFunction<?> function : createNativeFunctions(clazz)) {
             builder.addFunction(function);
           }
         }
