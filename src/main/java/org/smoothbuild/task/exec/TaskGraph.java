@@ -28,7 +28,7 @@ public class TaskGraph {
     return root;
   }
 
-  public <T extends SValue> Task<T> createTasksImpl(Expr<T> expr) {
+  private <T extends SValue> Task<T> createTasksImpl(Expr<T> expr) {
     ImmutableList<Task<?>> dependencies = createTasksImpl(expr.dependencies());
     return new Task<>(expr.createWorker(), dependencies);
   }
