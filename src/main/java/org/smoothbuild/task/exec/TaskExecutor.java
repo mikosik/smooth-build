@@ -4,27 +4,33 @@ import static org.smoothbuild.message.base.Messages.containsProblems;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDb;
+import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskOutput;
 
 import com.google.common.hash.HashCode;
+import com.google.common.hash.Hasher;
 
 public class TaskExecutor {
+  private final HashCode smoothJarHash;
   private final NativeApiImpl nativeApi;
   private final TaskOutputsDb taskOutputsDb;
   private final TaskReporter reporter;
 
   @Inject
-  public TaskExecutor(NativeApiImpl nativeApi, TaskOutputsDb taskOutputsDb, TaskReporter reporter) {
+  public TaskExecutor(@SmoothJar HashCode smoothJarHash, NativeApiImpl nativeApi,
+      TaskOutputsDb taskOutputsDb, TaskReporter reporter) {
+    this.smoothJarHash = smoothJarHash;
     this.nativeApi = nativeApi;
     this.taskOutputsDb = taskOutputsDb;
     this.reporter = reporter;
   }
 
   public <T extends SValue> void execute(Task<T> task) {
-    HashCode hash = task.hash();
+    HashCode hash = taskHash(task);
     boolean isAlreadyCached = taskOutputsDb.contains(hash);
     if (isAlreadyCached) {
       TaskOutput<T> output = taskOutputsDb.read(hash, task.resultType());
@@ -39,5 +45,12 @@ public class TaskExecutor {
     if (containsProblems(task.output().messages())) {
       throw new BuildInterruptedException();
     }
+  }
+
+  private <T extends SValue> HashCode taskHash(Task<T> task) {
+    Hasher hasher = Hash.newHasher();
+    hasher.putBytes(smoothJarHash.asBytes());
+    hasher.putBytes(task.hash().asBytes());
+    return hasher.hash();
   }
 }
