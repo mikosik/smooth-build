@@ -25,6 +25,7 @@ import org.smoothbuild.builtin.string.ToBlobFunction;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDbModule;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
+import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.module.Module;
@@ -44,6 +45,12 @@ public class IntegrationTestModule extends AbstractModule {
     install(new ObjectsDbModule());
     install(new FakeFileSystemModule());
     install(new FakeUserConsoleModule());
+  }
+
+  @Provides
+  @SmoothJar
+  public HashCode provideSmoothJarHash() {
+    return HashCode.fromInt(1);
   }
 
   @Provides

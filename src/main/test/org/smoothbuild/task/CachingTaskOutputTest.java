@@ -1,5 +1,6 @@
 package org.smoothbuild.task;
 
+import static com.google.inject.util.Modules.override;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
@@ -13,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SString;
@@ -29,20 +31,29 @@ import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.hash.HashCode;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Provides;
 
 public class CachingTaskOutputTest {
   private static final CodeLocation CL = codeLocation(2);
 
   private ObjectsDb objectsDb;
   private TaskGraph taskGraph;
+  private TaskGraph taskGraph2;
 
   private AtomicInteger counter;
   private CountingExpr expr1;
   private CountingExpr expr2;
   private ArrayExpr<SString> arrayExpr;
   private Task<?> task;
+  private Task<SString> task2;
+
+  private Module module;
+  private Injector injector;
 
   @Before
   public void before() {
@@ -85,6 +96,37 @@ public class CachingTaskOutputTest {
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringSArray("1", "2")));
+  }
+
+  @Test
+  public void smooth_jar_hash_is_used_for_calculating_hash_for_task_outputs_db() throws Exception {
+    given(module = override(new TestExecutorModule()).with(new GrowingSmoothJarHashModule()));
+    given(injector = Guice.createInjector(module));
+    given(taskGraph = injector.getInstance(TaskGraph.class));
+    given(taskGraph2 = injector.getInstance(TaskGraph.class));
+    given(objectsDb = injector.getInstance(ObjectsDb.class));
+    given(counter = new AtomicInteger());
+    given(expr1 = new CountingExpr(counter, Empty.exprList(), true));
+    given(expr2 = new CountingExpr(counter, Empty.exprList(), true));
+    given(task = taskGraph.createTasks(expr1));
+    given(task2 = taskGraph2.createTasks(expr2));
+    given(taskGraph).executeAll();
+    when(taskGraph2).executeAll();
+    thenEqual(task.output(), new TaskOutput<>(objectsDb.string("1")));
+    thenEqual(task2.output(), new TaskOutput<>(objectsDb.string("2")));
+  }
+
+  private static class GrowingSmoothJarHashModule extends AbstractModule {
+    private int counter = 0;
+
+    @Override
+    protected void configure() {}
+
+    @Provides
+    @SmoothJar
+    public HashCode provideSmoothJarHash() {
+      return HashCode.fromInt(counter++);
+    }
   }
 
   private ConstantExpr<SString> stringExpr(String string) {
