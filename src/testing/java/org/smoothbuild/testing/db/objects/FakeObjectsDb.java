@@ -35,7 +35,7 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   public FakeObjectsDb(HashedDb hashedDb, ObjectMarshallers objectMarshallers) {
-    super(objectMarshallers, new ObjectBuilders(hashedDb, objectMarshallers));
+    super(objectMarshallers, new ObjectBuilders(objectMarshallers));
   }
 
   @SuppressWarnings("unchecked")
