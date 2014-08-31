@@ -57,6 +57,6 @@ public class ObjectBuilders {
 
   private <T extends SValue> ArrayBuilder<T> createArrayBuilder(SArrayType<T> arrayType) {
     ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(arrayType);
-    return new ArrayBuilderImpl<T>(arrayType, marshaller);
+    return new ArrayBuilderImpl<>(arrayType, marshaller);
   }
 }

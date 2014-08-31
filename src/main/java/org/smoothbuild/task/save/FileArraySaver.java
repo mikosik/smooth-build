@@ -25,7 +25,7 @@ public class FileArraySaver implements Saver<SArray<SFile>> {
 
   @Override
   public void save(Name name, SArray<SFile> fileArray) {
-    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<Path>();
+    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
 
     Path artifactPath = artifactPath(name);
     smoothFileSystem.delete(artifactPath);

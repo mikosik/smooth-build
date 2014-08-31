@@ -41,7 +41,7 @@ public class ZipFunction {
     public Worker(NativeApi nativeApi, ZipParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
-      this.duplicatesDetector = new DuplicatesDetector<Path>();
+      this.duplicatesDetector = new DuplicatesDetector<>();
     }
 
     public SBlob execute() {

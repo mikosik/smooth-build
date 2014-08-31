@@ -20,6 +20,6 @@ public class ArrayExpr<T extends SValue> extends Expr<SArray<T>> {
 
   @Override
   public TaskWorker<SArray<T>> createWorker() {
-    return new ArrayWorker<T>(arrayType, codeLocation());
+    return new ArrayWorker<>(arrayType, codeLocation());
   }
 }

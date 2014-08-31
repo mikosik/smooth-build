@@ -9,7 +9,7 @@ import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.util.LineBuilder;
 
 public class DependencyStack {
-  private final Deque<DependencyStackElem> stack = new ArrayDeque<DependencyStackElem>();
+  private final Deque<DependencyStackElem> stack = new ArrayDeque<>();
 
   public boolean isEmpty() {
     return stack.isEmpty();

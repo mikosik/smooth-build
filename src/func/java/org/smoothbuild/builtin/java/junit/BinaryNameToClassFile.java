@@ -21,7 +21,7 @@ public class BinaryNameToClassFile {
   public static Map<String, SFile> binaryNameToClassFile(SValueFactory valueFactory,
       Iterable<SBlob> libraryJars) {
     Unjarer unjarer = new Unjarer(valueFactory);
-    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<Path>();
+    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, SFile> binaryNameToClassFile = Maps.newHashMap();
 
     for (SBlob jarBlob : libraryJars) {

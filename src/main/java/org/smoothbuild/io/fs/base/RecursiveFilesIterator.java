@@ -18,8 +18,8 @@ public class RecursiveFilesIterator implements Iterator<Path> {
 
   public RecursiveFilesIterator(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-    this.directoryStack = new ArrayDeque<Path>();
-    this.fileStack = new ArrayDeque<Path>();
+    this.directoryStack = new ArrayDeque<>();
+    this.fileStack = new ArrayDeque<>();
     this.directoryStack.push(Path.rootPath());
 
     nextFile = fetchNextFile();

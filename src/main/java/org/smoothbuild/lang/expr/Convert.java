@@ -79,7 +79,7 @@ public class Convert {
     @SuppressWarnings("unchecked")
     Function<T> function = (Function<T>) availableFunctions.get(destinationType);
 
-    return new CallExpr<T>(function, source.codeLocation(), ImmutableMap.of(PARAM_NAME, source));
+    return new CallExpr<>(function, source.codeLocation(), ImmutableMap.of(PARAM_NAME, source));
   }
 
   private static ImmutableMap<SType<?>, ImmutableMap<SType<?>, Function<?>>> createFunctions() {

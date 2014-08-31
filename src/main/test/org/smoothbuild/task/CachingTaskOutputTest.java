@@ -170,7 +170,7 @@ public class CachingTaskOutputTest {
     @Override
     public TaskOutput<SString> execute(TaskInput input, NativeApiImpl nativeApi) {
       SString sstring = nativeApi.string(Integer.toString(counter.incrementAndGet()));
-      return new TaskOutput<SString>(sstring);
+      return new TaskOutput<>(sstring);
     }
   }
 }
