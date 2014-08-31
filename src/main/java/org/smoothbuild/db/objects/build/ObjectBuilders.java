@@ -7,8 +7,6 @@ import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.Objects;
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.lang.base.ArrayBuilder;
@@ -17,12 +15,10 @@ import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 
 public class ObjectBuilders {
-  private final HashedDb hashedDb;
   private final ObjectMarshallers objectMarshallers;
 
   @Inject
-  public ObjectBuilders(@Objects HashedDb hashedDb, ObjectMarshallers objectMarshallers) {
-    this.hashedDb = hashedDb;
+  public ObjectBuilders(ObjectMarshallers objectMarshallers) {
     this.objectMarshallers = objectMarshallers;
   }
 
