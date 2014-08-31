@@ -10,7 +10,7 @@ import com.google.inject.TypeLiteral;
 public class ForbiddenParamTypeException extends ParamsImplementationException {
 
   public ForbiddenParamTypeException(Method method, Method paramMethod, TypeLiteral<?> javaType) {
-    super(method, "with all methods returning proper types, but method '" + method.getName()
+    super(method, "with all methods returning proper types, but method '" + paramMethod.getName()
         + "' has forbidden return type = " + javaType + "\n Allowed types = "
         + javaTypesAllowedForParam());
   }
