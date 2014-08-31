@@ -145,7 +145,7 @@ public class TaskOutputTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new TaskOutput<SValue>(result, messages);
+        return new TaskOutput<>(result, messages);
       }
     };
   }

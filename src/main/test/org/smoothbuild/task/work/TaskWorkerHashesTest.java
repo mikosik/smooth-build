@@ -36,8 +36,8 @@ public class TaskWorkerHashesTest {
 
   @Test
   public void constant_workers_with_different_value_have_different_hashes() throws Exception {
-    given(worker = new ConstantWorker<SString>(STRING, objectsDb.string("abc"), CL));
-    given(worker2 = new ConstantWorker<SString>(STRING, objectsDb.string("def"), CL));
+    given(worker = new ConstantWorker<>(STRING, objectsDb.string("abc"), CL));
+    given(worker2 = new ConstantWorker<>(STRING, objectsDb.string("def"), CL));
     when(worker).hash();
     thenReturned(not(worker2.hash()));
   }
@@ -45,7 +45,7 @@ public class TaskWorkerHashesTest {
   @Test
   public void array_worker_and_constant_worker_have_different_hashes() throws Exception {
     given(worker = new ArrayWorker<>(STRING_ARRAY, CL));
-    given(worker2 = new ConstantWorker<SString>(STRING, objectsDb.string("abc"), CL));
+    given(worker2 = new ConstantWorker<>(STRING, objectsDb.string("abc"), CL));
     when(worker).hash();
     thenReturned(not(worker2.hash()));
   }

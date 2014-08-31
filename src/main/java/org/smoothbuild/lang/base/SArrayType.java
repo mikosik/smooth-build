@@ -7,7 +7,7 @@ public class SArrayType<T extends SValue> extends SType<SArray<T>> {
 
   protected static <T extends SValue> SArrayType<T> sArrayType(TypeLiteral<SArray<T>> javaType,
       SType<T> elemType) {
-    return new SArrayType<T>(javaType, elemType);
+    return new SArrayType<>(javaType, elemType);
   }
 
   protected SArrayType(TypeLiteral<SArray<T>> javaType, SType<T> elemType) {

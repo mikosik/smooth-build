@@ -46,7 +46,7 @@ public class Unjarer {
   }
 
   public SArray<SFile> unjar(SBlob jarBlob, Predicate<String> nameFilter) {
-    this.duplicatesDetector = new DuplicatesDetector<Path>();
+    this.duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {

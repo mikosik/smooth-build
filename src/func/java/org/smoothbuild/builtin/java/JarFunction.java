@@ -43,7 +43,7 @@ public class JarFunction {
     public Worker(NativeApi nativeApi, JarParameters params) {
       this.nativeApi = nativeApi;
       this.params = params;
-      this.duplicatesDetector = new DuplicatesDetector<Path>();
+      this.duplicatesDetector = new DuplicatesDetector<>();
     }
 
     public SBlob execute() {

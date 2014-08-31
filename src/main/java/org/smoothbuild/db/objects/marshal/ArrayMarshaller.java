@@ -29,7 +29,7 @@ public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<SArra
 
   @Override
   public SArray<T> read(HashCode hash) {
-    return new ArrayObject<T>(hash, arrayType, this);
+    return new ArrayObject<>(hash, arrayType, this);
   }
 
   public ImmutableList<T> readElements(HashCode hash) {
@@ -52,6 +52,6 @@ public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<SArra
     byte[] bytes = marshaller.getBytes();
 
     HashCode hash = hashedDb.write(bytes);
-    return new ArrayObject<T>(hash, arrayType, this);
+    return new ArrayObject<>(hash, arrayType, this);
   }
 }

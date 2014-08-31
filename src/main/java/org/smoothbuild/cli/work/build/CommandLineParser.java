@@ -32,7 +32,7 @@ public class CommandLineParser {
   }
 
   private Set<Name> names(List<String> args) {
-    DuplicatesDetector<Name> duplicatesDetector = new DuplicatesDetector<Name>();
+    DuplicatesDetector<Name> duplicatesDetector = new DuplicatesDetector<>();
 
     for (String nameString : args) {
       if (isLegalName(nameString)) {

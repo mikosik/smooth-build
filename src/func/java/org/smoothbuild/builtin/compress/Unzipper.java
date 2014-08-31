@@ -37,7 +37,7 @@ public class Unzipper {
   }
 
   public SArray<SFile> unzip(SBlob zipBlob) {
-    this.duplicatesDetector = new DuplicatesDetector<Path>();
+    this.duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream())) {

@@ -23,7 +23,7 @@ import com.google.common.hash.Hasher;
 
 /**
  * Smooth Function implemented natively in java.
- * 
+ *
  * @see DefinedFunction
  */
 public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
@@ -62,7 +62,7 @@ public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
   @Override
   public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
       CodeLocation codeLocation) {
-    return new NativeCallWorker<T>(this, ImmutableList.copyOf(args.keySet()), codeLocation);
+    return new NativeCallWorker<>(this, ImmutableList.copyOf(args.keySet()), codeLocation);
   }
 
   public T invoke(NativeApi nativeApi, ImmutableMap<String, SValue> args)
