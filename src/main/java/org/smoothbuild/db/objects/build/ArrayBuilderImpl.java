@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
@@ -19,8 +18,7 @@ public class ArrayBuilderImpl<T extends SValue> implements ArrayBuilder<T> {
   private final ArrayMarshaller<T> marshaller;
   private final List<T> result;
 
-  public ArrayBuilderImpl(HashedDb hashedDb, SArrayType<T> arrayType,
-      ArrayMarshaller<T> arrayMarshaller) {
+  public ArrayBuilderImpl(SArrayType<T> arrayType, ArrayMarshaller<T> arrayMarshaller) {
     this.arrayType = arrayType;
     this.marshaller = arrayMarshaller;
     this.result = Lists.newArrayList();
