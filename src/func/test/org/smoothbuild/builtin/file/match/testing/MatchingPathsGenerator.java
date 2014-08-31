@@ -26,9 +26,7 @@ public class MatchingPathsGenerator {
     if (index == template.size()) {
       consumer.apply(path);
     } else {
-      List<String> t = template.get(index);
-      for (int i = 0; i < t.size(); i++) {
-        String suffix = t.get(i);
+      for (String suffix : template.get(index)) {
         if (!(suffix.equals("/") && (path.endsWith("/") || path.isEmpty()))) {
           generatePaths(path + suffix, template, index + 1, consumer);
         }
