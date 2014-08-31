@@ -40,7 +40,7 @@ public class Unzipper {
     this.duplicatesDetector = new DuplicatesDetector<Path>();
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     try {
-      try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream());) {
+      try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream())) {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
           if (!IS_DIRECTORY.apply(entry.getName())) {

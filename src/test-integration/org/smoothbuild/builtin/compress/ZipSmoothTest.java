@@ -33,7 +33,7 @@ public class ZipSmoothTest extends IntegrationTestCase {
     int fileCount = 0;
     Path artifactPath = RESULTS_PATH.append(path("run"));
     InputStream inputStream = fileSystem.openInputStream(artifactPath);
-    try (ZipInputStream zipInputStream = new ZipInputStream(inputStream);) {
+    try (ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
       ZipEntry entry = null;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         fileCount++;

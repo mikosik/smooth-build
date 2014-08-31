@@ -29,7 +29,7 @@ public class StreamTester {
   }
 
   public static void writeAndClose(OutputStream outputStream, String content) throws IOException {
-    try (OutputStreamWriter writer = new OutputStreamWriter(outputStream);) {
+    try (OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
       writer.write(content);
     }
   }

@@ -56,7 +56,7 @@ public class TaskOutputsDb {
   }
 
   public <T extends SValue> TaskOutput<T> read(HashCode taskHash, SType<T> type) {
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash);) {
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash)) {
       int size = unmarshaller.readInt();
       List<Message> messages = newArrayList();
       for (int i = 0; i < size; i++) {

@@ -56,7 +56,7 @@ public class NativeFunctionFactory {
 
   private static <T extends SValue> NativeFunction<T> createNativeFunction(HashCode jarHash,
       Method method, Signature<T> signature, Class<?> paramsInterface)
-      throws NativeImplementationException, MissingNameException {
+      throws NativeImplementationException{
 
     /*
      * Cast is safe as T is return type of 'method'.

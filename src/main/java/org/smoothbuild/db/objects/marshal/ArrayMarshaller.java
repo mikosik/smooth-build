@@ -41,7 +41,7 @@ public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<SArra
   }
 
   private List<HashCode> readElementHashes(HashCode hash) {
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
       return unmarshaller.readHashList();
     }
   }

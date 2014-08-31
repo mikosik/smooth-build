@@ -48,7 +48,7 @@ public class JarFunction {
 
     public SBlob execute() {
       BlobBuilder blobBuilder = nativeApi.blobBuilder();
-      try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder);) {
+      try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder)) {
         for (SFile file : params.files()) {
           addEntry(jarOutputStream, file);
         }
@@ -64,7 +64,7 @@ public class JarFunction {
       if (params.manifest() == null) {
         return new JarOutputStream(outputStream);
       } else {
-        try (InputStream manifestStream = params.manifest().openInputStream();) {
+        try (InputStream manifestStream = params.manifest().openInputStream()) {
           Manifest manifest = new Manifest(manifestStream);
           return new JarOutputStream(outputStream, manifest);
         }
@@ -79,7 +79,7 @@ public class JarFunction {
       JarEntry entry = new JarEntry(path.value());
       jarOutputStream.putNextEntry(entry);
 
-      try (InputStream inputStream = file.content().openInputStream();) {
+      try (InputStream inputStream = file.content().openInputStream()) {
         int readCount = inputStream.read(buffer);
         while (readCount > 0) {
           jarOutputStream.write(buffer, 0, readCount);

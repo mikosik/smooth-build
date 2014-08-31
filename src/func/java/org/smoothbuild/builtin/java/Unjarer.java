@@ -50,7 +50,7 @@ public class Unjarer {
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
-      try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream());) {
+      try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream())) {
         JarEntry entry = null;
         while ((entry = jarInputStream.getNextJarEntry()) != null) {
           String fileName = entry.getName();

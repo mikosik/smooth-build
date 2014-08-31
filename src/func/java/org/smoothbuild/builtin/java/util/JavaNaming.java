@@ -9,7 +9,7 @@ import com.google.common.base.Predicate;
 
 public class JavaNaming {
   private static final String CLASS_FILE_EXTENSION = Kind.CLASS.extension;
-  private static Predicate<String> IS_CLASS_FILE = new EndsWithPredicate(CLASS_FILE_EXTENSION);
+  private static final Predicate<String> IS_CLASS_FILE = new EndsWithPredicate(CLASS_FILE_EXTENSION);
 
   public static String toBinaryName(Path path) {
     String pathString = path.value();

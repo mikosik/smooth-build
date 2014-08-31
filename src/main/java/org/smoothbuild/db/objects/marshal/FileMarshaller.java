@@ -33,7 +33,7 @@ public class FileMarshaller implements ObjectMarshaller<SFile> {
 
   @Override
   public SFile read(HashCode hash) {
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash);) {
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
       HashCode blobHash = unmarshaller.readHash();
       Path path = unmarshaller.readPath();
       SBlob blob = blobMarshaller.read(blobHash);
