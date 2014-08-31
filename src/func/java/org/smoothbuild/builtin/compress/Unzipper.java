@@ -41,7 +41,7 @@ public class Unzipper {
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream())) {
-        ZipEntry entry = null;
+        ZipEntry entry;
         while ((entry = zipInputStream.getNextEntry()) != null) {
           if (!IS_DIRECTORY.apply(entry.getName())) {
             fileArrayBuilder.add(unzipEntry(zipInputStream, entry));
@@ -73,7 +73,7 @@ public class Unzipper {
     try {
       BlobBuilder contentBuilder = valueFactory.blobBuilder();
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
-        int len = 0;
+        int len;
         while ((len = zipInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);
         }

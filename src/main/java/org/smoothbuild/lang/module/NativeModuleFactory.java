@@ -25,12 +25,11 @@ public class NativeModuleFactory {
     }
   }
 
-  private static Module createNativeModuleImpl(JarFile jar) throws IOException,
-      NativeImplementationException {
+  private static Module createNativeModuleImpl(JarFile jar) throws IOException, NativeImplementationException {
     ModuleBuilder builder = new ModuleBuilder();
     ClassLoader classLoader = classLoader(jar);
     try (JarInputStream jarInputStream = newJarInputStream(jar)) {
-      JarEntry entry = null;
+      JarEntry entry;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {
         String fileName = entry.getName();
         if (fileName.endsWith(CLASS_FILE_EXTENSION)) {

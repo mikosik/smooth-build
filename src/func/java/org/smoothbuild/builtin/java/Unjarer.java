@@ -50,7 +50,7 @@ public class Unjarer {
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream())) {
-        JarEntry entry = null;
+        JarEntry entry;
         while ((entry = jarInputStream.getNextJarEntry()) != null) {
           String fileName = entry.getName();
           if (filter.apply(fileName)) {
@@ -85,7 +85,7 @@ public class Unjarer {
     BlobBuilder contentBuilder = valueFactory.blobBuilder();
     try {
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
-        int len = 0;
+        int len;
         while ((len = jarInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);
         }
