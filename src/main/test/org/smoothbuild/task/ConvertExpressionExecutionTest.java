@@ -39,7 +39,7 @@ import com.google.inject.Injector;
 
 public class ConvertExpressionExecutionTest {
   private static final ImmutableList<Expr<SNothing>> emptyNothingExprList = ImmutableList
-      .<Expr<SNothing>> of();
+      .of();
   private ObjectsDb objectsDb;
   private TaskGraph taskGraph;
   private Expr<SArray<SNothing>> nilExpr;
