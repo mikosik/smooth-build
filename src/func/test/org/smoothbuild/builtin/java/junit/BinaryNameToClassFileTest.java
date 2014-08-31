@@ -37,7 +37,7 @@ public class BinaryNameToClassFileTest {
     given(file1 = objectsDb.file(path("a/Klass.txt")));
     given(file2 = objectsDb.file(path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(objectsDb, ImmutableList.<SBlob> of(blob)));
+    when(binaryNameToClassFile(objectsDb, ImmutableList.of(blob)));
     thenReturned(ImmutableMap.of());
   }
 }

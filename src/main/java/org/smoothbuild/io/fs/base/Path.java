@@ -100,7 +100,7 @@ public class Path {
 
   public ImmutableList<Path> parts() {
     if (this == ROOT_PATH) {
-      return ImmutableList.<Path> of();
+      return ImmutableList.of();
     } else {
       Builder<Path> builder = ImmutableList.builder();
       for (String string : Splitter.on(SEPARATOR_CHARACTER).split(value)) {

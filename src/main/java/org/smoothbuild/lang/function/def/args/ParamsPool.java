@@ -85,7 +85,7 @@ public class ParamsPool {
       boolean requiredParams) {
     Map<SType<?>, Set<Param>> map = Maps.newHashMap();
     for (SType<?> type : allTypes()) {
-      HashSet<Param> set = Sets.<Param> newHashSet();
+      HashSet<Param> set = Sets.newHashSet();
       for (Param param : allParams.values()) {
         if (param.isRequired() == requiredParams && param.type() == type) {
           set.add(param);
