@@ -15,7 +15,7 @@ public class JarTester {
 
   public static SBlob jar(SFile... files) throws IOException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    try (JarOutputStream jarOutputStream = new JarOutputStream(outputStream);) {
+    try (JarOutputStream jarOutputStream = new JarOutputStream(outputStream)) {
       for (SFile file : files) {
         addEntry(jarOutputStream, file);
       }

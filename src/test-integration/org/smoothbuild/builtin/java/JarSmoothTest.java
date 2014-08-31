@@ -35,7 +35,7 @@ public class JarSmoothTest extends IntegrationTestCase {
     int fileCount = 0;
     Path artifactPath = RESULTS_PATH.append(path("run"));
     InputStream inputStream = fileSystem.openInputStream(artifactPath);
-    try (JarInputStream jarInputStream = new JarInputStream(inputStream);) {
+    try (JarInputStream jarInputStream = new JarInputStream(inputStream)) {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {
         fileCount++;

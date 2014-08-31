@@ -28,5 +28,5 @@ public class FakeTempDirectoryManager extends TempDirectoryManager {
       java.nio.file.Path rootPath = Paths.get("/fake/temporary/path/" + index++);
       return new TempDirectory(valueFactory, rootPath, new MemoryFileSystem());
     }
-  };
+  }
 }

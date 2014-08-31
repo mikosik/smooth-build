@@ -47,7 +47,7 @@ public class ZipFunction {
     public SBlob execute() {
       BlobBuilder blobBuilder = nativeApi.blobBuilder();
 
-      try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.openOutputStream());) {
+      try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.openOutputStream())) {
         for (SFile file : params.files()) {
           addEntry(zipOutputStream, file);
         }
@@ -66,7 +66,7 @@ public class ZipFunction {
       ZipEntry entry = new ZipEntry(path.value());
       zipOutputStream.putNextEntry(entry);
 
-      try (InputStream inputStream = file.content().openInputStream();) {
+      try (InputStream inputStream = file.content().openInputStream()) {
         int readCount = inputStream.read(buffer);
         while (readCount > 0) {
           zipOutputStream.write(buffer, 0, readCount);

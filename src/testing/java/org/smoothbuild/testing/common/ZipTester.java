@@ -14,7 +14,7 @@ public class ZipTester {
 
   public static Path zippedFiles(FakeFileSystem fileSystem, String... fileNames) throws IOException {
     Path path = path("input.zip");
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileSystem.openOutputStream(path));) {
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileSystem.openOutputStream(path))) {
       for (String fileName : fileNames) {
         addEntry(zipOutputStream, fileName);
       }
