@@ -22,9 +22,7 @@ public class Utils {
   @SuppressWarnings("unchecked")
   public static <T> Set<T> immutableSet(T... elements) {
     Set<T> set = new HashSet<>(elements.length);
-    for (T elem : elements) {
-      set.add(elem);
-    }
+    Collections.addAll(set, elements);
 
     return Collections.unmodifiableSet(set);
   }
