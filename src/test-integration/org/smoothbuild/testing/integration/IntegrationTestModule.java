@@ -56,7 +56,7 @@ public class IntegrationTestModule extends AbstractModule {
   @Provides
   @Singleton
   @Builtin
-  public Module provideBuiltinModule(ModuleBuilder builder) throws NativeImplementationException {
+  public Module provideBuiltinModule() throws NativeImplementationException {
     // @formatter:off
     return createNativeModule(
         AidlFunction.class,
