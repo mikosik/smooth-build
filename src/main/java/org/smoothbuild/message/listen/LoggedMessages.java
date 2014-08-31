@@ -27,8 +27,7 @@ public class LoggedMessages implements Iterable<Message> {
   }
 
   public void log(Message message) {
-    checkNotNull(message);
-    messages.add(message);
+    messages.add(checkNotNull(message));
     stats.incCount(message.type());
   }
 
