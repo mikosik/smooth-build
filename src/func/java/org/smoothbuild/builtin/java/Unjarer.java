@@ -34,7 +34,6 @@ public class Unjarer {
 
   private final SValueFactory valueFactory;
   private final byte[] buffer;
-  private DuplicatesDetector<Path> duplicatesDetector;
 
   public Unjarer(SValueFactory valueFactory) {
     this.valueFactory = valueFactory;
@@ -42,11 +41,11 @@ public class Unjarer {
   }
 
   public SArray<SFile> unjar(SBlob jarBlob) {
-    return unjar(jarBlob, Predicates.<String> alwaysTrue());
+    return unjar(jarBlob, Predicates.<String>alwaysTrue());
   }
 
   public SArray<SFile> unjar(SBlob jarBlob, Predicate<String> nameFilter) {
-    this.duplicatesDetector = new DuplicatesDetector<>();
+    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
