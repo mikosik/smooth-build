@@ -64,11 +64,11 @@ public class ScriptParser {
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol,
         int line, int charPositionInLine, String msg, @Nullable RecognitionException e) {
-      CodeLocation location = createLocation(offendingSymbol, line, charPositionInLine);
+      CodeLocation location = createLocation(offendingSymbol, line);
       messages.log(new SyntaxError(location, msg));
     }
 
-    private CodeLocation createLocation(Object offendingSymbol, int line, int charPositionInLine) {
+    private CodeLocation createLocation(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
         return codeLocation(line);
       } else {
