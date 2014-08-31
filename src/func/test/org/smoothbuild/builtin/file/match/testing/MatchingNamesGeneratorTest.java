@@ -36,7 +36,7 @@ public class MatchingNamesGeneratorTest {
     expected.add("xcbz");
     expected.add("xccz");
 
-    String[] expectedNames = expected.toArray(new String[] {});
+    String[] expectedNames = expected.toArray(new String[expected.size()]);
 
     when(new Closure() {
       @Override

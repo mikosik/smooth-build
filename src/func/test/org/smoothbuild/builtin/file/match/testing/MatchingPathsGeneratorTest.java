@@ -43,7 +43,7 @@ public class MatchingPathsGeneratorTest {
     expected.add("x/cb/z");
     expected.add("x/cc/z");
 
-    assertThat(generatedPaths).containsOnly(expected.toArray(new String[] {}));
+    assertThat(generatedPaths).containsOnly(expected.toArray(new String[expected.size()]));
   }
 
   @Test
@@ -80,6 +80,6 @@ public class MatchingPathsGeneratorTest {
     expected.add("x/1cb9/z");
     expected.add("x/1cc9/z");
 
-    assertThat(generatedPaths).containsOnly(generatedPaths.toArray(new String[] {}));
+    assertThat(generatedPaths).containsOnly(generatedPaths.toArray(new String[generatedPaths.size()]));
   }
 }

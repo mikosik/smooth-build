@@ -44,6 +44,6 @@ public class NamePatternGeneratorTest {
     expected.add("*ab");
     expected.add("*a*");
 
-    assertThat(generatedPatterns).containsOnly(expected.toArray(new String[] {}));
+    assertThat(generatedPatterns).containsOnly(expected.toArray(new String[expected.size()]));
   }
 }

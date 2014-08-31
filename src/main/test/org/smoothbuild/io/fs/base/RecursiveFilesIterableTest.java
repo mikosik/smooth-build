@@ -79,7 +79,6 @@ public class RecursiveFilesIterableTest {
       created.add(path(name));
     }
 
-    assertThat(recursiveFilesIterable(fileSystem, path(expectedRootDir))).containsOnly(
-        created.toArray(new Path[] {}));
+    assertThat(recursiveFilesIterable(fileSystem, path(expectedRootDir))).containsOnly(created.toArray(new Path[created.size()]));
   }
 }

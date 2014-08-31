@@ -43,6 +43,6 @@ public class PathPatternGeneratorTest {
     expected.add("**/a");
     expected.add("**/*");
 
-    assertThat(generatedPatterns).containsOnly(expected.toArray(new String[] {}));
+    assertThat(generatedPatterns).containsOnly(expected.toArray(new String[expected.size()]));
   }
 }
