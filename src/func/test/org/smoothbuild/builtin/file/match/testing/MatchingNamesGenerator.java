@@ -20,9 +20,8 @@ public class MatchingNamesGenerator {
     if (index == template.size()) {
       consumer.apply(name);
     } else {
-      List<String> t = template.get(index);
-      for (int i = 0; i < t.size(); i++) {
-        generateNames(name + t.get(i), template, index + 1, consumer);
+      for (String elem : template.get(index)) {
+        generateNames(name + elem, template, index + 1, consumer);
       }
     }
   }
