@@ -44,7 +44,7 @@ public class Unzipper {
         ZipEntry entry = null;
         while ((entry = zipInputStream.getNextEntry()) != null) {
           if (!IS_DIRECTORY.apply(entry.getName())) {
-            fileArrayBuilder.add(unzipEntry(zipInputStream, entry, fileArrayBuilder));
+            fileArrayBuilder.add(unzipEntry(zipInputStream, entry));
           }
         }
       }
@@ -54,8 +54,7 @@ public class Unzipper {
     }
   }
 
-  private SFile unzipEntry(ZipInputStream zipInputStream, ZipEntry entry,
-      ArrayBuilder<SFile> fileArrayBuilder) {
+  private SFile unzipEntry(ZipInputStream zipInputStream, ZipEntry entry) {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
