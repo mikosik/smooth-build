@@ -74,7 +74,7 @@ public class PathPattern {
       index = pattern.indexOf(Constants.DOUBLE_STAR, index + 1);
     }
 
-    if (pattern.indexOf("**/**") != -1) {
+    if (pattern.contains("**/**")) {
       return "Pattern can't contain '**/**' element. Replace it with single '**'.";
     }
     return null;
