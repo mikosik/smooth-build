@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.base.STypes.javaParamTypetoType;
-import static org.smoothbuild.lang.base.STypes.javaResultTypetoType;
+import static org.smoothbuild.lang.base.STypes.javaParamTypeToType;
+import static org.smoothbuild.lang.base.STypes.javaResultTypeToType;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import java.lang.reflect.Method;
@@ -49,7 +49,7 @@ public class SignatureFactory {
 
   private static SType<?> getReturnType(Method method) throws NativeImplementationException {
     TypeLiteral<?> javaType = javaMethodReturnType(method);
-    SType<?> type = javaResultTypetoType(javaType);
+    SType<?> type = javaResultTypeToType(javaType);
     if (type == null) {
       throw new IllegalReturnTypeException(method, javaType);
     }
@@ -76,7 +76,7 @@ public class SignatureFactory {
     }
 
     TypeLiteral<?> javaType = javaMethodReturnType(paramMethod);
-    SType<?> type = javaParamTypetoType(javaType);
+    SType<?> type = javaParamTypeToType(javaType);
     if (type == null) {
       throw new ForbiddenParamTypeException(method, paramMethod, javaType);
     }

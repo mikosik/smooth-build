@@ -118,11 +118,11 @@ public class STypes {
     return PARAM_JAVA_TYPES;
   }
 
-  public static SType<?> javaParamTypetoType(TypeLiteral<?> javaType) {
+  public static SType<?> javaParamTypeToType(TypeLiteral<?> javaType) {
     return JAVA_PARAM_TO_SMOOTH.get(javaType);
   }
 
-  public static SType<?> javaResultTypetoType(TypeLiteral<?> javaType) {
+  public static SType<?> javaResultTypeToType(TypeLiteral<?> javaType) {
     return JAVA_RESULT_TO_SMOOTH.get(javaType);
   }
 
