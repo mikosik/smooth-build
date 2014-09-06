@@ -16,8 +16,8 @@ import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.base.STypes.arrayTypeContaining;
 import static org.smoothbuild.lang.base.STypes.arrayTypes;
 import static org.smoothbuild.lang.base.STypes.basicTypes;
-import static org.smoothbuild.lang.base.STypes.javaParamTypetoType;
-import static org.smoothbuild.lang.base.STypes.javaResultTypetoType;
+import static org.smoothbuild.lang.base.STypes.javaParamTypeToType;
+import static org.smoothbuild.lang.base.STypes.javaResultTypeToType;
 
 import java.util.Set;
 
@@ -80,36 +80,36 @@ public class STypesTest {
   }
 
   @Test
-  public void testJavaParamTypetoType() {
-    assertThat(javaParamTypetoType(type(SString.class))).isEqualTo(STRING);
-    assertThat(javaParamTypetoType(type(SBlob.class))).isEqualTo(BLOB);
-    assertThat(javaParamTypetoType(type(SFile.class))).isEqualTo(FILE);
+  public void testJavaParamTypeToType() {
+    assertThat(javaParamTypeToType(type(SString.class))).isEqualTo(STRING);
+    assertThat(javaParamTypeToType(type(SBlob.class))).isEqualTo(BLOB);
+    assertThat(javaParamTypeToType(type(SFile.class))).isEqualTo(FILE);
 
-    assertThat(javaParamTypetoType(new TypeLiteral<SArray<SString>>() {})).isEqualTo(STRING_ARRAY);
-    assertThat(javaParamTypetoType(new TypeLiteral<SArray<SBlob>>() {})).isEqualTo(BLOB_ARRAY);
-    assertThat(javaParamTypetoType(new TypeLiteral<SArray<SFile>>() {})).isEqualTo(FILE_ARRAY);
+    assertThat(javaParamTypeToType(new TypeLiteral<SArray<SString>>() {})).isEqualTo(STRING_ARRAY);
+    assertThat(javaParamTypeToType(new TypeLiteral<SArray<SBlob>>() {})).isEqualTo(BLOB_ARRAY);
+    assertThat(javaParamTypeToType(new TypeLiteral<SArray<SFile>>() {})).isEqualTo(FILE_ARRAY);
   }
 
   @Test
-  public void testJavaResultTypetoType() {
-    assertThat(javaResultTypetoType(type(SString.class))).isEqualTo(STRING);
-    assertThat(javaResultTypetoType(type(SBlob.class))).isEqualTo(BLOB);
-    assertThat(javaResultTypetoType(type(SFile.class))).isEqualTo(FILE);
+  public void testJavaResultTypeToType() {
+    assertThat(javaResultTypeToType(type(SString.class))).isEqualTo(STRING);
+    assertThat(javaResultTypeToType(type(SBlob.class))).isEqualTo(BLOB);
+    assertThat(javaResultTypeToType(type(SFile.class))).isEqualTo(FILE);
 
-    assertThat(javaResultTypetoType(new TypeLiteral<SArray<SString>>() {})).isEqualTo(STRING_ARRAY);
-    assertThat(javaResultTypetoType(new TypeLiteral<SArray<SBlob>>() {})).isEqualTo(BLOB_ARRAY);
-    assertThat(javaResultTypetoType(new TypeLiteral<SArray<SFile>>() {})).isEqualTo(FILE_ARRAY);
+    assertThat(javaResultTypeToType(new TypeLiteral<SArray<SString>>() {})).isEqualTo(STRING_ARRAY);
+    assertThat(javaResultTypeToType(new TypeLiteral<SArray<SBlob>>() {})).isEqualTo(BLOB_ARRAY);
+    assertThat(javaResultTypeToType(new TypeLiteral<SArray<SFile>>() {})).isEqualTo(FILE_ARRAY);
   }
 
   @Test
   public void javaResultToSmoothContainsAllResultTypes() throws Exception {
-    SType<?>[] array = new SType<?>[] {};
+    SType<?>[] array = new SType<?>[]{};
     assertThat(JAVA_RESULT_TO_SMOOTH.values()).containsOnly(RESULT_TYPES.toArray(array));
   }
 
   @Test
   public void javaParamToSmoothContainsAllResultTypes() throws Exception {
-    SType<?>[] array = new SType<?>[] {};
+    SType<?>[] array = new SType<?>[]{};
     assertThat(JAVA_PARAM_TO_SMOOTH.values()).containsOnly(PARAM_TYPES.toArray(array));
   }
 
