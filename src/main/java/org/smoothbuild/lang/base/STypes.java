@@ -69,10 +69,6 @@ public class STypes {
     return BASIC_STYPES;
   }
 
-  public static ImmutableSet<SArrayType<?>> arraySTypes() {
-    return ARRAY_STYPES;
-  }
-
   public static ImmutableSet<SType<?>> paramSTypes() {
     return PARAM_STYPES;
   }
