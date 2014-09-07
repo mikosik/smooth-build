@@ -28,7 +28,7 @@ import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Params;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
+import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
@@ -280,7 +280,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void array_of_array_is_forbidden_as_param_type() throws Exception {
     when($createNativeFunction(FuncWithArrayOfArrayParamType.class.getDeclaredMethods()[0]));
-    thenThrown(ForbiddenParamTypeException.class);
+    thenThrown(IllegalParamTypeException.class);
   }
 
   public interface ArrayOfArrayParams {
@@ -297,7 +297,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void non_smooth_types_are_forbidden_as_param_types() throws Exception {
     when($createNativeFunction(FuncWithForbiddenParamType.class.getDeclaredMethods()[0]));
-    thenThrown(ForbiddenParamTypeException.class);
+    thenThrown(IllegalParamTypeException.class);
   }
 
   public interface ForbiddenParams {

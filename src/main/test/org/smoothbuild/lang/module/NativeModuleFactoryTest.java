@@ -29,7 +29,7 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Params;
-import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
+import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
@@ -204,7 +204,7 @@ public class NativeModuleFactoryTest {
     }
   }
 
-  @Test(expected = ForbiddenParamTypeException.class)
+  @Test(expected = IllegalParamTypeException.class)
   public void array_of_array_is_forbidden_as_param_type() throws Exception {
     module = createNativeModule(ModuleWithFunctionWithArrayOfArraysParameter.class);
   }
@@ -220,7 +220,7 @@ public class NativeModuleFactoryTest {
     }
   }
 
-  @Test(expected = ForbiddenParamTypeException.class)
+  @Test(expected = IllegalParamTypeException.class)
   public void non_smooth_type_is_forbidden_as_param_type() throws Exception {
     module = createNativeModule(ModuleWithFunctionWithNonSmoothParameter.class);
   }
