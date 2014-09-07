@@ -33,15 +33,15 @@ public class STypes {
    * NOTHING is not a basic type as it is not possible to create instance of
    * that type.
    */
-  static final ImmutableSet<SType<?>> BASIC_STYPES = ImmutableSet.of(STRING, BLOB, FILE);
-  static final ImmutableSet<SArrayType<?>> ARRAY_STYPES = ImmutableSet.of(STRING_ARRAY, BLOB_ARRAY,
-      FILE_ARRAY, NIL);
+  private static final ImmutableSet<SType<?>> BASIC_STYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  private static final ImmutableSet<SArrayType<?>> ARRAY_STYPES = ImmutableSet.of(STRING_ARRAY,
+      BLOB_ARRAY, FILE_ARRAY, NIL);
 
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> RESULT_STYPES = ImmutableSet.of(STRING, BLOB, FILE,
+  private static final ImmutableSet<SType<?>> RESULT_STYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> PARAM_STYPES = ImmutableSet.of(STRING, BLOB, FILE,
+  private static final ImmutableSet<SType<?>> PARAM_STYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
   @SuppressWarnings("unchecked")
   private static final ImmutableSet<SType<?>> ALL_STYPES = ImmutableSet.of(STRING, BLOB, FILE,
@@ -51,16 +51,16 @@ public class STypes {
    * Some of the set above converted to java types.
    */
 
-  static final ImmutableSet<TypeLiteral<?>> RESULT_JTYPES = toJTypes(RESULT_STYPES);
-  static final ImmutableSet<TypeLiteral<?>> PARAM_JTYPES = toJTypes(PARAM_STYPES);
+  private static final ImmutableSet<TypeLiteral<?>> RESULT_JTYPES = toJTypes(RESULT_STYPES);
+  private static final ImmutableSet<TypeLiteral<?>> PARAM_JTYPES = toJTypes(PARAM_STYPES);
 
   /*
    * A few handy mappings.
    */
 
-  static final ImmutableMap<TypeLiteral<?>, SType<?>> PARAM_JTYPE_TO_STYPE = createToSTypeMap(
+  private static final ImmutableMap<TypeLiteral<?>, SType<?>> PARAM_JTYPE_TO_STYPE = createToSTypeMap(
       PARAM_STYPES);
-  static final ImmutableMap<TypeLiteral<?>, SType<?>> RESULT_JTYPE_TO_STYPE = createToSTypeMap(
+  private static final ImmutableMap<TypeLiteral<?>, SType<?>> RESULT_JTYPE_TO_STYPE = createToSTypeMap(
       RESULT_STYPES);
   private static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_STYPE_TO_ARRAY_STYPE = createElemSTypeToSArrayTypeMap(
       ARRAY_STYPES);
