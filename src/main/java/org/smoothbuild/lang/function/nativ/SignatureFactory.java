@@ -26,67 +26,73 @@ import com.google.inject.TypeLiteral;
 
 public class SignatureFactory {
 
-  public static Signature<?> create(Method method, Class<?> paramsInterface)
-      throws NativeImplementationException {
-    SType<?> type = getReturnType(method);
-    Name name = getFunctionName(method);
-    Iterable<Param> params = getParams(method, paramsInterface);
+  public static Signature<?> create(Method functionMethod, Class<?> paramsInterface) throws
+      NativeImplementationException {
+    SType<?> type = functionSType(functionMethod);
+    Name name = functionSName(functionMethod);
+    Iterable<Param> params = functionSParams(functionMethod, paramsInterface);
 
     return new Signature<>(type, name, params);
   }
 
-  private static Name getFunctionName(Method method) throws NativeImplementationException {
-    SmoothFunction annotation = method.getAnnotation(SmoothFunction.class);
+  private static Name functionSName(Method functionMethod) throws NativeImplementationException {
+    SmoothFunction annotation = functionMethod.getAnnotation(SmoothFunction.class);
     if (annotation == null) {
-      throw new MissingNameException(method);
+      throw new MissingNameException(functionMethod);
     }
     try {
       return name(annotation.name());
     } catch (IllegalArgumentException e) {
-      throw new IllegalFunctionNameException(method, e.getMessage());
+      throw new IllegalFunctionNameException(functionMethod, e.getMessage());
     }
   }
 
-  private static SType<?> getReturnType(Method method) throws NativeImplementationException {
-    TypeLiteral<?> jType = methodReturnJType(method);
-    SType<?> type = resultJTypeToSType(jType);
-    if (type == null) {
-      throw new IllegalReturnTypeException(method, jType);
-    }
-    return type;
-  }
-
-  private static Iterable<Param> getParams(Method method, Class<?> paramsInterface)
-      throws NativeImplementationException {
+  private static Iterable<Param> functionSParams(Method functionMethod, Class<?> paramsInterface) throws
+      NativeImplementationException {
     if (!paramsInterface.isInterface()) {
-      throw new ParamsIsNotInterfaceException(method);
+      throw new ParamsIsNotInterfaceException(functionMethod);
     }
     Method[] methods = paramsInterface.getMethods();
     List<Param> params = Lists.newArrayList();
     for (Method paramMethod : methods) {
-      params.add(methodToParam(method, paramMethod));
+      params.add(paramMethodToSParam(functionMethod, paramMethod));
     }
     return params;
   }
 
-  private static Param methodToParam(Method method, Method paramMethod)
-      throws NativeImplementationException {
+  private static Param paramMethodToSParam(Method functionMethod, Method paramMethod) throws
+      NativeImplementationException {
     if (paramMethod.getParameterTypes().length != 0) {
-      throw new ParamMethodHasArgumentsException(method, paramMethod);
+      throw new ParamMethodHasArgumentsException(functionMethod, paramMethod);
     }
 
-    TypeLiteral<?> jType = methodReturnJType(paramMethod);
-    SType<?> type = paramJTypeToSType(jType);
-    if (type == null) {
-      throw new ForbiddenParamTypeException(method, paramMethod, jType);
-    }
-
-    boolean isRequired = paramMethod.getAnnotation(Required.class) != null;
+    SType<?> type = paramMethodSType(functionMethod, paramMethod);
     String name = paramMethod.getName();
+    boolean isRequired = paramMethod.getAnnotation(Required.class) != null;
     return Param.param(type, name, isRequired);
   }
 
-  private static TypeLiteral<?> methodReturnJType(Method paramMethod) {
+  private static SType<?> functionSType(Method functionMethod) throws
+      NativeImplementationException {
+    TypeLiteral<?> jType = methodJType(functionMethod);
+    SType<?> type = resultJTypeToSType(jType);
+    if (type == null) {
+      throw new IllegalReturnTypeException(functionMethod, jType);
+    }
+    return type;
+  }
+
+  private static SType<?> paramMethodSType(Method functionMethod, Method paramMethod) throws
+      ForbiddenParamTypeException {
+    TypeLiteral<?> jType = methodJType(paramMethod);
+    SType<?> type = paramJTypeToSType(jType);
+    if (type == null) {
+      throw new ForbiddenParamTypeException(functionMethod, paramMethod, jType);
+    }
+    return type;
+  }
+
+  private static TypeLiteral<?> methodJType(Method paramMethod) {
     Class<?> paramsClass = paramMethod.getDeclaringClass();
     return TypeLiteral.get(paramsClass).getReturnType(paramMethod);
   }
