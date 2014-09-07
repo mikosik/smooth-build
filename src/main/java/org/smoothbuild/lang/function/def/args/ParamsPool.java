@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.base.STypes.allTypes;
+import static org.smoothbuild.lang.base.STypes.allSTypes;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class ParamsPool {
       Map<SType<?>, Set<Param>> optionalParamsMap, Map<SType<?>, Set<Param>> requiredParamsMap) {
 
     Builder<SType<?>, TypedParamsPool> builder = ImmutableMap.builder();
-    for (SType<?> type : allTypes()) {
+    for (SType<?> type : allSTypes()) {
       Set<Param> optional = optionalParamsMap.get(type);
       Set<Param> required = requiredParamsMap.get(type);
 
@@ -84,7 +84,7 @@ public class ParamsPool {
   private static Map<SType<?>, Set<Param>> createParamsMap(ImmutableMap<String, Param> allParams,
       boolean requiredParams) {
     Map<SType<?>, Set<Param>> map = Maps.newHashMap();
-    for (SType<?> type : allTypes()) {
+    for (SType<?> type : allSTypes()) {
       HashSet<Param> set = Sets.newHashSet();
       for (Param param : allParams.values()) {
         if (param.isRequired() == requiredParams && param.type() == type) {

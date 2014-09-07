@@ -18,29 +18,19 @@ public class STypes {
   private static final TypeLiteral<SFile> FILE_T = TypeLiteral.get(SFile.class);
   private static final TypeLiteral<SNothing> NOTHING_T = TypeLiteral.get(SNothing.class);
 
-  private static final TypeLiteral<SArray<SString>> STRING_A_T =
-      new TypeLiteral<SArray<SString>>() {};
+  private static final TypeLiteral<SArray<SString>> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
   private static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
   private static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
   private static final TypeLiteral<SArray<SNothing>> NIL_T = new TypeLiteral<SArray<SNothing>>() {};
 
   /*
-   * Names of smooth types.
-   */
-
-  private static final String STRING_N = "String";
-  private static final String BLOB_N = "Blob";
-  private static final String FILE_N = "File";
-  private static final String NOTHING_N = "Nothing";
-
-  /*
    * Smooth types. Used by smooth-build code to represent smooth types.
    */
 
-  public static final SType<SString> STRING = sType(STRING_N, STRING_T);
-  public static final SType<SBlob> BLOB = sType(BLOB_N, BLOB_T);
-  public static final SType<SFile> FILE = sType(FILE_N, FILE_T);
-  public static final SType<SNothing> NOTHING = sType(NOTHING_N, NOTHING_T);
+  public static final SType<SString> STRING = sType("String", STRING_T);
+  public static final SType<SBlob> BLOB = sType("Blob", BLOB_T);
+  public static final SType<SFile> FILE = sType("File", FILE_T);
+  public static final SType<SNothing> NOTHING = sType("Nothing", NOTHING_T);
 
   public static final SArrayType<SString> STRING_ARRAY = sArrayType(STRING_A_T, STRING);
   public static final SArrayType<SBlob> BLOB_ARRAY = sArrayType(BLOB_A_T, BLOB);
@@ -57,48 +47,48 @@ public class STypes {
    * NOTHING is not a basic type as it is not possible to create instance of
    * that type.
    */
-  static final ImmutableSet<SType<?>> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
-  static final ImmutableSet<SArrayType<?>> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY, BLOB_ARRAY,
+  static final ImmutableSet<SType<?>> BASIC_STYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  static final ImmutableSet<SArrayType<?>> ARRAY_STYPES = ImmutableSet.of(STRING_ARRAY, BLOB_ARRAY,
       FILE_ARRAY, NIL);
 
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> RESULT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+  static final ImmutableSet<SType<?>> RESULT_STYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  static final ImmutableSet<SType<?>> PARAM_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+  static final ImmutableSet<SType<?>> PARAM_STYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
   @SuppressWarnings("unchecked")
-  private static final ImmutableSet<SType<?>> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+  private static final ImmutableSet<SType<?>> ALL_STYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
 
   /*
    * Some of the set above converted to java types.
    */
 
-  static final ImmutableSet<TypeLiteral<?>> RESULT_JAVA_TYPES = toJavaTypes(RESULT_TYPES);
-  static final ImmutableSet<TypeLiteral<?>> PARAM_JAVA_TYPES = toJavaTypes(PARAM_TYPES);
+  static final ImmutableSet<TypeLiteral<?>> RESULT_JTYPES = toJTypes(RESULT_STYPES);
+  static final ImmutableSet<TypeLiteral<?>> PARAM_JTYPES = toJTypes(PARAM_STYPES);
 
   /*
    * A few handy mappings.
    */
 
-  static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_PARAM_TO_SMOOTH =
-      javaToTypeMap(PARAM_TYPES);
-  static final ImmutableMap<TypeLiteral<?>, SType<?>> JAVA_RESULT_TO_SMOOTH =
-      javaToTypeMap(RESULT_TYPES);
-  static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_TYPE_TO_ARRAY_TYPE =
-      createElemTypeToArrayType(ARRAY_TYPES);
+  static final ImmutableMap<TypeLiteral<?>, SType<?>> PARAM_JTYPE_TO_STYPE = createToSTypeMap(
+      PARAM_STYPES);
+  static final ImmutableMap<TypeLiteral<?>, SType<?>> RESULT_JTYPE_TO_STYPE = createToSTypeMap(
+      RESULT_STYPES);
+  private static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_STYPE_TO_ARRAY_STYPE = createElemSTypeToSArrayType(
+      ARRAY_STYPES);
 
-  public static ImmutableSet<SType<?>> basicTypes() {
-    return BASIC_TYPES;
+  public static ImmutableSet<SType<?>> basicSTypes() {
+    return BASIC_STYPES;
   }
 
-  public static ImmutableSet<SArrayType<?>> arrayTypes() {
-    return ARRAY_TYPES;
+  public static ImmutableSet<SArrayType<?>> arraySTypes() {
+    return ARRAY_STYPES;
   }
 
-  public static ImmutableSet<SType<?>> allowedForParam() {
-    return PARAM_TYPES;
+  public static ImmutableSet<SType<?>> paramSTypes() {
+    return PARAM_STYPES;
   }
 
   /**
@@ -106,57 +96,57 @@ public class STypes {
    * using type - subtype relationship. Each type comes before all of its
    * subtypes.
    */
-  public static ImmutableSet<SType<?>> allTypes() {
-    return ALL_TYPES;
+  public static ImmutableSet<SType<?>> allSTypes() {
+    return ALL_STYPES;
   }
 
-  public static ImmutableSet<TypeLiteral<?>> javaTypesAllowedForResult() {
-    return RESULT_JAVA_TYPES;
+  public static ImmutableSet<TypeLiteral<?>> resultJTypes() {
+    return RESULT_JTYPES;
   }
 
-  public static ImmutableSet<TypeLiteral<?>> javaTypesAllowedForParam() {
-    return PARAM_JAVA_TYPES;
+  public static ImmutableSet<TypeLiteral<?>> paramJTypes() {
+    return PARAM_JTYPES;
   }
 
-  public static SType<?> javaParamTypeToType(TypeLiteral<?> javaType) {
-    return JAVA_PARAM_TO_SMOOTH.get(javaType);
+  public static SType<?> paramJTypeToSType(TypeLiteral<?> jType) {
+    return PARAM_JTYPE_TO_STYPE.get(jType);
   }
 
-  public static SType<?> javaResultTypeToType(TypeLiteral<?> javaType) {
-    return JAVA_RESULT_TO_SMOOTH.get(javaType);
+  public static SType<?> resultJTypeToSType(TypeLiteral<?> jType) {
+    return RESULT_JTYPE_TO_STYPE.get(jType);
   }
 
-  public static <T extends SValue> SArrayType<T> arrayTypeContaining(SType<T> elemType) {
+  public static <T extends SValue> SArrayType<T> sArrayTypeContaining(SType<T> elemType) {
     /*
      * Cast is safe as ELEM_TYPE_TO_ARRAY_TYPE is immutable and it is
      * initialized with proper mappings.
      */
-    @SuppressWarnings("unchecked")
-    SArrayType<T> result = (SArrayType<T>) ELEM_TYPE_TO_ARRAY_TYPE.get(elemType);
+    @SuppressWarnings(
+        "unchecked") SArrayType<T> result = (SArrayType<T>) ELEM_STYPE_TO_ARRAY_STYPE.get(elemType);
     return result;
   }
 
-  private static ImmutableSet<TypeLiteral<?>> toJavaTypes(Iterable<SType<?>> types) {
+  private static ImmutableSet<TypeLiteral<?>> toJTypes(Iterable<SType<?>> types) {
     ImmutableSet.Builder<TypeLiteral<?>> builder = ImmutableSet.builder();
 
     for (SType<?> type : types) {
-      builder.add(type.javaType());
+      builder.add(type.jType());
     }
 
     return builder.build();
   }
 
-  private static ImmutableMap<TypeLiteral<?>, SType<?>> javaToTypeMap(Iterable<SType<?>> types) {
+  private static ImmutableMap<TypeLiteral<?>, SType<?>> createToSTypeMap(Iterable<SType<?>> types) {
     ImmutableMap.Builder<TypeLiteral<?>, SType<?>> builder = ImmutableMap.builder();
 
     for (SType<?> type : types) {
-      builder.put(type.javaType(), type);
+      builder.put(type.jType(), type);
     }
 
     return builder.build();
   }
 
-  private static ImmutableMap<SType<?>, SArrayType<?>> createElemTypeToArrayType(
+  private static ImmutableMap<SType<?>, SArrayType<?>> createElemSTypeToSArrayType(
       ImmutableSet<SArrayType<?>> arrayTypes) {
 
     ImmutableMap.Builder<SType<?>, SArrayType<?>> builder = ImmutableMap.builder();

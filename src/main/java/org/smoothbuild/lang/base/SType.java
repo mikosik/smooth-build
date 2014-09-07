@@ -7,23 +7,23 @@ import com.google.inject.TypeLiteral;
  */
 public class SType<T extends SValue> {
   private final String name;
-  private final TypeLiteral<? extends SValue> javaType;
+  private final TypeLiteral<? extends SValue> jType;
 
-  protected static <T extends SValue> SType<T> sType(String name, TypeLiteral<T> javaType) {
-    return new SType<>(name, javaType);
+  protected static <T extends SValue> SType<T> sType(String name, TypeLiteral<T> jType) {
+    return new SType<>(name, jType);
   }
 
-  protected SType(String name, TypeLiteral<T> javaType) {
+  protected SType(String name, TypeLiteral<T> jType) {
     this.name = name;
-    this.javaType = javaType;
+    this.jType = jType;
   }
 
   public String name() {
     return name;
   }
 
-  public TypeLiteral<? extends SValue> javaType() {
-    return javaType;
+  public TypeLiteral<? extends SValue> jType() {
+    return jType;
   }
 
   @Override
