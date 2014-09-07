@@ -37,8 +37,7 @@ public class Convert {
    */
   private static final String PARAM_NAME = "input";
 
-  private static final ImmutableMap<SType<?>, ImmutableMap<SType<?>, Function<?>>> FUNCTIONS =
-      createFunctions();
+  private static final ImmutableMap<SType<?>, ImmutableMap<SType<?>, Function<?>>> FUNCTIONS = createFunctions();
 
   public static <T extends SValue> ImmutableList<Expr<T>> convertExprs(SType<T> type,
       Iterable<? extends Expr<?>> expressions) {
@@ -50,10 +49,7 @@ public class Convert {
   }
 
   public static boolean isAssignable(SType<?> from, SType<?> to) {
-    if (from == to) {
-      return true;
-    }
-    return FUNCTIONS.get(from).containsKey(to);
+    return from == to || FUNCTIONS.get(from).containsKey(to);
   }
 
   public static ImmutableSet<SType<?>> superTypesOf(SType<?> type) {
