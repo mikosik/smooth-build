@@ -8,34 +8,20 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class STypes {
-  /*
-   * Java types representing smooth types. These types are used by native
-   * function implementations in plugins code.
-   */
 
-  private static final TypeLiteral<SString> STRING_T = TypeLiteral.get(SString.class);
-  private static final TypeLiteral<SBlob> BLOB_T = TypeLiteral.get(SBlob.class);
-  private static final TypeLiteral<SFile> FILE_T = TypeLiteral.get(SFile.class);
-  private static final TypeLiteral<SNothing> NOTHING_T = TypeLiteral.get(SNothing.class);
+  public static final SType<SString> STRING = sType("String", SString.class);
+  public static final SType<SBlob> BLOB = sType("Blob", SBlob.class);
+  public static final SType<SFile> FILE = sType("File", SFile.class);
+  public static final SType<SNothing> NOTHING = sType("Nothing", SNothing.class);
 
-  private static final TypeLiteral<SArray<SString>> STRING_A_T = new TypeLiteral<SArray<SString>>() {};
-  private static final TypeLiteral<SArray<SBlob>> BLOB_A_T = new TypeLiteral<SArray<SBlob>>() {};
-  private static final TypeLiteral<SArray<SFile>> FILE_A_T = new TypeLiteral<SArray<SFile>>() {};
-  private static final TypeLiteral<SArray<SNothing>> NIL_T = new TypeLiteral<SArray<SNothing>>() {};
-
-  /*
-   * Smooth types. Used by smooth-build code to represent smooth types.
-   */
-
-  public static final SType<SString> STRING = sType("String", STRING_T);
-  public static final SType<SBlob> BLOB = sType("Blob", BLOB_T);
-  public static final SType<SFile> FILE = sType("File", FILE_T);
-  public static final SType<SNothing> NOTHING = sType("Nothing", NOTHING_T);
-
-  public static final SArrayType<SString> STRING_ARRAY = sArrayType(STRING_A_T, STRING);
-  public static final SArrayType<SBlob> BLOB_ARRAY = sArrayType(BLOB_A_T, BLOB);
-  public static final SArrayType<SFile> FILE_ARRAY = sArrayType(FILE_A_T, FILE);
-  public static final SArrayType<SNothing> NIL = sArrayType(NIL_T, NOTHING);
+  public static final SArrayType<SString> STRING_ARRAY = sArrayType(STRING,
+      new TypeLiteral<SArray<SString>>() {});
+  public static final SArrayType<SBlob> BLOB_ARRAY = sArrayType(BLOB,
+      new TypeLiteral<SArray<SBlob>>() {});
+  public static final SArrayType<SFile> FILE_ARRAY = sArrayType(FILE,
+      new TypeLiteral<SArray<SFile>>() {});
+  public static final SArrayType<SNothing> NIL = sArrayType(NOTHING,
+      new TypeLiteral<SArray<SNothing>>() {});
 
   /*
    * Not each type can be used in every place. Each set below represent one
@@ -76,7 +62,7 @@ public class STypes {
       PARAM_STYPES);
   static final ImmutableMap<TypeLiteral<?>, SType<?>> RESULT_JTYPE_TO_STYPE = createToSTypeMap(
       RESULT_STYPES);
-  private static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_STYPE_TO_ARRAY_STYPE = createElemSTypeToSArrayType(
+  private static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_STYPE_TO_ARRAY_STYPE = createElemSTypeToSArrayTypeMap(
       ARRAY_STYPES);
 
   public static ImmutableSet<SType<?>> basicSTypes() {
@@ -146,7 +132,7 @@ public class STypes {
     return builder.build();
   }
 
-  private static ImmutableMap<SType<?>, SArrayType<?>> createElemSTypeToSArrayType(
+  private static ImmutableMap<SType<?>, SArrayType<?>> createElemSTypeToSArrayTypeMap(
       ImmutableSet<SArrayType<?>> arrayTypes) {
 
     ImmutableMap.Builder<SType<?>, SArrayType<?>> builder = ImmutableMap.builder();

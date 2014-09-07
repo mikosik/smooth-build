@@ -9,8 +9,8 @@ public class SType<T extends SValue> {
   private final String name;
   private final TypeLiteral<? extends SValue> jType;
 
-  protected static <T extends SValue> SType<T> sType(String name, TypeLiteral<T> jType) {
-    return new SType<>(name, jType);
+  protected static <T extends SValue> SType<T> sType(String name, Class<T> clazz) {
+    return new SType<>(name, TypeLiteral.get(clazz));
   }
 
   protected SType(String name, TypeLiteral<T> jType) {
