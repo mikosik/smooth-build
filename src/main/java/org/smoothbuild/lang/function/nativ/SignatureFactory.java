@@ -11,7 +11,7 @@ import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.err.ForbiddenParamTypeException;
+import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
 import org.smoothbuild.lang.function.nativ.err.MissingNameException;
@@ -83,11 +83,11 @@ public class SignatureFactory {
   }
 
   private static SType<?> paramMethodSType(Method functionMethod, Method paramMethod) throws
-      ForbiddenParamTypeException {
+      IllegalParamTypeException {
     TypeLiteral<?> jType = methodJType(paramMethod);
     SType<?> type = paramJTypeToSType(jType);
     if (type == null) {
-      throw new ForbiddenParamTypeException(functionMethod, paramMethod, jType);
+      throw new IllegalParamTypeException(functionMethod, paramMethod, jType);
     }
     return type;
   }
