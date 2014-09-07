@@ -67,18 +67,21 @@ public class ParamsPool {
 
     Builder<SType<?>, TypedParamsPool> builder = ImmutableMap.builder();
     for (SType<?> type : allSTypes()) {
-      Set<Param> optional = optionalParamsMap.get(type);
-      Set<Param> required = requiredParamsMap.get(type);
-
-      for (SType<?> superType : Convert.superTypesOf(type)) {
-        optional = Sets.union(optional, optionalParamsMap.get(superType));
-        required = Sets.union(required, requiredParamsMap.get(superType));
-      }
-
+      Set<Param> optional = paramsAssignableFromType(type, optionalParamsMap);
+      Set<Param> required = paramsAssignableFromType(type, requiredParamsMap);
       builder.put(type, new TypedParamsPool(optional, required));
     }
 
     return builder.build();
+  }
+
+  private static Set<Param> paramsAssignableFromType(SType<?> type,
+      Map<SType<?>, Set<Param>> paramsMap) {
+    Set<Param> params = paramsMap.get(type);
+    for (SType<?> superType : Convert.superTypesOf(type)) {
+      params = Sets.union(params, paramsMap.get(superType));
+    }
+    return params;
   }
 
   private static Map<SType<?>, Set<Param>> createParamsMap(ImmutableMap<String, Param> allParams,
