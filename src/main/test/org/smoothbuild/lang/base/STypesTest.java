@@ -10,7 +10,6 @@ import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 import static org.smoothbuild.lang.base.STypes.allSTypes;
-import static org.smoothbuild.lang.base.STypes.arraySTypes;
 import static org.smoothbuild.lang.base.STypes.basicSTypes;
 import static org.smoothbuild.lang.base.STypes.paramJTypeToSType;
 import static org.smoothbuild.lang.base.STypes.paramSTypes;
@@ -31,11 +30,6 @@ public class STypesTest {
   @Test
   public void basic_stypes() throws Exception {
     assertThat(basicSTypes()).containsExactly(STRING, BLOB, FILE);
-  }
-
-  @Test
-  public void array_stypes() throws Exception {
-    assertThat(arraySTypes()).containsExactly(STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
   }
 
   @Test
