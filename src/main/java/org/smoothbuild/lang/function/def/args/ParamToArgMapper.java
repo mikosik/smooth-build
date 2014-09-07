@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static org.smoothbuild.lang.base.STypes.allTypes;
+import static org.smoothbuild.lang.base.STypes.allSTypes;
 
 import java.util.Collection;
 import java.util.Set;
@@ -102,7 +102,7 @@ public class ParamToArgMapper {
   private void processNamelessArguments(ParamToArgMapBuilder paramToArgMapBuilder) {
     ImmutableMultimap<SType<?>, Arg> namelessArgs = Arg.filterNameless(allArguments);
 
-    for (SType<?> type : allTypes()) {
+    for (SType<?> type : allSTypes()) {
       Collection<Arg> availableArgs = namelessArgs.get(type);
       int argsSize = availableArgs.size();
       if (0 < argsSize) {

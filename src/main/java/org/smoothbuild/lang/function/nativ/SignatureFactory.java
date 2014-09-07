@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.base.STypes.javaParamTypeToType;
-import static org.smoothbuild.lang.base.STypes.javaResultTypeToType;
+import static org.smoothbuild.lang.base.STypes.paramJTypeToSType;
+import static org.smoothbuild.lang.base.STypes.resultJTypeToSType;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import java.lang.reflect.Method;
@@ -48,10 +48,10 @@ public class SignatureFactory {
   }
 
   private static SType<?> getReturnType(Method method) throws NativeImplementationException {
-    TypeLiteral<?> javaType = javaMethodReturnType(method);
-    SType<?> type = javaResultTypeToType(javaType);
+    TypeLiteral<?> jType = methodReturnJType(method);
+    SType<?> type = resultJTypeToSType(jType);
     if (type == null) {
-      throw new IllegalReturnTypeException(method, javaType);
+      throw new IllegalReturnTypeException(method, jType);
     }
     return type;
   }
@@ -75,10 +75,10 @@ public class SignatureFactory {
       throw new ParamMethodHasArgumentsException(method, paramMethod);
     }
 
-    TypeLiteral<?> javaType = javaMethodReturnType(paramMethod);
-    SType<?> type = javaParamTypeToType(javaType);
+    TypeLiteral<?> jType = methodReturnJType(paramMethod);
+    SType<?> type = paramJTypeToSType(jType);
     if (type == null) {
-      throw new ForbiddenParamTypeException(method, paramMethod, javaType);
+      throw new ForbiddenParamTypeException(method, paramMethod, jType);
     }
 
     boolean isRequired = paramMethod.getAnnotation(Required.class) != null;
@@ -86,7 +86,7 @@ public class SignatureFactory {
     return Param.param(type, name, isRequired);
   }
 
-  private static TypeLiteral<?> javaMethodReturnType(Method paramMethod) {
+  private static TypeLiteral<?> methodReturnJType(Method paramMethod) {
     Class<?> paramsClass = paramMethod.getDeclaringClass();
     return TypeLiteral.get(paramsClass).getReturnType(paramMethod);
   }

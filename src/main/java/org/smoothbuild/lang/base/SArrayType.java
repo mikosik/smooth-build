@@ -3,19 +3,19 @@ package org.smoothbuild.lang.base;
 import com.google.inject.TypeLiteral;
 
 public class SArrayType<T extends SValue> extends SType<SArray<T>> {
-  private final SType<T> elemType;
+  private final SType<T> elemSType;
 
-  protected static <T extends SValue> SArrayType<T> sArrayType(TypeLiteral<SArray<T>> javaType,
+  protected static <T extends SValue> SArrayType<T> sArrayType(TypeLiteral<SArray<T>> jType,
       SType<T> elemType) {
-    return new SArrayType<>(javaType, elemType);
+    return new SArrayType<>(jType, elemType);
   }
 
-  protected SArrayType(TypeLiteral<SArray<T>> javaType, SType<T> elemType) {
-    super(elemType.name() + "[]", javaType);
-    this.elemType = elemType;
+  protected SArrayType(TypeLiteral<SArray<T>> jType, SType<T> elemSType) {
+    super(elemSType.name() + "[]", jType);
+    this.elemSType = elemSType;
   }
 
   public SType<T> elemType() {
-    return elemType;
+    return elemSType;
   }
 }

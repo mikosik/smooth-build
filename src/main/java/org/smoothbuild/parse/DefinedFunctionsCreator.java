@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.STypes.FILE;
 import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING;
-import static org.smoothbuild.lang.base.STypes.basicTypes;
+import static org.smoothbuild.lang.base.STypes.basicSTypes;
 import static org.smoothbuild.lang.expr.Convert.convertExprs;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
@@ -168,7 +168,7 @@ public class DefinedFunctionsCreator {
 
     private <T extends SValue> Expr<SArray<T>> buildArray(SType<T> elemType,
         ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
-      SArrayType<T> arrayType = STypes.arrayTypeContaining(elemType);
+      SArrayType<T> arrayType = STypes.sArrayTypeContaining(elemType);
       ImmutableList<Expr<T>> convertedExpr = convertExprs(elemType, elemExprs);
       return new ArrayExpr<>(arrayType, convertedExpr, location);
     }
@@ -177,7 +177,7 @@ public class DefinedFunctionsCreator {
       Builder<Expr<?>> builder = ImmutableList.builder();
       for (ArrayElemContext elem : elems) {
         Expr<?> expr = build(elem);
-        if (!basicTypes().contains(expr.type())) {
+        if (!basicSTypes().contains(expr.type())) {
           CodeLocation location = locationOf(elem);
           messages.log(new ForbiddenArrayElemError(location, expr.type()));
           builder.add(new InvalidExpr<>(NOTHING, location));
