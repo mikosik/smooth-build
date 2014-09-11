@@ -4,6 +4,7 @@ import static org.smoothbuild.lang.base.SArrayType.sArrayType;
 import static org.smoothbuild.lang.base.SType.sType;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
@@ -65,6 +66,8 @@ public class STypes {
   private static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_STYPE_TO_ARRAY_STYPE = createElemSTypeToSArrayTypeMap(
       ARRAY_STYPES);
 
+  private static final ImmutableMultimap<SType<?>, SType<?>> CONVERSIONS = createConversions();
+
   public static ImmutableSet<SType<?>> basicSTypes() {
     return BASIC_STYPES;
   }
@@ -103,9 +106,13 @@ public class STypes {
      * Cast is safe as ELEM_TYPE_TO_ARRAY_TYPE is immutable and it is
      * initialized with proper mappings.
      */
-    @SuppressWarnings(
-        "unchecked") SArrayType<T> result = (SArrayType<T>) ELEM_STYPE_TO_ARRAY_STYPE.get(elemType);
+    @SuppressWarnings("unchecked")
+    SArrayType<T> result = (SArrayType<T>) ELEM_STYPE_TO_ARRAY_STYPE.get(elemType);
     return result;
+  }
+
+  public static boolean canConvert(SType<?> from, SType<?> to) {
+    return from == to || CONVERSIONS.containsEntry(from, to);
   }
 
   private static ImmutableSet<TypeLiteral<?>> toJTypes(Iterable<SType<?>> types) {
@@ -136,6 +143,18 @@ public class STypes {
     for (SArrayType<?> type : arrayTypes) {
       builder.put(type.elemType(), type);
     }
+
+    return builder.build();
+  }
+
+  private static ImmutableMultimap<SType<?>, SType<?>> createConversions() {
+    ImmutableMultimap.Builder<SType<?>, SType<?>> builder = ImmutableMultimap.builder();
+
+    builder.put(FILE, BLOB);
+    builder.put(FILE_ARRAY, BLOB_ARRAY);
+    builder.put(NIL, STRING_ARRAY);
+    builder.put(NIL, BLOB_ARRAY);
+    builder.put(NIL, FILE_ARRAY);
 
     return builder.build();
   }

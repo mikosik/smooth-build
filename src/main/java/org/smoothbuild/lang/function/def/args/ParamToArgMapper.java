@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.STypes;
 import org.smoothbuild.lang.expr.Convert;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
@@ -90,7 +91,7 @@ public class ParamToArgMapper {
         String name = arg.name();
         Param param = paramsPool.takeByName(name);
         SType<?> paramType = param.type();
-        if (!Convert.isAssignable(arg.type(), paramType)) {
+        if (!STypes.canConvert(arg.type(), paramType)) {
           messages.log(new TypeMismatchError(arg, paramType));
         } else {
           paramToArgMapBuilder.add(param, arg);
