@@ -48,10 +48,6 @@ public class Convert {
     return builder.build();
   }
 
-  public static boolean isAssignable(SType<?> from, SType<?> to) {
-    return from == to || FUNCTIONS.get(from).containsKey(to);
-  }
-
   public static ImmutableSet<SType<?>> superTypesOf(SType<?> type) {
     return FUNCTIONS.get(type).keySet();
   }
