@@ -10,8 +10,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public interface Function<T extends SValue> {
-  public Signature<T> signature();
-
   public SType<T> type();
 
   public Name name();
