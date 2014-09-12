@@ -2,15 +2,17 @@ package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.STypes.allSTypes;
+import static org.smoothbuild.lang.base.STypes.canConvert;
+import static org.smoothbuild.lang.function.base.Params.filterOptionalParams;
+import static org.smoothbuild.lang.function.base.Params.filterRequiredParams;
+import static org.smoothbuild.lang.function.base.Params.paramsToMap;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.expr.Convert;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.base.Params;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -26,9 +28,9 @@ public class ParamsPool {
   private final Map<SType<?>, Set<Param>> requiredParamsMap;
 
   public ParamsPool(ImmutableList<Param> params) {
-    this.params = Params.paramsToMap(params);
-    this.optionalParamsMap = createParamsMap(Params.filterOptionalParams(params));
-    this.requiredParamsMap = createParamsMap(Params.filterRequiredParams(params));
+    this.params = paramsToMap(params);
+    this.optionalParamsMap = createParamsMap(filterOptionalParams(params));
+    this.requiredParamsMap = createParamsMap(filterRequiredParams(params));
     this.typePools = createTypePools(optionalParamsMap, requiredParamsMap);
   }
 
@@ -80,8 +82,10 @@ public class ParamsPool {
   private static Set<Param> paramsAssignableFromType(SType<?> type,
       Map<SType<?>, Set<Param>> paramsMap) {
     Set<Param> params = paramsMap.get(type);
-    for (SType<?> superType : Convert.superTypesOf(type)) {
-      params = Sets.union(params, paramsMap.get(superType));
+    for (SType<?> currentType : allSTypes()) {
+      if (canConvert(type, currentType)) {
+        params = Sets.union(params, paramsMap.get(currentType));
+      }
     }
     return params;
   }

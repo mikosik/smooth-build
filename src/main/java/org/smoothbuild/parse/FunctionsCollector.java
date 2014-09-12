@@ -22,7 +22,7 @@ import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 import com.google.common.collect.Maps;
 
 /**
- * Transforms script ParseTree into paramsToMap that maps function name to its
+ * Transforms script ParseTree into map that maps function name to its
  * FunctionContext. Detects illegal function names, duplicate function names,
  * overridden imports.
  */

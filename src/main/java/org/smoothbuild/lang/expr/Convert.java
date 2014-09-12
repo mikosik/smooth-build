@@ -28,7 +28,6 @@ import org.smoothbuild.util.Empty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.HashCode;
 
 public class Convert {
@@ -46,10 +45,6 @@ public class Convert {
       builder.add(convertExpr(type, expr));
     }
     return builder.build();
-  }
-
-  public static ImmutableSet<SType<?>> superTypesOf(SType<?> type) {
-    return FUNCTIONS.get(type).keySet();
   }
 
   public static <T extends SValue> Expr<T> convertExpr(SType<T> destinationType, Expr<?> source) {
