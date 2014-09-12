@@ -13,9 +13,8 @@ import static org.smoothbuild.lang.function.base.Param.param;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.base.Params;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 public class ParamsPoolTest {
   Param string = param(STRING, "string1");
@@ -34,7 +33,7 @@ public class ParamsPoolTest {
   Param blobArrayRequired = param(BLOB_ARRAY, "blobArrayRequired", true);
   Param fileArrayRequired = param(FILE_ARRAY, "fileArrayRequired", true);
 
-  ImmutableMap<String, Param> params = Params.map(string, stringRequired, blob, blobRequired, file,
+  ImmutableList<Param> params = ImmutableList.of(string, stringRequired, blob, blobRequired, file,
       fileRequired, stringArray, stringArrayRequired, blobArray, blobArrayRequired, fileArray,
       fileArrayRequired);
   ParamsPool paramsPool = new ParamsPool(params);
@@ -122,8 +121,8 @@ public class ParamsPoolTest {
   public void string_array_param_is_available_for_string_array_argument() throws Exception {
     paramsPool = new ParamsPool(params);
 
-    assertThat(paramsPool.availableForType(STRING_ARRAY).optionalParams())
-        .containsOnly(stringArray);
+    assertThat(paramsPool.availableForType(STRING_ARRAY).optionalParams()).containsOnly(
+        stringArray);
     assertThat(paramsPool.availableForType(STRING_ARRAY).requiredParams()).containsOnly(
         stringArrayRequired);
   }
@@ -138,8 +137,8 @@ public class ParamsPoolTest {
   }
 
   @Test
-  public void blob_array_and_file_array_params_are_available_for_file_array_argument()
-      throws Exception {
+  public void blob_array_and_file_array_params_are_available_for_file_array_argument() throws
+      Exception {
     paramsPool = new ParamsPool(params);
 
     assertThat(paramsPool.availableForType(FILE_ARRAY).optionalParams()).containsOnly(blobArray,
@@ -168,7 +167,7 @@ public class ParamsPoolTest {
 
   @Test
   public void available_required_params_does_not_contain_taken_param() throws Exception {
-    ImmutableMap<String, Param> params = Params.map(stringRequired, fileRequired);
+    ImmutableList<Param> params = ImmutableList.of(stringRequired, fileRequired);
     ParamsPool paramsPool = new ParamsPool(params);
 
     paramsPool.take(stringRequired);

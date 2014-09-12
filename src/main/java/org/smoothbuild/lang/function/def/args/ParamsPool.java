@@ -10,7 +10,9 @@ import java.util.Set;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.expr.Convert;
 import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Params;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Iterables;
@@ -23,10 +25,10 @@ public class ParamsPool {
   private final Map<SType<?>, Set<Param>> optionalParamsMap;
   private final Map<SType<?>, Set<Param>> requiredParamsMap;
 
-  public ParamsPool(ImmutableMap<String, Param> params) {
-    this.params = params;
-    this.optionalParamsMap = createParamsMap(params, false);
-    this.requiredParamsMap = createParamsMap(params, true);
+  public ParamsPool(ImmutableList<Param> params) {
+    this.params = Params.paramsToMap(params);
+    this.optionalParamsMap = createParamsMap(Params.filterOptionalParams(params));
+    this.requiredParamsMap = createParamsMap(Params.filterRequiredParams(params));
     this.typePools = createTypePools(optionalParamsMap, requiredParamsMap);
   }
 
@@ -84,13 +86,12 @@ public class ParamsPool {
     return params;
   }
 
-  private static Map<SType<?>, Set<Param>> createParamsMap(ImmutableMap<String, Param> allParams,
-      boolean requiredParams) {
+  private static Map<SType<?>, Set<Param>> createParamsMap(ImmutableList<Param> params) {
     Map<SType<?>, Set<Param>> map = Maps.newHashMap();
     for (SType<?> type : allSTypes()) {
       HashSet<Param> set = Sets.newHashSet();
-      for (Param param : allParams.values()) {
-        if (param.isRequired() == requiredParams && param.type() == type) {
+      for (Param param : params) {
+        if (param.type() == type) {
           set.add(param);
         }
       }

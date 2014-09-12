@@ -36,29 +36,31 @@ public class Params {
     return builder.build();
   }
 
-  public static ImmutableMap<String, Param> map(Param... params) {
-    return map(Arrays.asList(params));
+  public static ImmutableMap<String, Param> paramsToMap(Param... params) {
+    return paramsToMap(Arrays.asList(params));
+  }
+
+  public static ImmutableMap<String, Param> paramsToMap(Iterable<Param> params) {
+    ImmutableMap.Builder<String, Param> builder = ImmutableMap.builder();
+    for (Param param : params) {
+      builder.put(param.name(), param);
+    }
+    return builder.build();
   }
 
   /**
-   * @return Parameters ordered lexicographically by their names. Methods
-   * values(), keySet(), entrySet() of returned map returns collections
-   * which elements keep that order.
+   * @return Parameters ordered lexicographically by their names.
    */
-  public static ImmutableMap<String, Param> map(Iterable<Param> params) {
+  public static ImmutableList<Param> sortedParams(Iterable<Param> params) {
     Set<String> names = Sets.newHashSet();
 
-    /*
-     * ImmutableMap keeps order of elements.
-     */
-    ImmutableMap.Builder<String, Param> builder = ImmutableMap.builder();
-
+    ImmutableList.Builder<Param> builder = ImmutableList.builder();
     for (Param param : ParamOrdering.PARAM_ORDERING.sortedCopy(params)) {
       String name = param.name();
       if (names.contains(name)) {
         throw new IllegalArgumentException("Duplicate param name = '" + name + "'");
       }
-      builder.put(name, param);
+      builder.add(param);
       names.add(name);
     }
     return builder.build();

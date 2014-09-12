@@ -28,9 +28,8 @@ import org.smoothbuild.lang.base.SBlob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Params;
-import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
+import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
@@ -39,6 +38,7 @@ import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.util.Classes;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 
 public class NativeModuleFactoryTest {
@@ -121,7 +121,7 @@ public class NativeModuleFactoryTest {
   public void function_signature_contains_all_params() throws Exception {
     given(module = createNativeModule(ModuleWithTwoParamFunction.class));
     when(module.getFunction(name("func")).params());
-    thenReturned(Params.map(param(STRING, "param1"), param(STRING, "param2")));
+    thenReturned(ImmutableList.of(param(STRING, "param1"), param(STRING, "param2")));
   }
 
   public static class ModuleWithTwoParamFunction {
@@ -169,7 +169,7 @@ public class NativeModuleFactoryTest {
   public void params_annotated_as_required_are_required() throws Exception {
     given(module = createNativeModule(ModuleWithFunctionWithRequiredParam.class));
     given(function = module.getFunction(name("func")));
-    when(function.params().get("param").isRequired());
+    when(function.params().get(0).isRequired());
     thenReturned(true);
   }
 
@@ -189,7 +189,7 @@ public class NativeModuleFactoryTest {
   public void params_not_annotated_as_required_are_not_required() throws Exception {
     given(module = createNativeModule(ModuleWithFunctionWithNotRequiredParam.class));
     given(function = module.getFunction(name("func")));
-    when(function.params().get("param").isRequired());
+    when(function.params().get(0).isRequired());
     thenReturned(false);
   }
 

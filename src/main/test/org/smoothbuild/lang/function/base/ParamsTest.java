@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.testory.Testory.given;
@@ -18,28 +17,6 @@ public class ParamsTest {
   Param param1;
   Param param2;
   Param param3;
-
-  @Test
-  public void paramsAreSortedAccordingToName() throws Exception {
-    String name1 = "aaa";
-    String name2 = "bbb";
-    String name3 = "ccc";
-    String name4 = "ddd";
-    String name5 = "eee";
-    String name6 = "fff";
-    Param param1 = param(STRING, name1, false);
-    Param param2 = param(STRING, name2, false);
-    Param param3 = param(STRING, name3, false);
-    Param param4 = param(STRING, name4, false);
-    Param param5 = param(STRING, name5, false);
-    Param param6 = param(STRING, name6, false);
-
-    ImmutableMap<String, Param> map = Params.map(ImmutableList.of(param4, param6, param1, param3,
-        param5, param2));
-
-    assertThat(map.values()).containsExactly(param1, param2, param3, param4, param5, param6);
-    assertThat(map.keySet()).containsExactly(name1, name2, name3, name4, name5, name6);
-  }
 
   // filterRequiredParams()
 
@@ -122,4 +99,37 @@ public class ParamsTest {
     when(Params.paramsToNames(params));
     thenReturned(ImmutableList.of("name1", "name2", "name3"));
   }
+
+  // paramsToMap()
+
+  @Test
+  public void params_to_map() throws Exception {
+    given(param1 = param(STRING, "alpha", true));
+    given(param2 = param(STRING, "beta", false));
+    given(param3 = param(STRING, "gamma", false));
+    given(params = ImmutableList.of(param1, param2, param3));
+    when(Params.paramsToMap(params));
+    thenReturned(ImmutableMap.of(param1.name(), param1, param2.name(), param2, param3.name(),
+        param3));
+  }
+
+  // sortedParams()
+
+  @Test
+  public void sorted_params_for_empty_list_returns_empty_list() throws Exception {
+    given(params = Empty.paramList());
+    when(Params.sortedParams(params));
+    thenReturned(Empty.paramList());
+  }
+
+  @Test
+  public void sorted_params() throws Exception {
+    given(param1 = param(STRING, "gamma", false));
+    given(param2 = param(STRING, "alpha", true));
+    given(param3 = param(STRING, "beta", false));
+    given(params = ImmutableList.of(param1, param2, param3));
+    when(Params.sortedParams(params));
+    thenReturned(ImmutableList.of(param2, param3, param1));
+  }
+
 }

@@ -16,9 +16,10 @@ public interface Function<T extends SValue> {
 
   public Name name();
 
-  public ImmutableMap<String, Param> params();
+  public ImmutableList<Param> params();
 
-  public ImmutableList<? extends Expr<?>> dependencies(ImmutableMap<String, ? extends Expr<?>> args);
+  public ImmutableList<? extends Expr<?>> dependencies(
+      ImmutableMap<String, ? extends Expr<?>> args);
 
   public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
       CodeLocation codeLocation);

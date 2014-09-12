@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class SignatureTest {
   private final SType<?> type = STRING;
@@ -53,13 +52,9 @@ public class SignatureTest {
     Param param5 = param(STRING, name5, false);
     Param param6 = param(STRING, name6, false);
 
-    Signature<?> signature =
-        new Signature<>(type, name, ImmutableList
-            .of(param4, param6, param1, param3, param5, param2));
-
-    ImmutableMap<String, Param> map = signature.params();
-    assertThat(map.values()).containsExactly(param1, param2, param3, param4, param5, param6);
-    assertThat(map.keySet()).containsExactly(name1, name2, name3, name4, name5, name6);
+    ImmutableList<Param> params = ImmutableList.of(param4, param6, param1, param3, param5, param2);
+    Signature<?> signature = new Signature<>(type, name, params);
+    assertThat(signature.params()).containsExactly(param1, param2, param3, param4, param5, param6);
   }
 
   @Test
@@ -67,7 +62,7 @@ public class SignatureTest {
     given(param = param(BLOB, "blob"));
     given(param2 = param(FILE, "file"));
     when(new Signature<>(STRING, name, ImmutableList.of(param, param2))).toString();
-    thenReturned(STRING.name() + " " + name.value() + "(" + param.type().name() + " "
-        + param.name() + ", " + param2.type().name() + " " + param2.name() + ")");
+    thenReturned(
+        STRING.name() + " " + name.value() + "(" + param.type().name() + " " + param.name() + ", " + param2.type().name() + " " + param2.name() + ")");
   }
 }

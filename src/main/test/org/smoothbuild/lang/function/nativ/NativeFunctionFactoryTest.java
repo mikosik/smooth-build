@@ -26,10 +26,9 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Params;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
+import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
@@ -131,7 +130,7 @@ public class NativeFunctionFactoryTest {
   public void function_params_are_equal_to_params_of_java_method() throws Exception {
     given(function = createNativeFunction(FunctionWithDifferentParams.class.getMethods()[0]));
     when(function).params();
-    thenReturned(Params.map(param(STRING, "string"), param(STRING_ARRAY, "array")));
+    thenReturned(ImmutableList.of(param(STRING_ARRAY, "array"), param(STRING, "string")));
   }
 
   public interface DifferentParams {
@@ -148,8 +147,8 @@ public class NativeFunctionFactoryTest {
   }
 
   @Test
-  public void function_is_cacheable_when_cacheable_is_missing_from_java_method_annotation()
-      throws Exception {
+  public void function_is_cacheable_when_cacheable_is_missing_from_java_method_annotation() throws
+      Exception {
     given(function = createNativeFunction(NonCacheableFunction.class.getMethods()[0]));
     when(function).isCacheable();
     thenReturned(true);
@@ -163,8 +162,8 @@ public class NativeFunctionFactoryTest {
   }
 
   @Test
-  public void function_is_not_cacheable_when_java_method_annotation_is_annotated_as_not_cacheable()
-      throws Exception {
+  public void function_is_not_cacheable_when_java_method_annotation_is_annotated_as_not_cacheable() throws
+      Exception {
     given(function = createNativeFunction(CacheableFunction.class.getMethods()[0]));
     when(function).isCacheable();
     thenReturned(false);
@@ -181,8 +180,8 @@ public class NativeFunctionFactoryTest {
   public void function_signature_is_determined_by_java_method() throws Exception {
     given(function = createNativeFunction(SignatureTestFunction.class.getMethods()[0]));
     when(function.signature().toString());
-    thenReturned(new Signature<>(BLOB, name("func"), ImmutableList.of(param(STRING, "string")))
-        .toString());
+    thenReturned(new Signature<>(BLOB, name("func"), ImmutableList.of(param(STRING,
+        "string"))).toString());
   }
 
   public interface SignatureTestParameters {
@@ -199,10 +198,10 @@ public class NativeFunctionFactoryTest {
   @SuppressWarnings("unchecked")
   @Test
   public void testInvokation() throws Exception {
-    given(stringFunction =
-        (Function<SString>) createNativeFunction(ConstantStringFunction.class.getMethods()[0]));
+    given(stringFunction = (Function<SString>) createNativeFunction(
+        ConstantStringFunction.class.getMethods()[0]));
     given(worker = stringFunction.createWorker(Empty.stringExprMap(), codeLocation(1)));
-    when(worker).execute(TaskInput.fromValues(ImmutableList.<SValue> of()), nativeApi);
+    when(worker).execute(TaskInput.fromValues(ImmutableList.<SValue>of()), nativeApi);
     thenReturned(new TaskOutput<>(objectsDb.string("constant string")));
   }
 
@@ -243,7 +242,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void param_annotated_as_required_is_required() throws Exception {
     given(function = createNativeFunction(FuncWithRequiredParam.class.getMethods()[0]));
-    when(function.params().get("param").isRequired());
+    when(function.params().get(0).isRequired());
     thenReturned(true);
   }
 
@@ -262,7 +261,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void param_not_annotated_as_required_is_not_required() throws Exception {
     given(function = createNativeFunction(FuncWithNotRequiredParam.class.getMethods()[0]));
-    when(function.params().get("param").isRequired());
+    when(function.params().get(0).isRequired());
     thenReturned(false);
   }
 
@@ -479,7 +478,8 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithPrivateSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    private static void execute(NativeApi nativeApi, EmptyParameters params) {}
+    private static void execute(NativeApi nativeApi, EmptyParameters params) {
+    }
   }
 
   @Test
@@ -507,7 +507,8 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithNonStaticSmoothMethod {
     @SmoothFunction(name = "myFunction")
-    public void execute(NativeApi nativeApi, EmptyParameters params) {}
+    public void execute(NativeApi nativeApi, EmptyParameters params) {
+    }
   }
 
   @Test
@@ -518,7 +519,8 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithSmoothMethodWithZeroParams {
     @SmoothFunction(name = "myFunction")
-    public static void execute() {}
+    public static void execute() {
+    }
   }
 
   @Test
@@ -529,23 +531,27 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithSmoothMethodWithOneParam {
     @SmoothFunction(name = "myFunction")
-    public static void execute() {}
+    public static void execute() {
+    }
   }
 
   @Test
   public void wrong_first_parameter_in_native_smooth_function() throws Exception {
-    when($createNativeFunction(FuncWithSmoothMethodWithWrongFirstParam.class.getDeclaredMethods()[0]));
+    when($createNativeFunction(
+        FuncWithSmoothMethodWithWrongFirstParam.class.getDeclaredMethods()[0]));
     thenThrown(WrongParamsInSmoothFunctionException.class);
   }
 
   public static class FuncWithSmoothMethodWithWrongFirstParam {
     @SmoothFunction(name = "myFunction")
-    public static void execute(EmptyParameters wrong, EmptyParameters params) {}
+    public static void execute(EmptyParameters wrong, EmptyParameters params) {
+    }
   }
 
   @Test
   public void wrong_second_parameter_in_native_smooth_function() throws Exception {
-    when($createNativeFunction(FuncWithSmoothMethodWithWrongSecondParam.class.getDeclaredMethods()[0]));
+    when($createNativeFunction(
+        FuncWithSmoothMethodWithWrongSecondParam.class.getDeclaredMethods()[0]));
     thenThrown(ParamsIsNotInterfaceException.class);
   }
 
@@ -567,8 +573,8 @@ public class NativeFunctionFactoryTest {
     };
   }
 
-  private static NativeFunction<?> createNativeFunction(Method method)
-      throws NativeImplementationException {
+  private static NativeFunction<?> createNativeFunction(Method method) throws
+      NativeImplementationException {
     return NativeFunctionFactory.createNativeFunction(Hash.integer(33), method);
   }
 }
