@@ -110,4 +110,16 @@ public class ParamsTest {
     when(Params.filterOptionalParams(params));
     thenReturned(ImmutableList.of(param1, param3));
   }
+
+  // paramsToNames()
+
+  @Test
+  public void params_to_names() throws Exception {
+    given(param1 = param(STRING, "name1", false));
+    given(param2 = param(STRING, "name2", true));
+    given(param3 = param(STRING, "name3", false));
+    given(params = ImmutableList.of(param1, param2, param3));
+    when(Params.paramsToNames(params));
+    thenReturned(ImmutableList.of("name1", "name2", "name3"));
+  }
 }

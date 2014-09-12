@@ -28,6 +28,14 @@ public class Params {
     return builder.build();
   }
 
+  public static ImmutableList<String> paramsToNames(Iterable<Param> params) {
+    ImmutableList.Builder<String> builder = ImmutableList.builder();
+    for (Param param : params) {
+      builder.add(param.name());
+    }
+    return builder.build();
+  }
+
   public static ImmutableMap<String, Param> map(Param... params) {
     return map(Arrays.asList(params));
   }
