@@ -5,6 +5,8 @@ import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
@@ -20,6 +22,7 @@ public class AbstractFunctionTest {
   @SuppressWarnings("unchecked")
   Signature<SString> signature = mock(Signature.class);
   AbstractFunction<SString> function = new MyAbstractFunction(signature);
+  ImmutableList<Param> params;
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
@@ -41,11 +44,12 @@ public class AbstractFunctionTest {
   }
 
   @Test
-  public void testParams() {
-    ImmutableMap<String, Param> params = Params.map(param(STRING, "name"));
-    given(willReturn(params), signature).params();
-
-    assertThat(function.params()).isEqualTo(params);
+  public void params_returns_signature_params() {
+    given(params = ImmutableList.of(param(STRING, "name")));
+    given(signature = new Signature<>(STRING, Name.name("name"), params));
+    given(function = new MyAbstractFunction(signature));
+    when(function).params();
+    thenReturned(params);
   }
 
   public static class MyAbstractFunction extends AbstractFunction<SString> {

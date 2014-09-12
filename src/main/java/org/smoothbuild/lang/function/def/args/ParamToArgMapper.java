@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static org.smoothbuild.lang.base.STypes.allSTypes;
+import static org.smoothbuild.lang.function.base.Params.paramsToNames;
 
 import java.util.Collection;
 import java.util.Set;
@@ -68,7 +69,7 @@ public class ParamToArgMapper {
   }
 
   private void detectDuplicatedAndUnknownArgNames(Collection<Arg> namedArgs) {
-    Set<String> unusedNames = Sets.newHashSet(function.params().keySet());
+    Set<String> unusedNames = Sets.newHashSet(paramsToNames(function.params()));
     Set<String> usedNames = Sets.newHashSet();
     for (Arg arg : namedArgs) {
       if (arg.hasName()) {
@@ -116,9 +117,8 @@ public class ParamToArgMapper {
           paramToArgMapBuilder.add(candidateParam, onlyArg);
           paramsPool.take(candidateParam);
         } else {
-          AmbiguousNamelessArgsError error =
-              new AmbiguousNamelessArgsError(function.name(), paramToArgMapBuilder.build(),
-                  availableArgs, availableTypedParams);
+          AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
+              paramToArgMapBuilder.build(), availableArgs, availableTypedParams);
           messages.log(error);
           return;
         }

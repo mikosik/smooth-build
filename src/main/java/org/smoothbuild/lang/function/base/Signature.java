@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Function's signature.
@@ -13,12 +13,12 @@ import com.google.common.collect.ImmutableMap;
 public class Signature<T extends SValue> {
   private final SType<T> type;
   private final Name name;
-  private final ImmutableMap<String, Param> params;
+  private final ImmutableList<Param> params;
 
   public Signature(SType<T> type, Name name, Iterable<Param> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
-    this.params = Params.map(params);
+    this.params = Params.sortedParams(params);
   }
 
   public SType<T> type() {
@@ -30,11 +30,9 @@ public class Signature<T extends SValue> {
   }
 
   /**
-   * @return Parameters ordered lexicographically by their names. Methods
-   *         values(), keySet(), entrySet() of returned map returns collections
-   *         which elements keep that order.
+   * @return Parameters ordered lexicographically by their names.
    */
-  public ImmutableMap<String, Param> params() {
+  public ImmutableList<Param> params() {
     return params;
   }
 
@@ -43,7 +41,7 @@ public class Signature<T extends SValue> {
     StringBuilder builder = new StringBuilder();
     builder.append(type.name() + " " + name.value() + "(");
     int count = 0;
-    for (Param param : params.values()) {
+    for (Param param : params) {
       if (count != 0) {
         builder.append(", ");
       }

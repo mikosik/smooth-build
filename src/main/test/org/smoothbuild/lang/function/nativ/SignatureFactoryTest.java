@@ -10,21 +10,22 @@ import java.lang.reflect.Method;
 import org.junit.Test;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.function.base.Params;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+
+import com.google.common.collect.ImmutableList;
 
 public class SignatureFactoryTest {
 
   @Test
   public void test() throws Exception {
-    Method method =
-        SignatureFactoryTest.class.getMethod("smoothMethod", NativeApi.class, FuncParams.class);
+    Method method = SignatureFactoryTest.class.getMethod("smoothMethod", NativeApi.class,
+        FuncParams.class);
 
     Signature<?> signature = SignatureFactory.create(method, FuncParams.class);
     assertThat(signature.type()).isEqualTo(FILE);
     assertThat(signature.name()).isEqualTo(name("function"));
-    assertThat(signature.params()).isEqualTo(Params.map(param(FILE, "param1", false)));
+    assertThat(signature.params()).isEqualTo(ImmutableList.of(param(FILE, "param1", false)));
   }
 
   public interface FuncParams {

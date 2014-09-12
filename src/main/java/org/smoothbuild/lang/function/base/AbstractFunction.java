@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 public abstract class AbstractFunction<T extends SValue> implements Function<T> {
   private final Signature<T> signature;
@@ -30,7 +30,7 @@ public abstract class AbstractFunction<T extends SValue> implements Function<T> 
   }
 
   @Override
-  public ImmutableMap<String, Param> params() {
+  public ImmutableList<Param> params() {
     return signature.params();
   }
 }
