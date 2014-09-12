@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
-import org.smoothbuild.lang.expr.Convert;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
@@ -69,16 +68,18 @@ public class ParamToArgMapper {
   }
 
   private void detectDuplicatedAndUnknownArgNames(Collection<Arg> namedArgs) {
-    Set<String> names = Sets.newHashSet();
+    Set<String> unusedNames = Sets.newHashSet(function.params().keySet());
+    Set<String> usedNames = Sets.newHashSet();
     for (Arg arg : namedArgs) {
       if (arg.hasName()) {
         String name = arg.name();
-        if (names.contains(name)) {
+        if (unusedNames.contains(name)) {
+          unusedNames.remove(name);
+          usedNames.add(name);
+        } else if (usedNames.contains(name)) {
           messages.log(new DuplicateArgNameError(arg));
-        } else if (!function.params().containsKey(name)) {
-          messages.log(new UnknownParamNameError(function.name(), arg));
         } else {
-          names.add(name);
+          messages.log(new UnknownParamNameError(function.name(), arg));
         }
       }
     }
