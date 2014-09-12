@@ -15,11 +15,6 @@ public abstract class AbstractFunction<T extends SValue> implements Function<T> 
   }
 
   @Override
-  public Signature<T> signature() {
-    return signature;
-  }
-
-  @Override
   public SType<T> type() {
     return signature.type();
   }

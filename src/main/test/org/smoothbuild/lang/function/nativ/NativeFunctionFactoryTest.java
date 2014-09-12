@@ -26,7 +26,6 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
@@ -179,9 +178,15 @@ public class NativeFunctionFactoryTest {
   @Test
   public void function_signature_is_determined_by_java_method() throws Exception {
     given(function = createNativeFunction(SignatureTestFunction.class.getMethods()[0]));
-    when(function.signature().toString());
-    thenReturned(new Signature<>(BLOB, name("func"), ImmutableList.of(param(STRING,
-        "string"))).toString());
+
+    when(function.type());
+    thenReturned(BLOB);
+
+    when(function.params());
+    thenReturned(ImmutableList.of(param(STRING, "string")));
+
+    when(function.name());
+    thenReturned(name("func"));
   }
 
   public interface SignatureTestParameters {

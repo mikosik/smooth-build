@@ -91,7 +91,7 @@ public class Convert {
     Builder<SType<?>, Function<?>> builder = ImmutableMap.builder();
     for (Class<?> functionClass : functionClasses) {
       NativeFunction<?> function = function(functionClass.getMethods()[0]);
-      builder.put(function.signature().type(), function);
+      builder.put(function.type(), function);
     }
     return builder.build();
   }
