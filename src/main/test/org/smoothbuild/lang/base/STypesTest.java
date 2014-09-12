@@ -22,7 +22,6 @@ import static org.smoothbuild.lang.base.STypes.sArrayTypeContaining;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.expr.Convert;
 
 import com.google.common.collect.Sets;
 import com.google.common.testing.EqualsTester;
@@ -79,8 +78,8 @@ public class STypesTest {
   public void all_stypes_returns_list_sorted_by_super_type_dependency() throws Exception {
     Set<SType<?>> visited = Sets.newHashSet();
     for (SType<?> type : allSTypes()) {
-      for (SType<?> superType : Convert.superTypesOf(type)) {
-        assertThat(visited).contains(superType);
+      for (SType<?> visitedType : visited) {
+        assertThat(canConvert(visitedType, type)).isFalse();
       }
       visited.add(type);
     }
