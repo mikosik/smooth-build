@@ -121,7 +121,7 @@ public class NativeModuleFactoryTest {
   public void function_signature_contains_all_params() throws Exception {
     given(module = createNativeModule(ModuleWithTwoParamFunction.class));
     when(module.getFunction(name("func")).params());
-    thenReturned(ImmutableList.of(param(STRING, "param1"), param(STRING, "param2")));
+    thenReturned(ImmutableList.of(param(STRING, "param1", false), param(STRING, "param2", false)));
   }
 
   public static class ModuleWithTwoParamFunction {

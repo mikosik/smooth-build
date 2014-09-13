@@ -14,9 +14,9 @@ import com.google.common.collect.ImmutableList;
 public class ParamOrderingTest {
   @Test
   public void ordering_params() {
-    Param param1 = param(STRING, "aaa");
-    Param param2 = param(STRING, "bbb");
-    Param param3 = param(STRING, "ccc");
+    Param param1 = param(STRING, "aaa", false);
+    Param param2 = param(STRING, "bbb", false);
+    Param param3 = param(STRING, "ccc", false);
 
     List<Param> actual = PARAM_ORDERING.sortedCopy(ImmutableList.of(param3, param2, param1));
     assertThat(actual).containsExactly(param1, param2, param3);
@@ -24,9 +24,9 @@ public class ParamOrderingTest {
 
   @Test
   public void ordering_params_of_different_length() {
-    Param param1 = param(STRING, "a");
-    Param param2 = param(STRING, "aa");
-    Param param3 = param(STRING, "aaa");
+    Param param1 = param(STRING, "a", false);
+    Param param2 = param(STRING, "aa", false);
+    Param param3 = param(STRING, "aaa", false);
 
     List<Param> actual = PARAM_ORDERING.sortedCopy(ImmutableList.of(param3, param2, param1));
     assertThat(actual).containsExactly(param1, param2, param3);

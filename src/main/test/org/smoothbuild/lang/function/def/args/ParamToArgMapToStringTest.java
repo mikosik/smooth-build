@@ -22,17 +22,17 @@ public class ParamToArgMapToStringTest {
   @Test
   public void testToString() throws Exception {
     // given
-    Param param1 = param(STRING, "name1-that-is-long");
-    Param param2 = param(STRING, "name2");
-    Param param3 = param(FILE, "name3");
+    Param param1 = param(STRING, "name1-that-is-long", false);
+    Param param2 = param(STRING, "name2", false);
+    Param param3 = param(FILE, "name3", false);
 
     Arg arg1 = arg(1, STRING, "name4");
     Arg arg2 = arg(1234, STRING, "name5");
     Arg arg3 = arg(7, FILE, "name6-that-is-long");
 
     // when
-    String actual =
-        ParamToArgMapToString.toString(ImmutableMap.of(param1, arg1, param2, arg2, param3, arg3));
+    String actual = ParamToArgMapToString.toString(ImmutableMap.of(param1, arg1, param2, arg2,
+        param3, arg3));
 
     // then
     String l = codeLocation(2).toString();

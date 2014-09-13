@@ -13,8 +13,8 @@ import org.smoothbuild.lang.function.base.Param;
 import com.google.common.collect.Sets;
 
 public class TypedParamsPoolTest {
-  Param string = param(STRING, "string1");
-  Param blob = param(BLOB, "blob");
+  Param string = param(STRING, "string1", false);
+  Param blob = param(BLOB, "blob", false);
 
   Param stringRequired = param(STRING, "stringRequired", true);
   Param stringRequired2 = param(STRING, "stringRequired2", true);

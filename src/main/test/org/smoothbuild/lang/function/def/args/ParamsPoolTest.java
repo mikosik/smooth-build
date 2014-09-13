@@ -29,7 +29,7 @@ public class ParamsPoolTest {
 
   @Test
   public void existing_param_can_be_taken_from_pool() {
-    given(param = param(STRING, "NAME"));
+    given(param = param(STRING, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool).take(param);
     thenReturned(same(param));
@@ -38,13 +38,13 @@ public class ParamsPoolTest {
   @Test
   public void taking_unknown_param_throws_exception() {
     given(paramsPool = new ParamsPool(Empty.paramList()));
-    when(paramsPool).take(param(STRING, "unknownName"));
+    when(paramsPool).take(param(STRING, "unknownName", false));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void param_cannot_be_taken_twice_from_pool() {
-    given(param = param(STRING, "NAME"));
+    given(param = param(STRING, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     given(paramsPool).take(param);
     when(paramsPool).take(param);
@@ -55,7 +55,7 @@ public class ParamsPoolTest {
 
   @Test
   public void existing_param_can_be_taken_from_pool_by_name() {
-    given(param = param(STRING, "NAME"));
+    given(param = param(STRING, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool).take(param.name());
     thenReturned(same(param));
@@ -70,7 +70,7 @@ public class ParamsPoolTest {
 
   @Test
   public void param_cannot_be_taken_by_name_twice() {
-    given(param = param(STRING, "NAME"));
+    given(param = param(STRING, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     given(paramsPool).take(param.name());
     when(paramsPool).take(param.name());
@@ -81,7 +81,7 @@ public class ParamsPoolTest {
 
   @Test
   public void optional_string_param_is_available_in_optional_set_of_string_pool() throws Exception {
-    given(param = param(STRING, "NAME"));
+    given(param = param(STRING, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(STRING)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -97,7 +97,7 @@ public class ParamsPoolTest {
 
   @Test
   public void optional_blob_param_is_available_in_optional_set_of_blob_pool() throws Exception {
-    given(param = param(BLOB, "NAME"));
+    given(param = param(BLOB, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(BLOB)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -113,7 +113,7 @@ public class ParamsPoolTest {
 
   @Test
   public void optional_blob_param_is_available_in_optional_set_of_file_pool() throws Exception {
-    given(param = param(BLOB, "NAME"));
+    given(param = param(BLOB, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(FILE)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -129,7 +129,7 @@ public class ParamsPoolTest {
 
   @Test
   public void optional_file_param_is_available_in_optional_set_of_file_pool() throws Exception {
-    given(param = param(FILE, "NAME"));
+    given(param = param(FILE, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(FILE)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -146,7 +146,7 @@ public class ParamsPoolTest {
   @Test
   public void optional_string_array_param_is_available_in_optional_set_of_string_array_pool() throws
       Exception {
-    given(param = param(STRING_ARRAY, "NAME"));
+    given(param = param(STRING_ARRAY, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(STRING_ARRAY)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -164,7 +164,7 @@ public class ParamsPoolTest {
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_blob_array_pool() throws
       Exception {
-    given(param = param(BLOB_ARRAY, "NAME"));
+    given(param = param(BLOB_ARRAY, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(BLOB_ARRAY)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -182,7 +182,7 @@ public class ParamsPoolTest {
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_file_array_pool() throws
       Exception {
-    given(param = param(BLOB_ARRAY, "NAME"));
+    given(param = param(BLOB_ARRAY, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(FILE_ARRAY)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -200,7 +200,7 @@ public class ParamsPoolTest {
   @Test
   public void optional_file_array_param_is_available_in_optional_set_of_file_array_pool() throws
       Exception {
-    given(param = param(FILE_ARRAY, "NAME"));
+    given(param = param(FILE_ARRAY, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(FILE_ARRAY)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -218,7 +218,7 @@ public class ParamsPoolTest {
   @Test
   public void optional_string_array_param_is_available_in_optional_set_of_nil_pool() throws
       Exception {
-    given(param = param(STRING_ARRAY, "NAME"));
+    given(param = param(STRING_ARRAY, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(NIL)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -236,7 +236,7 @@ public class ParamsPoolTest {
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_nil_pool() throws
       Exception {
-    given(param = param(BLOB_ARRAY, "NAME"));
+    given(param = param(BLOB_ARRAY, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(NIL)).optionalParams();
     thenReturned(ImmutableSet.of(param));
@@ -254,7 +254,7 @@ public class ParamsPoolTest {
   @Test
   public void optional_file_array_param_is_available_in_optional_set_of_nil_pool() throws
       Exception {
-    given(param = param(FILE_ARRAY, "NAME"));
+    given(param = param(FILE_ARRAY, "NAME", false));
     given(paramsPool = new ParamsPool(ImmutableList.of(param)));
     when(paramsPool.assignableFrom(NIL)).optionalParams();
     thenReturned(ImmutableSet.of(param));

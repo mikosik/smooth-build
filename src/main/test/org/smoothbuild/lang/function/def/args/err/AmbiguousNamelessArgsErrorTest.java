@@ -36,13 +36,13 @@ public class AmbiguousNamelessArgsErrorTest {
   @Test
   public void test() {
 
-    Param p1 = param(STRING, "param1");
+    Param p1 = param(STRING, "param1", false);
     Arg a1 = namedArg(12, "arg1", expr(STRING), codeLocation(2));
 
-    Param p2 = param(STRING_ARRAY, "param2");
+    Param p2 = param(STRING_ARRAY, "param2", false);
     Arg a2 = namelessArg(7, expr(STRING_ARRAY), codeLocation(12));
 
-    Param p3 = param(FILE, "param3");
+    Param p3 = param(FILE, "param3", false);
     Arg a3 = pipedArg(expr(FILE), codeLocation(14));
 
     Arg a4 = namedArg(3, "arg4", expr(NIL), codeLocation(7));
@@ -51,17 +51,17 @@ public class AmbiguousNamelessArgsErrorTest {
 
     Map<Param, Arg> paramToArgMap = ImmutableMap.of(p1, a1, p2, a2, p3, a3);
 
-    Param p4 = param(FILE_ARRAY, "param4");
-    Param p5 = param(STRING_ARRAY, "param5");
-    TypedParamsPool availableParams =
-        new TypedParamsPool(newHashSet(p4, p5), Sets.<Param> newHashSet());
+    Param p4 = param(FILE_ARRAY, "param4", false);
+    Param p5 = param(STRING_ARRAY, "param5", false);
+    TypedParamsPool availableParams = new TypedParamsPool(newHashSet(p4, p5),
+        Sets.<Param>newHashSet());
 
-    AmbiguousNamelessArgsError error =
-        new AmbiguousNamelessArgsError(name("func"), paramToArgMap, availableArgs, availableParams);
+    AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(name("func"), paramToArgMap,
+        availableArgs, availableParams);
 
     LineBuilder builder = new LineBuilder();
-    builder
-        .addLine("ERROR [ line 7 ]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:");
+    builder.addLine(
+        "ERROR [ line 7 ]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:");
     builder.addLine("List of assignments that were successfully detected is following:");
     builder.addLine("  String  : param1 <- String  : arg1       #12 " + a1.codeLocation());
     builder.addLine("  String[]: param2 <- String[]: <nameless> #7  " + a2.codeLocation());

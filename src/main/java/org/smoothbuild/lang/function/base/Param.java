@@ -19,10 +19,6 @@ public class Param {
   private final boolean isRequired;
   private final HashCode nameHash;
 
-  public static Param param(SType<?> type, String name) {
-    return param(type, name, false);
-  }
-
   public static Param param(SType<?> type, String name, boolean isRequired) {
     return new Param(type, name, isRequired);
   }

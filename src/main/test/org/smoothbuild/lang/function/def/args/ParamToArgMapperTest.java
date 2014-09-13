@@ -69,8 +69,8 @@ public class ParamToArgMapperTest {
   private void do_test_converting_named_argument(SType<?> paramType, SType<?> argType) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(paramType, "name1");
-    Param p2 = param(paramType, "name2");
+    Param p1 = param(paramType, "name1", false);
+    Param p2 = param(paramType, "name2", false);
 
     Arg a1 = arg(p1.name(), argType);
 
@@ -102,7 +102,7 @@ public class ParamToArgMapperTest {
   private void do_test_duplicated_names(SType<?> paramType, SType<?> argType) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(paramType, "name1");
+    Param p1 = param(paramType, "name1", false);
 
     Arg a1 = arg(p1.name(), argType);
     Arg a2 = arg(p1.name(), argType);
@@ -118,7 +118,7 @@ public class ParamToArgMapperTest {
   public void unknown_param_name() {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(STRING, "name1");
+    Param p1 = param(STRING, "name1", false);
     Arg a1 = arg("otherName", STRING);
 
     // when
@@ -193,11 +193,11 @@ public class ParamToArgMapperTest {
     do_test_type_mismatch_for_param_problem(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void do_test_type_mismatch_for_param_problem(SType<?> paramType, SType<?> argType)
-      throws Exception {
+  private void do_test_type_mismatch_for_param_problem(SType<?> paramType, SType<?> argType) throws
+      Exception {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(paramType, "name1");
+    Param p1 = param(paramType, "name1", false);
     Arg a1 = arg(p1.name(), argType);
 
     // when
@@ -211,7 +211,7 @@ public class ParamToArgMapperTest {
   public void mapping_empty_list_of_arguments() throws Exception {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(STRING, "name1");
+    Param p1 = param(STRING, "name1", false);
 
     // when
     Map<Param, Arg> mapping = createMapping(params(p1), list());
@@ -320,9 +320,9 @@ public class ParamToArgMapperTest {
       SType<?> otherParamsType) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(otherParamsType, "name1");
-    Param p2 = param(paramType, "name2");
-    Param p3 = param(otherParamsType, "name3");
+    Param p1 = param(otherParamsType, "name1", false);
+    Param p2 = param(paramType, "name2", false);
+    Param p3 = param(otherParamsType, "name3", false);
 
     Arg a1 = arg(argType);
 
@@ -348,9 +348,9 @@ public class ParamToArgMapperTest {
   private void do_test_converting_single_nameless_argument_with_others_named(SType<?> type) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(type, "name1");
-    Param p2 = param(type, "name2");
-    Param p3 = param(type, "name3");
+    Param p1 = param(type, "name1", false);
+    Param p2 = param(type, "name2", false);
+    Param p3 = param(type, "name3", false);
 
     Arg a1 = arg(p1.name(), type);
     Arg a2 = arg(type);
@@ -407,8 +407,8 @@ public class ParamToArgMapperTest {
       SType<?> type2) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(type1, "name1");
-    Param p2 = param(type2, "name2");
+    Param p1 = param(type1, "name1", false);
+    Param p2 = param(type2, "name2", false);
 
     Arg a1 = arg(type1);
     Arg a2 = arg(type2);
@@ -431,9 +431,9 @@ public class ParamToArgMapperTest {
   private void do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(SType<?> type) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(type, "name1");
-    Param p2 = param(type, "name2");
-    Param p3 = param(type, "name3");
+    Param p1 = param(type, "name1", false);
+    Param p2 = param(type, "name2", false);
+    Param p3 = param(type, "name3", false);
 
     Arg a1 = arg(p1.name(), type);
     Arg a2 = arg(NIL);
@@ -463,8 +463,8 @@ public class ParamToArgMapperTest {
       SType<?> otherArrayType) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(arrayType, "name1");
-    Param p2 = param(otherArrayType, "name2");
+    Param p1 = param(arrayType, "name1", false);
+    Param p2 = param(otherArrayType, "name2", false);
 
     Arg a1 = arg(p1.name(), arrayType);
     Arg a2 = arg(NIL);
@@ -507,8 +507,8 @@ public class ParamToArgMapperTest {
       SType<?> argType) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(paramType, "name1");
-    Param p2 = param(paramType2, "name2");
+    Param p1 = param(paramType, "name1", false);
+    Param p2 = param(paramType2, "name2", false);
 
     Arg a1 = arg(argType);
 
@@ -586,10 +586,11 @@ public class ParamToArgMapperTest {
     do_test_no_param_with_proper_type_for_nameless_arg(NIL, FILE);
   }
 
-  private void do_test_no_param_with_proper_type_for_nameless_arg(SType<?> type, SType<?> otherType) {
+  private void do_test_no_param_with_proper_type_for_nameless_arg(SType<?> type,
+      SType<?> otherType) {
     // given
     messages = new FakeLoggedMessages();
-    Param p1 = param(otherType, "name1");
+    Param p1 = param(otherType, "name1", false);
     Arg a1 = arg(type);
 
     // when

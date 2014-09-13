@@ -129,7 +129,8 @@ public class NativeFunctionFactoryTest {
   public void function_params_are_equal_to_params_of_java_method() throws Exception {
     given(function = createNativeFunction(FunctionWithDifferentParams.class.getMethods()[0]));
     when(function).params();
-    thenReturned(ImmutableList.of(param(STRING_ARRAY, "array"), param(STRING, "string")));
+    thenReturned(ImmutableList.of(param(STRING_ARRAY, "array", false), param(STRING, "string",
+        false)));
   }
 
   public interface DifferentParams {
@@ -183,7 +184,7 @@ public class NativeFunctionFactoryTest {
     thenReturned(BLOB);
 
     when(function.params());
-    thenReturned(ImmutableList.of(param(STRING, "string")));
+    thenReturned(ImmutableList.of(param(STRING, "string", false)));
 
     when(function.name());
     thenReturned(name("func"));
