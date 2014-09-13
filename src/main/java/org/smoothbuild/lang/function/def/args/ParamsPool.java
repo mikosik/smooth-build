@@ -34,7 +34,7 @@ public class ParamsPool {
     this.typePools = createTypePools(optionalParamsMap, requiredParamsMap);
   }
 
-  public Param takeByName(String name) {
+  public Param take(String name) {
     Param param = params.get(name);
     checkArgument(param != null);
     return take(param);
@@ -54,11 +54,11 @@ public class ParamsPool {
     }
   }
 
-  public TypedParamsPool availableForType(SType<?> type) {
+  public TypedParamsPool assignableFrom(SType<?> type) {
     return typePools.get(type);
   }
 
-  public Set<Param> availableRequiredParams() {
+  public Set<Param> allRequired() {
     Set<Param> result = Sets.newHashSet();
     for (TypedParamsPool typedParamPool : typePools.values()) {
       Iterables.addAll(result, typedParamPool.requiredParams());
