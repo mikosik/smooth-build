@@ -58,7 +58,7 @@ public class ParamToArgMapper {
       return null;
     }
 
-    Set<Param> missingRequiredParams = paramsPool.availableRequiredParams();
+    Set<Param> missingRequiredParams = paramsPool.allRequired();
     if (missingRequiredParams.size() != 0) {
       messages.log(new MissingRequiredArgsError(codeLocation, function, paramToArgMapBuilder,
           missingRequiredParams));
@@ -91,7 +91,7 @@ public class ParamToArgMapper {
     for (Arg arg : namedArgs) {
       if (arg.hasName()) {
         String name = arg.name();
-        Param param = paramsPool.takeByName(name);
+        Param param = paramsPool.take(name);
         SType<?> paramType = param.type();
         if (!STypes.canConvert(arg.type(), paramType)) {
           messages.log(new TypeMismatchError(arg, paramType));
@@ -109,7 +109,7 @@ public class ParamToArgMapper {
       Collection<Arg> availableArgs = namelessArgs.get(type);
       int argsSize = availableArgs.size();
       if (0 < argsSize) {
-        TypedParamsPool availableTypedParams = paramsPool.availableForType(type);
+        TypedParamsPool availableTypedParams = paramsPool.assignableFrom(type);
 
         if (argsSize == 1 && availableTypedParams.hasCandidate()) {
           Arg onlyArg = availableArgs.iterator().next();
