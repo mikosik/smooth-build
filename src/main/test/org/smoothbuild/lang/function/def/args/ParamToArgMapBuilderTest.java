@@ -24,7 +24,7 @@ public class ParamToArgMapBuilderTest {
   @Test
   public void addingNullArgThrowsException() throws Exception {
     try {
-      paramToArgMapBuilder.add(param(STRING, "name"), null);
+      paramToArgMapBuilder.add(param(STRING, "name", false), null);
       fail("exception should be thrown");
     } catch (NullPointerException e) {
       // expected
@@ -44,7 +44,7 @@ public class ParamToArgMapBuilderTest {
   @Test
   public void addingAssignmentForTheSameParamTwiceThrowsException() throws Exception {
     String name = "name";
-    Param param1 = param(STRING, name);
+    Param param1 = param(STRING, name, false);
 
     Arg arg1 = arg(STRING);
     Arg arg2 = arg(FILE);
@@ -65,9 +65,9 @@ public class ParamToArgMapBuilderTest {
     String name2 = "name2";
     String name3 = "name3";
 
-    Param param1 = param(STRING, name1);
-    Param param2 = param(STRING, name2);
-    Param param3 = param(STRING, name3);
+    Param param1 = param(STRING, name1, false);
+    Param param2 = param(STRING, name2, false);
+    Param param3 = param(STRING, name3, false);
 
     Arg arg1 = arg(STRING);
     Arg arg2 = arg(STRING);
@@ -77,8 +77,8 @@ public class ParamToArgMapBuilderTest {
     paramToArgMapBuilder.add(param2, arg2);
     paramToArgMapBuilder.add(param3, arg3);
 
-    assertThat(paramToArgMapBuilder.build()).isEqualTo(
-        ImmutableMap.of(param1, arg1, param2, arg2, param3, arg3));
+    assertThat(paramToArgMapBuilder.build()).isEqualTo(ImmutableMap.of(param1, arg1, param2, arg2,
+        param3, arg3));
   }
 
   private static Arg arg(SType<?> type) {

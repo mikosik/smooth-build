@@ -59,8 +59,8 @@ public class SignatureTest {
 
   @Test
   public void test_to_string() throws Exception {
-    given(param = param(BLOB, "blob"));
-    given(param2 = param(FILE, "file"));
+    given(param = param(BLOB, "blob", false));
+    given(param2 = param(FILE, "file", false));
     when(new Signature<>(STRING, name, ImmutableList.of(param, param2))).toString();
     thenReturned(
         STRING.name() + " " + name.value() + "(" + param.type().name() + " " + param.name() + ", " + param2.type().name() + " " + param2.name() + ")");

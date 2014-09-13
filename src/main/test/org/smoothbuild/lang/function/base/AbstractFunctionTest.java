@@ -45,7 +45,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void params_returns_signature_params() {
-    given(params = ImmutableList.of(param(STRING, "name")));
+    given(params = ImmutableList.of(param(STRING, "name", false)));
     given(signature = new Signature<>(STRING, Name.name("name"), params));
     given(function = new MyAbstractFunction(signature));
     when(function).params();
