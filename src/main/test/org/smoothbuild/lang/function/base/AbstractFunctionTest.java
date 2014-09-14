@@ -1,28 +1,27 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
-import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class AbstractFunctionTest {
-  @SuppressWarnings("unchecked")
-  Signature<SString> signature = mock(Signature.class);
-  AbstractFunction<SString> function = new MyAbstractFunction(signature);
+  Name name;
   ImmutableList<Param> params;
+  Signature<SString> signature;
+  AbstractFunction<SString> function;
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
@@ -30,23 +29,26 @@ public class AbstractFunctionTest {
   }
 
   @Test
-  public void type() {
-    given(willReturn(STRING), signature).type();
-    assertThat(function.type()).isEqualTo(STRING);
+  public void type_returns_signature_type() {
+    given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
+    given(function = new MyAbstractFunction(signature));
+    when(function).type();
+    thenReturned(STRING);
   }
 
   @Test
-  public void name() {
-    Name name = Name.name("name");
-    given(willReturn(name), signature).name();
-
-    assertThat(function.name()).isEqualTo(name);
+  public void name_returns_signature_name() {
+    given(name = name("name"));
+    given(signature = new Signature<>(STRING, name, Empty.paramList()));
+    given(function = new MyAbstractFunction(signature));
+    when(function).type();
+    thenReturned(STRING);
   }
 
   @Test
   public void params_returns_signature_params() {
     given(params = ImmutableList.of(param(STRING, "name", false)));
-    given(signature = new Signature<>(STRING, Name.name("name"), params));
+    given(signature = new Signature<>(STRING, name("name"), params));
     given(function = new MyAbstractFunction(signature));
     when(function).params();
     thenReturned(params);
