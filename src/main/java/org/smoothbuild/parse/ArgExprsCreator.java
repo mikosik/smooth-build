@@ -1,10 +1,11 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.expr.Convert.convertExpr;
-
 import java.util.Collection;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import org.smoothbuild.lang.expr.ExprConverter;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
@@ -17,6 +18,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class ArgExprsCreator {
+  private final ExprConverter converter;
+
+  @Inject
+  public ArgExprsCreator(ExprConverter exprConverter) {
+    converter = exprConverter;
+  }
 
   public ImmutableMap<String, Expr<?>> createArgExprs(CodeLocation codeLocation,
       LoggedMessages messages, Function<?> function, Collection<Arg> args) {
@@ -32,7 +39,7 @@ public class ArgExprsCreator {
     for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
       Param param = entry.getKey();
       Arg arg = entry.getValue();
-      Expr<?> expr = convertExpr(param.type(), arg.expr());
+      Expr<?> expr = converter.convertExpr(param.type(), arg.expr());
       builder.put(param.name(), expr);
     }
 

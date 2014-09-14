@@ -26,7 +26,7 @@ import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
-import org.smoothbuild.lang.expr.Convert;
+import org.smoothbuild.lang.expr.ExprConverter;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskOutput;
@@ -38,8 +38,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class ConvertExpressionExecutionTest {
-  private static final ImmutableList<Expr<SNothing>> emptyNothingExprList = ImmutableList
-      .of();
+  private static final ImmutableList<Expr<SNothing>> emptyNothingExprList = ImmutableList.of();
   private ObjectsDb objectsDb;
   private TaskGraph taskGraph;
   private Expr<SArray<SNothing>> nilExpr;
@@ -58,12 +57,14 @@ public class ConvertExpressionExecutionTest {
   private SArray<SFile> fileArray;
   private SArray<SNothing> nil;
   private ImmutableList<Expr<SBlob>> expressions;
+  private ExprConverter converter;
 
   @Before
   public void before() {
     Injector injector = Guice.createInjector(new TestExecutorModule());
     objectsDb = injector.getInstance(ObjectsDb.class);
     taskGraph = injector.getInstance(TaskGraph.class);
+    converter = new ExprConverter();
   }
 
   // no-op conversions
@@ -72,7 +73,7 @@ public class ConvertExpressionExecutionTest {
   public void converts_string_to_string() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
-    given(stringExpr = Convert.convertExpr(STRING, stringExpr));
+    given(stringExpr = converter.convertExpr(STRING, stringExpr));
     given(task = taskGraph.createTasks(stringExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));
@@ -83,7 +84,7 @@ public class ConvertExpressionExecutionTest {
   public void converts_blob_to_blob() throws Exception {
     given(blob = createBlob());
     given(blobExpr = new ConstantExpr<>(BLOB, blob, codeLocation(2)));
-    given(blobExpr = Convert.convertExpr(BLOB, blobExpr));
+    given(blobExpr = converter.convertExpr(BLOB, blobExpr));
     given(task = taskGraph.createTasks(blobExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(blob));
@@ -95,7 +96,7 @@ public class ConvertExpressionExecutionTest {
     given(blob = createBlob());
     given(file = objectsDb.file(path("file.txt"), blob));
     given(fileExpr = new ConstantExpr<>(FILE, file, codeLocation(2)));
-    given(fileExpr = Convert.convertExpr(FILE, fileExpr));
+    given(fileExpr = converter.convertExpr(FILE, fileExpr));
     given(task = taskGraph.createTasks(fileExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(file));
@@ -107,7 +108,7 @@ public class ConvertExpressionExecutionTest {
     given(sstring = objectsDb.string("abc"));
     given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(sstring).build());
     given(stringArrayExpr = new ConstantExpr<>(STRING_ARRAY, stringArray, codeLocation(2)));
-    given(stringArrayExpr = Convert.convertExpr(STRING_ARRAY, stringArrayExpr));
+    given(stringArrayExpr = converter.convertExpr(STRING_ARRAY, stringArrayExpr));
     given(task = taskGraph.createTasks(stringArrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray));
@@ -119,7 +120,7 @@ public class ConvertExpressionExecutionTest {
     given(blob = createBlob());
     given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
     given(blobArrayExpr = new ConstantExpr<>(BLOB_ARRAY, blobArray, codeLocation(2)));
-    given(blobArrayExpr = Convert.convertExpr(BLOB_ARRAY, blobArrayExpr));
+    given(blobArrayExpr = converter.convertExpr(BLOB_ARRAY, blobArrayExpr));
     given(task = taskGraph.createTasks(blobArrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(blobArray));
@@ -132,7 +133,7 @@ public class ConvertExpressionExecutionTest {
     given(file = objectsDb.file(path("file.txt"), blob));
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
     given(fileArrayExpr = new ConstantExpr<>(FILE_ARRAY, fileArray, codeLocation(2)));
-    given(fileArrayExpr = Convert.convertExpr(FILE_ARRAY, fileArrayExpr));
+    given(fileArrayExpr = converter.convertExpr(FILE_ARRAY, fileArrayExpr));
     given(task = taskGraph.createTasks(fileArrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(fileArray));
@@ -143,7 +144,7 @@ public class ConvertExpressionExecutionTest {
   public void converts_nil_to_nil() throws Exception {
     given(nil = objectsDb.arrayBuilder(NIL).build());
     given(nilExpr = new ConstantExpr<>(NIL, nil, codeLocation(2)));
-    given(nilExpr = Convert.convertExpr(NIL, nilExpr));
+    given(nilExpr = converter.convertExpr(NIL, nilExpr));
     given(task = taskGraph.createTasks(nilExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(nil));
@@ -157,7 +158,7 @@ public class ConvertExpressionExecutionTest {
     given(blob = createBlob());
     given(file = objectsDb.file(path("file.txt"), blob));
     given(fileExpr = new ConstantExpr<>(FILE, file, codeLocation(2)));
-    given(blobExpr = Convert.convertExpr(BLOB, fileExpr));
+    given(blobExpr = converter.convertExpr(BLOB, fileExpr));
     given(task = taskGraph.createTasks(blobExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(blob));
@@ -170,17 +171,18 @@ public class ConvertExpressionExecutionTest {
     given(file = objectsDb.file(path("file.txt"), blob));
     given(fileExpr = new ConstantExpr<>(FILE, file, codeLocation(2)));
     given(fileArrayExpr = new ArrayExpr<>(FILE_ARRAY, ImmutableList.of(fileExpr), codeLocation(2)));
-    given(blobArrayExpr = Convert.convertExpr(BLOB_ARRAY, fileArrayExpr));
+    given(blobArrayExpr = converter.convertExpr(BLOB_ARRAY, fileArrayExpr));
     given(task = taskGraph.createTasks(blobArrayExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build()));
+    thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(BLOB_ARRAY).add(
+        blob).build()));
     thenEqual(task.resultType(), BLOB_ARRAY);
   }
 
   @Test
   public void converts_nil_to_string_array() throws Exception {
     given(nilExpr = new ArrayExpr<>(NIL, emptyNothingExprList, codeLocation(2)));
-    given(stringArrayExpr = Convert.convertExpr(STRING_ARRAY, nilExpr));
+    given(stringArrayExpr = converter.convertExpr(STRING_ARRAY, nilExpr));
     given(task = taskGraph.createTasks(stringArrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(STRING_ARRAY).build()));
@@ -190,7 +192,7 @@ public class ConvertExpressionExecutionTest {
   @Test
   public void converts_nil_to_blob_array() throws Exception {
     given(nilExpr = new ArrayExpr<>(NIL, emptyNothingExprList, codeLocation(2)));
-    given(blobArrayExpr = Convert.convertExpr(BLOB_ARRAY, nilExpr));
+    given(blobArrayExpr = converter.convertExpr(BLOB_ARRAY, nilExpr));
     given(task = taskGraph.createTasks(blobArrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(BLOB_ARRAY).build()));
@@ -200,7 +202,7 @@ public class ConvertExpressionExecutionTest {
   @Test
   public void converts_nil_to_file_array() throws Exception {
     given(nilExpr = new ArrayExpr<>(NIL, emptyNothingExprList, codeLocation(2)));
-    given(fileArrayExpr = Convert.convertExpr(FILE_ARRAY, nilExpr));
+    given(fileArrayExpr = converter.convertExpr(FILE_ARRAY, nilExpr));
     given(task = taskGraph.createTasks(fileArrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(FILE_ARRAY).build()));
@@ -213,12 +215,12 @@ public class ConvertExpressionExecutionTest {
     given(file = objectsDb.file(path("file.txt"), blob));
     given(blobExpr = new ConstantExpr<>(BLOB, blob, codeLocation(2)));
     given(fileExpr = new ConstantExpr<>(FILE, file, codeLocation(2)));
-    given(expressions = Convert.convertExprs(BLOB, ImmutableList.of(blobExpr, fileExpr)));
+    given(expressions = converter.convertExprs(BLOB, ImmutableList.of(blobExpr, fileExpr)));
     given(blobArrayExpr = new ArrayExpr<>(BLOB_ARRAY, expressions, codeLocation(2)));
     given(task = taskGraph.createTasks(blobArrayExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(BLOB_ARRAY).add(blob)
-        .add(blob).build()));
+    thenEqual(task.output(), new TaskOutput<>(objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).add(
+        blob).build()));
     thenEqual(task.resultType(), BLOB_ARRAY);
   }
 

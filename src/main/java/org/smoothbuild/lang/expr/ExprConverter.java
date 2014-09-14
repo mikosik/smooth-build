@@ -11,6 +11,8 @@ import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
 
 import java.lang.reflect.Method;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
@@ -30,7 +32,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.hash.HashCode;
 
-public class Convert {
+public class ExprConverter {
   /**
    * Name of the only parameter in every conversion function.
    */
@@ -38,7 +40,11 @@ public class Convert {
 
   private static final ImmutableMap<SType<?>, ImmutableMap<SType<?>, Function<?>>> FUNCTIONS = createFunctions();
 
-  public static <T extends SValue> ImmutableList<Expr<T>> convertExprs(SType<T> type,
+  @Inject
+  public ExprConverter() {
+  }
+
+  public <T extends SValue> ImmutableList<Expr<T>> convertExprs(SType<T> type,
       Iterable<? extends Expr<?>> expressions) {
     ImmutableList.Builder<Expr<T>> builder = ImmutableList.builder();
     for (Expr<?> expr : expressions) {
@@ -47,7 +53,7 @@ public class Convert {
     return builder.build();
   }
 
-  public static <T extends SValue> Expr<T> convertExpr(SType<T> destinationType, Expr<?> source) {
+  public <T extends SValue> Expr<T> convertExpr(SType<T> destinationType, Expr<?> source) {
     SType<?> sourceType = source.type();
     if (sourceType == destinationType) {
       /*
