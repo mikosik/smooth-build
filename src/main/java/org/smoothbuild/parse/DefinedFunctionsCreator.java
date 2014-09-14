@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.base.STypes.NIL;
 import static org.smoothbuild.lang.base.STypes.NOTHING;
 import static org.smoothbuild.lang.base.STypes.STRING;
 import static org.smoothbuild.lang.base.STypes.basicSTypes;
-import static org.smoothbuild.lang.expr.Convert.convertExprs;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
@@ -41,6 +40,7 @@ import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
+import org.smoothbuild.lang.expr.ExprConverter;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.expr.InvalidExpr;
 import org.smoothbuild.lang.function.base.Function;
@@ -67,17 +67,20 @@ import com.google.common.collect.Maps;
 public class DefinedFunctionsCreator {
   private final ObjectsDb objectsDb;
   private final ArgExprsCreator argExprsCreator;
+  private final ExprConverter converter;
 
   @Inject
-  public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgExprsCreator argExprsCreator) {
+  public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgExprsCreator argExprsCreator,
+      ExprConverter converter) {
     this.objectsDb = objectsDb;
     this.argExprsCreator = argExprsCreator;
+    this.converter = converter;
   }
 
   public Map<Name, Function<?>> createDefinedFunctions(LoggedMessages messages,
       Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    Worker worker =
-        new Worker(messages, builtinModule, functionContexts, sorted, objectsDb, argExprsCreator);
+    Worker worker = new Worker(messages, builtinModule, functionContexts, sorted, objectsDb,
+        argExprsCreator, converter);
     Map<Name, Function<?>> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -90,18 +93,20 @@ public class DefinedFunctionsCreator {
     private final List<Name> sorted;
     private final ObjectsDb objectsDb;
     private final ArgExprsCreator argExprsCreator;
+    private final ExprConverter converter;
 
     private final Map<Name, Function<?>> functions = Maps.newHashMap();
 
     public Worker(LoggedMessages messages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
-        ArgExprsCreator argExprsCreator) {
+        ArgExprsCreator argExprsCreator, ExprConverter converter) {
       this.messages = messages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
       this.objectsDb = objectsDb;
       this.argExprsCreator = argExprsCreator;
+      this.converter = converter;
     }
 
     public Map<Name, Function<?>> run() {
@@ -148,8 +153,8 @@ public class DefinedFunctionsCreator {
       if (expression.STRING() != null) {
         return buildStringExpr(expression.STRING());
       }
-      throw new Message(FATAL, "Illegal parse tree: " + ExpressionContext.class.getSimpleName()
-          + " without children.");
+      throw new Message(FATAL,
+          "Illegal parse tree: " + ExpressionContext.class.getSimpleName() + " without children.");
     }
 
     private Expr<?> build(ArrayContext list) {
@@ -169,7 +174,7 @@ public class DefinedFunctionsCreator {
     private <T extends SValue> Expr<SArray<T>> buildArray(SType<T> elemType,
         ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
       SArrayType<T> arrayType = STypes.sArrayTypeContaining(elemType);
-      ImmutableList<Expr<T>> convertedExpr = convertExprs(elemType, elemExprs);
+      ImmutableList<Expr<T>> convertedExpr = converter.convertExprs(elemType, elemExprs);
       return new ArrayExpr<>(arrayType, convertedExpr, location);
     }
 
@@ -196,12 +201,12 @@ public class DefinedFunctionsCreator {
         return build(elem.call());
       }
 
-      throw new Message(FATAL, "Illegal parse tree: " + ArrayElemContext.class.getSimpleName()
-          + " without children.");
+      throw new Message(FATAL,
+          "Illegal parse tree: " + ArrayElemContext.class.getSimpleName() + " without children.");
     }
 
-    private SType<?> commonSuperType(List<ArrayElemContext> elems,
-        ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
+    private SType<?> commonSuperType(List<ArrayElemContext> elems, ImmutableList<Expr<?>> elemExprs,
+        CodeLocation location) {
       if (elems.size() == 0) {
         return NOTHING;
       }
@@ -256,8 +261,8 @@ public class DefinedFunctionsCreator {
       Function<?> function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      ImmutableMap<String, ? extends Expr<?>> namedArgs =
-          argExprsCreator.createArgExprs(codeLocation, messages, function, args);
+      ImmutableMap<String, ? extends Expr<?>> namedArgs = argExprsCreator.createArgExprs(
+          codeLocation, messages, function, args);
 
       if (namedArgs == null) {
         return new InvalidExpr<>(function.type(), locationOf(call.functionName()));
