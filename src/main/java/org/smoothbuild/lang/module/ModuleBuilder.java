@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
 
 import com.google.common.collect.Maps;
 
@@ -18,7 +17,7 @@ public class ModuleBuilder {
     this.functions = Maps.newHashMap();
   }
 
-  public void addFunction(NativeFunction<?> function) {
+  public void addFunction(Function<?> function) {
     Name name = function.name();
     if (functions.containsKey(name)) {
       throw new IllegalArgumentException("Function " + name
