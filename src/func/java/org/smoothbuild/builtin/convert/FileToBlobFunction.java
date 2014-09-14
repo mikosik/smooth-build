@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.builtin.convert;
+package org.smoothbuild.builtin.convert;
 
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SBlob;

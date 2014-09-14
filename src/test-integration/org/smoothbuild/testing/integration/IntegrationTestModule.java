@@ -10,6 +10,11 @@ import org.smoothbuild.builtin.blob.ToFileFunction;
 import org.smoothbuild.builtin.blob.ToStringFunction;
 import org.smoothbuild.builtin.compress.UnzipFunction;
 import org.smoothbuild.builtin.compress.ZipFunction;
+import org.smoothbuild.builtin.convert.FileArrayToBlobArrayFunction;
+import org.smoothbuild.builtin.convert.FileToBlobFunction;
+import org.smoothbuild.builtin.convert.NilToBlobArrayFunction;
+import org.smoothbuild.builtin.convert.NilToFileArrayFunction;
+import org.smoothbuild.builtin.convert.NilToStringArrayFunction;
 import org.smoothbuild.builtin.file.ConcatenateFilesFunction;
 import org.smoothbuild.builtin.file.ContentFunction;
 import org.smoothbuild.builtin.file.FileFunction;
@@ -59,6 +64,14 @@ public class IntegrationTestModule extends AbstractModule {
   public Module provideBuiltinModule() throws NativeImplementationException {
     // @formatter:off
     return createNativeModule(
+        // conversion functions
+        FileToBlobFunction.class,
+        FileArrayToBlobArrayFunction.class,
+        NilToStringArrayFunction.class,
+        NilToBlobArrayFunction.class,
+        NilToFileArrayFunction.class,
+
+        //
         AidlFunction.class,
         ConcatenateBlobsFunction.class,
         ConcatenateFilesFunction.class,
@@ -80,7 +93,8 @@ public class IntegrationTestModule extends AbstractModule {
     // @formatter:on
   }
 
-  public static Module createNativeModule(Class<?>... classes) throws NativeImplementationException {
+  public static Module createNativeModule(Class<?>... classes) throws
+      NativeImplementationException {
     HashCode jarHash = Hash.integer(33);
     ModuleBuilder builder = new ModuleBuilder();
     for (Class<?> clazz : classes) {
