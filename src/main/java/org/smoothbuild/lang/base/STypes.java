@@ -66,8 +66,6 @@ public class STypes {
   private static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_STYPE_TO_ARRAY_STYPE = createElemSTypeToSArrayTypeMap(
       ARRAY_STYPES);
 
-  private static final ImmutableMultimap<SType<?>, SType<?>> CONVERSIONS = createConversions();
-
   public static ImmutableSet<SType<?>> basicSTypes() {
     return BASIC_STYPES;
   }
@@ -111,10 +109,6 @@ public class STypes {
     return result;
   }
 
-  public static boolean canConvert(SType<?> from, SType<?> to) {
-    return from == to || CONVERSIONS.containsEntry(from, to);
-  }
-
   private static ImmutableSet<TypeLiteral<?>> toJTypes(Iterable<SType<?>> types) {
     ImmutableSet.Builder<TypeLiteral<?>> builder = ImmutableSet.builder();
 
@@ -147,15 +141,4 @@ public class STypes {
     return builder.build();
   }
 
-  private static ImmutableMultimap<SType<?>, SType<?>> createConversions() {
-    ImmutableMultimap.Builder<SType<?>, SType<?>> builder = ImmutableMultimap.builder();
-
-    builder.put(FILE, BLOB);
-    builder.put(FILE_ARRAY, BLOB_ARRAY);
-    builder.put(NIL, STRING_ARRAY);
-    builder.put(NIL, BLOB_ARRAY);
-    builder.put(NIL, FILE_ARRAY);
-
-    return builder.build();
-  }
 }
