@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.lang.base.Conversions.canConvert;
 import static org.smoothbuild.lang.base.STypes.allSTypes;
-import static org.smoothbuild.lang.base.STypes.canConvert;
 import static org.smoothbuild.lang.function.base.Params.filterOptionalParams;
 import static org.smoothbuild.lang.function.base.Params.filterRequiredParams;
 import static org.smoothbuild.lang.function.base.Params.paramsToMap;
