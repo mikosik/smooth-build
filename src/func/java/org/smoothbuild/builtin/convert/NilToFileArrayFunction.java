@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.builtin.convert;
+package org.smoothbuild.builtin.convert;
 
 import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
 
