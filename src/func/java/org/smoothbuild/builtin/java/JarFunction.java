@@ -29,7 +29,7 @@ public class JarFunction {
   }
 
   @SmoothFunction(name = "jar")
-  public static SBlob execute(NativeApi nativeApi, JarParameters params) {
+  public static SBlob jar(NativeApi nativeApi, JarParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 

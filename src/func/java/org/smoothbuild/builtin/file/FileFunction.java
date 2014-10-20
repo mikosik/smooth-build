@@ -23,7 +23,7 @@ public class FileFunction {
   }
 
   @SmoothFunction(name = "file", cacheable = false)
-  public static SFile execute(NativeApiImpl nativeApi, FileParameters params) {
+  public static SFile file(NativeApiImpl nativeApi, FileParameters params) {
     Path path = validatedPath("path", params.path());
     if (!path.isRoot() && path.firstPart().equals(SMOOTH_DIR)) {
       throw new IllegalReadFromSmoothDirError(path);

@@ -19,7 +19,7 @@ public class SignatureFactoryTest {
 
   @Test
   public void test() throws Exception {
-    Method method = SignatureFactoryTest.class.getMethod("smoothMethod", NativeApi.class,
+    Method method = SignatureFactoryTest.class.getMethod("function", NativeApi.class,
         FuncParams.class);
 
     Signature<?> signature = SignatureFactory.create(method, FuncParams.class);
@@ -33,7 +33,7 @@ public class SignatureFactoryTest {
   }
 
   @SmoothFunction(name = "function")
-  public static SFile smoothMethod(NativeApi nativeApi, FuncParams funcParams) {
+  public static SFile function(NativeApi nativeApi, FuncParams funcParams) {
     return null;
   }
 }

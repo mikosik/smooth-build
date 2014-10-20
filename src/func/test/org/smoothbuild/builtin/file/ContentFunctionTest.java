@@ -18,7 +18,7 @@ public class ContentFunctionTest {
   @Test
   public void content_of_file_is_returned_as_blob() throws Exception {
     SFile file = objectsDb.file(path("some/path"), objectsDb.blob("content"));
-    SBlob actual = ContentFunction.execute(nativeApi, params(file));
+    SBlob actual = ContentFunction.content(nativeApi, params(file));
     assertThat(actual).isSameAs(file.content());
   }
 

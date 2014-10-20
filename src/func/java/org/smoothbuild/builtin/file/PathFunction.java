@@ -14,7 +14,7 @@ public class PathFunction {
   }
 
   @SmoothFunction(name = "path")
-  public static SString execute(NativeApi nativeApi, PathParameters params) {
+  public static SString path(NativeApi nativeApi, PathParameters params) {
     return nativeApi.string(params.file().path().value());
   }
 }

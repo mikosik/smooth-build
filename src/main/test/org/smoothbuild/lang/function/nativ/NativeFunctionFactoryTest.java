@@ -75,12 +75,12 @@ public class NativeFunctionFactoryTest {
 
   public static class ClassWithManyFunctions {
     @SmoothFunction(name = "aFunction")
-    public static SString aFunc(NativeApi nativeApi, EmptyParameters params) {
+    public static SString aFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
 
     @SmoothFunction(name = "bFunction")
-    public static SString bFunc(NativeApi nativeApi, EmptyParameters params) {
+    public static SString bFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -106,7 +106,7 @@ public class NativeFunctionFactoryTest {
 
   public static class NamedFunc {
     @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -196,7 +196,7 @@ public class NativeFunctionFactoryTest {
 
   public static class SignatureTestFunction {
     @SmoothFunction(name = "func")
-    public static SBlob execute(NativeApi nativeApi, SignatureTestParameters params) {
+    public static SBlob func(NativeApi nativeApi, SignatureTestParameters params) {
       return null;
     }
   }
@@ -456,7 +456,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithIllegalFunctionName {
     @SmoothFunction(name = "my^package")
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    public static SString my$function(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }

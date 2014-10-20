@@ -20,7 +20,7 @@ public class ToFileFunction {
   }
 
   @SmoothFunction(name = "toFile")
-  public static SFile execute(NativeApi nativeApi, ToFileParameters params) {
+  public static SFile toFile(NativeApi nativeApi, ToFileParameters params) {
     Path path = validatedPath("path", params.path());
     SBlob content = params.content();
     return nativeApi.file(path, content);

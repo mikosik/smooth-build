@@ -27,7 +27,7 @@ public class FilesFunctionTest {
   @Test
   public void listingFilesFromRootDirIsForbidden() throws Exception {
     try {
-      runExecute(params(Path.rootPath().value()));
+      execute(params(Path.rootPath().value()));
       fail("exception should be thrown");
     } catch (CannotListRootDirError e) {
       // expected
@@ -37,7 +37,7 @@ public class FilesFunctionTest {
   @Test
   public void accessToSmoothDirIsReported() throws Exception {
     try {
-      runExecute(params(SMOOTH_DIR.value()));
+      execute(params(SMOOTH_DIR.value()));
       fail("exception should be thrown");
     } catch (IllegalReadFromSmoothDirError e) {
       // expected
@@ -47,7 +47,7 @@ public class FilesFunctionTest {
   @Test
   public void accessToSmoothSubDirIsReported() throws Exception {
     try {
-      runExecute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
+      execute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
       fail("exception should be thrown");
     } catch (IllegalReadFromSmoothDirError e) {
       // expected
@@ -59,7 +59,7 @@ public class FilesFunctionTest {
     for (String path : PathTesting.listOfInvalidPaths()) {
       nativeApi = new FakeNativeApi();
       try {
-        runExecute(params(path));
+        execute(params(path));
         fail("exception should be thrown");
       } catch (IllegalPathError e) {
         // expected
@@ -70,7 +70,7 @@ public class FilesFunctionTest {
   @Test
   public void nonexistentPathIsReported() throws Exception {
     try {
-      runExecute(params("some/path"));
+      execute(params("some/path"));
       fail("exception should be thrown");
     } catch (NoSuchDirError e) {
       // expected
@@ -83,7 +83,7 @@ public class FilesFunctionTest {
     nativeApi.projectFileSystem().createFileContainingItsPath(filePath);
 
     try {
-      runExecute(params(filePath.value()));
+      execute(params(filePath.value()));
       fail("exception should be thrown");
     } catch (NoSuchDirButFileError e) {
       // expected
@@ -96,7 +96,7 @@ public class FilesFunctionTest {
     Path filePath = path("file/path/file.txt");
     nativeApi.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
 
-    SArray<SFile> fileArray = runExecute(params(rootPath.value()));
+    SArray<SFile> fileArray = execute(params(rootPath.value()));
 
     SFile expectedFile = objectsDb.file(filePath);
     assertThat(fileArray).containsExactly(expectedFile);
@@ -111,7 +111,7 @@ public class FilesFunctionTest {
     };
   }
 
-  private SArray<SFile> runExecute(FilesParameters params) {
-    return FilesFunction.execute(nativeApi, params);
+  private SArray<SFile> execute(FilesParameters params) {
+    return FilesFunction.files(nativeApi, params);
   }
 }

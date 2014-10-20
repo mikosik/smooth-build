@@ -56,7 +56,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -72,12 +72,12 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func1")
-    public static SString execute1(NativeApi nativeApi, Parameters params) {
+    public static SString func1(NativeApi nativeApi, Parameters params) {
       return null;
     }
 
     @SmoothFunction(name = "func2")
-    public static SString execute2(NativeApi nativeApi, Parameters params) {
+    public static SString func2(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -90,13 +90,15 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithTwoFunctionsWithSameName {
     public interface Parameters {}
 
+    public interface Parameters2 {}
+
     @SmoothFunction(name = "func")
-    public static SString execute1(NativeApi nativeApi, Parameters params) {
+    public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
 
     @SmoothFunction(name = "func")
-    public static SString execute2(NativeApi nativeApi, Parameters params) {
+    public static SString func(NativeApi nativeApi, Parameters2 params) {
       return null;
     }
   }
@@ -112,7 +114,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -132,7 +134,7 @@ public class NativeModuleFactoryTest {
     }
 
     @SmoothFunction(name = "func")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -180,7 +182,7 @@ public class NativeModuleFactoryTest {
     }
 
     @SmoothFunction(name = "func")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -199,7 +201,7 @@ public class NativeModuleFactoryTest {
     }
 
     @SmoothFunction(name = "func")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -263,7 +265,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -280,7 +282,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func")
-    public static SBlob execute(NativeApi nativeApi, Parameters params) {
+    public static SBlob func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -297,7 +299,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func")
-    public static SFile execute(NativeApi nativeApi, Parameters params) {
+    public static SFile func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -314,7 +316,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func")
-    public static SArray<SString> execute(NativeApi nativeApi, Parameters params) {
+    public static SArray<SString> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -331,7 +333,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func")
-    public static SArray<SBlob> execute(NativeApi nativeApi, Parameters params) {
+    public static SArray<SBlob> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -348,7 +350,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "func")
-    public static SArray<SFile> execute(NativeApi nativeApi, Parameters params) {
+    public static SArray<SFile> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -390,7 +392,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction(name = "my^package")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    public static SString my$function(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }

@@ -34,9 +34,9 @@ public class JunitFunction {
   }
 
   @SmoothFunction(name = "junit")
-  public static SString execute(NativeApi nativeApi, JunitParameters params) {
-    Map<String, SFile> binaryNameToClassFile =
-        binaryNameToClassFile(nativeApi, nullToEmpty(params.libs()));
+  public static SString junit(NativeApi nativeApi, JunitParameters params) {
+    Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(nativeApi, nullToEmpty(
+        params.libs()));
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
     JUnitCore jUnitCore = new JUnitCore();
 

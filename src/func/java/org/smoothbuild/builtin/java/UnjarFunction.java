@@ -15,7 +15,7 @@ public class UnjarFunction {
   }
 
   @SmoothFunction(name = "unjar")
-  public static SArray<SFile> execute(NativeApi nativeApi, UnjarParameters params) {
+  public static SArray<SFile> unjar(NativeApi nativeApi, UnjarParameters params) {
     return new Unjarer(nativeApi).unjar(params.blob());
   }
 }

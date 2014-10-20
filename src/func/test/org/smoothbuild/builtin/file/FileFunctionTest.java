@@ -28,7 +28,7 @@ public class FileFunctionTest {
   @Test
   public void accessToSmoothDirIsReported() throws Exception {
     try {
-      runExecute(params(SMOOTH_DIR.value()));
+      execute(params(SMOOTH_DIR.value()));
       fail("exception should be thrown");
     } catch (IllegalReadFromSmoothDirError e) {
       // expected
@@ -38,7 +38,7 @@ public class FileFunctionTest {
   @Test
   public void accessToSmoothSubDirIsReported() throws Exception {
     try {
-      runExecute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
+      execute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
       fail("exception should be thrown");
     } catch (IllegalReadFromSmoothDirError e) {
       // expected
@@ -50,7 +50,7 @@ public class FileFunctionTest {
     for (String path : PathTesting.listOfInvalidPaths()) {
       nativeApi = new FakeNativeApi();
       try {
-        runExecute(params(path));
+        execute(params(path));
         fail("exception should be thrown");
       } catch (IllegalPathError e) {
         // expected
@@ -62,7 +62,7 @@ public class FileFunctionTest {
   public void nonexistentPathIsReported() throws Exception {
 
     try {
-      runExecute(params("some/path/file.txt"));
+      execute(params("some/path/file.txt"));
       fail("exception should be thrown");
     } catch (NoSuchFileError e) {
       // expected
@@ -76,7 +76,7 @@ public class FileFunctionTest {
     nativeApi.projectFileSystem().createFileContainingItsPath(file);
 
     try {
-      runExecute(params(dir.value()));
+      execute(params(dir.value()));
       fail("exception should be thrown");
     } catch (NoSuchFileButDirError e) {
       // expected
@@ -86,7 +86,7 @@ public class FileFunctionTest {
   @Test
   public void execute() throws Exception {
     given(nativeApi.projectFileSystem()).createFileContainingItsPath(path);
-    when(runExecute(params(path.value())));
+    when(execute(params(path.value())));
     thenReturned(objectsDb.file(path));
   }
 
@@ -99,7 +99,7 @@ public class FileFunctionTest {
     };
   }
 
-  private SFile runExecute(FileParameters params) {
-    return FileFunction.execute(nativeApi, params);
+  private SFile execute(FileParameters params) {
+    return FileFunction.file(nativeApi, params);
   }
 }

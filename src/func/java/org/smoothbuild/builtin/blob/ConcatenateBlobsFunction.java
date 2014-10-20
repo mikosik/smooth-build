@@ -20,7 +20,8 @@ public class ConcatenateBlobsFunction {
   }
 
   @SmoothFunction(name = "concatenateBlobs")
-  public static SArray<SBlob> execute(NativeApi nativeApi, ConcatenateBlobsParameters params) {
+  public static SArray<SBlob> concatenateBlobs(NativeApi nativeApi,
+      ConcatenateBlobsParameters params) {
     ArrayBuilder<SBlob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
 
     for (SBlob blob : params.blobs()) {

@@ -16,7 +16,7 @@ public class NilToStringArrayFunction {
   }
 
   @SmoothFunction(name = "nilToStringArray")
-  public static SArray<SString> execute(NativeApi nativeApi, Parameters params) {
+  public static SArray<SString> nilToStringArray(NativeApi nativeApi, Parameters params) {
     return nativeApi.arrayBuilder(STRING_ARRAY).build();
   }
 }
