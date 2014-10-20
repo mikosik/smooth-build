@@ -11,15 +11,13 @@ import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
+import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
-import org.smoothbuild.lang.function.nativ.err.MissingNameException;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.err.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
 
 import com.google.common.collect.Lists;
 import com.google.inject.TypeLiteral;
@@ -36,19 +34,15 @@ public class SignatureFactory {
   }
 
   private static Name functionSName(Method functionMethod) throws NativeImplementationException {
-    SmoothFunction annotation = functionMethod.getAnnotation(SmoothFunction.class);
-    if (annotation == null) {
-      throw new MissingNameException(functionMethod);
-    }
     try {
-      return name(annotation.name());
+      return name(functionMethod.getName());
     } catch (IllegalArgumentException e) {
       throw new IllegalFunctionNameException(functionMethod, e.getMessage());
     }
   }
 
-  private static Iterable<Param> functionSParams(Method functionMethod, Class<?> paramsInterface) throws
-      NativeImplementationException {
+  private static Iterable<Param> functionSParams(Method functionMethod,
+      Class<?> paramsInterface) throws NativeImplementationException {
     if (!paramsInterface.isInterface()) {
       throw new ParamsIsNotInterfaceException(functionMethod);
     }
