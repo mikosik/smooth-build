@@ -79,7 +79,7 @@ public class ExpressionExecutionTest {
 
   @Test
   public void executes_empty_array_expression() throws Exception {
-    given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.<Expr<SString>> of(), location));
+    given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.<Expr<SString>>of(), location));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(array()));
@@ -123,8 +123,8 @@ public class ExpressionExecutionTest {
       SString param();
     }
 
-    @SmoothFunction(name = "func")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    @SmoothFunction
+    public static SString func(NativeApi nativeApi, Parameters params) {
       return params.param();
     }
   }
@@ -145,8 +145,8 @@ public class ExpressionExecutionTest {
       SString param();
     }
 
-    @SmoothFunction(name = "func")
-    public static SString execute(NativeApi nativeApi, Parameters params) {
+    @SmoothFunction
+    public static SString func(NativeApi nativeApi, Parameters params) {
       throw new RuntimeException();
     }
   }

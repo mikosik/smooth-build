@@ -16,7 +16,7 @@ public class NilToBlobArrayFunction {
     public SArray<SNothing> input();
   }
 
-  @SmoothFunction(name = "nilToBlobArray")
+  @SmoothFunction
   public static SArray<SBlob> nilToBlobArray(NativeApi nativeApi, Parameters params) {
     return nativeApi.arrayBuilder(BLOB_ARRAY).build();
   }

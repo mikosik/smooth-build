@@ -26,7 +26,7 @@ public class ZipFunction {
     // add missing parameters: level, comment, method
   }
 
-  @SmoothFunction(name = "zip")
+  @SmoothFunction
   public static SBlob zip(NativeApi nativeApi, ZipParameters params) {
     return new Worker(nativeApi, params).execute();
   }

@@ -12,7 +12,7 @@ public class ContentFunction {
     public SFile file();
   }
 
-  @SmoothFunction(name = "content")
+  @SmoothFunction
   public static SBlob content(NativeApi nativeApi, ContentParameters params) {
     return params.file().content();
   }

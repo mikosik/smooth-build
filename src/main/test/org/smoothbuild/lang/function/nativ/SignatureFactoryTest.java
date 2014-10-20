@@ -32,7 +32,7 @@ public class SignatureFactoryTest {
     public SFile param1();
   }
 
-  @SmoothFunction(name = "function")
+  @SmoothFunction
   public static SFile function(NativeApi nativeApi, FuncParams funcParams) {
     return null;
   }

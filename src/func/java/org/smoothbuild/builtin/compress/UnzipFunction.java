@@ -13,7 +13,7 @@ public class UnzipFunction {
     public SBlob blob();
   }
 
-  @SmoothFunction(name = "unzip")
+  @SmoothFunction
   public static SArray<SFile> unzip(NativeApi nativeApi, UnzipParameters params) {
     return new Unzipper(nativeApi).unzip(params.blob());
   }
