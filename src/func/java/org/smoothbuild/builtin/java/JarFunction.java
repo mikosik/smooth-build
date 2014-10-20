@@ -28,7 +28,7 @@ public class JarFunction {
     public SBlob manifest();
   }
 
-  @SmoothFunction(name = "jar")
+  @SmoothFunction
   public static SBlob jar(NativeApi nativeApi, JarParameters params) {
     return new Worker(nativeApi, params).execute();
   }

@@ -27,7 +27,7 @@ public class FilesFunction {
     public SString dir();
   }
 
-  @SmoothFunction(name = "files", cacheable = false)
+  @SmoothFunction(cacheable = false)
   public static SArray<SFile> files(NativeApiImpl nativeApi, FilesParameters params) {
     Path path = validatedPath("dir", params.dir());
     FileSystem fileSystem = nativeApi.projectFileSystem();

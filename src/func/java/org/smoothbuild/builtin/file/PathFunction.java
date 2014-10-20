@@ -13,7 +13,7 @@ public class PathFunction {
     public SFile file();
   }
 
-  @SmoothFunction(name = "path")
+  @SmoothFunction
   public static SString path(NativeApi nativeApi, PathParameters params) {
     return nativeApi.string(params.file().path().value());
   }

@@ -19,7 +19,7 @@ public class ToBlobFunction {
     public SString string();
   }
 
-  @SmoothFunction(name = "toBlob")
+  @SmoothFunction
   public static SBlob toBlob(NativeApi nativeApi, ToBlobParameters params) {
     return stringToBlob(nativeApi, params.string());
   }

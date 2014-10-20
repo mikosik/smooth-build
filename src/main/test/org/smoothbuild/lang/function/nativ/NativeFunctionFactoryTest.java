@@ -74,12 +74,12 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class ClassWithManyFunctions {
-    @SmoothFunction(name = "aFunction")
+    @SmoothFunction
     public static SString aFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
 
-    @SmoothFunction(name = "bFunction")
+    @SmoothFunction
     public static SString bFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -105,7 +105,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class NamedFunc {
-    @SmoothFunction(name = "myFunction")
+    @SmoothFunction
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -119,8 +119,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FunctionReturningSString {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -140,8 +140,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FunctionWithDifferentParams {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, DifferentParams params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, DifferentParams params) {
       return null;
     }
   }
@@ -155,8 +155,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class NonCacheableFunction {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -170,8 +170,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class CacheableFunction {
-    @SmoothFunction(name = "myFunction", cacheable = false)
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction(cacheable = false)
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -195,7 +195,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class SignatureTestFunction {
-    @SmoothFunction(name = "func")
+    @SmoothFunction
     public static SBlob func(NativeApi nativeApi, SignatureTestParameters params) {
       return null;
     }
@@ -212,8 +212,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class ConstantStringFunction {
-    @SmoothFunction(name = "constantStringFunction")
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SString constantStringFunction(NativeApi nativeApi, EmptyParameters params) {
       return new FakeObjectsDb().string("constant string");
     }
   }
@@ -239,8 +239,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithAllowedParamTypes {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, AllowedParameters params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, AllowedParameters params) {
       return null;
     }
   }
@@ -258,8 +258,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithRequiredParam {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, RequiredParam params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, RequiredParam params) {
       return null;
     }
   }
@@ -276,8 +276,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithNotRequiredParam {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, NotRequiredParam params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, NotRequiredParam params) {
       return null;
     }
   }
@@ -293,8 +293,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithArrayOfArrayParamType {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, ArrayOfArrayParams params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, ArrayOfArrayParams params) {
       return null;
     }
   }
@@ -310,8 +310,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithForbiddenParamType {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, ForbiddenParams params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, ForbiddenParams params) {
       return null;
     }
   }
@@ -325,8 +325,8 @@ public class NativeFunctionFactoryTest {
   public interface EmptyParameters {}
 
   public static class FuncWithEmptyParameters {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -338,8 +338,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithStringResult {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -351,8 +351,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithBlobResult {
-    @SmoothFunction(name = "myFunction")
-    public static SBlob execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SBlob myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -364,8 +364,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithFileResult {
-    @SmoothFunction(name = "myFunction")
-    public static SFile execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SFile myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -377,8 +377,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithStringArrayResult {
-    @SmoothFunction(name = "myFunction")
-    public static SArray<SString> execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SArray<SString> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -390,8 +390,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithBlobArrayResult {
-    @SmoothFunction(name = "myFunction")
-    public static SArray<SBlob> execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SArray<SBlob> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -403,8 +403,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithFileArrayResult {
-    @SmoothFunction(name = "myFunction")
-    public static SArray<SFile> execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SArray<SFile> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -416,8 +416,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithIllegalReturnType {
-    @SmoothFunction(name = "myFunction")
-    public static Runnable execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static Runnable myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -429,8 +429,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithArrayOfArrayReturnType {
-    @SmoothFunction(name = "myFunction")
-    public static SArray<SArray<SFile>> execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SArray<SArray<SFile>> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -442,8 +442,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithParamThatIsNotInterface {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, String string) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, String string) {
       return null;
     }
   }
@@ -455,7 +455,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithIllegalFunctionName {
-    @SmoothFunction(name = "my^package")
+    @SmoothFunction
     public static SString my$function(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -470,8 +470,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithThrowingSmoothMethod {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       throw new RuntimeException();
     }
   }
@@ -483,8 +483,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithPrivateSmoothMethod {
-    @SmoothFunction(name = "myFunction")
-    private static void execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    private static void myFunction(NativeApi nativeApi, EmptyParameters params) {
     }
   }
 
@@ -499,8 +499,9 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithParamMethodThatHasParameters {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, ParametersWithMethodWithParameters params) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi,
+        ParametersWithMethodWithParameters params) {
       return null;
     }
   }
@@ -512,8 +513,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithNonStaticSmoothMethod {
-    @SmoothFunction(name = "myFunction")
-    public void execute(NativeApi nativeApi, EmptyParameters params) {
+    @SmoothFunction
+    public void myFunction(NativeApi nativeApi, EmptyParameters params) {
     }
   }
 
@@ -524,8 +525,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithSmoothMethodWithZeroParams {
-    @SmoothFunction(name = "myFunction")
-    public static void execute() {
+    @SmoothFunction
+    public static void myFunction() {
     }
   }
 
@@ -536,8 +537,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithSmoothMethodWithOneParam {
-    @SmoothFunction(name = "myFunction")
-    public static void execute() {
+    @SmoothFunction
+    public static void myFunction() {
     }
   }
 
@@ -549,8 +550,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithSmoothMethodWithWrongFirstParam {
-    @SmoothFunction(name = "myFunction")
-    public static void execute(EmptyParameters wrong, EmptyParameters params) {
+    @SmoothFunction
+    public static void myFunction(EmptyParameters wrong, EmptyParameters params) {
     }
   }
 
@@ -562,8 +563,8 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class FuncWithSmoothMethodWithWrongSecondParam {
-    @SmoothFunction(name = "myFunction")
-    public static SString execute(NativeApi nativeApi, Integer wrong) {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, Integer wrong) {
       return null;
     }
   }

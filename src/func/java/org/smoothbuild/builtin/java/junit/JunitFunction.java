@@ -33,7 +33,7 @@ public class JunitFunction {
     SString include();
   }
 
-  @SmoothFunction(name = "junit")
+  @SmoothFunction
   public static SString junit(NativeApi nativeApi, JunitParameters params) {
     Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(nativeApi, nullToEmpty(
         params.libs()));

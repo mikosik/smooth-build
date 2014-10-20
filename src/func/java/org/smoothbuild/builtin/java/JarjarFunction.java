@@ -26,7 +26,7 @@ public class JarjarFunction {
     public SBlob in();
   }
 
-  @SmoothFunction(name = "jarjar")
+  @SmoothFunction
   public static SBlob jarjar(NativeApi nativeApi, JarjarParameters params) {
     TempDirectory tempDir = nativeApi.createTempDirectory();
 

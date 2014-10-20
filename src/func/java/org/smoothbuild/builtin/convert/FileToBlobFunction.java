@@ -13,7 +13,7 @@ public class FileToBlobFunction {
     public SFile input();
   }
 
-  @SmoothFunction(name = "fileToBlob")
+  @SmoothFunction
   public static SBlob fileToBlob(NativeApi nativeApi, Parameters params) {
     return params.input().content();
   }

@@ -26,7 +26,7 @@ public class FilterFunction {
     public SString include();
   }
 
-  @SmoothFunction(name = "filter")
+  @SmoothFunction
   public static SArray<SFile> filter(NativeApi nativeApi, FilterParameters params) {
     Predicate<Path> filter = createFilter(params.include().value());
     ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);

@@ -22,7 +22,7 @@ public class FileFunction {
     public SString path();
   }
 
-  @SmoothFunction(name = "file", cacheable = false)
+  @SmoothFunction(cacheable = false)
   public static SFile file(NativeApiImpl nativeApi, FileParameters params) {
     Path path = validatedPath("path", params.path());
     if (!path.isRoot() && path.firstPart().equals(SMOOTH_DIR)) {

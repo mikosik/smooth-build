@@ -16,7 +16,7 @@ public class NilToFileArrayFunction {
     public SArray<SNothing> input();
   }
 
-  @SmoothFunction(name = "nilToFileArray")
+  @SmoothFunction
   public static SArray<SFile> nilToFileArray(NativeApi nativeApi, Parameters params) {
     return nativeApi.arrayBuilder(FILE_ARRAY).build();
   }

@@ -49,7 +49,7 @@ public class JavacFunction {
     SString target();
   }
 
-  @SmoothFunction(name = "javac")
+  @SmoothFunction
   public static SArray<SFile> javac(NativeApi nativeApi, JavacParameters params) {
     return new Worker(nativeApi, params).execute();
   }
