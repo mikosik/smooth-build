@@ -32,8 +32,7 @@ public class AidlFunction {
   }
 
   @SmoothFunction(name = "aidl")
-  public static SFile execute(NativeApi nativeApi, AidlParameters params)
-      throws InterruptedException {
+  public static SFile aidl(NativeApi nativeApi, AidlParameters params) throws InterruptedException {
     String buildToolsVersion = params.buildToolsVersion().value();
     String apiLevel = params.apiLevel().value();
     SFile interfaceFile = params.interfaceFile();

@@ -17,7 +17,7 @@ public class ToStringFunction {
   }
 
   @SmoothFunction(name = "toString")
-  public static SString execute(NativeApi nativeApi, ToStringParameters params) {
+  public static SString toString(NativeApi nativeApi, ToStringParameters params) {
     try {
       String string = Streams.inputStreamToString(params.blob().openInputStream());
       return nativeApi.string(string);

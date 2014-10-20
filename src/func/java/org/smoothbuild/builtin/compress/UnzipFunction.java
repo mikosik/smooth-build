@@ -14,7 +14,7 @@ public class UnzipFunction {
   }
 
   @SmoothFunction(name = "unzip")
-  public static SArray<SFile> execute(NativeApi nativeApi, UnzipParameters params) {
+  public static SArray<SFile> unzip(NativeApi nativeApi, UnzipParameters params) {
     return new Unzipper(nativeApi).unzip(params.blob());
   }
 }

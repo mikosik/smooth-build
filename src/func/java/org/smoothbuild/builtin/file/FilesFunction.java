@@ -28,7 +28,7 @@ public class FilesFunction {
   }
 
   @SmoothFunction(name = "files", cacheable = false)
-  public static SArray<SFile> execute(NativeApiImpl nativeApi, FilesParameters params) {
+  public static SArray<SFile> files(NativeApiImpl nativeApi, FilesParameters params) {
     Path path = validatedPath("dir", params.dir());
     FileSystem fileSystem = nativeApi.projectFileSystem();
 
@@ -52,7 +52,8 @@ public class FilesFunction {
     }
   }
 
-  private static SArray<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem, Path path) {
+  private static SArray<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem,
+      Path path) {
     ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
     FileReader reader = new FileReader(nativeApi);
     for (Path filePath : fileSystem.filesFromRecursive(path)) {

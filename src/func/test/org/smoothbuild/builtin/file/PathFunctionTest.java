@@ -22,7 +22,7 @@ public class PathFunctionTest {
   public void file_path_is_returned_as_string() throws Exception {
     given(path = path("some/path"));
     given(file = objectsDb.file(path, ""));
-    when(PathFunction.execute(nativeApi, params(file)));
+    when(PathFunction.path(nativeApi, params(file)));
     thenReturned(objectsDb.string(path.value()));
   }
 

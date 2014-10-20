@@ -27,7 +27,7 @@ public class ZipFunction {
   }
 
   @SmoothFunction(name = "zip")
-  public static SBlob execute(NativeApi nativeApi, ZipParameters params) {
+  public static SBlob zip(NativeApi nativeApi, ZipParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 

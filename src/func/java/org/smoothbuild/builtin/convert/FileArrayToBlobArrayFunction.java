@@ -17,7 +17,7 @@ public class FileArrayToBlobArrayFunction {
   }
 
   @SmoothFunction(name = "fileArrayToBlobArray")
-  public static SArray<SBlob> execute(NativeApi nativeApi, Parameters params) {
+  public static SArray<SBlob> fileArrayToBlobArray(NativeApi nativeApi, Parameters params) {
     ArrayBuilder<SBlob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
     for (SFile file : params.input()) {
       builder.add(file.content());

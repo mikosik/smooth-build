@@ -14,7 +14,7 @@ public class FileToBlobFunction {
   }
 
   @SmoothFunction(name = "fileToBlob")
-  public static SBlob execute(NativeApi nativeApi, Parameters params) {
+  public static SBlob fileToBlob(NativeApi nativeApi, Parameters params) {
     return params.input().content();
   }
 }
