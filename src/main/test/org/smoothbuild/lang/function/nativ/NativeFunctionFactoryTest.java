@@ -35,6 +35,7 @@ import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.err.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionException;
+import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.task.base.TaskInput;
@@ -164,13 +165,14 @@ public class NativeFunctionFactoryTest {
   @Test
   public void function_is_not_cacheable_when_java_method_annotation_is_annotated_as_not_cacheable() throws
       Exception {
-    given(function = createNativeFunction(CacheableFunction.class.getMethods()[0]));
+    given(function = createNativeFunction(NotCacheableFunction.class.getMethods()[0]));
     when(function).isCacheable();
     thenReturned(false);
   }
 
-  public static class CacheableFunction {
-    @SmoothFunction(cacheable = false)
+  public static class NotCacheableFunction {
+    @SmoothFunction
+    @NotCacheable
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
