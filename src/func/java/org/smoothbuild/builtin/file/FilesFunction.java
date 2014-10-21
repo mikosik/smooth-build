@@ -15,6 +15,7 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.Message;
@@ -27,7 +28,8 @@ public class FilesFunction {
     public SString dir();
   }
 
-  @SmoothFunction(cacheable = false)
+  @SmoothFunction
+  @NotCacheable
   public static SArray<SFile> files(NativeApiImpl nativeApi, FilesParameters params) {
     Path path = validatedPath("dir", params.dir());
     FileSystem fileSystem = nativeApi.projectFileSystem();

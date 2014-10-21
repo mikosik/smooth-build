@@ -8,11 +8,11 @@ import java.lang.reflect.Method;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.err.MissingNameException;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionException;
+import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
@@ -32,8 +32,8 @@ public class NativeFunctionFactory {
     return builder.build();
   }
 
-  public static NativeFunction<?> createNativeFunction(HashCode jarHash, Method method)
-      throws NativeImplementationException {
+  public static NativeFunction<?> createNativeFunction(HashCode jarHash, Method method) throws
+      NativeImplementationException {
     if (!isPublic(method)) {
       throw new NonPublicSmoothFunctionException(method);
     }
@@ -55,8 +55,8 @@ public class NativeFunctionFactory {
   }
 
   private static <T extends SValue> NativeFunction<T> createNativeFunction(HashCode jarHash,
-      Method method, Signature<T> signature, Class<?> paramsInterface)
-      throws NativeImplementationException{
+      Method method, Signature<T> signature, Class<?> paramsInterface) throws
+      NativeImplementationException {
 
     /*
      * Cast is safe as T is return type of 'method'.
@@ -67,17 +67,13 @@ public class NativeFunctionFactory {
     return new NativeFunction<>(jarHash, signature, invoker, isCacheable(method));
   }
 
-  private static Invoker<?> createInvoker(Method method, Class<?> paramsInterface)
-      throws NativeImplementationException {
+  private static Invoker<?> createInvoker(Method method, Class<?> paramsInterface) throws
+      NativeImplementationException {
     ArgsCreator argsCreator = new ArgsCreator(paramsInterface);
     return new Invoker<>(method, argsCreator);
   }
 
-  private static boolean isCacheable(Method method) throws MissingNameException {
-    SmoothFunction annotation = method.getAnnotation(SmoothFunction.class);
-    if (annotation == null) {
-      throw new MissingNameException(method);
-    }
-    return annotation.cacheable();
+  private static boolean isCacheable(Method method) {
+    return null == method.getAnnotation(NotCacheable.class);
   }
 }
