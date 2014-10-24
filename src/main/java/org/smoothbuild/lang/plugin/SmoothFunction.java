@@ -7,6 +7,4 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface SmoothFunction {
-  boolean cacheable() default true;
-}
+public @interface SmoothFunction {}
