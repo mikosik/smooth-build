@@ -10,13 +10,14 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.task.work.VirtualWorker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**
  * Smooth function defined in smooth language via smooth expression.
- * 
+ *
  * @see NativeFunction
  */
 public class DefinedFunction<T extends SValue> extends AbstractFunction<T> {
@@ -28,10 +29,11 @@ public class DefinedFunction<T extends SValue> extends AbstractFunction<T> {
   }
 
   @Override
-  public ImmutableList<? extends Expr<?>> dependencies(ImmutableMap<String, ? extends Expr<?>> args) {
+  public ImmutableList<? extends Expr<?>> dependencies(
+      ImmutableMap<String, ? extends Expr<?>> args) {
     checkArgument(args.isEmpty(),
         "DefinedFunction.dependencies() cannot accept non-empty arguments");
-    return root.dependencies();
+    return ImmutableList.of(root);
   }
 
   @Override
@@ -39,6 +41,6 @@ public class DefinedFunction<T extends SValue> extends AbstractFunction<T> {
       CodeLocation codeLocation) {
     checkArgument(args.isEmpty(),
         "DefinedFunction.createWorker() cannot accept non-empty arguments");
-    return root.createWorker();
+    return new VirtualWorker<T>(this, codeLocation);
   }
 }
