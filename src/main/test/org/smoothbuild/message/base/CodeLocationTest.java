@@ -2,12 +2,17 @@ package org.smoothbuild.message.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.message.base.CodeLocation.commandLine;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 
 import com.google.common.testing.EqualsTester;
 
 public class CodeLocationTest {
+  private CodeLocation codeLocation;
 
   @Test
   public void testGetters() {
@@ -37,7 +42,16 @@ public class CodeLocationTest {
   }
 
   @Test
-  public void testToString() throws Exception {
-    assertThat(codeLocation(2).toString()).isEqualTo("[ line 2 ]");
+  public void file_code_location_to_string() throws Exception {
+    given(codeLocation = codeLocation(2));
+    when(codeLocation.toString());
+    thenReturned("[ line 2 ]");
+  }
+
+  @Test
+  public void command_line_code_location_to_string() throws Exception {
+    given(codeLocation = commandLine());
+    when(codeLocation.toString());
+    thenReturned("[ cmd line ]");
   }
 }
