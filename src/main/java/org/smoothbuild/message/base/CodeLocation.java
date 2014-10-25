@@ -41,6 +41,14 @@ public class CodeLocation {
 
   @Override
   public String toString() {
-    return "[ line " + Integer.toString(line) + " ]";
+    return "[ " + asString() + " ]";
+  }
+
+  private String asString() {
+    if (line == -1) {
+      return "cmd line";
+    } else {
+      return "line " + Integer.toString(line);
+    }
   }
 }
