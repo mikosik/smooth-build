@@ -1,6 +1,5 @@
 package org.smoothbuild.message.base;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.CodeLocation.commandLine;
 import static org.testory.Testory.given;
@@ -15,13 +14,14 @@ public class CodeLocationTest {
   private CodeLocation codeLocation;
 
   @Test
-  public void testGetters() {
-    CodeLocation location = codeLocation(13);
-    assertThat(location.line()).isEqualTo(13);
+  public void line_returns_value_passed_during_construction() {
+    given(codeLocation = codeLocation(13));
+    when(codeLocation.line());
+    thenReturned(13);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void zeroIndexesAreForbidden() {
+  public void zero_line_is_forbidden() {
     codeLocation(0);
   }
 
