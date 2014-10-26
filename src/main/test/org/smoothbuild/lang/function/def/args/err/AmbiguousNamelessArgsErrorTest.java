@@ -9,9 +9,9 @@ import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
-import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -24,8 +24,8 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Param;
-import org.smoothbuild.lang.function.def.args.Arg;
-import org.smoothbuild.lang.function.def.args.TypedParamsPool;
+import org.smoothbuild.lang.function.def.args.Argument;
+import org.smoothbuild.lang.function.def.args.TypedParametersPool;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableMap;
@@ -37,27 +37,27 @@ public class AmbiguousNamelessArgsErrorTest {
   public void test() {
 
     Param p1 = param(STRING, "param1", false);
-    Arg a1 = namedArg(12, "arg1", expression(STRING), codeLocation(2));
+    Argument a1 = namedArg(12, "arg1", expression(STRING), codeLocation(2));
 
     Param p2 = param(STRING_ARRAY, "param2", false);
-    Arg a2 = namelessArg(7, expression(STRING_ARRAY), codeLocation(12));
+    Argument a2 = namelessArg(7, expression(STRING_ARRAY), codeLocation(12));
 
     Param p3 = param(FILE, "param3", false);
-    Arg a3 = pipedArg(expression(FILE), codeLocation(14));
+    Argument a3 = pipedArg(expression(FILE), codeLocation(14));
 
-    Arg a4 = namedArg(3, "arg4", expression(NIL), codeLocation(7));
-    Set<Arg> availableArgs = newHashSet();
-    availableArgs.add(a4);
+    Argument a4 = namedArg(3, "arg4", expression(NIL), codeLocation(7));
+    Set<Argument> availableArguments = newHashSet();
+    availableArguments.add(a4);
 
-    Map<Param, Arg> paramToArgMap = ImmutableMap.of(p1, a1, p2, a2, p3, a3);
+    Map<Param, Argument> paramToArgMap = ImmutableMap.of(p1, a1, p2, a2, p3, a3);
 
     Param p4 = param(FILE_ARRAY, "param4", false);
     Param p5 = param(STRING_ARRAY, "param5", false);
-    TypedParamsPool availableParams = new TypedParamsPool(newHashSet(p4, p5),
+    TypedParametersPool availableParams = new TypedParametersPool(newHashSet(p4, p5),
         Sets.<Param>newHashSet());
 
     AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(name("func"), paramToArgMap,
-        availableArgs, availableParams);
+        availableArguments, availableParams);
 
     LineBuilder builder = new LineBuilder();
     builder.addLine(

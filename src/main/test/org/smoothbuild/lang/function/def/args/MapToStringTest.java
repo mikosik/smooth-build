@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -18,7 +18,7 @@ import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableMap;
 
-public class ParamToArgMapToStringTest {
+public class MapToStringTest {
   @Test
   public void testToString() throws Exception {
     // given
@@ -26,13 +26,13 @@ public class ParamToArgMapToStringTest {
     Param param2 = param(STRING, "name2", false);
     Param param3 = param(FILE, "name3", false);
 
-    Arg arg1 = arg(1, STRING, "name4");
-    Arg arg2 = arg(1234, STRING, "name5");
-    Arg arg3 = arg(7, FILE, "name6-that-is-long");
+    Argument argument1 = arg(1, STRING, "name4");
+    Argument argument2 = arg(1234, STRING, "name5");
+    Argument argument3 = arg(7, FILE, "name6-that-is-long");
 
     // when
-    String actual = ParamToArgMapToString.toString(ImmutableMap.of(param1, arg1, param2, arg2,
-        param3, arg3));
+    String actual = MapToString.toString(ImmutableMap.of(param1, argument1, param2, argument2,
+        param3, argument3));
 
     // then
     String l = codeLocation(2).toString();
@@ -44,7 +44,7 @@ public class ParamToArgMapToStringTest {
     assertThat(actual).isEqualTo(expected.build());
   }
 
-  private static Arg arg(int number, Type<?> type, String name) {
+  private static Argument arg(int number, Type<?> type, String name) {
     Expression<?> expression = mock(Expression.class);
     given(willReturn(type), expression).type();
 

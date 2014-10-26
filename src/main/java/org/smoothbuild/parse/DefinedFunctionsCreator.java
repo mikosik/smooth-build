@@ -7,9 +7,9 @@ import static org.smoothbuild.lang.base.Types.NOTHING;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.basicTypes;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
-import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -47,7 +47,7 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.function.def.args.Arg;
+import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
@@ -134,11 +134,11 @@ public class DefinedFunctionsCreator {
       List<CallContext> elements = pipe.call();
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
-        List<Arg> args = build(call.argList());
+        List<Argument> arguments = build(call.argList());
         // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipe.p.get(i));
-        args.add(pipedArg(result, codeLocation));
-        result = build(call, args);
+        arguments.add(pipedArg(result, codeLocation));
+        result = build(call, arguments);
       }
       return result;
     }
@@ -261,18 +261,18 @@ public class DefinedFunctionsCreator {
     }
 
     private Expression<?> build(CallContext call) {
-      List<Arg> args = build(call.argList());
-      return build(call, args);
+      List<Argument> arguments = build(call.argList());
+      return build(call, arguments);
     }
 
-    private Expression<?> build(CallContext call, List<Arg> args) {
+    private Expression<?> build(CallContext call, List<Argument> arguments) {
       String functionName = call.functionName().getText();
 
       Function<?> function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
       ImmutableMap<String, ? extends Expression<?>> namedArgs = argExprsCreator.createArgExprs(
-          codeLocation, messages, function, args);
+          codeLocation, messages, function, arguments);
 
       if (namedArgs == null) {
         return new InvalidExpression<>(function.type(), locationOf(call.functionName()));
@@ -295,8 +295,8 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private List<Arg> build(ArgListContext argList) {
-      List<Arg> result = Lists.newArrayList();
+    private List<Argument> build(ArgListContext argList) {
+      List<Argument> result = Lists.newArrayList();
       if (argList != null) {
         List<ArgContext> argContextList = argList.arg();
         for (int i = 0; i < argContextList.size(); i++) {
@@ -306,7 +306,7 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
-    private Arg build(int index, ArgContext arg) {
+    private Argument build(int index, ArgContext arg) {
       Expression<?> expression = build(arg.expression());
 
       CodeLocation location = locationOf(arg);

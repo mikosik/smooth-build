@@ -4,9 +4,9 @@ import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
-import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -22,14 +22,14 @@ import org.smoothbuild.message.base.CodeLocation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 
-public class ArgTest {
+public class ArgumentTest {
   private final String name = "name";
   private final Expression<?> expression = mock(Expression.class);
   private final CodeLocation codeLocation = codeLocation(1);
-  private Arg arg;
-  private Arg arg2;
-  private Arg arg3;
-  private Arg arg4;
+  private Argument argument;
+  private Argument argument2;
+  private Argument argument3;
+  private Argument argument4;
 
   @Test(expected = IllegalArgumentException.class)
   public void negative_index_is_forbidden_in_named_argument() {
@@ -100,36 +100,36 @@ public class ArgTest {
 
   @Test
   public void named_argument_has_name() throws Exception {
-    given(arg = namedArg(1, name, expression, codeLocation));
-    when(arg).hasName();
+    given(argument = namedArg(1, name, expression, codeLocation));
+    when(argument).hasName();
     thenReturned(true);
   }
 
   @Test
   public void nameless_argument_does_not_have_name() throws Exception {
-    given(arg = namelessArg(1, expression, codeLocation));
-    when(arg).hasName();
+    given(argument = namelessArg(1, expression, codeLocation));
+    when(argument).hasName();
     thenReturned(false);
   }
 
   @Test
   public void piped_argument_does_not_have_name() throws Exception {
-    given(arg = pipedArg(expression, codeLocation));
-    when(arg).hasName();
+    given(argument = pipedArg(expression, codeLocation));
+    when(argument).hasName();
     thenReturned(false);
   }
 
   @Test
   public void sanitized_name_of_named_argument_is_equal_its_name() throws Exception {
-    given(arg = named(name));
-    when(arg).nameSanitized();
+    given(argument = named(name));
+    when(argument).nameSanitized();
     thenReturned(name);
   }
 
   @Test
   public void sanitized_name_of_nameless_argument_is_equal_to_nameless() throws Exception {
-    given(arg = nameless(STRING));
-    when(arg).nameSanitized();
+    given(argument = nameless(STRING));
+    when(argument).nameSanitized();
     thenReturned("<nameless>");
   }
 
@@ -163,31 +163,31 @@ public class ArgTest {
 
   @Test
   public void filter_named_returns_only_named_arguments() throws Exception {
-    given(arg = named("name1"));
-    given(arg2 = named("name2"));
-    given(arg3 = nameless(STRING));
-    given(arg4 = nameless(STRING));
-    when(Arg.filterNamed(ImmutableList.of(arg, arg2, arg3, arg4)));
-    thenReturned(contains(arg, arg2));
+    given(argument = named("name1"));
+    given(argument2 = named("name2"));
+    given(argument3 = nameless(STRING));
+    given(argument4 = nameless(STRING));
+    when(Argument.filterNamed(ImmutableList.of(argument, argument2, argument3, argument4)));
+    thenReturned(contains(argument, argument2));
   }
 
   @Test
   public void filter_nameless_returns_only_nameless_arguments() {
-    given(arg = nameless(STRING));
-    given(arg2 = nameless(BLOB_ARRAY));
-    given(arg3 = nameless(FILE));
-    given(arg4 = named("named"));
-    when(Arg.filterNameless(ImmutableList.of(arg, arg2, arg3, arg4)));
-    thenReturned(ImmutableMultimap.of(STRING, arg, BLOB_ARRAY, arg2, FILE, arg3));
+    given(argument = nameless(STRING));
+    given(argument2 = nameless(BLOB_ARRAY));
+    given(argument3 = nameless(FILE));
+    given(argument4 = named("named"));
+    when(Argument.filterNameless(ImmutableList.of(argument, argument2, argument3, argument4)));
+    thenReturned(ImmutableMultimap.of(STRING, argument, BLOB_ARRAY, argument2, FILE, argument3));
   }
 
-  private static Arg named(String name) {
-    return Arg.namedArg(1, name, mock(Expression.class), codeLocation(1));
+  private static Argument named(String name) {
+    return Argument.namedArg(1, name, mock(Expression.class), codeLocation(1));
   }
 
-  private static Arg nameless(Type<?> type) {
+  private static Argument nameless(Type<?> type) {
     Expression<?> expression = mock(Expression.class);
     given(willReturn(type), expression).type();
-    return Arg.namelessArg(1, expression, codeLocation(1));
+    return Argument.namelessArg(1, expression, codeLocation(1));
   }
 }

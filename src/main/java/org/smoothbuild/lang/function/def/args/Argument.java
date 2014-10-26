@@ -15,27 +15,27 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Ordering;
 
-public class Arg {
+public class Argument {
   private final int number;
   private final String name;
   private final Expression<?> expression;
   private final CodeLocation codeLocation;
 
-  public static Arg namedArg(int number, String name, Expression<?> expression, CodeLocation codeLocation) {
+  public static Argument namedArg(int number, String name, Expression<?> expression, CodeLocation codeLocation) {
     checkArgument(0 < number);
-    return new Arg(number, checkNotNull(name), expression, codeLocation);
+    return new Argument(number, checkNotNull(name), expression, codeLocation);
   }
 
-  public static Arg namelessArg(int number, Expression<?> expression, CodeLocation codeLocation) {
+  public static Argument namelessArg(int number, Expression<?> expression, CodeLocation codeLocation) {
     checkArgument(0 < number);
-    return new Arg(number, null, expression, codeLocation);
+    return new Argument(number, null, expression, codeLocation);
   }
 
-  public static Arg pipedArg(Expression<?> expression, CodeLocation codeLocation) {
-    return new Arg(0, null, expression, codeLocation);
+  public static Argument pipedArg(Expression<?> expression, CodeLocation codeLocation) {
+    return new Argument(0, null, expression, codeLocation);
   }
 
-  private Arg(int number, String name, Expression<?> expression, CodeLocation codeLocation) {
+  private Argument(int number, String name, Expression<?> expression, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
@@ -95,32 +95,32 @@ public class Arg {
     return type().name() + ":" + nameSanitized();
   }
 
-  public static ImmutableList<Arg> filterNamed(Collection<Arg> args) {
-    ImmutableList.Builder<Arg> builder = ImmutableList.builder();
-    for (Arg arg : args) {
-      if (arg.hasName()) {
-        builder.add(arg);
+  public static ImmutableList<Argument> filterNamed(Collection<Argument> arguments) {
+    ImmutableList.Builder<Argument> builder = ImmutableList.builder();
+    for (Argument argument : arguments) {
+      if (argument.hasName()) {
+        builder.add(argument);
       }
     }
     return builder.build();
   }
 
-  public static ImmutableMultimap<Type<?>, Arg> filterNameless(Collection<Arg> args) {
-    ImmutableMultimap.Builder<Type<? extends Value>, Arg> builder = ImmutableMultimap.builder();
-    for (Arg arg : args) {
-      if (!arg.hasName()) {
-        Type<?> type = arg.expression().type();
-        builder.put(type, arg);
+  public static ImmutableMultimap<Type<?>, Argument> filterNameless(Collection<Argument> arguments) {
+    ImmutableMultimap.Builder<Type<? extends Value>, Argument> builder = ImmutableMultimap.builder();
+    for (Argument argument : arguments) {
+      if (!argument.hasName()) {
+        Type<?> type = argument.expression().type();
+        builder.put(type, argument);
       }
     }
     return builder.build();
   }
 
-  public static final Ordering<Arg> NUMBER_ORDERING = new Ordering<Arg>() {
+  public static final Ordering<Argument> NUMBER_ORDERING = new Ordering<Argument>() {
     @Override
-    public int compare(Arg arg1, Arg arg2) {
-      int number1 = arg1.number();
-      int number2 = arg2.number();
+    public int compare(Argument argument1, Argument argument2) {
+      int number1 = argument1.number();
+      int number2 = argument2.number();
       if (number1 == number2) {
         return 0;
       }

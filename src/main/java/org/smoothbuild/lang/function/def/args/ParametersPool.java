@@ -21,13 +21,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-public class ParamsPool {
+public class ParametersPool {
   private final ImmutableMap<String, Param> params;
-  private final ImmutableMap<Type<?>, TypedParamsPool> typePools;
+  private final ImmutableMap<Type<?>, TypedParametersPool> typePools;
   private final Map<Type<?>, Set<Param>> optionalParamsMap;
   private final Map<Type<?>, Set<Param>> requiredParamsMap;
 
-  public ParamsPool(ImmutableList<Param> params) {
+  public ParametersPool(ImmutableList<Param> params) {
     this.params = paramsToMap(params);
     this.optionalParamsMap = createParamsMap(filterOptionalParams(params));
     this.requiredParamsMap = createParamsMap(filterRequiredParams(params));
@@ -54,26 +54,26 @@ public class ParamsPool {
     }
   }
 
-  public TypedParamsPool assignableFrom(Type<?> type) {
+  public TypedParametersPool assignableFrom(Type<?> type) {
     return typePools.get(type);
   }
 
   public Set<Param> allRequired() {
     Set<Param> result = Sets.newHashSet();
-    for (TypedParamsPool typedParamPool : typePools.values()) {
+    for (TypedParametersPool typedParamPool : typePools.values()) {
       Iterables.addAll(result, typedParamPool.requiredParams());
     }
     return result;
   }
 
-  private static ImmutableMap<Type<?>, TypedParamsPool> createTypePools(
+  private static ImmutableMap<Type<?>, TypedParametersPool> createTypePools(
       Map<Type<?>, Set<Param>> optionalParamsMap, Map<Type<?>, Set<Param>> requiredParamsMap) {
 
-    Builder<Type<?>, TypedParamsPool> builder = ImmutableMap.builder();
+    Builder<Type<?>, TypedParametersPool> builder = ImmutableMap.builder();
     for (Type<?> type : allTypes()) {
       Set<Param> optional = paramsAssignableFromType(type, optionalParamsMap);
       Set<Param> required = paramsAssignableFromType(type, requiredParamsMap);
-      builder.put(type, new TypedParamsPool(optional, required));
+      builder.put(type, new TypedParametersPool(optional, required));
     }
 
     return builder.build();
