@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;

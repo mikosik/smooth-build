@@ -2,11 +2,11 @@ package org.smoothbuild.lang.function.def.args.err;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.base.STypes.FILE;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
-import static org.smoothbuild.lang.base.STypes.STRING;
-import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.NIL;
+import static org.smoothbuild.lang.base.Types.STRING;
+import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.args.Arg;
@@ -75,7 +75,7 @@ public class AmbiguousNamelessArgsErrorTest {
     assertThat(error.toString()).isEqualTo(builder.build());
   }
 
-  private Expr<?> expr(SType<?> type) {
+  private Expr<?> expr(Type<?> type) {
     Expr<?> result = mock(Expr.class);
     given(willReturn(type), result).type();
     return result;

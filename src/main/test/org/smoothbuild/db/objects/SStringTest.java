@@ -1,7 +1,7 @@
 package org.smoothbuild.db.objects;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
@@ -10,14 +10,14 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 
 public class ExprTest {
-  SType<SString> type = STRING;
+  Type<SString> type = STRING;
   CodeLocation codeLocation;
 
   MyExpr expr;
@@ -53,7 +53,7 @@ public class ExprTest {
     thenReturned(codeLocation);
   }
 
-  private static Closure $myExpr(final SType<SString> type, final CodeLocation codeLocation) {
+  private static Closure $myExpr(final Type<SString> type, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
@@ -63,7 +63,7 @@ public class ExprTest {
   }
 
   public static class MyExpr extends Expr<SString> {
-    public MyExpr(SType<SString> type, CodeLocation codeLocation) {
+    public MyExpr(Type<SString> type, CodeLocation codeLocation) {
       super(type, Empty.exprList(), codeLocation);
     }
 

@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.base;
 
-import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.FILE;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
-import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.Types.BLOB;
+import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.NIL;
+import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import org.smoothbuild.lang.function.base.Name;
@@ -15,11 +15,11 @@ import com.google.common.collect.ImmutableMap;
 public class Conversions {
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
 
-  public static boolean canConvert(SType<?> from, SType<?> to) {
+  public static boolean canConvert(Type<?> from, Type<?> to) {
     return from == to || CONVERSIONS.containsKey(new TypeConversion(from, to));
   }
 
-  public static Name convertFunctionName(SType<?> from, SType<?> to) {
+  public static Name convertFunctionName(Type<?> from, Type<?> to) {
     return CONVERSIONS.get(new TypeConversion(from, to));
   }
 
@@ -36,10 +36,10 @@ public class Conversions {
   }
 
   private static class TypeConversion {
-    private final SType<?> from;
-    private final SType<?> to;
+    private final Type<?> from;
+    private final Type<?> to;
 
-    private TypeConversion(SType<?> from, SType<?> to) {
+    private TypeConversion(Type<?> from, Type<?> to) {
       this.from = from;
       this.to = to;
     }

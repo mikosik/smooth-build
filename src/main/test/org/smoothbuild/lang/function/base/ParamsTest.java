@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;

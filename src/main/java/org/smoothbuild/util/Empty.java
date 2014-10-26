@@ -1,6 +1,6 @@
 package org.smoothbuild.util;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
@@ -26,7 +26,7 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<SType<?>, Function<?>> typeFunctionMap() {
+  public static ImmutableMap<Type<?>, Function<?>> typeFunctionMap() {
     return ImmutableMap.of();
   }
 

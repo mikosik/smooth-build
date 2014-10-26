@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 
 import com.google.common.collect.ImmutableList;
@@ -15,7 +15,7 @@ public abstract class AbstractFunction<T extends Value> implements Function<T> {
   }
 
   @Override
-  public SType<T> type() {
+  public Type<T> type() {
     return signature.type();
   }
 

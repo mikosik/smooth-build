@@ -2,7 +2,7 @@ package org.smoothbuild.task.work;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
@@ -13,13 +13,13 @@ import com.google.common.hash.HashCode;
 
 public abstract class TaskWorker<T extends Value> {
   private final HashCode hash;
-  private final SType<T> type;
+  private final Type<T> type;
   private final String name;
   private final boolean isInternal;
   private final boolean isCacheable;
   private final CodeLocation codeLocation;
 
-  public TaskWorker(HashCode hash, SType<T> type, String name, boolean isInternal,
+  public TaskWorker(HashCode hash, Type<T> type, String name, boolean isInternal,
       boolean isCacheable, CodeLocation codeLocation) {
     this.hash = hash;
     this.type = checkNotNull(type);
@@ -29,7 +29,7 @@ public abstract class TaskWorker<T extends Value> {
     this.codeLocation = checkNotNull(codeLocation);
   }
 
-  public SType<T> resultType() {
+  public Type<T> resultType() {
     return type;
   }
 

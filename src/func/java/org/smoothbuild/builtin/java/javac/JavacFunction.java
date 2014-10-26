@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.io.IOException;

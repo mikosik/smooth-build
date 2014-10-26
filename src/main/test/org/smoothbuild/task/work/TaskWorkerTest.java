@@ -8,8 +8,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.STypes;
+import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
@@ -20,7 +20,7 @@ import org.testory.Closure;
 import com.google.common.hash.HashCode;
 
 public class TaskWorkerTest {
-  private final SType<?> type = STypes.STRING;
+  private final Type<?> type = Types.STRING;
   private final HashCode hash = Hash.string("");
   private final String name = "name";
   private final CodeLocation codeLocation = codeLocation(1);
@@ -80,7 +80,7 @@ public class TaskWorkerTest {
     thenReturned(codeLocation);
   }
 
-  private static <T extends Value> Closure $myTask(final SType<T> type, final String name,
+  private static <T extends Value> Closure $myTask(final Type<T> type, final String name,
       final boolean isInternal, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
@@ -91,7 +91,7 @@ public class TaskWorkerTest {
   }
 
   public static class MyTaskWorker<T extends Value> extends TaskWorker<T> {
-    public MyTaskWorker(HashCode hash, SType<T> type, String name, boolean isInternal,
+    public MyTaskWorker(HashCode hash, Type<T> type, String name, boolean isInternal,
         CodeLocation codeLocation) {
       super(hash, type, name, isInternal, true, codeLocation);
     }

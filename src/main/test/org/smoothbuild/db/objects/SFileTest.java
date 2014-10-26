@@ -2,7 +2,7 @@ package org.smoothbuild.db.objects;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.base.STypes.FILE;
+import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;

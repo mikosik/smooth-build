@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.base.STypes.FILE;
+import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 

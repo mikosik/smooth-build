@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 
 import com.google.common.collect.ImmutableList;
@@ -11,17 +11,17 @@ import com.google.common.collect.ImmutableList;
  * Function's signature.
  */
 public class Signature<T extends Value> {
-  private final SType<T> type;
+  private final Type<T> type;
   private final Name name;
   private final ImmutableList<Param> params;
 
-  public Signature(SType<T> type, Name name, Iterable<Param> params) {
+  public Signature(Type<T> type, Name name, Iterable<Param> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.params = Params.sortedParams(params);
   }
 
-  public SType<T> type() {
+  public Type<T> type() {
     return type;
   }
 

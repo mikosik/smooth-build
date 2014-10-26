@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.base.STypes.paramJTypeToSType;
-import static org.smoothbuild.lang.base.STypes.resultJTypeToSType;
+import static org.smoothbuild.lang.base.Types.paramJTypeToType;
+import static org.smoothbuild.lang.base.Types.resultJTypeToType;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
@@ -26,7 +26,7 @@ public class SignatureFactory {
 
   public static Signature<?> create(Method functionMethod, Class<?> paramsInterface) throws
       NativeImplementationException {
-    SType<?> type = functionSType(functionMethod);
+    Type<?> type = functionType(functionMethod);
     Name name = functionSName(functionMethod);
     Iterable<Param> params = functionSParams(functionMethod, paramsInterface);
 
@@ -60,26 +60,26 @@ public class SignatureFactory {
       throw new ParamMethodHasArgumentsException(functionMethod, paramMethod);
     }
 
-    SType<?> type = paramMethodSType(functionMethod, paramMethod);
+    Type<?> type = paramMethodType(functionMethod, paramMethod);
     String name = paramMethod.getName();
     boolean isRequired = paramMethod.getAnnotation(Required.class) != null;
     return Param.param(type, name, isRequired);
   }
 
-  private static SType<?> functionSType(Method functionMethod) throws
+  private static Type<?> functionType(Method functionMethod) throws
       NativeImplementationException {
     TypeLiteral<?> jType = methodJType(functionMethod);
-    SType<?> type = resultJTypeToSType(jType);
+    Type<?> type = resultJTypeToType(jType);
     if (type == null) {
       throw new IllegalReturnTypeException(functionMethod, jType);
     }
     return type;
   }
 
-  private static SType<?> paramMethodSType(Method functionMethod, Method paramMethod) throws
+  private static Type<?> paramMethodType(Method functionMethod, Method paramMethod) throws
       IllegalParamTypeException {
     TypeLiteral<?> jType = methodJType(paramMethod);
-    SType<?> type = paramJTypeToSType(jType);
+    Type<?> type = paramJTypeToType(jType);
     if (type == null) {
       throw new IllegalParamTypeException(functionMethod, paramMethod, jType);
     }

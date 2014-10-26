@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;

@@ -6,7 +6,7 @@ import static com.google.common.base.Strings.padEnd;
 
 import java.util.Collection;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
@@ -62,7 +62,7 @@ public class Arg {
     return name == null ? "<nameless>" : name;
   }
 
-  public SType<?> type() {
+  public Type<?> type() {
     return expr.type();
   }
 
@@ -105,11 +105,11 @@ public class Arg {
     return builder.build();
   }
 
-  public static ImmutableMultimap<SType<?>, Arg> filterNameless(Collection<Arg> args) {
-    ImmutableMultimap.Builder<SType<? extends Value>, Arg> builder = ImmutableMultimap.builder();
+  public static ImmutableMultimap<Type<?>, Arg> filterNameless(Collection<Arg> args) {
+    ImmutableMultimap.Builder<Type<? extends Value>, Arg> builder = ImmutableMultimap.builder();
     for (Arg arg : args) {
       if (!arg.hasName()) {
-        SType<?> type = arg.expr().type();
+        Type<?> type = arg.expr().type();
         builder.put(type, arg);
       }
     }

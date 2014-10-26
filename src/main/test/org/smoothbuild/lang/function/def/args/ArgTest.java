@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.FILE;
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Arg.pipedArg;
@@ -15,7 +15,7 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
 
@@ -185,7 +185,7 @@ public class ArgTest {
     return Arg.namedArg(1, name, mock(Expr.class), codeLocation(1));
   }
 
-  private static Arg nameless(SType<?> type) {
+  private static Arg nameless(Type<?> type) {
     Expr<?> expr = mock(Expr.class);
     given(willReturn(type), expr).type();
     return Arg.namelessArg(1, expr, codeLocation(1));
