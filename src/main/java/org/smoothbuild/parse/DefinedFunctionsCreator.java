@@ -40,8 +40,8 @@ import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
-import org.smoothbuild.lang.expr.ExprConverter;
 import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.expr.InvalidExpr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
@@ -67,20 +67,20 @@ import com.google.common.collect.Maps;
 public class DefinedFunctionsCreator {
   private final ObjectsDb objectsDb;
   private final ArgExprsCreator argExprsCreator;
-  private final ExprConverter converter;
+  private final ImplicitConverter implicitConverter;
 
   @Inject
   public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgExprsCreator argExprsCreator,
-      ExprConverter converter) {
+      ImplicitConverter implicitConverter) {
     this.objectsDb = objectsDb;
     this.argExprsCreator = argExprsCreator;
-    this.converter = converter;
+    this.implicitConverter = implicitConverter;
   }
 
   public Map<Name, Function<?>> createDefinedFunctions(LoggedMessages messages,
       Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker = new Worker(messages, builtinModule, functionContexts, sorted, objectsDb,
-        argExprsCreator, converter);
+        argExprsCreator, implicitConverter);
     Map<Name, Function<?>> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -93,20 +93,20 @@ public class DefinedFunctionsCreator {
     private final List<Name> sorted;
     private final ObjectsDb objectsDb;
     private final ArgExprsCreator argExprsCreator;
-    private final ExprConverter converter;
+    private final ImplicitConverter implicitConverter;
 
     private final Map<Name, Function<?>> functions = Maps.newHashMap();
 
     public Worker(LoggedMessages messages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
-        ArgExprsCreator argExprsCreator, ExprConverter converter) {
+        ArgExprsCreator argExprsCreator, ImplicitConverter implicitConverter) {
       this.messages = messages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
       this.objectsDb = objectsDb;
       this.argExprsCreator = argExprsCreator;
-      this.converter = converter;
+      this.implicitConverter = implicitConverter;
     }
 
     public Map<Name, Function<?>> run() {
@@ -182,7 +182,7 @@ public class DefinedFunctionsCreator {
         Iterable<? extends Expr<?>> expressions) {
       ImmutableList.Builder<Expr<T>> builder = ImmutableList.builder();
       for (Expr<?> expr : expressions) {
-        builder.add(converter.convertExpr(type, expr));
+        builder.add(implicitConverter.apply(type, expr));
       }
       return builder.build();
     }
