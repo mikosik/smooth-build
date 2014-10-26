@@ -27,13 +27,13 @@ public class SignatureFactory {
   public static Signature<?> create(Method functionMethod, Class<?> paramsInterface) throws
       NativeImplementationException {
     Type<?> type = functionType(functionMethod);
-    Name name = functionSName(functionMethod);
-    Iterable<Param> params = functionSParams(functionMethod, paramsInterface);
+    Name name = functionName(functionMethod);
+    Iterable<Param> params = functionParams(functionMethod, paramsInterface);
 
     return new Signature<>(type, name, params);
   }
 
-  private static Name functionSName(Method functionMethod) throws NativeImplementationException {
+  private static Name functionName(Method functionMethod) throws NativeImplementationException {
     try {
       return name(functionMethod.getName());
     } catch (IllegalArgumentException e) {
@@ -41,8 +41,7 @@ public class SignatureFactory {
     }
   }
 
-  private static Iterable<Param> functionSParams(Method functionMethod,
-      Class<?> paramsInterface) throws NativeImplementationException {
+  private static Iterable<Param> functionParams(Method functionMethod, Class<?> paramsInterface) throws NativeImplementationException {
     if (!paramsInterface.isInterface()) {
       throw new ParamsIsNotInterfaceException(functionMethod);
     }
