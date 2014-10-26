@@ -6,7 +6,7 @@ import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 import java.lang.reflect.Method;
 
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
@@ -50,11 +50,11 @@ public class NativeFunctionFactory {
     }
 
     Class<?> paramsInterface = method.getParameterTypes()[1];
-    Signature<? extends SValue> signature = SignatureFactory.create(method, paramsInterface);
+    Signature<? extends Value> signature = SignatureFactory.create(method, paramsInterface);
     return createNativeFunction(jarHash, method, signature, paramsInterface);
   }
 
-  private static <T extends SValue> NativeFunction<T> createNativeFunction(HashCode jarHash,
+  private static <T extends Value> NativeFunction<T> createNativeFunction(HashCode jarHash,
       Method method, Signature<T> signature, Class<?> paramsInterface) throws
       NativeImplementationException {
 

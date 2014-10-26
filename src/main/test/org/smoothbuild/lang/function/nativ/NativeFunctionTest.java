@@ -14,7 +14,7 @@ import static org.testory.Testory.willReturn;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
@@ -38,7 +38,7 @@ public class NativeFunctionTest {
   private final Invoker<SString> invoker = mock(Invoker.class);
 
   private NativeFunction<?> function;
-  private ImmutableMap<String, SValue> args;
+  private ImmutableMap<String, Value> args;
   private HashCode jarHash;
   private NativeFunction<SString> function2;
 

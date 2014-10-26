@@ -5,12 +5,12 @@ import java.util.Iterator;
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 
 import com.google.common.base.Joiner;
 import com.google.common.hash.HashCode;
 
-public class ArrayObject<T extends SValue> extends AbstractObject implements Array<T> {
+public class ArrayObject<T extends Value> extends AbstractObject implements Array<T> {
   private final ArrayMarshaller<T> marshaller;
 
   public ArrayObject(HashCode hash, ArrayType<T> arrayType, ArrayMarshaller<T> marshaller) {

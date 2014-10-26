@@ -3,11 +3,11 @@ package org.smoothbuild.db.objects.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 
 import com.google.common.hash.HashCode;
 
-public abstract class AbstractObject implements SValue {
+public abstract class AbstractObject implements Value {
   private final SType<?> type;
   private final HashCode hash;
 
@@ -33,8 +33,8 @@ public abstract class AbstractObject implements SValue {
 
   @Override
   public boolean equals(Object object) {
-    if (object instanceof SValue) {
-      SValue that = (SValue) object;
+    if (object instanceof Value) {
+      Value that = (Value) object;
       return this.hash.equals(that.hash());
     }
     return false;

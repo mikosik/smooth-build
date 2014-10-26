@@ -14,14 +14,14 @@ import javax.tools.StandardJavaFileManager;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.lang.base.SValueFactory;
+import org.smoothbuild.lang.base.ValueFactory;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManagerTest {
   private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  private final SValueFactory valueFactory = new FakeObjectsDb();
+  private final ValueFactory valueFactory = new FakeObjectsDb();
   @SuppressWarnings("unchecked")
   private final Multimap<String, JavaFileObject> packagedJavaFileObjects = mock(Multimap.class);
 

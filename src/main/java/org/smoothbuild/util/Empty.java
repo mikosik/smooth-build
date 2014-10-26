@@ -1,7 +1,7 @@
 package org.smoothbuild.util;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class Empty {
 
-  public static ImmutableMap<String, SValue> stringValueMap() {
+  public static ImmutableMap<String, Value> stringValueMap() {
     return ImmutableMap.of();
   }
 
@@ -34,7 +34,7 @@ public class Empty {
     return ImmutableList.of();
   }
 
-  public static ImmutableList<SValue> svalueList() {
+  public static ImmutableList<Value> valueList() {
     return ImmutableList.of();
   }
 

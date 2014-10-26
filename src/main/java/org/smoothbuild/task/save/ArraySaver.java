@@ -7,10 +7,10 @@ import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Name;
 
-public class ArraySaver<T extends SValue> implements Saver<Array<T>> {
+public class ArraySaver<T extends Value> implements Saver<Array<T>> {
   private final FileSystem smoothFileSystem;
 
   public ArraySaver(FileSystem smoothFileSystem) {

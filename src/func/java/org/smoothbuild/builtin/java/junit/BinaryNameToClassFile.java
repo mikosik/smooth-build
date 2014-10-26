@@ -11,14 +11,14 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValueFactory;
+import org.smoothbuild.lang.base.ValueFactory;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.Maps;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, SFile> binaryNameToClassFile(SValueFactory valueFactory,
+  public static Map<String, SFile> binaryNameToClassFile(ValueFactory valueFactory,
       Iterable<Blob> libraryJars) {
     Unjarer unjarer = new Unjarer(valueFactory);
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();

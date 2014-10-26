@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -17,7 +17,7 @@ public class ArgsCreator {
     this.paramsInterface = paramsInterface;
   }
 
-  public Object create(Map<String, SValue> arguments) {
+  public Object create(Map<String, Value> arguments) {
     ClassLoader classLoader = paramsInterface.getClassLoader();
     Class<?>[] args = new Class<?>[] { paramsInterface };
     InvocationHandler invocationHandler = new MapInvocationHandler(arguments);
@@ -26,9 +26,9 @@ public class ArgsCreator {
   }
 
   private final class MapInvocationHandler implements InvocationHandler {
-    private final ImmutableMap<String, SValue> arguments;
+    private final ImmutableMap<String, Value> arguments;
 
-    private MapInvocationHandler(Map<String, SValue> arguments) {
+    private MapInvocationHandler(Map<String, Value> arguments) {
       this.arguments = ImmutableMap.copyOf(arguments);
     }
 

@@ -17,7 +17,7 @@ import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.SmoothExecutorMessages;
@@ -43,7 +43,7 @@ public class ArtifactSaver {
     this.saversMap = builder.build();
   }
 
-  public <T extends SValue> void save(Name name, T value) {
+  public <T extends Value> void save(Name name, T value) {
     /*
      * Cast is safe as saversMap is constructed in proper way and it is
      * immutable.

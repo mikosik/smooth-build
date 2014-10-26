@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
@@ -22,7 +22,7 @@ import com.google.common.collect.Ordering;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
-public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
+public class NativeCallWorker<T extends Value> extends TaskWorker<T> {
   private final NativeFunction<T> function;
   private final ImmutableList<String> paramNames;
 
@@ -72,13 +72,13 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
     }
   }
 
-  private ImmutableMap<String, SValue> calculateArguments(TaskInput input) {
-    Builder<String, SValue> builder = ImmutableMap.builder();
+  private ImmutableMap<String, Value> calculateArguments(TaskInput input) {
+    Builder<String, Value> builder = ImmutableMap.builder();
     Iterator<String> names = paramNames.iterator();
-    Iterator<? extends SValue> values = input.values().iterator();
+    Iterator<? extends Value> values = input.values().iterator();
     while (names.hasNext()) {
       String name = names.next();
-      SValue value = values.next();
+      Value value = values.next();
       builder.put(name, value);
     }
     return builder.build();

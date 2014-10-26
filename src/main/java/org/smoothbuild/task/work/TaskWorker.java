@@ -3,7 +3,7 @@ package org.smoothbuild.task.work;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
@@ -11,7 +11,7 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.hash.HashCode;
 
-public abstract class TaskWorker<T extends SValue> {
+public abstract class TaskWorker<T extends Value> {
   private final HashCode hash;
   private final SType<T> type;
   private final String name;

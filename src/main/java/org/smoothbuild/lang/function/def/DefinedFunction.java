@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
  *
  * @see NativeFunction
  */
-public class DefinedFunction<T extends SValue> extends AbstractFunction<T> {
+public class DefinedFunction<T extends Value> extends AbstractFunction<T> {
   private final Expr<T> root;
 
   public DefinedFunction(Signature<T> signature, Expr<T> root) {

@@ -10,12 +10,12 @@ import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.objects.base.ArrayObject;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<Array<T>> {
+public class ArrayMarshaller<T extends Value> implements ObjectMarshaller<Array<T>> {
   private final HashedDb hashedDb;
   private final ArrayType<T> arrayType;
   private final ObjectMarshaller<T> elementMarshaller;

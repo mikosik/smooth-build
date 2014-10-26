@@ -18,16 +18,16 @@ import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompi
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValueFactory;
+import org.smoothbuild.lang.base.ValueFactory;
 
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-  private final SValueFactory valueFactory;
+  private final ValueFactory valueFactory;
   private final Multimap<String, JavaFileObject> packageToJavaFileObjects;
   private final ArrayBuilder<SFile> resultClassFiles;
 
-  SandboxedJavaFileManager(StandardJavaFileManager fileManager, SValueFactory valueFactory,
+  SandboxedJavaFileManager(StandardJavaFileManager fileManager, ValueFactory valueFactory,
       Multimap<String, JavaFileObject> packageToJavaFileObjects) {
     super(fileManager);
     this.valueFactory = valueFactory;

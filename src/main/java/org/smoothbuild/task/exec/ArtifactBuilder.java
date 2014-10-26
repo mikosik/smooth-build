@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
@@ -44,7 +44,7 @@ public class ArtifactBuilder {
     for (Entry<Name, Task<?>> artifact : artifacts.entrySet()) {
       Name name = artifact.getKey();
       Task<?> task = artifact.getValue();
-      SValue value = task.output().returnValue();
+      Value value = task.output().returnValue();
       artifactSaver.save(name, value);
     }
   }

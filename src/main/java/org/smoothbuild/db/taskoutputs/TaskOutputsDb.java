@@ -13,7 +13,7 @@ import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 import org.smoothbuild.message.base.Messages;
@@ -32,7 +32,7 @@ public class TaskOutputsDb {
     this.objectsDb = objectsDb;
   }
 
-  public void write(HashCode taskHash, TaskOutput<? extends SValue> taskOutput) {
+  public void write(HashCode taskHash, TaskOutput<? extends Value> taskOutput) {
     Marshaller marshaller = new Marshaller();
 
     ImmutableList<Message> messages = taskOutput.messages();
@@ -55,7 +55,7 @@ public class TaskOutputsDb {
     return hashedDb.contains(taskHash);
   }
 
-  public <T extends SValue> TaskOutput<T> read(HashCode taskHash, SType<T> type) {
+  public <T extends Value> TaskOutput<T> read(HashCode taskHash, SType<T> type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash)) {
       int size = unmarshaller.readInt();
       List<Message> messages = newArrayList();

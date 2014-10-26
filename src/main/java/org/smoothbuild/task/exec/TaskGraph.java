@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.task.base.Task;
 
@@ -22,13 +22,13 @@ public class TaskGraph {
     this.rootTasks = Lists.newArrayList();
   }
 
-  public <T extends SValue> Task<T> createTasks(Expr<T> expr) {
+  public <T extends Value> Task<T> createTasks(Expr<T> expr) {
     Task<T> root = createTasksImpl(expr);
     rootTasks.add(root);
     return root;
   }
 
-  private <T extends SValue> Task<T> createTasksImpl(Expr<T> expr) {
+  private <T extends Value> Task<T> createTasksImpl(Expr<T> expr) {
     ImmutableList<Task<?>> dependencies = createTasksImpl(expr.dependencies());
     return new Task<>(expr.createWorker(), dependencies);
   }

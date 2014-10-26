@@ -24,7 +24,7 @@ import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
@@ -209,7 +209,7 @@ public class NativeFunctionFactoryTest {
     given(stringFunction = (Function<SString>) createNativeFunction(
         ConstantStringFunction.class.getMethods()[0]));
     given(worker = stringFunction.createWorker(Empty.stringExprMap(), false, codeLocation(1)));
-    when(worker).execute(TaskInput.fromValues(ImmutableList.<SValue>of()), nativeApi);
+    when(worker).execute(TaskInput.fromValues(ImmutableList.<Value>of()), nativeApi);
     thenReturned(new TaskOutput<>(objectsDb.string("constant string")));
   }
 

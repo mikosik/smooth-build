@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDb;
 import org.smoothbuild.io.util.SmoothJar;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskOutput;
 
@@ -29,7 +29,7 @@ public class TaskExecutor {
     this.reporter = reporter;
   }
 
-  public <T extends SValue> void execute(Task<T> task) {
+  public <T extends Value> void execute(Task<T> task) {
     HashCode hash = taskHash(task);
     boolean isAlreadyCached = taskOutputsDb.contains(hash);
     if (isAlreadyCached) {
@@ -47,7 +47,7 @@ public class TaskExecutor {
     }
   }
 
-  private <T extends SValue> HashCode taskHash(Task<T> task) {
+  private <T extends Value> HashCode taskHash(Task<T> task) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(smoothJarHash.asBytes());
     hasher.putBytes(task.hash().asBytes());

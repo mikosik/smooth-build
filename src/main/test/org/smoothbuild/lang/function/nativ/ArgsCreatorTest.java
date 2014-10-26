@@ -6,7 +6,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableMap;
@@ -20,7 +20,7 @@ public class ArgsCreatorTest {
   @Test
   public void sstring_argument_is_provided() {
     given(sstring = objectsDb.string("my string"));
-    given(args = createArgs(ImmutableMap.<String, SValue> of("stringParam", sstring)));
+    given(args = createArgs(ImmutableMap.<String, Value> of("stringParam", sstring)));
     when(args.stringParam());
     thenReturned(sstring);
   }
@@ -28,12 +28,12 @@ public class ArgsCreatorTest {
   @Test
   public void not_set_arguments_are_provided_as_nulls() {
     given(sstring = objectsDb.string("my string"));
-    given(args = createArgs(ImmutableMap.<String, SValue> of("stringParam", sstring)));
+    given(args = createArgs(ImmutableMap.<String, Value> of("stringParam", sstring)));
     when(args.string2());
     thenReturned(null);
   }
 
-  private MyParametersInterface createArgs(ImmutableMap<String, SValue> map) {
+  private MyParametersInterface createArgs(ImmutableMap<String, Value> map) {
     return (MyParametersInterface) argsCreator.create(map);
   }
 
