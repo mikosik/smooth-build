@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def.args;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
@@ -13,7 +13,7 @@ import static org.testory.Testory.willReturn;
 import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableMap;
@@ -22,17 +22,17 @@ public class MapToStringTest {
   @Test
   public void testToString() throws Exception {
     // given
-    Param param1 = param(STRING, "name1-that-is-long", false);
-    Param param2 = param(STRING, "name2", false);
-    Param param3 = param(FILE, "name3", false);
+    Parameter parameter1 = parameter(STRING, "name1-that-is-long", false);
+    Parameter parameter2 = parameter(STRING, "name2", false);
+    Parameter parameter3 = parameter(FILE, "name3", false);
 
     Argument argument1 = arg(1, STRING, "name4");
     Argument argument2 = arg(1234, STRING, "name5");
     Argument argument3 = arg(7, FILE, "name6-that-is-long");
 
     // when
-    String actual = MapToString.toString(ImmutableMap.of(param1, argument1, param2, argument2,
-        param3, argument3));
+    String actual = MapToString.toString(ImmutableMap.of(parameter1, argument1, parameter2, argument2,
+        parameter3, argument3));
 
     // then
     String l = codeLocation(2).toString();

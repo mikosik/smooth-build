@@ -3,7 +3,7 @@ package org.smoothbuild.task.work;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.testory.Testory.given;
@@ -19,7 +19,7 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
@@ -57,8 +57,8 @@ public class NativeCallWorkerTest {
   HashCode hash1 = HashCode.fromInt(1);
   HashCode hash2 = HashCode.fromInt(2);
 
-  ImmutableList<Param> params = ImmutableList.of(param(STRING, name1, false), param(STRING, name2,
-      false));
+  ImmutableList<Parameter> parameters = ImmutableList.of(parameter(STRING, name1, false), parameter(
+      STRING, name2, false));
 
   NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1,
       ImmutableList.<String>of(), false, codeLocation(1));
@@ -89,8 +89,8 @@ public class NativeCallWorkerTest {
 
   @Test
   public void null_can_be_returned_when_function_logged_errors() throws Exception {
-    ImmutableList<Param> params = ImmutableList.of();
-    Signature<SString> signature = new Signature<>(STRING, name("name"), params);
+    ImmutableList<Parameter> parameters = ImmutableList.of();
+    Signature<SString> signature = new Signature<>(STRING, name("name"), parameters);
     function1 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
     nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList.<String>of(), false,
         codeLocation(1));

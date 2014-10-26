@@ -13,12 +13,12 @@ import com.google.common.collect.ImmutableList;
 public class Signature<T extends Value> {
   private final Type<T> type;
   private final Name name;
-  private final ImmutableList<Param> params;
+  private final ImmutableList<Parameter> parameters;
 
-  public Signature(Type<T> type, Name name, Iterable<Param> params) {
+  public Signature(Type<T> type, Name name, Iterable<Parameter> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
-    this.params = Params.sortedParams(params);
+    this.parameters = Parameters.sortedParameters(params);
   }
 
   public Type<T> type() {
@@ -32,8 +32,8 @@ public class Signature<T extends Value> {
   /**
    * @return Parameters ordered lexicographically by their names.
    */
-  public ImmutableList<Param> params() {
-    return params;
+  public ImmutableList<Parameter> params() {
+    return parameters;
   }
 
   @Override
@@ -41,14 +41,14 @@ public class Signature<T extends Value> {
     StringBuilder builder = new StringBuilder();
     builder.append(type.name() + " " + name.value() + "(");
     int count = 0;
-    for (Param param : params) {
+    for (Parameter parameter : parameters) {
       if (count != 0) {
         builder.append(", ");
       }
       count++;
-      builder.append(param.type().name());
+      builder.append(parameter.type().name());
       builder.append(" ");
-      builder.append(param.name());
+      builder.append(parameter.name());
     }
 
     builder.append(")");

@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -18,18 +18,18 @@ import com.google.common.collect.ImmutableList;
 public class SignatureTest {
   private final Type<?> type = STRING;
   private final Name name = name("name");
-  private final ImmutableList<Param> params = ImmutableList.of();
-  private Param param;
-  private Param param2;
+  private final ImmutableList<Parameter> parameters = ImmutableList.of();
+  private Parameter parameter;
+  private Parameter parameter2;
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() {
-    new Signature<>(null, name, params);
+    new Signature<>(null, name, parameters);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbidden() {
-    new Signature<>(type, null, params);
+    new Signature<>(type, null, parameters);
   }
 
   @Test(expected = NullPointerException.class)
@@ -45,24 +45,26 @@ public class SignatureTest {
     String name4 = "ddd";
     String name5 = "eee";
     String name6 = "fff";
-    Param param1 = param(STRING, name1, false);
-    Param param2 = param(STRING, name2, false);
-    Param param3 = param(STRING, name3, false);
-    Param param4 = param(STRING, name4, false);
-    Param param5 = param(STRING, name5, false);
-    Param param6 = param(STRING, name6, false);
+    Parameter parameter1 = parameter(STRING, name1, false);
+    Parameter parameter2 = parameter(STRING, name2, false);
+    Parameter parameter3 = parameter(STRING, name3, false);
+    Parameter parameter4 = parameter(STRING, name4, false);
+    Parameter parameter5 = parameter(STRING, name5, false);
+    Parameter parameter6 = parameter(STRING, name6, false);
 
-    ImmutableList<Param> params = ImmutableList.of(param4, param6, param1, param3, param5, param2);
-    Signature<?> signature = new Signature<>(type, name, params);
-    assertThat(signature.params()).containsExactly(param1, param2, param3, param4, param5, param6);
+    ImmutableList<Parameter> parameters = ImmutableList.of(parameter4, parameter6, parameter1,
+        parameter3, parameter5, parameter2);
+    Signature<?> signature = new Signature<>(type, name, parameters);
+    assertThat(signature.params()).containsExactly(parameter1, parameter2, parameter3, parameter4,
+        parameter5, parameter6);
   }
 
   @Test
   public void test_to_string() throws Exception {
-    given(param = param(BLOB, "blob", false));
-    given(param2 = param(FILE, "file", false));
-    when(new Signature<>(STRING, name, ImmutableList.of(param, param2))).toString();
+    given(parameter = parameter(BLOB, "blob", false));
+    given(parameter2 = parameter(FILE, "file", false));
+    when(new Signature<>(STRING, name, ImmutableList.of(parameter, parameter2))).toString();
     thenReturned(
-        STRING.name() + " " + name.value() + "(" + param.type().name() + " " + param.name() + ", " + param2.type().name() + " " + param2.name() + ")");
+        STRING.name() + " " + name.value() + "(" + parameter.type().name() + " " + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");
   }
 }

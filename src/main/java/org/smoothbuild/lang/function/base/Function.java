@@ -14,7 +14,7 @@ public interface Function<T extends Value> {
 
   public Name name();
 
-  public ImmutableList<Param> params();
+  public ImmutableList<Parameter> parameters();
 
   public ImmutableList<? extends Expression<?>> dependencies(
       ImmutableMap<String, ? extends Expression<?>> args);

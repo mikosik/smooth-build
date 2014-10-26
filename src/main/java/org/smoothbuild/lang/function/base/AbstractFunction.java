@@ -25,7 +25,7 @@ public abstract class AbstractFunction<T extends Value> implements Function<T> {
   }
 
   @Override
-  public ImmutableList<Param> params() {
+  public ImmutableList<Parameter> parameters() {
     return signature.params();
   }
 }

@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.util.LineBuilder;
 
 public class MapToString {
-  public static String toString(Map<Param, Argument> paramToArgMap) {
+  public static String toString(Map<Parameter, Argument> paramToArgMap) {
     int maxParamType = calculateLongestParamType(paramToArgMap.keySet());
     int maxParamName = calculateLongestParamName(paramToArgMap.keySet());
     int maxArgType = calculateLongestArgType(paramToArgMap.values());
@@ -16,7 +16,7 @@ public class MapToString {
     int maxNumber = calculateLongestArgNumber(paramToArgMap.values());
 
     LineBuilder builder = new LineBuilder();
-    for (Map.Entry<Param, Argument> entry : paramToArgMap.entrySet()) {
+    for (Map.Entry<Parameter, Argument> entry : paramToArgMap.entrySet()) {
       String paramPart = entry.getKey().toPaddedString(maxParamType, maxParamName);
       Argument argument = entry.getValue();
       String argPart = argument.toPaddedString(maxArgType, maxArgName, maxNumber);
@@ -25,18 +25,18 @@ public class MapToString {
     return builder.build();
   }
 
-  private static int calculateLongestParamType(Set<Param> params) {
+  private static int calculateLongestParamType(Set<Parameter> parameters) {
     int result = 0;
-    for (Param param : params) {
-      result = Math.max(result, param.type().name().length());
+    for (Parameter parameter : parameters) {
+      result = Math.max(result, parameter.type().name().length());
     }
     return result;
   }
 
-  private static int calculateLongestParamName(Set<Param> params) {
+  private static int calculateLongestParamName(Set<Parameter> parameters) {
     int result = 0;
-    for (Param param : params) {
-      result = Math.max(result, param.name().length());
+    for (Parameter parameter : parameters) {
+      result = Math.max(result, parameter.name().length());
     }
     return result;
   }

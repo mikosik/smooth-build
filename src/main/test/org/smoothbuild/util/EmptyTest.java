@@ -9,7 +9,7 @@ import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Task;
 
@@ -100,7 +100,7 @@ public class EmptyTest {
   @Test
   public void empty_param_list_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableList<Param> list = Empty.paramList();
+    ImmutableList<Parameter> list = Empty.paramList();
   }
 
   @Test

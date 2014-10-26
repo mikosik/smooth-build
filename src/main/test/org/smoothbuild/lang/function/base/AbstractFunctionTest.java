@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class AbstractFunctionTest {
   Name name;
-  ImmutableList<Param> params;
+  ImmutableList<Parameter> parameters;
   Signature<SString> signature;
   AbstractFunction<SString> function;
 
@@ -47,11 +47,11 @@ public class AbstractFunctionTest {
 
   @Test
   public void params_returns_signature_params() {
-    given(params = ImmutableList.of(param(STRING, "name", false)));
-    given(signature = new Signature<>(STRING, name("name"), params));
+    given(parameters = ImmutableList.of(parameter(STRING, "name", false)));
+    given(signature = new Signature<>(STRING, name("name"), parameters));
     given(function = new MyAbstractFunction(signature));
-    when(function).params();
-    thenReturned(params);
+    when(function).parameters();
+    thenReturned(parameters);
   }
 
   public static class MyAbstractFunction extends AbstractFunction<SString> {
