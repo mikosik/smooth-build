@@ -11,8 +11,8 @@ import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
+import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -601,11 +601,11 @@ public class MapperTest {
   }
 
   private static Argument arg(Type<?> type) {
-    return namelessArg(1, expr(type), codeLocation(1));
+    return namelessArgument(1, expr(type), codeLocation(1));
   }
 
   private static Argument arg(String name, Type<?> type) {
-    return namedArg(1, name, expr(type), codeLocation(1));
+    return namedArgument(1, name, expr(type), codeLocation(1));
   }
 
   private static Expression<?> expr(Type<?> type) {

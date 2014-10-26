@@ -7,9 +7,9 @@ import static org.smoothbuild.lang.base.Types.NOTHING;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.basicTypes;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
+import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
+import static org.smoothbuild.lang.function.def.args.Argument.pipedArgument;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -137,7 +137,7 @@ public class DefinedFunctionsCreator {
         List<Argument> arguments = build(call.argList());
         // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipe.p.get(i));
-        arguments.add(pipedArg(result, codeLocation));
+        arguments.add(pipedArgument(result, codeLocation));
         result = build(call, arguments);
       }
       return result;
@@ -312,9 +312,9 @@ public class DefinedFunctionsCreator {
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
       if (paramName == null) {
-        return namelessArg(index + 1, expression, location);
+        return namelessArgument(index + 1, expression, location);
       } else {
-        return namedArg(index + 1, paramName.getText(), expression, location);
+        return namedArgument(index + 1, paramName.getText(), expression, location);
       }
     }
 

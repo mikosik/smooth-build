@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -48,6 +48,6 @@ public class MapToStringTest {
     Expression<?> expression = mock(Expression.class);
     given(willReturn(type), expression).type();
 
-    return namedArg(number, name, expression, codeLocation(2));
+    return namedArgument(number, name, expression, codeLocation(2));
   }
 }
