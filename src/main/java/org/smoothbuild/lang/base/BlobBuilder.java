@@ -6,5 +6,5 @@ public interface BlobBuilder {
 
   public OutputStream openOutputStream();
 
-  public SBlob build();
+  public Blob build();
 }

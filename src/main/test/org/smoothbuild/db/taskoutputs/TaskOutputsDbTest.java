@@ -25,7 +25,7 @@ import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.Message;
@@ -49,10 +49,10 @@ public class TaskOutputsDbTest {
 
   private Message message;
   private SArray<SFile> fileArray;
-  private SArray<SBlob> blobArray;
+  private SArray<Blob> blobArray;
   private SArray<SString> stringArray;
   private SFile file;
-  private SBlob blob;
+  private Blob blob;
   private SString stringValue;
   private final String string = "some string";
 
@@ -136,7 +136,7 @@ public class TaskOutputsDbTest {
     thenReturned(string);
   }
 
-  private static SBlob writeBlob(ObjectsDb objectsDb, byte[] bytes) throws IOException {
+  private static Blob writeBlob(ObjectsDb objectsDb, byte[] bytes) throws IOException {
     BlobBuilder builder = objectsDb.blobBuilder();
     Streams.copy(new ByteArrayInputStream(bytes), builder.openOutputStream());
     return builder.build();

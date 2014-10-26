@@ -4,21 +4,20 @@ import static org.smoothbuild.lang.base.SArrayType.sArrayType;
 import static org.smoothbuild.lang.base.SType.sType;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class STypes {
 
   public static final SType<SString> STRING = sType("String", SString.class);
-  public static final SType<SBlob> BLOB = sType("Blob", SBlob.class);
+  public static final SType<Blob> BLOB = sType("Blob", Blob.class);
   public static final SType<SFile> FILE = sType("File", SFile.class);
   public static final SType<SNothing> NOTHING = sType("Nothing", SNothing.class);
 
   public static final SArrayType<SString> STRING_ARRAY = sArrayType(STRING,
       new TypeLiteral<SArray<SString>>() {});
-  public static final SArrayType<SBlob> BLOB_ARRAY = sArrayType(BLOB,
-      new TypeLiteral<SArray<SBlob>>() {});
+  public static final SArrayType<Blob> BLOB_ARRAY = sArrayType(BLOB,
+      new TypeLiteral<SArray<Blob>>() {});
   public static final SArrayType<SFile> FILE_ARRAY = sArrayType(FILE,
       new TypeLiteral<SArray<SFile>>() {});
   public static final SArrayType<SNothing> NIL = sArrayType(NOTHING,

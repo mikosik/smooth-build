@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.Objects;
 import org.smoothbuild.lang.base.SArrayType;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SString;
@@ -33,7 +33,7 @@ public class ObjectMarshallers {
   private final NothingMarshaller nothingMarshaller;
 
   private final ArrayMarshaller<SString> stringArrayMarshaller;
-  private final ArrayMarshaller<SBlob> blobArrayMarshaller;
+  private final ArrayMarshaller<Blob> blobArrayMarshaller;
   private final ArrayMarshaller<SFile> fileArrayMarshaller;
   private final ArrayMarshaller<SNothing> nilMarshaller;
 

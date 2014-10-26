@@ -18,7 +18,7 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -36,7 +36,7 @@ public class Unzipper {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public SArray<SFile> unzip(SBlob zipBlob) {
+  public SArray<SFile> unzip(Blob zipBlob) {
     this.duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     try {
@@ -65,11 +65,11 @@ public class Unzipper {
       throw new DuplicatePathInZipError(path);
     }
 
-    SBlob content = unzipEntryContent(zipInputStream);
+    Blob content = unzipEntryContent(zipInputStream);
     return valueFactory.file(path, content);
   }
 
-  private SBlob unzipEntryContent(ZipInputStream zipInputStream) {
+  private Blob unzipEntryContent(ZipInputStream zipInputStream) {
     try {
       BlobBuilder contentBuilder = valueFactory.blobBuilder();
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {

@@ -24,7 +24,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Function;
@@ -156,9 +156,9 @@ public class NativeModuleFactoryTest {
 
       public SArray<SFile> fileArray();
 
-      public SBlob blob();
+      public Blob blob();
 
-      public SArray<SBlob> blobArray();
+      public SArray<Blob> blobArray();
     }
 
     @SmoothFunction
@@ -282,7 +282,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction
-    public static SBlob func(NativeApi nativeApi, Parameters params) {
+    public static Blob func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -333,7 +333,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction
-    public static SArray<SBlob> func(NativeApi nativeApi, Parameters params) {
+    public static SArray<Blob> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }

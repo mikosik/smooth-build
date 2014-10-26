@@ -4,7 +4,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -27,7 +27,7 @@ public class UnjarSmoothTest extends IntegrationTestCase {
     SFile file1 = objectsDb.file(path1);
     SFile file2 = objectsDb.file(path2);
 
-    SBlob jarBlob = JarTester.jar(file1, file2);
+    Blob jarBlob = JarTester.jar(file1, file2);
     Streams.copy(jarBlob.openInputStream(), fileSystem.openOutputStream(jarPath));
 
     script("run : file(" + jarPath + ") | unjar ;");

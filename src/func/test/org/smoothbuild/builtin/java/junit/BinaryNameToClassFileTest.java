@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class BinaryNameToClassFileTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private SBlob blob;
+  private Blob blob;
   private SFile file1;
   private SFile file2;
 

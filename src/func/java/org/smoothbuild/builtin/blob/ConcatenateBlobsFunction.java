@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 
@@ -13,21 +13,21 @@ public class ConcatenateBlobsFunction {
 
   public interface ConcatenateBlobsParameters {
     @Required
-    public SArray<SBlob> blobs();
+    public SArray<Blob> blobs();
 
     @Required
-    public SArray<SBlob> with();
+    public SArray<Blob> with();
   }
 
   @SmoothFunction
-  public static SArray<SBlob> concatenateBlobs(NativeApi nativeApi,
+  public static SArray<Blob> concatenateBlobs(NativeApi nativeApi,
       ConcatenateBlobsParameters params) {
-    ArrayBuilder<SBlob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
+    ArrayBuilder<Blob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
 
-    for (SBlob blob : params.blobs()) {
+    for (Blob blob : params.blobs()) {
       builder.add(blob);
     }
-    for (SBlob blob : params.with()) {
+    for (Blob blob : params.with()) {
       builder.add(blob);
     }
 

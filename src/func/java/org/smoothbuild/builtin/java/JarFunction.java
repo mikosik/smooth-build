@@ -14,7 +14,7 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -25,11 +25,11 @@ public class JarFunction {
     @Required
     public SArray<SFile> files();
 
-    public SBlob manifest();
+    public Blob manifest();
   }
 
   @SmoothFunction
-  public static SBlob jar(NativeApi nativeApi, JarParameters params) {
+  public static Blob jar(NativeApi nativeApi, JarParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
@@ -46,7 +46,7 @@ public class JarFunction {
       this.duplicatesDetector = new DuplicatesDetector<>();
     }
 
-    public SBlob execute() {
+    public Blob execute() {
       BlobBuilder blobBuilder = nativeApi.blobBuilder();
       try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder)) {
         for (SFile file : params.files()) {

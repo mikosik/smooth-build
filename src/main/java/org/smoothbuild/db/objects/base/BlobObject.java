@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.smoothbuild.db.objects.marshal.BlobMarshaller;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingInputStream;
 
-public class BlobObject extends AbstractObject implements SBlob {
+public class BlobObject extends AbstractObject implements Blob {
   private final BlobMarshaller marshaller;
 
   public BlobObject(HashCode hash, BlobMarshaller marshaller) {

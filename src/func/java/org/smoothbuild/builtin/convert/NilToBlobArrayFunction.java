@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
 
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -17,7 +17,7 @@ public class NilToBlobArrayFunction {
   }
 
   @SmoothFunction
-  public static SArray<SBlob> nilToBlobArray(NativeApi nativeApi, Parameters params) {
+  public static SArray<Blob> nilToBlobArray(NativeApi nativeApi, Parameters params) {
     return nativeApi.arrayBuilder(BLOB_ARRAY).build();
   }
 }

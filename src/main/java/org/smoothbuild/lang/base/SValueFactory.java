@@ -5,7 +5,7 @@ import org.smoothbuild.io.fs.base.Path;
 public interface SValueFactory {
   public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType);
 
-  public SFile file(Path path, SBlob content);
+  public SFile file(Path path, Blob content);
 
   public BlobBuilder blobBuilder();
 
