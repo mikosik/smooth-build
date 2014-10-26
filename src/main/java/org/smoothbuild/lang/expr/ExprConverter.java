@@ -22,15 +22,6 @@ public class ExprConverter {
     this.builtinModule = builtinModule;
   }
 
-  public <T extends SValue> ImmutableList<Expr<T>> convertExprs(SType<T> type,
-      Iterable<? extends Expr<?>> expressions) {
-    ImmutableList.Builder<Expr<T>> builder = ImmutableList.builder();
-    for (Expr<?> expr : expressions) {
-      builder.add(convertExpr(type, expr));
-    }
-    return builder.build();
-  }
-
   public <T extends SValue> Expr<T> convertExpr(SType<T> destinationType, Expr<?> source) {
     SType<?> sourceType = source.type();
     if (sourceType == destinationType) {
