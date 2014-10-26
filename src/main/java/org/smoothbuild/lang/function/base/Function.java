@@ -20,5 +20,5 @@ public interface Function<T extends SValue> {
       ImmutableMap<String, ? extends Expr<?>> args);
 
   public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
-      CodeLocation codeLocation);
+      boolean isInternal, CodeLocation codeLocation);
 }

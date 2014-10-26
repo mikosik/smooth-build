@@ -267,7 +267,7 @@ public class DefinedFunctionsCreator {
       if (namedArgs == null) {
         return new InvalidExpr<>(function.type(), locationOf(call.functionName()));
       } else {
-        return new CallExpr<>(function, codeLocation, namedArgs);
+        return new CallExpr<>(function, false, codeLocation, namedArgs);
       }
     }
 

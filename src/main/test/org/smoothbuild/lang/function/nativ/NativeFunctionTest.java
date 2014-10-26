@@ -66,7 +66,7 @@ public class NativeFunctionTest {
     given(function = new NativeFunction<>(Hash.integer(33), signature, invoker, true));
     given(sstring = objectsDb.string("result"));
     given(willReturn(sstring), invoker).invoke(nativeApi, Empty.stringValueMap());
-    given(worker = function.createWorker(Empty.stringExprMap(), codeLocation(1)));
+    given(worker = function.createWorker(Empty.stringExprMap(), false, codeLocation(1)));
     when(worker).execute(TaskInput.fromTaskReturnValues(Empty.taskList()), nativeApi);
     thenReturned(new TaskOutput<>(sstring));
   }
@@ -81,7 +81,8 @@ public class NativeFunctionTest {
   }
 
   @Test
-  public void functions_with_different_names_in_the_same_jar_have_different_hash() throws Exception {
+  public void functions_with_different_names_in_the_same_jar_have_different_hash() throws
+      Exception {
     given(jarHash = Hash.integer(33));
     given(function = new NativeFunction<>(jarHash, signature("name"), invoker, false));
     given(function2 = new NativeFunction<>(jarHash, signature("name2"), invoker, false));

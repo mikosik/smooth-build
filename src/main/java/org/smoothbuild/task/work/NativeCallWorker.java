@@ -27,9 +27,9 @@ public class NativeCallWorker<T extends SValue> extends TaskWorker<T> {
   private final ImmutableList<String> paramNames;
 
   public NativeCallWorker(NativeFunction<T> function, ImmutableList<String> paramNames,
-      CodeLocation codeLocation) {
+      boolean isInternal, CodeLocation codeLocation) {
     super(nativeCallWorkerHash(function, paramNames), function.type(), function.name().value(),
-        false, function.isCacheable(), codeLocation);
+        isInternal, function.isCacheable(), codeLocation);
     this.function = function;
     this.paramNames = paramNames;
   }

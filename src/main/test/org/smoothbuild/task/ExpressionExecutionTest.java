@@ -101,7 +101,7 @@ public class ExpressionExecutionTest {
     given(stringExpr = new ConstantExpr<>(STRING, sstring, location));
     given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction<>(signature, stringExpr));
-    given(callExpr = new CallExpr<>(function, location, Empty.stringExprMap()));
+    given(callExpr = new CallExpr<>(function, false, location, Empty.stringExprMap()));
     given(task = taskGraph.createTasks(callExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));
@@ -112,7 +112,8 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string("abc"));
     given(function = createNativeFunction(Hash.integer(33), SmoothModule.class.getMethods()[0]));
     given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
-    given(callExpr = new CallExpr<>(function, location, ImmutableMap.of("param", stringExpr)));
+    given(callExpr = new CallExpr<>(function, false, location, ImmutableMap.of("param",
+        stringExpr)));
     given(task = taskGraph.createTasks(callExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));
@@ -134,7 +135,8 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string("abc"));
     given(function = createNativeFunction(Hash.integer(33), SmoothModule2.class.getMethods()[0]));
     given(stringExpr = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
-    given(callExpr = new CallExpr<>(function, location, ImmutableMap.of("param", stringExpr)));
+    given(callExpr = new CallExpr<>(function, false, location, ImmutableMap.of("param",
+        stringExpr)));
     given(task = taskGraph.createTasks(callExpr));
     when(taskGraph).executeAll();
     thenEqual(task.output().hasReturnValue(), false);

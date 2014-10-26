@@ -30,7 +30,8 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function<?> function) {
-    Expr<?> expr = new CallExpr<>(function, CodeLocation.commandLine(), Empty.stringExprMap());
+    Expr<?> expr = new CallExpr<>(function, false, CodeLocation.commandLine(),
+        Empty.stringExprMap());
     artifacts.put(function.name(), taskGraph.createTasks(expr));
   }
 

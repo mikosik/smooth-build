@@ -67,7 +67,7 @@ public class AbstractFunctionTest {
 
     @Override
     public TaskWorker<SString> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
-        CodeLocation codeLocation) {
+        boolean isInternal, CodeLocation codeLocation) {
       return null;
     }
   }

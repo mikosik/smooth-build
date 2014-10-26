@@ -9,17 +9,19 @@ import com.google.common.collect.ImmutableMap;
 
 public class CallExpr<T extends SValue> extends Expr<T> {
   private final Function<T> function;
+  private final boolean isGenerated;
   private final ImmutableMap<String, ? extends Expr<?>> args;
 
-  public CallExpr(Function<T> function, CodeLocation codeLocation,
+  public CallExpr(Function<T> function, boolean isGenerated, CodeLocation codeLocation,
       ImmutableMap<String, ? extends Expr<?>> args) {
     super(function.type(), function.dependencies(args), codeLocation);
     this.function = function;
+    this.isGenerated = isGenerated;
     this.args = args;
   }
 
   @Override
   public TaskWorker<T> createWorker() {
-    return function.createWorker(args, codeLocation());
+    return function.createWorker(args, isGenerated, codeLocation());
   }
 }
