@@ -12,8 +12,8 @@ import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.base.Types.allTypes;
 import static org.smoothbuild.lang.base.Types.basicTypes;
-import static org.smoothbuild.lang.base.Types.paramJTypeToType;
-import static org.smoothbuild.lang.base.Types.paramTypes;
+import static org.smoothbuild.lang.base.Types.parameterJTypeToType;
+import static org.smoothbuild.lang.base.Types.parameterTypes;
 import static org.smoothbuild.lang.base.Types.resultJTypeToType;
 import static org.smoothbuild.lang.base.Types.arrayTypeContaining;
 
@@ -33,7 +33,7 @@ public class TypesTest {
 
   @Test
   public void param_types() throws Exception {
-    assertThat(paramTypes()).containsExactly(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY,
+    assertThat(parameterTypes()).containsExactly(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY,
         FILE_ARRAY, NIL);
   }
 
@@ -84,13 +84,13 @@ public class TypesTest {
 
   @Test
   public void paramJTypeToType_works_for_all_types() {
-    assertThat(paramJTypeToType(STRING.jType())).isEqualTo(STRING);
-    assertThat(paramJTypeToType(BLOB.jType())).isEqualTo(BLOB);
-    assertThat(paramJTypeToType(FILE.jType())).isEqualTo(FILE);
+    assertThat(parameterJTypeToType(STRING.jType())).isEqualTo(STRING);
+    assertThat(parameterJTypeToType(BLOB.jType())).isEqualTo(BLOB);
+    assertThat(parameterJTypeToType(FILE.jType())).isEqualTo(FILE);
 
-    assertThat(paramJTypeToType(STRING_ARRAY.jType())).isEqualTo(STRING_ARRAY);
-    assertThat(paramJTypeToType(BLOB_ARRAY.jType())).isEqualTo(BLOB_ARRAY);
-    assertThat(paramJTypeToType(FILE_ARRAY.jType())).isEqualTo(FILE_ARRAY);
+    assertThat(parameterJTypeToType(STRING_ARRAY.jType())).isEqualTo(STRING_ARRAY);
+    assertThat(parameterJTypeToType(BLOB_ARRAY.jType())).isEqualTo(BLOB_ARRAY);
+    assertThat(parameterJTypeToType(FILE_ARRAY.jType())).isEqualTo(FILE_ARRAY);
   }
 
   @Test
