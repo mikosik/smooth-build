@@ -42,7 +42,7 @@ public class ImplicitConverter {
     Function<T> function = (Function<T>) builtinModule.getFunction(functionName);
 
     String paramName = function.params().get(0).name();
-    return new CallExpr<>(function, true, source.codeLocation(), ImmutableMap.of(paramName,
+    return new CallExpression<>(function, true, source.codeLocation(), ImmutableMap.of(paramName,
         source));
   }
 }
