@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.FILE;
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.BLOB;
+import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.testory.Testory.given;
@@ -11,12 +11,12 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 
 import com.google.common.collect.ImmutableList;
 
 public class SignatureTest {
-  private final SType<?> type = STRING;
+  private final Type<?> type = STRING;
   private final Name name = name("name");
   private final ImmutableList<Param> params = ImmutableList.of();
   private Param param;

@@ -2,8 +2,8 @@ package org.smoothbuild.lang.function.def.args;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.lang.base.STypes.FILE;
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
@@ -12,7 +12,7 @@ import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Param;
 
@@ -81,15 +81,15 @@ public class ParamToArgMapBuilderTest {
         param3, arg3));
   }
 
-  private static Arg arg(SType<?> type) {
+  private static Arg arg(Type<?> type) {
     return arg(type, "name");
   }
 
-  private static Arg arg(SType<?> type, String name) {
+  private static Arg arg(Type<?> type, String name) {
     return arg(1, type, name);
   }
 
-  private static Arg arg(int number, SType<?> type, String name) {
+  private static Arg arg(int number, Type<?> type, String name) {
     Expr<?> expr = mock(Expr.class);
     given(willReturn(type), expr).type();
 

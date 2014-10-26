@@ -1,7 +1,7 @@
 package org.smoothbuild.task.save;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.task.save.ArtifactPaths.targetPath;

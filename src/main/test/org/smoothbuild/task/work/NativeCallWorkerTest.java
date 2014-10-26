@@ -1,7 +1,7 @@
 package org.smoothbuild.task.work;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;

@@ -1,7 +1,7 @@
 package org.smoothbuild.io.util;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.InputStream;

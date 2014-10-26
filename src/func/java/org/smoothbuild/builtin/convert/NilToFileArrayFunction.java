@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.convert;
 
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Array;

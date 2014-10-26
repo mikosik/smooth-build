@@ -3,17 +3,17 @@ package org.smoothbuild.lang.base;
 import com.google.inject.TypeLiteral;
 
 /**
- * Smooth type. Type in smooth language.
+ * Type in smooth language.
  */
-public class SType<T extends Value> {
+public class Type<T extends Value> {
   private final String name;
   private final TypeLiteral<? extends Value> jType;
 
-  protected static <T extends Value> SType<T> sType(String name, Class<T> clazz) {
-    return new SType<>(name, TypeLiteral.get(clazz));
+  protected static <T extends Value> Type<T> type(String name, Class<T> clazz) {
+    return new Type<>(name, TypeLiteral.get(clazz));
   }
 
-  protected SType(String name, TypeLiteral<T> jType) {
+  protected Type(String name, TypeLiteral<T> jType) {
     this.name = name;
     this.jType = jType;
   }

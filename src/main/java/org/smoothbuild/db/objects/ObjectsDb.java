@@ -11,7 +11,7 @@ import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.ValueFactory;
 
@@ -47,7 +47,7 @@ public class ObjectsDb implements ValueFactory {
     return objectMarshallers.stringMarshaller().write(string);
   }
 
-  public <T extends Value> T read(SType<T> type, HashCode hash) {
+  public <T extends Value> T read(Type<T> type, HashCode hash) {
     return objectMarshallers.marshaller(type).read(hash);
   }
 }

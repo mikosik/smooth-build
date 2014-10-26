@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.message.base.CodeLocation;
@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public interface Function<T extends Value> {
-  public SType<T> type();
+  public Type<T> type();
 
   public Name name();
 

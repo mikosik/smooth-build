@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.testory.Testory.mock;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
@@ -82,7 +82,7 @@ public class EmptyTest {
   @Test
   public void empty_type_function_map_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<SType<?>, Function<?>> map = Empty.typeFunctionMap();
+    ImmutableMap<Type<?>, Function<?>> map = Empty.typeFunctionMap();
   }
 
   @Test

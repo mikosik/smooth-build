@@ -2,13 +2,13 @@ package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.FILE;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
-import static org.smoothbuild.lang.base.STypes.STRING;
-import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.Types.BLOB;
+import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.NIL;
+import static org.smoothbuild.lang.base.Types.STRING;
+import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Param.param;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
@@ -26,7 +26,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
@@ -66,7 +66,7 @@ public class ParamToArgMapperTest {
     do_test_converting_named_argument(FILE_ARRAY, NIL);
   }
 
-  private void do_test_converting_named_argument(SType<?> paramType, SType<?> argType) {
+  private void do_test_converting_named_argument(Type<?> paramType, Type<?> argType) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(paramType, "name1", false);
@@ -99,7 +99,7 @@ public class ParamToArgMapperTest {
     do_test_duplicated_names(FILE_ARRAY, NIL);
   }
 
-  private void do_test_duplicated_names(SType<?> paramType, SType<?> argType) {
+  private void do_test_duplicated_names(Type<?> paramType, Type<?> argType) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(paramType, "name1", false);
@@ -193,7 +193,7 @@ public class ParamToArgMapperTest {
     do_test_type_mismatch_for_param_problem(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void do_test_type_mismatch_for_param_problem(SType<?> paramType, SType<?> argType) throws
+  private void do_test_type_mismatch_for_param_problem(Type<?> paramType, Type<?> argType) throws
       Exception {
     // given
     messages = new FakeLoggedMessages();
@@ -316,8 +316,8 @@ public class ParamToArgMapperTest {
     do_test_converting_single_nameless_argument(BLOB_ARRAY, NIL, STRING);
   }
 
-  private void do_test_converting_single_nameless_argument(SType<?> paramType, SType<?> argType,
-      SType<?> otherParamsType) {
+  private void do_test_converting_single_nameless_argument(Type<?> paramType, Type<?> argType,
+      Type<?> otherParamsType) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(otherParamsType, "name1", false);
@@ -345,7 +345,7 @@ public class ParamToArgMapperTest {
     do_test_converting_single_nameless_argument_with_others_named(FILE_ARRAY);
   }
 
-  private void do_test_converting_single_nameless_argument_with_others_named(SType<?> type) {
+  private void do_test_converting_single_nameless_argument_with_others_named(Type<?> type) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(type, "name1", false);
@@ -403,8 +403,8 @@ public class ParamToArgMapperTest {
     do_test_converting_two_nameless_arguments_with_different_types(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void do_test_converting_two_nameless_arguments_with_different_types(SType<?> type1,
-      SType<?> type2) {
+  private void do_test_converting_two_nameless_arguments_with_different_types(Type<?> type1,
+      Type<?> type2) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(type1, "name1", false);
@@ -428,7 +428,7 @@ public class ParamToArgMapperTest {
     do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(FILE_ARRAY);
   }
 
-  private void do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(SType<?> type) {
+  private void do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(Type<?> type) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(type, "name1", false);
@@ -459,8 +459,8 @@ public class ParamToArgMapperTest {
     converting_nameless_nil_arg_with_other_named_array(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void converting_nameless_nil_arg_with_other_named_array(SType<?> arrayType,
-      SType<?> otherArrayType) {
+  private void converting_nameless_nil_arg_with_other_named_array(Type<?> arrayType,
+      Type<?> otherArrayType) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(arrayType, "name1", false);
@@ -503,8 +503,8 @@ public class ParamToArgMapperTest {
     do_test_ambiguous_nameless_argument(FILE_ARRAY, FILE_ARRAY, NIL);
   }
 
-  private void do_test_ambiguous_nameless_argument(SType<?> paramType, SType<?> paramType2,
-      SType<?> argType) {
+  private void do_test_ambiguous_nameless_argument(Type<?> paramType, Type<?> paramType2,
+      Type<?> argType) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(paramType, "name1", false);
@@ -586,8 +586,8 @@ public class ParamToArgMapperTest {
     do_test_no_param_with_proper_type_for_nameless_arg(NIL, FILE);
   }
 
-  private void do_test_no_param_with_proper_type_for_nameless_arg(SType<?> type,
-      SType<?> otherType) {
+  private void do_test_no_param_with_proper_type_for_nameless_arg(Type<?> type,
+      Type<?> otherType) {
     // given
     messages = new FakeLoggedMessages();
     Param p1 = param(otherType, "name1", false);
@@ -600,15 +600,15 @@ public class ParamToArgMapperTest {
     messages.assertContainsOnly(AmbiguousNamelessArgsError.class);
   }
 
-  private static Arg arg(SType<?> type) {
+  private static Arg arg(Type<?> type) {
     return namelessArg(1, expr(type), codeLocation(1));
   }
 
-  private static Arg arg(String name, SType<?> type) {
+  private static Arg arg(String name, Type<?> type) {
     return namedArg(1, name, expr(type), codeLocation(1));
   }
 
-  private static Expr<?> expr(SType<?> type) {
+  private static Expr<?> expr(Type<?> type) {
     Expr<?> expr = mock(Expr.class);
     given(willReturn(type), expr).type();
     return expr;

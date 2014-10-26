@@ -1,7 +1,7 @@
 package org.smoothbuild.db.objects.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.STRING;
 
 import org.smoothbuild.db.objects.marshal.StringMarshaller;
 import org.smoothbuild.lang.base.SString;

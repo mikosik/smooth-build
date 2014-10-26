@@ -1,13 +1,13 @@
 package org.smoothbuild.db.objects.marshal;
 
-import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.FILE;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
-import static org.smoothbuild.lang.base.STypes.NOTHING;
-import static org.smoothbuild.lang.base.STypes.STRING;
-import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.Types.BLOB;
+import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.NIL;
+import static org.smoothbuild.lang.base.Types.NOTHING;
+import static org.smoothbuild.lang.base.Types.STRING;
+import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.Message;
 
@@ -37,7 +37,7 @@ public class ObjectMarshallers {
   private final ArrayMarshaller<SFile> fileArrayMarshaller;
   private final ArrayMarshaller<Nothing> nilMarshaller;
 
-  private final ImmutableMap<SType<?>, ObjectMarshaller<?>> marshallersMap;
+  private final ImmutableMap<Type<?>, ObjectMarshaller<?>> marshallersMap;
   private final ImmutableMap<ArrayType<?>, ArrayMarshaller<?>> arrayMarshallersMap;
 
   @Inject
@@ -52,7 +52,7 @@ public class ObjectMarshallers {
     this.fileArrayMarshaller = new ArrayMarshaller<>(hashedDb, FILE_ARRAY, fileMarshaller);
     this.nilMarshaller = new ArrayMarshaller<>(hashedDb, NIL, nothingMarshaller);
 
-    Builder<SType<?>, ObjectMarshaller<?>> marshallersBuilder = ImmutableMap.builder();
+    Builder<Type<?>, ObjectMarshaller<?>> marshallersBuilder = ImmutableMap.builder();
     marshallersBuilder.put(STRING, stringMarshaller);
     marshallersBuilder.put(BLOB, blobMarshaller);
     marshallersBuilder.put(FILE, fileMarshaller);
@@ -95,7 +95,7 @@ public class ObjectMarshallers {
     return reader;
   }
 
-  public <T extends Value> ObjectMarshaller<T> marshaller(SType<T> type) {
+  public <T extends Value> ObjectMarshaller<T> marshaller(Type<T> type) {
     /*
      * Cast is safe as readersMap is immutable and constructed in proper way.
      */

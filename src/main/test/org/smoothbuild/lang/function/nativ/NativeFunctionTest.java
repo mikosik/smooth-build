@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;

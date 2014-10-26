@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.convert;
 
-import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.NativeApi;

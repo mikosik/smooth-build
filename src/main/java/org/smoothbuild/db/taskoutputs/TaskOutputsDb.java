@@ -1,7 +1,7 @@
 package org.smoothbuild.db.taskoutputs;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.smoothbuild.lang.base.STypes.STRING;
+import static org.smoothbuild.lang.base.Types.STRING;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
@@ -55,7 +55,7 @@ public class TaskOutputsDb {
     return hashedDb.contains(taskHash);
   }
 
-  public <T extends Value> TaskOutput<T> read(HashCode taskHash, SType<T> type) {
+  public <T extends Value> TaskOutput<T> read(HashCode taskHash, Type<T> type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash)) {
       int size = unmarshaller.readInt();
       List<Message> messages = newArrayList();

@@ -1,7 +1,7 @@
 package org.smoothbuild.db.objects.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.lang.base.STypes.FILE;
+import static org.smoothbuild.lang.base.Types.FILE;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Blob;

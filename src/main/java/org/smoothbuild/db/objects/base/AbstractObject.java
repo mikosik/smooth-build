@@ -2,16 +2,16 @@ package org.smoothbuild.db.objects.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 
 import com.google.common.hash.HashCode;
 
 public abstract class AbstractObject implements Value {
-  private final SType<?> type;
+  private final Type<?> type;
   private final HashCode hash;
 
-  public AbstractObject(SType<?> type, HashCode hash) {
+  public AbstractObject(Type<?> type, HashCode hash) {
     this.type = checkNotNull(type);
     this.hash = checkNotNull(hash);
   }
@@ -22,7 +22,7 @@ public abstract class AbstractObject implements Value {
   }
 
   @Override
-  public SType<?> type() {
+  public Type<?> type() {
     return type;
   }
 

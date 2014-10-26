@@ -3,40 +3,40 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
-import static org.smoothbuild.lang.base.STypes.paramSTypes;
+import static org.smoothbuild.lang.base.Types.paramTypes;
 
 import java.util.Set;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.hash.HashCode;
 
 public class Param {
-  private final SType<?> type;
+  private final Type<?> type;
   private final String name;
   private final boolean isRequired;
   private final HashCode nameHash;
 
-  public static Param param(SType<?> type, String name, boolean isRequired) {
+  public static Param param(Type<?> type, String name, boolean isRequired) {
     return new Param(type, name, isRequired);
   }
 
-  protected Param(SType<?> type, String name, boolean isRequired) {
+  protected Param(Type<?> type, String name, boolean isRequired) {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
     this.nameHash = Hash.string(name);
   }
 
-  private SType<?> checkAllowedType(SType<?> type) {
+  private Type<?> checkAllowedType(Type<?> type) {
     checkNotNull(type);
-    checkArgument(paramSTypes().contains(type));
+    checkArgument(paramTypes().contains(type));
     return type;
   }
 
-  public SType<?> type() {
+  public Type<?> type() {
     return type;
   }
 

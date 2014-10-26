@@ -3,10 +3,10 @@ package org.smoothbuild.db.objects;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
-import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.NIL;
+import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -19,8 +19,8 @@ import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.STypes;
+import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
 
 import com.google.common.hash.HashCode;
@@ -235,8 +235,8 @@ public class ArrayTest {
     }
 
     @Override
-    public SType<? extends Value> type() {
-      return STypes.NOTHING;
+    public Type<? extends Value> type() {
+      return Types.NOTHING;
     }
   }
 }

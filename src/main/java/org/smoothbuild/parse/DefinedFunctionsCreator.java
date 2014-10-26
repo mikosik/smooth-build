@@ -1,11 +1,11 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.base.STypes.BLOB;
-import static org.smoothbuild.lang.base.STypes.FILE;
-import static org.smoothbuild.lang.base.STypes.NIL;
-import static org.smoothbuild.lang.base.STypes.NOTHING;
-import static org.smoothbuild.lang.base.STypes.STRING;
-import static org.smoothbuild.lang.base.STypes.basicSTypes;
+import static org.smoothbuild.lang.base.Types.BLOB;
+import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.base.Types.NIL;
+import static org.smoothbuild.lang.base.Types.NOTHING;
+import static org.smoothbuild.lang.base.Types.STRING;
+import static org.smoothbuild.lang.base.Types.basicTypes;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
 import static org.smoothbuild.lang.function.def.args.Arg.namelessArg;
@@ -34,8 +34,8 @@ import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.STypes;
+import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
@@ -162,7 +162,7 @@ public class DefinedFunctionsCreator {
       ImmutableList<Expr<?>> elemExprs = build(elems);
 
       CodeLocation location = locationOf(list);
-      SType<?> elemType = commonSuperType(elems, elemExprs, location);
+      Type<?> elemType = commonSuperType(elems, elemExprs, location);
 
       if (elemType != null) {
         return buildArray(elemType, elemExprs, location);
@@ -171,14 +171,14 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private <T extends Value> Expr<Array<T>> buildArray(SType<T> elemType,
+    private <T extends Value> Expr<Array<T>> buildArray(Type<T> elemType,
         ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
-      ArrayType<T> arrayType = STypes.arrayTypeContaining(elemType);
+      ArrayType<T> arrayType = Types.arrayTypeContaining(elemType);
       ImmutableList<Expr<T>> convertedExpr = convertExprs(elemType, elemExprs);
       return new ArrayExpr<>(arrayType, convertedExpr, location);
     }
 
-    public <T extends Value> ImmutableList<Expr<T>> convertExprs(SType<T> type,
+    public <T extends Value> ImmutableList<Expr<T>> convertExprs(Type<T> type,
         Iterable<? extends Expr<?>> expressions) {
       ImmutableList.Builder<Expr<T>> builder = ImmutableList.builder();
       for (Expr<?> expr : expressions) {
@@ -191,7 +191,7 @@ public class DefinedFunctionsCreator {
       Builder<Expr<?>> builder = ImmutableList.builder();
       for (ArrayElemContext elem : elems) {
         Expr<?> expr = build(elem);
-        if (!basicSTypes().contains(expr.type())) {
+        if (!basicTypes().contains(expr.type())) {
           CodeLocation location = locationOf(elem);
           messages.log(new ForbiddenArrayElemError(location, expr.type()));
           builder.add(new InvalidExpr<>(NOTHING, location));
@@ -214,16 +214,16 @@ public class DefinedFunctionsCreator {
           "Illegal parse tree: " + ArrayElemContext.class.getSimpleName() + " without children.");
     }
 
-    private SType<?> commonSuperType(List<ArrayElemContext> elems, ImmutableList<Expr<?>> elemExprs,
+    private Type<?> commonSuperType(List<ArrayElemContext> elems, ImmutableList<Expr<?>> elemExprs,
         CodeLocation location) {
       if (elems.size() == 0) {
         return NOTHING;
       }
-      SType<?> firstType = elemExprs.get(0).type();
-      SType<?> commonSuperType = firstType;
+      Type<?> firstType = elemExprs.get(0).type();
+      Type<?> commonSuperType = firstType;
 
       for (int i = 1; i < elemExprs.size(); i++) {
-        SType<?> currentType = elemExprs.get(i).type();
+        Type<?> currentType = elemExprs.get(i).type();
         commonSuperType = commonSuperType(commonSuperType, currentType);
 
         if (commonSuperType == null) {
@@ -234,7 +234,7 @@ public class DefinedFunctionsCreator {
       return commonSuperType;
     }
 
-    private static SType<?> commonSuperType(SType<?> type1, SType<?> type2) {
+    private static Type<?> commonSuperType(Type<?> type1, Type<?> type2) {
       if (type1 == STRING) {
         if (type2 == STRING) {
           return STRING;

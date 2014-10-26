@@ -1,9 +1,9 @@
 package org.smoothbuild.db.objects.build;
 
-import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.STypes.FILE_ARRAY;
-import static org.smoothbuild.lang.base.STypes.NIL;
-import static org.smoothbuild.lang.base.STypes.STRING_ARRAY;
+import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.base.Types.NIL;
+import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 
 import javax.inject.Inject;
 

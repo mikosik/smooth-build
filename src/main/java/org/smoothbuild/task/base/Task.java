@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.NativeApiImpl;
@@ -36,7 +36,7 @@ public class Task<T extends Value> {
     return worker.name();
   }
 
-  public SType<T> resultType() {
+  public Type<T> resultType() {
     return worker.resultType();
   }
 

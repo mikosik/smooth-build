@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static org.smoothbuild.lang.base.Conversions.canConvert;
-import static org.smoothbuild.lang.base.STypes.allSTypes;
+import static org.smoothbuild.lang.base.Types.allTypes;
 import static org.smoothbuild.lang.function.base.Params.paramsToNames;
 
 import java.util.Collection;
 import java.util.Set;
 
-import org.smoothbuild.lang.base.SType;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
@@ -92,7 +92,7 @@ public class ParamToArgMapper {
       if (arg.hasName()) {
         String name = arg.name();
         Param param = paramsPool.take(name);
-        SType<?> paramType = param.type();
+        Type<?> paramType = param.type();
         if (!canConvert(arg.type(), paramType)) {
           messages.log(new TypeMismatchError(arg, paramType));
         } else {
@@ -103,9 +103,9 @@ public class ParamToArgMapper {
   }
 
   private void processNamelessArguments(ParamToArgMapBuilder paramToArgMapBuilder) {
-    ImmutableMultimap<SType<?>, Arg> namelessArgs = Arg.filterNameless(allArguments);
+    ImmutableMultimap<Type<?>, Arg> namelessArgs = Arg.filterNameless(allArguments);
 
-    for (SType<?> type : allSTypes()) {
+    for (Type<?> type : allTypes()) {
       Collection<Arg> availableArgs = namelessArgs.get(type);
       int argsSize = availableArgs.size();
       if (0 < argsSize) {

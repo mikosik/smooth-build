@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.convert;
 
-import static org.smoothbuild.lang.base.STypes.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
 
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Array;
