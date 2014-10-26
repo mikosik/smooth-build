@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.Objects;
-import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SNothing;
@@ -38,7 +38,7 @@ public class ObjectMarshallers {
   private final ArrayMarshaller<SNothing> nilMarshaller;
 
   private final ImmutableMap<SType<?>, ObjectMarshaller<?>> marshallersMap;
-  private final ImmutableMap<SArrayType<?>, ArrayMarshaller<?>> arrayMarshallersMap;
+  private final ImmutableMap<ArrayType<?>, ArrayMarshaller<?>> arrayMarshallersMap;
 
   @Inject
   public ObjectMarshallers(@Objects HashedDb hashedDb) {
@@ -63,7 +63,7 @@ public class ObjectMarshallers {
     marshallersBuilder.put(NIL, nilMarshaller);
     this.marshallersMap = marshallersBuilder.build();
 
-    Builder<SArrayType<?>, ArrayMarshaller<?>> arrayMarshallersBuilder = ImmutableMap.builder();
+    Builder<ArrayType<?>, ArrayMarshaller<?>> arrayMarshallersBuilder = ImmutableMap.builder();
     arrayMarshallersBuilder.put(STRING_ARRAY, stringArrayMarshaller);
     arrayMarshallersBuilder.put(BLOB_ARRAY, blobArrayMarshaller);
     arrayMarshallersBuilder.put(FILE_ARRAY, fileArrayMarshaller);
@@ -83,7 +83,7 @@ public class ObjectMarshallers {
     return fileMarshaller;
   }
 
-  public <T extends SValue> ArrayMarshaller<T> arrayMarshaller(SArrayType<T> arrayType) {
+  public <T extends SValue> ArrayMarshaller<T> arrayMarshaller(ArrayType<T> arrayType) {
     /*
      * Cast is safe as readersMap is immutable and constructed in proper way.
      */

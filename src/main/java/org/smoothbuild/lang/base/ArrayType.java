@@ -2,15 +2,15 @@ package org.smoothbuild.lang.base;
 
 import com.google.inject.TypeLiteral;
 
-public class SArrayType<T extends SValue> extends SType<Array<T>> {
+public class ArrayType<T extends SValue> extends SType<Array<T>> {
   private final SType<T> elemSType;
 
-  protected static <T extends SValue> SArrayType<T> sArrayType(SType<T> elemType,
+  protected static <T extends SValue> ArrayType<T> arrayType(SType<T> elemType,
       TypeLiteral<Array<T>> jType) {
-    return new SArrayType<>(elemType, jType);
+    return new ArrayType<>(elemType, jType);
   }
 
-  protected SArrayType(SType<T> elemSType, TypeLiteral<Array<T>> jType) {
+  protected ArrayType(SType<T> elemSType, TypeLiteral<Array<T>> jType) {
     super(elemSType.name() + "[]", jType);
     this.elemSType = elemSType;
   }

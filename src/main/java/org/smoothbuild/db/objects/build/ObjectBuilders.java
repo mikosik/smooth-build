@@ -11,7 +11,7 @@ import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.SValue;
 
 public class ObjectBuilders {
@@ -26,7 +26,7 @@ public class ObjectBuilders {
     return new BlobBuilderImpl(objectMarshallers.blobMarshaller());
   }
 
-  public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
+  public <T extends SValue> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
     /*
      * Each cast is safe as it is preceded by checking arrayType.
      */
@@ -51,7 +51,7 @@ public class ObjectBuilders {
     return (ArrayBuilder<T>) arrayWriter;
   }
 
-  private <T extends SValue> ArrayBuilder<T> createArrayBuilder(SArrayType<T> arrayType) {
+  private <T extends SValue> ArrayBuilder<T> createArrayBuilder(ArrayType<T> arrayType) {
     ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(arrayType);
     return new ArrayBuilderImpl<>(arrayType, marshaller);
   }

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base;
 
-import static org.smoothbuild.lang.base.SArrayType.sArrayType;
+import static org.smoothbuild.lang.base.ArrayType.arrayType;
 import static org.smoothbuild.lang.base.SType.sType;
 
 import com.google.common.collect.ImmutableMap;
@@ -14,14 +14,14 @@ public class STypes {
   public static final SType<SFile> FILE = sType("File", SFile.class);
   public static final SType<SNothing> NOTHING = sType("Nothing", SNothing.class);
 
-  public static final SArrayType<SString> STRING_ARRAY = sArrayType(STRING,
+  public static final ArrayType<SString> STRING_ARRAY = arrayType(STRING,
       new TypeLiteral<Array<SString>>() {});
-  public static final SArrayType<Blob> BLOB_ARRAY = sArrayType(BLOB,
+  public static final ArrayType<Blob> BLOB_ARRAY = arrayType(BLOB,
       new TypeLiteral<Array<Blob>>() {});
-  public static final SArrayType<SFile> FILE_ARRAY = sArrayType(FILE,
+  public static final ArrayType<SFile> FILE_ARRAY = arrayType(FILE,
       new TypeLiteral<Array<SFile>>() {});
-  public static final SArrayType<SNothing> NIL = sArrayType(NOTHING,
-      new TypeLiteral<Array<SNothing>>() {});
+  public static final ArrayType<SNothing> NIL = arrayType(NOTHING,
+      new TypeLiteral<Array<Nothing>>() {});
 
   /*
    * Not each type can be used in every place. Each set below represent one
@@ -34,7 +34,7 @@ public class STypes {
    * that type.
    */
   private static final ImmutableSet<SType<?>> BASIC_STYPES = ImmutableSet.of(STRING, BLOB, FILE);
-  private static final ImmutableSet<SArrayType<?>> ARRAY_STYPES = ImmutableSet.of(STRING_ARRAY,
+  private static final ImmutableSet<ArrayType<?>> ARRAY_STYPES = ImmutableSet.of(STRING_ARRAY,
       BLOB_ARRAY, FILE_ARRAY, NIL);
 
   @SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public class STypes {
       PARAM_STYPES);
   private static final ImmutableMap<TypeLiteral<?>, SType<?>> RESULT_JTYPE_TO_STYPE = createToSTypeMap(
       RESULT_STYPES);
-  private static final ImmutableMap<SType<?>, SArrayType<?>> ELEM_STYPE_TO_ARRAY_STYPE = createElemSTypeToSArrayTypeMap(
+  private static final ImmutableMap<SType<?>, ArrayType<?>> ELEM_STYPE_TO_ARRAY_STYPE = createElemSTypeToArrayTypeMap(
       ARRAY_STYPES);
 
   public static ImmutableSet<SType<?>> basicSTypes() {
@@ -98,13 +98,13 @@ public class STypes {
     return RESULT_JTYPE_TO_STYPE.get(jType);
   }
 
-  public static <T extends SValue> SArrayType<T> sArrayTypeContaining(SType<T> elemType) {
+  public static <T extends SValue> ArrayType<T> arrayTypeContaining(SType<T> elemType) {
     /*
      * Cast is safe as ELEM_TYPE_TO_ARRAY_TYPE is immutable and it is
      * initialized with proper mappings.
      */
     @SuppressWarnings("unchecked")
-    SArrayType<T> result = (SArrayType<T>) ELEM_STYPE_TO_ARRAY_STYPE.get(elemType);
+    ArrayType<T> result = (ArrayType<T>) ELEM_STYPE_TO_ARRAY_STYPE.get(elemType);
     return result;
   }
 
@@ -128,12 +128,12 @@ public class STypes {
     return builder.build();
   }
 
-  private static ImmutableMap<SType<?>, SArrayType<?>> createElemSTypeToSArrayTypeMap(
-      ImmutableSet<SArrayType<?>> arrayTypes) {
+  private static ImmutableMap<SType<?>, ArrayType<?>> createElemSTypeToArrayTypeMap(
+      ImmutableSet<ArrayType<?>> arrayTypes) {
 
-    ImmutableMap.Builder<SType<?>, SArrayType<?>> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<SType<?>, ArrayType<?>> builder = ImmutableMap.builder();
 
-    for (SArrayType<?> type : arrayTypes) {
+    for (ArrayType<?> type : arrayTypes) {
       builder.put(type.elemType(), type);
     }
 

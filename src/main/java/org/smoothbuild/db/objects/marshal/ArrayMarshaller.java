@@ -9,7 +9,7 @@ import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.objects.base.ArrayObject;
 import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.collect.ImmutableList;
@@ -17,10 +17,10 @@ import com.google.common.hash.HashCode;
 
 public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<Array<T>> {
   private final HashedDb hashedDb;
-  private final SArrayType<T> arrayType;
+  private final ArrayType<T> arrayType;
   private final ObjectMarshaller<T> elementMarshaller;
 
-  public ArrayMarshaller(HashedDb hashedDb, SArrayType<T> arrayType,
+  public ArrayMarshaller(HashedDb hashedDb, ArrayType<T> arrayType,
       ObjectMarshaller<T> elementMarshaller) {
     this.hashedDb = checkNotNull(hashedDb);
     this.arrayType = checkNotNull(arrayType);

@@ -15,7 +15,7 @@ import static org.smoothbuild.lang.base.STypes.basicSTypes;
 import static org.smoothbuild.lang.base.STypes.paramJTypeToSType;
 import static org.smoothbuild.lang.base.STypes.paramSTypes;
 import static org.smoothbuild.lang.base.STypes.resultJTypeToSType;
-import static org.smoothbuild.lang.base.STypes.sArrayTypeContaining;
+import static org.smoothbuild.lang.base.STypes.arrayTypeContaining;
 
 import java.util.Set;
 
@@ -105,11 +105,11 @@ public class STypesTest {
   }
 
   @Test
-  public void sArrayType_containing() throws Exception {
-    assertThat(sArrayTypeContaining(STRING)).isEqualTo(STRING_ARRAY);
-    assertThat(sArrayTypeContaining(BLOB)).isEqualTo(BLOB_ARRAY);
-    assertThat(sArrayTypeContaining(FILE)).isEqualTo(FILE_ARRAY);
-    assertThat(sArrayTypeContaining(NOTHING)).isEqualTo(NIL);
+  public void arrayType_containing() throws Exception {
+    assertThat(arrayTypeContaining(STRING)).isEqualTo(STRING_ARRAY);
+    assertThat(arrayTypeContaining(BLOB)).isEqualTo(BLOB_ARRAY);
+    assertThat(arrayTypeContaining(FILE)).isEqualTo(FILE_ARRAY);
+    assertThat(arrayTypeContaining(NOTHING)).isEqualTo(NIL);
   }
 
 }

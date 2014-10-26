@@ -71,7 +71,7 @@ public class CachingTaskOutputTest {
     given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(stringSArray("1", "1")));
+    thenEqual(task.output(), new TaskOutput<>(stringArray("1", "1")));
   }
 
   @Test
@@ -83,7 +83,7 @@ public class CachingTaskOutputTest {
     given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(stringSArray("1", "2")));
+    thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
   }
 
   @Test
@@ -95,7 +95,7 @@ public class CachingTaskOutputTest {
     given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
     given(task = taskGraph.createTasks(arrayExpr));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(stringSArray("1", "2")));
+    thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
   }
 
   @Test
@@ -133,7 +133,7 @@ public class CachingTaskOutputTest {
     return new ConstantExpr<>(STRING, objectsDb.string(string), CL);
   }
 
-  private Array<SString> stringSArray(String... strings) {
+  private Array<SString> stringArray(String... strings) {
     ArrayBuilder<SString> builder = objectsDb.arrayBuilder(STRING_ARRAY);
     for (String string : strings) {
       builder.add(objectsDb.string(string));

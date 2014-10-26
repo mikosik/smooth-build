@@ -6,8 +6,8 @@ import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
+import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
@@ -28,7 +28,7 @@ public class ObjectsDb implements SValueFactory {
   }
 
   @Override
-  public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
+  public <T extends SValue> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
     return objectBuilders.arrayBuilder(arrayType);
   }
 
