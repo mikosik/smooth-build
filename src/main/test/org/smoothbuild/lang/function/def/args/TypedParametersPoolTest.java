@@ -28,7 +28,7 @@ public class TypedParametersPoolTest {
     optionalParameters.add(string);
     requiredParameters.add(stringRequired);
 
-    assertThat(pool.requiredParams()).containsOnly(stringRequired);
+    assertThat(pool.requiredParameters()).containsOnly(stringRequired);
   }
 
   @Test
@@ -36,17 +36,17 @@ public class TypedParametersPoolTest {
     optionalParameters.add(string);
     requiredParameters.add(stringRequired);
 
-    assertThat(pool.optionalParams()).containsOnly(string);
+    assertThat(pool.optionalParameters()).containsOnly(string);
   }
 
   @Test
   public void requiredParamsIsEmptyWhenNoParamWasAdded() throws Exception {
-    assertThat(pool.requiredParams()).isEmpty();
+    assertThat(pool.requiredParameters()).isEmpty();
   }
 
   @Test
   public void optionalParamsIsEmptyWhenNoParamWasAdded() throws Exception {
-    assertThat(pool.optionalParams()).isEmpty();
+    assertThat(pool.optionalParameters()).isEmpty();
   }
 
   @Test

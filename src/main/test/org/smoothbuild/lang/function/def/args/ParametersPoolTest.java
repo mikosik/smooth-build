@@ -83,7 +83,7 @@ public class ParametersPoolTest {
   public void optional_string_param_is_available_in_optional_set_of_string_pool() throws Exception {
     given(parameter = parameter(STRING, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(STRING)).optionalParams();
+    when(parametersPool.assignableFrom(STRING)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -91,7 +91,7 @@ public class ParametersPoolTest {
   public void required_string_param_is_available_in_required_set_of_string_pool() throws Exception {
     given(parameter = parameter(STRING, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(STRING)).requiredParams();
+    when(parametersPool.assignableFrom(STRING)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -99,7 +99,7 @@ public class ParametersPoolTest {
   public void optional_blob_param_is_available_in_optional_set_of_blob_pool() throws Exception {
     given(parameter = parameter(BLOB, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(BLOB)).optionalParams();
+    when(parametersPool.assignableFrom(BLOB)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -107,7 +107,7 @@ public class ParametersPoolTest {
   public void required_blob_param_is_available_in_required_set_of_blob_pool() throws Exception {
     given(parameter = parameter(BLOB, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(BLOB)).requiredParams();
+    when(parametersPool.assignableFrom(BLOB)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -115,7 +115,7 @@ public class ParametersPoolTest {
   public void optional_blob_param_is_available_in_optional_set_of_file_pool() throws Exception {
     given(parameter = parameter(BLOB, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(FILE)).optionalParams();
+    when(parametersPool.assignableFrom(FILE)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -123,7 +123,7 @@ public class ParametersPoolTest {
   public void required_blob_param_is_available_in_required_set_of_file_pool() throws Exception {
     given(parameter = parameter(BLOB, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(FILE)).requiredParams();
+    when(parametersPool.assignableFrom(FILE)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -131,7 +131,7 @@ public class ParametersPoolTest {
   public void optional_file_param_is_available_in_optional_set_of_file_pool() throws Exception {
     given(parameter = parameter(FILE, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(FILE)).optionalParams();
+    when(parametersPool.assignableFrom(FILE)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -139,7 +139,7 @@ public class ParametersPoolTest {
   public void required_file_param_is_available_in_required_set_of_file_pool() throws Exception {
     given(parameter = parameter(FILE, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(FILE)).requiredParams();
+    when(parametersPool.assignableFrom(FILE)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -148,7 +148,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(STRING_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(STRING_ARRAY)).optionalParams();
+    when(parametersPool.assignableFrom(STRING_ARRAY)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -157,7 +157,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(STRING_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(STRING_ARRAY)).requiredParams();
+    when(parametersPool.assignableFrom(STRING_ARRAY)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -166,7 +166,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(BLOB_ARRAY)).optionalParams();
+    when(parametersPool.assignableFrom(BLOB_ARRAY)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -175,7 +175,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(BLOB_ARRAY)).requiredParams();
+    when(parametersPool.assignableFrom(BLOB_ARRAY)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -184,7 +184,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParams();
+    when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -193,7 +193,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(FILE_ARRAY)).requiredParams();
+    when(parametersPool.assignableFrom(FILE_ARRAY)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -202,7 +202,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(FILE_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParams();
+    when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -211,7 +211,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(FILE_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(FILE_ARRAY)).requiredParams();
+    when(parametersPool.assignableFrom(FILE_ARRAY)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -220,7 +220,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(STRING_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(NIL)).optionalParams();
+    when(parametersPool.assignableFrom(NIL)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -229,7 +229,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(STRING_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(NIL)).requiredParams();
+    when(parametersPool.assignableFrom(NIL)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -238,7 +238,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(NIL)).optionalParams();
+    when(parametersPool.assignableFrom(NIL)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -247,7 +247,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(NIL)).requiredParams();
+    when(parametersPool.assignableFrom(NIL)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -256,7 +256,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(FILE_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(NIL)).optionalParams();
+    when(parametersPool.assignableFrom(NIL)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -265,7 +265,7 @@ public class ParametersPoolTest {
       Exception {
     given(parameter = parameter(FILE_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
-    when(parametersPool.assignableFrom(NIL)).requiredParams();
+    when(parametersPool.assignableFrom(NIL)).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
