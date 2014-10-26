@@ -11,15 +11,15 @@ import org.smoothbuild.lang.base.Value;
 import com.google.common.collect.ImmutableMap;
 
 public class ArgumentsCreator {
-  private final Class<?> paramsInterface;
+  private final Class<?> parametersInterface;
 
-  public ArgumentsCreator(Class<?> paramsInterface) {
-    this.paramsInterface = paramsInterface;
+  public ArgumentsCreator(Class<?> parametersInterface) {
+    this.parametersInterface = parametersInterface;
   }
 
   public Object create(Map<String, Value> arguments) {
-    ClassLoader classLoader = paramsInterface.getClassLoader();
-    Class<?>[] args = new Class<?>[] { paramsInterface };
+    ClassLoader classLoader = parametersInterface.getClassLoader();
+    Class<?>[] args = new Class<?>[] {parametersInterface};
     InvocationHandler invocationHandler = new MapInvocationHandler(arguments);
 
     return newProxyInstance(classLoader, args, invocationHandler);
