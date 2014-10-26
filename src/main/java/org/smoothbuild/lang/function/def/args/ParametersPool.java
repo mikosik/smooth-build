@@ -22,20 +22,20 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class ParametersPool {
-  private final ImmutableMap<String, Parameter> params;
+  private final ImmutableMap<String, Parameter> parameters;
   private final ImmutableMap<Type<?>, TypedParametersPool> typePools;
-  private final Map<Type<?>, Set<Parameter>> optionalParamsMap;
-  private final Map<Type<?>, Set<Parameter>> requiredParamsMap;
+  private final Map<Type<?>, Set<Parameter>> optionalParametersMap;
+  private final Map<Type<?>, Set<Parameter>> requiredParametersMap;
 
   public ParametersPool(ImmutableList<Parameter> parameters) {
-    this.params = parametersToMap(parameters);
-    this.optionalParamsMap = createParamsMap(filterOptionalParameters(parameters));
-    this.requiredParamsMap = createParamsMap(filterRequiredParameters(parameters));
-    this.typePools = createTypePools(optionalParamsMap, requiredParamsMap);
+    this.parameters = parametersToMap(parameters);
+    this.optionalParametersMap = createParametersMap(filterOptionalParameters(parameters));
+    this.requiredParametersMap = createParametersMap(filterRequiredParameters(parameters));
+    this.typePools = createTypePools(optionalParametersMap, requiredParametersMap);
   }
 
   public Parameter take(String name) {
-    Parameter parameter = params.get(name);
+    Parameter parameter = parameters.get(name);
     checkArgument(parameter != null);
     return take(parameter);
   }
@@ -48,9 +48,9 @@ public class ParametersPool {
 
   private boolean remove(Parameter parameter) {
     if (parameter.isRequired()) {
-      return requiredParamsMap.get(parameter.type()).remove(parameter);
+      return requiredParametersMap.get(parameter.type()).remove(parameter);
     } else {
-      return optionalParamsMap.get(parameter.type()).remove(parameter);
+      return optionalParametersMap.get(parameter.type()).remove(parameter);
     }
   }
 
@@ -67,19 +67,19 @@ public class ParametersPool {
   }
 
   private static ImmutableMap<Type<?>, TypedParametersPool> createTypePools(
-      Map<Type<?>, Set<Parameter>> optionalParamsMap, Map<Type<?>, Set<Parameter>> requiredParamsMap) {
+      Map<Type<?>, Set<Parameter>> optionalParametersMap, Map<Type<?>, Set<Parameter>> requiredParametersMap) {
 
     Builder<Type<?>, TypedParametersPool> builder = ImmutableMap.builder();
     for (Type<?> type : allTypes()) {
-      Set<Parameter> optional = paramsAssignableFromType(type, optionalParamsMap);
-      Set<Parameter> required = paramsAssignableFromType(type, requiredParamsMap);
+      Set<Parameter> optional = parametersAssignableFromType(type, optionalParametersMap);
+      Set<Parameter> required = parametersAssignableFromType(type, requiredParametersMap);
       builder.put(type, new TypedParametersPool(optional, required));
     }
 
     return builder.build();
   }
 
-  private static Set<Parameter> paramsAssignableFromType(Type<?> type,
+  private static Set<Parameter> parametersAssignableFromType(Type<?> type,
       Map<Type<?>, Set<Parameter>> paramsMap) {
     Set<Parameter> parameters = paramsMap.get(type);
     for (Type<?> currentType : allTypes()) {
@@ -90,7 +90,8 @@ public class ParametersPool {
     return parameters;
   }
 
-  private static Map<Type<?>, Set<Parameter>> createParamsMap(ImmutableList<Parameter> parameters) {
+  private static Map<Type<?>, Set<Parameter>> createParametersMap(
+      ImmutableList<Parameter> parameters) {
     Map<Type<?>, Set<Parameter>> map = Maps.newHashMap();
     for (Type<?> type : allTypes()) {
       HashSet<Parameter> set = Sets.newHashSet();
