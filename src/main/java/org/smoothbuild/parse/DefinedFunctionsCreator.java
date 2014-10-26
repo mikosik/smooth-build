@@ -42,7 +42,7 @@ import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
-import org.smoothbuild.lang.expr.InvalidExpr;
+import org.smoothbuild.lang.expr.InvalidExpression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Signature;
@@ -167,7 +167,7 @@ public class DefinedFunctionsCreator {
       if (elemType != null) {
         return buildArray(elemType, elemExpressions, location);
       } else {
-        return new InvalidExpr<>(NIL, location);
+        return new InvalidExpression<>(NIL, location);
       }
     }
 
@@ -194,7 +194,7 @@ public class DefinedFunctionsCreator {
         if (!basicTypes().contains(expression.type())) {
           CodeLocation location = locationOf(elem);
           messages.log(new ForbiddenArrayElemError(location, expression.type()));
-          builder.add(new InvalidExpr<>(NOTHING, location));
+          builder.add(new InvalidExpression<>(NOTHING, location));
         } else {
           builder.add(expression);
         }
@@ -274,7 +274,7 @@ public class DefinedFunctionsCreator {
           codeLocation, messages, function, args);
 
       if (namedArgs == null) {
-        return new InvalidExpr<>(function.type(), locationOf(call.functionName()));
+        return new InvalidExpression<>(function.type(), locationOf(call.functionName()));
       } else {
         return new CallExpr<>(function, false, codeLocation, namedArgs);
       }
@@ -326,7 +326,7 @@ public class DefinedFunctionsCreator {
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.log(new CodeMessage(ERROR, location, e.getMessage()));
-        return new InvalidExpr<>(STRING, locationOf(stringToken.getSymbol()));
+        return new InvalidExpression<>(STRING, locationOf(stringToken.getSymbol()));
       }
     }
   }
