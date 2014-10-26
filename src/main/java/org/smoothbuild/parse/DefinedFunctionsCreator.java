@@ -38,7 +38,7 @@ import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.ArrayExpression;
-import org.smoothbuild.lang.expr.CallExpr;
+import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
@@ -276,7 +276,7 @@ public class DefinedFunctionsCreator {
       if (namedArgs == null) {
         return new InvalidExpression<>(function.type(), locationOf(call.functionName()));
       } else {
-        return new CallExpr<>(function, false, codeLocation, namedArgs);
+        return new CallExpression<>(function, false, codeLocation, namedArgs);
       }
     }
 
