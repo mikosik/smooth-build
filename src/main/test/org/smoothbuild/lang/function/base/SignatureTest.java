@@ -55,7 +55,7 @@ public class SignatureTest {
     ImmutableList<Parameter> parameters = ImmutableList.of(parameter4, parameter6, parameter1,
         parameter3, parameter5, parameter2);
     Signature<?> signature = new Signature<>(type, name, parameters);
-    assertThat(signature.params()).containsExactly(parameter1, parameter2, parameter3, parameter4,
+    assertThat(signature.parameters()).containsExactly(parameter1, parameter2, parameter3, parameter4,
         parameter5, parameter6);
   }
 

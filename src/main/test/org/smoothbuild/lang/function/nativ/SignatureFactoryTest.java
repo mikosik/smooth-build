@@ -25,7 +25,7 @@ public class SignatureFactoryTest {
     Signature<?> signature = SignatureFactory.create(method, FuncParams.class);
     assertThat(signature.type()).isEqualTo(FILE);
     assertThat(signature.name()).isEqualTo(name("function"));
-    assertThat(signature.params()).isEqualTo(ImmutableList.of(parameter(FILE, "param1", false)));
+    assertThat(signature.parameters()).isEqualTo(ImmutableList.of(parameter(FILE, "param1", false)));
   }
 
   public interface FuncParams {
