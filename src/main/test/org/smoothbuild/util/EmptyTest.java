@@ -36,22 +36,22 @@ public class EmptyTest {
     assertThat(Empty.stringValueMap()).isSameAs(Empty.stringValueMap());
   }
 
-  // stringExprMap()
+  // stringExpressionMap()
 
   @Test
-  public void empty_string_expr_map_is_empty() {
-    assertThat(Empty.stringExprMap()).isEmpty();
+  public void empty_string_expression_map_is_empty() {
+    assertThat(Empty.stringExpressionMap()).isEmpty();
   }
 
   @Test
-  public void empty_string_expr_map_is_immutable() {
+  public void empty_string_expression_map_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<String, Expression<?>> map = Empty.stringExprMap();
+    ImmutableMap<String, Expression<?>> map = Empty.stringExpressionMap();
   }
 
   @Test
-  public void empty_string_expr_map_always_returns_the_same_object() {
-    assertThat(Empty.stringExprMap()).isSameAs(Empty.stringExprMap());
+  public void empty_string_expression_map_always_returns_the_same_object() {
+    assertThat(Empty.stringExpressionMap()).isSameAs(Empty.stringExpressionMap());
   }
 
   // nameFunctionMap();
@@ -126,22 +126,22 @@ public class EmptyTest {
     assertThat(Empty.valueList()).isSameAs(Empty.valueList());
   }
 
-  // exprList()
+  // expressionList()
 
   @Test
-  public void empty_expr_list_is_empty() {
-    assertThat(Empty.exprList()).isEmpty();
+  public void empty_expression_list_is_empty() {
+    assertThat(Empty.expressionList()).isEmpty();
   }
 
   @Test
-  public void empty_expr_list_is_immutable() {
+  public void empty_expression_list_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableList<Expression<?>> list = Empty.exprList();
+    ImmutableList<Expression<?>> list = Empty.expressionList();
   }
 
   @Test
-  public void empty_expr_list_always_returns_the_same_object() {
-    assertThat(Empty.exprList()).isSameAs(Empty.exprList());
+  public void empty_expression_list_always_returns_the_same_object() {
+    assertThat(Empty.expressionList()).isSameAs(Empty.expressionList());
   }
 
   // messageList()

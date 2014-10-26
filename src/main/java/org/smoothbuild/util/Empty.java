@@ -18,7 +18,7 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<String, Expression<?>> stringExprMap() {
+  public static ImmutableMap<String, Expression<?>> stringExpressionMap() {
     return ImmutableMap.of();
   }
 
@@ -38,7 +38,7 @@ public class Empty {
     return ImmutableList.of();
   }
 
-  public static ImmutableList<Expression<?>> exprList() {
+  public static ImmutableList<Expression<?>> expressionList() {
     return ImmutableList.of();
   }
 

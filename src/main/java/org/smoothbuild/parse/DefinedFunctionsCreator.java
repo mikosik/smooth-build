@@ -174,11 +174,12 @@ public class DefinedFunctionsCreator {
     private <T extends Value> Expression<Array<T>> buildArray(Type<T> elemType,
         ImmutableList<Expression<?>> elemExpressions, CodeLocation location) {
       ArrayType<T> arrayType = Types.arrayTypeContaining(elemType);
-      ImmutableList<Expression<T>> convertedExpression = convertExprs(elemType, elemExpressions);
+      ImmutableList<Expression<T>> convertedExpression = convertExpressions(elemType,
+          elemExpressions);
       return new ArrayExpression<>(arrayType, convertedExpression, location);
     }
 
-    public <T extends Value> ImmutableList<Expression<T>> convertExprs(Type<T> type,
+    public <T extends Value> ImmutableList<Expression<T>> convertExpressions(Type<T> type,
         Iterable<? extends Expression<?>> expressions) {
       ImmutableList.Builder<Expression<T>> builder = ImmutableList.builder();
       for (Expression<?> expression : expressions) {
@@ -214,8 +215,8 @@ public class DefinedFunctionsCreator {
           "Illegal parse tree: " + ArrayElemContext.class.getSimpleName() + " without children.");
     }
 
-    private Type<?> commonSuperType(List<ArrayElemContext> elems, ImmutableList<Expression<?>> elemExpressions,
-        CodeLocation location) {
+    private Type<?> commonSuperType(List<ArrayElemContext> elems,
+        ImmutableList<Expression<?>> elemExpressions, CodeLocation location) {
       if (elems.size() == 0) {
         return NOTHING;
       }

@@ -20,7 +20,7 @@ public class ExpressionTest {
   Type<SString> type = STRING;
   CodeLocation codeLocation;
 
-  MyExpression expr;
+  MyExpression expression;
 
   @Before
   public void before() {
@@ -29,31 +29,31 @@ public class ExpressionTest {
 
   @Test
   public void null_type_is_forbidden() {
-    when($myExpr(null, codeLocation));
+    when($myExpression(null, codeLocation));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_code_location_is_forbidden() {
-    when($myExpr(type, null));
+    when($myExpression(type, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void type() throws Exception {
-    given(expr = new MyExpression(type, codeLocation));
-    when(expr.type());
+    given(expression = new MyExpression(type, codeLocation));
+    when(expression.type());
     thenReturned(type);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(expr = new MyExpression(type, codeLocation));
-    when(expr.codeLocation());
+    given(expression = new MyExpression(type, codeLocation));
+    when(expression.codeLocation());
     thenReturned(codeLocation);
   }
 
-  private static Closure $myExpr(final Type<SString> type, final CodeLocation codeLocation) {
+  private static Closure $myExpression(final Type<SString> type, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
@@ -64,7 +64,7 @@ public class ExpressionTest {
 
   public static class MyExpression extends Expression<SString> {
     public MyExpression(Type<SString> type, CodeLocation codeLocation) {
-      super(type, Empty.exprList(), codeLocation);
+      super(type, Empty.expressionList(), codeLocation);
     }
 
     @Override
