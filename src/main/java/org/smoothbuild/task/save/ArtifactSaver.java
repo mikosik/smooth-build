@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SNothing;
+import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
@@ -38,7 +38,7 @@ public class ArtifactSaver {
     builder.put(STRING_ARRAY, new ArraySaver<SString>(smoothFileSystem));
     builder.put(BLOB_ARRAY, new ArraySaver<Blob>(smoothFileSystem));
     builder.put(FILE_ARRAY, new FileArraySaver(smoothFileSystem, messages));
-    builder.put(NIL, new ArraySaver<SNothing>(smoothFileSystem));
+    builder.put(NIL, new ArraySaver<Nothing>(smoothFileSystem));
 
     this.saversMap = builder.build();
   }

@@ -12,7 +12,7 @@ public class STypes {
   public static final SType<SString> STRING = sType("String", SString.class);
   public static final SType<Blob> BLOB = sType("Blob", Blob.class);
   public static final SType<SFile> FILE = sType("File", SFile.class);
-  public static final SType<SNothing> NOTHING = sType("Nothing", SNothing.class);
+  public static final SType<Nothing> NOTHING = sType("Nothing", Nothing.class);
 
   public static final ArrayType<SString> STRING_ARRAY = arrayType(STRING,
       new TypeLiteral<Array<SString>>() {});
@@ -20,7 +20,7 @@ public class STypes {
       new TypeLiteral<Array<Blob>>() {});
   public static final ArrayType<SFile> FILE_ARRAY = arrayType(FILE,
       new TypeLiteral<Array<SFile>>() {});
-  public static final ArrayType<SNothing> NIL = arrayType(NOTHING,
+  public static final ArrayType<Nothing> NIL = arrayType(NOTHING,
       new TypeLiteral<Array<Nothing>>() {});
 
   /*

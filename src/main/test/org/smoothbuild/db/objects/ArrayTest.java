@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.SNothing;
+import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
@@ -33,7 +33,7 @@ public class ArrayTest {
   private SString sstring2;
   private SString sstring3;
   private Array<?> array;
-  private ArrayBuilder<SNothing> nilBuilder;
+  private ArrayBuilder<Nothing> nilBuilder;
   private ArrayBuilder<SString> arrayBuilder;
   @SuppressWarnings("rawtypes")
   private ArrayBuilder rawArrayBuilder;
@@ -228,7 +228,7 @@ public class ArrayTest {
     thenReturned("[]");
   }
 
-  private static class MyNothing implements SNothing {
+  private static class MyNothing implements Nothing {
     @Override
     public HashCode hash() {
       return Hash.string("");
