@@ -10,22 +10,22 @@ import org.smoothbuild.lang.function.base.Param;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-public class ParamToArgMapBuilder {
-  private final Map<Param, Arg> map;
+public class MapBuilder {
+  private final Map<Param, Argument> map;
 
-  public ParamToArgMapBuilder() {
+  public MapBuilder() {
     this.map = Maps.newHashMap();
   }
 
-  public void add(Param param, Arg arg) {
+  public void add(Param param, Argument argument) {
     checkNotNull(param);
-    checkNotNull(arg);
+    checkNotNull(argument);
     checkState(!map.containsKey(param));
 
-    map.put(param, arg);
+    map.put(param, argument);
   }
 
-  public ImmutableMap<Param, Arg> build() {
+  public ImmutableMap<Param, Argument> build() {
     return ImmutableMap.copyOf(map);
   }
 }

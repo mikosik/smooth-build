@@ -12,7 +12,7 @@ import org.smoothbuild.lang.function.base.Param;
 
 import com.google.common.collect.Sets;
 
-public class TypedParamsPoolTest {
+public class TypedParametersPoolTest {
   Param string = param(STRING, "string1", false);
   Param blob = param(BLOB, "blob", false);
 
@@ -21,7 +21,7 @@ public class TypedParamsPoolTest {
 
   Set<Param> optionalParams = Sets.newHashSet();
   Set<Param> requiredParams = Sets.newHashSet();
-  TypedParamsPool pool = new TypedParamsPool(optionalParams, requiredParams);
+  TypedParametersPool pool = new TypedParametersPool(optionalParams, requiredParams);
 
   @Test
   public void requiredParams() throws Exception {

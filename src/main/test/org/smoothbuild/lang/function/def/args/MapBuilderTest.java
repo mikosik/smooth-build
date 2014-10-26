@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.def.args.Arg.namedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -18,13 +18,13 @@ import org.smoothbuild.lang.function.base.Param;
 
 import com.google.common.collect.ImmutableMap;
 
-public class ParamToArgMapBuilderTest {
-  ParamToArgMapBuilder paramToArgMapBuilder = new ParamToArgMapBuilder();
+public class MapBuilderTest {
+  MapBuilder mapBuilder = new MapBuilder();
 
   @Test
   public void addingNullArgThrowsException() throws Exception {
     try {
-      paramToArgMapBuilder.add(param(STRING, "name", false), null);
+      mapBuilder.add(param(STRING, "name", false), null);
       fail("exception should be thrown");
     } catch (NullPointerException e) {
       // expected
@@ -34,7 +34,7 @@ public class ParamToArgMapBuilderTest {
   @Test
   public void addingNullParamThrowsException() throws Exception {
     try {
-      paramToArgMapBuilder.add(null, arg(STRING));
+      mapBuilder.add(null, arg(STRING));
       fail("exception should be thrown");
     } catch (NullPointerException e) {
       // expected
@@ -46,12 +46,12 @@ public class ParamToArgMapBuilderTest {
     String name = "name";
     Param param1 = param(STRING, name, false);
 
-    Arg arg1 = arg(STRING);
-    Arg arg2 = arg(FILE);
+    Argument argument1 = arg(STRING);
+    Argument argument2 = arg(FILE);
 
-    paramToArgMapBuilder.add(param1, arg1);
+    mapBuilder.add(param1, argument1);
     try {
-      paramToArgMapBuilder.add(param1, arg2);
+      mapBuilder.add(param1, argument2);
       fail("exception should be thrown");
     } catch (IllegalStateException e) {
       // expected
@@ -69,27 +69,28 @@ public class ParamToArgMapBuilderTest {
     Param param2 = param(STRING, name2, false);
     Param param3 = param(STRING, name3, false);
 
-    Arg arg1 = arg(STRING);
-    Arg arg2 = arg(STRING);
-    Arg arg3 = arg(STRING);
+    Argument argument1 = arg(STRING);
+    Argument argument2 = arg(STRING);
+    Argument argument3 = arg(STRING);
 
-    paramToArgMapBuilder.add(param1, arg1);
-    paramToArgMapBuilder.add(param2, arg2);
-    paramToArgMapBuilder.add(param3, arg3);
+    mapBuilder.add(param1, argument1);
+    mapBuilder.add(param2, argument2);
+    mapBuilder.add(param3, argument3);
 
-    assertThat(paramToArgMapBuilder.build()).isEqualTo(ImmutableMap.of(param1, arg1, param2, arg2,
-        param3, arg3));
+    assertThat(mapBuilder.build()).isEqualTo(ImmutableMap.of(param1, argument1, param2,
+        argument2,
+        param3, argument3));
   }
 
-  private static Arg arg(Type<?> type) {
+  private static Argument arg(Type<?> type) {
     return arg(type, "name");
   }
 
-  private static Arg arg(Type<?> type, String name) {
+  private static Argument arg(Type<?> type, String name) {
     return arg(1, type, name);
   }
 
-  private static Arg arg(int number, Type<?> type, String name) {
+  private static Argument arg(int number, Type<?> type, String name) {
     Expression<?> expression = mock(Expression.class);
     given(willReturn(type), expression).type();
 

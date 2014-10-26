@@ -13,11 +13,11 @@ import com.google.common.collect.Sets;
  * and 'Blob' as arguments of type 'File' can be assigned to 'Blob' param as
  * well.
  */
-public class TypedParamsPool {
+public class TypedParametersPool {
   private final Set<Param> optionalParams;
   private final Set<Param> requiredParams;
 
-  public TypedParamsPool(Set<Param> optionalParams, Set<Param> requiredParams) {
+  public TypedParametersPool(Set<Param> optionalParams, Set<Param> requiredParams) {
     this.optionalParams = optionalParams;
     this.requiredParams = requiredParams;
   }

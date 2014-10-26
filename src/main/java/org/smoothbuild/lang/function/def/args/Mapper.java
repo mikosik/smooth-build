@@ -23,102 +23,102 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
-public class ParamToArgMapper {
+public class Mapper {
   private final CodeLocation codeLocation;
   private final LoggedMessages messages;
   private final Function<?> function;
-  private final ParamsPool paramsPool;
-  private final Collection<Arg> allArguments;
+  private final ParametersPool parametersPool;
+  private final Collection<Argument> allArguments;
 
-  public ParamToArgMapper(CodeLocation codeLocation, LoggedMessages messages, Function<?> function,
-      Collection<Arg> args) {
+  public Mapper(CodeLocation codeLocation, LoggedMessages messages, Function<?> function,
+      Collection<Argument> arguments) {
     this.codeLocation = codeLocation;
     this.messages = messages;
     this.function = function;
-    this.paramsPool = new ParamsPool(function.params());
-    this.allArguments = args;
+    this.parametersPool = new ParametersPool(function.params());
+    this.allArguments = arguments;
   }
 
-  public ImmutableMap<Param, Arg> detectMapping() {
-    ImmutableList<Arg> namedArgs = Arg.filterNamed(allArguments);
+  public ImmutableMap<Param, Argument> detectMapping() {
+    ImmutableList<Argument> namedArguments = Argument.filterNamed(allArguments);
 
-    detectDuplicatedAndUnknownArgNames(namedArgs);
+    detectDuplicatedAndUnknownArgNames(namedArguments);
     if (messages.containsProblems()) {
       return null;
     }
 
-    ParamToArgMapBuilder paramToArgMapBuilder = new ParamToArgMapBuilder();
-    processNamedArguments(paramToArgMapBuilder, namedArgs);
+    MapBuilder mapBuilder = new MapBuilder();
+    processNamedArguments(mapBuilder, namedArguments);
     if (messages.containsProblems()) {
       return null;
     }
 
-    processNamelessArguments(paramToArgMapBuilder);
+    processNamelessArguments(mapBuilder);
     if (messages.containsProblems()) {
       return null;
     }
 
-    Set<Param> missingRequiredParams = paramsPool.allRequired();
+    Set<Param> missingRequiredParams = parametersPool.allRequired();
     if (missingRequiredParams.size() != 0) {
-      messages.log(new MissingRequiredArgsError(codeLocation, function, paramToArgMapBuilder,
+      messages.log(new MissingRequiredArgsError(codeLocation, function, mapBuilder,
           missingRequiredParams));
       return null;
     }
 
-    return paramToArgMapBuilder.build();
+    return mapBuilder.build();
   }
 
-  private void detectDuplicatedAndUnknownArgNames(Collection<Arg> namedArgs) {
+  private void detectDuplicatedAndUnknownArgNames(Collection<Argument> namedArguments) {
     Set<String> unusedNames = Sets.newHashSet(paramsToNames(function.params()));
     Set<String> usedNames = Sets.newHashSet();
-    for (Arg arg : namedArgs) {
-      if (arg.hasName()) {
-        String name = arg.name();
+    for (Argument argument : namedArguments) {
+      if (argument.hasName()) {
+        String name = argument.name();
         if (unusedNames.contains(name)) {
           unusedNames.remove(name);
           usedNames.add(name);
         } else if (usedNames.contains(name)) {
-          messages.log(new DuplicateArgNameError(arg));
+          messages.log(new DuplicateArgNameError(argument));
         } else {
-          messages.log(new UnknownParamNameError(function.name(), arg));
+          messages.log(new UnknownParamNameError(function.name(), argument));
         }
       }
     }
   }
 
-  private void processNamedArguments(ParamToArgMapBuilder paramToArgMapBuilder,
-      Collection<Arg> namedArgs) {
-    for (Arg arg : namedArgs) {
-      if (arg.hasName()) {
-        String name = arg.name();
-        Param param = paramsPool.take(name);
+  private void processNamedArguments(MapBuilder mapBuilder,
+      Collection<Argument> namedArguments) {
+    for (Argument argument : namedArguments) {
+      if (argument.hasName()) {
+        String name = argument.name();
+        Param param = parametersPool.take(name);
         Type<?> paramType = param.type();
-        if (!canConvert(arg.type(), paramType)) {
-          messages.log(new TypeMismatchError(arg, paramType));
+        if (!canConvert(argument.type(), paramType)) {
+          messages.log(new TypeMismatchError(argument, paramType));
         } else {
-          paramToArgMapBuilder.add(param, arg);
+          mapBuilder.add(param, argument);
         }
       }
     }
   }
 
-  private void processNamelessArguments(ParamToArgMapBuilder paramToArgMapBuilder) {
-    ImmutableMultimap<Type<?>, Arg> namelessArgs = Arg.filterNameless(allArguments);
+  private void processNamelessArguments(MapBuilder mapBuilder) {
+    ImmutableMultimap<Type<?>, Argument> namelessArgs = Argument.filterNameless(allArguments);
 
     for (Type<?> type : allTypes()) {
-      Collection<Arg> availableArgs = namelessArgs.get(type);
-      int argsSize = availableArgs.size();
+      Collection<Argument> availableArguments = namelessArgs.get(type);
+      int argsSize = availableArguments.size();
       if (0 < argsSize) {
-        TypedParamsPool availableTypedParams = paramsPool.assignableFrom(type);
+        TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
 
         if (argsSize == 1 && availableTypedParams.hasCandidate()) {
-          Arg onlyArg = availableArgs.iterator().next();
+          Argument onlyArgument = availableArguments.iterator().next();
           Param candidateParam = availableTypedParams.candidate();
-          paramToArgMapBuilder.add(candidateParam, onlyArg);
-          paramsPool.take(candidateParam);
+          mapBuilder.add(candidateParam, onlyArgument);
+          parametersPool.take(candidateParam);
         } else {
           AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
-              paramToArgMapBuilder.build(), availableArgs, availableTypedParams);
+              mapBuilder.build(), availableArguments, availableTypedParams);
           messages.log(error);
           return;
         }

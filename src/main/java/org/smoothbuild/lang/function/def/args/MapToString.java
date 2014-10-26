@@ -7,8 +7,8 @@ import java.util.Set;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.util.LineBuilder;
 
-public class ParamToArgMapToString {
-  public static String toString(Map<Param, Arg> paramToArgMap) {
+public class MapToString {
+  public static String toString(Map<Param, Argument> paramToArgMap) {
     int maxParamType = calculateLongestParamType(paramToArgMap.keySet());
     int maxParamName = calculateLongestParamName(paramToArgMap.keySet());
     int maxArgType = calculateLongestArgType(paramToArgMap.values());
@@ -16,10 +16,10 @@ public class ParamToArgMapToString {
     int maxNumber = calculateLongestArgNumber(paramToArgMap.values());
 
     LineBuilder builder = new LineBuilder();
-    for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
+    for (Map.Entry<Param, Argument> entry : paramToArgMap.entrySet()) {
       String paramPart = entry.getKey().toPaddedString(maxParamType, maxParamName);
-      Arg arg = entry.getValue();
-      String argPart = arg.toPaddedString(maxArgType, maxArgName, maxNumber);
+      Argument argument = entry.getValue();
+      String argPart = argument.toPaddedString(maxArgType, maxArgName, maxNumber);
       builder.addLine("  " + paramPart + " <- " + argPart);
     }
     return builder.build();
@@ -41,26 +41,26 @@ public class ParamToArgMapToString {
     return result;
   }
 
-  private static int calculateLongestArgType(Collection<Arg> args) {
+  private static int calculateLongestArgType(Collection<Argument> arguments) {
     int result = 0;
-    for (Arg arg : args) {
-      result = Math.max(result, arg.type().name().length());
+    for (Argument argument : arguments) {
+      result = Math.max(result, argument.type().name().length());
     }
     return result;
   }
 
-  private static int calculateLongestArgName(Collection<Arg> args) {
+  private static int calculateLongestArgName(Collection<Argument> arguments) {
     int result = 0;
-    for (Arg arg : args) {
-      result = Math.max(result, arg.nameSanitized().length());
+    for (Argument argument : arguments) {
+      result = Math.max(result, argument.nameSanitized().length());
     }
     return result;
   }
 
-  private static int calculateLongestArgNumber(Collection<Arg> args) {
+  private static int calculateLongestArgNumber(Collection<Argument> arguments) {
     int maxNumber = 0;
-    for (Arg arg : args) {
-      maxNumber = Math.max(maxNumber, arg.number());
+    for (Argument argument : arguments) {
+      maxNumber = Math.max(maxNumber, argument.number());
     }
     return Integer.toString(maxNumber).length();
   }
