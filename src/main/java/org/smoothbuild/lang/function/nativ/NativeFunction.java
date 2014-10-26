@@ -55,18 +55,20 @@ public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
   }
 
   @Override
-  public ImmutableList<? extends Expr<?>> dependencies(ImmutableMap<String, ? extends Expr<?>> args) {
+  public ImmutableList<? extends Expr<?>> dependencies(
+      ImmutableMap<String, ? extends Expr<?>> args) {
     return ImmutableList.copyOf(args.values());
   }
 
   @Override
   public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
-      CodeLocation codeLocation) {
-    return new NativeCallWorker<>(this, ImmutableList.copyOf(args.keySet()), codeLocation);
+      boolean isInternal, CodeLocation codeLocation) {
+    return new NativeCallWorker<>(this, ImmutableList.copyOf(args.keySet()), isInternal,
+        codeLocation);
   }
 
-  public T invoke(NativeApi nativeApi, ImmutableMap<String, SValue> args)
-      throws IllegalAccessException, InvocationTargetException {
+  public T invoke(NativeApi nativeApi, ImmutableMap<String, SValue> args) throws
+      IllegalAccessException, InvocationTargetException {
     return invoker.invoke(nativeApi, args);
   }
 }

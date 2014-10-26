@@ -38,9 +38,10 @@ public class DefinedFunction<T extends SValue> extends AbstractFunction<T> {
 
   @Override
   public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
-      CodeLocation codeLocation) {
+      boolean isInternal, CodeLocation codeLocation) {
     checkArgument(args.isEmpty(),
         "DefinedFunction.createWorker() cannot accept non-empty arguments");
+    checkArgument(!isInternal, "DefinedFunction.createWorker() cannot accept isInternal=true");
     return new VirtualWorker<T>(this, codeLocation);
   }
 }

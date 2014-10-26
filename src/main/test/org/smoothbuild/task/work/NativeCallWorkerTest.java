@@ -61,7 +61,7 @@ public class NativeCallWorkerTest {
       false));
 
   NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1,
-      ImmutableList.<String>of(), codeLocation(1));
+      ImmutableList.<String>of(), false, codeLocation(1));
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
@@ -69,7 +69,7 @@ public class NativeCallWorkerTest {
 
     String name = "param";
     NativeCallWorker<?> nativeCallTask = new NativeCallWorker<>(function1, ImmutableList.of(name),
-        codeLocation(1));
+        false, codeLocation(1));
 
     SString sstring = objectsDb.string("result");
     given(willReturn(sstring), invoker).invoke(nativeApi, ImmutableMap.<String, SValue>of(name,
@@ -92,8 +92,8 @@ public class NativeCallWorkerTest {
     ImmutableList<Param> params = ImmutableList.of();
     Signature<SString> signature = new Signature<>(STRING, name("name"), params);
     function1 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
-    nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList.<String>of(), codeLocation(
-        1));
+    nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList.<String>of(), false,
+        codeLocation(1));
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {
