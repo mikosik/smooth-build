@@ -61,7 +61,7 @@ public class ParametersPool {
   public Set<Parameter> allRequired() {
     Set<Parameter> result = Sets.newHashSet();
     for (TypedParametersPool typedParamPool : typePools.values()) {
-      Iterables.addAll(result, typedParamPool.requiredParams());
+      Iterables.addAll(result, typedParamPool.requiredParameters());
     }
     return result;
   }

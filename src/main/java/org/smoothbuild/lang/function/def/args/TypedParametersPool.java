@@ -22,11 +22,11 @@ public class TypedParametersPool {
     this.requiredParameters = requiredParameters;
   }
 
-  public Set<Parameter> optionalParams() {
+  public Set<Parameter> optionalParameters() {
     return optionalParameters;
   }
 
-  public Set<Parameter> requiredParams() {
+  public Set<Parameter> requiredParameters() {
     return requiredParameters;
   }
 
