@@ -3,13 +3,13 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
-public class TaskOutput<T extends SValue> {
+public class TaskOutput<T extends Value> {
   private final T returnValue;
   private final ImmutableList<Message> messages;
 

@@ -14,19 +14,19 @@ import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.base.SValueFactory;
+import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.ValueFactory;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 
 public class NativeApiImpl implements NativeApi {
   private final FileSystem projectFileSystem;
-  private final SValueFactory valueFactory;
+  private final ValueFactory valueFactory;
   private final TempDirectoryManager tempDirectoryManager;
   private final LoggedMessages messages;
 
   @Inject
-  public NativeApiImpl(@ProjectDir FileSystem fileSystem, SValueFactory valueFactory,
+  public NativeApiImpl(@ProjectDir FileSystem fileSystem, ValueFactory valueFactory,
       TempDirectoryManager tempDirectoryManager) {
     this.projectFileSystem = fileSystem;
     this.valueFactory = valueFactory;
@@ -39,7 +39,7 @@ public class NativeApiImpl implements NativeApi {
   }
 
   @Override
-  public <T extends SValue> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
     return valueFactory.arrayBuilder(arrayType);
   }
 

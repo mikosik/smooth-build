@@ -5,11 +5,11 @@ import com.google.inject.TypeLiteral;
 /**
  * Smooth type. Type in smooth language.
  */
-public class SType<T extends SValue> {
+public class SType<T extends Value> {
   private final String name;
-  private final TypeLiteral<? extends SValue> jType;
+  private final TypeLiteral<? extends Value> jType;
 
-  protected static <T extends SValue> SType<T> sType(String name, Class<T> clazz) {
+  protected static <T extends Value> SType<T> sType(String name, Class<T> clazz) {
     return new SType<>(name, TypeLiteral.get(clazz));
   }
 
@@ -22,7 +22,7 @@ public class SType<T extends SValue> {
     return name;
   }
 
-  public TypeLiteral<? extends SValue> jType() {
+  public TypeLiteral<? extends Value> jType() {
     return jType;
   }
 

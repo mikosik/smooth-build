@@ -18,7 +18,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
@@ -72,7 +72,7 @@ public class NativeCallWorkerTest {
         false, codeLocation(1));
 
     SString sstring = objectsDb.string("result");
-    given(willReturn(sstring), invoker).invoke(nativeApi, ImmutableMap.<String, SValue>of(name,
+    given(willReturn(sstring), invoker).invoke(nativeApi, ImmutableMap.<String, Value>of(name,
         argValue));
 
     TaskInput taskInput = TaskInput.fromValues(ImmutableList.of(argValue));
@@ -83,7 +83,7 @@ public class NativeCallWorkerTest {
   @Test
   public void null_result_is_logged_when_function_has_non_void_return_type() throws Exception {
     given(willReturn(null), invoker).invoke(nativeApi, Empty.stringValueMap());
-    nativeCallWorker.execute(TaskInput.fromValues(Empty.svalueList()), nativeApi);
+    nativeCallWorker.execute(TaskInput.fromValues(Empty.valueList()), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(NullResultError.class);
   }
 
@@ -103,7 +103,7 @@ public class NativeCallWorkerTest {
       }
     }, invoker).invoke(nativeApi, Empty.stringValueMap());
 
-    nativeCallWorker.execute(TaskInput.fromValues(Empty.svalueList()), nativeApi);
+    nativeCallWorker.execute(TaskInput.fromValues(Empty.valueList()), nativeApi);
 
     nativeApi.loggedMessages().assertContainsOnly(CodeMessage.class);
   }
@@ -141,7 +141,7 @@ public class NativeCallWorkerTest {
   private void assertExceptionIsLoggedAsProblem(Throwable thrown,
       Class<? extends Message> expected) throws Exception {
     given(willThrow(thrown), invoker).invoke(nativeApi, Empty.stringValueMap());
-    nativeCallWorker.execute(TaskInput.fromValues(Empty.svalueList()), nativeApi);
+    nativeCallWorker.execute(TaskInput.fromValues(Empty.valueList()), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(expected);
   }
 }

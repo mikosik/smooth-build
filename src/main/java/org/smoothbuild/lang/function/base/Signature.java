@@ -3,14 +3,14 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * Function's signature.
  */
-public class Signature<T extends SValue> {
+public class Signature<T extends Value> {
   private final SType<T> type;
   private final Name name;
   private final ImmutableList<Param> params;

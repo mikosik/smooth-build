@@ -20,7 +20,7 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValueFactory;
+import org.smoothbuild.lang.base.ValueFactory;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.base.Predicate;
@@ -28,10 +28,10 @@ import com.google.common.base.Predicate;
 public class Unzipper {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer;
-  private final SValueFactory valueFactory;
+  private final ValueFactory valueFactory;
   private DuplicatesDetector<Path> duplicatesDetector;
 
-  public Unzipper(SValueFactory valueFactory) {
+  public Unzipper(ValueFactory valueFactory) {
     this.valueFactory = valueFactory;
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }

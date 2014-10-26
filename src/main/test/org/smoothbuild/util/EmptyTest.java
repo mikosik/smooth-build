@@ -5,7 +5,7 @@ import static org.testory.Testory.mock;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
@@ -28,7 +28,7 @@ public class EmptyTest {
   @Test
   public void empty_string_value_map_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<String, SValue> map = Empty.stringValueMap();
+    ImmutableMap<String, Value> map = Empty.stringValueMap();
   }
 
   @Test
@@ -108,22 +108,22 @@ public class EmptyTest {
     assertThat(Empty.paramList()).isSameAs(Empty.paramList());
   }
 
-  // svalueList()
+  // valueList()
 
   @Test
-  public void empty_svalue_list_is_empty() {
-    assertThat(Empty.svalueList()).isEmpty();
+  public void empty_value_list_is_empty() {
+    assertThat(Empty.valueList()).isEmpty();
   }
 
   @Test
-  public void empty_svalue_list_is_immutable() {
+  public void empty_value_list_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableList<SValue> list = Empty.svalueList();
+    ImmutableList<Value> list = Empty.valueList();
   }
 
   @Test
-  public void empty_svalue_list_always_returns_the_same_object() {
-    assertThat(Empty.svalueList()).isSameAs(Empty.svalueList());
+  public void empty_value_list_always_returns_the_same_object() {
+    assertThat(Empty.valueList()).isSameAs(Empty.valueList());
   }
 
   // exprList()

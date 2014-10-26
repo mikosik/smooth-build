@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
@@ -80,7 +80,7 @@ public class TaskWorkerTest {
     thenReturned(codeLocation);
   }
 
-  private static <T extends SValue> Closure $myTask(final SType<T> type, final String name,
+  private static <T extends Value> Closure $myTask(final SType<T> type, final String name,
       final boolean isInternal, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
@@ -90,7 +90,7 @@ public class TaskWorkerTest {
     };
   }
 
-  public static class MyTaskWorker<T extends SValue> extends TaskWorker<T> {
+  public static class MyTaskWorker<T extends Value> extends TaskWorker<T> {
     public MyTaskWorker(HashCode hash, SType<T> type, String name, boolean isInternal,
         CodeLocation codeLocation) {
       super(hash, type, name, isInternal, true, codeLocation);

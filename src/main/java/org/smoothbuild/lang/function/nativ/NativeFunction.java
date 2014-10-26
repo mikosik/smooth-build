@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expr;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
@@ -26,7 +26,7 @@ import com.google.common.hash.Hasher;
  *
  * @see DefinedFunction
  */
-public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
+public class NativeFunction<T extends Value> extends AbstractFunction<T> {
   private final HashCode hash;
   private final Invoker<T> invoker;
   private final boolean isCacheable;
@@ -67,7 +67,7 @@ public class NativeFunction<T extends SValue> extends AbstractFunction<T> {
         codeLocation);
   }
 
-  public T invoke(NativeApi nativeApi, ImmutableMap<String, SValue> args) throws
+  public T invoke(NativeApi nativeApi, ImmutableMap<String, Value> args) throws
       IllegalAccessException, InvocationTargetException {
     return invoker.invoke(nativeApi, args);
   }

@@ -2,8 +2,8 @@ package org.smoothbuild.lang.base;
 
 import org.smoothbuild.io.fs.base.Path;
 
-public interface SValueFactory {
-  public <T extends SValue> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType);
+public interface ValueFactory {
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType);
 
   public SFile file(Path path, Blob content);
 

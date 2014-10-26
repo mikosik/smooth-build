@@ -21,7 +21,7 @@ import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.STypes;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 
 import com.google.common.hash.HashCode;
 import com.google.inject.Guice;
@@ -235,7 +235,7 @@ public class ArrayTest {
     }
 
     @Override
-    public SType<? extends SValue> type() {
+    public SType<? extends Value> type() {
       return STypes.NOTHING;
     }
   }

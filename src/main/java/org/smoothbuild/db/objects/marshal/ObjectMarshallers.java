@@ -20,7 +20,7 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableMap;
@@ -83,7 +83,7 @@ public class ObjectMarshallers {
     return fileMarshaller;
   }
 
-  public <T extends SValue> ArrayMarshaller<T> arrayMarshaller(ArrayType<T> arrayType) {
+  public <T extends Value> ArrayMarshaller<T> arrayMarshaller(ArrayType<T> arrayType) {
     /*
      * Cast is safe as readersMap is immutable and constructed in proper way.
      */
@@ -95,7 +95,7 @@ public class ObjectMarshallers {
     return reader;
   }
 
-  public <T extends SValue> ObjectMarshaller<T> marshaller(SType<T> type) {
+  public <T extends Value> ObjectMarshaller<T> marshaller(SType<T> type) {
     /*
      * Cast is safe as readersMap is immutable and constructed in proper way.
      */

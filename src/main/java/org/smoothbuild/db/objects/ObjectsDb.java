@@ -12,12 +12,12 @@ import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
-import org.smoothbuild.lang.base.SValueFactory;
+import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.ValueFactory;
 
 import com.google.common.hash.HashCode;
 
-public class ObjectsDb implements SValueFactory {
+public class ObjectsDb implements ValueFactory {
   private final ObjectMarshallers objectMarshallers;
   private final ObjectBuilders objectBuilders;
 
@@ -28,7 +28,7 @@ public class ObjectsDb implements SValueFactory {
   }
 
   @Override
-  public <T extends SValue> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
     return objectBuilders.arrayBuilder(arrayType);
   }
 
@@ -47,7 +47,7 @@ public class ObjectsDb implements SValueFactory {
     return objectMarshallers.stringMarshaller().write(string);
   }
 
-  public <T extends SValue> T read(SType<T> type, HashCode hash) {
+  public <T extends Value> T read(SType<T> type, HashCode hash) {
     return objectMarshallers.marshaller(type).read(hash);
   }
 }

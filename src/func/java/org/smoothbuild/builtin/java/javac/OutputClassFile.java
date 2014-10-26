@@ -10,16 +10,16 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValueFactory;
+import org.smoothbuild.lang.base.ValueFactory;
 import org.smoothbuild.util.ForwardingOutputStream;
 
 public class OutputClassFile extends SimpleJavaFileObject {
   private final ArrayBuilder<SFile> fileArrayBuilder;
   private final Path path;
   private final BlobBuilder contentBuilder;
-  private final SValueFactory valueFactory;
+  private final ValueFactory valueFactory;
 
-  public OutputClassFile(ArrayBuilder<SFile> fileArrayBuilder, Path path, SValueFactory valueFactory) {
+  public OutputClassFile(ArrayBuilder<SFile> fileArrayBuilder, Path path, ValueFactory valueFactory) {
     super(URI.create("class:///" + path.value()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;

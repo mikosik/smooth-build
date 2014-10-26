@@ -98,7 +98,7 @@ public class STypes {
     return RESULT_JTYPE_TO_STYPE.get(jType);
   }
 
-  public static <T extends SValue> ArrayType<T> arrayTypeContaining(SType<T> elemType) {
+  public static <T extends Value> ArrayType<T> arrayTypeContaining(SType<T> elemType) {
     /*
      * Cast is safe as ELEM_TYPE_TO_ARRAY_TYPE is immutable and it is
      * initialized with proper mappings.

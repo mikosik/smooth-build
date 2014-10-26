@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.testory.Closure;
@@ -141,7 +141,7 @@ public class TaskOutputTest {
     thenReturned(new TaskOutput<>(sstring, messages).hashCode());
   }
 
-  private Closure newTaskOutput(final SValue result, final ImmutableList<Message> messages) {
+  private Closure newTaskOutput(final Value result, final ImmutableList<Message> messages) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {

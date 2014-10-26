@@ -9,14 +9,14 @@ import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValueFactory;
+import org.smoothbuild.lang.base.ValueFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjects {
   public static Multimap<String, JavaFileObject> packagedJavaFileObjects(
-      SValueFactory valueFactory, Iterable<Blob> libraryJars) {
+      ValueFactory valueFactory, Iterable<Blob> libraryJars) {
     Unjarer unjarer = new Unjarer(valueFactory);
     Multimap<String, JavaFileObject> result = HashMultimap.create();
 

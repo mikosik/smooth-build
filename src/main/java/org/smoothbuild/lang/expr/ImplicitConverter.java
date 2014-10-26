@@ -5,13 +5,12 @@ import static org.smoothbuild.lang.base.Conversions.convertFunctionName;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.parse.Builtin;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ImplicitConverter {
@@ -22,7 +21,7 @@ public class ImplicitConverter {
     this.builtinModule = builtinModule;
   }
 
-  public <T extends SValue> Expr<T> apply(SType<T> destinationType, Expr<?> source) {
+  public <T extends Value> Expr<T> apply(SType<T> destinationType, Expr<?> source) {
     SType<?> sourceType = source.type();
     if (sourceType == destinationType) {
       /*

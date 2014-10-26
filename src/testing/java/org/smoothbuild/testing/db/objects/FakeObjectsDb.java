@@ -16,7 +16,7 @@ import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.util.Streams;
 
@@ -39,7 +39,7 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends SValue> Array<T> array(ArrayType<T> type, T... elements) {
+  public <T extends Value> Array<T> array(ArrayType<T> type, T... elements) {
     ArrayBuilder<T> arrayBuilder = arrayBuilder(type);
     for (T elem : elements) {
       arrayBuilder.add(elem);

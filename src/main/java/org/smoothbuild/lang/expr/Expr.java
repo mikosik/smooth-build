@@ -3,7 +3,7 @@ package org.smoothbuild.lang.expr;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.SType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
 
@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * Expression in smooth language.
  */
-public abstract class Expr<T extends SValue> {
+public abstract class Expr<T extends Value> {
   private final SType<T> type;
   private final CodeLocation codeLocation;
   private final ImmutableList<? extends Expr<?>> dependencies;

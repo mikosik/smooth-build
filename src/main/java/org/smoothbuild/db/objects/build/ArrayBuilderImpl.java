@@ -9,11 +9,11 @@ import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayType;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 
 import com.google.common.collect.Lists;
 
-public class ArrayBuilderImpl<T extends SValue> implements ArrayBuilder<T> {
+public class ArrayBuilderImpl<T extends Value> implements ArrayBuilder<T> {
   private final ArrayType<T> arrayType;
   private final ArrayMarshaller<T> marshaller;
   private final List<T> result;

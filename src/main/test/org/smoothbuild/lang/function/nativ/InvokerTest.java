@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import org.junit.Test;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.SValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableMap;
@@ -33,7 +33,7 @@ public class InvokerTest {
     Method method = InvokerTest.class.getMethod("myMethod", NativeApi.class, Parameters.class);
 
     Invoker<?> invoker = new Invoker<>(method, new ArgsCreator(Parameters.class));
-    ImmutableMap<String, SValue> valuesMap = ImmutableMap.<String, SValue> of("stringParam", value);
+    ImmutableMap<String, Value> valuesMap = ImmutableMap.<String, Value> of("stringParam", value);
     Object result = invoker.invoke(nativeApi, valuesMap);
 
     assertThat(result).isSameAs(value);
