@@ -11,9 +11,9 @@ import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableMap;
 
-public class ArgsCreatorTest {
+public class ArgumentsCreatorTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final ArgsCreator argsCreator = new ArgsCreator(MyParametersInterface.class);
+  private final ArgumentsCreator argumentsCreator = new ArgumentsCreator(MyParametersInterface.class);
   private SString sstring;
   private MyParametersInterface args;
 
@@ -34,7 +34,7 @@ public class ArgsCreatorTest {
   }
 
   private MyParametersInterface createArgs(ImmutableMap<String, Value> map) {
-    return (MyParametersInterface) argsCreator.create(map);
+    return (MyParametersInterface) argumentsCreator.create(map);
   }
 
   public interface MyParametersInterface {

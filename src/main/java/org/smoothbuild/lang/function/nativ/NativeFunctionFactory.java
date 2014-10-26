@@ -69,8 +69,8 @@ public class NativeFunctionFactory {
 
   private static Invoker<?> createInvoker(Method method, Class<?> paramsInterface) throws
       NativeImplementationException {
-    ArgsCreator argsCreator = new ArgsCreator(paramsInterface);
-    return new Invoker<>(method, argsCreator);
+    ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
+    return new Invoker<>(method, argumentsCreator);
   }
 
   private static boolean isCacheable(Method method) {
