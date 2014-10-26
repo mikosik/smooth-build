@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.CallExpr;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
@@ -30,9 +30,9 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function<?> function) {
-    Expr<?> expr = new CallExpr<>(function, false, CodeLocation.commandLine(),
+    Expression<?> expression = new CallExpr<>(function, false, CodeLocation.commandLine(),
         Empty.stringExprMap());
-    artifacts.put(function.name(), taskGraph.createTasks(expr));
+    artifacts.put(function.name(), taskGraph.createTasks(expression));
   }
 
   public void runBuild() {

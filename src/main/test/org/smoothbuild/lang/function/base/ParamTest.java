@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.hash.HashCode;
@@ -82,8 +82,8 @@ public class ParamTest {
 
   @Test
   public void to_padded_string() throws Exception {
-    Expr<?> expr = mock(Expr.class);
-    given(willReturn(STRING), expr).type();
+    Expression<?> expression = mock(Expression.class);
+    given(willReturn(STRING), expression).type();
 
     Param param = param(STRING, "myName", false);
     String actual = param.toPaddedString(10, 13);
@@ -93,8 +93,8 @@ public class ParamTest {
 
   @Test
   public void to_padded_string_for_short_limits() throws Exception {
-    Expr<?> expr = mock(Expr.class);
-    given(willReturn(STRING), expr).type();
+    Expression<?> expression = mock(Expression.class);
+    given(willReturn(STRING), expression).type();
 
     Param param = param(STRING, "myName", false);
     String actual = param.toPaddedString(1, 1);

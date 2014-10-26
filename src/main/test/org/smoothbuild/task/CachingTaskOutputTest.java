@@ -20,7 +20,7 @@ import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskInput;
@@ -141,11 +141,11 @@ public class CachingTaskOutputTest {
     return builder.build();
   }
 
-  private static class CountingExpr extends Expr<SString> {
+  private static class CountingExpr extends Expression<SString> {
     private final AtomicInteger counter;
     private final boolean isCacheable;
 
-    public CountingExpr(AtomicInteger counter, ImmutableList<? extends Expr<?>> dependencies,
+    public CountingExpr(AtomicInteger counter, ImmutableList<? extends Expression<?>> dependencies,
         boolean isCacheable) {
       super(STRING, dependencies, CL);
       this.counter = counter;

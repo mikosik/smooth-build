@@ -22,7 +22,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.args.Arg;
 import org.smoothbuild.lang.function.def.args.TypedParamsPool;
@@ -75,8 +75,8 @@ public class AmbiguousNamelessArgsErrorTest {
     assertThat(error.toString()).isEqualTo(builder.build());
   }
 
-  private Expr<?> expr(Type<?> type) {
-    Expr<?> result = mock(Expr.class);
+  private Expression<?> expr(Type<?> type) {
+    Expression<?> result = mock(Expression.class);
     given(willReturn(type), result).type();
     return result;
   }

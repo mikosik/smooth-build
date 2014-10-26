@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
 
@@ -16,9 +16,9 @@ public interface Function<T extends Value> {
 
   public ImmutableList<Param> params();
 
-  public ImmutableList<? extends Expr<?>> dependencies(
-      ImmutableMap<String, ? extends Expr<?>> args);
+  public ImmutableList<? extends Expression<?>> dependencies(
+      ImmutableMap<String, ? extends Expression<?>> args);
 
-  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
+  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expression<?>> args,
       boolean isInternal, CodeLocation codeLocation);
 }

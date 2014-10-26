@@ -16,11 +16,11 @@ import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 
-public class ExprTest {
+public class ExpressionTest {
   Type<SString> type = STRING;
   CodeLocation codeLocation;
 
-  MyExpr expr;
+  MyExpression expr;
 
   @Before
   public void before() {
@@ -41,14 +41,14 @@ public class ExprTest {
 
   @Test
   public void type() throws Exception {
-    given(expr = new MyExpr(type, codeLocation));
+    given(expr = new MyExpression(type, codeLocation));
     when(expr.type());
     thenReturned(type);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(expr = new MyExpr(type, codeLocation));
+    given(expr = new MyExpression(type, codeLocation));
     when(expr.codeLocation());
     thenReturned(codeLocation);
   }
@@ -57,13 +57,13 @@ public class ExprTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new MyExpr(type, codeLocation);
+        return new MyExpression(type, codeLocation);
       }
     };
   }
 
-  public static class MyExpr extends Expr<SString> {
-    public MyExpr(Type<SString> type, CodeLocation codeLocation) {
+  public static class MyExpression extends Expression<SString> {
+    public MyExpression(Type<SString> type, CodeLocation codeLocation) {
       super(type, Empty.exprList(), codeLocation);
     }
 

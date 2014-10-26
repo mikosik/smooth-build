@@ -7,13 +7,13 @@ import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableMap;
 
-public class CallExpr<T extends Value> extends Expr<T> {
+public class CallExpr<T extends Value> extends Expression<T> {
   private final Function<T> function;
   private final boolean isGenerated;
-  private final ImmutableMap<String, ? extends Expr<?>> args;
+  private final ImmutableMap<String, ? extends Expression<?>> args;
 
   public CallExpr(Function<T> function, boolean isGenerated, CodeLocation codeLocation,
-      ImmutableMap<String, ? extends Expr<?>> args) {
+      ImmutableMap<String, ? extends Expression<?>> args) {
     super(function.type(), function.dependencies(args), codeLocation);
     this.function = function;
     this.isGenerated = isGenerated;

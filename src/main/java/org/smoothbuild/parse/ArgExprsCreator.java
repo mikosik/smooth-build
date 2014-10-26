@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.expr.ImplicitConverter;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.def.args.Arg;
@@ -25,7 +25,7 @@ public class ArgExprsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public ImmutableMap<String, Expr<?>> createArgExprs(CodeLocation codeLocation,
+  public ImmutableMap<String, Expression<?>> createArgExprs(CodeLocation codeLocation,
       LoggedMessages messages, Function<?> function, Collection<Arg> args) {
     ParamToArgMapper mapper = new ParamToArgMapper(codeLocation, messages, function, args);
     Map<Param, Arg> paramToArgMap = mapper.detectMapping();
@@ -33,14 +33,14 @@ public class ArgExprsCreator {
     return convert(paramToArgMap);
   }
 
-  private ImmutableMap<String, Expr<?>> convert(Map<Param, Arg> paramToArgMap) {
-    Builder<String, Expr<?>> builder = ImmutableMap.builder();
+  private ImmutableMap<String, Expression<?>> convert(Map<Param, Arg> paramToArgMap) {
+    Builder<String, Expression<?>> builder = ImmutableMap.builder();
 
     for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
       Param param = entry.getKey();
       Arg arg = entry.getValue();
-      Expr<?> expr = implicitConverter.apply(param.type(), arg.expr());
-      builder.put(param.name(), expr);
+      Expression<?> expression = implicitConverter.apply(param.type(), arg.expr());
+      builder.put(param.name(), expression);
     }
 
     return builder.build();

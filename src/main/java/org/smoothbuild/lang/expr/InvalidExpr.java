@@ -9,7 +9,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
-public class InvalidExpr<T extends Value> extends Expr<T> {
+public class InvalidExpr<T extends Value> extends Expression<T> {
   private final Type<T> type;
 
   public InvalidExpr(Type<T> type, CodeLocation codeLocation) {

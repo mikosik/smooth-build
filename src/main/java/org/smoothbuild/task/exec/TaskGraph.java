@@ -5,7 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
@@ -22,21 +22,21 @@ public class TaskGraph {
     this.rootTasks = Lists.newArrayList();
   }
 
-  public <T extends Value> Task<T> createTasks(Expr<T> expr) {
-    Task<T> root = createTasksImpl(expr);
+  public <T extends Value> Task<T> createTasks(Expression<T> expression) {
+    Task<T> root = createTasksImpl(expression);
     rootTasks.add(root);
     return root;
   }
 
-  private <T extends Value> Task<T> createTasksImpl(Expr<T> expr) {
-    ImmutableList<Task<?>> dependencies = createTasksImpl(expr.dependencies());
-    return new Task<>(expr.createWorker(), dependencies);
+  private <T extends Value> Task<T> createTasksImpl(Expression<T> expression) {
+    ImmutableList<Task<?>> dependencies = createTasksImpl(expression.dependencies());
+    return new Task<>(expression.createWorker(), dependencies);
   }
 
-  private ImmutableList<Task<?>> createTasksImpl(ImmutableList<? extends Expr<?>> exprs) {
+  private ImmutableList<Task<?>> createTasksImpl(ImmutableList<? extends Expression<?>> exprs) {
     Builder<Task<?>> builder = ImmutableList.builder();
-    for (Expr<?> expr : exprs) {
-      Task<?> executor = createTasksImpl(expr);
+    for (Expression<?> expression : exprs) {
+      Task<?> executor = createTasksImpl(expression);
       builder.add(executor);
     }
     return builder.build();

@@ -9,10 +9,10 @@ import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 
-public class ArrayExpr<T extends Value> extends Expr<Array<T>> {
+public class ArrayExpr<T extends Value> extends Expression<Array<T>> {
   private final ArrayType<T> arrayType;
 
-  public ArrayExpr(ArrayType<T> arrayType, ImmutableList<? extends Expr<T>> elements,
+  public ArrayExpr(ArrayType<T> arrayType, ImmutableList<? extends Expression<T>> elements,
       CodeLocation codeLocation) {
     super(arrayType, elements, codeLocation);
     this.arrayType = arrayType;

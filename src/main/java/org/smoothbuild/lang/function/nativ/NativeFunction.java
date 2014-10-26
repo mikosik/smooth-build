@@ -8,7 +8,7 @@ import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -55,13 +55,13 @@ public class NativeFunction<T extends Value> extends AbstractFunction<T> {
   }
 
   @Override
-  public ImmutableList<? extends Expr<?>> dependencies(
-      ImmutableMap<String, ? extends Expr<?>> args) {
+  public ImmutableList<? extends Expression<?>> dependencies(
+      ImmutableMap<String, ? extends Expression<?>> args) {
     return ImmutableList.copyOf(args.values());
   }
 
   @Override
-  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
+  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expression<?>> args,
       boolean isInternal, CodeLocation codeLocation) {
     return new NativeCallWorker<>(this, ImmutableList.copyOf(args.keySet()), isInternal,
         codeLocation);
