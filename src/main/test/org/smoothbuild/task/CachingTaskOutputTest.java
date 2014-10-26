@@ -19,7 +19,7 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpression;
-import org.smoothbuild.lang.expr.ConstantExpr;
+import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
@@ -129,8 +129,8 @@ public class CachingTaskOutputTest {
     }
   }
 
-  private ConstantExpr<SString> stringExpr(String string) {
-    return new ConstantExpr<>(STRING, objectsDb.string(string), CL);
+  private ConstantExpression<SString> stringExpr(String string) {
+    return new ConstantExpression<>(STRING, objectsDb.string(string), CL);
   }
 
   private Array<SString> stringArray(String... strings) {
