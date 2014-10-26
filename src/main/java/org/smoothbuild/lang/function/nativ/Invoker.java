@@ -11,16 +11,16 @@ import org.smoothbuild.lang.base.Value;
 
 public class Invoker<T extends Value> {
   private final Method method;
-  private final ArgsCreator argsCreator;
+  private final ArgumentsCreator argumentsCreator;
 
-  public Invoker(Method method, ArgsCreator argsCreator) {
+  public Invoker(Method method, ArgumentsCreator argumentsCreator) {
     this.method = checkNotNull(method);
-    this.argsCreator = checkNotNull(argsCreator);
+    this.argumentsCreator = checkNotNull(argumentsCreator);
   }
 
   public T invoke(NativeApi nativeApi, Map<String, Value> args) throws IllegalAccessException,
       InvocationTargetException {
-    Object arguments = argsCreator.create(args);
+    Object arguments = argumentsCreator.create(args);
     Object[] javaArguments = new Object[] { nativeApi, arguments };
 
     @SuppressWarnings("unchecked")
