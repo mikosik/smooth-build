@@ -20,7 +20,7 @@ import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.CallExpression;
-import org.smoothbuild.lang.expr.ConstantExpr;
+import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.InvalidExpression;
 import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExprError;
@@ -63,7 +63,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_string_literal_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpr<>(STRING, sstring, location));
+    given(stringExpression = new ConstantExpression<>(STRING, sstring, location));
     given(task = taskGraph.createTasks(stringExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));
@@ -88,7 +88,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_array_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpr<>(STRING, sstring, location));
+    given(stringExpression = new ConstantExpression<>(STRING, sstring, location));
     given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
@@ -98,7 +98,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_call_expression_using_defined_function() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpr<>(STRING, sstring, location));
+    given(stringExpression = new ConstantExpression<>(STRING, sstring, location));
     given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction<>(signature, stringExpression));
     given(callExpression = new CallExpression<>(function, false, location, Empty.stringExprMap()));
@@ -111,7 +111,7 @@ public class ExpressionExecutionTest {
   public void executes_native_function_that_returns_its_argument() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(function = createNativeFunction(Hash.integer(33), SmoothModule.class.getMethods()[0]));
-    given(stringExpression = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
+    given(stringExpression = new ConstantExpression<>(STRING, sstring, codeLocation(2)));
     given(callExpression = new CallExpression<>(function, false, location, ImmutableMap.of("param",
         stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
@@ -134,7 +134,7 @@ public class ExpressionExecutionTest {
   public void execution_fails_when_native_function_throws_runtime_exception() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(function = createNativeFunction(Hash.integer(33), SmoothModule2.class.getMethods()[0]));
-    given(stringExpression = new ConstantExpr<>(STRING, sstring, codeLocation(2)));
+    given(stringExpression = new ConstantExpression<>(STRING, sstring, codeLocation(2)));
     given(callExpression = new CallExpression<>(function, false, location, ImmutableMap.of("param",
         stringExpression)));
     given(task = taskGraph.createTasks(callExpression));

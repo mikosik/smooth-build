@@ -9,10 +9,10 @@ import org.smoothbuild.task.work.ConstantWorker;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
-public class ConstantExpr<T extends Value> extends Expression<T> {
+public class ConstantExpression<T extends Value> extends Expression<T> {
   private final T value;
 
-  public ConstantExpr(Type<T> type, T value, CodeLocation codeLocation) {
+  public ConstantExpression(Type<T> type, T value, CodeLocation codeLocation) {
     super(type, Empty.exprList(), codeLocation);
     this.value = checkNotNull(value);
   }

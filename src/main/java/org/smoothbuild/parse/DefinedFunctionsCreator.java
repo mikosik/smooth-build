@@ -39,7 +39,7 @@ import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.CallExpression;
-import org.smoothbuild.lang.expr.ConstantExpr;
+import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.expr.InvalidExpression;
@@ -322,7 +322,7 @@ public class DefinedFunctionsCreator {
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         SString stringValue = objectsDb.string(unescaped(string));
-        return new ConstantExpr<>(STRING, stringValue, locationOf(stringToken.getSymbol()));
+        return new ConstantExpression<>(STRING, stringValue, locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.log(new CodeMessage(ERROR, location, e.getMessage()));
