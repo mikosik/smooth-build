@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
@@ -21,23 +21,23 @@ import com.google.common.collect.ImmutableMap;
  * @see NativeFunction
  */
 public class DefinedFunction<T extends Value> extends AbstractFunction<T> {
-  private final Expr<T> root;
+  private final Expression<T> root;
 
-  public DefinedFunction(Signature<T> signature, Expr<T> root) {
+  public DefinedFunction(Signature<T> signature, Expression<T> root) {
     super(signature);
     this.root = checkNotNull(root);
   }
 
   @Override
-  public ImmutableList<? extends Expr<?>> dependencies(
-      ImmutableMap<String, ? extends Expr<?>> args) {
+  public ImmutableList<? extends Expression<?>> dependencies(
+      ImmutableMap<String, ? extends Expression<?>> args) {
     checkArgument(args.isEmpty(),
         "DefinedFunction.dependencies() cannot accept non-empty arguments");
     return ImmutableList.of(root);
   }
 
   @Override
-  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expr<?>> args,
+  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expression<?>> args,
       boolean isInternal, CodeLocation codeLocation) {
     checkArgument(args.isEmpty(),
         "DefinedFunction.createWorker() cannot accept non-empty arguments");

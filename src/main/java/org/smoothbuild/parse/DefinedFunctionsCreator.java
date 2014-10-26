@@ -40,7 +40,7 @@ import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.expr.InvalidExpr;
 import org.smoothbuild.lang.function.base.Function;
@@ -118,19 +118,19 @@ public class DefinedFunctionsCreator {
     }
 
     public DefinedFunction<?> build(FunctionContext function) {
-      Expr<?> expr = build(function.pipe());
-      return buildDefinedFunction(function, expr);
+      Expression<?> expression = build(function.pipe());
+      return buildDefinedFunction(function, expression);
     }
 
     private <T extends Value> DefinedFunction<T> buildDefinedFunction(FunctionContext function,
-        Expr<T> expr) {
+        Expression<T> expression) {
       Name name = name(function.functionName().getText());
-      Signature<T> signature = new Signature<>(expr.type(), name, Empty.paramList());
-      return new DefinedFunction<>(signature, expr);
+      Signature<T> signature = new Signature<>(expression.type(), name, Empty.paramList());
+      return new DefinedFunction<>(signature, expression);
     }
 
-    private Expr<?> build(PipeContext pipe) {
-      Expr<?> result = build(pipe.expression());
+    private Expression<?> build(PipeContext pipe) {
+      Expression<?> result = build(pipe.expression());
       List<CallContext> elements = pipe.call();
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
@@ -143,7 +143,7 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
-    private Expr<?> build(ExpressionContext expression) {
+    private Expression<?> build(ExpressionContext expression) {
       if (expression.array() != null) {
         return build(expression.array());
       }
@@ -157,52 +157,52 @@ public class DefinedFunctionsCreator {
           "Illegal parse tree: " + ExpressionContext.class.getSimpleName() + " without children.");
     }
 
-    private Expr<?> build(ArrayContext list) {
+    private Expression<?> build(ArrayContext list) {
       List<ArrayElemContext> elems = list.arrayElem();
-      ImmutableList<Expr<?>> elemExprs = build(elems);
+      ImmutableList<Expression<?>> elemExpressions = build(elems);
 
       CodeLocation location = locationOf(list);
-      Type<?> elemType = commonSuperType(elems, elemExprs, location);
+      Type<?> elemType = commonSuperType(elems, elemExpressions, location);
 
       if (elemType != null) {
-        return buildArray(elemType, elemExprs, location);
+        return buildArray(elemType, elemExpressions, location);
       } else {
         return new InvalidExpr<>(NIL, location);
       }
     }
 
-    private <T extends Value> Expr<Array<T>> buildArray(Type<T> elemType,
-        ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
+    private <T extends Value> Expression<Array<T>> buildArray(Type<T> elemType,
+        ImmutableList<Expression<?>> elemExpressions, CodeLocation location) {
       ArrayType<T> arrayType = Types.arrayTypeContaining(elemType);
-      ImmutableList<Expr<T>> convertedExpr = convertExprs(elemType, elemExprs);
-      return new ArrayExpr<>(arrayType, convertedExpr, location);
+      ImmutableList<Expression<T>> convertedExpression = convertExprs(elemType, elemExpressions);
+      return new ArrayExpr<>(arrayType, convertedExpression, location);
     }
 
-    public <T extends Value> ImmutableList<Expr<T>> convertExprs(Type<T> type,
-        Iterable<? extends Expr<?>> expressions) {
-      ImmutableList.Builder<Expr<T>> builder = ImmutableList.builder();
-      for (Expr<?> expr : expressions) {
-        builder.add(implicitConverter.apply(type, expr));
+    public <T extends Value> ImmutableList<Expression<T>> convertExprs(Type<T> type,
+        Iterable<? extends Expression<?>> expressions) {
+      ImmutableList.Builder<Expression<T>> builder = ImmutableList.builder();
+      for (Expression<?> expression : expressions) {
+        builder.add(implicitConverter.apply(type, expression));
       }
       return builder.build();
     }
 
-    private ImmutableList<Expr<?>> build(List<ArrayElemContext> elems) {
-      Builder<Expr<?>> builder = ImmutableList.builder();
+    private ImmutableList<Expression<?>> build(List<ArrayElemContext> elems) {
+      Builder<Expression<?>> builder = ImmutableList.builder();
       for (ArrayElemContext elem : elems) {
-        Expr<?> expr = build(elem);
-        if (!basicTypes().contains(expr.type())) {
+        Expression<?> expression = build(elem);
+        if (!basicTypes().contains(expression.type())) {
           CodeLocation location = locationOf(elem);
-          messages.log(new ForbiddenArrayElemError(location, expr.type()));
+          messages.log(new ForbiddenArrayElemError(location, expression.type()));
           builder.add(new InvalidExpr<>(NOTHING, location));
         } else {
-          builder.add(expr);
+          builder.add(expression);
         }
       }
       return builder.build();
     }
 
-    private Expr<?> build(ArrayElemContext elem) {
+    private Expression<?> build(ArrayElemContext elem) {
       if (elem.STRING() != null) {
         return buildStringExpr(elem.STRING());
       }
@@ -214,16 +214,16 @@ public class DefinedFunctionsCreator {
           "Illegal parse tree: " + ArrayElemContext.class.getSimpleName() + " without children.");
     }
 
-    private Type<?> commonSuperType(List<ArrayElemContext> elems, ImmutableList<Expr<?>> elemExprs,
+    private Type<?> commonSuperType(List<ArrayElemContext> elems, ImmutableList<Expression<?>> elemExpressions,
         CodeLocation location) {
       if (elems.size() == 0) {
         return NOTHING;
       }
-      Type<?> firstType = elemExprs.get(0).type();
+      Type<?> firstType = elemExpressions.get(0).type();
       Type<?> commonSuperType = firstType;
 
-      for (int i = 1; i < elemExprs.size(); i++) {
-        Type<?> currentType = elemExprs.get(i).type();
+      for (int i = 1; i < elemExpressions.size(); i++) {
+        Type<?> currentType = elemExpressions.get(i).type();
         commonSuperType = commonSuperType(commonSuperType, currentType);
 
         if (commonSuperType == null) {
@@ -259,18 +259,18 @@ public class DefinedFunctionsCreator {
       return null;
     }
 
-    private Expr<?> build(CallContext call) {
+    private Expression<?> build(CallContext call) {
       List<Arg> args = build(call.argList());
       return build(call, args);
     }
 
-    private Expr<?> build(CallContext call, List<Arg> args) {
+    private Expression<?> build(CallContext call, List<Arg> args) {
       String functionName = call.functionName().getText();
 
       Function<?> function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      ImmutableMap<String, ? extends Expr<?>> namedArgs = argExprsCreator.createArgExprs(
+      ImmutableMap<String, ? extends Expression<?>> namedArgs = argExprsCreator.createArgExprs(
           codeLocation, messages, function, args);
 
       if (namedArgs == null) {
@@ -306,18 +306,18 @@ public class DefinedFunctionsCreator {
     }
 
     private Arg build(int index, ArgContext arg) {
-      Expr<?> expr = build(arg.expression());
+      Expression<?> expression = build(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
       if (paramName == null) {
-        return namelessArg(index + 1, expr, location);
+        return namelessArg(index + 1, expression, location);
       } else {
-        return namedArg(index + 1, paramName.getText(), expr, location);
+        return namedArg(index + 1, paramName.getText(), expression, location);
       }
     }
 
-    private Expr<?> buildStringExpr(TerminalNode stringToken) {
+    private Expression<?> buildStringExpr(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {

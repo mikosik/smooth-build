@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
@@ -18,28 +18,28 @@ import com.google.common.collect.Ordering;
 public class Arg {
   private final int number;
   private final String name;
-  private final Expr<?> expr;
+  private final Expression<?> expression;
   private final CodeLocation codeLocation;
 
-  public static Arg namedArg(int number, String name, Expr<?> expr, CodeLocation codeLocation) {
+  public static Arg namedArg(int number, String name, Expression<?> expression, CodeLocation codeLocation) {
     checkArgument(0 < number);
-    return new Arg(number, checkNotNull(name), expr, codeLocation);
+    return new Arg(number, checkNotNull(name), expression, codeLocation);
   }
 
-  public static Arg namelessArg(int number, Expr<?> expr, CodeLocation codeLocation) {
+  public static Arg namelessArg(int number, Expression<?> expression, CodeLocation codeLocation) {
     checkArgument(0 < number);
-    return new Arg(number, null, expr, codeLocation);
+    return new Arg(number, null, expression, codeLocation);
   }
 
-  public static Arg pipedArg(Expr<?> expr, CodeLocation codeLocation) {
-    return new Arg(0, null, expr, codeLocation);
+  public static Arg pipedArg(Expression<?> expression, CodeLocation codeLocation) {
+    return new Arg(0, null, expression, codeLocation);
   }
 
-  private Arg(int number, String name, Expr<?> expr, CodeLocation codeLocation) {
+  private Arg(int number, String name, Expression<?> expression, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
-    this.expr = checkNotNull(expr);
+    this.expression = checkNotNull(expression);
     this.codeLocation = checkNotNull(codeLocation);
   }
 
@@ -63,11 +63,11 @@ public class Arg {
   }
 
   public Type<?> type() {
-    return expr.type();
+    return expression.type();
   }
 
-  public Expr<?> expr() {
-    return expr;
+  public Expression<?> expr() {
+    return expression;
   }
 
   public CodeLocation codeLocation() {

@@ -21,15 +21,15 @@ public class ImplicitConverter {
     this.builtinModule = builtinModule;
   }
 
-  public <T extends Value> Expr<T> apply(Type<T> destinationType, Expr<?> source) {
+  public <T extends Value> Expression<T> apply(Type<T> destinationType, Expression<?> source) {
     Type<?> sourceType = source.type();
     if (sourceType == destinationType) {
       /*
        * Cast is safe as 'if' above checked that source has proper type.
        */
       @SuppressWarnings("unchecked")
-      Expr<T> expr = (Expr<T>) source;
-      return expr;
+      Expression<T> expression = (Expression<T>) source;
+      return expression;
     }
 
     Name functionName = convertFunctionName(sourceType, destinationType);

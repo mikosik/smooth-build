@@ -16,7 +16,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableMultimap;
 
 public class ArgTest {
   private final String name = "name";
-  private final Expr<?> expr = mock(Expr.class);
+  private final Expression<?> expression = mock(Expression.class);
   private final CodeLocation codeLocation = codeLocation(1);
   private Arg arg;
   private Arg arg2;
@@ -33,17 +33,17 @@ public class ArgTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void negative_index_is_forbidden_in_named_argument() {
-    namedArg(-1, name, expr, codeLocation);
+    namedArg(-1, name, expression, codeLocation);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void zero_index_is_forbidden_in_named_argument() {
-    namedArg(0, name, expr, codeLocation);
+    namedArg(0, name, expression, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbiddenInNamedArg() {
-    namedArg(1, null, expr, codeLocation);
+    namedArg(1, null, expression, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
@@ -53,17 +53,17 @@ public class ArgTest {
 
   @Test(expected = NullPointerException.class)
   public void null_source_location_is_forbidden_in_named_argument() {
-    namedArg(1, name, expr, null);
+    namedArg(1, name, expression, null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void negative_index_is_forbidden_in_nameless_argument() {
-    namelessArg(-1, expr, codeLocation);
+    namelessArg(-1, expression, codeLocation);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void zero_index_is_forbidden_in_nameless_argument() {
-    namelessArg(0, expr, codeLocation);
+    namelessArg(0, expression, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
@@ -73,7 +73,7 @@ public class ArgTest {
 
   @Test(expected = NullPointerException.class)
   public void null_source_location_is_forbidden_in_nameless_argument() {
-    namelessArg(1, expr, null);
+    namelessArg(1, expression, null);
   }
 
   @Test(expected = NullPointerException.class)
@@ -83,13 +83,13 @@ public class ArgTest {
 
   @Test(expected = NullPointerException.class)
   public void null_source_location_is_forbidden_in_piped_argument() {
-    pipedArg(expr, null);
+    pipedArg(expression, null);
   }
 
   @Test
   public void argument_type_is_equal_to_argument_expression_type() throws Exception {
-    given(willReturn(FILE), expr).type();
-    when(namedArg(1, name, expr, codeLocation)).type();
+    given(willReturn(FILE), expression).type();
+    when(namedArg(1, name, expression, codeLocation)).type();
     thenReturned(FILE);
   }
 
@@ -100,21 +100,21 @@ public class ArgTest {
 
   @Test
   public void named_argument_has_name() throws Exception {
-    given(arg = namedArg(1, name, expr, codeLocation));
+    given(arg = namedArg(1, name, expression, codeLocation));
     when(arg).hasName();
     thenReturned(true);
   }
 
   @Test
   public void nameless_argument_does_not_have_name() throws Exception {
-    given(arg = namelessArg(1, expr, codeLocation));
+    given(arg = namelessArg(1, expression, codeLocation));
     when(arg).hasName();
     thenReturned(false);
   }
 
   @Test
   public void piped_argument_does_not_have_name() throws Exception {
-    given(arg = pipedArg(expr, codeLocation));
+    given(arg = pipedArg(expression, codeLocation));
     when(arg).hasName();
     thenReturned(false);
   }
@@ -135,29 +135,29 @@ public class ArgTest {
 
   @Test
   public void named_argument_to_string() throws Exception {
-    given(willReturn(STRING), expr).type();
-    when(namedArg(1, name, expr, codeLocation)).toString();
+    given(willReturn(STRING), expression).type();
+    when(namedArg(1, name, expression, codeLocation)).toString();
     thenReturned("String:" + name);
   }
 
   @Test
   public void nameless_argument_to_strig() throws Exception {
-    given(willReturn(STRING), expr).type();
-    when(namelessArg(1, expr, codeLocation)).toString();
+    given(willReturn(STRING), expression).type();
+    when(namelessArg(1, expression, codeLocation)).toString();
     thenReturned("String:<nameless>");
   }
 
   @Test
   public void to_padded_string() throws Exception {
-    given(willReturn(STRING), expr).type();
-    when(namedArg(1, "myName", expr, codeLocation)).toPaddedString(10, 13, 7);
+    given(willReturn(STRING), expression).type();
+    when(namedArg(1, "myName", expression, codeLocation)).toPaddedString(10, 13, 7);
     thenReturned("String    : myName        #1       " + codeLocation.toString());
   }
 
   @Test
   public void to_padded_string_with_short_limits() throws Exception {
-    given(willReturn(STRING), expr).type();
-    when(namedArg(1, "myName", expr, codeLocation(1))).toPaddedString(1, 1, 1);
+    given(willReturn(STRING), expression).type();
+    when(namedArg(1, "myName", expression, codeLocation(1))).toPaddedString(1, 1, 1);
     thenReturned("String: myName #1 " + codeLocation.toString());
   }
 
@@ -182,12 +182,12 @@ public class ArgTest {
   }
 
   private static Arg named(String name) {
-    return Arg.namedArg(1, name, mock(Expr.class), codeLocation(1));
+    return Arg.namedArg(1, name, mock(Expression.class), codeLocation(1));
   }
 
   private static Arg nameless(Type<?> type) {
-    Expr<?> expr = mock(Expr.class);
-    given(willReturn(type), expr).type();
-    return Arg.namelessArg(1, expr, codeLocation(1));
+    Expression<?> expression = mock(Expression.class);
+    given(willReturn(type), expression).type();
+    return Arg.namelessArg(1, expression, codeLocation(1));
   }
 }

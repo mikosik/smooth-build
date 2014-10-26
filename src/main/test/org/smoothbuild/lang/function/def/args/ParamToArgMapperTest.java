@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Param;
 import org.smoothbuild.lang.function.base.Signature;
@@ -608,10 +608,10 @@ public class ParamToArgMapperTest {
     return namedArg(1, name, expr(type), codeLocation(1));
   }
 
-  private static Expr<?> expr(Type<?> type) {
-    Expr<?> expr = mock(Expr.class);
-    given(willReturn(type), expr).type();
-    return expr;
+  private static Expression<?> expr(Type<?> type) {
+    Expression<?> expression = mock(Expression.class);
+    given(willReturn(type), expression).type();
+    return expression;
   }
 
   private Map<Param, Arg> createMapping(Iterable<Param> params, List<Arg> args) {

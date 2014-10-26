@@ -12,12 +12,12 @@ import com.google.common.collect.ImmutableList;
 /**
  * Expression in smooth language.
  */
-public abstract class Expr<T extends Value> {
+public abstract class Expression<T extends Value> {
   private final Type<T> type;
   private final CodeLocation codeLocation;
-  private final ImmutableList<? extends Expr<?>> dependencies;
+  private final ImmutableList<? extends Expression<?>> dependencies;
 
-  public Expr(Type<T> type, ImmutableList<? extends Expr<?>> dependencies,
+  public Expression(Type<T> type, ImmutableList<? extends Expression<?>> dependencies,
       CodeLocation codeLocation) {
     this.type = checkNotNull(type);
     this.dependencies = checkNotNull(dependencies);
@@ -32,7 +32,7 @@ public abstract class Expr<T extends Value> {
     return codeLocation;
   }
 
-  public ImmutableList<? extends Expr<?>> dependencies() {
+  public ImmutableList<? extends Expression<?>> dependencies() {
     return dependencies;
   }
 

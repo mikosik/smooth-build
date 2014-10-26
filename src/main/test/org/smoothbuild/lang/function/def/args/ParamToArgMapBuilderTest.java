@@ -13,7 +13,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Param;
 
 import com.google.common.collect.ImmutableMap;
@@ -90,9 +90,9 @@ public class ParamToArgMapBuilderTest {
   }
 
   private static Arg arg(int number, Type<?> type, String name) {
-    Expr<?> expr = mock(Expr.class);
-    given(willReturn(type), expr).type();
+    Expression<?> expression = mock(Expression.class);
+    given(willReturn(type), expression).type();
 
-    return namedArg(number, name, expr, codeLocation(1));
+    return namedArg(number, name, expression, codeLocation(1));
   }
 }

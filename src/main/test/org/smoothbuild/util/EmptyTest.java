@@ -6,7 +6,7 @@ import static org.testory.Testory.mock;
 import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
@@ -46,7 +46,7 @@ public class EmptyTest {
   @Test
   public void empty_string_expr_map_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableMap<String, Expr<?>> map = Empty.stringExprMap();
+    ImmutableMap<String, Expression<?>> map = Empty.stringExprMap();
   }
 
   @Test
@@ -136,7 +136,7 @@ public class EmptyTest {
   @Test
   public void empty_expr_list_is_immutable() {
     @SuppressWarnings("unused")
-    ImmutableList<Expr<?>> list = Empty.exprList();
+    ImmutableList<Expression<?>> list = Empty.exprList();
   }
 
   @Test

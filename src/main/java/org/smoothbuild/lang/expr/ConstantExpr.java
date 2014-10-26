@@ -9,7 +9,7 @@ import org.smoothbuild.task.work.ConstantWorker;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
-public class ConstantExpr<T extends Value> extends Expr<T> {
+public class ConstantExpr<T extends Value> extends Expression<T> {
   private final T value;
 
   public ConstantExpr(Type<T> type, T value, CodeLocation codeLocation) {

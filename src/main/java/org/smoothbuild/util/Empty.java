@@ -2,7 +2,7 @@ package org.smoothbuild.util;
 
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expr;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Param;
@@ -18,7 +18,7 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<String, Expr<?>> stringExprMap() {
+  public static ImmutableMap<String, Expression<?>> stringExprMap() {
     return ImmutableMap.of();
   }
 
@@ -38,7 +38,7 @@ public class Empty {
     return ImmutableList.of();
   }
 
-  public static ImmutableList<Expr<?>> exprList() {
+  public static ImmutableList<Expression<?>> exprList() {
     return ImmutableList.of();
   }
 
