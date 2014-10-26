@@ -174,8 +174,17 @@ public class DefinedFunctionsCreator {
     private <T extends SValue> Expr<SArray<T>> buildArray(SType<T> elemType,
         ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
       SArrayType<T> arrayType = STypes.sArrayTypeContaining(elemType);
-      ImmutableList<Expr<T>> convertedExpr = converter.convertExprs(elemType, elemExprs);
+      ImmutableList<Expr<T>> convertedExpr = convertExprs(elemType, elemExprs);
       return new ArrayExpr<>(arrayType, convertedExpr, location);
+    }
+
+    public <T extends SValue> ImmutableList<Expr<T>> convertExprs(SType<T> type,
+        Iterable<? extends Expr<?>> expressions) {
+      ImmutableList.Builder<Expr<T>> builder = ImmutableList.builder();
+      for (Expr<?> expr : expressions) {
+        builder.add(converter.convertExpr(type, expr));
+      }
+      return builder.build();
     }
 
     private ImmutableList<Expr<?>> build(List<ArrayElemContext> elems) {
