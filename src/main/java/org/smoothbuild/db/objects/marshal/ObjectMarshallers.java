@@ -17,7 +17,7 @@ import org.smoothbuild.db.objects.Objects;
 import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SNothing;
+import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
 import org.smoothbuild.lang.base.SValue;
@@ -35,7 +35,7 @@ public class ObjectMarshallers {
   private final ArrayMarshaller<SString> stringArrayMarshaller;
   private final ArrayMarshaller<Blob> blobArrayMarshaller;
   private final ArrayMarshaller<SFile> fileArrayMarshaller;
-  private final ArrayMarshaller<SNothing> nilMarshaller;
+  private final ArrayMarshaller<Nothing> nilMarshaller;
 
   private final ImmutableMap<SType<?>, ObjectMarshaller<?>> marshallersMap;
   private final ImmutableMap<ArrayType<?>, ArrayMarshaller<?>> arrayMarshallersMap;
