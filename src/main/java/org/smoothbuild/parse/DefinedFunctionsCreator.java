@@ -66,21 +66,21 @@ import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
   private final ObjectsDb objectsDb;
-  private final ArgExprsCreator argExprsCreator;
+  private final ArgumentExpressionCreator argumentExpressionCreator;
   private final ImplicitConverter implicitConverter;
 
   @Inject
-  public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgExprsCreator argExprsCreator,
+  public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgumentExpressionCreator argumentExpressionCreator,
       ImplicitConverter implicitConverter) {
     this.objectsDb = objectsDb;
-    this.argExprsCreator = argExprsCreator;
+    this.argumentExpressionCreator = argumentExpressionCreator;
     this.implicitConverter = implicitConverter;
   }
 
   public Map<Name, Function<?>> createDefinedFunctions(LoggedMessages messages,
       Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker = new Worker(messages, builtinModule, functionContexts, sorted, objectsDb,
-        argExprsCreator, implicitConverter);
+        argumentExpressionCreator, implicitConverter);
     Map<Name, Function<?>> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -92,20 +92,20 @@ public class DefinedFunctionsCreator {
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
     private final ObjectsDb objectsDb;
-    private final ArgExprsCreator argExprsCreator;
+    private final ArgumentExpressionCreator argumentExpressionCreator;
     private final ImplicitConverter implicitConverter;
 
     private final Map<Name, Function<?>> functions = Maps.newHashMap();
 
     public Worker(LoggedMessages messages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
-        ArgExprsCreator argExprsCreator, ImplicitConverter implicitConverter) {
+        ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
       this.messages = messages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
       this.objectsDb = objectsDb;
-      this.argExprsCreator = argExprsCreator;
+      this.argumentExpressionCreator = argumentExpressionCreator;
       this.implicitConverter = implicitConverter;
     }
 
@@ -271,7 +271,7 @@ public class DefinedFunctionsCreator {
       Function<?> function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      ImmutableMap<String, ? extends Expression<?>> namedArgs = argExprsCreator.createArgExprs(
+      ImmutableMap<String, ? extends Expression<?>> namedArgs = argumentExpressionCreator.createArgExprs(
           codeLocation, messages, function, arguments);
 
       if (namedArgs == null) {
