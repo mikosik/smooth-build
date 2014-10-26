@@ -8,17 +8,17 @@ import java.util.List;
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.collect.Lists;
 
 public class ArrayBuilderImpl<T extends SValue> implements ArrayBuilder<T> {
-  private final SArrayType<T> arrayType;
+  private final ArrayType<T> arrayType;
   private final ArrayMarshaller<T> marshaller;
   private final List<T> result;
 
-  public ArrayBuilderImpl(SArrayType<T> arrayType, ArrayMarshaller<T> arrayMarshaller) {
+  public ArrayBuilderImpl(ArrayType<T> arrayType, ArrayMarshaller<T> arrayMarshaller) {
     this.arrayType = arrayType;
     this.marshaller = arrayMarshaller;
     this.result = Lists.newArrayList();

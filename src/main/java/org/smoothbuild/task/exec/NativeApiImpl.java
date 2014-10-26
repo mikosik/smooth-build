@@ -10,7 +10,7 @@ import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArrayType;
+import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
@@ -39,7 +39,7 @@ public class NativeApiImpl implements NativeApi {
   }
 
   @Override
-  public <T extends SValue> ArrayBuilder<T> arrayBuilder(SArrayType<T> arrayType) {
+  public <T extends SValue> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
     return valueFactory.arrayBuilder(arrayType);
   }
 
