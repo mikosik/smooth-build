@@ -18,9 +18,9 @@ import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueFactory;
@@ -40,11 +40,11 @@ public class Unjarer {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public SArray<SFile> unjar(Blob jarBlob) {
+  public Array<SFile> unjar(Blob jarBlob) {
     return unjar(jarBlob, Predicates.<String>alwaysTrue());
   }
 
-  public SArray<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {
+  public Array<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);

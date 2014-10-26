@@ -6,11 +6,11 @@ import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.lang.function.base.Name;
 
-public class ArraySaver<T extends SValue> implements Saver<SArray<T>> {
+public class ArraySaver<T extends SValue> implements Saver<Array<T>> {
   private final FileSystem smoothFileSystem;
 
   public ArraySaver(FileSystem smoothFileSystem) {
@@ -18,7 +18,7 @@ public class ArraySaver<T extends SValue> implements Saver<SArray<T>> {
   }
 
   @Override
-  public void save(Name name, SArray<T> array) {
+  public void save(Name name, Array<T> array) {
     Path artifactPath = artifactPath(name);
 
     smoothFileSystem.delete(artifactPath);

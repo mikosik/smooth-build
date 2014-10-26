@@ -13,7 +13,7 @@ import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -96,7 +96,7 @@ public class FilesFunctionTest {
     Path filePath = path("file/path/file.txt");
     nativeApi.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
 
-    SArray<SFile> fileArray = execute(params(rootPath.value()));
+    Array<SFile> fileArray = execute(params(rootPath.value()));
 
     SFile expectedFile = objectsDb.file(filePath);
     assertThat(fileArray).containsExactly(expectedFile);
@@ -111,7 +111,7 @@ public class FilesFunctionTest {
     };
   }
 
-  private SArray<SFile> execute(FilesParameters params) {
+  private Array<SFile> execute(FilesParameters params) {
     return FilesFunction.files(nativeApi, params);
   }
 }

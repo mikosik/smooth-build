@@ -14,9 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.CallExpr;
@@ -153,7 +153,7 @@ public class ExpressionExecutionTest {
     }
   }
 
-  private SArray<SString> array(SString... sstrings) {
+  private Array<SString> array(SString... sstrings) {
     ArrayBuilder<SString> arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY);
     for (SString sstring : sstrings) {
       arrayBuilder.add(sstring);

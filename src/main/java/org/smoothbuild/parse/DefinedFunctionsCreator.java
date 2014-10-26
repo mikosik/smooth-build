@@ -31,7 +31,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
@@ -171,7 +171,7 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private <T extends SValue> Expr<SArray<T>> buildArray(SType<T> elemType,
+    private <T extends SValue> Expr<Array<T>> buildArray(SType<T> elemType,
         ImmutableList<Expr<?>> elemExprs, CodeLocation location) {
       SArrayType<T> arrayType = STypes.sArrayTypeContaining(elemType);
       ImmutableList<Expr<T>> convertedExpr = convertExprs(elemType, elemExprs);

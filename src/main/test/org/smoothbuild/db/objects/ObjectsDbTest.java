@@ -13,7 +13,7 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
@@ -23,10 +23,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class ObjectsDbTest {
-  private SArray<SFile> fileArray;
-  private SArray<Blob> blobArray;
+  private Array<SFile> fileArray;
+  private Array<Blob> blobArray;
   private Blob blob;
-  private SArray<SString> stringArray;
+  private Array<SString> stringArray;
   private SString stringValue;
 
   private ObjectsDb objectsDb;

@@ -15,8 +15,8 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SNothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SType;
@@ -27,12 +27,12 @@ import com.google.common.hash.HashCode;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-public class SArrayTest {
+public class ArrayTest {
   private ObjectsDb objectsDb;
   private SString sstring;
   private SString sstring2;
   private SString sstring3;
-  private SArray<?> array;
+  private Array<?> array;
   private ArrayBuilder<SNothing> nilBuilder;
   private ArrayBuilder<SString> arrayBuilder;
   @SuppressWarnings("rawtypes")

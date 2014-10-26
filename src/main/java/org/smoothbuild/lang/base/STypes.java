@@ -15,13 +15,13 @@ public class STypes {
   public static final SType<SNothing> NOTHING = sType("Nothing", SNothing.class);
 
   public static final SArrayType<SString> STRING_ARRAY = sArrayType(STRING,
-      new TypeLiteral<SArray<SString>>() {});
+      new TypeLiteral<Array<SString>>() {});
   public static final SArrayType<Blob> BLOB_ARRAY = sArrayType(BLOB,
-      new TypeLiteral<SArray<Blob>>() {});
+      new TypeLiteral<Array<Blob>>() {});
   public static final SArrayType<SFile> FILE_ARRAY = sArrayType(FILE,
-      new TypeLiteral<SArray<SFile>>() {});
+      new TypeLiteral<Array<SFile>>() {});
   public static final SArrayType<SNothing> NIL = sArrayType(NOTHING,
-      new TypeLiteral<SArray<SNothing>>() {});
+      new TypeLiteral<Array<SNothing>>() {});
 
   /*
    * Not each type can be used in every place. Each set below represent one

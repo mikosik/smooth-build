@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.ZipTester;
@@ -33,7 +33,7 @@ public class UnzipperTest {
   public void unzipping() throws Exception {
     Blob zipBlob = zipped(fileName1, fileName2);
 
-    SArray<SFile> resultFileArray = unzipper.unzip(zipBlob);
+    Array<SFile> resultFileArray = unzipper.unzip(zipBlob);
 
     int fileCount = 0;
     for (SFile file : resultFileArray) {
@@ -47,7 +47,7 @@ public class UnzipperTest {
   public void unzipperIgnoresDirectories() throws Exception {
     Blob zipBlob = zipped(fileName1, directoryName);
 
-    SArray<SFile> resultFileArray = unzipper.unzip(zipBlob);
+    Array<SFile> resultFileArray = unzipper.unzip(zipBlob);
 
     assertThat(Iterables.size(resultFileArray)).isEqualTo(1);
     assertThat(resultFileArray.iterator().next().path()).isEqualTo(path(fileName1));

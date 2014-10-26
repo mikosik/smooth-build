@@ -2,7 +2,7 @@ package org.smoothbuild.db.objects.build;
 
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SNothing;
 
 import com.google.common.collect.ImmutableList;
@@ -20,7 +20,7 @@ public class NilBuilder implements ArrayBuilder<SNothing> {
   }
 
   @Override
-  public SArray<SNothing> build() {
+  public Array<SNothing> build() {
     return marshaller.write(ImmutableList.<SNothing> of());
   }
 }

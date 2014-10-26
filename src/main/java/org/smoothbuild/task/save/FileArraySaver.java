@@ -7,14 +7,14 @@ import java.util.Set;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.task.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.util.DuplicatesDetector;
 
-public class FileArraySaver implements Saver<SArray<SFile>> {
+public class FileArraySaver implements Saver<Array<SFile>> {
   private final FileSystem smoothFileSystem;
   private final LoggedMessages messages;
 
@@ -24,7 +24,7 @@ public class FileArraySaver implements Saver<SArray<SFile>> {
   }
 
   @Override
-  public void save(Name name, SArray<SFile> fileArray) {
+  public void save(Name name, Array<SFile> fileArray) {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
 
     Path artifactPath = artifactPath(name);

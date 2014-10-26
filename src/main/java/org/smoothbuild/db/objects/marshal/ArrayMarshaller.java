@@ -8,14 +8,14 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.objects.base.ArrayObject;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<SArray<T>> {
+public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<Array<T>> {
   private final HashedDb hashedDb;
   private final SArrayType<T> arrayType;
   private final ObjectMarshaller<T> elementMarshaller;
@@ -28,7 +28,7 @@ public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<SArra
   }
 
   @Override
-  public SArray<T> read(HashCode hash) {
+  public Array<T> read(HashCode hash) {
     return new ArrayObject<>(hash, arrayType, this);
   }
 
@@ -46,7 +46,7 @@ public class ArrayMarshaller<T extends SValue> implements ObjectMarshaller<SArra
     }
   }
 
-  public SArray<T> write(List<T> elements) {
+  public Array<T> write(List<T> elements) {
     Marshaller marshaller = new Marshaller();
     marshaller.write(elements);
     byte[] bytes = marshaller.getBytes();

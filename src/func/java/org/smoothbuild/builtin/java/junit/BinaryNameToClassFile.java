@@ -8,7 +8,7 @@ import java.util.Map;
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueFactory;
@@ -25,7 +25,7 @@ public class BinaryNameToClassFile {
     Map<String, SFile> binaryNameToClassFile = Maps.newHashMap();
 
     for (Blob jarBlob : libraryJars) {
-      SArray<SFile> fileArray = unjarer.unjar(jarBlob, isClassFilePredicate());
+      Array<SFile> fileArray = unjarer.unjar(jarBlob, isClassFilePredicate());
 
       for (SFile classFile : fileArray) {
         Path classFilePath = classFile.path();

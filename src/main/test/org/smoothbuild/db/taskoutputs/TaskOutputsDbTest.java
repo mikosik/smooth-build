@@ -23,8 +23,8 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
@@ -48,9 +48,9 @@ public class TaskOutputsDbTest {
   private final Path path = path("file/path");
 
   private Message message;
-  private SArray<SFile> fileArray;
-  private SArray<Blob> blobArray;
-  private SArray<SString> stringArray;
+  private Array<SFile> fileArray;
+  private Array<Blob> blobArray;
+  private Array<SString> stringArray;
   private SFile file;
   private Blob blob;
   private SString stringValue;

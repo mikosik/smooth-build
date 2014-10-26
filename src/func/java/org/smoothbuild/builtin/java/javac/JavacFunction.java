@@ -22,7 +22,7 @@ import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
@@ -40,9 +40,9 @@ public class JavacFunction {
 
   public interface JavacParameters {
     @Required
-    SArray<SFile> sources();
+    Array<SFile> sources();
 
-    SArray<Blob> libs();
+    Array<Blob> libs();
 
     SString source();
 
@@ -50,7 +50,7 @@ public class JavacFunction {
   }
 
   @SmoothFunction
-  public static SArray<SFile> javac(NativeApi nativeApi, JavacParameters params) {
+  public static Array<SFile> javac(NativeApi nativeApi, JavacParameters params) {
     return new Worker(nativeApi, params).execute();
   }
 
@@ -70,14 +70,14 @@ public class JavacFunction {
       this.params = params;
     }
 
-    public SArray<SFile> execute() {
+    public Array<SFile> execute() {
       if (compiler == null) {
         throw new NoCompilerAvailableError();
       }
       return compile(params.sources());
     }
 
-    public SArray<SFile> compile(SArray<SFile> files) {
+    public Array<SFile> compile(Array<SFile> files) {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();

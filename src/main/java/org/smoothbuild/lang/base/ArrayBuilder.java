@@ -5,6 +5,6 @@ public interface ArrayBuilder<T extends SValue> {
 
   public ArrayBuilder<T> add(T elem);
 
-  public SArray<T> build();
+  public Array<T> build();
 
 }
