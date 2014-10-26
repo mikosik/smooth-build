@@ -23,7 +23,7 @@ import java.util.zip.ZipEntry;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
@@ -150,15 +150,15 @@ public class NativeModuleFactoryTest {
     public interface Parameters {
       public SString string();
 
-      public SArray<SString> stringArray();
+      public Array<SString> stringArray();
 
       public SFile file();
 
-      public SArray<SFile> fileArray();
+      public Array<SFile> fileArray();
 
       public Blob blob();
 
-      public SArray<Blob> blobArray();
+      public Array<Blob> blobArray();
     }
 
     @SmoothFunction
@@ -213,7 +213,7 @@ public class NativeModuleFactoryTest {
 
   public static class ModuleWithFunctionWithArrayOfArraysParameter {
     public interface Parameters {
-      public SArray<SArray<SString>> param();
+      public Array<Array<SString>> param();
     }
 
     @SmoothFunction
@@ -316,7 +316,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction
-    public static SArray<SString> func(NativeApi nativeApi, Parameters params) {
+    public static Array<SString> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -333,7 +333,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction
-    public static SArray<Blob> func(NativeApi nativeApi, Parameters params) {
+    public static Array<Blob> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -350,7 +350,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction
-    public static SArray<SFile> func(NativeApi nativeApi, Parameters params) {
+    public static Array<SFile> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }
@@ -364,7 +364,7 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction
-    public static SArray<SArray<SString>> func(NativeApi nativeApi, Parameters params) {
+    public static Array<Array<SString>> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
   }

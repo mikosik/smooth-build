@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.android.err;
 import static org.smoothbuild.builtin.android.AndroidSdk.AIDL_BINARY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.LineBuilder;
@@ -12,11 +12,11 @@ import com.google.common.collect.Iterables;
 
 @SuppressWarnings("serial")
 public class AidlShouldOutputExactlyOneFileError extends Message {
-  public AidlShouldOutputExactlyOneFileError(SArray<SFile> outputFiles) {
+  public AidlShouldOutputExactlyOneFileError(Array<SFile> outputFiles) {
     super(ERROR, createMessage(outputFiles));
   }
 
-  private static String createMessage(SArray<SFile> outputFiles) {
+  private static String createMessage(Array<SFile> outputFiles) {
     String aidl = AIDL_BINARY;
     if (Iterables.size(outputFiles) == 0) {
       return aidl + " binary should return exactly one file but returned zero.";

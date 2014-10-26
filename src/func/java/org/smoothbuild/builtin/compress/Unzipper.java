@@ -15,9 +15,9 @@ import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueFactory;
@@ -36,7 +36,7 @@ public class Unzipper {
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
-  public SArray<SFile> unzip(Blob zipBlob) {
+  public Array<SFile> unzip(Blob zipBlob) {
     this.duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     try {

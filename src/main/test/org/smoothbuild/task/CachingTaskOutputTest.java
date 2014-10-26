@@ -16,7 +16,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
@@ -133,7 +133,7 @@ public class CachingTaskOutputTest {
     return new ConstantExpr<>(STRING, objectsDb.string(string), CL);
   }
 
-  private SArray<SString> stringSArray(String... strings) {
+  private Array<SString> stringSArray(String... strings) {
     ArrayBuilder<SString> builder = objectsDb.arrayBuilder(STRING_ARRAY);
     for (String string : strings) {
       builder.add(objectsDb.string(string));

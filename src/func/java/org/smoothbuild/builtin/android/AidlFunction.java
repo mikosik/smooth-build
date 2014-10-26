@@ -7,8 +7,8 @@ import org.smoothbuild.builtin.android.err.AidlBinaryReturnedNonZeroCodeError;
 import org.smoothbuild.builtin.android.err.AidlShouldOutputExactlyOneFileError;
 import org.smoothbuild.builtin.android.err.RunningAidlBinaryFailedError;
 import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.Required;
@@ -58,7 +58,7 @@ public class AidlFunction {
 
     executeCommand(command);
 
-    SArray<SFile> outputFiles = outputFilesDir.readFiles();
+    Array<SFile> outputFiles = outputFilesDir.readFiles();
     if (Iterables.size(outputFiles) != 1) {
       throw new AidlShouldOutputExactlyOneFileError(outputFiles);
     }

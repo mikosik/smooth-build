@@ -11,9 +11,9 @@ import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.CannotAddDuplicatePathError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.plugin.Required;
@@ -23,7 +23,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class JarFunction {
   public interface JarParameters {
     @Required
-    public SArray<SFile> files();
+    public Array<SFile> files();
 
     public Blob manifest();
   }

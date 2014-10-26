@@ -15,8 +15,8 @@ import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
@@ -28,7 +28,7 @@ import com.google.common.base.Predicate;
 public class JunitFunction {
 
   public interface JunitParameters {
-    SArray<Blob> libs();
+    Array<Blob> libs();
 
     SString include();
   }

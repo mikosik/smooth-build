@@ -20,7 +20,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
@@ -137,7 +137,7 @@ public class NativeFunctionFactoryTest {
   public interface DifferentParams {
     public SString string();
 
-    public SArray<SString> array();
+    public Array<SString> array();
   }
 
   public static class FunctionWithDifferentParams {
@@ -229,15 +229,15 @@ public class NativeFunctionFactoryTest {
   public interface AllowedParameters {
     public SString string();
 
-    public SArray<SString> stringArray();
+    public Array<SString> stringArray();
 
     public SFile file();
 
-    public SArray<SFile> fileArray();
+    public Array<SFile> fileArray();
 
     public Blob blob();
 
-    public SArray<Blob> blobArray();
+    public Array<Blob> blobArray();
   }
 
   public static class FuncWithAllowedParamTypes {
@@ -291,7 +291,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public interface ArrayOfArrayParams {
-    public SArray<SArray<SString>> runnable();
+    public Array<Array<SString>> runnable();
   }
 
   public static class FuncWithArrayOfArrayParamType {
@@ -380,7 +380,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithStringArrayResult {
     @SmoothFunction
-    public static SArray<SString> myFunction(NativeApi nativeApi, EmptyParameters params) {
+    public static Array<SString> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -393,7 +393,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobArrayResult {
     @SmoothFunction
-    public static SArray<Blob> myFunction(NativeApi nativeApi, EmptyParameters params) {
+    public static Array<Blob> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -406,7 +406,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithFileArrayResult {
     @SmoothFunction
-    public static SArray<SFile> myFunction(NativeApi nativeApi, EmptyParameters params) {
+    public static Array<SFile> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -432,7 +432,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithArrayOfArrayReturnType {
     @SmoothFunction
-    public static SArray<SArray<SFile>> myFunction(NativeApi nativeApi, EmptyParameters params) {
+    public static Array<Array<SFile>> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }

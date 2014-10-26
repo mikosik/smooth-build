@@ -10,9 +10,9 @@ import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
@@ -39,7 +39,7 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends SValue> SArray<T> array(SArrayType<T> type, T... elements) {
+  public <T extends SValue> Array<T> array(SArrayType<T> type, T... elements) {
     ArrayBuilder<T> arrayBuilder = arrayBuilder(type);
     for (T elem : elements) {
       arrayBuilder.add(elem);

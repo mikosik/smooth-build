@@ -10,7 +10,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.plugin.Required;
@@ -21,7 +21,7 @@ public class ZipFunction {
 
   public interface ZipParameters {
     @Required
-    public SArray<SFile> files();
+    public Array<SFile> files();
 
     // add missing parameters: level, comment, method
   }

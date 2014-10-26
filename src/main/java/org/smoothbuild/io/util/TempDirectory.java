@@ -14,9 +14,9 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueFactory;
@@ -64,7 +64,7 @@ public class TempDirectory {
     isDestroyed = true;
   }
 
-  public void writeFiles(SArray<SFile> files) {
+  public void writeFiles(Array<SFile> files) {
     assertNotDestroyed();
     try {
       writeFilesImpl(files);
@@ -73,7 +73,7 @@ public class TempDirectory {
     }
   }
 
-  private void writeFilesImpl(SArray<SFile> files) throws IOException {
+  private void writeFilesImpl(Array<SFile> files) throws IOException {
     for (SFile file : files) {
       writeFileImpl(file.path(), file.content());
     }
@@ -98,7 +98,7 @@ public class TempDirectory {
     Streams.copy(inputStream, outputStream);
   }
 
-  public SArray<SFile> readFiles() {
+  public Array<SFile> readFiles() {
     assertNotDestroyed();
     try {
       return readFilesImpl();
@@ -107,7 +107,7 @@ public class TempDirectory {
     }
   }
 
-  private SArray<SFile> readFilesImpl() throws IOException {
+  private Array<SFile> readFilesImpl() throws IOException {
     ArrayBuilder<SFile> arrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     for (Path path : fileSystem.filesFromRecursive(Path.rootPath())) {
       Blob content = readContentImpl(path);

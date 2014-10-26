@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 
@@ -33,7 +33,7 @@ public class ArrayBuilderImpl<T extends SValue> implements ArrayBuilder<T> {
   }
 
   @Override
-  public SArray<T> build() {
+  public Array<T> build() {
     return marshaller.write(result);
   }
 }

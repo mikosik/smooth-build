@@ -17,7 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -32,7 +32,7 @@ public class TempDirectoryTest {
   private FakeObjectsDb objectsDb;
   private FakeFileSystem fileSystem;
   private TempDirectory tempDirectory;
-  private SArray<SFile> array;
+  private Array<SFile> array;
 
   @Before
   public void before() {

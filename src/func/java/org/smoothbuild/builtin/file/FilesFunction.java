@@ -11,8 +11,8 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.SArray;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NotCacheable;
@@ -30,7 +30,7 @@ public class FilesFunction {
 
   @SmoothFunction
   @NotCacheable
-  public static SArray<SFile> files(NativeApiImpl nativeApi, FilesParameters params) {
+  public static Array<SFile> files(NativeApiImpl nativeApi, FilesParameters params) {
     Path path = validatedPath("dir", params.dir());
     FileSystem fileSystem = nativeApi.projectFileSystem();
 
@@ -54,7 +54,7 @@ public class FilesFunction {
     }
   }
 
-  private static SArray<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem,
+  private static Array<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem,
       Path path) {
     ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
     FileReader reader = new FileReader(nativeApi);

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.expr;
 
-import org.smoothbuild.lang.base.SArray;
+import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SArrayType;
 import org.smoothbuild.lang.base.SValue;
 import org.smoothbuild.message.base.CodeLocation;
@@ -9,7 +9,7 @@ import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 
-public class ArrayExpr<T extends SValue> extends Expr<SArray<T>> {
+public class ArrayExpr<T extends SValue> extends Expr<Array<T>> {
   private final SArrayType<T> arrayType;
 
   public ArrayExpr(SArrayType<T> arrayType, ImmutableList<? extends Expr<T>> elements,
@@ -19,7 +19,7 @@ public class ArrayExpr<T extends SValue> extends Expr<SArray<T>> {
   }
 
   @Override
-  public TaskWorker<SArray<T>> createWorker() {
+  public TaskWorker<Array<T>> createWorker() {
     return new ArrayWorker<>(arrayType, codeLocation());
   }
 }
