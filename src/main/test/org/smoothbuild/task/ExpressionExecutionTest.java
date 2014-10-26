@@ -18,7 +18,7 @@ import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.expr.ArrayExpr;
+import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expression;
@@ -79,7 +79,7 @@ public class ExpressionExecutionTest {
 
   @Test
   public void executes_empty_array_expression() throws Exception {
-    given(arrayExpression = new ArrayExpr<>(STRING_ARRAY, ImmutableList.<Expression<SString>>of(), location));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.<Expression<SString>>of(), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(array()));
@@ -89,7 +89,7 @@ public class ExpressionExecutionTest {
   public void executes_array_expression() throws Exception {
     given(sstring = objectsDb.string(string));
     given(stringExpression = new ConstantExpr<>(STRING, sstring, location));
-    given(arrayExpression = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(stringExpression), location));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(array(sstring)));

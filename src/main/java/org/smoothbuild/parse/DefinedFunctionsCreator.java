@@ -37,7 +37,7 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.ArrayExpr;
+import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.CallExpr;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expression;
@@ -175,7 +175,7 @@ public class DefinedFunctionsCreator {
         ImmutableList<Expression<?>> elemExpressions, CodeLocation location) {
       ArrayType<T> arrayType = Types.arrayTypeContaining(elemType);
       ImmutableList<Expression<T>> convertedExpression = convertExprs(elemType, elemExpressions);
-      return new ArrayExpr<>(arrayType, convertedExpression, location);
+      return new ArrayExpression<>(arrayType, convertedExpression, location);
     }
 
     public <T extends Value> ImmutableList<Expression<T>> convertExprs(Type<T> type,

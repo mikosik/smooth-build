@@ -18,7 +18,7 @@ import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.expr.ArrayExpr;
+import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.ConstantExpr;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.message.base.CodeLocation;
@@ -48,7 +48,7 @@ public class CachingTaskOutputTest {
   private AtomicInteger counter;
   private CountingExpr expr1;
   private CountingExpr expr2;
-  private ArrayExpr<SString> arrayExpr;
+  private ArrayExpression<SString> arrayExpression;
   private Task<?> task;
   private Task<SString> task2;
 
@@ -68,8 +68,8 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expr1 = new CountingExpr(counter, Empty.exprList(), true));
     given(expr2 = new CountingExpr(counter, Empty.exprList(), true));
-    given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
-    given(task = taskGraph.createTasks(arrayExpr));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
+    given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "1")));
   }
@@ -80,8 +80,8 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expr1 = new CountingExpr(counter, Empty.exprList(), false));
     given(expr2 = new CountingExpr(counter, Empty.exprList(), false));
-    given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
-    given(task = taskGraph.createTasks(arrayExpr));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
+    given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
   }
@@ -92,8 +92,8 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expr1 = new CountingExpr(counter, ImmutableList.of(stringExpr("dep1")), true));
     given(expr2 = new CountingExpr(counter, ImmutableList.of(stringExpr("dep2")), true));
-    given(arrayExpr = new ArrayExpr<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
-    given(task = taskGraph.createTasks(arrayExpr));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
+    given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
   }
