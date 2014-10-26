@@ -14,15 +14,15 @@ import org.smoothbuild.parse.Builtin;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class ExprConverter {
+public class ImplicitConverter {
   private final Module builtinModule;
 
   @Inject
-  public ExprConverter(@Builtin Module builtinModule) {
+  public ImplicitConverter(@Builtin Module builtinModule) {
     this.builtinModule = builtinModule;
   }
 
-  public <T extends SValue> Expr<T> convertExpr(SType<T> destinationType, Expr<?> source) {
+  public <T extends SValue> Expr<T> apply(SType<T> destinationType, Expr<?> source) {
     SType<?> sourceType = source.type();
     if (sourceType == destinationType) {
       /*
