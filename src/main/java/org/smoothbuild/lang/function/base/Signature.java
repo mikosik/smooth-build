@@ -32,7 +32,7 @@ public class Signature<T extends Value> {
   /**
    * @return Parameters ordered lexicographically by their names.
    */
-  public ImmutableList<Parameter> params() {
+  public ImmutableList<Parameter> parameters() {
     return parameters;
   }
 
