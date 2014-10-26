@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.base.Types.paramTypes;
+import static org.smoothbuild.lang.base.Types.parameterTypes;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.testory.Testory.given;
@@ -70,7 +70,7 @@ public class ParameterTest {
 
     tester.addEqualityGroup(parameter(STRING, "equal", false), parameter(STRING, "equal", false));
 
-    for (Type<?> type : paramTypes()) {
+    for (Type<?> type : parameterTypes()) {
       tester.addEqualityGroup(parameter(type, "name", false));
       tester.addEqualityGroup(parameter(type, "name", true));
       tester.addEqualityGroup(parameter(type, "name2", false));

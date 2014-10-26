@@ -41,7 +41,7 @@ public class Types {
   private static final ImmutableSet<Type<?>> RESULT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   @SuppressWarnings("unchecked")
-  private static final ImmutableSet<Type<?>> PARAM_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+  private static final ImmutableSet<Type<?>> PARAMETER_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
   @SuppressWarnings("unchecked")
   private static final ImmutableSet<Type<?>> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
@@ -52,14 +52,14 @@ public class Types {
    */
 
   private static final ImmutableSet<TypeLiteral<?>> RESULT_JTYPES = toJTypes(RESULT_TYPES);
-  private static final ImmutableSet<TypeLiteral<?>> PARAM_JTYPES = toJTypes(PARAM_TYPES);
+  private static final ImmutableSet<TypeLiteral<?>> PARAMETER_JTYPES = toJTypes(PARAMETER_TYPES);
 
   /*
    * A few handy mappings.
    */
 
-  private static final ImmutableMap<TypeLiteral<?>, Type<?>> PARAM_JTYPE_TO_TYPE = createToTypeMap(
-      PARAM_TYPES);
+  private static final ImmutableMap<TypeLiteral<?>, Type<?>> PARAMETER_JTYPE_TO_TYPE = createToTypeMap(
+      PARAMETER_TYPES);
   private static final ImmutableMap<TypeLiteral<?>, Type<?>> RESULT_JTYPE_TO_TYPE = createToTypeMap(
       RESULT_TYPES);
   private static final ImmutableMap<Type<?>, ArrayType<?>> ELEM_TYPE_TO_ARRAY_TYPE = createElemTypeToArrayTypeMap(
@@ -69,8 +69,8 @@ public class Types {
     return BASIC_TYPES;
   }
 
-  public static ImmutableSet<Type<?>> paramTypes() {
-    return PARAM_TYPES;
+  public static ImmutableSet<Type<?>> parameterTypes() {
+    return PARAMETER_TYPES;
   }
 
   /**
@@ -86,12 +86,12 @@ public class Types {
     return RESULT_JTYPES;
   }
 
-  public static ImmutableSet<TypeLiteral<?>> paramJTypes() {
-    return PARAM_JTYPES;
+  public static ImmutableSet<TypeLiteral<?>> parameterJTypes() {
+    return PARAMETER_JTYPES;
   }
 
-  public static Type<?> paramJTypeToType(TypeLiteral<?> jType) {
-    return PARAM_JTYPE_TO_TYPE.get(jType);
+  public static Type<?> parameterJTypeToType(TypeLiteral<?> jType) {
+    return PARAMETER_JTYPE_TO_TYPE.get(jType);
   }
 
   public static Type<?> resultJTypeToType(TypeLiteral<?> jType) {

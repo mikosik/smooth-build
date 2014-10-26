@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.base.Types.paramJTypeToType;
+import static org.smoothbuild.lang.base.Types.parameterJTypeToType;
 import static org.smoothbuild.lang.base.Types.resultJTypeToType;
 import static org.smoothbuild.lang.function.base.Name.name;
 
@@ -78,7 +78,7 @@ public class SignatureFactory {
   private static Type<?> parameterMethodType(Method functionMethod, Method paramMethod) throws
       IllegalParamTypeException {
     TypeLiteral<?> jType = methodJType(paramMethod);
-    Type<?> type = paramJTypeToType(jType);
+    Type<?> type = parameterJTypeToType(jType);
     if (type == null) {
       throw new IllegalParamTypeException(functionMethod, paramMethod, jType);
     }
