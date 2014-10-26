@@ -9,10 +9,10 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
-public class InvalidExpr<T extends Value> extends Expression<T> {
+public class InvalidExpression<T extends Value> extends Expression<T> {
   private final Type<T> type;
 
-  public InvalidExpr(Type<T> type, CodeLocation codeLocation) {
+  public InvalidExpression(Type<T> type, CodeLocation codeLocation) {
     super(type, Empty.exprList(), codeLocation);
     this.type = checkNotNull(type);
   }
