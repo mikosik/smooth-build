@@ -41,32 +41,32 @@ public class SignatureFactory {
     }
   }
 
-  private static Iterable<Parameter> functionParams(Method functionMethod, Class<?> paramsInterface) throws NativeImplementationException {
-    if (!paramsInterface.isInterface()) {
+  private static Iterable<Parameter> functionParams(Method functionMethod,
+      Class<?> parametersInterface) throws NativeImplementationException {
+    if (!parametersInterface.isInterface()) {
       throw new ParamsIsNotInterfaceException(functionMethod);
     }
-    Method[] methods = paramsInterface.getMethods();
+    Method[] methods = parametersInterface.getMethods();
     List<Parameter> parameters = Lists.newArrayList();
     for (Method paramMethod : methods) {
-      parameters.add(paramMethodToSParam(functionMethod, paramMethod));
+      parameters.add(parameterMethodToParameter(functionMethod, paramMethod));
     }
     return parameters;
   }
 
-  private static Parameter paramMethodToSParam(Method functionMethod, Method paramMethod) throws
-      NativeImplementationException {
-    if (paramMethod.getParameterTypes().length != 0) {
-      throw new ParamMethodHasArgumentsException(functionMethod, paramMethod);
+  private static Parameter parameterMethodToParameter(Method functionMethod,
+      Method parameterMethod) throws NativeImplementationException {
+    if (parameterMethod.getParameterTypes().length != 0) {
+      throw new ParamMethodHasArgumentsException(functionMethod, parameterMethod);
     }
 
-    Type<?> type = paramMethodType(functionMethod, paramMethod);
-    String name = paramMethod.getName();
-    boolean isRequired = paramMethod.getAnnotation(Required.class) != null;
+    Type<?> type = parameterMethodType(functionMethod, parameterMethod);
+    String name = parameterMethod.getName();
+    boolean isRequired = parameterMethod.getAnnotation(Required.class) != null;
     return Parameter.parameter(type, name, isRequired);
   }
 
-  private static Type<?> functionType(Method functionMethod) throws
-      NativeImplementationException {
+  private static Type<?> functionType(Method functionMethod) throws NativeImplementationException {
     TypeLiteral<?> jType = methodJType(functionMethod);
     Type<?> type = resultJTypeToType(jType);
     if (type == null) {
@@ -75,7 +75,7 @@ public class SignatureFactory {
     return type;
   }
 
-  private static Type<?> paramMethodType(Method functionMethod, Method paramMethod) throws
+  private static Type<?> parameterMethodType(Method functionMethod, Method paramMethod) throws
       IllegalParamTypeException {
     TypeLiteral<?> jType = methodJType(paramMethod);
     Type<?> type = paramJTypeToType(jType);
