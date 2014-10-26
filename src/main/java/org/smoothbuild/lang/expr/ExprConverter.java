@@ -45,7 +45,7 @@ public class ExprConverter {
     Name functionName = convertFunctionName(sourceType, destinationType);
 
     /*
-     * Cast is safe as FUNCTIONS as we assume that STypes.convertFunctionName()
+     * Cast is safe as we assume that STypes.convertFunctionName()
      * returns name of correct function.
      */
     @SuppressWarnings("unchecked")
