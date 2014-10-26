@@ -42,7 +42,7 @@ public class Mapper {
   public ImmutableMap<Parameter, Argument> detectMapping() {
     ImmutableList<Argument> namedArguments = Argument.filterNamed(allArguments);
 
-    detectDuplicatedAndUnknownArgNames(namedArguments);
+    detectDuplicatedAndUnknownArgumentNames(namedArguments);
     if (messages.containsProblems()) {
       return null;
     }
@@ -68,7 +68,7 @@ public class Mapper {
     return mapBuilder.build();
   }
 
-  private void detectDuplicatedAndUnknownArgNames(Collection<Argument> namedArguments) {
+  private void detectDuplicatedAndUnknownArgumentNames(Collection<Argument> namedArguments) {
     Set<String> unusedNames = Sets.newHashSet(parametersToNames(function.parameters()));
     Set<String> usedNames = Sets.newHashSet();
     for (Argument argument : namedArguments) {
