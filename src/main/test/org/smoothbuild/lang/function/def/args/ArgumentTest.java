@@ -4,9 +4,9 @@ import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
+import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
+import static org.smoothbuild.lang.function.def.args.Argument.pipedArgument;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -33,63 +33,63 @@ public class ArgumentTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void negative_index_is_forbidden_in_named_argument() {
-    namedArg(-1, name, expression, codeLocation);
+    namedArgument(-1, name, expression, codeLocation);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void zero_index_is_forbidden_in_named_argument() {
-    namedArg(0, name, expression, codeLocation);
+    namedArgument(0, name, expression, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbiddenInNamedArg() {
-    namedArg(1, null, expression, codeLocation);
+    namedArgument(1, null, expression, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_expression_is_forbidden_in_null_argument() {
-    namedArg(1, name, null, codeLocation);
+    namedArgument(1, name, null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_source_location_is_forbidden_in_named_argument() {
-    namedArg(1, name, expression, null);
+    namedArgument(1, name, expression, null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void negative_index_is_forbidden_in_nameless_argument() {
-    namelessArg(-1, expression, codeLocation);
+    namelessArgument(-1, expression, codeLocation);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void zero_index_is_forbidden_in_nameless_argument() {
-    namelessArg(0, expression, codeLocation);
+    namelessArgument(0, expression, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_expression_is_forbidden_in_nameless_argument() {
-    namelessArg(1, null, codeLocation);
+    namelessArgument(1, null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_source_location_is_forbidden_in_nameless_argument() {
-    namelessArg(1, expression, null);
+    namelessArgument(1, expression, null);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_expression_is_forbidden_in_piped_argument() {
-    pipedArg(null, codeLocation);
+    pipedArgument(null, codeLocation);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_source_location_is_forbidden_in_piped_argument() {
-    pipedArg(expression, null);
+    pipedArgument(expression, null);
   }
 
   @Test
   public void argument_type_is_equal_to_argument_expression_type() throws Exception {
     given(willReturn(FILE), expression).type();
-    when(namedArg(1, name, expression, codeLocation)).type();
+    when(namedArgument(1, name, expression, codeLocation)).type();
     thenReturned(FILE);
   }
 
@@ -100,21 +100,21 @@ public class ArgumentTest {
 
   @Test
   public void named_argument_has_name() throws Exception {
-    given(argument = namedArg(1, name, expression, codeLocation));
+    given(argument = namedArgument(1, name, expression, codeLocation));
     when(argument).hasName();
     thenReturned(true);
   }
 
   @Test
   public void nameless_argument_does_not_have_name() throws Exception {
-    given(argument = namelessArg(1, expression, codeLocation));
+    given(argument = namelessArgument(1, expression, codeLocation));
     when(argument).hasName();
     thenReturned(false);
   }
 
   @Test
   public void piped_argument_does_not_have_name() throws Exception {
-    given(argument = pipedArg(expression, codeLocation));
+    given(argument = pipedArgument(expression, codeLocation));
     when(argument).hasName();
     thenReturned(false);
   }
@@ -136,28 +136,28 @@ public class ArgumentTest {
   @Test
   public void named_argument_to_string() throws Exception {
     given(willReturn(STRING), expression).type();
-    when(namedArg(1, name, expression, codeLocation)).toString();
+    when(namedArgument(1, name, expression, codeLocation)).toString();
     thenReturned("String:" + name);
   }
 
   @Test
   public void nameless_argument_to_strig() throws Exception {
     given(willReturn(STRING), expression).type();
-    when(namelessArg(1, expression, codeLocation)).toString();
+    when(namelessArgument(1, expression, codeLocation)).toString();
     thenReturned("String:<nameless>");
   }
 
   @Test
   public void to_padded_string() throws Exception {
     given(willReturn(STRING), expression).type();
-    when(namedArg(1, "myName", expression, codeLocation)).toPaddedString(10, 13, 7);
+    when(namedArgument(1, "myName", expression, codeLocation)).toPaddedString(10, 13, 7);
     thenReturned("String    : myName        #1       " + codeLocation.toString());
   }
 
   @Test
   public void to_padded_string_with_short_limits() throws Exception {
     given(willReturn(STRING), expression).type();
-    when(namedArg(1, "myName", expression, codeLocation(1))).toPaddedString(1, 1, 1);
+    when(namedArgument(1, "myName", expression, codeLocation(1))).toPaddedString(1, 1, 1);
     thenReturned("String: myName #1 " + codeLocation.toString());
   }
 
@@ -182,12 +182,12 @@ public class ArgumentTest {
   }
 
   private static Argument named(String name) {
-    return Argument.namedArg(1, name, mock(Expression.class), codeLocation(1));
+    return Argument.namedArgument(1, name, mock(Expression.class), codeLocation(1));
   }
 
   private static Argument nameless(Type<?> type) {
     Expression<?> expression = mock(Expression.class);
     given(willReturn(type), expression).type();
-    return Argument.namelessArg(1, expression, codeLocation(1));
+    return Argument.namelessArgument(1, expression, codeLocation(1));
   }
 }

@@ -9,9 +9,9 @@ import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
-import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
+import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
+import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
+import static org.smoothbuild.lang.function.def.args.Argument.pipedArgument;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -37,15 +37,15 @@ public class AmbiguousNamelessArgsErrorTest {
   public void test() {
 
     Parameter p1 = parameter(STRING, "param1", false);
-    Argument a1 = namedArg(12, "arg1", expression(STRING), codeLocation(2));
+    Argument a1 = namedArgument(12, "arg1", expression(STRING), codeLocation(2));
 
     Parameter p2 = parameter(STRING_ARRAY, "param2", false);
-    Argument a2 = namelessArg(7, expression(STRING_ARRAY), codeLocation(12));
+    Argument a2 = namelessArgument(7, expression(STRING_ARRAY), codeLocation(12));
 
     Parameter p3 = parameter(FILE, "param3", false);
-    Argument a3 = pipedArg(expression(FILE), codeLocation(14));
+    Argument a3 = pipedArgument(expression(FILE), codeLocation(14));
 
-    Argument a4 = namedArg(3, "arg4", expression(NIL), codeLocation(7));
+    Argument a4 = namedArgument(3, "arg4", expression(NIL), codeLocation(7));
     Set<Argument> availableArguments = newHashSet();
     availableArguments.add(a4);
 

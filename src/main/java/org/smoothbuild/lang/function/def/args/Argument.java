@@ -21,17 +21,19 @@ public class Argument {
   private final Expression<?> expression;
   private final CodeLocation codeLocation;
 
-  public static Argument namedArg(int number, String name, Expression<?> expression, CodeLocation codeLocation) {
+  public static Argument namedArgument(int number, String name, Expression<?> expression,
+      CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Argument(number, checkNotNull(name), expression, codeLocation);
   }
 
-  public static Argument namelessArg(int number, Expression<?> expression, CodeLocation codeLocation) {
+  public static Argument namelessArgument(int number, Expression<?> expression,
+      CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Argument(number, null, expression, codeLocation);
   }
 
-  public static Argument pipedArg(Expression<?> expression, CodeLocation codeLocation) {
+  public static Argument pipedArgument(Expression<?> expression, CodeLocation codeLocation) {
     return new Argument(0, null, expression, codeLocation);
   }
 
