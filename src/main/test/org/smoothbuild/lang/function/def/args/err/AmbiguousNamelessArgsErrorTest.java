@@ -37,15 +37,15 @@ public class AmbiguousNamelessArgsErrorTest {
   public void test() {
 
     Param p1 = param(STRING, "param1", false);
-    Arg a1 = namedArg(12, "arg1", expr(STRING), codeLocation(2));
+    Arg a1 = namedArg(12, "arg1", expression(STRING), codeLocation(2));
 
     Param p2 = param(STRING_ARRAY, "param2", false);
-    Arg a2 = namelessArg(7, expr(STRING_ARRAY), codeLocation(12));
+    Arg a2 = namelessArg(7, expression(STRING_ARRAY), codeLocation(12));
 
     Param p3 = param(FILE, "param3", false);
-    Arg a3 = pipedArg(expr(FILE), codeLocation(14));
+    Arg a3 = pipedArg(expression(FILE), codeLocation(14));
 
-    Arg a4 = namedArg(3, "arg4", expr(NIL), codeLocation(7));
+    Arg a4 = namedArg(3, "arg4", expression(NIL), codeLocation(7));
     Set<Arg> availableArgs = newHashSet();
     availableArgs.add(a4);
 
@@ -75,7 +75,7 @@ public class AmbiguousNamelessArgsErrorTest {
     assertThat(error.toString()).isEqualTo(builder.build());
   }
 
-  private Expression<?> expr(Type<?> type) {
+  private Expression<?> expression(Type<?> type) {
     Expression<?> result = mock(Expression.class);
     given(willReturn(type), result).type();
     return result;

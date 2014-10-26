@@ -66,7 +66,7 @@ public class Arg {
     return expression.type();
   }
 
-  public Expression<?> expr() {
+  public Expression<?> expression() {
     return expression;
   }
 
@@ -109,7 +109,7 @@ public class Arg {
     ImmutableMultimap.Builder<Type<? extends Value>, Arg> builder = ImmutableMultimap.builder();
     for (Arg arg : args) {
       if (!arg.hasName()) {
-        Type<?> type = arg.expr().type();
+        Type<?> type = arg.expression().type();
         builder.put(type, arg);
       }
     }

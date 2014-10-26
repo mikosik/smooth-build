@@ -39,7 +39,7 @@ public class ArgExprsCreator {
     for (Map.Entry<Param, Arg> entry : paramToArgMap.entrySet()) {
       Param param = entry.getKey();
       Arg arg = entry.getValue();
-      Expression<?> expression = implicitConverter.apply(param.type(), arg.expr());
+      Expression<?> expression = implicitConverter.apply(param.type(), arg.expression());
       builder.put(param.name(), expression);
     }
 

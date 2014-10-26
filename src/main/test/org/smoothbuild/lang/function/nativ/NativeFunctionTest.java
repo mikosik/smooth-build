@@ -66,7 +66,7 @@ public class NativeFunctionTest {
     given(function = new NativeFunction<>(Hash.integer(33), signature, invoker, true));
     given(sstring = objectsDb.string("result"));
     given(willReturn(sstring), invoker).invoke(nativeApi, Empty.stringValueMap());
-    given(worker = function.createWorker(Empty.stringExprMap(), false, codeLocation(1)));
+    given(worker = function.createWorker(Empty.stringExpressionMap(), false, codeLocation(1)));
     when(worker).execute(TaskInput.fromTaskReturnValues(Empty.taskList()), nativeApi);
     thenReturned(new TaskOutput<>(sstring));
   }

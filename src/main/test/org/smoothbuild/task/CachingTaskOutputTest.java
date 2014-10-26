@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.util.SmoothJar;
-import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Array;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
@@ -46,8 +46,8 @@ public class CachingTaskOutputTest {
   private TaskGraph taskGraph2;
 
   private AtomicInteger counter;
-  private CountingExpr expr1;
-  private CountingExpr expr2;
+  private CountingExpression expression1;
+  private CountingExpression expression2;
   private ArrayExpression<SString> arrayExpression;
   private Task<?> task;
   private Task<SString> task2;
@@ -63,36 +63,41 @@ public class CachingTaskOutputTest {
   }
 
   @Test
-  public void calculating_cacheable_expression_for_second_time_uses_cached_output()
-      throws Exception {
+  public void calculating_cacheable_expression_for_second_time_uses_cached_output() throws
+      Exception {
     given(counter = new AtomicInteger());
-    given(expr1 = new CountingExpr(counter, Empty.exprList(), true));
-    given(expr2 = new CountingExpr(counter, Empty.exprList(), true));
-    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
+    given(expression1 = new CountingExpression(counter, Empty.expressionList(), true));
+    given(expression2 = new CountingExpression(counter, Empty.expressionList(), true));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1,
+        expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "1")));
   }
 
   @Test
-  public void calculating_non_cacheable_expression_for_second_time_does_not_use_cached_output()
-      throws Exception {
+  public void calculating_non_cacheable_expression_for_second_time_does_not_use_cached_output() throws
+      Exception {
     given(counter = new AtomicInteger());
-    given(expr1 = new CountingExpr(counter, Empty.exprList(), false));
-    given(expr2 = new CountingExpr(counter, Empty.exprList(), false));
-    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
+    given(expression1 = new CountingExpression(counter, Empty.expressionList(), false));
+    given(expression2 = new CountingExpression(counter, Empty.expressionList(), false));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1,
+        expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
   }
 
   @Test
-  public void expression_of_same_type_but_different_dependencies_do_not_share_cached_results()
-      throws Exception {
+  public void expression_of_same_type_but_different_dependencies_do_not_share_cached_results() throws
+      Exception {
     given(counter = new AtomicInteger());
-    given(expr1 = new CountingExpr(counter, ImmutableList.of(stringExpr("dep1")), true));
-    given(expr2 = new CountingExpr(counter, ImmutableList.of(stringExpr("dep2")), true));
-    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expr1, expr2), CL));
+    given(expression1 = new CountingExpression(counter, ImmutableList.of(stringExpression("dep1")),
+        true));
+    given(expression2 = new CountingExpression(counter, ImmutableList.of(stringExpression("dep2")),
+        true));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1,
+        expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
@@ -106,10 +111,10 @@ public class CachingTaskOutputTest {
     given(taskGraph2 = injector.getInstance(TaskGraph.class));
     given(objectsDb = injector.getInstance(ObjectsDb.class));
     given(counter = new AtomicInteger());
-    given(expr1 = new CountingExpr(counter, Empty.exprList(), true));
-    given(expr2 = new CountingExpr(counter, Empty.exprList(), true));
-    given(task = taskGraph.createTasks(expr1));
-    given(task2 = taskGraph2.createTasks(expr2));
+    given(expression1 = new CountingExpression(counter, Empty.expressionList(), true));
+    given(expression2 = new CountingExpression(counter, Empty.expressionList(), true));
+    given(task = taskGraph.createTasks(expression1));
+    given(task2 = taskGraph2.createTasks(expression2));
     given(taskGraph).executeAll();
     when(taskGraph2).executeAll();
     thenEqual(task.output(), new TaskOutput<>(objectsDb.string("1")));
@@ -120,7 +125,8 @@ public class CachingTaskOutputTest {
     private int counter = 0;
 
     @Override
-    protected void configure() {}
+    protected void configure() {
+    }
 
     @Provides
     @SmoothJar
@@ -129,7 +135,7 @@ public class CachingTaskOutputTest {
     }
   }
 
-  private ConstantExpression<SString> stringExpr(String string) {
+  private ConstantExpression<SString> stringExpression(String string) {
     return new ConstantExpression<>(STRING, objectsDb.string(string), CL);
   }
 
@@ -141,12 +147,12 @@ public class CachingTaskOutputTest {
     return builder.build();
   }
 
-  private static class CountingExpr extends Expression<SString> {
+  private static class CountingExpression extends Expression<SString> {
     private final AtomicInteger counter;
     private final boolean isCacheable;
 
-    public CountingExpr(AtomicInteger counter, ImmutableList<? extends Expression<?>> dependencies,
-        boolean isCacheable) {
+    public CountingExpression(AtomicInteger counter,
+        ImmutableList<? extends Expression<?>> dependencies, boolean isCacheable) {
       super(STRING, dependencies, CL);
       this.counter = counter;
       this.isCacheable = isCacheable;
@@ -162,8 +168,8 @@ public class CachingTaskOutputTest {
     private final AtomicInteger counter;
 
     public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
-      super(Hash.string("hash"), STRING, "counting", false, isCacheable, CodeLocation
-          .codeLocation(2));
+      super(Hash.string("hash"), STRING, "counting", false, isCacheable, CodeLocation.codeLocation(
+          2));
       this.counter = counter;
     }
 

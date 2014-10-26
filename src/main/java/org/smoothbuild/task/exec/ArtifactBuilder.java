@@ -31,7 +31,7 @@ public class ArtifactBuilder {
 
   public void addArtifact(Function<?> function) {
     Expression<?> expression = new CallExpression<>(function, false, CodeLocation.commandLine(),
-        Empty.stringExprMap());
+        Empty.stringExpressionMap());
     artifacts.put(function.name(), taskGraph.createTasks(expression));
   }
 

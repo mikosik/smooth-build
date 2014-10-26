@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExprError;
+import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExpressionError;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
@@ -13,7 +13,7 @@ public class InvalidExpression<T extends Value> extends Expression<T> {
   private final Type<T> type;
 
   public InvalidExpression(Type<T> type, CodeLocation codeLocation) {
-    super(type, Empty.exprList(), codeLocation);
+    super(type, Empty.expressionList(), codeLocation);
     this.type = checkNotNull(type);
   }
 
@@ -24,6 +24,6 @@ public class InvalidExpression<T extends Value> extends Expression<T> {
 
   @Override
   public TaskWorker<T> createWorker() {
-    throw new CannotCreateTaskWorkerFromInvalidExprError();
+    throw new CannotCreateTaskWorkerFromInvalidExpressionError();
   }
 }

@@ -33,9 +33,10 @@ public class TaskGraph {
     return new Task<>(expression.createWorker(), dependencies);
   }
 
-  private ImmutableList<Task<?>> createTasksImpl(ImmutableList<? extends Expression<?>> exprs) {
+  private ImmutableList<Task<?>> createTasksImpl(
+      ImmutableList<? extends Expression<?>> expressions) {
     Builder<Task<?>> builder = ImmutableList.builder();
-    for (Expression<?> expression : exprs) {
+    for (Expression<?> expression : expressions) {
       Task<?> executor = createTasksImpl(expression);
       builder.add(executor);
     }

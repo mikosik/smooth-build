@@ -23,7 +23,7 @@ import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.InvalidExpression;
-import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExprError;
+import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExpressionError;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -74,7 +74,7 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string(string));
     given(expression = new InvalidExpression<>(STRING, location));
     when(taskGraph).createTasks(expression);
-    thenThrown(new CannotCreateTaskWorkerFromInvalidExprError());
+    thenThrown(new CannotCreateTaskWorkerFromInvalidExpressionError());
   }
 
   @Test
@@ -101,7 +101,7 @@ public class ExpressionExecutionTest {
     given(stringExpression = new ConstantExpression<>(STRING, sstring, location));
     given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction<>(signature, stringExpression));
-    given(callExpression = new CallExpression<>(function, false, location, Empty.stringExprMap()));
+    given(callExpression = new CallExpression<>(function, false, location, Empty.stringExpressionMap()));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));

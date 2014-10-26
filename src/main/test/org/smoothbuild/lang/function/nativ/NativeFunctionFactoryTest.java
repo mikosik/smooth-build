@@ -208,7 +208,7 @@ public class NativeFunctionFactoryTest {
   public void testInvokation() throws Exception {
     given(stringFunction = (Function<SString>) createNativeFunction(
         ConstantStringFunction.class.getMethods()[0]));
-    given(worker = stringFunction.createWorker(Empty.stringExprMap(), false, codeLocation(1)));
+    given(worker = stringFunction.createWorker(Empty.stringExpressionMap(), false, codeLocation(1)));
     when(worker).execute(TaskInput.fromValues(ImmutableList.<Value>of()), nativeApi);
     thenReturned(new TaskOutput<>(objectsDb.string("constant string")));
   }
@@ -466,7 +466,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
     given(function = createNativeFunction(FuncWithThrowingSmoothMethod.class.getMethods()[0]));
-    given(worker = function.createWorker(Empty.stringExprMap(), false, codeLocation(1)));
+    given(worker = function.createWorker(Empty.stringExpressionMap(), false, codeLocation(1)));
     when(worker).execute(TaskInput.fromTaskReturnValues(Empty.taskList()), nativeApi);
     then(nativeApi.loggedMessages().containsProblems());
   }
