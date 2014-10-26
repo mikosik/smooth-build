@@ -17,7 +17,7 @@ import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -28,7 +28,7 @@ import com.google.common.base.Predicate;
 public class JunitFunction {
 
   public interface JunitParameters {
-    SArray<SBlob> libs();
+    SArray<Blob> libs();
 
     SString include();
   }

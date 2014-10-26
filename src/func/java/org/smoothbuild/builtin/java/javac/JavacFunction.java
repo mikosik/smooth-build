@@ -23,7 +23,7 @@ import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.Required;
@@ -42,7 +42,7 @@ public class JavacFunction {
     @Required
     SArray<SFile> sources();
 
-    SArray<SBlob> libs();
+    SArray<Blob> libs();
 
     SString source();
 

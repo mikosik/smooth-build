@@ -10,7 +10,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -23,11 +23,11 @@ public class JarjarFunction {
     public SString rules();
 
     @Required
-    public SBlob in();
+    public Blob in();
   }
 
   @SmoothFunction
-  public static SBlob jarjar(NativeApi nativeApi, JarjarParameters params) {
+  public static Blob jarjar(NativeApi nativeApi, JarjarParameters params) {
     TempDirectory tempDir = nativeApi.createTempDirectory();
 
     Path rulesPath = path("rules");

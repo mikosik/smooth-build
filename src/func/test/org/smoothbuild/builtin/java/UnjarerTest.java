@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -21,7 +21,7 @@ public class UnjarerTest {
 
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private final Unjarer unjarer = new Unjarer(objectsDb);
-  private SBlob blob;
+  private Blob blob;
   private SFile file1;
   private SFile file2;
 

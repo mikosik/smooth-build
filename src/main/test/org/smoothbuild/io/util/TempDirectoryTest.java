@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
@@ -132,7 +132,7 @@ public class TempDirectoryTest {
       @Override
       public boolean matches(Object object) {
         try {
-          return inputStreamToString(((SBlob) object).openInputStream()).equals(expected);
+          return inputStreamToString(((Blob) object).openInputStream()).equals(expected);
         } catch (IOException e) {
           throw new RuntimeException(e);
         }

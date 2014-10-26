@@ -7,7 +7,7 @@ import java.io.OutputStream;
 
 import org.smoothbuild.db.objects.marshal.BlobMarshaller;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 
 public class BlobBuilderImpl implements BlobBuilder {
   private final BlobMarshaller marshaller;
@@ -25,7 +25,7 @@ public class BlobBuilderImpl implements BlobBuilder {
   }
 
   @Override
-  public SBlob build() {
+  public Blob build() {
     checkState(outputStream != null, "No content available. Create one via openOutputStream()");
     byte[] bytes = outputStream.toByteArray();
     return marshaller.write(bytes);

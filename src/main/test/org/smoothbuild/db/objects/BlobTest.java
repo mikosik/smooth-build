@@ -12,19 +12,19 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 
 import com.google.common.hash.HashCode;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-public class SBlobTest {
+public class BlobTest {
   private final String string = "abc";
   private final String otherString = "def";
   private ObjectsDb objectsDb;
   private BlobBuilder blobBuilder;
-  private SBlob blob;
-  private SBlob blob2;
+  private Blob blob;
+  private Blob blob2;
   private HashCode hash;
 
   @Before
@@ -142,7 +142,7 @@ public class SBlobTest {
     thenReturned("Blob(3 bytes)");
   }
 
-  private static SBlob createBlob(ObjectsDb objectsDb, String content) throws Exception {
+  private static Blob createBlob(ObjectsDb objectsDb, String content) throws Exception {
     BlobBuilder blobBuilder = objectsDb.blobBuilder();
     writeAndClose(blobBuilder.openOutputStream(), content);
     return blobBuilder.build();

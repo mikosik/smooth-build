@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 
 import com.google.inject.Guice;
@@ -198,7 +198,7 @@ public class SFileTest {
     return objectsDb.file(path, createBlob(objectsDb, content));
   }
 
-  private static SBlob createBlob(ObjectsDb objectsDb, String content) throws Exception {
+  private static Blob createBlob(ObjectsDb objectsDb, String content) throws Exception {
     BlobBuilder blobBuilder = objectsDb.blobBuilder();
     writeAndClose(blobBuilder.openOutputStream(), content);
     return blobBuilder.build();

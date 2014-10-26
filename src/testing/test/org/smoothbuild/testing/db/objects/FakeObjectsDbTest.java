@@ -8,13 +8,13 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 
 public class FakeObjectsDbTest {
   private final String string = "my string";
   private final Path path = Path.path("my/file");
   private final FakeObjectsDb fakeObjectsDb = new FakeObjectsDb();
-  private SBlob blob;
+  private Blob blob;
   private final byte[] bytes = new byte[] { 1, 2, 3 };
 
   @Test

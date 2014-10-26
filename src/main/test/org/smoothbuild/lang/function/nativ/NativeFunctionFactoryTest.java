@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.SValue;
@@ -198,7 +198,7 @@ public class NativeFunctionFactoryTest {
 
   public static class SignatureTestFunction {
     @SmoothFunction
-    public static SBlob func(NativeApi nativeApi, SignatureTestParameters params) {
+    public static Blob func(NativeApi nativeApi, SignatureTestParameters params) {
       return null;
     }
   }
@@ -235,9 +235,9 @@ public class NativeFunctionFactoryTest {
 
     public SArray<SFile> fileArray();
 
-    public SBlob blob();
+    public Blob blob();
 
-    public SArray<SBlob> blobArray();
+    public SArray<Blob> blobArray();
   }
 
   public static class FuncWithAllowedParamTypes {
@@ -354,7 +354,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobResult {
     @SmoothFunction
-    public static SBlob myFunction(NativeApi nativeApi, EmptyParameters params) {
+    public static Blob myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }
@@ -393,7 +393,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithBlobArrayResult {
     @SmoothFunction
-    public static SArray<SBlob> myFunction(NativeApi nativeApi, EmptyParameters params) {
+    public static SArray<Blob> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
   }

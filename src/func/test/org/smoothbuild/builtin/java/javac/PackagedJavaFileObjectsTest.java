@@ -13,7 +13,7 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.testory.Closure;
@@ -25,7 +25,7 @@ public class PackagedJavaFileObjectsTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private SFile file1;
   private SFile file2;
-  private SBlob jar;
+  private Blob jar;
   private Multimap<String, JavaFileObject> objects;
   private JavaFileObject fileObject;
 
@@ -52,7 +52,7 @@ public class PackagedJavaFileObjectsTest {
     thenThrown(DuplicateClassFileError.class);
   }
 
-  private Closure javaFileObjects(final ImmutableList<SBlob> libraryJars) {
+  private Closure javaFileObjects(final ImmutableList<Blob> libraryJars) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {

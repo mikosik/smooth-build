@@ -4,7 +4,7 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.NativeApi;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.Required;
@@ -16,13 +16,13 @@ public class ToFileFunction {
     public SString path();
 
     @Required
-    public SBlob content();
+    public Blob content();
   }
 
   @SmoothFunction
   public static SFile toFile(NativeApi nativeApi, ToFileParameters params) {
     Path path = validatedPath("path", params.path());
-    SBlob content = params.content();
+    Blob content = params.content();
     return nativeApi.file(path, content);
   }
 }

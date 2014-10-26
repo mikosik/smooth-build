@@ -7,7 +7,7 @@ import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.objects.base.FileObject;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 
 import com.google.common.hash.HashCode;
@@ -21,7 +21,7 @@ public class FileMarshaller implements ObjectMarshaller<SFile> {
     this.blobMarshaller = checkNotNull(blobMarshaller);
   }
 
-  public SFile write(Path path, SBlob content) {
+  public SFile write(Path path, Blob content) {
     Marshaller marshaller = new Marshaller();
     marshaller.write(content.hash());
     marshaller.write(path);
@@ -36,7 +36,7 @@ public class FileMarshaller implements ObjectMarshaller<SFile> {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
       HashCode blobHash = unmarshaller.readHash();
       Path path = unmarshaller.readPath();
-      SBlob blob = blobMarshaller.read(blobHash);
+      Blob blob = blobMarshaller.read(blobHash);
 
       return new FileObject(hash, path, blob);
     }

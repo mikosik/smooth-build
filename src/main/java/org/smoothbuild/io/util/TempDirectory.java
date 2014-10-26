@@ -17,7 +17,7 @@ import org.smoothbuild.io.fs.disk.DiskFileSystem;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SValueFactory;
 import org.smoothbuild.util.Streams;
@@ -83,7 +83,7 @@ public class TempDirectory {
     writeFile(file.path(), file.content());
   }
 
-  public void writeFile(Path path, SBlob content) {
+  public void writeFile(Path path, Blob content) {
     assertNotDestroyed();
     try {
       writeFileImpl(path, content);
@@ -92,7 +92,7 @@ public class TempDirectory {
     }
   }
 
-  private void writeFileImpl(Path path, SBlob content) throws IOException {
+  private void writeFileImpl(Path path, Blob content) throws IOException {
     InputStream inputStream = content.openInputStream();
     OutputStream outputStream = fileSystem.openOutputStream(path);
     Streams.copy(inputStream, outputStream);
@@ -110,14 +110,14 @@ public class TempDirectory {
   private SArray<SFile> readFilesImpl() throws IOException {
     ArrayBuilder<SFile> arrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
     for (Path path : fileSystem.filesFromRecursive(Path.rootPath())) {
-      SBlob content = readContentImpl(path);
+      Blob content = readContentImpl(path);
       SFile file = valueFactory.file(path, content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();
   }
 
-  public SBlob readContent(Path path) {
+  public Blob readContent(Path path) {
     assertNotDestroyed();
     try {
       return readContentImpl(path);
@@ -126,7 +126,7 @@ public class TempDirectory {
     }
   }
 
-  private SBlob readContentImpl(Path path) throws IOException {
+  private Blob readContentImpl(Path path) throws IOException {
     BlobBuilder blobBuilder = valueFactory.blobBuilder();
     Streams.copy(fileSystem.openInputStream(path), blobBuilder.openOutputStream());
     return blobBuilder.build();

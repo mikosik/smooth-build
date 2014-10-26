@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.SArray;
-import org.smoothbuild.lang.base.SBlob;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -31,7 +31,7 @@ public class UnzipperTest {
 
   @Test
   public void unzipping() throws Exception {
-    SBlob zipBlob = zipped(fileName1, fileName2);
+    Blob zipBlob = zipped(fileName1, fileName2);
 
     SArray<SFile> resultFileArray = unzipper.unzip(zipBlob);
 
@@ -45,7 +45,7 @@ public class UnzipperTest {
 
   @Test
   public void unzipperIgnoresDirectories() throws Exception {
-    SBlob zipBlob = zipped(fileName1, directoryName);
+    Blob zipBlob = zipped(fileName1, directoryName);
 
     SArray<SFile> resultFileArray = unzipper.unzip(zipBlob);
 
@@ -56,7 +56,7 @@ public class UnzipperTest {
   @Test
   public void entryWithIllegalName() throws Exception {
     String illegalFileName = "/leading/slash/is/forbidden";
-    SBlob zipBlob = zipped(illegalFileName);
+    Blob zipBlob = zipped(illegalFileName);
     try {
       unzipper.unzip(zipBlob);
       fail("exception should be thrown");
@@ -65,7 +65,7 @@ public class UnzipperTest {
     }
   }
 
-  private SBlob zipped(String... fileNames) throws IOException {
+  private Blob zipped(String... fileNames) throws IOException {
     FakeFileSystem fileSystem = new FakeFileSystem();
     Path path = ZipTester.zippedFiles(fileSystem, fileNames);
     return objectsDb.blob(inputStreamToBytes(fileSystem.openInputStream(path)));
