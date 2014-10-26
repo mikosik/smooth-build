@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.base.Types.NIL;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArg;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArg;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArg;
@@ -23,7 +23,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.TypedParametersPool;
 import org.smoothbuild.util.LineBuilder;
@@ -36,25 +36,25 @@ public class AmbiguousNamelessArgsErrorTest {
   @Test
   public void test() {
 
-    Param p1 = param(STRING, "param1", false);
+    Parameter p1 = parameter(STRING, "param1", false);
     Argument a1 = namedArg(12, "arg1", expression(STRING), codeLocation(2));
 
-    Param p2 = param(STRING_ARRAY, "param2", false);
+    Parameter p2 = parameter(STRING_ARRAY, "param2", false);
     Argument a2 = namelessArg(7, expression(STRING_ARRAY), codeLocation(12));
 
-    Param p3 = param(FILE, "param3", false);
+    Parameter p3 = parameter(FILE, "param3", false);
     Argument a3 = pipedArg(expression(FILE), codeLocation(14));
 
     Argument a4 = namedArg(3, "arg4", expression(NIL), codeLocation(7));
     Set<Argument> availableArguments = newHashSet();
     availableArguments.add(a4);
 
-    Map<Param, Argument> paramToArgMap = ImmutableMap.of(p1, a1, p2, a2, p3, a3);
+    Map<Parameter, Argument> paramToArgMap = ImmutableMap.of(p1, a1, p2, a2, p3, a3);
 
-    Param p4 = param(FILE_ARRAY, "param4", false);
-    Param p5 = param(STRING_ARRAY, "param5", false);
+    Parameter p4 = parameter(FILE_ARRAY, "param4", false);
+    Parameter p5 = parameter(STRING_ARRAY, "param5", false);
     TypedParametersPool availableParams = new TypedParametersPool(newHashSet(p4, p5),
-        Sets.<Param>newHashSet());
+        Sets.<Parameter>newHashSet());
 
     AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(name("func"), paramToArgMap,
         availableArguments, availableParams);

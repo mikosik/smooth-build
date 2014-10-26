@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.lang.function.def.args.MapToString;
 import org.smoothbuild.lang.function.def.args.TypedParametersPool;
@@ -17,19 +17,19 @@ import org.smoothbuild.util.LineBuilder;
 @SuppressWarnings("serial")
 public class AmbiguousNamelessArgsError extends CodeMessage {
 
-  public AmbiguousNamelessArgsError(Name functionName, Map<Param, Argument> paramToArgMap,
+  public AmbiguousNamelessArgsError(Name functionName, Map<Parameter, Argument> paramToArgMap,
       Collection<Argument> availableArguments, TypedParametersPool availableTypedParams) {
     this(functionName, paramToArgMap, Argument.NUMBER_ORDERING.sortedCopy(availableArguments),
         availableTypedParams);
   }
 
-  public AmbiguousNamelessArgsError(Name functionName, Map<Param, Argument> paramToArgMap,
+  public AmbiguousNamelessArgsError(Name functionName, Map<Parameter, Argument> paramToArgMap,
       List<Argument> availableArguments, TypedParametersPool availableTypedParams) {
     super(ERROR, availableArguments.iterator().next().codeLocation(), message(functionName,
         paramToArgMap, availableArguments, availableTypedParams));
   }
 
-  private static String message(Name functionName, Map<Param, Argument> paramToArgMap,
+  private static String message(Name functionName, Map<Parameter, Argument> paramToArgMap,
       List<Argument> availableArguments, TypedParametersPool availableTypedParams) {
     String assignmentList = MapToString.toString(paramToArgMap);
     if (availableTypedParams.size() == 0) {

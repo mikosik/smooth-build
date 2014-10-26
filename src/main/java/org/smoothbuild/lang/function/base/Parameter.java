@@ -13,17 +13,17 @@ import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.hash.HashCode;
 
-public class Param {
+public class Parameter {
   private final Type<?> type;
   private final String name;
   private final boolean isRequired;
   private final HashCode nameHash;
 
-  public static Param param(Type<?> type, String name, boolean isRequired) {
-    return new Param(type, name, isRequired);
+  public static Parameter parameter(Type<?> type, String name, boolean isRequired) {
+    return new Parameter(type, name, isRequired);
   }
 
-  protected Param(Type<?> type, String name, boolean isRequired) {
+  protected Parameter(Type<?> type, String name, boolean isRequired) {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
@@ -54,10 +54,10 @@ public class Param {
 
   @Override
   public final boolean equals(Object object) {
-    if (!(object instanceof Param)) {
+    if (!(object instanceof Parameter)) {
       return false;
     }
-    Param that = (Param) object;
+    Parameter that = (Parameter) object;
     return this.type.equals(that.type) && this.name.equals(that.name)
         && this.isRequired == that.isRequired;
   }
@@ -78,29 +78,29 @@ public class Param {
     return "Param(" + type.name() + ": " + name + ")";
   }
 
-  public static String paramsToString(Set<Param> params) {
-    int typeLength = longestParamType(params);
-    int nameLength = longestParamName(params);
+  public static String parametersToString(Set<Parameter> parameters) {
+    int typeLength = longestParameterType(parameters);
+    int nameLength = longestParameterName(parameters);
 
     LineBuilder builder = new LineBuilder();
-    for (Param param : params) {
-      builder.addLine("  " + param.toPaddedString(typeLength, nameLength));
+    for (Parameter parameter : parameters) {
+      builder.addLine("  " + parameter.toPaddedString(typeLength, nameLength));
     }
     return builder.build();
   }
 
-  private static int longestParamType(Set<Param> params) {
+  private static int longestParameterType(Set<Parameter> parameters) {
     int result = 0;
-    for (Param param : params) {
-      result = Math.max(result, param.type().name().length());
+    for (Parameter parameter : parameters) {
+      result = Math.max(result, parameter.type().name().length());
     }
     return result;
   }
 
-  private static int longestParamName(Set<Param> params) {
+  private static int longestParameterName(Set<Parameter> parameters) {
     int result = 0;
-    for (Param param : params) {
-      result = Math.max(result, param.name().length());
+    for (Parameter parameter : parameters) {
+      result = Math.max(result, parameter.name().length());
     }
     return result;
   }

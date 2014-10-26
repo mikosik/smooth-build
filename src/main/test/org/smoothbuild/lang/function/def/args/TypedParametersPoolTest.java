@@ -3,38 +3,38 @@ package org.smoothbuild.lang.function.def.args;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 
 import com.google.common.collect.Sets;
 
 public class TypedParametersPoolTest {
-  Param string = param(STRING, "string1", false);
-  Param blob = param(BLOB, "blob", false);
+  Parameter string = parameter(STRING, "string1", false);
+  Parameter blob = parameter(BLOB, "blob", false);
 
-  Param stringRequired = param(STRING, "stringRequired", true);
-  Param stringRequired2 = param(STRING, "stringRequired2", true);
+  Parameter stringRequired = parameter(STRING, "stringRequired", true);
+  Parameter stringRequired2 = parameter(STRING, "stringRequired2", true);
 
-  Set<Param> optionalParams = Sets.newHashSet();
-  Set<Param> requiredParams = Sets.newHashSet();
-  TypedParametersPool pool = new TypedParametersPool(optionalParams, requiredParams);
+  Set<Parameter> optionalParameters = Sets.newHashSet();
+  Set<Parameter> requiredParameters = Sets.newHashSet();
+  TypedParametersPool pool = new TypedParametersPool(optionalParameters, requiredParameters);
 
   @Test
   public void requiredParams() throws Exception {
-    optionalParams.add(string);
-    requiredParams.add(stringRequired);
+    optionalParameters.add(string);
+    requiredParameters.add(stringRequired);
 
     assertThat(pool.requiredParams()).containsOnly(stringRequired);
   }
 
   @Test
   public void optionalParams() throws Exception {
-    optionalParams.add(string);
-    requiredParams.add(stringRequired);
+    optionalParameters.add(string);
+    requiredParameters.add(stringRequired);
 
     assertThat(pool.optionalParams()).containsOnly(string);
   }
@@ -51,7 +51,7 @@ public class TypedParametersPoolTest {
 
   @Test
   public void hasCandidateForOptionalParam() throws Exception {
-    requiredParams.add(stringRequired);
+    requiredParameters.add(stringRequired);
 
     assertThat(pool.hasCandidate()).isTrue();
     assertThat(pool.candidate()).isSameAs(stringRequired);
@@ -59,7 +59,7 @@ public class TypedParametersPoolTest {
 
   @Test
   public void hasCandidateForOneOptionalParam() throws Exception {
-    optionalParams.add(string);
+    optionalParameters.add(string);
 
     assertThat(pool.hasCandidate()).isTrue();
     assertThat(pool.candidate()).isSameAs(string);
@@ -67,8 +67,8 @@ public class TypedParametersPoolTest {
 
   @Test
   public void hasCandidateForOptionalAndOneNonRequiredParam() throws Exception {
-    requiredParams.add(stringRequired);
-    optionalParams.add(string);
+    requiredParameters.add(stringRequired);
+    optionalParameters.add(string);
 
     assertThat(pool.hasCandidate()).isTrue();
     assertThat(pool.candidate()).isSameAs(stringRequired);
@@ -81,31 +81,31 @@ public class TypedParametersPoolTest {
 
   @Test
   public void doesNotHaveCandidateWhenTwoNonRequiredParamsExist() throws Exception {
-    optionalParams.add(string);
-    optionalParams.add(blob);
+    optionalParameters.add(string);
+    optionalParameters.add(blob);
     assertThat(pool.hasCandidate()).isFalse();
   }
 
   @Test
   public void doesNotHaveCandidateWhenTwoRequiredParamsExist() throws Exception {
-    requiredParams.add(stringRequired);
-    requiredParams.add(stringRequired2);
+    requiredParameters.add(stringRequired);
+    requiredParameters.add(stringRequired2);
     assertThat(pool.hasCandidate()).isFalse();
   }
 
   @Test
   public void doesNotHaveCandidateWhenTwoRequiredAndOneNonRequiredParamsExist() throws Exception {
-    requiredParams.add(stringRequired);
-    requiredParams.add(stringRequired2);
-    optionalParams.add(string);
+    requiredParameters.add(stringRequired);
+    requiredParameters.add(stringRequired2);
+    optionalParameters.add(string);
     assertThat(pool.hasCandidate()).isFalse();
   }
 
   @Test
   public void haveCandidateWhenOptionalAndTwoNonRequiredParamsExist() throws Exception {
-    requiredParams.add(stringRequired);
-    optionalParams.add(string);
-    optionalParams.add(blob);
+    requiredParameters.add(stringRequired);
+    optionalParameters.add(string);
+    optionalParameters.add(blob);
 
     assertThat(pool.hasCandidate()).isTrue();
     assertThat(pool.candidate()).isSameAs(stringRequired);
@@ -118,8 +118,8 @@ public class TypedParametersPoolTest {
 
   @Test
   public void size() throws Exception {
-    optionalParams.add(string);
-    requiredParams.add(stringRequired);
+    optionalParameters.add(string);
+    requiredParameters.add(stringRequired);
 
     assertThat(pool.size()).isEqualTo(2);
   }

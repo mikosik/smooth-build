@@ -6,8 +6,8 @@ import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.paramTypes;
-import static org.smoothbuild.lang.function.base.Param.param;
-import static org.smoothbuild.lang.function.base.Param.paramsToString;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
@@ -22,45 +22,45 @@ import org.smoothbuild.util.LineBuilder;
 import com.google.common.hash.HashCode;
 import com.google.common.testing.EqualsTester;
 
-public class ParamTest {
+public class ParameterTest {
 
   @Test(expected = NullPointerException.class)
   public void null_type_is_forbidden() throws Exception {
-    param(null, "name", true);
+    parameter(null, "name", true);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_name_is_forbidden() throws Exception {
-    param(STRING, null, true);
+    parameter(STRING, null, true);
   }
 
   @Test
   public void type() throws Exception {
-    assertThat(param(STRING, "name", true).type()).isEqualTo(STRING);
+    assertThat(parameter(STRING, "name", true).type()).isEqualTo(STRING);
   }
 
   @Test
   public void name() throws Exception {
-    assertThat(param(STRING, "name", true).name()).isEqualTo("name");
+    assertThat(parameter(STRING, "name", true).name()).isEqualTo("name");
   }
 
   @Test
   public void is_required() throws Exception {
-    assertThat(param(STRING, "name", true).isRequired()).isTrue();
+    assertThat(parameter(STRING, "name", true).isRequired()).isTrue();
   }
 
   @Test
   public void params_with_different_names_have_different_name_hashes() throws Exception {
-    HashCode hash1 = param(STRING, "name1", true).nameHash();
-    HashCode hash2 = param(STRING, "name2", true).nameHash();
+    HashCode hash1 = parameter(STRING, "name1", true).nameHash();
+    HashCode hash2 = parameter(STRING, "name2", true).nameHash();
     assertThat(hash1).isNotEqualTo(hash2);
   }
 
   @Test
   public void params_with_same_names_but_different_types_have_the_same_name_hashes()
       throws Exception {
-    HashCode hash1 = param(STRING, "name1", true).nameHash();
-    HashCode hash2 = param(BLOB, "name1", true).nameHash();
+    HashCode hash1 = parameter(STRING, "name1", true).nameHash();
+    HashCode hash2 = parameter(BLOB, "name1", true).nameHash();
     assertThat(hash1).isEqualTo(hash2);
   }
 
@@ -68,13 +68,13 @@ public class ParamTest {
   public void equals_and_hash_code() throws Exception {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(param(STRING, "equal", false), param(STRING, "equal", false));
+    tester.addEqualityGroup(parameter(STRING, "equal", false), parameter(STRING, "equal", false));
 
     for (Type<?> type : paramTypes()) {
-      tester.addEqualityGroup(param(type, "name", false));
-      tester.addEqualityGroup(param(type, "name", true));
-      tester.addEqualityGroup(param(type, "name2", false));
-      tester.addEqualityGroup(param(type, "name2", true));
+      tester.addEqualityGroup(parameter(type, "name", false));
+      tester.addEqualityGroup(parameter(type, "name", true));
+      tester.addEqualityGroup(parameter(type, "name2", false));
+      tester.addEqualityGroup(parameter(type, "name2", true));
     }
 
     tester.testEquals();
@@ -85,8 +85,8 @@ public class ParamTest {
     Expression<?> expression = mock(Expression.class);
     given(willReturn(STRING), expression).type();
 
-    Param param = param(STRING, "myName", false);
-    String actual = param.toPaddedString(10, 13);
+    Parameter parameter = parameter(STRING, "myName", false);
+    String actual = parameter.toPaddedString(10, 13);
 
     assertThat(actual).isEqualTo("String    : myName       ");
   }
@@ -96,25 +96,25 @@ public class ParamTest {
     Expression<?> expression = mock(Expression.class);
     given(willReturn(STRING), expression).type();
 
-    Param param = param(STRING, "myName", false);
-    String actual = param.toPaddedString(1, 1);
+    Parameter parameter = parameter(STRING, "myName", false);
+    String actual = parameter.toPaddedString(1, 1);
 
     assertThat(actual).isEqualTo("String: myName");
   }
 
   @Test
   public void to_string() throws Exception {
-    assertThat(param(STRING, "name", false).toString()).isEqualTo("Param(String: name)");
+    assertThat(parameter(STRING, "name", false).toString()).isEqualTo("Param(String: name)");
   }
 
   @Test
   public void params_to_string() throws Exception {
-    Set<Param> params = newHashSet();
-    params.add(param(STRING, "param1", false));
-    params.add(param(STRING, "param2-with-very-long", false));
-    params.add(param(FILE_ARRAY, "param3", true));
+    Set<Parameter> parameters = newHashSet();
+    parameters.add(parameter(STRING, "param1", false));
+    parameters.add(parameter(STRING, "param2-with-very-long", false));
+    parameters.add(parameter(FILE_ARRAY, "param3", true));
 
-    String actual = paramsToString(params);
+    String actual = parametersToString(parameters);
 
     LineBuilder builder = new LineBuilder();
     builder.addLine("  String: param1               ");

@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -122,8 +122,9 @@ public class NativeModuleFactoryTest {
   @Test
   public void function_signature_contains_all_params() throws Exception {
     given(module = createNativeModule(ModuleWithTwoParamFunction.class));
-    when(module.getFunction(name("func")).params());
-    thenReturned(ImmutableList.of(param(STRING, "param1", false), param(STRING, "param2", false)));
+    when(module.getFunction(name("func")).parameters());
+    thenReturned(ImmutableList.of(parameter(STRING, "param1", false), parameter(STRING, "param2",
+        false)));
   }
 
   public static class ModuleWithTwoParamFunction {
@@ -171,7 +172,7 @@ public class NativeModuleFactoryTest {
   public void params_annotated_as_required_are_required() throws Exception {
     given(module = createNativeModule(ModuleWithFunctionWithRequiredParam.class));
     given(function = module.getFunction(name("func")));
-    when(function.params().get(0).isRequired());
+    when(function.parameters().get(0).isRequired());
     thenReturned(true);
   }
 
@@ -191,7 +192,7 @@ public class NativeModuleFactoryTest {
   public void params_not_annotated_as_required_are_not_required() throws Exception {
     given(module = createNativeModule(ModuleWithFunctionWithNotRequiredParam.class));
     given(function = module.getFunction(name("func")));
-    when(function.params().get(0).isRequired());
+    when(function.parameters().get(0).isRequired());
     thenReturned(false);
   }
 

@@ -5,7 +5,7 @@ import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Task;
 
@@ -30,7 +30,7 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableList<Param> paramList() {
+  public static ImmutableList<Parameter> paramList() {
     return ImmutableList.of();
   }
 

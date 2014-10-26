@@ -2,14 +2,14 @@ package org.smoothbuild.lang.function.def.args;
 
 import static org.smoothbuild.lang.base.Conversions.canConvert;
 import static org.smoothbuild.lang.base.Types.allTypes;
-import static org.smoothbuild.lang.function.base.Params.paramsToNames;
+import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
 
 import java.util.Collection;
 import java.util.Set;
 
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.args.err.MissingRequiredArgsError;
@@ -35,11 +35,11 @@ public class Mapper {
     this.codeLocation = codeLocation;
     this.messages = messages;
     this.function = function;
-    this.parametersPool = new ParametersPool(function.params());
+    this.parametersPool = new ParametersPool(function.parameters());
     this.allArguments = arguments;
   }
 
-  public ImmutableMap<Param, Argument> detectMapping() {
+  public ImmutableMap<Parameter, Argument> detectMapping() {
     ImmutableList<Argument> namedArguments = Argument.filterNamed(allArguments);
 
     detectDuplicatedAndUnknownArgNames(namedArguments);
@@ -58,10 +58,10 @@ public class Mapper {
       return null;
     }
 
-    Set<Param> missingRequiredParams = parametersPool.allRequired();
-    if (missingRequiredParams.size() != 0) {
+    Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
+    if (missingRequiredParameters.size() != 0) {
       messages.log(new MissingRequiredArgsError(codeLocation, function, mapBuilder,
-          missingRequiredParams));
+          missingRequiredParameters));
       return null;
     }
 
@@ -69,7 +69,7 @@ public class Mapper {
   }
 
   private void detectDuplicatedAndUnknownArgNames(Collection<Argument> namedArguments) {
-    Set<String> unusedNames = Sets.newHashSet(paramsToNames(function.params()));
+    Set<String> unusedNames = Sets.newHashSet(parametersToNames(function.parameters()));
     Set<String> usedNames = Sets.newHashSet();
     for (Argument argument : namedArguments) {
       if (argument.hasName()) {
@@ -91,12 +91,12 @@ public class Mapper {
     for (Argument argument : namedArguments) {
       if (argument.hasName()) {
         String name = argument.name();
-        Param param = parametersPool.take(name);
-        Type<?> paramType = param.type();
+        Parameter parameter = parametersPool.take(name);
+        Type<?> paramType = parameter.type();
         if (!canConvert(argument.type(), paramType)) {
           messages.log(new TypeMismatchError(argument, paramType));
         } else {
-          mapBuilder.add(param, argument);
+          mapBuilder.add(parameter, argument);
         }
       }
     }
@@ -113,9 +113,9 @@ public class Mapper {
 
         if (argsSize == 1 && availableTypedParams.hasCandidate()) {
           Argument onlyArgument = availableArguments.iterator().next();
-          Param candidateParam = availableTypedParams.candidate();
-          mapBuilder.add(candidateParam, onlyArgument);
-          parametersPool.take(candidateParam);
+          Parameter candidateParameter = availableTypedParams.candidate();
+          mapBuilder.add(candidateParameter, onlyArgument);
+          parametersPool.take(candidateParameter);
         } else {
           AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
               mapBuilder.build(), availableArguments, availableTypedParams);

@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
@@ -28,7 +28,7 @@ public class SignatureFactory {
       NativeImplementationException {
     Type<?> type = functionType(functionMethod);
     Name name = functionName(functionMethod);
-    Iterable<Param> params = functionParams(functionMethod, paramsInterface);
+    Iterable<Parameter> params = functionParams(functionMethod, paramsInterface);
 
     return new Signature<>(type, name, params);
   }
@@ -41,19 +41,19 @@ public class SignatureFactory {
     }
   }
 
-  private static Iterable<Param> functionParams(Method functionMethod, Class<?> paramsInterface) throws NativeImplementationException {
+  private static Iterable<Parameter> functionParams(Method functionMethod, Class<?> paramsInterface) throws NativeImplementationException {
     if (!paramsInterface.isInterface()) {
       throw new ParamsIsNotInterfaceException(functionMethod);
     }
     Method[] methods = paramsInterface.getMethods();
-    List<Param> params = Lists.newArrayList();
+    List<Parameter> parameters = Lists.newArrayList();
     for (Method paramMethod : methods) {
-      params.add(paramMethodToSParam(functionMethod, paramMethod));
+      parameters.add(paramMethodToSParam(functionMethod, paramMethod));
     }
-    return params;
+    return parameters;
   }
 
-  private static Param paramMethodToSParam(Method functionMethod, Method paramMethod) throws
+  private static Parameter paramMethodToSParam(Method functionMethod, Method paramMethod) throws
       NativeImplementationException {
     if (paramMethod.getParameterTypes().length != 0) {
       throw new ParamMethodHasArgumentsException(functionMethod, paramMethod);
@@ -62,7 +62,7 @@ public class SignatureFactory {
     Type<?> type = paramMethodType(functionMethod, paramMethod);
     String name = paramMethod.getName();
     boolean isRequired = paramMethod.getAnnotation(Required.class) != null;
-    return Param.param(type, name, isRequired);
+    return Parameter.parameter(type, name, isRequired);
   }
 
   private static Type<?> functionType(Method functionMethod) throws

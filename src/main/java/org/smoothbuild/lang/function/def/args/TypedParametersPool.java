@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.def.args;
 
 import java.util.Set;
 
-import org.smoothbuild.lang.function.base.Param;
+import org.smoothbuild.lang.function.base.Parameter;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -14,40 +14,40 @@ import com.google.common.collect.Sets;
  * well.
  */
 public class TypedParametersPool {
-  private final Set<Param> optionalParams;
-  private final Set<Param> requiredParams;
+  private final Set<Parameter> optionalParameters;
+  private final Set<Parameter> requiredParameters;
 
-  public TypedParametersPool(Set<Param> optionalParams, Set<Param> requiredParams) {
-    this.optionalParams = optionalParams;
-    this.requiredParams = requiredParams;
+  public TypedParametersPool(Set<Parameter> optionalParameters, Set<Parameter> requiredParameters) {
+    this.optionalParameters = optionalParameters;
+    this.requiredParameters = requiredParameters;
   }
 
-  public Set<Param> optionalParams() {
-    return optionalParams;
+  public Set<Parameter> optionalParams() {
+    return optionalParameters;
   }
 
-  public Set<Param> requiredParams() {
-    return requiredParams;
+  public Set<Parameter> requiredParams() {
+    return requiredParameters;
   }
 
   public boolean hasCandidate() {
-    return requiredParams.size() == 1 || (requiredParams.size() == 0 && optionalParams.size() == 1);
+    return requiredParameters.size() == 1 || (requiredParameters.size() == 0 && optionalParameters.size() == 1);
   }
 
-  public Param candidate() {
+  public Parameter candidate() {
     Preconditions.checkState(hasCandidate(), "No candidate available");
-    if (requiredParams.isEmpty()) {
-      return optionalParams.iterator().next();
+    if (requiredParameters.isEmpty()) {
+      return optionalParameters.iterator().next();
     } else {
-      return requiredParams.iterator().next();
+      return requiredParameters.iterator().next();
     }
   }
 
   public String toFormattedString() {
-    return Param.paramsToString(Sets.union(requiredParams, optionalParams));
+    return Parameter.parametersToString(Sets.union(requiredParameters, optionalParameters));
   }
 
   public int size() {
-    return optionalParams.size() + requiredParams.size();
+    return optionalParameters.size() + requiredParameters.size();
   }
 }

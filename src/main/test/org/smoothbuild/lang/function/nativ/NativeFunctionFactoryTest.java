@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Param.param;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
@@ -129,9 +129,9 @@ public class NativeFunctionFactoryTest {
   @Test
   public void function_params_are_equal_to_params_of_java_method() throws Exception {
     given(function = createNativeFunction(FunctionWithDifferentParams.class.getMethods()[0]));
-    when(function).params();
-    thenReturned(ImmutableList.of(param(STRING_ARRAY, "array", false), param(STRING, "string",
-        false)));
+    when(function).parameters();
+    thenReturned(ImmutableList.of(parameter(STRING_ARRAY, "array", false), parameter(STRING,
+        "string", false)));
   }
 
   public interface DifferentParams {
@@ -185,8 +185,8 @@ public class NativeFunctionFactoryTest {
     when(function.type());
     thenReturned(BLOB);
 
-    when(function.params());
-    thenReturned(ImmutableList.of(param(STRING, "string", false)));
+    when(function.parameters());
+    thenReturned(ImmutableList.of(parameter(STRING, "string", false)));
 
     when(function.name());
     thenReturned(name("func"));
@@ -250,7 +250,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void param_annotated_as_required_is_required() throws Exception {
     given(function = createNativeFunction(FuncWithRequiredParam.class.getMethods()[0]));
-    when(function.params().get(0).isRequired());
+    when(function.parameters().get(0).isRequired());
     thenReturned(true);
   }
 
@@ -269,7 +269,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void param_not_annotated_as_required_is_not_required() throws Exception {
     given(function = createNativeFunction(FuncWithNotRequiredParam.class.getMethods()[0]));
-    when(function.params().get(0).isRequired());
+    when(function.parameters().get(0).isRequired());
     thenReturned(false);
   }
 
