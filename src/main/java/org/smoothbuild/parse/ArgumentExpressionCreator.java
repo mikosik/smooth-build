@@ -17,11 +17,11 @@ import org.smoothbuild.message.listen.LoggedMessages;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class ArgExprsCreator {
+public class ArgumentExpressionCreator {
   private final ImplicitConverter implicitConverter;
 
   @Inject
-  public ArgExprsCreator(ImplicitConverter implicitConverter) {
+  public ArgumentExpressionCreator(ImplicitConverter implicitConverter) {
     this.implicitConverter = implicitConverter;
   }
 
