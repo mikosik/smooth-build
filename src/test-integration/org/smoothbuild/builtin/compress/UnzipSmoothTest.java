@@ -1,13 +1,36 @@
 package org.smoothbuild.builtin.compress;
 
+import static com.google.inject.Guice.createInjector;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
+import javax.inject.Inject;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.cli.work.BuildWorker;
+import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.common.ZipTester;
-import org.smoothbuild.testing.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class UnzipSmoothTest extends IntegrationTestCase {
+public class UnzipSmoothTest {
+  @Inject
+  @ProjectDir
+  private FakeFileSystem fileSystem;
+  @Inject
+  private FakeUserConsole userConsole;
+  @Inject
+  private BuildWorker buildWorker;
+
+  @Before
+  public void before() {
+    createInjector(new IntegrationTestModule()).injectMembers(this);
+  }
 
   @Test
   public void testUnzipping() throws Exception {
@@ -16,15 +39,15 @@ public class UnzipSmoothTest extends IntegrationTestCase {
     Path path2 = path("b/fileB.txt");
     Path zipFile = ZipTester.zippedFiles(fileSystem, path1.value(), path2.value());
 
-    script("run : file(" + zipFile + ") | unzip ;");
+    script(fileSystem, "run : file(" + zipFile + ") | unzip ;");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
 
-    Path dirPath = RESULTS_PATH.append(path("run"));
+    Path dirPath = ARTIFACTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(dirPath, path1);
     fileSystem.assertFileContainsItsPath(dirPath, path2);
   }

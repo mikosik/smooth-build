@@ -1,24 +1,48 @@
 package org.smoothbuild.builtin.java;
 
 import static com.google.common.io.ByteStreams.toByteArray;
+import static com.google.inject.Guice.createInjector;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.inject.Inject;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
 import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
+import org.smoothbuild.cli.work.BuildWorker;
+import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 import org.smoothbuild.util.LineBuilder;
 
-public class JavacSmoothTest extends IntegrationTestCase {
+public class JavacSmoothTest {
+  @Inject
+  @ProjectDir
+  private FakeFileSystem fileSystem;
+  @Inject
+  private FakeUserConsole userConsole;
+  @Inject
+  private BuildWorker buildWorker;
+
+  @Before
+  public void before() {
+    createInjector(new IntegrationTestModule()).injectMembers(this);
+  }
+
   MyClassLoader classLoader = new MyClassLoader();
 
   @Test
@@ -26,16 +50,16 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public private class MyClass {}");
 
-    script("run : [ file(path=" + path + ") ] | javac ;");
-    build("run");
+    script(fileSystem, "run : [ file(path=" + path + ") ] | javac ;");
+    buildWorker.run(asList("run"));
 
     userConsole.messages().assertContainsOnly(JavaCompilerMessage.class);
   }
 
   @Test
   public void compileZeroFiles() throws Exception {
-    script("run : [ ] | javac ;");
-    build("run");
+    script(fileSystem, "run : [ ] | javac ;");
+    buildWorker.run(asList("run"));
 
     userConsole.messages().assertContainsOnly(NoJavaSourceFilesFoundWarning.class);
   }
@@ -54,12 +78,12 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, builder.build());
 
-    script("run : [ file(path=" + path + ") ] | javac ;");
-    build("run");
+    script(fileSystem, "run : [ file(path=" + path + ") ] | javac ;");
+    buildWorker.run(asList("run"));
 
     userConsole.messages().assertNoProblems();
 
-    Path artifactPath = RESULTS_PATH.append(path("run"));
+    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     Path classFile = artifactPath.append(path("MyClass.class"));
     Object result = invoke(classFile, "myMethod");
     assertThat(result).isEqualTo(returnedString);
@@ -101,11 +125,11 @@ public class JavacSmoothTest extends IntegrationTestCase {
     builder.addLine("libraryJar: libraryClasses | jar ;");
     builder.addLine("appClasses: [ file(path=" + appJavaFile + ") ] | javac(libs=[libraryJar]) ;");
     builder.addLine("run: libraryClasses | concatenateFiles(with=appClasses) ;");
-    this.script(builder.build());
+    script(fileSystem, builder.build());
 
-    build("run");
+    buildWorker.run(asList("run"));
 
-    Path artifactPath = RESULTS_PATH.append(path("run"));
+    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     Path libClassFile = artifactPath.append(path("library/LibraryClass.class"));
     Path appClassFile = artifactPath.append(path("MyClass2.class"));
 
@@ -121,8 +145,8 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
 
-    script("run : [ file(" + path + "), file(" + path + ") ] | javac ;");
-    build("run");
+    script(fileSystem, "run : [ file(" + path + "), file(" + path + ") ] | javac ;");
+    buildWorker.run(asList("run"));
 
     userConsole.messages().assertContainsOnly(JavaCompilerMessage.class);
   }
@@ -132,8 +156,8 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
 
-    script("run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
-    build("run");
+    script(fileSystem, "run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
+    buildWorker.run(asList("run"));
 
     userConsole.messages().assertContainsOnly(IllegalSourceParamError.class);
   }
@@ -143,8 +167,8 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
 
-    script("run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
-    build("run");
+    script(fileSystem, "run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
+    buildWorker.run(asList("run"));
 
     userConsole.messages().assertContainsOnly(IllegalTargetParamError.class);
   }
@@ -154,8 +178,8 @@ public class JavacSmoothTest extends IntegrationTestCase {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public enum MyClass { VALUE }");
 
-    script("run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
-    build("run");
+    script(fileSystem, "run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
+    buildWorker.run(asList("run"));
 
     userConsole.messages().assertContainsOnly(JavaCompilerMessage.class);
   }

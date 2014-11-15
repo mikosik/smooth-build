@@ -1,15 +1,39 @@
 package org.smoothbuild.builtin.file;
 
+import static com.google.inject.Guice.createInjector;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.cli.work.BuildWorker;
+import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class FileArraySmoothTest extends IntegrationTestCase {
+public class FileArraySmoothTest {
+  @Inject
+  @ProjectDir
+  private FakeFileSystem fileSystem;
+  @Inject
+  private FakeUserConsole userConsole;
+  @Inject
+  private BuildWorker buildWorker;
+
+  @Before
+  public void before() {
+    createInjector(new IntegrationTestModule()).injectMembers(this);
+  }
+
   Path path1 = path("file/path/file1.txt");
   Path path2 = path("file/path/file2.txt");
 
@@ -18,14 +42,14 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
-    script("run : [ file(" + path1 + "), file(" + path2 + "), ];");
+    script(fileSystem, "run : [ file(" + path1 + "), file(" + path2 + "), ];");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = RESULTS_PATH.append(path("run"));
+    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(artifactPath, path1);
     fileSystem.assertFileContainsItsPath(artifactPath, path2);
   }
@@ -33,10 +57,10 @@ public class FileArraySmoothTest extends IntegrationTestCase {
   @Test
   public void arrayWithOnlyCommaIsForbidden() throws Exception {
     // given
-    script("run : [ , ];");
+    script(fileSystem, "run : [ , ];");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertContainsOnly(SyntaxError.class);
@@ -48,14 +72,14 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
-    script("run : [ file(" + path1 + "), file(" + path2 + ") ];");
+    script(fileSystem, "run : [ file(" + path1 + "), file(" + path2 + ") ];");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = RESULTS_PATH.append(path("run"));
+    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(artifactPath, path1);
     fileSystem.assertFileContainsItsPath(artifactPath, path2);
   }
@@ -65,24 +89,24 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFileContainingItsPath(path1);
 
-    script("run : [ file(" + path1 + ") ];");
+    script(fileSystem, "run : [ file(" + path1 + ") ];");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = RESULTS_PATH.append(path("run"));
+    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     fileSystem.assertFileContainsItsPath(artifactPath, path1);
   }
 
   @Test
   public void saveEmptyFileArray() throws IOException {
     // given
-    script("run : [ ];");
+    script(fileSystem, "run : [ ];");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
@@ -93,10 +117,10 @@ public class FileArraySmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFileContainingItsPath(path1);
 
-    script("run : [ file(" + path1 + "), file(" + path1 + ") ] | filter('nothing');\n");
+    script(fileSystem, "run : [ file(" + path1 + "), file(" + path1 + ") ] | filter('nothing');\n");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();

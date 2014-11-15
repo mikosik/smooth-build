@@ -1,36 +1,61 @@
 package org.smoothbuild.base;
 
+import static com.google.inject.Guice.createInjector;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
 
-import org.junit.Test;
-import org.smoothbuild.testing.integration.IntegrationTestCase;
+import javax.inject.Inject;
 
-public class StringSmoothTest extends IntegrationTestCase {
+import org.junit.Before;
+import org.junit.Test;
+import org.smoothbuild.cli.work.BuildWorker;
+import org.smoothbuild.io.fs.ProjectDir;
+import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.integration.IntegrationTestUtils;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeUserConsole;
+
+public class StringSmoothTest {
+  @Inject
+  @ProjectDir
+  private FakeFileSystem fileSystem;
+  @Inject
+  private FakeUserConsole userConsole;
+  @Inject
+  private BuildWorker buildWorker;
+
+  @Before
+  public void before() {
+    createInjector(new IntegrationTestModule()).injectMembers(this);
+  }
+
   @Test
   public void escapingDoubleQuotes() throws IOException {
     // given
-    script("run : '\\\"' ;");
+    script(fileSystem, "run : '\\\"' ;");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(RESULTS_PATH.append(path("run")), "\"");
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\"");
   }
 
   @Test
   public void escapingBackslash() throws IOException {
     // given
-    script("run : '\\\\' ;");
+    script(fileSystem, "run : '\\\\' ;");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(RESULTS_PATH.append(path("run")), "\\");
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\\");
   }
 }

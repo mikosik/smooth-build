@@ -1,20 +1,43 @@
 package org.smoothbuild.builtin.java;
 
+import static com.google.inject.Guice.createInjector;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
+import org.smoothbuild.cli.work.BuildWorker;
+import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
-public class JunitSmoothTest extends IntegrationTestCase {
+public class JunitSmoothTest {
   private static final String FAILING_TEST_CLASS = "MyClassFailingTest";
   private static final String SUCCESS_TEST_CLASS = "MyClassTest";
+
+  @Inject
+  @ProjectDir
+  private FakeFileSystem fileSystem;
+  @Inject
+  private FakeUserConsole userConsole;
+  @Inject
+  private BuildWorker buildWorker;
+
+  @Before
+  public void before() {
+    createInjector(new IntegrationTestModule()).injectMembers(this);
+  }
 
   Path srcPath = path("src");
   Path fakeJunitPath = path("junit");
@@ -24,9 +47,9 @@ public class JunitSmoothTest extends IntegrationTestCase {
     createTestAnnotation();
     createSuccessfulTest();
 
-    script(createScript());
+    script(fileSystem, createscript());
 
-    build("run");
+    buildWorker.run(asList("run"));
     assertThat(userConsole.messages()).isEmpty();
   }
 
@@ -35,9 +58,9 @@ public class JunitSmoothTest extends IntegrationTestCase {
     createTestAnnotation();
     createFailingTest();
 
-    script(createScript());
+    script(fileSystem, createscript());
 
-    build("run");
+    buildWorker.run(asList("run"));
     userConsole.messages().assertContainsOnly(JunitTestFailedError.class);
   }
 
@@ -46,9 +69,9 @@ public class JunitSmoothTest extends IntegrationTestCase {
     createTestAnnotation();
     fileSystem.createDir(srcPath);
 
-    script(createScript());
+    script(fileSystem, createscript());
 
-    build("run");
+    buildWorker.run(asList("run"));
     userConsole.messages().assertNoProblems();
     userConsole.messages().assertContains(NoJunitTestFoundWarning.class);
   }
@@ -59,17 +82,17 @@ public class JunitSmoothTest extends IntegrationTestCase {
     createSuccessfulTest();
     createFailingTest();
 
-    script(createScript(SUCCESS_TEST_CLASS + ".class"));
+    script(fileSystem, createscript(SUCCESS_TEST_CLASS + ".class"));
 
-    build("run");
+    buildWorker.run(asList("run"));
     assertThat(userConsole.messages()).isEmpty();
   }
 
-  private String createScript() {
-    return createScript(null);
+  private String createscript() {
+    return createscript(null);
   }
 
-  private String createScript(String pattern) {
+  private String createscript(String pattern) {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("sources: files(" + srcPath + ");");
     builder.addLine("fakeJunitJar: files(" + fakeJunitPath + ") | javac | jar;");
