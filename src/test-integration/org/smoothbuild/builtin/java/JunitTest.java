@@ -22,7 +22,7 @@ import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
-public class JunitSmoothTest {
+public class JunitTest {
   private static final String FAILING_TEST_CLASS = "MyClassFailingTest";
   private static final String SUCCESS_TEST_CLASS = "MyClassTest";
 

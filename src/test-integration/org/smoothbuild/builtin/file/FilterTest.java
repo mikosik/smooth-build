@@ -24,7 +24,7 @@ import org.smoothbuild.testing.message.FakeUserConsole;
 
 import com.google.common.collect.ImmutableList;
 
-public class FilterSmoothTest {
+public class FilterTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;

@@ -1,4 +1,4 @@
-package org.smoothbuild.builtin.compress;
+package org.smoothbuild.builtin.java;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
@@ -9,10 +9,9 @@ import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 import javax.inject.Inject;
 
@@ -25,7 +24,7 @@ import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class ZipSmoothTest {
+public class JarTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
@@ -40,11 +39,15 @@ public class ZipSmoothTest {
   }
 
   @Test
-  public void zip_function() throws IOException {
+  public void jar_function() throws Exception {
     // given
-    fileSystem.createFile(path("dir/fileA.txt"), "fileA.txt");
-    fileSystem.createFile(path("dir/fileB.txt"), "fileB.txt");
-    script(fileSystem, "run : files('dir') | zip ;");
+    Path root = path("dir");
+    Path path1 = path("dir/fileA.txt");
+    Path path2 = path("dir/fileB.txt");
+    fileSystem.createFileContainingItsPath(root, path1);
+    fileSystem.createFileContainingItsPath(root, path2);
+
+    script(fileSystem, "run : files(" + root + ") | jar ;");
 
     // when
     buildWorker.run(asList("run"));
@@ -56,15 +59,14 @@ public class ZipSmoothTest {
     int fileCount = 0;
     Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     InputStream inputStream = fileSystem.openInputStream(artifactPath);
-    try (ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
-      ZipEntry entry = null;
-      while ((entry = zipInputStream.getNextEntry()) != null) {
+    try (JarInputStream jarInputStream = new JarInputStream(inputStream)) {
+      JarEntry entry = null;
+      while ((entry = jarInputStream.getNextJarEntry()) != null) {
         fileCount++;
-
         Path path = path(entry.getName());
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
           int len = 0;
-          while ((len = zipInputStream.read(buffer)) > 0) {
+          while ((len = jarInputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, len);
           }
           assertThat(new String(outputStream.toByteArray(), CHARSET)).isEqualTo(path.value());
