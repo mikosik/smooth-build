@@ -33,6 +33,19 @@ public class StringSmoothTest {
   }
 
   @Test
+  public void string_literal() throws IOException {
+    // given
+    script(fileSystem, "run : 'abc' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "abc");
+  }
+
+  @Test
   public void string_literal_with_escaped_double_quotes() throws IOException {
     // given
     script(fileSystem, "run : '\\\"' ;");
