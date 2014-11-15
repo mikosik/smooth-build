@@ -1,16 +1,31 @@
 package org.smoothbuild.base;
 
-import static org.smoothbuild.SmoothConstants.ARTIFACTS_DIR;
-import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
+import static com.google.inject.Guice.createInjector;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
+import javax.inject.Inject;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.cli.work.BuildWorker;
+import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.task.save.err.DuplicatePathsInFileArrayArtifactError;
-import org.smoothbuild.testing.integration.IntegrationTestCase;
+import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class ArtifactSaverSmoothTest extends IntegrationTestCase {
-  private static final Path RESULTS_PATH = SMOOTH_DIR.append(ARTIFACTS_DIR);
+public class ArtifactSaverSmoothTest {
+  @Inject
+  @ProjectDir
+  private FakeFileSystem fileSystem;
+  @Inject
+  private FakeUserConsole userConsole;
+  @Inject
+  private BuildWorker buildWorker;
 
   Path path1 = path("def/filename1.txt");
   Path path2 = path("def/filename2.txt");
@@ -19,19 +34,24 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
 
   String functionName = "myFunction";
 
+  @Before
+  public void before() {
+    createInjector(new IntegrationTestModule()).injectMembers(this);
+  }
+
   // basic types
 
   @Test
   public void storing_string_artifact() throws Exception {
     // given
-    script(functionName + " : '" + content1 + "' ;");
+    script(fileSystem, functionName + " : '" + content1 + "' ;");
 
     // when
-    build(functionName);
+    buildWorker.run(asList(functionName));
 
     // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = RESULTS_PATH.append(path(functionName));
+    Path artifactPath = ARTIFACTS_PATH.append(path(functionName));
     fileSystem.assertFileContains(artifactPath, content1);
   }
 
@@ -40,14 +60,14 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFile(path1, content1);
 
-    script(functionName + " : file(" + path1 + ") | content ;");
+    script(fileSystem, functionName + " : file(" + path1 + ") | content ;");
 
     // when
-    build(functionName);
+    buildWorker.run(asList(functionName));
 
     // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = RESULTS_PATH.append(path(functionName));
+    Path artifactPath = ARTIFACTS_PATH.append(path(functionName));
     fileSystem.assertFileContains(artifactPath, content1);
   }
 
@@ -56,14 +76,14 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
     // given
     fileSystem.createFile(path1, content1);
 
-    script(functionName + " : file(" + path1 + ") ;");
+    script(fileSystem, functionName + " : file(" + path1 + ") ;");
 
     // when
-    build(functionName);
+    buildWorker.run(asList(functionName));
 
     // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = RESULTS_PATH.append(path(functionName));
+    Path artifactPath = ARTIFACTS_PATH.append(path(functionName));
     fileSystem.assertFileContains(artifactPath, content1);
   }
 
@@ -72,15 +92,15 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
   @Test
   public void storing_string_array_artifact() throws Exception {
     // given
-    script(functionName + " : [ '" + content1 + "', '" + content2 + "' ]  ;");
+    script(fileSystem, functionName + " : [ '" + content1 + "', '" + content2 + "' ]  ;");
 
     // when
-    build(functionName);
+    buildWorker.run(asList(functionName));
 
     // then
     userConsole.messages().assertNoProblems();
 
-    Path dirPath = RESULTS_PATH.append(path(functionName));
+    Path dirPath = ARTIFACTS_PATH.append(path(functionName));
     Path artifact1Path = dirPath.append(path("0"));
     Path artifact2Path = dirPath.append(path("1"));
 
@@ -96,15 +116,16 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
 
     String functionName = "myFunction";
 
-    script(functionName + " : [ content(file(" + path1 + ")) , content(file(" + path2 + ")) ] ;");
+    script(fileSystem,
+        functionName + " : [ content(file(" + path1 + ")) , content(file(" + path2 + ")) ] ;");
 
     // when
-    build(functionName);
+    buildWorker.run(asList(functionName));
 
     // then
     userConsole.messages().assertNoProblems();
 
-    Path dirPath = RESULTS_PATH.append(path(functionName));
+    Path dirPath = ARTIFACTS_PATH.append(path(functionName));
     Path artifact1Path = dirPath.append(path("0"));
     Path artifact2Path = dirPath.append(path("1"));
 
@@ -120,15 +141,15 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
 
     String functionName = "myFunction";
 
-    script(functionName + " : [ file(" + path1 + ") , file(" + path2 + ") ]  ;");
+    script(fileSystem, functionName + " : [ file(" + path1 + ") , file(" + path2 + ") ]  ;");
 
     // when
-    build(functionName);
+    buildWorker.run(asList(functionName));
 
     // then
     userConsole.messages().assertNoProblems();
 
-    Path dirPath = RESULTS_PATH.append(path(functionName));
+    Path dirPath = ARTIFACTS_PATH.append(path(functionName));
     Path artifact1Path = dirPath.append(path1);
     Path artifact2Path = dirPath.append(path2);
 
@@ -137,17 +158,17 @@ public class ArtifactSaverSmoothTest extends IntegrationTestCase {
   }
 
   @Test
-  public void storing_file_array_artifact_logs_error_when_files_have_duplicated_paths()
-      throws Exception {
+  public void storing_file_array_artifact_logs_error_when_files_have_duplicated_paths() throws
+      Exception {
     // given
     fileSystem.createFile(path1, content1);
 
     String functionName = "myFunction";
 
-    script(functionName + " : [ file(" + path1 + ") , file(" + path1 + ") ]  ;");
+    script(fileSystem, functionName + " : [ file(" + path1 + ") , file(" + path1 + ") ]  ;");
 
     // when
-    build(functionName);
+    buildWorker.run(asList(functionName));
 
     // then
     userConsole.messages().assertContainsOnly(DuplicatePathsInFileArrayArtifactError.class);

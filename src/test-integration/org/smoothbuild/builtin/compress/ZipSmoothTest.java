@@ -1,8 +1,12 @@
 package org.smoothbuild.builtin.compress;
 
+import static com.google.inject.Guice.createInjector;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,28 +14,47 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.junit.Test;
-import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.integration.IntegrationTestCase;
+import javax.inject.Inject;
 
-public class ZipSmoothTest extends IntegrationTestCase {
+import org.junit.Before;
+import org.junit.Test;
+import org.smoothbuild.cli.work.BuildWorker;
+import org.smoothbuild.io.fs.ProjectDir;
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.message.FakeUserConsole;
+
+public class ZipSmoothTest {
+  @Inject
+  @ProjectDir
+  private FakeFileSystem fileSystem;
+  @Inject
+  private FakeUserConsole userConsole;
+  @Inject
+  private BuildWorker buildWorker;
+
+  @Before
+  public void before() {
+    createInjector(new IntegrationTestModule()).injectMembers(this);
+  }
 
   @Test
   public void testZipping() throws IOException {
     // given
     fileSystem.createFile(path("dir/fileA.txt"), "fileA.txt");
     fileSystem.createFile(path("dir/fileB.txt"), "fileB.txt");
-    script("run : files('dir') | zip ;");
+    script(fileSystem, "run : files('dir') | zip ;");
 
     // when
-    build("run");
+    buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    Path artifactPath = RESULTS_PATH.append(path("run"));
+    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     InputStream inputStream = fileSystem.openInputStream(artifactPath);
     try (ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
       ZipEntry entry = null;
