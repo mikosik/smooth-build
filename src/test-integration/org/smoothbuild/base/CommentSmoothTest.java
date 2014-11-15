@@ -2,6 +2,8 @@ package org.smoothbuild.base;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
+import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
@@ -32,11 +34,11 @@ public class CommentSmoothTest {
   }
 
   @Test
-  public void comments_are_ignored() throws IOException {
+  public void full_line_comment_is_ignored() throws IOException {
     // given
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("# full line comment");
-    builder.addLine("run: 'string value' ; # comment at the end of line");
+    builder.addLine("run: 'abc';");
     script(fileSystem, builder.build());
 
     // when
@@ -44,17 +46,34 @@ public class CommentSmoothTest {
 
     // then
     userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "abc");
   }
 
   @Test
-  public void comment_char_is_allowed_in_strings() throws IOException {
+  public void comments_are_ignored() throws IOException {
     // given
-    script(fileSystem, "run: '## string with hashes ##' ;");
+    ScriptBuilder builder = new ScriptBuilder();
+    builder.addLine("run: 'abc' ; # comment at the end of line");
+    script(fileSystem, builder.build());
 
     // when
     buildWorker.run(asList("run"));
 
     // then
     userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "abc");
+  }
+
+  @Test
+  public void comment_char_is_allowed_in_strings() throws IOException {
+    // given
+    script(fileSystem, "run: '###' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "###");
   }
 }
