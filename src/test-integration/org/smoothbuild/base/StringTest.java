@@ -1,4 +1,4 @@
-package org.smoothbuild.builtin.string;
+package org.smoothbuild.base;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
@@ -14,12 +14,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class ToBlobSmoothTest {
+public class StringTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
@@ -34,14 +33,41 @@ public class ToBlobSmoothTest {
   }
 
   @Test
-  public void to_blob_function() throws IOException {
-    String content = "file content";
+  public void string_literal() throws IOException {
+    // given
+    script(fileSystem, "run : 'abc' ;");
 
-    script(fileSystem, "run : toBlob('" + content + "');");
+    // when
     buildWorker.run(asList("run"));
 
+    // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(artifactPath, content);
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "abc");
+  }
+
+  @Test
+  public void string_literal_with_escaped_double_quotes() throws IOException {
+    // given
+    script(fileSystem, "run : '\\\"' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\"");
+  }
+
+  @Test
+  public void string_literal_with_escaped_backslash() throws IOException {
+    // given
+    script(fileSystem, "run : '\\\\' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\\");
   }
 }

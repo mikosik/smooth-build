@@ -1,12 +1,10 @@
-package org.smoothbuild.builtin.blob;
+package org.smoothbuild.builtin.compress;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -15,11 +13,12 @@ import org.junit.Test;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class ToStringSmoothTest {
+public class UnzipTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
@@ -34,16 +33,22 @@ public class ToStringSmoothTest {
   }
 
   @Test
-  public void to_string_function() throws IOException {
-    Path path = path("source/path/file.txt");
-    String content = "file content";
+  public void unzip_function() throws Exception {
+    // given
+    Path path1 = path("a/fileA.txt");
+    Path path2 = path("b/fileB.txt");
+    Path zipFile = ZipTester.zippedFiles(fileSystem, path1.value(), path2.value());
 
-    fileSystem.createFile(path, content);
+    script(fileSystem, "run : file(" + zipFile + ") | unzip ;");
 
-    script(fileSystem, "run : file(" + path + ") | content | toString ;");
+    // when
     buildWorker.run(asList("run"));
 
+    // then
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), content);
+
+    Path dirPath = ARTIFACTS_PATH.append(path("run"));
+    fileSystem.assertFileContainsItsPath(dirPath, path1);
+    fileSystem.assertFileContainsItsPath(dirPath, path2);
   }
 }

@@ -29,7 +29,7 @@ import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 import org.smoothbuild.util.LineBuilder;
 
-public class JavacSmoothTest {
+public class JavacTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;

@@ -25,7 +25,7 @@ import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
-public class ArraysSmoothTest {
+public class ArraysTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;

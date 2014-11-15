@@ -19,7 +19,7 @@ import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class FileSmoothTest {
+public class PathTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
@@ -34,19 +34,17 @@ public class FileSmoothTest {
   }
 
   @Test
-  public void save_file() throws IOException {
-    // given
+  public void path_function() throws IOException {
     Path path = path("file/path/file.txt");
-    String content = "file content";
-    fileSystem.createFile(path, content);
-    script(fileSystem, "run : file(" + path + ") ;");
+    fileSystem.createFile(path, "content");
 
-    // when
+    script(fileSystem, "run : file(" + path + ") | path ;");
+
     buildWorker.run(asList("run"));
 
-    // then
     userConsole.messages().assertNoProblems();
     Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(artifactPath, content);
+    fileSystem.assertFileContains(artifactPath, path.value());
   }
+
 }

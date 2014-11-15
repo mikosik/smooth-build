@@ -1,4 +1,4 @@
-package org.smoothbuild.builtin.blob;
+package org.smoothbuild.builtin.file;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
@@ -19,7 +19,7 @@ import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class ToFileSmoothTest {
+public class FileTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
@@ -34,20 +34,19 @@ public class ToFileSmoothTest {
   }
 
   @Test
-  public void to_file_function() throws IOException {
+  public void save_file() throws IOException {
+    // given
+    Path path = path("file/path/file.txt");
     String content = "file content";
-    Path sourcePath = path("source/path/file.txt");
-    Path destinationPath = path("destination/path/file.txt");
+    fileSystem.createFile(path, content);
+    script(fileSystem, "run : file(" + path + ") ;");
 
-    fileSystem.createFile(sourcePath, content);
-
-    script(fileSystem,
-        "run : [ toFile(path=" + destinationPath + ", content=file(" + sourcePath + ")) ];");
-
+    // when
     buildWorker.run(asList("run"));
 
+    // then
     userConsole.messages().assertNoProblems();
     Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(artifactPath.append(destinationPath), content);
+    fileSystem.assertFileContains(artifactPath, content);
   }
 }
