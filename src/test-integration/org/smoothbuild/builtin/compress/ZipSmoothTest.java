@@ -40,7 +40,7 @@ public class ZipSmoothTest {
   }
 
   @Test
-  public void testZipping() throws IOException {
+  public void zip_function() throws IOException {
     // given
     fileSystem.createFile(path("dir/fileA.txt"), "fileA.txt");
     fileSystem.createFile(path("dir/fileB.txt"), "fileB.txt");

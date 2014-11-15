@@ -34,7 +34,7 @@ public class ContentSmoothTest {
   }
 
   @Test
-  public void test() throws IOException {
+  public void content_function() throws IOException {
     Path path = path("file/path/file.txt");
     String content = "file content";
     fileSystem.createFile(path, content);

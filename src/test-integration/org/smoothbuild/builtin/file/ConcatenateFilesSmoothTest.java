@@ -33,7 +33,7 @@ public class ConcatenateFilesSmoothTest {
   }
 
   @Test
-  public void concatenating_two_file_arrays() throws Exception {
+  public void concatenate_files_function() throws Exception {
     // given
     Path path1 = path("def/fileA.txt");
     Path path2 = path("def/fileB.txt");

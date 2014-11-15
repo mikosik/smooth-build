@@ -34,7 +34,7 @@ public class ToBlobSmoothTest {
   }
 
   @Test
-  public void test() throws IOException {
+  public void to_blob_function() throws IOException {
     String content = "file content";
 
     script(fileSystem, "run : toBlob('" + content + "');");

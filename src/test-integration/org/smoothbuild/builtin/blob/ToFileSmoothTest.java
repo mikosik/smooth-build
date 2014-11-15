@@ -34,7 +34,7 @@ public class ToFileSmoothTest {
   }
 
   @Test
-  public void test() throws IOException {
+  public void to_file_function() throws IOException {
     String content = "file content";
     Path sourcePath = path("source/path/file.txt");
     Path destinationPath = path("destination/path/file.txt");

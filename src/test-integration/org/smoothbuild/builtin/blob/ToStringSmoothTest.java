@@ -34,7 +34,7 @@ public class ToStringSmoothTest {
   }
 
   @Test
-  public void test() throws IOException {
+  public void to_string_function() throws IOException {
     Path path = path("source/path/file.txt");
     String content = "file content";
 

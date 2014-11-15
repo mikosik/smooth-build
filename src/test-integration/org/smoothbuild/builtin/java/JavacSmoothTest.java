@@ -46,7 +46,7 @@ public class JavacSmoothTest {
   MyClassLoader classLoader = new MyClassLoader();
 
   @Test
-  public void errorIsLoggededForCompilationErrors() throws Exception {
+  public void error_is_logged_when_compilation_error_occurs() throws Exception {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public private class MyClass {}");
 
@@ -57,7 +57,7 @@ public class JavacSmoothTest {
   }
 
   @Test
-  public void compileZeroFiles() throws Exception {
+  public void zero_files_can_be_compiled() throws Exception {
     script(fileSystem, "run : [ ] | javac ;");
     buildWorker.run(asList("run"));
 
@@ -65,7 +65,7 @@ public class JavacSmoothTest {
   }
 
   @Test
-  public void compileOneFile() throws Exception {
+  public void one_file_can_be_compiled() throws Exception {
     String returnedString = "returned string";
 
     LineBuilder builder = new LineBuilder();
@@ -90,7 +90,7 @@ public class JavacSmoothTest {
   }
 
   @Test
-  public void compileOneFileWithLibraryDependency() throws Exception {
+  public void one_file_with_library_dependency_can_be_compiled() throws Exception {
     Path libSourceDir = path("src/lib");
     Path appSourceDir = path("src/app");
 
@@ -152,7 +152,7 @@ public class JavacSmoothTest {
   }
 
   @Test
-  public void illegalSourceParamCausesError() throws Exception {
+  public void illegal_source_parameter_causes_error() throws Exception {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
 
@@ -163,7 +163,7 @@ public class JavacSmoothTest {
   }
 
   @Test
-  public void illegalTargetParamCausesError() throws Exception {
+  public void illegal_target_parameter_causes_error() throws Exception {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
 
@@ -174,7 +174,8 @@ public class JavacSmoothTest {
   }
 
   @Test
-  public void compilingEnumWithSourceParamSetToTooOldJavaVersionCausesError() throws Exception {
+  public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error() throws
+      Exception {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public enum MyClass { VALUE }");
 

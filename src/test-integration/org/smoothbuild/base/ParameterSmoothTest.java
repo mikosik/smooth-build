@@ -31,7 +31,7 @@ public class ParameterSmoothTest {
   }
 
   @Test
-  public void trailingCommaIsAllowedInParameterList() throws IOException {
+  public void trailing_comma_is_allowed_in_parameter_list() throws IOException {
     // given
     script(fileSystem, "run : toBlob(string='abc',) ;");
 

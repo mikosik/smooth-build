@@ -38,7 +38,7 @@ public class FileArraySmoothTest {
   Path path2 = path("file/path/file2.txt");
 
   @Test
-  public void arrayWithTrailingCommaIsAllowed() throws Exception {
+  public void file_array_with_trailing_comma_is_allowed() throws Exception {
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
@@ -55,7 +55,7 @@ public class FileArraySmoothTest {
   }
 
   @Test
-  public void arrayWithOnlyCommaIsForbidden() throws Exception {
+  public void file_array_with_only_comma_is_forbidden() throws Exception {
     // given
     script(fileSystem, "run : [ , ];");
 
@@ -67,7 +67,7 @@ public class FileArraySmoothTest {
   }
 
   @Test
-  public void saveFileArrayWithTwoFiles() throws IOException {
+  public void save_file_array_with_two_files() throws IOException {
     // given
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
@@ -85,7 +85,7 @@ public class FileArraySmoothTest {
   }
 
   @Test
-  public void saveFileArrayWithOneFile() throws IOException {
+  public void save_file_array_with_one_file() throws IOException {
     // given
     fileSystem.createFileContainingItsPath(path1);
 
@@ -101,7 +101,7 @@ public class FileArraySmoothTest {
   }
 
   @Test
-  public void saveEmptyFileArray() throws IOException {
+  public void save_empty_file_array() throws IOException {
     // given
     script(fileSystem, "run : [ ];");
 
