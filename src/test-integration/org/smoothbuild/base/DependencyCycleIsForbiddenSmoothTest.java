@@ -33,16 +33,45 @@ public class DependencyCycleIsForbiddenSmoothTest {
   }
 
   @Test
-  public void indirect_function_recursion_is_forbidden() throws IOException {
+  public void direct_function_recursion_is_forbidden() throws IOException {
     // given
     ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("function2: run;");
-    builder.addLine("function1: function2;");
-    builder.addLine("run:       function1;");
+    builder.addLine("function1: function1;");
     script(fileSystem, builder.build());
 
     // when
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("function1"));
+
+    // then
+    userConsole.messages().assertContainsOnly(CycleInCallGraphError.class);
+  }
+
+  @Test
+  public void indirect_function_recursion_with_two_steps_is_forbidden() throws IOException {
+    // given
+    ScriptBuilder builder = new ScriptBuilder();
+    builder.addLine("function1: function2;");
+    builder.addLine("function2: function1;");
+    script(fileSystem, builder.build());
+
+    // when
+    buildWorker.run(asList("function1"));
+
+    // then
+    userConsole.messages().assertContainsOnly(CycleInCallGraphError.class);
+  }
+
+  @Test
+  public void indirect_recursion_with_three_steps_is_forbidden() throws IOException {
+    // given
+    ScriptBuilder builder = new ScriptBuilder();
+    builder.addLine("function1: function2;");
+    builder.addLine("function2: function3;");
+    builder.addLine("function3: function1;");
+    script(fileSystem, builder.build());
+
+    // when
+    buildWorker.run(asList("function1"));
 
     // then
     userConsole.messages().assertContainsOnly(CycleInCallGraphError.class);
