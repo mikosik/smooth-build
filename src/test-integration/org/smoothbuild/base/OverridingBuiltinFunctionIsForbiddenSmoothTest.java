@@ -33,15 +33,14 @@ public class OverridingBuiltinFunctionIsForbiddenSmoothTest {
   }
 
   @Test
-  public void overriding_core_functions_is_forbidden() throws IOException {
+  public void overriding_core_function_is_forbidden() throws IOException {
     // given
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("file: 'abc';");
-    builder.addLine("run: 'def';");
     script(fileSystem, builder.build());
 
     // when
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("file"));
 
     // then
     userConsole.messages().assertContainsOnly(OverridenBuiltinFunctionError.class);
