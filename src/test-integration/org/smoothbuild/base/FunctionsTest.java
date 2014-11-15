@@ -13,12 +13,13 @@ import org.junit.Test;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
+import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
-public class DependencyCycleIsForbiddenSmoothTest {
+public class FunctionsTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
@@ -30,6 +31,20 @@ public class DependencyCycleIsForbiddenSmoothTest {
   @Before
   public void before() {
     createInjector(new IntegrationTestModule()).injectMembers(this);
+  }
+
+  @Test
+  public void overriding_core_function_is_forbidden() throws IOException {
+    // given
+    ScriptBuilder builder = new ScriptBuilder();
+    builder.addLine("file: 'abc';");
+    script(fileSystem, builder.build());
+
+    // when
+    buildWorker.run(asList("file"));
+
+    // then
+    userConsole.messages().assertContainsOnly(OverridenBuiltinFunctionError.class);
   }
 
   @Test
