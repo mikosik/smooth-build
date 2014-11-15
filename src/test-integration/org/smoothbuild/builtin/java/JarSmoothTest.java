@@ -39,7 +39,7 @@ public class JarSmoothTest {
   }
 
   @Test
-  public void testJaring() throws Exception {
+  public void jar_function() throws Exception {
     // given
     Path root = path("dir");
     Path path1 = path("dir/fileA.txt");

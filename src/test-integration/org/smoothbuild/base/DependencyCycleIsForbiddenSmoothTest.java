@@ -33,7 +33,7 @@ public class DependencyCycleIsForbiddenSmoothTest {
   }
 
   @Test
-  public void test() throws IOException {
+  public void indirect_function_recursion_is_forbidden() throws IOException {
     // given
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("function2: run;");

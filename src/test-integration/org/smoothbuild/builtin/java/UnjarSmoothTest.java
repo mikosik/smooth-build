@@ -39,7 +39,7 @@ public class UnjarSmoothTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
 
   @Test
-  public void testUnjaring() throws Exception {
+  public void unjar_function() throws Exception {
     // given
     Path path1 = path("a/fileA.txt");
     Path path2 = path("b/fileB.txt");

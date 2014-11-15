@@ -34,7 +34,7 @@ public class FileSmoothTest {
   }
 
   @Test
-  public void saveFile() throws IOException {
+  public void save_file() throws IOException {
     // given
     Path path = path("file/path/file.txt");
     String content = "file content";

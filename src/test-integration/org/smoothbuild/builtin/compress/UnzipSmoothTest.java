@@ -33,7 +33,7 @@ public class UnzipSmoothTest {
   }
 
   @Test
-  public void testUnzipping() throws Exception {
+  public void unzip_function() throws Exception {
     // given
     Path path1 = path("a/fileA.txt");
     Path path2 = path("b/fileB.txt");

@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
-import org.smoothbuild.testing.integration.IntegrationTestUtils;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
@@ -34,7 +33,7 @@ public class StringSmoothTest {
   }
 
   @Test
-  public void escapingDoubleQuotes() throws IOException {
+  public void string_literal_with_escaped_double_quotes() throws IOException {
     // given
     script(fileSystem, "run : '\\\"' ;");
 
@@ -47,7 +46,7 @@ public class StringSmoothTest {
   }
 
   @Test
-  public void escapingBackslash() throws IOException {
+  public void string_literal_with_escaped_backslash() throws IOException {
     // given
     script(fileSystem, "run : '\\\\' ;");
 

@@ -33,7 +33,7 @@ public class OverridingBuiltinFunctionIsForbiddenSmoothTest {
   }
 
   @Test
-  public void test() throws IOException {
+  public void overriding_core_functions_is_forbidden() throws IOException {
     // given
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("file: 'abc';");

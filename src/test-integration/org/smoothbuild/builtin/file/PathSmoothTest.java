@@ -34,7 +34,7 @@ public class PathSmoothTest {
   }
 
   @Test
-  public void test() throws IOException {
+  public void path_function() throws IOException {
     Path path = path("file/path/file.txt");
     fileSystem.createFile(path, "content");
 
