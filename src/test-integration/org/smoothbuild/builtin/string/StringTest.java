@@ -1,4 +1,4 @@
-package org.smoothbuild.base;
+package org.smoothbuild.builtin.string;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;

@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
@@ -15,10 +16,13 @@ import org.junit.Test;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
+import org.smoothbuild.testing.parse.ScriptBuilder;
 
 public class FileArrayTest {
   @Inject
@@ -36,6 +40,66 @@ public class FileArrayTest {
 
   Path path1 = path("file/path/file1.txt");
   Path path2 = path("file/path/file2.txt");
+  private final String content1 = "content 1";
+  private final String content2 = "content 2";
+
+  @Test
+  public void array_containing_two_files_is_allowed() throws Exception {
+    fileSystem.createFile(path1, content1);
+    fileSystem.createFile(path2, content2);
+
+    script(fileSystem, "run: [file(" + path1 + ") , file(" + path2 + ")];");
+    buildWorker.run(asList("run"));
+
+    userConsole.messages().assertNoProblems();
+    Path arrayArtifactPath = ARTIFACTS_PATH.append(path("run"));
+    fileSystem.assertFileContains(arrayArtifactPath.append(path1), content1);
+    fileSystem.assertFileContains(arrayArtifactPath.append(path2), content2);
+  }
+
+  @Test
+  public void array_containing_file_and_string_is_forbidden() throws Exception {
+    // given
+    fileSystem.createFile(path1, content1);
+
+    ScriptBuilder scriptBuilder = new ScriptBuilder();
+    scriptBuilder.addLine("myFile: file(" + path1 + ") ;");
+    scriptBuilder.addLine("myString: 'abc' ;");
+    scriptBuilder.addLine("run: [ myFile, myString ] ;");
+
+    script(fileSystem, scriptBuilder.build());
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertContainsOnly(IncompatibleArrayElemsError.class);
+  }
+
+  @Test
+  public void array_containing_file_and_blob_is_allowed() throws Exception {
+    // given
+    fileSystem.createFile(path1, content1);
+    fileSystem.createFile(path2, content2);
+
+    ScriptBuilder scriptBuilder = new ScriptBuilder();
+    scriptBuilder.addLine("myString: 'abc' ;");
+    scriptBuilder.addLine("myFile: file(" + path1 + ") ;");
+    scriptBuilder.addLine("myBlob: file(" + path2 + ") | content ;");
+    scriptBuilder.addLine("run: [ myFile, myBlob] ;");
+
+    script(fileSystem, scriptBuilder.build());
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+
+    userConsole.messages().assertNoProblems();
+    Path arrayArtifactPath = ARTIFACTS_PATH.append(path("run"));
+    fileSystem.assertFileContains(arrayArtifactPath.append(path("0")), content1);
+    fileSystem.assertFileContains(arrayArtifactPath.append(path("1")), content2);
+  }
 
   @Test
   public void file_array_with_trailing_comma_is_allowed() throws Exception {
@@ -124,5 +188,23 @@ public class FileArrayTest {
 
     // then
     userConsole.messages().assertNoProblems();
+  }
+
+  @Test
+  public void empty_file_array_can_be_saved() throws IOException {
+    // given
+    Path path = path("some/dir");
+    fileSystem.createDir(path);
+    script(fileSystem, "run : files(" + path + ");");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+
+    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
+    assertThat(fileSystem.pathState(artifactPath)).isEqualTo(PathState.DIR);
+    assertThat(fileSystem.filesFrom(artifactPath)).isEmpty();
   }
 }
