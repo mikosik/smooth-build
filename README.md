@@ -9,12 +9,10 @@ Compiling java source files and packaging them into jar file can be specified wi
 release.jar: files("src") | javac | jar ;
 ```
 
-Once Smooth development reaches version 1.0 it will allow robust multithreading execution (possibly on multiple machines) of your build process without any extra configuration on your side.
-
 Prerequisites
 -------------
 
-Learning is much faster when you can experiment on the way. Therefore it is advised to install Smooth-build by following [download / install](http://www.smooth-build.org/download.html) documentation so you can try all examples from this tutorial yourself.
+Learning is much faster when you can experiment on the way. Therefore it is advised to install smooth-build by following [download / install](https://github.com/mikosik/smooth-build/blob/master/doc/install.md) documentation so you can try all examples from this tutorial yourself.
 
 All examples used in this tutorial are available online as [smooth-build-examples github project](https://github.com/mikosik/smooth-build-examples). You can checkout it as a git repository:
 
@@ -29,7 +27,7 @@ Running build
 
 Smooth uses "build.smooth" file located in your project's root directory as a description of project's build process. If you downloaded smooth-build-examples, note that it contains many exampleXX directories. Each is a separate project so each contains single "build.smooth" file.
 
-To run build process enter directory "example01" and type "smooth build release.jar" (on Linux) or "smooth.bat build release.jar" (on Windows). If you installed smooth correctly and added it to your system PATH as advised by [download / install](http://www.smooth-build.org/download.html) you should get smooth running successfully with output equal to the one below:
+To run build process enter directory "example01" and type "smooth build release.jar" (on Linux) or "smooth.bat build release.jar" (on Windows). If you installed smooth correctly and added it to your system PATH as advised by [download / install](https://github.com/mikosik/smooth-build/blob/master/doc/install.md) you should get smooth running successfully with output equal to the one below:
 
 ```
 $smooth build release.jar
@@ -153,9 +151,4 @@ release.jar: files("src/main") | javac(libs=[library]) | jar ;
 First line defines `library` - function that takes java files from "src/lib" dir, compiles them and packs as jar file. Second line does similar thing to java files from "src/main" dir but it uses jar produces by the first line.
 
 Once again, notice that we didn't have to specify (nor create) any directory for temporary files. Only location of java source files had to be provided and indirectly name of output jar which is taken from function name we created - `release.jar`.
-
-More to come
-------------
-
-This is only beginning of Smooth-Build development so there's a lot of features that can be done to revolutionize the world of application building. Take a look at [Feature Roadmap](http://www.smooth-build.org/roadmap.html) to see what is coming.
 
