@@ -1,9 +1,10 @@
 package org.smoothbuild.builtin.file;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.io.fs.base.Path.rootPath;
+import static org.testory.Testory.*;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FilesFunction.FilesParameters;
@@ -13,105 +14,91 @@ import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.testory.Closure;
 
 public class FilesFunctionTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private FakeObjectsDb objectsDb;
   private FakeNativeApi nativeApi = new FakeNativeApi();
+  private Path path;
+  private Path path1;
+  private Path path2;
+  private Path dir;
 
   @Test
-  public void listingFilesFromRootDirIsForbidden() throws Exception {
-    try {
-      execute(params(Path.rootPath().value()));
-      fail("exception should be thrown");
-    } catch (CannotListRootDirError e) {
-      // expected
-    }
+  public void listing_files_from_project_root_dir_is_forbidden() throws Exception {
+    when($files(nativeApi, params(rootPath().value())));
+    thenThrown(CannotListRootDirError.class);
   }
 
   @Test
-  public void accessToSmoothDirIsReported() throws Exception {
-    try {
-      execute(params(SMOOTH_DIR.value()));
-      fail("exception should be thrown");
-    } catch (IllegalReadFromSmoothDirError e) {
-      // expected
-    }
+  public void listing_files_from_smooth_dir_is_forbidden() throws Exception {
+    when($files(nativeApi, params(SMOOTH_DIR.value())));
+    thenThrown(IllegalReadFromSmoothDirError.class);
   }
 
   @Test
-  public void accessToSmoothSubDirIsReported() throws Exception {
-    try {
-      execute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
-      fail("exception should be thrown");
-    } catch (IllegalReadFromSmoothDirError e) {
-      // expected
-    }
+  public void listing_files_from_subdir_in_smooth_dir_is_forbidden() throws Exception {
+    when($files(nativeApi, params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc")));
+    thenThrown(IllegalReadFromSmoothDirError.class);
   }
 
   @Test
-  public void illegalPathsAreReported() {
+  public void illegal_path_is_forbidden() {
     for (String path : PathTesting.listOfInvalidPaths()) {
-      nativeApi = new FakeNativeApi();
-      try {
-        execute(params(path));
-        fail("exception should be thrown");
-      } catch (IllegalPathError e) {
-        // expected
-      }
+      when($files(nativeApi, params(path)));
+      thenThrown(IllegalPathError.class);
     }
   }
 
   @Test
-  public void nonexistentPathIsReported() throws Exception {
-    try {
-      execute(params("some/path"));
-      fail("exception should be thrown");
-    } catch (NoSuchDirError e) {
-      // expected
-    }
+  public void nonexistent_path_is_forbidden() throws Exception {
+    when($files(nativeApi, params("some/path")));
+    thenThrown(NoSuchDirError.class);
   }
 
   @Test
-  public void nonDirPathIsReported() throws Exception {
-    Path filePath = path("some/path/file.txt");
-    nativeApi.projectFileSystem().createFileContainingItsPath(filePath);
-
-    try {
-      execute(params(filePath.value()));
-      fail("exception should be thrown");
-    } catch (NoSuchDirButFileError e) {
-      // expected
-    }
+  public void non_dir_path_is_forbidden() throws Exception {
+    given(path = path("some/path/file.txt"));
+    given(nativeApi.projectFileSystem()).createFile(path, "");
+    when($files(nativeApi, params(path.value())));
+    thenThrown(NoSuchDirButFileError.class);
   }
 
   @Test
-  public void execute() throws Exception {
-    Path rootPath = path("root/path");
-    Path filePath = path("file/path/file.txt");
-    nativeApi.projectFileSystem().subFileSystem(rootPath).createFileContainingItsPath(filePath);
+  public void files_returns_files_read_from_project_filesystem() throws Throwable {
+    given(dir = path("root/path"));
+    given(path1 = path("file/file.txt"));
+    given(path2 = path("file/file2.txt"));
+    given(nativeApi.projectFileSystem()).createFile(dir.append(path1), "file1");
+    given(nativeApi.projectFileSystem()).createFile(dir.append(path2), "file2");
+    given(objectsDb = new FakeObjectsDb());
 
-    Array<SFile> fileArray = execute(params(rootPath.value()));
+    when($files(nativeApi, params(dir.value())));
 
-    SFile expectedFile = objectsDb.file(filePath);
-    assertThat(fileArray).containsExactly(expectedFile);
+    thenReturned(containsInAnyOrder(objectsDb.file(path1, "file1"), objectsDb.file(path2,
+        "file2")));
   }
 
-  private FilesParameters params(final String dir) {
+  private static FilesParameters params(final String dir) {
     return new FilesParameters() {
       @Override
       public SString dir() {
-        return objectsDb.string(dir);
+        return new FakeObjectsDb().string(dir);
       }
     };
   }
 
-  private Array<SFile> execute(FilesParameters params) {
-    return FilesFunction.files(nativeApi, params);
+  private static Closure $files(final NativeApiImpl nativeApi, final FilesParameters params) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return FilesFunction.files(nativeApi, params);
+      }
+    };
   }
 }
