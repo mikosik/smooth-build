@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.file.match.testing;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.endsWithThreeLetters;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 
 public class PathPatternGenerator {
@@ -11,20 +10,15 @@ public class PathPatternGenerator {
   /**
    * Generates all patterns containing 'size' or less elements and pass it to
    * given 'consumer'.
-   * 
+   * <p/>
    * Element is either "**" wildcard, "*" wildcard, one of the letters {a, b, b}
    * or separator "/" (which is not taken into account when calculating pattern
    * size).
    */
   public static void generatePatterns(int maxSize, Function<String, Void> consumer) {
     for (int i = 1; i <= maxSize; i++) {
-      generatePatternsImpl(i, consumer);
+      generatePatterns("", i, consumer);
     }
-  }
-
-  @VisibleForTesting
-  static void generatePatternsImpl(int size, Function<String, Void> consumer) {
-    generatePatterns("", size, consumer);
   }
 
   private static void generatePatterns(String pattern, int size, Function<String, Void> consumer) {
