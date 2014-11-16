@@ -1,0 +1,18 @@
+## files
+
+Returns all files read recursively from project tree at given directory path.
+
+ * String __path__ - Path in project tree to a directory.
+Referencing directory outside project is not allowed.
+Slash ("/") should be used as separator no matter what your operating system
+is.
+
+Returns __File[]__ with all files recursively from directory specified
+via 'path' parameter.
+
+### examples
+
+Returns all files located in 'src' directory or its subdirectories.
+```
+sources: files("src") ;
+```
