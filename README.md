@@ -152,3 +152,5 @@ First line defines `library` - function that takes java files from "src/lib" dir
 
 Once again, notice that we didn't have to specify (nor create) any directory for temporary files. Only location of java source files had to be provided and indirectly name of output jar which is taken from function name we created - `release.jar`.
 
+[core functions API](https://github.com/mikosik/smooth-build/blob/work/doc/api.md)
+| [development blog](http://smooth-build.blogspot.com/)
