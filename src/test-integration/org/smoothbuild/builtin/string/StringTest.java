@@ -46,6 +46,71 @@ public class StringTest {
   }
 
   @Test
+  public void string_literal_with_escaped_tab() throws IOException {
+    // given
+    script(fileSystem, "run : '\\t' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\t");
+  }
+
+  @Test
+  public void string_literal_with_escaped_backspace() throws IOException {
+    // given
+    script(fileSystem, "run : '\\b' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\b");
+  }
+
+  @Test
+  public void string_literal_with_escaped_new_line() throws IOException {
+    // given
+    script(fileSystem, "run : '\\n' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\n");
+  }
+
+  @Test
+  public void string_literal_with_escaped_carriage_return() throws IOException {
+    // given
+    script(fileSystem, "run : '\\r' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\r");
+  }
+
+  @Test
+  public void string_literal_with_escaped_form_feed() throws IOException {
+    // given
+    script(fileSystem, "run : '\\f' ;");
+
+    // when
+    buildWorker.run(asList("run"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\f");
+  }
+
+  @Test
   public void string_literal_with_escaped_double_quotes() throws IOException {
     // given
     script(fileSystem, "run : '\\\"' ;");
