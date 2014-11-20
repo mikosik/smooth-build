@@ -1,165 +1,152 @@
 package org.smoothbuild.parse;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.core.IsSame.sameInstance;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.testory.Testory.*;
 
 import java.util.NoSuchElementException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableSet;
 
 public class DependencyStackTest {
-  Name name1 = name("funcation1");
-  Name name2 = name("funcation2");
-  Name name3 = name("funcation3");
-  Name name4 = name("funcation4");
+  private Name name1 = name("function1");
+  private Name name2 = name("function2");
+  private Name name3 = name("function3");
+  private Name name4 = name("function4");
 
-  DependencyStack dependencyStack = new DependencyStack();
+  private DependencyStack dependencyStack;
+  private DependencyStackElem elem1;
+  private DependencyStackElem elem2;
+  private DependencyStackElem elem3;
 
   @Test
-  public void stackIsEmptyInitially() {
-    assertThat(dependencyStack.isEmpty()).isTrue();
+  public void stack_is_empty_initially() {
+    given(dependencyStack = new DependencyStack());
+    when(dependencyStack).isEmpty();
+    thenReturned(true);
   }
 
   @Test
-  public void stackIsNotEmptyAfterPushingElement() throws Exception {
-    dependencyStack.push(elem());
-    assertThat(dependencyStack.isEmpty()).isFalse();
+  public void stack_is_not_empty_after_pushing_one_element() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(dependencyStack).push(elem());
+    when(dependencyStack).isEmpty();
+    thenReturned(false);
   }
 
   @Test
-  public void stackIsEmptyAfterPushAndPop() {
-    dependencyStack.push(elem());
-    dependencyStack.pop();
-    assertThat(dependencyStack.isEmpty()).isTrue();
+  public void stack_is_empty_after_pushing_and_popping() {
+    given(dependencyStack = new DependencyStack());
+    given(dependencyStack).push(elem());
+    given(dependencyStack).pop();
+    when(dependencyStack).isEmpty();
+    thenReturned(true);
   }
 
   @Test
-  public void pushedElemIsReturnedByPoped() throws Exception {
-    DependencyStackElem elem = elem();
-    dependencyStack.push(elem);
-    assertThat(dependencyStack.pop()).isSameAs(elem);
+  public void pushed_element_is_returned_by_pop() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(elem1 = elem());
+    given(dependencyStack).push(elem1);
+    when(dependencyStack).pop();
+    thenReturned(elem1);
   }
 
   @Test
-  public void elementsArePopedInFiloOrder() throws Exception {
-    DependencyStackElem elem1 = elem();
-    DependencyStackElem elem2 = elem();
-    DependencyStackElem elem3 = elem();
-
-    dependencyStack.push(elem1);
-    dependencyStack.push(elem2);
-    dependencyStack.push(elem3);
-
-    assertThat(dependencyStack.pop()).isSameAs(elem3);
-    assertThat(dependencyStack.pop()).isSameAs(elem2);
-    assertThat(dependencyStack.pop()).isSameAs(elem1);
+  public void elements_are_poped_in_filo_order() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(elem1 = elem());
+    given(elem2 = elem());
+    given(elem3 = elem());
+    given(dependencyStack).push(elem1);
+    given(dependencyStack).push(elem2);
+    given(dependencyStack).push(elem3);
+    when(dependencyStack).pop();
+    thenReturned(sameInstance(elem3));
+    when(dependencyStack).pop();
+    thenReturned(sameInstance(elem2));
+    when(dependencyStack).pop();
+    thenReturned(sameInstance(elem1));
   }
 
   @Test
-  public void popingFromEmptyStackThrowsException() throws Exception {
-    try {
-      dependencyStack.pop();
-      Assert.fail("exception should be thrown");
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+  public void poping_from_empty_stack_throws_exception() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    when(dependencyStack).pop();
+    thenThrown(NoSuchElementException.class);
   }
 
   @Test
-  public void popingAfterRemovingLastElemThrowsException() throws Exception {
-    try {
-      dependencyStack.push(elem());
-      dependencyStack.pop();
-
-      dependencyStack.pop();
-      Assert.fail("exception should be thrown");
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+  public void poping_after_all_elements_has_been_removed_throws_exception() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(dependencyStack).push(elem());
+    given(dependencyStack).pop();
+    when(dependencyStack).pop();
+    thenThrown(NoSuchElementException.class);
   }
 
   @Test
-  public void peekReturnsTopElem() throws Exception {
-    DependencyStackElem elem1 = elem();
-    DependencyStackElem elem2 = elem();
-
-    dependencyStack.push(elem1);
-    dependencyStack.push(elem2);
-
-    assertThat(dependencyStack.peek()).isSameAs(elem2);
+  public void peek_returns_top_element() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(dependencyStack).push(elem());
+    given(elem2 = elem());
+    given(dependencyStack).push(elem2);
+    when(dependencyStack).peek();
+    thenReturned(sameInstance(elem2));
   }
 
   @Test
-  public void peekDoesNotRemoveElement() throws Exception {
-    DependencyStackElem elem1 = elem();
-    dependencyStack.push(elem1);
-
-    dependencyStack.peek();
-
-    assertThat(dependencyStack.pop()).isSameAs(elem1);
+  public void peek_does_not_remove_element() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(elem1 = elem());
+    given(dependencyStack).push(elem1);
+    when(dependencyStack).peek();
+    thenEqual(dependencyStack.pop(), elem1);
   }
 
   @Test
-  public void peekingFromEmptyStackThrowsException() throws Exception {
-    try {
-      dependencyStack.peek();
-      Assert.fail("exception should be thrown");
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+  public void peeking_on_empty_stack_throws_exception() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    when(dependencyStack).peek();
+    thenThrown(NoSuchElementException.class);
   }
 
   @Test
-  public void peekingAfterRemovingLastElemThrowsException() throws Exception {
-    try {
-      dependencyStack.push(elem());
-      dependencyStack.pop();
-
-      dependencyStack.peek();
-      Assert.fail("exception should be thrown");
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+  public void peeking_after_all_elements_has_been_removed_throws_exception() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(dependencyStack).push(elem());
+    given(dependencyStack).pop();
+    when(dependencyStack).peek();
+    thenThrown(NoSuchElementException.class);
   }
 
   @Test
-  public void createCycleError() throws Exception {
-    dependencyStack.push(elem(name1, name2, 1));
-    dependencyStack.push(elem(name2, name3, 2));
-    dependencyStack.push(elem(name3, name4, 3));
-    dependencyStack.push(elem(name4, name2, 4));
-
-    CycleInCallGraphError error = dependencyStack.createCycleError();
-
-    LineBuilder builder = new LineBuilder();
-    builder.addLine("Function call graph contains cycle:");
-    builder.addLine(name2.value() + codeLocation(2) + " -> " + name3.value());
-    builder.addLine(name3.value() + codeLocation(3) + " -> " + name4.value());
-    builder.addLine(name4.value() + codeLocation(4) + " -> " + name2.value());
-
-    assertThat(error.message()).isEqualTo(builder.build());
+  public void create_cycle_error() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(dependencyStack).push(elem(name1, name2, 1));
+    given(dependencyStack).push(elem(name2, name3, 2));
+    given(dependencyStack).push(elem(name3, name4, 3));
+    given(dependencyStack).push(elem(name4, name2, 4));
+    when(dependencyStack.createCycleError()).message();
+    thenReturned("Function call graph contains cycle:\n" //
+        + name2.value() + codeLocation(2) + " -> " + name3.value() + "\n" //
+        + name3.value() + codeLocation(3) + " -> " + name4.value() + "\n" //
+        + name4.value() + codeLocation(4) + " -> " + name2.value() + "\n");
   }
 
   @Test
-  public void createCycleErrorForRecursiveCall() throws Exception {
-    dependencyStack.push(elem(name1, name2, 1));
-    dependencyStack.push(elem(name2, name2, 2));
-
-    CycleInCallGraphError error = dependencyStack.createCycleError();
-
-    LineBuilder builder = new LineBuilder();
-    builder.addLine("Function call graph contains cycle:");
-    builder.addLine(name2.value() + codeLocation(2) + " -> " + name2.value());
-
-    assertThat(error.message()).isEqualTo(builder.build());
+  public void create_cycle_error_for_recursive_call() throws Exception {
+    given(dependencyStack = new DependencyStack());
+    given(dependencyStack).push(elem(name1, name2, 1));
+    given(dependencyStack).push(elem(name2, name2, 2));
+    when(dependencyStack.createCycleError()).message();
+    thenReturned("Function call graph contains cycle:\n" //
+        + name2.value() + codeLocation(2) + " -> " + name2.value() + "\n");
   }
 
   private DependencyStackElem elem(Name from, Name to, int location) {
@@ -170,6 +157,6 @@ public class DependencyStackTest {
   }
 
   private static DependencyStackElem elem() {
-    return new DependencyStackElem(name("name"), ImmutableSet.<Dependency> of());
+    return new DependencyStackElem(name("name"), ImmutableSet.<Dependency>of());
   }
 }

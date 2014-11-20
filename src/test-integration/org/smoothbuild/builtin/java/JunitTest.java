@@ -2,9 +2,9 @@ package org.smoothbuild.builtin.java;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
+import static org.testory.Testory.*;
 
 import java.io.IOException;
 
@@ -50,7 +50,7 @@ public class JunitTest {
     script(fileSystem, createscript());
 
     buildWorker.run(asList("run"));
-    assertThat(userConsole.messages()).isEmpty();
+    then(userConsole.messages().isEmpty());
   }
 
   @Test
@@ -85,7 +85,7 @@ public class JunitTest {
     script(fileSystem, createscript(SUCCESS_TEST_CLASS + ".class"));
 
     buildWorker.run(asList("run"));
-    assertThat(userConsole.messages()).isEmpty();
+    then(userConsole.messages().isEmpty());
   }
 
   private String createscript() {

@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.common;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.testory.Testory.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,41 +8,32 @@ import java.io.IOException;
 import org.junit.Test;
 
 public class TestCaseWithTempDirTest {
+  private TestCaseWithTempDir testCase;
+  private File tempDir;
+  private File newSubDir;
 
   @Test
-  public void temporaryDirectoryExists() {
-    // given
-    TestCaseWithTempDir testCase = new TestCaseWithTempDir();
-
-    // when
-    File tempDir = testCase.getTempDirectory();
-
-    // then
-    assertThat(tempDir.exists()).isTrue();
-
-    // cleanup temporary dir
-    tempDir.delete();
+  public void temporary_directory_exists() {
+    given(testCase = new TestCaseWithTempDir());
+    when(testCase.getTempDirectory()).exists();
+    thenReturned(true);
   }
 
   @Test
-  public void temporaryDirectoryIsDeletedInAfterMethod() throws IOException {
-    TestCaseWithTempDir testCase = new TestCaseWithTempDir();
-    File tempDir = testCase.getTempDirectory();
-    testCase.after();
-
-    assertThat(tempDir.exists()).isFalse();
+  public void temporary_directory_is_deleted_by_after_method() throws IOException {
+    given(testCase = new TestCaseWithTempDir());
+    given(tempDir = testCase.getTempDirectory());
+    when(testCase).after();
+    then(!tempDir.exists());
   }
 
   @Test
-  public void createdContentIsDeletedInAfterMethod() throws IOException {
-    TestCaseWithTempDir testCase = new TestCaseWithTempDir();
-    File tempDir = testCase.getTempDirectory();
-    File newSubDir = new File(tempDir, "newFile");
-    newSubDir.mkdirs();
-    assertThat(newSubDir.exists()).isTrue();
-
-    testCase.after();
-
-    assertThat(newSubDir.exists()).isFalse();
+  public void created_content_is_deleted_by_after_method() throws IOException {
+    given(testCase = new TestCaseWithTempDir());
+    given(tempDir = testCase.getTempDirectory());
+    given(newSubDir = new File(tempDir, "newFile"));
+    given(newSubDir).mkdirs();
+    when(testCase).after();
+    then(!newSubDir.exists());
   }
 }

@@ -1,6 +1,6 @@
 package org.smoothbuild.task.save.err;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
 
@@ -26,6 +26,6 @@ public class DuplicatePathsInFileArrayArtifactErrorTest {
     builder.addLine("  'path2'");
     builder.add("  'path3'");
 
-    assertThat(error.message()).isEqualTo(builder.build());
+    assertEquals(error.message(), builder.build());
   }
 }

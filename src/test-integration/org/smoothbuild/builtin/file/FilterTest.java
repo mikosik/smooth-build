@@ -2,11 +2,11 @@ package org.smoothbuild.builtin.file;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
+import static org.testory.Testory.*;
 
 import java.io.IOException;
 
@@ -152,7 +152,7 @@ public class FilterTest {
     userConsole.messages().assertNoProblems();
     Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     for (String path : excluded) {
-      assertThat(fileSystem.pathState(artifactPath.append(path(path)))).isEqualTo(NOTHING);
+      thenEqual(fileSystem.pathState(artifactPath.append(path(path))), NOTHING);
     }
     for (String path : included) {
       fileSystem.assertFileContainsItsPath(artifactPath, path(path));

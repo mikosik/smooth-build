@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.java;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
@@ -86,7 +86,7 @@ public class JavacTest {
     Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     Path classFile = artifactPath.append(path("MyClass.class"));
     Object result = invoke(classFile, "myMethod");
-    assertThat(result).isEqualTo(returnedString);
+    assertEquals(result, returnedString);
   }
 
   @Test
@@ -137,7 +137,7 @@ public class JavacTest {
     loadClass(byteCode(libClassFile));
     String method = "myMethod";
     Object result = invoke(appClassFile, method);
-    assertThat(result).isEqualTo("5");
+    assertEquals(result, "5");
   }
 
   @Test

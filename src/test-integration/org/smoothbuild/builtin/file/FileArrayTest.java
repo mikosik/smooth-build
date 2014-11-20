@@ -2,10 +2,11 @@ package org.smoothbuild.builtin.file;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
+import static org.testory.Testory.*;
 
 import java.io.IOException;
 
@@ -16,7 +17,6 @@ import org.junit.Test;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
@@ -204,7 +204,6 @@ public class FileArrayTest {
     userConsole.messages().assertNoProblems();
 
     Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    assertThat(fileSystem.pathState(artifactPath)).isEqualTo(PathState.DIR);
-    assertThat(fileSystem.filesFrom(artifactPath)).isEmpty();
+    then(fileSystem.filesFrom(artifactPath), empty());
   }
 }
