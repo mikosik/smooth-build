@@ -1,7 +1,9 @@
 Change Log
 ==========
 
-Version 0.10.0 (2014.13.25)
+ * added 'concatenateStrings' function
+
+Version 0.10.0 (2014.03.25)
 ---------------------------
 
  * added 'toString' function

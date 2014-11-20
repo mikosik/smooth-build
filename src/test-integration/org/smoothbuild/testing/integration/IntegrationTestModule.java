@@ -26,6 +26,7 @@ import org.smoothbuild.builtin.java.JarjarFunction;
 import org.smoothbuild.builtin.java.UnjarFunction;
 import org.smoothbuild.builtin.java.javac.JavacFunction;
 import org.smoothbuild.builtin.java.junit.JunitFunction;
+import org.smoothbuild.builtin.string.ConcatenateStringsFunction;
 import org.smoothbuild.builtin.string.ToBlobFunction;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDbModule;
@@ -75,6 +76,7 @@ public class IntegrationTestModule extends AbstractModule {
         AidlFunction.class,
         ConcatenateBlobsFunction.class,
         ConcatenateFilesFunction.class,
+        ConcatenateStringsFunction.class,
         ContentFunction.class,
         FileFunction.class,
         FilesFunction.class,
