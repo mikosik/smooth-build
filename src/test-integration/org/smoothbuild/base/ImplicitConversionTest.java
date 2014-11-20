@@ -2,9 +2,11 @@ package org.smoothbuild.base;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
+import static org.testory.Testory.*;
 
 import java.io.IOException;
 
@@ -35,6 +37,7 @@ public class ImplicitConversionTest {
 
   @Test
   public void file_is_implicitly_converted_to_blob() throws IOException {
+    // given
     Path path = path("file.txt");
     fileSystem.createFile(path, "abc");
     script(fileSystem, "fileContent: file(" + path + ") | toString ;");
@@ -45,5 +48,64 @@ public class ImplicitConversionTest {
     // then
     userConsole.messages().assertNoProblems();
     fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("fileContent")), "abc");
+  }
+
+  @Test
+  public void file_array_is_implicitly_converted_to_blob_array() throws IOException {
+    // given
+    fileSystem.createFile(path("file1.txt"), "abc");
+    fileSystem.createFile(path("file2.txt"), "def");
+    script(fileSystem, "blobs: concatenateBlobs([file('file1.txt')], with=[file('file2.txt')]) ;");
+
+    // when
+    buildWorker.run(asList("blobs"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    Path blobsPath = ARTIFACTS_PATH.append(path("blobs"));
+    fileSystem.assertFileContains(blobsPath.append(path("0")), "abc");
+    fileSystem.assertFileContains(blobsPath.append(path("1")), "def");
+  }
+
+  @Test
+  public void nil_is_implicitly_converted_to_string_array() throws IOException {
+    // given
+    script(fileSystem, "strings: concatenateStrings([], with=[]) ;");
+
+    // when
+    buildWorker.run(asList("strings"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    Path blobsPath = ARTIFACTS_PATH.append(path("strings"));
+    then(fileSystem.filesFrom(blobsPath), empty());
+  }
+
+  @Test
+  public void nil_is_implicitly_converted_to_blob_array() throws IOException {
+    // given
+    script(fileSystem, "blobs: concatenateBlobs([], with=[]) ;");
+
+    // when
+    buildWorker.run(asList("blobs"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    Path blobsPath = ARTIFACTS_PATH.append(path("blobs"));
+    then(fileSystem.filesFrom(blobsPath), empty());
+  }
+
+  @Test
+  public void nil_is_implicitly_converted_to_file_array() throws IOException {
+    // given
+    script(fileSystem, "blobs: concatenateFiles([], with=[]) ;");
+
+    // when
+    buildWorker.run(asList("blobs"));
+
+    // then
+    userConsole.messages().assertNoProblems();
+    Path blobsPath = ARTIFACTS_PATH.append(path("blobs"));
+    then(fileSystem.filesFrom(blobsPath), empty());
   }
 }

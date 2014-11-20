@@ -262,6 +262,8 @@
     <path id="classpath.for.test-integration">
         <path refid="classpath.with.testing.java"/>
         <path refid="classpath.with.func.java"/>
+        <pathelement location="${lib.hamcrest-library}"/>
+        <pathelement location="${lib.testory}"/>
     </path>
 
     <target name="compile-integration-tests" depends="compile-testing.java">
