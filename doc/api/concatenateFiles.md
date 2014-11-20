@@ -4,7 +4,7 @@ Concatenates two File[].
 
  * File[] __files__ - Array of Files to be concatenated with array passed
 via "with" parameter.
- * Blob[] __with__ - Array of Files to be concatenated with array passed
+ * File[] __with__ - Array of Files to be concatenated with array passed
 via "files" parameter.
 
 Returns __Files[]__ containing all Files from first and second argument.
