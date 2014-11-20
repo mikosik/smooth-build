@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.compress;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
@@ -67,10 +67,10 @@ public class ZipTest {
           while ((len = zipInputStream.read(buffer)) > 0) {
             outputStream.write(buffer, 0, len);
           }
-          assertThat(new String(outputStream.toByteArray(), CHARSET)).isEqualTo(path.value());
+          assertEquals(new String(outputStream.toByteArray(), CHARSET), path.value());
         }
       }
     }
-    assertThat(fileCount).isEqualTo(2);
+    assertEquals(fileCount, 2);
   }
 }

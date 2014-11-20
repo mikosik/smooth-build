@@ -1,15 +1,12 @@
 package org.smoothbuild.task.work;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.willReturn;
-import static org.testory.Testory.willThrow;
+import static org.testory.Testory.*;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -77,7 +74,7 @@ public class NativeCallWorkerTest {
 
     TaskInput taskInput = TaskInput.fromValues(ImmutableList.of(argValue));
     TaskOutput<?> actual = nativeCallTask.execute(taskInput, nativeApi);
-    assertThat(actual).isEqualTo(new TaskOutput<>(sstring));
+    assertEquals(new TaskOutput<>(sstring), actual);
   }
 
   @Test

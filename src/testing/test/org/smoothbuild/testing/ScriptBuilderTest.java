@@ -1,42 +1,48 @@
 package org.smoothbuild.testing;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.testing.parse.ScriptBuilder.script;
+import static org.testory.Testory.*;
 
 import org.junit.Test;
 import org.smoothbuild.testing.parse.ScriptBuilder;
 
 public class ScriptBuilderTest {
+  private ScriptBuilder builder;
 
   @Test
-  public void newLinesAreAppendedAtTheEndOfLines() {
-    ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("abc");
-    builder.addLine("def");
-    assertThat(builder.build()).isEqualTo("abc\ndef\n");
+  public void new_line_is_appended_to_every_line() {
+    given(builder = new ScriptBuilder());
+    given(builder).addLine("abc");
+    given(builder).addLine("def");
+    when(builder.build());
+    thenReturned("abc\ndef\n");
   }
 
   @Test
-  public void singleQuotesAreChangedIntoDoubleQuotes() throws Exception {
-    ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("a 'message' quoted");
-    assertThat(builder.build()).isEqualTo("a \"message\" quoted\n");
+  public void single_quotes_are_changed_to_double_quotes() throws Exception {
+    given(builder = new ScriptBuilder());
+    given(builder).addLine("a 'message' quoted");
+    when(builder).build();
+    thenReturned("a \"message\" quoted\n");
   }
 
   @Test
-  public void singleQuotesAreChangedIntoDoubleQuotesByOneLineScript() throws Exception {
-    assertThat(script("a 'message' quoted")).isEqualTo("a \"message\" quoted");
+  public void single_quotes_are_changed_to_double_quotes_by_single_line_script() throws Exception {
+    when(script("a 'message' quoted"));
+    thenReturned("a \"message\" quoted");
   }
 
   @Test
-  public void doubleQuotesAreUnchanged() throws Exception {
-    ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("a \"message\" quoted");
-    assertThat(builder.build()).isEqualTo("a \"message\" quoted\n");
+  public void double_quotes_are_unchanged() throws Exception {
+    given(builder = new ScriptBuilder());
+    given(builder).addLine("a \"message\" quoted");
+    when(builder).build();
+    thenReturned("a \"message\" quoted\n");
   }
 
   @Test
-  public void doubleQuotesAreUnchangedByOneLineScript() throws Exception {
-    assertThat(script("a \"message\" quoted")).isEqualTo("a \"message\" quoted");
+  public void double_quotes_are_unchanged_by_single_line_script() throws Exception {
+    when(script("a \"message\" quoted"));
+    thenReturned("a \"message\" quoted");
   }
 }
