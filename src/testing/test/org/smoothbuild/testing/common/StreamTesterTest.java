@@ -15,7 +15,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,10 +106,6 @@ public class StreamTesterTest {
 
     inputStreamToBytes(inputStream);
     thenCalled(inputStream).close();
-  }
-
-  private static ByteArrayInputStream inputStream(ByteArrayOutputStream outputStream) {
-    return new ByteArrayInputStream(outputStream.toByteArray());
   }
 
   private static Closure $inputStreamToString(final InputStream inputStream) {

@@ -29,7 +29,6 @@ public class StringArrayTest {
   private BuildWorker buildWorker;
 
   private final Path path1 = path("some/path1");
-  private final Path path2 = path("some/path2");
   private final String content1 = "content 1";
   private final String content2 = "content 2";
 
