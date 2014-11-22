@@ -2,8 +2,8 @@ package org.smoothbuild.task.work;
 
 import static org.smoothbuild.task.work.WorkerHashes.workerHash;
 
-import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Array;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.CodeLocation;

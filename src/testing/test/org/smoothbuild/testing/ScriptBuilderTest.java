@@ -1,7 +1,9 @@
 package org.smoothbuild.testing;
 
 import static org.smoothbuild.testing.parse.ScriptBuilder.script;
-import static org.testory.Testory.*;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.testing.parse.ScriptBuilder;

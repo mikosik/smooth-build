@@ -6,8 +6,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
-import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Array;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Value;
 

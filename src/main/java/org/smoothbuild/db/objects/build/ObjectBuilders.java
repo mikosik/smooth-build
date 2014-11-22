@@ -10,8 +10,8 @@ import javax.inject.Inject;
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.ArrayType;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.Value;
 
 public class ObjectBuilders {

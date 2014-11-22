@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.compress;
 
 import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;

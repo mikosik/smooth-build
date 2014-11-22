@@ -4,7 +4,7 @@ import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
-import static org.testory.Testory.*;
+import static org.testory.Testory.then;
 
 import java.io.IOException;
 

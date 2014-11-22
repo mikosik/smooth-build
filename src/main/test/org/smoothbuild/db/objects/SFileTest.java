@@ -13,8 +13,8 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SFile;
 
 import com.google.inject.Guice;

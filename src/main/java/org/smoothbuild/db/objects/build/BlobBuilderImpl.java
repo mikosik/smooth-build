@@ -6,8 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.db.objects.marshal.BlobMarshaller;
-import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.BlobBuilder;
 
 public class BlobBuilderImpl implements BlobBuilder {
   private final BlobMarshaller marshaller;

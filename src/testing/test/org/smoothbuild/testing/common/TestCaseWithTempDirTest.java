@@ -1,6 +1,9 @@
 package org.smoothbuild.testing.common;
 
-import static org.testory.Testory.*;
+import static org.testory.Testory.given;
+import static org.testory.Testory.then;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import java.io.File;
 import java.io.IOException;

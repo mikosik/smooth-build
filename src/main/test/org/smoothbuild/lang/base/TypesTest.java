@@ -11,11 +11,11 @@ import static org.smoothbuild.lang.base.Types.NOTHING;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.base.Types.allTypes;
+import static org.smoothbuild.lang.base.Types.arrayTypeContaining;
 import static org.smoothbuild.lang.base.Types.basicTypes;
 import static org.smoothbuild.lang.base.Types.parameterJTypeToType;
 import static org.smoothbuild.lang.base.Types.parameterTypes;
 import static org.smoothbuild.lang.base.Types.resultJTypeToType;
-import static org.smoothbuild.lang.base.Types.arrayTypeContaining;
 
 import java.util.Set;
 

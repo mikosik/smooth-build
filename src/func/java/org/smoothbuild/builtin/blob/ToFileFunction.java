@@ -3,8 +3,8 @@ package org.smoothbuild.builtin.blob;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.Required;

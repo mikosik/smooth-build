@@ -22,9 +22,9 @@ import java.util.zip.ZipEntry;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Function;

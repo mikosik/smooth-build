@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.file.match.testing;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.builtin.file.match.testing.PathPatternGenerator.generatePatterns;
-import static org.testory.Testory.*;
+import static org.testory.Testory.then;
 
 import java.util.List;
 
