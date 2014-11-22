@@ -16,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.err.ForbiddenArrayElemError;
 import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
@@ -32,11 +31,6 @@ public class ArrayTest {
   private FakeUserConsole userConsole;
   @Inject
   private BuildWorker buildWorker;
-
-  private final Path path1 = path("some/path1");
-  private final Path path2 = path("some/path2");
-  private final String content1 = "content 1";
-  private final String content2 = "content 2";
 
   @Before
   public void before() {
