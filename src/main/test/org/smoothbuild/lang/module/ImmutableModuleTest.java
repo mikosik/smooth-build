@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;

@@ -11,8 +11,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.BlobBuilder;
 
 import com.google.common.hash.HashCode;
 import com.google.inject.Guice;

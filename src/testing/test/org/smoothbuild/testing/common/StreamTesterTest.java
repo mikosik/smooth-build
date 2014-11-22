@@ -6,7 +6,14 @@ import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
-import static org.testory.Testory.*;
+import static org.testory.Testory.any;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.thenEqual;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

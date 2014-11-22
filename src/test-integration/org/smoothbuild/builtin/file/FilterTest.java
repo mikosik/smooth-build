@@ -6,7 +6,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
-import static org.testory.Testory.*;
+import static org.testory.Testory.thenEqual;
 
 import java.io.IOException;
 

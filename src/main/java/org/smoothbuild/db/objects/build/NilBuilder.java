@@ -1,8 +1,8 @@
 package org.smoothbuild.db.objects.build;
 
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
-import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Array;
+import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Nothing;
 
 import com.google.common.collect.ImmutableList;

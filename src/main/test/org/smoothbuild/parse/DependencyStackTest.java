@@ -3,7 +3,11 @@ package org.smoothbuild.parse;
 import static org.hamcrest.core.IsSame.sameInstance;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-import static org.testory.Testory.*;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenEqual;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import java.util.NoSuchElementException;
 

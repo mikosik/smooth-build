@@ -4,7 +4,10 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
-import static org.testory.Testory.*;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.FilesFunction.FilesParameters;

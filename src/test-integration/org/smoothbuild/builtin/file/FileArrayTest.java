@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
-import static org.testory.Testory.*;
+import static org.testory.Testory.then;
 
 import java.io.IOException;
 
