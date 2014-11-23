@@ -1,7 +1,9 @@
 package org.smoothbuild.lang.function.def.args;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.Types.FILE;
@@ -79,7 +81,7 @@ public class MapperTest {
 
     // then
     messages.assertNoProblems();
-    assertThat(mapping).isEqualTo(ImmutableMap.of(p1, a1));
+    assertEquals(ImmutableMap.of(p1, a1), mapping);
   }
 
   @Test
@@ -193,8 +195,8 @@ public class MapperTest {
     do_test_type_mismatch_for_param_problem(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void do_test_type_mismatch_for_param_problem(Type<?> paramType, Type<?> argType) throws
-      Exception {
+  private void do_test_type_mismatch_for_param_problem(Type<?> paramType, Type<?> argType)
+      throws Exception {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = parameter(paramType, "name1", false);
@@ -218,7 +220,7 @@ public class MapperTest {
 
     // then
     messages.assertNoProblems();
-    assertThat(mapping).isEmpty();
+    assertThat(mapping.keySet(), empty());
   }
 
   // basic types
@@ -331,7 +333,7 @@ public class MapperTest {
 
     // then
     messages.assertNoProblems();
-    assertThat(mapping).isEqualTo(ImmutableMap.of(p2, a1));
+    assertEquals(ImmutableMap.of(p2, a1), mapping);
   }
 
   @Test
@@ -361,7 +363,7 @@ public class MapperTest {
 
     // then
     messages.assertNoProblems();
-    assertThat(result).isEqualTo(ImmutableMap.of(p1, a1, p2, a2, p3, a3));
+    assertEquals(ImmutableMap.of(p1, a1, p2, a2, p3, a3), result);
   }
 
   @Test
@@ -418,7 +420,7 @@ public class MapperTest {
 
     // then
     messages.assertNoProblems();
-    assertThat(result).isEqualTo(ImmutableMap.of(p1, a1, p2, a2));
+    assertEquals(ImmutableMap.of(p1, a1, p2, a2), result);
   }
 
   @Test
@@ -444,7 +446,7 @@ public class MapperTest {
 
     // then
     messages.assertNoProblems();
-    assertThat(mapping).isEqualTo(ImmutableMap.of(p1, a1, p2, a2, p3, a3));
+    assertEquals(ImmutableMap.of(p1, a1, p2, a2, p3, a3), mapping);
   }
 
   @Test
@@ -474,7 +476,7 @@ public class MapperTest {
 
     // then
     messages.assertNoProblems();
-    assertThat(result).isEqualTo(ImmutableMap.of(p1, a1, p2, a2));
+    assertEquals(ImmutableMap.of(p1, a1, p2, a2), result);
   }
 
   @Test
@@ -586,8 +588,7 @@ public class MapperTest {
     do_test_no_param_with_proper_type_for_nameless_arg(NIL, FILE);
   }
 
-  private void do_test_no_param_with_proper_type_for_nameless_arg(Type<?> type,
-      Type<?> otherType) {
+  private void do_test_no_param_with_proper_type_for_nameless_arg(Type<?> type, Type<?> otherType) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = parameter(otherType, "name1", false);
@@ -614,7 +615,8 @@ public class MapperTest {
     return expression;
   }
 
-  private Map<Parameter, Argument> createMapping(Iterable<Parameter> params, List<Argument> arguments) {
+  private Map<Parameter, Argument> createMapping(Iterable<Parameter> params,
+      List<Argument> arguments) {
     Function<?> function = function(params);
     return new Mapper(codeLocation(1), messages, function, arguments).detectMapping();
   }

@@ -1,6 +1,6 @@
 package org.smoothbuild.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -62,7 +62,7 @@ public class StringUnescaperTest {
       fail("exception should be thrown");
     } catch (UnescapingFailedException e) {
       // expected
-      assertThat(e.charIndex()).isEqualTo(index);
+      assertEquals(index, e.charIndex());
     }
   }
 
@@ -98,7 +98,7 @@ public class StringUnescaperTest {
   }
 
   private void assertUnescapedResult(String input, String expected) {
-    assertThat(unescaped(input)).isEqualTo(expected);
+    assertEquals(expected, unescaped(input));
   }
 
   private static Map<String, String> unescapeMap() {

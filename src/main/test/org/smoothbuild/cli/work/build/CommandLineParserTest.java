@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.work.build;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.lang.function.base.Name.name;
 
@@ -20,7 +20,7 @@ public class CommandLineParserTest {
   @Test
   public void functions_to_run() {
     CommandLineArguments args = parser.parse(ImmutableList.of(functionName));
-    assertThat(args.functionsToRun()).isEqualTo(ImmutableSet.of(name(functionName)));
+    assertEquals(ImmutableSet.of(name(functionName)), args.functionsToRun());
   }
 
   @Test
@@ -38,7 +38,6 @@ public class CommandLineParserTest {
   @Test
   public void scriptFile() throws Exception {
     CommandLineArguments args = parser.parse(ImmutableList.of(functionName));
-    assertThat(args.scriptFile()).isEqualTo(DEFAULT_SCRIPT);
+    assertEquals(DEFAULT_SCRIPT, args.scriptFile());
   }
-
 }

@@ -1,16 +1,29 @@
 package org.smoothbuild.message.base;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.testory.Testory.given;
+import static org.testory.Testory.givenTest;
+import static org.testory.Testory.thenEqual;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.testing.EqualsTester;
 
 public class MessageTest {
-  String messageString = "message";
+  private String messageString;
+  private Message message;
+  private Throwable throwable;
+
+  @Before
+  public void before() {
+    givenTest(this);
+    given(throwable = new Throwable());
+  }
 
   @Test(expected = NullPointerException.class)
   public void nullMessageIsForbidden() throws Exception {
@@ -24,32 +37,30 @@ public class MessageTest {
 
   @Test
   public void testError() {
-    Message message = new Message(ERROR, messageString);
-
-    assertThat(message.type()).isEqualTo(ERROR);
-    assertThat(message.message()).isEqualTo(messageString);
+    when(message = new Message(ERROR, messageString));
+    thenEqual(message.type(), ERROR);
+    thenEqual(message.message(), messageString);
   }
 
   @Test
   public void testWarning() {
-    Message message = new Message(WARNING, messageString);
-
-    assertThat(message.type()).isEqualTo(WARNING);
-    assertThat(message.message()).isEqualTo(messageString);
+    when(message = new Message(WARNING, messageString));
+    thenEqual(message.type(), WARNING);
+    thenEqual(message.message(), messageString);
   }
 
   @Test
   public void to_string() throws Exception {
-    Message message = new Message(ERROR, messageString);
-    assertThat(message.toString()).isEqualTo("ERROR: " + messageString);
+    given(message = new Message(ERROR, messageString));
+    when(message.toString());
+    thenReturned(ERROR.name() + ": " + messageString);
   }
 
   @Test
   public void to_string_with_cause() throws Exception {
-    Throwable throwable = new Throwable();
-    Message message = new Message(ERROR, "message", throwable);
-    assertThat(message.toString()).isEqualTo(
-        "ERROR: " + messageString + "\n" + getStackTraceAsString(throwable));
+    given(message = new Message(ERROR, messageString, throwable));
+    when(message.toString());
+    thenReturned(ERROR.name() + ": " + messageString + "\n" + getStackTraceAsString(throwable));
   }
 
   @Test

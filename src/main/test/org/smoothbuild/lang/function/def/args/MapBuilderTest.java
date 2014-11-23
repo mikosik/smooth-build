@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
@@ -77,8 +77,8 @@ public class MapBuilderTest {
     mapBuilder.add(parameter2, argument2);
     mapBuilder.add(parameter3, argument3);
 
-    assertThat(mapBuilder.build()).isEqualTo(ImmutableMap.of(parameter1, argument1, parameter2,
-        argument2, parameter3, argument3));
+    assertEquals(ImmutableMap.of(parameter1, argument1, parameter2, argument2, parameter3,
+        argument3), mapBuilder.build());
   }
 
   private static Argument arg(Type<?> type) {

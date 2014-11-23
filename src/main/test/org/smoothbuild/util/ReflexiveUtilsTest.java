@@ -1,6 +1,7 @@
 package org.smoothbuild.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.util.ReflexiveUtils.isPublic;
 import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
@@ -12,34 +13,34 @@ public class ReflexiveUtilsTest {
   public void testIsMethodPublic() throws Exception {
     Class<?> klass = MyClass.class;
 
-    assertThat(isPublic(klass.getDeclaredMethod("publicMethod"))).isTrue();
-    assertThat(isPublic(klass.getDeclaredMethod("publicStaticMethod"))).isTrue();
+    assertTrue(isPublic(klass.getDeclaredMethod("publicMethod")));
+    assertTrue(isPublic(klass.getDeclaredMethod("publicStaticMethod")));
 
-    assertThat(isPublic(klass.getDeclaredMethod("packageMethod"))).isFalse();
-    assertThat(isPublic(klass.getDeclaredMethod("packageStaticMethod"))).isFalse();
+    assertFalse(isPublic(klass.getDeclaredMethod("packageMethod")));
+    assertFalse(isPublic(klass.getDeclaredMethod("packageStaticMethod")));
 
-    assertThat(isPublic(klass.getDeclaredMethod("protectedMethod"))).isFalse();
-    assertThat(isPublic(klass.getDeclaredMethod("protectedStaticMethod"))).isFalse();
+    assertFalse(isPublic(klass.getDeclaredMethod("protectedMethod")));
+    assertFalse(isPublic(klass.getDeclaredMethod("protectedStaticMethod")));
 
-    assertThat(isPublic(klass.getDeclaredMethod("privateMethod"))).isFalse();
-    assertThat(isPublic(klass.getDeclaredMethod("privateStaticMethod"))).isFalse();
+    assertFalse(isPublic(klass.getDeclaredMethod("privateMethod")));
+    assertFalse(isPublic(klass.getDeclaredMethod("privateStaticMethod")));
   }
 
   @Test
   public void testIsMethodStatic() throws Exception {
     Class<?> klass = MyClass.class;
 
-    assertThat(isStatic(klass.getDeclaredMethod("publicMethod"))).isFalse();
-    assertThat(isStatic(klass.getDeclaredMethod("publicStaticMethod"))).isTrue();
+    assertFalse(isStatic(klass.getDeclaredMethod("publicMethod")));
+    assertTrue(isStatic(klass.getDeclaredMethod("publicStaticMethod")));
 
-    assertThat(isStatic(klass.getDeclaredMethod("packageMethod"))).isFalse();
-    assertThat(isStatic(klass.getDeclaredMethod("packageStaticMethod"))).isTrue();
+    assertFalse(isStatic(klass.getDeclaredMethod("packageMethod")));
+    assertTrue(isStatic(klass.getDeclaredMethod("packageStaticMethod")));
 
-    assertThat(isStatic(klass.getDeclaredMethod("protectedMethod"))).isFalse();
-    assertThat(isStatic(klass.getDeclaredMethod("protectedStaticMethod"))).isTrue();
+    assertFalse(isStatic(klass.getDeclaredMethod("protectedMethod")));
+    assertTrue(isStatic(klass.getDeclaredMethod("protectedStaticMethod")));
 
-    assertThat(isStatic(klass.getDeclaredMethod("privateMethod"))).isFalse();
-    assertThat(isStatic(klass.getDeclaredMethod("privateStaticMethod"))).isTrue();
+    assertFalse(isStatic(klass.getDeclaredMethod("privateMethod")));
+    assertTrue(isStatic(klass.getDeclaredMethod("privateStaticMethod")));
   }
 
   public static class MyClass {
@@ -64,10 +65,10 @@ public class ReflexiveUtilsTest {
 
   @Test
   public void testIsConstructorPublic() throws Exception {
-    assertThat(isPublic(MyPublicConstructorClass.class.getDeclaredConstructor())).isTrue();
-    assertThat(isPublic(MyPackageConstructorClass.class.getDeclaredConstructor())).isFalse();
-    assertThat(isPublic(MyProtectedConstructorClass.class.getDeclaredConstructor())).isFalse();
-    assertThat(isPublic(MyPrivateConstructorClass.class.getDeclaredConstructor())).isFalse();
+    assertTrue(isPublic(MyPublicConstructorClass.class.getDeclaredConstructor()));
+    assertFalse(isPublic(MyPackageConstructorClass.class.getDeclaredConstructor()));
+    assertFalse(isPublic(MyProtectedConstructorClass.class.getDeclaredConstructor()));
+    assertFalse(isPublic(MyPrivateConstructorClass.class.getDeclaredConstructor()));
   }
 
   public static class MyPublicConstructorClass {

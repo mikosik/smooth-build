@@ -1,6 +1,8 @@
 package org.smoothbuild.parse;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
@@ -27,7 +29,7 @@ public class DependencyCollectorTest {
 
   @Test
   public void emptyMapIsReturnedForEmptyModule() throws Exception {
-    assertThat(collectDependencies(messages, moduleCtx())).isEmpty();
+    assertThat(collectDependencies(messages, moduleCtx()).keySet(), empty());
   }
 
   @Test
@@ -42,7 +44,7 @@ public class DependencyCollectorTest {
     Map<Name, Set<Dependency>> expected = Maps.newHashMap();
     expected.put(name1, dependencies(name2, name3));
 
-    assertThat(collectDependencies(messages, module)).isEqualTo(expected);
+    assertEquals(expected, collectDependencies(messages, module));
   }
 
   @Test
@@ -63,6 +65,6 @@ public class DependencyCollectorTest {
     expected.put(name1, dependencies(name2));
     expected.put(name2, dependencies(name1));
 
-    assertThat(collectDependencies(messages, module)).isEqualTo(expected);
+    assertEquals(expected, collectDependencies(messages, module));
   }
 }

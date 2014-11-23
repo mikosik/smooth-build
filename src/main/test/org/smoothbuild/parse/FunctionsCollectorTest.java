@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.testing.parse.FakeFunctionContext.functionCtx;
 import static org.smoothbuild.testing.parse.FakeModuleContext.moduleCtx;
@@ -38,7 +38,7 @@ public class FunctionsCollectorTest {
 
     ImmutableMap<Name, FunctionContext> expected =
         ImmutableMap.of(name1, function1, name2, function2);
-    assertThat(collectFunctions(module)).isEqualTo(expected);
+    assertEquals(expected, collectFunctions(module));
   }
 
   @Test

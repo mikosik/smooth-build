@@ -1,7 +1,10 @@
 package org.smoothbuild.io.fs.base;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
 
@@ -21,7 +24,7 @@ public class PathTest {
   @Test
   public void validationErrorReturnsNullForCorrectPath() throws Exception {
     for (String path : PathTesting.listOfCorrectPaths()) {
-      assertThat(Path.validationError(path)).isNull();
+      assertNull(Path.validationError(path));
     }
   }
 
@@ -35,7 +38,7 @@ public class PathTest {
   @Test
   public void validationErrorReturnsMessageForInvalidPath() {
     for (String path : PathTesting.listOfInvalidPaths()) {
-      assertThat(Path.validationError(path)).isNotNull();
+      assertNotNull(Path.validationError(path));
     }
   }
 
@@ -53,12 +56,12 @@ public class PathTest {
 
   @Test
   public void rootPathReturnsTheSameInstanceEachTime() throws Exception {
-    assertThat(Path.rootPath()).isSameAs(Path.rootPath());
+    assertSame(Path.rootPath(), Path.rootPath());
   }
 
   @Test
   public void dotPathReturnsRootPathInstance() throws Exception {
-    assertThat(Path.path(".")).isSameAs(Path.rootPath());
+    assertSame(Path.rootPath(), Path.path("."));
   }
 
   @Test
@@ -75,7 +78,7 @@ public class PathTest {
   }
 
   private static void assertValue(String path, String expected) {
-    assertThat(path(path).value()).isEqualTo(expected);
+    assertEquals(expected, path(path).value());
   }
 
   @Test
@@ -98,7 +101,7 @@ public class PathTest {
   }
 
   private static void assertParentOf(String input, String expected) {
-    assertThat(path(input).parent()).isEqualTo(path(expected));
+    assertEquals(path(expected), path(input).parent());
   }
 
   @Test
@@ -132,7 +135,7 @@ public class PathTest {
   }
 
   private static void assertAppend(String path1, String path2, String expected) {
-    assertThat(path(path1).append(path(path2)).value()).isEqualTo(expected);
+    assertEquals(expected, path(path1).append(path(path2)).value());
   }
 
   @Test
@@ -153,7 +156,7 @@ public class PathTest {
     for (Path path : path(input).parts()) {
       list.add(path.value());
     }
-    assertThat(list).isEqualTo(expected);
+    assertEquals(expected, list);
   }
 
   @Test
@@ -177,7 +180,7 @@ public class PathTest {
   }
 
   private static void assertLastPart(String input, String expected) {
-    assertThat(path(input).lastPart()).isEqualTo(path(expected));
+    assertEquals(path(expected), path(input).lastPart());
   }
 
   @Test
@@ -201,7 +204,7 @@ public class PathTest {
   }
 
   private static void assertFirstPart(String input, String expected) {
-    assertThat(path(input).firstPart()).isEqualTo(path(expected));
+    assertEquals(path(expected), path(input).firstPart());
   }
 
   @Test
@@ -218,7 +221,7 @@ public class PathTest {
 
   @Test
   public void testToString() {
-    assertThat(path("abc/def").toString()).isEqualTo("'abc/def'");
+    assertEquals("'abc/def'", path("abc/def").toString());
   }
 
   private static List<Path> listOfCorrectNonEqualPaths() {

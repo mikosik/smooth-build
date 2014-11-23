@@ -1,6 +1,6 @@
 package org.smoothbuild.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class CommandExecutorTest {
     // linux command testing whether length of string "abc" is zero.
     // As it is not zero it will return non zero return code.
     ImmutableList<String> command = ImmutableList.of("test", "-z", "abc");
-    assertThat(CommandExecutor.execute(command)).isEqualTo(1);
+    assertEquals(1, CommandExecutor.execute(command));
   }
 
   @Test
@@ -52,6 +52,6 @@ public class CommandExecutorTest {
     // linux command testing whether length of string "abc" is not zero.
     // As it is not zero it will return zero return code.
     ImmutableList<String> command = ImmutableList.of("test", "-n", "abc");
-    assertThat(CommandExecutor.execute(command)).isEqualTo(0);
+    assertEquals(0, CommandExecutor.execute(command));
   }
 }

@@ -1,17 +1,15 @@
 package org.smoothbuild.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.emptyIterable;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 import static org.testory.Testory.mock;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -22,175 +20,174 @@ public class EmptyTest {
 
   @Test
   public void empty_string_value_map_is_empty() {
-    assertThat(Empty.stringValueMap()).isEmpty();
+    assertThat(Empty.stringValueMap().keySet(), empty());
   }
 
   @Test
   public void empty_string_value_map_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<String, Value> map = Empty.stringValueMap();
+    when(Empty.stringValueMap());
+    thenReturned(instanceOf(ImmutableMap.class));
   }
 
   @Test
   public void empty_string_value_map_always_returns_the_same_object() {
-    assertThat(Empty.stringValueMap()).isSameAs(Empty.stringValueMap());
+    assertSame(Empty.stringValueMap(), Empty.stringValueMap());
   }
 
   // stringExpressionMap()
 
   @Test
   public void empty_string_expression_map_is_empty() {
-    assertThat(Empty.stringExpressionMap()).isEmpty();
+    assertThat(Empty.stringExpressionMap().keySet(), empty());
   }
 
   @Test
   public void empty_string_expression_map_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<String, Expression<?>> map = Empty.stringExpressionMap();
+    when(Empty.stringExpressionMap());
+    thenReturned(instanceOf(ImmutableMap.class));
   }
 
   @Test
   public void empty_string_expression_map_always_returns_the_same_object() {
-    assertThat(Empty.stringExpressionMap()).isSameAs(Empty.stringExpressionMap());
+    assertSame(Empty.stringExpressionMap(), Empty.stringExpressionMap());
   }
 
   // nameFunctionMap();
 
   @Test
   public void empty_name_function_map_is_empty() {
-    assertThat(Empty.nameFunctionMap()).isEmpty();
+    assertThat(Empty.nameFunctionMap().keySet(), empty());
   }
 
   @Test
   public void empty_name_function_map_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<Name, Function<?>> map = Empty.nameFunctionMap();
+    when(Empty.nameFunctionMap());
+    thenReturned(instanceOf(ImmutableMap.class));
   }
 
   @Test
   public void empty_name_function_map_always_returns_the_same_object() {
-    assertThat(Empty.nameFunctionMap()).isSameAs(Empty.nameFunctionMap());
+    assertSame(Empty.nameFunctionMap(), Empty.nameFunctionMap());
   }
 
   // typeFunctionMap();
 
   @Test
   public void empty_type_function_map_is_empty() {
-    assertThat(Empty.typeFunctionMap()).isEmpty();
+    assertThat(Empty.typeFunctionMap().keySet(), empty());
   }
 
   @Test
   public void empty_type_function_map_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableMap<Type<?>, Function<?>> map = Empty.typeFunctionMap();
+    when(Empty.typeFunctionMap());
+    thenReturned(instanceOf(ImmutableMap.class));
   }
 
   @Test
   public void empty_type_function_map_always_returns_the_same_object() {
-    assertThat(Empty.typeFunctionMap()).isSameAs(Empty.typeFunctionMap());
+    assertSame(Empty.typeFunctionMap(), Empty.typeFunctionMap());
   }
 
   // paramList()
 
   @Test
   public void empty_param_list_is_empty() {
-    assertThat(Empty.paramList()).isEmpty();
+    assertThat(Empty.paramList(), empty());
   }
 
   @Test
   public void empty_param_list_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableList<Parameter> list = Empty.paramList();
+    when(Empty.paramList());
+    thenReturned(instanceOf(ImmutableList.class));
   }
 
   @Test
   public void empty_param_list_always_returns_the_same_object() {
-    assertThat(Empty.paramList()).isSameAs(Empty.paramList());
+    assertSame(Empty.paramList(), Empty.paramList());
   }
 
   // valueList()
 
   @Test
   public void empty_value_list_is_empty() {
-    assertThat(Empty.valueList()).isEmpty();
+    assertThat(Empty.valueList(), empty());
   }
 
   @Test
   public void empty_value_list_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableList<Value> list = Empty.valueList();
+    when(Empty.valueList());
+    thenReturned(instanceOf(ImmutableList.class));
   }
 
   @Test
   public void empty_value_list_always_returns_the_same_object() {
-    assertThat(Empty.valueList()).isSameAs(Empty.valueList());
+    assertSame(Empty.valueList(), Empty.valueList());
   }
 
   // expressionList()
 
   @Test
   public void empty_expression_list_is_empty() {
-    assertThat(Empty.expressionList()).isEmpty();
+    assertThat(Empty.expressionList(), empty());
   }
 
   @Test
   public void empty_expression_list_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableList<Expression<?>> list = Empty.expressionList();
+    when(Empty.expressionList());
+    thenReturned(instanceOf(ImmutableList.class));
   }
 
   @Test
   public void empty_expression_list_always_returns_the_same_object() {
-    assertThat(Empty.expressionList()).isSameAs(Empty.expressionList());
+    assertSame(Empty.expressionList(), Empty.expressionList());
   }
 
   // messageList()
 
   @Test
   public void empty_message_list_is_empty() {
-    assertThat(Empty.messageList()).isEmpty();
+    assertThat(Empty.messageList(), empty());
   }
 
   @Test
   public void empty_message_list_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableList<Message> list = Empty.messageList();
+    when(Empty.messageList());
+    thenReturned(instanceOf(ImmutableList.class));
   }
 
   @Test
   public void empty_message_list_always_returns_the_same_object() {
-    assertThat(Empty.messageList()).isSameAs(Empty.messageList());
+    assertSame(Empty.messageList(), Empty.messageList());
   }
 
   // taskList()
 
   @Test
   public void empty_task_list_is_empty() {
-    assertThat(Empty.taskList()).isEmpty();
+    assertThat(Empty.taskList(), empty());
   }
 
   @Test
   public void empty_task_list_is_immutable() {
-    @SuppressWarnings("unused")
-    ImmutableList<Task<?>> list = Empty.taskList();
+    when(Empty.taskList());
+    thenReturned(instanceOf(ImmutableList.class));
   }
 
   @Test
   public void empty_task_list_always_returns_the_same_object() {
-    assertThat(Empty.taskList()).isSameAs(Empty.taskList());
+    assertSame(Empty.taskList(), Empty.taskList());
   }
 
   // nullToEmpty
 
   @Test
   public void null_is_changed_into_empty_iterable() throws Exception {
-    assertThat(Empty.nullToEmpty(null)).isEmpty();
+    assertThat(Empty.nullToEmpty(null), emptyIterable());
   }
 
   @Test
   public void null_to_empty_does_not_change_non_empty_iterable() throws Exception {
-    @SuppressWarnings("unchecked")
     Iterable<String> iterable = mock(Iterable.class);
-    assertThat(Empty.nullToEmpty(iterable)).isSameAs(iterable);
+    assertSame(iterable, Empty.nullToEmpty(iterable));
   }
 }

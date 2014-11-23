@@ -1,28 +1,37 @@
 package org.smoothbuild.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
+import static org.testory.Testory.givenTest;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import java.io.File;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class DirectoryFileFilterTest {
-  DirectoryFileFilter directoryFileFilter = new DirectoryFileFilter();
+  private DirectoryFileFilter directoryFileFilter;
+  private File file;
+
+  @Before
+  public void before() {
+    givenTest(this);
+    given(directoryFileFilter = new DirectoryFileFilter());
+  }
 
   @Test
   public void directory_file_is_accepted() {
-    File file = mock(File.class);
     given(willReturn(true), file).isDirectory();
-    assertThat(directoryFileFilter.accept(file)).isTrue();
+    when(directoryFileFilter.accept(file));
+    thenReturned(true);
   }
 
   @Test
   public void normal_file_is_not_accepted() {
-    File file = mock(File.class);
     given(willReturn(false), file).isDirectory();
-    assertThat(directoryFileFilter.accept(file)).isFalse();
+    when(directoryFileFilter.accept(file));
+    thenReturned(false);
   }
 }
