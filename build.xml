@@ -69,7 +69,6 @@
             <arg line="-o ${dir.build.java.parser}"/>
             <arg line="-package org.smoothbuild.antlr"/>
             <arg line="-visitor"/>
-            <arg line="-Werror"/>
             <arg line="Smooth.g4"/>
             <classpath>
                 <pathelement location="${dir.lib}/antlr-4.1-complete.jar"/>
@@ -93,8 +92,6 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="-Xlint:all"/>
-            <compilerarg value="-Werror"/>
             <src path="${dir.src.main.java}"/>
             <src path="${dir.build.java.parser}"/>
             <classpath>
@@ -124,8 +121,6 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="-Xlint:all"/>
-            <compilerarg value="-Werror"/>
             <src path="${dir.src.func.java}"/>
             <classpath>
                 <path refid="classpath.for.func.java"/>
@@ -152,8 +147,6 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="-Xlint:all"/>
-            <compilerarg value="-Werror"/>
             <src path="${dir.src.testing.java}"/>
             <classpath>
                 <path refid="classpath.for.main.testing.java"/>
@@ -182,8 +175,6 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="-Xlint:all"/>
-            <compilerarg value="-Werror"/>
             <src path="${dir.src.main.test}"/>
             <classpath>
                 <path refid="classpath.for.main.test"/>
@@ -213,8 +204,6 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="-Xlint:all"/>
-            <compilerarg value="-Werror"/>
             <src path="${dir.src.func.test}"/>
             <classpath>
                 <path refid="classpath.for.func.test"/>
@@ -243,8 +232,6 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="-Xlint:all"/>
-            <compilerarg value="-Werror"/>
             <src path="${dir.src.testing.test}"/>
             <classpath>
                 <path refid="classpath.for.testing.test"/>
@@ -271,8 +258,6 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <compilerarg value="-Xlint:all"/>
-            <compilerarg value="-Werror"/>
             <src path="${dir.src.test-integration}"/>
             <classpath>
                 <path refid="classpath.for.test-integration"/>
