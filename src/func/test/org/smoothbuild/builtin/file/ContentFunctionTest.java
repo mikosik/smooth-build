@@ -1,25 +1,37 @@
 package org.smoothbuild.builtin.file;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.smoothbuild.builtin.file.ContentFunction.content;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.testory.Testory.given;
+import static org.testory.Testory.givenTest;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.ContentFunction.ContentParameters;
-import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class ContentFunctionTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final NativeApiImpl nativeApi = new FakeNativeApi();
+  private FakeObjectsDb objectsDb;
+  private NativeApiImpl nativeApi;
+  private SFile file;
+
+  @Before
+  public void before() {
+    givenTest(this);
+    given(objectsDb = new FakeObjectsDb());
+    given(nativeApi = new FakeNativeApi());
+  }
 
   @Test
-  public void content_of_file_is_returned_as_blob() throws Exception {
-    SFile file = objectsDb.file(path("some/path"), objectsDb.blob("content"));
-    Blob actual = ContentFunction.content(nativeApi, params(file));
-    assertThat(actual).isSameAs(file.content());
+  public void content_of_file_is_returned_as_blob() {
+    given(file = objectsDb.file(path("some/path"), objectsDb.blob("content")));
+    when(content(nativeApi, params(file)));
+    thenReturned(file.content());
   }
 
   private static ContentParameters params(final SFile file) {

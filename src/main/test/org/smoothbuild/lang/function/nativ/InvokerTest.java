@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertSame;
 import static org.testory.Testory.mock;
 
 import java.lang.reflect.Method;
@@ -36,7 +36,7 @@ public class InvokerTest {
     ImmutableMap<String, Value> valuesMap = ImmutableMap.<String, Value> of("stringParam", value);
     Object result = invoker.invoke(nativeApi, valuesMap);
 
-    assertThat(result).isSameAs(value);
+    assertSame(value, result);
   }
 
   public interface Parameters {

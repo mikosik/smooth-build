@@ -1,13 +1,16 @@
 package org.smoothbuild.parse;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.smoothbuild.lang.function.base.Name.name;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
+import static org.testory.Testory.givenTest;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
@@ -16,45 +19,53 @@ import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.testing.message.FakeLoggedMessages;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 public class DependencySorterTest {
-  private static final Name NAME1 = name("funcation1");
-  private static final Name NAME2 = name("funcation2");
-  private static final Name NAME3 = name("funcation3");
-  private static final Name NAME4 = name("funcation4");
-  private static final Name NAME5 = name("funcation5");
-  private static final Name NAME6 = name("funcation6");
+  private Name name1;
+  private Name name2;
+  private Name name3;
+  private Name name4;
+  private Name name5;
+  private Name name6;
 
   FakeLoggedMessages messages = new FakeLoggedMessages();
+
+  @Before
+  public void before() {
+    givenTest(this);
+  }
 
   @Test
   public void linearDependency() {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
-    map.put(NAME3, dependencies(NAME4));
-    map.put(NAME1, dependencies(NAME2));
-    map.put(NAME4, dependencies());
-    map.put(NAME2, dependencies(NAME3));
+    map.put(name3, dependencies(name4));
+    map.put(name1, dependencies(name2));
+    map.put(name4, dependencies());
+    map.put(name2, dependencies(name3));
 
-    assertThat(sort(map)).isEqualTo(ImmutableList.of(NAME4, NAME3, NAME2, NAME1));
+    assertThat(sort(map), contains(name4, name3, name2, name1));
     messages.assertNoProblems();
   }
 
   @Test
   public void treeDependency() {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
-    map.put(NAME1, dependencies(NAME2, NAME3));
-    map.put(NAME2, dependencies(NAME4));
-    map.put(NAME3, dependencies(NAME5));
-    map.put(NAME4, dependencies());
-    map.put(NAME5, dependencies(NAME6));
-    map.put(NAME6, dependencies());
+    map.put(name1, dependencies(name2, name3));
+    map.put(name2, dependencies(name4));
+    map.put(name3, dependencies(name5));
+    map.put(name4, dependencies());
+    map.put(name5, dependencies(name6));
+    map.put(name6, dependencies());
 
     List<Name> actual = sort(map);
 
-    assertThat(actual).containsSubsequence(NAME4, NAME2, NAME1);
-    assertThat(actual).containsSubsequence(NAME6, NAME5, NAME3, NAME1);
+    assertTrue(actual.indexOf(name4) < actual.indexOf(name2));
+    assertTrue(actual.indexOf(name2) < actual.indexOf(name1));
+
+    assertTrue(actual.indexOf(name6) < actual.indexOf(name5));
+    assertTrue(actual.indexOf(name5) < actual.indexOf(name3));
+    assertTrue(actual.indexOf(name3) < actual.indexOf(name1));
 
     messages.assertNoProblems();
   }
@@ -62,7 +73,7 @@ public class DependencySorterTest {
   @Test
   public void simpleRecursionIsLoggedAsError() throws Exception {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
-    map.put(NAME1, dependencies(NAME1));
+    map.put(name1, dependencies(name1));
 
     sort(map);
 
@@ -72,9 +83,9 @@ public class DependencySorterTest {
   @Test
   public void cycleIsLoggedAsError() throws Exception {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
-    map.put(NAME1, dependencies(NAME2));
-    map.put(NAME2, dependencies(NAME3));
-    map.put(NAME3, dependencies(NAME1));
+    map.put(name1, dependencies(name2));
+    map.put(name2, dependencies(name3));
+    map.put(name3, dependencies(name1));
 
     sort(map);
 

@@ -1,73 +1,73 @@
 package org.smoothbuild.builtin.compress;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
-import static org.smoothbuild.io.fs.base.Path.path;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.Matchers.emptyIterable;
+import static org.hamcrest.Matchers.hasSize;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
+import static org.testory.Testory.given;
+import static org.testory.Testory.givenTest;
+import static org.testory.Testory.then;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import java.io.IOException;
+import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
-import com.google.common.collect.Iterables;
-
 public class UnzipperTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final String fileName1 = "file/path/file1.txt";
-  private final String fileName2 = "file/path/file2.txt";
-  private final String directoryName = "my/directory/";
+  private String fileName1;
+  private String fileName2;
+  private String directoryName;
+  private List<SFile> files;
+  private Blob blob;
+  private Unzipper unzipper;
 
-  private final FakeObjectsDb valueFactory = new FakeObjectsDb();
-  private final Unzipper unzipper = new Unzipper(valueFactory);
-
-  @Test
-  public void unzipping() throws Exception {
-    Blob zipBlob = zipped(fileName1, fileName2);
-
-    Array<SFile> resultFileArray = unzipper.unzip(zipBlob);
-
-    int fileCount = 0;
-    for (SFile file : resultFileArray) {
-      fileCount++;
-      assertContent(file.content().openInputStream(), file.path().value());
-    }
-    assertThat(fileCount).isEqualTo(2);
+  @Before
+  public void before() {
+    givenTest(this);
+    given(fileName1 = "file/path/file1.txt");
+    given(fileName2 = "file/path/file2.txt");
+    given(directoryName = "my/directory/");
+    given(unzipper = new Unzipper(new FakeObjectsDb()));
   }
 
   @Test
-  public void unzipperIgnoresDirectories() throws Exception {
-    Blob zipBlob = zipped(fileName1, directoryName);
-
-    Array<SFile> resultFileArray = unzipper.unzip(zipBlob);
-
-    assertThat(Iterables.size(resultFileArray)).isEqualTo(1);
-    assertThat(resultFileArray.iterator().next().path()).isEqualTo(path(fileName1));
+  public void unzips_files() throws Exception {
+    given(blob = zipped(fileName1, fileName2));
+    when(files = newArrayList(unzipper.unzip(blob)));
+    then(files, hasSize(2));
+    assertContent(files.get(0).content().openInputStream(), files.get(0).path().value());
+    assertContent(files.get(1).content().openInputStream(), files.get(1).path().value());
   }
 
   @Test
-  public void entryWithIllegalName() throws Exception {
-    String illegalFileName = "/leading/slash/is/forbidden";
-    Blob zipBlob = zipped(illegalFileName);
-    try {
-      unzipper.unzip(zipBlob);
-      fail("exception should be thrown");
-    } catch (IllegalPathInZipError e) {
-      // expected
-    }
+  public void directory_entries_are_ignored() throws Exception {
+    given(blob = zipped(directoryName));
+    when(unzipper.unzip(blob));
+    thenReturned(emptyIterable());
   }
 
-  private Blob zipped(String... fileNames) throws IOException {
+  @Test
+  public void zip_entry_key_cannot_start_with_slash() throws Exception {
+    given(blob = zipped("/leading/slash/is/forbidden"));
+    when(unzipper).unzip(blob);
+    thenThrown(IllegalPathInZipError.class);
+  }
+
+  private static Blob zipped(String... fileNames) throws IOException {
     FakeFileSystem fileSystem = new FakeFileSystem();
     Path path = ZipTester.zippedFiles(fileSystem, fileNames);
-    return objectsDb.blob(inputStreamToBytes(fileSystem.openInputStream(path)));
+    return new FakeObjectsDb().blob(inputStreamToBytes(fileSystem.openInputStream(path)));
   }
 }

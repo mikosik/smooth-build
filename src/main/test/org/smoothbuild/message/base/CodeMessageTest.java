@@ -1,6 +1,6 @@
 package org.smoothbuild.message.base;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 
@@ -17,13 +17,13 @@ public class CodeMessageTest {
   public void testCodeLocation() throws Exception {
     CodeLocation codeLocation = codeLocation(1);
     CodeMessage message = new CodeMessage(WARNING, codeLocation, "problem description");
-    assertThat(message.codeLocation()).isEqualTo(codeLocation);
+    assertEquals(codeLocation, message.codeLocation());
   }
 
   @Test
   public void testToString() throws Exception {
     CodeLocation codeLocation = codeLocation(2);
     Message message = new CodeMessage(WARNING, codeLocation, "problem description");
-    assertThat(message.toString()).isEqualTo("WARNING " + codeLocation + ": problem description");
+    assertEquals("WARNING " + codeLocation + ": problem description", message.toString());
   }
 }

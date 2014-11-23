@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertThat;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
@@ -39,24 +40,12 @@ public class SignatureTest {
 
   @Test
   public void paramsAreSortedAccordingToName() throws Exception {
-    String name1 = "aaa";
-    String name2 = "bbb";
-    String name3 = "ccc";
-    String name4 = "ddd";
-    String name5 = "eee";
-    String name6 = "fff";
-    Parameter parameter1 = parameter(STRING, name1, false);
-    Parameter parameter2 = parameter(STRING, name2, false);
-    Parameter parameter3 = parameter(STRING, name3, false);
-    Parameter parameter4 = parameter(STRING, name4, false);
-    Parameter parameter5 = parameter(STRING, name5, false);
-    Parameter parameter6 = parameter(STRING, name6, false);
+    Parameter parameter1 = parameter(STRING, "aaa", false);
+    Parameter parameter2 = parameter(STRING, "bbb", false);
 
-    ImmutableList<Parameter> parameters = ImmutableList.of(parameter4, parameter6, parameter1,
-        parameter3, parameter5, parameter2);
+    ImmutableList<Parameter> parameters = ImmutableList.of(parameter2, parameter1);
     Signature<?> signature = new Signature<>(type, name, parameters);
-    assertThat(signature.parameters()).containsExactly(parameter1, parameter2, parameter3, parameter4,
-        parameter5, parameter6);
+    assertThat(signature.parameters(), contains(parameter1, parameter2));
   }
 
   @Test
@@ -64,7 +53,7 @@ public class SignatureTest {
     given(parameter = parameter(BLOB, "blob", false));
     given(parameter2 = parameter(FILE, "file", false));
     when(new Signature<>(STRING, name, ImmutableList.of(parameter, parameter2))).toString();
-    thenReturned(
-        STRING.name() + " " + name.value() + "(" + parameter.type().name() + " " + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");
+    thenReturned(STRING.name() + " " + name.value() + "(" + parameter.type().name() + " "
+        + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");
   }
 }

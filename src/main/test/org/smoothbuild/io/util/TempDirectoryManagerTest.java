@@ -1,28 +1,37 @@
 package org.smoothbuild.io.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
+import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenCalled;
+import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
+import static org.testory.common.Matchers.same;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.inject.util.Providers;
 
 public class TempDirectoryManagerTest {
-  TempDirectory tempDirectory = mock(TempDirectory.class);
-  TempDirectoryManager tempDirectoryManager = new TempDirectoryManager(Providers.of(tempDirectory));
+  private TempDirectory tempDirectory;
+  private TempDirectoryManager tempDirectoryManager;
+  private TempDirectory created;
 
-  TempDirectory created;
-
-  @Test
-  public void create_returns_object_from_provider() {
-    assertThat(tempDirectoryManager.createTempDirectory()).isSameAs(tempDirectory);
+  @Before
+  public void before() {
+    givenTest(this);
+    given(tempDirectoryManager = new TempDirectoryManager(Providers.of(tempDirectory)));
   }
 
   @Test
-  public void destroy_is_forwarded_to_created_temp_directories() throws Exception {
+  public void create_returns_object_from_provider() {
+    given(tempDirectoryManager = new TempDirectoryManager(Providers.of(tempDirectory)));
+    when(tempDirectoryManager.createTempDirectory());
+    thenReturned(same(tempDirectory));
+  }
+
+  @Test
+  public void destroy_is_forwarded_to_created_temp_directories() {
     given(created = tempDirectoryManager.createTempDirectory());
     when(tempDirectoryManager).destroyTempDirectories();
     thenCalled(created).destroy();

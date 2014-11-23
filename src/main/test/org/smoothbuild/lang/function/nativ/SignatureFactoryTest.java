@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
@@ -19,13 +19,13 @@ public class SignatureFactoryTest {
 
   @Test
   public void test() throws Exception {
-    Method method = SignatureFactoryTest.class.getMethod("function", NativeApi.class,
-        FuncParams.class);
+    Method method =
+        SignatureFactoryTest.class.getMethod("function", NativeApi.class, FuncParams.class);
 
     Signature<?> signature = SignatureFactory.create(method, FuncParams.class);
-    assertThat(signature.type()).isEqualTo(FILE);
-    assertThat(signature.name()).isEqualTo(name("function"));
-    assertThat(signature.parameters()).isEqualTo(ImmutableList.of(parameter(FILE, "param1", false)));
+    assertEquals(FILE, signature.type());
+    assertEquals(name("function"), signature.name());
+    assertEquals(ImmutableList.of(parameter(FILE, "param1", false)), signature.parameters());
   }
 
   public interface FuncParams {

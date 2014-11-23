@@ -1,6 +1,7 @@
 package org.smoothbuild.io.fs.disk;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +40,7 @@ public class RecursiveDeleterTest {
   public void deleting_sigle_file() throws Exception {
     File file = createEmptyFile(root, "file");
     RecursiveDeleter.deleteRecursively(file.toPath());
-    assertThat(file.exists()).isFalse();
+    assertFalse(file.exists());
   }
 
   @Test
@@ -49,7 +50,7 @@ public class RecursiveDeleterTest {
 
     RecursiveDeleter.deleteRecursively(file.toPath());
 
-    assertThat(directory.exists()).isTrue();
+    assertTrue(directory.exists());
   }
 
   @Test
@@ -60,8 +61,8 @@ public class RecursiveDeleterTest {
 
     RecursiveDeleter.deleteRecursively(link.toPath());
 
-    assertThat(link.exists()).isFalse();
-    assertThat(file.exists()).isTrue();
+    assertFalse(link.exists());
+    assertTrue(file.exists());
   }
 
   @Test
@@ -73,9 +74,9 @@ public class RecursiveDeleterTest {
 
     RecursiveDeleter.deleteRecursively(link.toPath());
 
-    assertThat(dir.exists()).isTrue();
-    assertThat(file.exists()).isTrue();
-    assertThat(link.exists()).isFalse();
+    assertTrue(dir.exists());
+    assertTrue(file.exists());
+    assertFalse(link.exists());
   }
 
   @Test
@@ -102,13 +103,13 @@ public class RecursiveDeleterTest {
     RecursiveDeleter.deleteRecursively(mainDir.toPath());
 
     // then
-    assertThat(fileOutside.exists()).isTrue();
+    assertTrue(fileOutside.exists());
 
-    assertThat(mainDir.exists()).isFalse();
-    assertThat(directFile.exists()).isFalse();
-    assertThat(directDir.exists()).isFalse();
-    assertThat(notDirectFile.exists()).isFalse();
-    assertThat(notDirectDir.exists()).isFalse();
+    assertFalse(mainDir.exists());
+    assertFalse(directFile.exists());
+    assertFalse(directDir.exists());
+    assertFalse(notDirectFile.exists());
+    assertFalse(notDirectDir.exists());
   }
 
   @Test
@@ -121,9 +122,9 @@ public class RecursiveDeleterTest {
 
     RecursiveDeleter.deleteRecursively(dir.toPath());
 
-    assertThat(file.exists()).isTrue();
-    assertThat(dir.exists()).isFalse();
-    assertThat(link.exists()).isFalse();
+    assertTrue(file.exists());
+    assertFalse(dir.exists());
+    assertFalse(link.exists());
   }
 
   private File createDir(File root, String dirName) {

@@ -1,6 +1,8 @@
 package org.smoothbuild.message.listen;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.message.base.MessageType.INFO;
@@ -31,7 +33,7 @@ public class UserConsoleTest {
     builder.addLine(" + GROUP NAME");
     builder.addLine("   + ERROR: message string");
 
-    assertThat(outputStream.toString()).isEqualTo(builder.build());
+    assertEquals(builder.build(), outputStream.toString());
   }
 
   @Test
@@ -45,7 +47,7 @@ public class UserConsoleTest {
     builder.addLine(" + GROUP NAME");
     builder.addLine("   + WARNING: message string");
     builder.addLine("     second line");
-    assertThat(outputStream.toString()).isEqualTo(builder.build());
+    assertEquals(builder.build(), outputStream.toString());
   }
 
   // isProblemReported()
@@ -56,7 +58,7 @@ public class UserConsoleTest {
     loggedMessages.log(new Message(INFO, "message string"));
 
     userConsole.print(name, loggedMessages);
-    assertThat(userConsole.isProblemReported()).isFalse();
+    assertFalse(userConsole.isProblemReported());
   }
 
   @Test
@@ -65,7 +67,7 @@ public class UserConsoleTest {
     loggedMessages.log(new Message(SUGGESTION, "message string"));
 
     userConsole.print(name, loggedMessages);
-    assertThat(userConsole.isProblemReported()).isFalse();
+    assertFalse(userConsole.isProblemReported());
   }
 
   @Test
@@ -74,7 +76,7 @@ public class UserConsoleTest {
     loggedMessages.log(new Message(WARNING, "message string"));
 
     userConsole.print(name, loggedMessages);
-    assertThat(userConsole.isProblemReported()).isFalse();
+    assertFalse(userConsole.isProblemReported());
   }
 
   @Test
@@ -84,7 +86,7 @@ public class UserConsoleTest {
 
     userConsole.print(name, loggedMessages);
 
-    assertThat(userConsole.isProblemReported()).isTrue();
+    assertTrue(userConsole.isProblemReported());
   }
 
   @Test
@@ -94,7 +96,7 @@ public class UserConsoleTest {
 
     userConsole.print(name, loggedMessages);
 
-    assertThat(userConsole.isProblemReported()).isTrue();
+    assertTrue(userConsole.isProblemReported());
   }
 
   // printFinalSummary()
@@ -113,7 +115,7 @@ public class UserConsoleTest {
     builder.addLine(" + SUCCESS :)");
     builder.addLine("   + 1 warning(s)");
 
-    assertThat(outputStream.toString()).isEqualTo(builder.build());
+    assertEquals(builder.build(), outputStream.toString());
   }
 
   @Test
@@ -130,7 +132,7 @@ public class UserConsoleTest {
     builder.addLine(" + FAILED :(");
     builder.addLine("   + 1 error(s)");
 
-    assertThat(outputStream.toString()).isEqualTo(builder.build());
+    assertEquals(builder.build(), outputStream.toString());
   }
 
   @Test
@@ -176,6 +178,6 @@ public class UserConsoleTest {
     builder.addLine("   + 2 suggestion(s)");
     builder.addLine("   + 1 info(s)");
 
-    assertThat(outputStream.toString()).isEqualTo(builder.build());
+    assertEquals(builder.build(), outputStream.toString());
   }
 }

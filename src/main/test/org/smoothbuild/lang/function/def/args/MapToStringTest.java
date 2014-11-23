@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
@@ -31,8 +31,9 @@ public class MapToStringTest {
     Argument argument3 = arg(7, FILE, "name6-that-is-long");
 
     // when
-    String actual = MapToString.toString(ImmutableMap.of(parameter1, argument1, parameter2, argument2,
-        parameter3, argument3));
+    String actual =
+        MapToString.toString(ImmutableMap.of(parameter1, argument1, parameter2, argument2,
+            parameter3, argument3));
 
     // then
     String l = codeLocation(2).toString();
@@ -41,7 +42,7 @@ public class MapToStringTest {
     expected.addLine("  String: name2              <- String: name5              #1234 " + l);
     expected.addLine("  File  : name3              <- File  : name6-that-is-long #7    " + l);
 
-    assertThat(actual).isEqualTo(expected.build());
+    assertEquals(expected.build(), actual);
   }
 
   private static Argument arg(int number, Type<?> type, String name) {

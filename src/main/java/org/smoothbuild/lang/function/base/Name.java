@@ -27,7 +27,7 @@ public class Name {
   }
 
   @Override
-  public final boolean equals(Object object) {
+  public boolean equals(Object object) {
     if (!(object instanceof Name)) {
       return false;
     }
@@ -36,7 +36,7 @@ public class Name {
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return value.hashCode();
   }
 
