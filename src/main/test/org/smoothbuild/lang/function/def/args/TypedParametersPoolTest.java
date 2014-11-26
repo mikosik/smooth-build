@@ -125,18 +125,29 @@ public class TypedParametersPoolTest {
   }
 
   @Test
-  public void size_of_empty_pool_is_zero() {
-    given(pool = new TypedParametersPool(noParameters, noParameters));
-    when(pool.size());
-    thenReturned(0);
+  public void pool_without_parameters_is_empty() throws Exception {
+    given(optional = noParameters);
+    given(required = noParameters);
+    given(pool = new TypedParametersPool(optional, required));
+    when(pool.isEmpty());
+    thenReturned(true);
   }
 
   @Test
-  public void size_adds_number_of_required_and_optional_parameters() {
+  public void pool_with_optional_parameter_is_not_empty() throws Exception {
     given(optional = newHashSet(string));
+    given(required = noParameters);
+    given(pool = new TypedParametersPool(optional, required));
+    when(pool.isEmpty());
+    thenReturned(false);
+  }
+
+  @Test
+  public void pool_with_required_parameter_is_not_empty() throws Exception {
+    given(optional = noParameters);
     given(required = newHashSet(stringRequired));
     given(pool = new TypedParametersPool(optional, required));
-    when(pool.size());
-    thenReturned(2);
+    when(pool.isEmpty());
+    thenReturned(false);
   }
 }
