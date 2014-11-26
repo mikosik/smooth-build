@@ -31,7 +31,8 @@ public class TypedParametersPool {
   }
 
   public boolean hasCandidate() {
-    return requiredParameters.size() == 1 || (requiredParameters.size() == 0 && optionalParameters.size() == 1);
+    return requiredParameters.size() == 1
+        || (requiredParameters.size() == 0 && optionalParameters.size() == 1);
   }
 
   public Parameter candidate() {
@@ -47,7 +48,7 @@ public class TypedParametersPool {
     return Parameter.parametersToString(Sets.union(requiredParameters, optionalParameters));
   }
 
-  public int size() {
-    return optionalParameters.size() + requiredParameters.size();
+  public boolean isEmpty() {
+    return optionalParameters.isEmpty() && requiredParameters.isEmpty();
   }
 }

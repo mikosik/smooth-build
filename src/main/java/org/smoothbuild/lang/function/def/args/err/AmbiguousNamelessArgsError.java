@@ -32,7 +32,7 @@ public class AmbiguousNamelessArgsError extends CodeMessage {
   private static String message(Name functionName, Map<Parameter, Argument> paramToArgMap,
       List<Argument> availableArguments, TypedParametersPool availableTypedParams) {
     String assignmentList = MapToString.toString(paramToArgMap);
-    if (availableTypedParams.size() == 0) {
+    if (availableTypedParams.isEmpty()) {
       return "Can't find parameter(s) of proper type in " + functionName
           + " function for some nameless argument(s):\n"
           + "List of assignments that were successfully detected so far is following:\n"
