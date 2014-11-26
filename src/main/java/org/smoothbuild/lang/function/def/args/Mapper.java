@@ -20,6 +20,7 @@ import org.smoothbuild.message.listen.LoggedMessages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
@@ -47,7 +48,7 @@ public class Mapper {
       return null;
     }
 
-    MapBuilder mapBuilder = new MapBuilder();
+    Builder<Parameter, Argument> mapBuilder = ImmutableMap.builder();
     processNamedArguments(mapBuilder, namedArguments);
     if (messages.containsProblems()) {
       return null;
@@ -57,15 +58,16 @@ public class Mapper {
     if (messages.containsProblems()) {
       return null;
     }
+    ImmutableMap<Parameter, Argument> mapping = mapBuilder.build();
 
     Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
     if (missingRequiredParameters.size() != 0) {
-      messages.log(new MissingRequiredArgsError(codeLocation, function, mapBuilder,
+      messages.log(new MissingRequiredArgsError(codeLocation, function, mapping,
           missingRequiredParameters));
       return null;
     }
 
-    return mapBuilder.build();
+    return mapping;
   }
 
   private void detectDuplicatedAndUnknownArgumentNames(Collection<Argument> namedArguments) {
@@ -86,7 +88,7 @@ public class Mapper {
     }
   }
 
-  private void processNamedArguments(MapBuilder mapBuilder,
+  private void processNamedArguments(Builder<Parameter, Argument> mapBuilder,
       Collection<Argument> namedArguments) {
     for (Argument argument : namedArguments) {
       if (argument.hasName()) {
@@ -96,13 +98,13 @@ public class Mapper {
         if (!canConvert(argument.type(), paramType)) {
           messages.log(new TypeMismatchError(argument, paramType));
         } else {
-          mapBuilder.add(parameter, argument);
+          mapBuilder.put(parameter, argument);
         }
       }
     }
   }
 
-  private void processNamelessArguments(MapBuilder mapBuilder) {
+  private void processNamelessArguments(Builder<Parameter, Argument> mapBuilder) {
     ImmutableMultimap<Type<?>, Argument> namelessArgs = Argument.filterNameless(allArguments);
 
     for (Type<?> type : allTypes()) {
@@ -114,11 +116,12 @@ public class Mapper {
         if (argsSize == 1 && availableTypedParams.hasCandidate()) {
           Argument onlyArgument = availableArguments.iterator().next();
           Parameter candidateParameter = availableTypedParams.candidate();
-          mapBuilder.add(candidateParameter, onlyArgument);
+          mapBuilder.put(candidateParameter, onlyArgument);
           parametersPool.take(candidateParameter);
         } else {
-          AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
-              mapBuilder.build(), availableArguments, availableTypedParams);
+          AmbiguousNamelessArgsError error =
+              new AmbiguousNamelessArgsError(function.name(), mapBuilder.build(),
+                  availableArguments, availableTypedParams);
           messages.log(error);
           return;
         }
