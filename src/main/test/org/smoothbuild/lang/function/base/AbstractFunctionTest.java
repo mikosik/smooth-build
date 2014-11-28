@@ -9,11 +9,9 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class AbstractFunctionTest {
   Name name;
@@ -55,12 +53,6 @@ public class AbstractFunctionTest {
   public static class MyAbstractFunction extends AbstractFunction<SString> {
     public MyAbstractFunction(Signature<SString> signature) {
       super(signature);
-    }
-
-    @Override
-    public ImmutableList<? extends Expression<?>> dependencies(
-        ImmutableMap<String, ? extends Expression<?>> args) {
-      return null;
     }
   }
 }

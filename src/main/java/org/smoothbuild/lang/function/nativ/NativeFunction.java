@@ -8,12 +8,10 @@ import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
@@ -51,14 +49,8 @@ public class NativeFunction<T extends Value> extends AbstractFunction<T> {
     return isCacheable;
   }
 
-  @Override
-  public ImmutableList<? extends Expression<?>> dependencies(
-      ImmutableMap<String, ? extends Expression<?>> args) {
-    return ImmutableList.copyOf(args.values());
-  }
-
-  public T invoke(NativeApi nativeApi, ImmutableMap<String, Value> args) throws
-      IllegalAccessException, InvocationTargetException {
+  public T invoke(NativeApi nativeApi, ImmutableMap<String, Value> args)
+      throws IllegalAccessException, InvocationTargetException {
     return invoker.invoke(nativeApi, args);
   }
 }
