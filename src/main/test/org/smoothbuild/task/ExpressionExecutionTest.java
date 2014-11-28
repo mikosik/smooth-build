@@ -2,6 +2,7 @@ package org.smoothbuild.task;
 
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.expr.Expressions.callExpression;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
@@ -19,7 +20,6 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpression;
-import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.InvalidExpression;
@@ -49,7 +49,7 @@ public class ExpressionExecutionTest {
   private Expression<?> arrayExpression;
   private TaskGraph taskGraph;
   private Task<?> task;
-  private CallExpression<?> callExpression;
+  private Expression<?> callExpression;
   private Function<?> function;
   private Signature<SString> signature;
 
@@ -79,7 +79,8 @@ public class ExpressionExecutionTest {
 
   @Test
   public void executes_empty_array_expression() throws Exception {
-    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.<Expression<SString>>of(), location));
+    given(arrayExpression =
+        new ArrayExpression<>(STRING_ARRAY, ImmutableList.<Expression<SString>> of(), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(array()));
@@ -89,7 +90,8 @@ public class ExpressionExecutionTest {
   public void executes_array_expression() throws Exception {
     given(sstring = objectsDb.string(string));
     given(stringExpression = new ConstantExpression<>(STRING, sstring, location));
-    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(stringExpression), location));
+    given(arrayExpression =
+        new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(array(sstring)));
@@ -101,7 +103,7 @@ public class ExpressionExecutionTest {
     given(stringExpression = new ConstantExpression<>(STRING, sstring, location));
     given(signature = new Signature<>(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction<>(signature, stringExpression));
-    given(callExpression = new CallExpression<>(function, false, location, Empty.stringExpressionMap()));
+    given(callExpression = callExpression(function, false, location, Empty.stringExpressionMap()));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));
@@ -112,8 +114,8 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string("abc"));
     given(function = createNativeFunction(Hash.integer(33), SmoothModule.class.getMethods()[0]));
     given(stringExpression = new ConstantExpression<>(STRING, sstring, codeLocation(2)));
-    given(callExpression = new CallExpression<>(function, false, location, ImmutableMap.of("param",
-        stringExpression)));
+    given(callExpression =
+        callExpression(function, false, location, ImmutableMap.of("param", stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(sstring));
@@ -135,8 +137,8 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string("abc"));
     given(function = createNativeFunction(Hash.integer(33), SmoothModule2.class.getMethods()[0]));
     given(stringExpression = new ConstantExpression<>(STRING, sstring, codeLocation(2)));
-    given(callExpression = new CallExpression<>(function, false, location, ImmutableMap.of("param",
-        stringExpression)));
+    given(callExpression =
+        callExpression(function, false, location, ImmutableMap.of("param", stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output().hasReturnValue(), false);

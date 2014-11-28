@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.base.Types.NIL;
 import static org.smoothbuild.lang.base.Types.NOTHING;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.basicTypes;
+import static org.smoothbuild.lang.expr.Expressions.callExpression;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
@@ -38,7 +39,6 @@ import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.ArrayExpression;
-import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
@@ -70,8 +70,8 @@ public class DefinedFunctionsCreator {
   private final ImplicitConverter implicitConverter;
 
   @Inject
-  public DefinedFunctionsCreator(ObjectsDb objectsDb, ArgumentExpressionCreator argumentExpressionCreator,
-      ImplicitConverter implicitConverter) {
+  public DefinedFunctionsCreator(ObjectsDb objectsDb,
+      ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
     this.objectsDb = objectsDb;
     this.argumentExpressionCreator = argumentExpressionCreator;
     this.implicitConverter = implicitConverter;
@@ -79,8 +79,9 @@ public class DefinedFunctionsCreator {
 
   public Map<Name, Function<?>> createDefinedFunctions(LoggedMessages messages,
       Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    Worker worker = new Worker(messages, builtinModule, functionContexts, sorted, objectsDb,
-        argumentExpressionCreator, implicitConverter);
+    Worker worker =
+        new Worker(messages, builtinModule, functionContexts, sorted, objectsDb,
+            argumentExpressionCreator, implicitConverter);
     Map<Name, Function<?>> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -153,8 +154,8 @@ public class DefinedFunctionsCreator {
       if (expression.STRING() != null) {
         return buildStringExpr(expression.STRING());
       }
-      throw new Message(FATAL,
-          "Illegal parse tree: " + ExpressionContext.class.getSimpleName() + " without children.");
+      throw new Message(FATAL, "Illegal parse tree: " + ExpressionContext.class.getSimpleName()
+          + " without children.");
     }
 
     private Expression<?> build(ArrayContext list) {
@@ -174,8 +175,8 @@ public class DefinedFunctionsCreator {
     private <T extends Value> Expression<Array<T>> buildArray(Type<T> elemType,
         ImmutableList<Expression<?>> elemExpressions, CodeLocation location) {
       ArrayType<T> arrayType = Types.arrayTypeContaining(elemType);
-      ImmutableList<Expression<T>> convertedExpression = convertExpressions(elemType,
-          elemExpressions);
+      ImmutableList<Expression<T>> convertedExpression =
+          convertExpressions(elemType, elemExpressions);
       return new ArrayExpression<>(arrayType, convertedExpression, location);
     }
 
@@ -211,8 +212,8 @@ public class DefinedFunctionsCreator {
         return build(elem.call());
       }
 
-      throw new Message(FATAL,
-          "Illegal parse tree: " + ArrayElemContext.class.getSimpleName() + " without children.");
+      throw new Message(FATAL, "Illegal parse tree: " + ArrayElemContext.class.getSimpleName()
+          + " without children.");
     }
 
     private Type<?> commonSuperType(List<ArrayElemContext> elems,
@@ -271,13 +272,13 @@ public class DefinedFunctionsCreator {
       Function<?> function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      ImmutableMap<String, ? extends Expression<?>> namedArgs = argumentExpressionCreator.createArgExprs(
-          codeLocation, messages, function, arguments);
+      ImmutableMap<String, ? extends Expression<?>> namedArgs =
+          argumentExpressionCreator.createArgExprs(codeLocation, messages, function, arguments);
 
       if (namedArgs == null) {
         return new InvalidExpression<>(function.type(), locationOf(call.functionName()));
       } else {
-        return new CallExpression<>(function, false, codeLocation, namedArgs);
+        return callExpression(function, false, codeLocation, namedArgs);
       }
     }
 

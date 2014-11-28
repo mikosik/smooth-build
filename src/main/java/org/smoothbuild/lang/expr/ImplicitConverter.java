@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.lang.base.Conversions.convertFunctionName;
+import static org.smoothbuild.lang.expr.Expressions.callExpression;
 
 import javax.inject.Inject;
 
@@ -35,14 +36,13 @@ public class ImplicitConverter {
     Name functionName = convertFunctionName(sourceType, destinationType);
 
     /*
-     * Cast is safe as we assume that Types.convertFunctionName()
-     * returns name of correct function.
+     * Cast is safe as we assume that Types.convertFunctionName() returns name
+     * of correct function.
      */
     @SuppressWarnings("unchecked")
     Function<T> function = (Function<T>) builtinModule.getFunction(functionName);
 
     String paramName = function.parameters().get(0).name();
-    return new CallExpression<>(function, true, source.codeLocation(), ImmutableMap.of(paramName,
-        source));
+    return callExpression(function, true, source.codeLocation(), ImmutableMap.of(paramName, source));
   }
 }
