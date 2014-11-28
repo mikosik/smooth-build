@@ -21,7 +21,7 @@ public class CallExpression<T extends Value> extends Expression<T> {
 
   public CallExpression(Function<T> function, boolean isGenerated, CodeLocation codeLocation,
       ImmutableMap<String, ? extends Expression<?>> args) {
-    super(function.type(), function.dependencies(args), codeLocation);
+    super(function.type(), createDependencies(function, args), codeLocation);
 
     if (function instanceof DefinedFunction<?>) {
       checkArgument(args.isEmpty());
@@ -31,6 +31,16 @@ public class CallExpression<T extends Value> extends Expression<T> {
     this.function = function;
     this.isGenerated = isGenerated;
     this.args = args;
+  }
+
+  private static <T extends Value> ImmutableList<? extends Expression<?>> createDependencies(
+      Function<T> function, ImmutableMap<String, ? extends Expression<?>> args) {
+    if (function instanceof NativeFunction<?>) {
+      return ImmutableList.copyOf(args.values());
+    } else if (function instanceof DefinedFunction<?>) {
+      return ImmutableList.of(((DefinedFunction<?>) function).root());
+    }
+    throw new RuntimeException("Unsupported instance of Function interface: " + function.getClass());
   }
 
   @Override
