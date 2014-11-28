@@ -12,9 +12,6 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.NativeCallWorker;
-import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -58,13 +55,6 @@ public class NativeFunction<T extends Value> extends AbstractFunction<T> {
   public ImmutableList<? extends Expression<?>> dependencies(
       ImmutableMap<String, ? extends Expression<?>> args) {
     return ImmutableList.copyOf(args.values());
-  }
-
-  @Override
-  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expression<?>> args,
-      boolean isInternal, CodeLocation codeLocation) {
-    return new NativeCallWorker<>(this, ImmutableList.copyOf(args.keySet()), isInternal,
-        codeLocation);
   }
 
   public T invoke(NativeApi nativeApi, ImmutableMap<String, Value> args) throws

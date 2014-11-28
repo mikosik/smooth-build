@@ -8,9 +8,6 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.TaskWorker;
-import org.smoothbuild.task.work.VirtualWorker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -34,14 +31,5 @@ public class DefinedFunction<T extends Value> extends AbstractFunction<T> {
     checkArgument(args.isEmpty(),
         "DefinedFunction.dependencies() cannot accept non-empty arguments");
     return ImmutableList.of(root);
-  }
-
-  @Override
-  public TaskWorker<T> createWorker(ImmutableMap<String, ? extends Expression<?>> args,
-      boolean isInternal, CodeLocation codeLocation) {
-    checkArgument(args.isEmpty(),
-        "DefinedFunction.createWorker() cannot accept non-empty arguments");
-    checkArgument(!isInternal, "DefinedFunction.createWorker() cannot accept isInternal=true");
-    return new VirtualWorker<T>(this, codeLocation);
   }
 }

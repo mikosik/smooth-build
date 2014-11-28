@@ -10,8 +10,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
@@ -62,12 +60,6 @@ public class AbstractFunctionTest {
     @Override
     public ImmutableList<? extends Expression<?>> dependencies(
         ImmutableMap<String, ? extends Expression<?>> args) {
-      return null;
-    }
-
-    @Override
-    public TaskWorker<SString> createWorker(ImmutableMap<String, ? extends Expression<?>> args,
-        boolean isInternal, CodeLocation codeLocation) {
       return null;
     }
   }

@@ -6,9 +6,7 @@ import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
-import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -24,8 +22,6 @@ import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParamTypeException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
@@ -38,11 +34,7 @@ import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.task.base.TaskInput;
-import org.smoothbuild.task.base.TaskOutput;
-import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 import org.testory.common.Matcher;
@@ -52,10 +44,8 @@ import com.google.common.collect.Lists;
 
 public class NativeFunctionFactoryTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final FakeNativeApi nativeApi = new FakeNativeApi();
   private NativeFunction<?> function;
-  private Function<SString> stringFunction;
-  private TaskWorker<?> worker;
+  private NativeFunction<SString> stringFunction;
 
   @Test
   public void function_is_created_for_each_annotated_java_method() throws Exception {
@@ -148,8 +138,8 @@ public class NativeFunctionFactoryTest {
   }
 
   @Test
-  public void function_is_cacheable_when_cacheable_is_missing_from_java_method_annotation() throws
-      Exception {
+  public void function_is_cacheable_when_cacheable_is_missing_from_java_method_annotation()
+      throws Exception {
     given(function = createNativeFunction(NonCacheableFunction.class.getMethods()[0]));
     when(function).isCacheable();
     thenReturned(true);
@@ -163,8 +153,8 @@ public class NativeFunctionFactoryTest {
   }
 
   @Test
-  public void function_is_not_cacheable_when_java_method_annotation_is_annotated_as_not_cacheable() throws
-      Exception {
+  public void function_is_not_cacheable_when_java_method_annotation_is_annotated_as_not_cacheable()
+      throws Exception {
     given(function = createNativeFunction(NotCacheableFunction.class.getMethods()[0]));
     when(function).isCacheable();
     thenReturned(false);
@@ -206,11 +196,10 @@ public class NativeFunctionFactoryTest {
   @SuppressWarnings("unchecked")
   @Test
   public void testInvokation() throws Exception {
-    given(stringFunction = (Function<SString>) createNativeFunction(
-        ConstantStringFunction.class.getMethods()[0]));
-    given(worker = stringFunction.createWorker(Empty.stringExpressionMap(), false, codeLocation(1)));
-    when(worker).execute(TaskInput.fromValues(ImmutableList.<Value>of()), nativeApi);
-    thenReturned(new TaskOutput<>(objectsDb.string("constant string")));
+    given(stringFunction =
+        (NativeFunction<SString>) createNativeFunction(ConstantStringFunction.class.getMethods()[0]));
+    when(stringFunction.invoke(null, Empty.stringValueMap()));
+    thenReturned(objectsDb.string("constant string"));
   }
 
   public static class ConstantStringFunction {
@@ -464,21 +453,6 @@ public class NativeFunctionFactoryTest {
   }
 
   @Test
-  public void runtime_exception_thrown_from_native_function_is_logged() throws Exception {
-    given(function = createNativeFunction(FuncWithThrowingSmoothMethod.class.getMethods()[0]));
-    given(worker = function.createWorker(Empty.stringExpressionMap(), false, codeLocation(1)));
-    when(worker).execute(TaskInput.fromTaskReturnValues(Empty.taskList()), nativeApi);
-    then(nativeApi.loggedMessages().containsProblems());
-  }
-
-  public static class FuncWithThrowingSmoothMethod {
-    @SmoothFunction
-    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
-      throw new RuntimeException();
-    }
-  }
-
-  @Test
   public void non_public_smooth_method_is_not_allowed() throws Exception {
     when($createNativeFunction(FuncWithPrivateSmoothMethod.class.getDeclaredMethods()[0]));
     thenThrown(NonPublicSmoothFunctionException.class);
@@ -486,8 +460,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithPrivateSmoothMethod {
     @SmoothFunction
-    private static void myFunction(NativeApi nativeApi, EmptyParameters params) {
-    }
+    private static void myFunction(NativeApi nativeApi, EmptyParameters params) {}
   }
 
   @Test
@@ -502,8 +475,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithParamMethodThatHasParameters {
     @SmoothFunction
-    public static SString myFunction(NativeApi nativeApi,
-        ParametersWithMethodWithParameters params) {
+    public static SString myFunction(NativeApi nativeApi, ParametersWithMethodWithParameters params) {
       return null;
     }
   }
@@ -516,8 +488,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithNonStaticSmoothMethod {
     @SmoothFunction
-    public void myFunction(NativeApi nativeApi, EmptyParameters params) {
-    }
+    public void myFunction(NativeApi nativeApi, EmptyParameters params) {}
   }
 
   @Test
@@ -528,8 +499,7 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithSmoothMethodWithZeroParams {
     @SmoothFunction
-    public static void myFunction() {
-    }
+    public static void myFunction() {}
   }
 
   @Test
@@ -540,27 +510,23 @@ public class NativeFunctionFactoryTest {
 
   public static class FuncWithSmoothMethodWithOneParam {
     @SmoothFunction
-    public static void myFunction() {
-    }
+    public static void myFunction() {}
   }
 
   @Test
   public void wrong_first_parameter_in_native_smooth_function() throws Exception {
-    when($createNativeFunction(
-        FuncWithSmoothMethodWithWrongFirstParam.class.getDeclaredMethods()[0]));
+    when($createNativeFunction(FuncWithSmoothMethodWithWrongFirstParam.class.getDeclaredMethods()[0]));
     thenThrown(WrongParamsInSmoothFunctionException.class);
   }
 
   public static class FuncWithSmoothMethodWithWrongFirstParam {
     @SmoothFunction
-    public static void myFunction(EmptyParameters wrong, EmptyParameters params) {
-    }
+    public static void myFunction(EmptyParameters wrong, EmptyParameters params) {}
   }
 
   @Test
   public void wrong_second_parameter_in_native_smooth_function() throws Exception {
-    when($createNativeFunction(
-        FuncWithSmoothMethodWithWrongSecondParam.class.getDeclaredMethods()[0]));
+    when($createNativeFunction(FuncWithSmoothMethodWithWrongSecondParam.class.getDeclaredMethods()[0]));
     thenThrown(ParamsIsNotInterfaceException.class);
   }
 
@@ -582,8 +548,8 @@ public class NativeFunctionFactoryTest {
     };
   }
 
-  private static NativeFunction<?> createNativeFunction(Method method) throws
-      NativeImplementationException {
+  private static NativeFunction<?> createNativeFunction(Method method)
+      throws NativeImplementationException {
     return NativeFunctionFactory.createNativeFunction(Hash.integer(33), method);
   }
 }
