@@ -49,8 +49,8 @@ public class NativeCallWorkerTest {
 
   private final Signature<SString> signature = new Signature<>(STRING, name("name"), Empty
       .paramList());
-  NativeFunction<?> function1 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
-  NativeFunction<?> function2 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
+  NativeFunction<?> function1 = new NativeFunction<>(signature, invoker, true, Hash.integer(33));
+  NativeFunction<?> function2 = new NativeFunction<>(signature, invoker, true, Hash.integer(33));
 
   String name1 = "name1";
   String name2 = "name2";
@@ -91,7 +91,7 @@ public class NativeCallWorkerTest {
   public void null_can_be_returned_when_function_logged_errors() throws Exception {
     ImmutableList<Parameter> parameters = ImmutableList.of();
     Signature<SString> signature = new Signature<>(STRING, name("name"), parameters);
-    function1 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
+    function1 = new NativeFunction<>(signature, invoker, true, Hash.integer(33));
     nativeCallWorker =
         new NativeCallWorker<>(function1, ImmutableList.<String> of(), false, codeLocation(1));
     given(new Handler() {
