@@ -5,6 +5,8 @@ import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
 import java.lang.reflect.Method;
 
+import org.smoothbuild.SmoothConstants;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Signature;
@@ -19,6 +21,7 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.hash.HashCode;
+import com.google.common.hash.Hasher;
 
 public class NativeFunctionFactory {
   public static ImmutableList<NativeFunction<?>> createNativeFunctions(HashCode jarHash,
@@ -64,7 +67,15 @@ public class NativeFunctionFactory {
     @SuppressWarnings("unchecked")
     Invoker<T> invoker = (Invoker<T>) createInvoker(method, paramsInterface);
 
-    return new NativeFunction<>(jarHash, signature, invoker, isCacheable(method));
+    return new NativeFunction<>(signature, invoker, isCacheable(method), functionHash(jarHash,
+        signature));
+  }
+
+  private static HashCode functionHash(HashCode jarHash, Signature<?> signature) {
+    Hasher hasher = Hash.newHasher();
+    hasher.putBytes(jarHash.asBytes());
+    hasher.putString(signature.name().value(), SmoothConstants.CHARSET);
+    return hasher.hash();
   }
 
   private static Invoker<?> createInvoker(Method method, Class<?> paramsInterface)

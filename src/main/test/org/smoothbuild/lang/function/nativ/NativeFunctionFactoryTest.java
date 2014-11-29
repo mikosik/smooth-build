@@ -1,10 +1,12 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -41,11 +43,15 @@ import org.testory.common.Matcher;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.hash.HashCode;
 
 public class NativeFunctionFactoryTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private NativeFunction<?> function;
+  private NativeFunction<?> function2;
   private NativeFunction<SString> stringFunction;
+  private HashCode hash1;
+  private HashCode hash2;
 
   @Test
   public void function_is_created_for_each_annotated_java_method() throws Exception {
@@ -90,7 +96,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void function_name_is_equal_to_declared_via_annotation() throws Exception {
-    given(function = createNativeFunction(NamedFunc.class.getMethods()[0]));
+    given(function = function(NamedFunc.class.getMethods()[0]));
     when(function).name();
     thenReturned(name("myFunction"));
   }
@@ -103,8 +109,45 @@ public class NativeFunctionFactoryTest {
   }
 
   @Test
+  public void different_functions_have_different_hashes() throws Exception {
+    given(function = function(FunctionHashes.class.getMethods()[0]));
+    given(function2 = function(FunctionHashes.class.getMethods()[1]));
+    when(function).hash();
+    thenReturned(not(function2.hash()));
+  }
+
+  public static class FunctionHashes {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+
+    @SmoothFunction
+    public static SString myFunction2(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+  }
+
+  @Test
+  public void function_with_same_name_in_different_jars_have_different_hashes() throws Exception {
+    given(hash1 = Hash.integer(33));
+    given(hash2 = Hash.integer(34));
+    given(function = createNativeFunction(hash1, FunctionHash.class.getMethods()[0]));
+    given(function2 = createNativeFunction(hash2, FunctionHash.class.getMethods()[0]));
+    when(function).hash();
+    thenReturned(not(function2.hash()));
+  }
+
+  public static class FunctionHash {
+    @SmoothFunction
+    public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
+      return null;
+    }
+  }
+
+  @Test
   public void function_return_type_is_equal_to_java_method_return_type() throws Exception {
-    given(function = createNativeFunction(FunctionReturningSString.class.getMethods()[0]));
+    given(function = function(FunctionReturningSString.class.getMethods()[0]));
     when(function).type();
     thenReturned(STRING);
   }
@@ -118,7 +161,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void function_params_are_equal_to_params_of_java_method() throws Exception {
-    given(function = createNativeFunction(FunctionWithDifferentParams.class.getMethods()[0]));
+    given(function = function(FunctionWithDifferentParams.class.getMethods()[0]));
     when(function).parameters();
     thenReturned(ImmutableList.of(parameter(STRING_ARRAY, "array", false), parameter(STRING,
         "string", false)));
@@ -140,7 +183,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void function_is_cacheable_when_cacheable_is_missing_from_java_method_annotation()
       throws Exception {
-    given(function = createNativeFunction(NonCacheableFunction.class.getMethods()[0]));
+    given(function = function(NonCacheableFunction.class.getMethods()[0]));
     when(function).isCacheable();
     thenReturned(true);
   }
@@ -155,7 +198,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void function_is_not_cacheable_when_java_method_annotation_is_annotated_as_not_cacheable()
       throws Exception {
-    given(function = createNativeFunction(NotCacheableFunction.class.getMethods()[0]));
+    given(function = function(NotCacheableFunction.class.getMethods()[0]));
     when(function).isCacheable();
     thenReturned(false);
   }
@@ -170,7 +213,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void function_signature_is_determined_by_java_method() throws Exception {
-    given(function = createNativeFunction(SignatureTestFunction.class.getMethods()[0]));
+    given(function = function(SignatureTestFunction.class.getMethods()[0]));
 
     when(function.type());
     thenReturned(BLOB);
@@ -197,7 +240,7 @@ public class NativeFunctionFactoryTest {
   @Test
   public void testInvokation() throws Exception {
     given(stringFunction =
-        (NativeFunction<SString>) createNativeFunction(ConstantStringFunction.class.getMethods()[0]));
+        (NativeFunction<SString>) function(ConstantStringFunction.class.getMethods()[0]));
     when(stringFunction.invoke(null, Empty.stringValueMap()));
     thenReturned(objectsDb.string("constant string"));
   }
@@ -211,7 +254,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void all_allowed_param_types_are_accepted() throws Exception {
-    when(createNativeFunction(FuncWithAllowedParamTypes.class.getMethods()[0]));
+    when(function(FuncWithAllowedParamTypes.class.getMethods()[0]));
     thenReturned();
   }
 
@@ -238,7 +281,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void param_annotated_as_required_is_required() throws Exception {
-    given(function = createNativeFunction(FuncWithRequiredParam.class.getMethods()[0]));
+    given(function = function(FuncWithRequiredParam.class.getMethods()[0]));
     when(function.parameters().get(0).isRequired());
     thenReturned(true);
   }
@@ -257,7 +300,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void param_not_annotated_as_required_is_not_required() throws Exception {
-    given(function = createNativeFunction(FuncWithNotRequiredParam.class.getMethods()[0]));
+    given(function = function(FuncWithNotRequiredParam.class.getMethods()[0]));
     when(function.parameters().get(0).isRequired());
     thenReturned(false);
   }
@@ -543,13 +586,12 @@ public class NativeFunctionFactoryTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return createNativeFunction(method);
+        return function(method);
       }
     };
   }
 
-  private static NativeFunction<?> createNativeFunction(Method method)
-      throws NativeImplementationException {
+  private static NativeFunction<?> function(Method method) throws NativeImplementationException {
     return NativeFunctionFactory.createNativeFunction(Hash.integer(33), method);
   }
 }
