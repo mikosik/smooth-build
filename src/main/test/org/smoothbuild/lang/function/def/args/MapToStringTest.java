@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.def.args;
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
@@ -22,9 +22,9 @@ public class MapToStringTest {
   @Test
   public void testToString() throws Exception {
     // given
-    Parameter parameter1 = parameter(STRING, "name1-that-is-long", false);
-    Parameter parameter2 = parameter(STRING, "name2", false);
-    Parameter parameter3 = parameter(FILE, "name3", false);
+    Parameter parameter1 = optionalParameter(STRING, "name1-that-is-long");
+    Parameter parameter2 = optionalParameter(STRING, "name2");
+    Parameter parameter3 = optionalParameter(FILE, "name3");
 
     Argument argument1 = arg(1, STRING, "name4");
     Argument argument2 = arg(1234, STRING, "name5");

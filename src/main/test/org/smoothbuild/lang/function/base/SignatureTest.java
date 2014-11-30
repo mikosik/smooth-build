@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -40,8 +40,8 @@ public class SignatureTest {
 
   @Test
   public void paramsAreSortedAccordingToName() throws Exception {
-    Parameter parameter1 = parameter(STRING, "aaa", false);
-    Parameter parameter2 = parameter(STRING, "bbb", false);
+    Parameter parameter1 = optionalParameter(STRING, "aaa");
+    Parameter parameter2 = optionalParameter(STRING, "bbb");
 
     ImmutableList<Parameter> parameters = ImmutableList.of(parameter2, parameter1);
     Signature<?> signature = new Signature<>(type, name, parameters);
@@ -50,8 +50,8 @@ public class SignatureTest {
 
   @Test
   public void test_to_string() throws Exception {
-    given(parameter = parameter(BLOB, "blob", false));
-    given(parameter2 = parameter(FILE, "file", false));
+    given(parameter = optionalParameter(BLOB, "blob"));
+    given(parameter2 = optionalParameter(FILE, "file"));
     when(new Signature<>(STRING, name, ImmutableList.of(parameter, parameter2))).toString();
     thenReturned(STRING.name() + " " + name.value() + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");

@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -123,8 +123,8 @@ public class NativeModuleFactoryTest {
   public void function_signature_contains_all_params() throws Exception {
     given(module = createNativeModule(ModuleWithTwoParamFunction.class));
     when(module.getFunction(name("func")).parameters());
-    thenReturned(ImmutableList.of(parameter(STRING, "param1", false), parameter(STRING, "param2",
-        false)));
+    thenReturned(ImmutableList.of(optionalParameter(STRING, "param1"), optionalParameter(STRING,
+        "param2")));
   }
 
   public static class ModuleWithTwoParamFunction {

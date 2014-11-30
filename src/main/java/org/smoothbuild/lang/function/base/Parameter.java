@@ -19,6 +19,14 @@ public class Parameter {
   private final boolean isRequired;
   private final HashCode nameHash;
 
+  public static Parameter optionalParameter(Type<?> type, String name) {
+    return parameter(type, name, false);
+  }
+
+  public static Parameter requiredParameter(Type<?> type, String name) {
+    return parameter(type, name, true);
+  }
+
   public static Parameter parameter(Type<?> type, String name, boolean isRequired) {
     return new Parameter(type, name, isRequired);
   }

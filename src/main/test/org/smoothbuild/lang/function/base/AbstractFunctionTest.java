@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -43,7 +43,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void params_returns_signature_params() {
-    given(parameters = ImmutableList.of(parameter(STRING, "name", false)));
+    given(parameters = ImmutableList.of(optionalParameter(STRING, "name")));
     given(signature = new Signature<>(STRING, name("name"), parameters));
     given(function = new MyAbstractFunction(signature));
     when(function).parameters();

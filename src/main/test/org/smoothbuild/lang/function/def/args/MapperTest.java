@@ -12,7 +12,7 @@ import static org.smoothbuild.lang.base.Types.NIL;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
@@ -71,8 +71,8 @@ public class MapperTest {
   private void do_test_converting_named_argument(Type<?> paramType, Type<?> argType) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(paramType, "name1", false);
-    Parameter p2 = parameter(paramType, "name2", false);
+    Parameter p1 = optionalParameter(paramType, "name1");
+    Parameter p2 = optionalParameter(paramType, "name2");
 
     Argument a1 = arg(p1.name(), argType);
 
@@ -104,7 +104,7 @@ public class MapperTest {
   private void do_test_duplicated_names(Type<?> paramType, Type<?> argType) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(paramType, "name1", false);
+    Parameter p1 = optionalParameter(paramType, "name1");
 
     Argument a1 = arg(p1.name(), argType);
     Argument a2 = arg(p1.name(), argType);
@@ -120,7 +120,7 @@ public class MapperTest {
   public void unknown_param_name() {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(STRING, "name1", false);
+    Parameter p1 = optionalParameter(STRING, "name1");
     Argument a1 = arg("otherName", STRING);
 
     // when
@@ -199,7 +199,7 @@ public class MapperTest {
       throws Exception {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(paramType, "name1", false);
+    Parameter p1 = optionalParameter(paramType, "name1");
     Argument a1 = arg(p1.name(), argType);
 
     // when
@@ -213,7 +213,7 @@ public class MapperTest {
   public void mapping_empty_list_of_arguments() throws Exception {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(STRING, "name1", false);
+    Parameter p1 = optionalParameter(STRING, "name1");
 
     // when
     Map<Parameter, Argument> mapping = createMapping(params(p1), list());
@@ -322,9 +322,9 @@ public class MapperTest {
       Type<?> otherParamsType) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(otherParamsType, "name1", false);
-    Parameter p2 = parameter(paramType, "name2", false);
-    Parameter p3 = parameter(otherParamsType, "name3", false);
+    Parameter p1 = optionalParameter(otherParamsType, "name1");
+    Parameter p2 = optionalParameter(paramType, "name2");
+    Parameter p3 = optionalParameter(otherParamsType, "name3");
 
     Argument a1 = arg(argType);
 
@@ -350,9 +350,9 @@ public class MapperTest {
   private void do_test_converting_single_nameless_argument_with_others_named(Type<?> type) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(type, "name1", false);
-    Parameter p2 = parameter(type, "name2", false);
-    Parameter p3 = parameter(type, "name3", false);
+    Parameter p1 = optionalParameter(type, "name1");
+    Parameter p2 = optionalParameter(type, "name2");
+    Parameter p3 = optionalParameter(type, "name3");
 
     Argument a1 = arg(p1.name(), type);
     Argument a2 = arg(type);
@@ -409,8 +409,8 @@ public class MapperTest {
       Type<?> type2) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(type1, "name1", false);
-    Parameter p2 = parameter(type2, "name2", false);
+    Parameter p1 = optionalParameter(type1, "name1");
+    Parameter p2 = optionalParameter(type2, "name2");
 
     Argument a1 = arg(type1);
     Argument a2 = arg(type2);
@@ -433,9 +433,9 @@ public class MapperTest {
   private void do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(Type<?> type) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(type, "name1", false);
-    Parameter p2 = parameter(type, "name2", false);
-    Parameter p3 = parameter(type, "name3", false);
+    Parameter p1 = optionalParameter(type, "name1");
+    Parameter p2 = optionalParameter(type, "name2");
+    Parameter p3 = optionalParameter(type, "name3");
 
     Argument a1 = arg(p1.name(), type);
     Argument a2 = arg(NIL);
@@ -465,8 +465,8 @@ public class MapperTest {
       Type<?> otherArrayType) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(arrayType, "name1", false);
-    Parameter p2 = parameter(otherArrayType, "name2", false);
+    Parameter p1 = optionalParameter(arrayType, "name1");
+    Parameter p2 = optionalParameter(otherArrayType, "name2");
 
     Argument a1 = arg(p1.name(), arrayType);
     Argument a2 = arg(NIL);
@@ -509,8 +509,8 @@ public class MapperTest {
       Type<?> argType) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(paramType, "name1", false);
-    Parameter p2 = parameter(paramType2, "name2", false);
+    Parameter p1 = optionalParameter(paramType, "name1");
+    Parameter p2 = optionalParameter(paramType2, "name2");
 
     Argument a1 = arg(argType);
 
@@ -591,7 +591,7 @@ public class MapperTest {
   private void do_test_no_param_with_proper_type_for_nameless_arg(Type<?> type, Type<?> otherType) {
     // given
     messages = new FakeLoggedMessages();
-    Parameter p1 = parameter(otherType, "name1", false);
+    Parameter p1 = optionalParameter(otherType, "name1");
     Argument a1 = arg(type);
 
     // when
