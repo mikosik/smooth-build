@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
 import static org.testory.Testory.given;
@@ -163,8 +163,8 @@ public class NativeFunctionFactoryTest {
   public void function_params_are_equal_to_params_of_java_method() throws Exception {
     given(function = function(FunctionWithDifferentParams.class.getMethods()[0]));
     when(function).parameters();
-    thenReturned(ImmutableList.of(parameter(STRING_ARRAY, "array", false), parameter(STRING,
-        "string", false)));
+    thenReturned(ImmutableList.of(optionalParameter(STRING_ARRAY, "array"), optionalParameter(
+        STRING, "string")));
   }
 
   public interface DifferentParams {
@@ -219,7 +219,7 @@ public class NativeFunctionFactoryTest {
     thenReturned(BLOB);
 
     when(function.parameters());
-    thenReturned(ImmutableList.of(parameter(STRING, "string", false)));
+    thenReturned(ImmutableList.of(optionalParameter(STRING, "string")));
 
     when(function.name());
     thenReturned(name("func"));

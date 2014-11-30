@@ -3,7 +3,7 @@ package org.smoothbuild.task.work;
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.testory.Testory.given;
@@ -57,8 +57,8 @@ public class NativeCallWorkerTest {
   HashCode hash1 = HashCode.fromInt(1);
   HashCode hash2 = HashCode.fromInt(2);
 
-  ImmutableList<Parameter> parameters = ImmutableList.of(parameter(STRING, name1, false),
-      parameter(STRING, name2, false));
+  ImmutableList<Parameter> parameters = ImmutableList.of(optionalParameter(STRING, name1),
+      optionalParameter(STRING, name2));
 
   NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList
       .<String> of(), false, codeLocation(1));

@@ -6,8 +6,10 @@ import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.parameterTypes;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
+import static org.smoothbuild.lang.function.base.Parameter.requiredParameter;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
@@ -22,6 +24,20 @@ import com.google.common.testing.EqualsTester;
 
 public class ParameterTest {
   private Parameter parameter;
+
+  @Test
+  public void optional_parameter_creates_optional_parameter() throws Exception {
+    given(parameter = optionalParameter(STRING, "name"));
+    when(parameter).isRequired();
+    thenReturned(false);
+  }
+
+  @Test
+  public void required_parameter_creates_required_parameter() throws Exception {
+    given(parameter = requiredParameter(STRING, "name"));
+    when(parameter).isRequired();
+    thenReturned(true);
+  }
 
   @Test(expected = NullPointerException.class)
   public void null_type_is_forbidden() {

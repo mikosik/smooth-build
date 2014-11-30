@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.base.Types.NIL;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
 import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
 import static org.smoothbuild.lang.function.def.args.Argument.pipedArgument;
@@ -36,13 +36,13 @@ public class AmbiguousNamelessArgsErrorTest {
   @Test
   public void test() {
 
-    Parameter p1 = parameter(STRING, "param1", false);
+    Parameter p1 = optionalParameter(STRING, "param1");
     Argument a1 = namedArgument(12, "arg1", expression(STRING), codeLocation(2));
 
-    Parameter p2 = parameter(STRING_ARRAY, "param2", false);
+    Parameter p2 = optionalParameter(STRING_ARRAY, "param2");
     Argument a2 = namelessArgument(7, expression(STRING_ARRAY), codeLocation(12));
 
-    Parameter p3 = parameter(FILE, "param3", false);
+    Parameter p3 = optionalParameter(FILE, "param3");
     Argument a3 = pipedArgument(expression(FILE), codeLocation(14));
 
     Argument a4 = namedArgument(3, "arg4", expression(NIL), codeLocation(7));
@@ -51,8 +51,8 @@ public class AmbiguousNamelessArgsErrorTest {
 
     Map<Parameter, Argument> paramToArgMap = ImmutableMap.of(p1, a1, p2, a2, p3, a3);
 
-    Parameter p4 = parameter(FILE_ARRAY, "param4", false);
-    Parameter p5 = parameter(STRING_ARRAY, "param5", false);
+    Parameter p4 = optionalParameter(FILE_ARRAY, "param4");
+    Parameter p5 = optionalParameter(STRING_ARRAY, "param5");
     TypedParametersPool availableParams =
         new TypedParametersPool(newHashSet(p4, p5), Sets.<Parameter> newHashSet());
 

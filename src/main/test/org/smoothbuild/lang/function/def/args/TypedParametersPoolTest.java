@@ -6,7 +6,8 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
+import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
+import static org.smoothbuild.lang.function.base.Parameter.requiredParameter;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.then;
@@ -22,10 +23,10 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.base.Parameter;
 
 public class TypedParametersPoolTest {
-  private final Parameter string = parameter(STRING, "string1", false);
-  private final Parameter blob = parameter(BLOB, "blob", false);
-  private final Parameter stringRequired = parameter(STRING, "stringRequired", true);
-  private final Parameter stringRequired2 = parameter(STRING, "stringRequired2", true);
+  private final Parameter string = optionalParameter(STRING, "string1");
+  private final Parameter blob = optionalParameter(BLOB, "blob");
+  private final Parameter stringRequired = requiredParameter(STRING, "stringRequired");
+  private final Parameter stringRequired2 = requiredParameter(STRING, "stringRequired2");
 
   private Set<Parameter> optional;
   private Set<Parameter> required;
