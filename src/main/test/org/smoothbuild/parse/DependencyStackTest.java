@@ -161,6 +161,6 @@ public class DependencyStackTest {
   }
 
   private static DependencyStackElem elem() {
-    return new DependencyStackElem(name("name"), ImmutableSet.<Dependency>of());
+    return new DependencyStackElem(name("name"), ImmutableSet.<Dependency> of());
   }
 }

@@ -25,8 +25,8 @@ public class MatchingPathsGeneratorTest {
     };
 
     generatePaths("x/*/z", consumer);
-    then(generatedPaths, containsInAnyOrder("x/a/z", "x/b/z", "x/c/z", "x/aa/z", "x/ab/z", "x/ac/z",
-        "x/ba/z", "x/bb/z", "x/bc/z", "x/ca/z", "x/cb/z", "x/cc/z"));
+    then(generatedPaths, containsInAnyOrder("x/a/z", "x/b/z", "x/c/z", "x/aa/z", "x/ab/z",
+        "x/ac/z", "x/ba/z", "x/bb/z", "x/bc/z", "x/ca/z", "x/cb/z", "x/cc/z"));
   }
 
   @Test

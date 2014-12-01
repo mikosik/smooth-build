@@ -15,8 +15,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjects {
-  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(
-      ValueFactory valueFactory, Iterable<Blob> libraryJars) {
+  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(ValueFactory valueFactory,
+      Iterable<Blob> libraryJars) {
     Unjarer unjarer = new Unjarer(valueFactory);
     Multimap<String, JavaFileObject> result = HashMultimap.create();
 

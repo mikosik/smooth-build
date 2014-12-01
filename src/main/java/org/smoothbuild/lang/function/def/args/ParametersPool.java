@@ -67,7 +67,8 @@ public class ParametersPool {
   }
 
   private static ImmutableMap<Type<?>, TypedParametersPool> createTypePools(
-      Map<Type<?>, Set<Parameter>> optionalParametersMap, Map<Type<?>, Set<Parameter>> requiredParametersMap) {
+      Map<Type<?>, Set<Parameter>> optionalParametersMap,
+      Map<Type<?>, Set<Parameter>> requiredParametersMap) {
 
     Builder<Type<?>, TypedParametersPool> builder = ImmutableMap.builder();
     for (Type<?> type : allTypes()) {

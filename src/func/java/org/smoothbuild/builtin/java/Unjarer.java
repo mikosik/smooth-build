@@ -41,7 +41,7 @@ public class Unjarer {
   }
 
   public Array<SFile> unjar(Blob jarBlob) {
-    return unjar(jarBlob, Predicates.<String>alwaysTrue());
+    return unjar(jarBlob, Predicates.<String> alwaysTrue());
   }
 
   public Array<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {

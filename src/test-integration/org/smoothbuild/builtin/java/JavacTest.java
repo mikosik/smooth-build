@@ -174,8 +174,8 @@ public class JavacTest {
   }
 
   @Test
-  public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error() throws
-      Exception {
+  public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error()
+      throws Exception {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public enum MyClass { VALUE }");
 

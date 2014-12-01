@@ -9,7 +9,7 @@ import org.smoothbuild.message.base.CodeMessage;
 @SuppressWarnings("serial")
 public class TypeMismatchError extends CodeMessage {
   public TypeMismatchError(Argument argument, Type<?> type) {
-    super(ERROR, argument.codeLocation(), "Type mismatch, cannot convert from " + argument.type().name()
-        + " to " + type.name());
+    super(ERROR, argument.codeLocation(), "Type mismatch, cannot convert from "
+        + argument.type().name() + " to " + type.name());
   }
 }

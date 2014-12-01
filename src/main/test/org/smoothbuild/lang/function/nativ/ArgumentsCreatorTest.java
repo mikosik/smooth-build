@@ -13,7 +13,8 @@ import com.google.common.collect.ImmutableMap;
 
 public class ArgumentsCreatorTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final ArgumentsCreator argumentsCreator = new ArgumentsCreator(MyParametersInterface.class);
+  private final ArgumentsCreator argumentsCreator = new ArgumentsCreator(
+      MyParametersInterface.class);
   private SString sstring;
   private MyParametersInterface args;
 

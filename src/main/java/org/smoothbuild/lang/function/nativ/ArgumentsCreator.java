@@ -19,7 +19,7 @@ public class ArgumentsCreator {
 
   public Object create(Map<String, Value> arguments) {
     ClassLoader classLoader = parametersInterface.getClassLoader();
-    Class<?>[] args = new Class<?>[] {parametersInterface};
+    Class<?>[] args = new Class<?>[] { parametersInterface };
     InvocationHandler invocationHandler = new MapInvocationHandler(arguments);
 
     return newProxyInstance(classLoader, args, invocationHandler);

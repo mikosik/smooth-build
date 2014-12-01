@@ -58,12 +58,12 @@ public class Types {
    * A few handy mappings.
    */
 
-  private static final ImmutableMap<TypeLiteral<?>, Type<?>> PARAMETER_JTYPE_TO_TYPE = createToTypeMap(
-      PARAMETER_TYPES);
-  private static final ImmutableMap<TypeLiteral<?>, Type<?>> RESULT_JTYPE_TO_TYPE = createToTypeMap(
-      RESULT_TYPES);
-  private static final ImmutableMap<Type<?>, ArrayType<?>> ELEM_TYPE_TO_ARRAY_TYPE = createElemTypeToArrayTypeMap(
-      ARRAY_TYPES);
+  private static final ImmutableMap<TypeLiteral<?>, Type<?>> PARAMETER_JTYPE_TO_TYPE =
+      createToTypeMap(PARAMETER_TYPES);
+  private static final ImmutableMap<TypeLiteral<?>, Type<?>> RESULT_JTYPE_TO_TYPE =
+      createToTypeMap(RESULT_TYPES);
+  private static final ImmutableMap<Type<?>, ArrayType<?>> ELEM_TYPE_TO_ARRAY_TYPE =
+      createElemTypeToArrayTypeMap(ARRAY_TYPES);
 
   public static ImmutableSet<Type<?>> basicTypes() {
     return BASIC_TYPES;

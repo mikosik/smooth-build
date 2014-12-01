@@ -109,8 +109,8 @@ public class ParametersTest {
     given(parameter3 = parameter(STRING, "gamma", false));
     given(parameters = ImmutableList.of(parameter1, parameter2, parameter3));
     when(Parameters.parametersToMap(parameters));
-    thenReturned(ImmutableMap.of(parameter1.name(), parameter1, parameter2.name(), parameter2, parameter3.name(),
-        parameter3));
+    thenReturned(ImmutableMap.of(parameter1.name(), parameter1, parameter2.name(), parameter2,
+        parameter3.name(), parameter3));
   }
 
   // sortedParams()

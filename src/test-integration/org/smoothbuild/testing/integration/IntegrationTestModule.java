@@ -2,6 +2,9 @@ package org.smoothbuild.testing.integration;
 
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Singleton;
 
 import org.smoothbuild.builtin.android.AidlFunction;
@@ -63,40 +66,38 @@ public class IntegrationTestModule extends AbstractModule {
   @Singleton
   @Builtin
   public Module provideBuiltinModule() throws NativeImplementationException {
-    // @formatter:off
-    return createNativeModule(
-        // conversion functions
-        FileToBlobFunction.class,
-        FileArrayToBlobArrayFunction.class,
-        NilToStringArrayFunction.class,
-        NilToBlobArrayFunction.class,
-        NilToFileArrayFunction.class,
+    List<Class<?>> functions = new ArrayList<>();
 
-        //
-        AidlFunction.class,
-        ConcatenateBlobsFunction.class,
-        ConcatenateFilesFunction.class,
-        ConcatenateStringsFunction.class,
-        ContentFunction.class,
-        FileFunction.class,
-        FilesFunction.class,
-        FilterFunction.class,
-        JarjarFunction.class,
-        JavacFunction.class,
-        JarFunction.class,
-        JunitFunction.class,
-        PathFunction.class,
-        ToBlobFunction.class,
-        ToFileFunction.class,
-        ToStringFunction.class,
-        UnjarFunction.class,
-        UnzipFunction.class,
-        ZipFunction.class);
-    // @formatter:on
+    functions.add(FileToBlobFunction.class);
+    functions.add(FileArrayToBlobArrayFunction.class);
+    functions.add(NilToStringArrayFunction.class);
+    functions.add(NilToBlobArrayFunction.class);
+    functions.add(NilToFileArrayFunction.class);
+
+    functions.add(AidlFunction.class);
+    functions.add(ConcatenateBlobsFunction.class);
+    functions.add(ConcatenateFilesFunction.class);
+    functions.add(ConcatenateStringsFunction.class);
+    functions.add(ContentFunction.class);
+    functions.add(FileFunction.class);
+    functions.add(FilesFunction.class);
+    functions.add(FilterFunction.class);
+    functions.add(JarjarFunction.class);
+    functions.add(JavacFunction.class);
+    functions.add(JarFunction.class);
+    functions.add(JunitFunction.class);
+    functions.add(PathFunction.class);
+    functions.add(ToBlobFunction.class);
+    functions.add(ToFileFunction.class);
+    functions.add(ToStringFunction.class);
+    functions.add(UnjarFunction.class);
+    functions.add(UnzipFunction.class);
+    functions.add(ZipFunction.class);
+
+    return createNativeModule(functions.toArray(new Class[] {}));
   }
 
-  public static Module createNativeModule(Class<?>... classes) throws
-      NativeImplementationException {
+  public static Module createNativeModule(Class<?>... classes) throws NativeImplementationException {
     HashCode jarHash = Hash.integer(33);
     ModuleBuilder builder = new ModuleBuilder();
     for (Class<?> clazz : classes) {

@@ -97,8 +97,9 @@ public class JavacFunction {
         }
 
         // run compilation task
-        CompilationTask task = compiler.getTask(additionalCompilerOutput, fileManager, diagnostic,
-            options, null, inputSourceFiles);
+        CompilationTask task =
+            compiler.getTask(additionalCompilerOutput, fileManager, diagnostic, options, null,
+                inputSourceFiles);
         boolean success = task.call();
 
         // tidy up
@@ -144,10 +145,10 @@ public class JavacFunction {
     }
 
     private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic) {
-      StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostic, null,
-          defaultCharset());
-      Multimap<String, JavaFileObject> libsClasses = PackagedJavaFileObjects.packagedJavaFileObjects(
-          nativeApi, nullToEmpty(params.libs()));
+      StandardJavaFileManager fileManager =
+          compiler.getStandardFileManager(diagnostic, null, defaultCharset());
+      Multimap<String, JavaFileObject> libsClasses =
+          PackagedJavaFileObjects.packagedJavaFileObjects(nativeApi, nullToEmpty(params.libs()));
       return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
     }
 

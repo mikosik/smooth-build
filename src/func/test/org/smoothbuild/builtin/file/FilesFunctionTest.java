@@ -83,8 +83,7 @@ public class FilesFunctionTest {
 
     when($files(nativeApi, params(dir.value())));
 
-    thenReturned(containsInAnyOrder(objectsDb.file(path1, "file1"), objectsDb.file(path2,
-        "file2")));
+    thenReturned(containsInAnyOrder(objectsDb.file(path1, "file1"), objectsDb.file(path2, "file2")));
   }
 
   private static FilesParameters params(final String dir) {
