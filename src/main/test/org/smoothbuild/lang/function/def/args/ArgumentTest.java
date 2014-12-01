@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.def.args;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.Types.FILE;
@@ -19,7 +20,6 @@ import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.message.base.CodeLocation;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 
 public class ArgumentTest {
@@ -167,7 +167,7 @@ public class ArgumentTest {
     given(argument2 = named("name2"));
     given(argument3 = nameless(STRING));
     given(argument4 = nameless(STRING));
-    when(Argument.filterNamed(ImmutableList.of(argument, argument2, argument3, argument4)));
+    when(Argument.filterNamed(asList(argument, argument2, argument3, argument4)));
     thenReturned(contains(argument, argument2));
   }
 
@@ -177,7 +177,7 @@ public class ArgumentTest {
     given(argument2 = nameless(BLOB_ARRAY));
     given(argument3 = nameless(FILE));
     given(argument4 = named("named"));
-    when(Argument.filterNameless(ImmutableList.of(argument, argument2, argument3, argument4)));
+    when(Argument.filterNameless(asList(argument, argument2, argument3, argument4)));
     thenReturned(ImmutableMultimap.of(STRING, argument, BLOB_ARRAY, argument2, FILE, argument3));
   }
 

@@ -1,5 +1,6 @@
 package org.smoothbuild.task.work;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
@@ -12,6 +13,8 @@ import static org.testory.Testory.willReturn;
 import static org.testory.Testory.willThrow;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
@@ -36,7 +39,6 @@ import org.smoothbuild.util.Empty;
 import org.testory.proxy.Handler;
 import org.testory.proxy.Invocation;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
@@ -57,11 +59,11 @@ public class NativeCallWorkerTest {
   HashCode hash1 = HashCode.fromInt(1);
   HashCode hash2 = HashCode.fromInt(2);
 
-  ImmutableList<Parameter> parameters = ImmutableList.of(optionalParameter(STRING, name1),
-      optionalParameter(STRING, name2));
+  List<Parameter> parameters = asList(optionalParameter(STRING, name1), optionalParameter(STRING,
+      name2));
 
-  NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList
-      .<String> of(), false, codeLocation(1));
+  NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1,
+      Arrays.<String> asList(), false, codeLocation(1));
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
@@ -69,13 +71,13 @@ public class NativeCallWorkerTest {
 
     String name = "param";
     NativeCallWorker<?> nativeCallTask =
-        new NativeCallWorker<>(function1, ImmutableList.of(name), false, codeLocation(1));
+        new NativeCallWorker<>(function1, asList(name), false, codeLocation(1));
 
     SString sstring = objectsDb.string("result");
     given(willReturn(sstring), invoker).invoke(nativeApi,
         ImmutableMap.<String, Value> of(name, argValue));
 
-    TaskInput taskInput = TaskInput.fromValues(ImmutableList.of(argValue));
+    TaskInput taskInput = TaskInput.fromValues(asList(argValue));
     TaskOutput<?> actual = nativeCallTask.execute(taskInput, nativeApi);
     assertEquals(new TaskOutput<>(sstring), actual);
   }
@@ -89,11 +91,11 @@ public class NativeCallWorkerTest {
 
   @Test
   public void null_can_be_returned_when_function_logged_errors() throws Exception {
-    ImmutableList<Parameter> parameters = ImmutableList.of();
+    List<Parameter> parameters = asList();
     Signature<SString> signature = new Signature<>(STRING, name("name"), parameters);
     function1 = new NativeFunction<>(signature, invoker, true, Hash.integer(33));
     nativeCallWorker =
-        new NativeCallWorker<>(function1, ImmutableList.<String> of(), false, codeLocation(1));
+        new NativeCallWorker<>(function1, Arrays.<String> asList(), false, codeLocation(1));
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {

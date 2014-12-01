@@ -1,5 +1,6 @@
 package org.smoothbuild.task.base;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
 import static org.testory.Testory.given;
@@ -12,8 +13,6 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Empty;
-
-import com.google.common.collect.ImmutableList;
 
 public class TaskInputTest {
   private Task<?> depTask1;
@@ -29,7 +28,7 @@ public class TaskInputTest {
     given(depTask1 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
     given(willReturn(new TaskOutput<>(sstring1)), depTask1).output();
-    given(taskInput = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask1)));
+    given(taskInput = TaskInput.fromTaskReturnValues(asList(depTask1)));
     when(taskInput).values();
     thenReturned(contains(sstring1));
   }
@@ -42,8 +41,8 @@ public class TaskInputTest {
     given(sstring2 = objectsDb.string("def"));
     given(willReturn(new TaskOutput<>(sstring1)), depTask1).output();
     given(willReturn(new TaskOutput<>(sstring2)), depTask2).output();
-    given(taskInput = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask1)));
-    given(taskInput2 = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask2)));
+    given(taskInput = TaskInput.fromTaskReturnValues(asList(depTask1)));
+    given(taskInput2 = TaskInput.fromTaskReturnValues(asList(depTask2)));
     when(taskInput).hash();
     thenReturned(not(taskInput2.hash()));
   }
@@ -57,8 +56,8 @@ public class TaskInputTest {
     given(sstring2 = objectsDb.string("def"));
     given(willReturn(new TaskOutput<>(sstring1)), depTask1).output();
     given(willReturn(new TaskOutput<>(sstring2)), depTask2).output();
-    given(taskInput = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask1, depTask2)));
-    given(taskInput2 = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask2, depTask1)));
+    given(taskInput = TaskInput.fromTaskReturnValues(asList(depTask1, depTask2)));
+    given(taskInput2 = TaskInput.fromTaskReturnValues(asList(depTask2, depTask1)));
     when(taskInput).hash();
     thenReturned(not(taskInput2.hash()));
   }
@@ -70,8 +69,8 @@ public class TaskInputTest {
     given(sstring1 = objectsDb.string("abc"));
     given(willReturn(new TaskOutput<>(sstring1)), depTask1).output();
     given(willReturn(new TaskOutput<>(sstring1)), depTask2).output();
-    given(taskInput = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask1)));
-    given(taskInput2 = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask2)));
+    given(taskInput = TaskInput.fromTaskReturnValues(asList(depTask1)));
+    given(taskInput2 = TaskInput.fromTaskReturnValues(asList(depTask2)));
     when(taskInput).hash();
     thenReturned(taskInput2.hash());
   }
@@ -82,7 +81,7 @@ public class TaskInputTest {
     given(depTask2 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
     given(willReturn(new TaskOutput<>(sstring1)), depTask1).output();
-    given(taskInput = TaskInput.fromTaskReturnValues(ImmutableList.of(depTask1)));
+    given(taskInput = TaskInput.fromTaskReturnValues(asList(depTask1)));
     given(taskInput2 = TaskInput.fromTaskReturnValues(Empty.taskList()));
     when(taskInput).hash();
     thenReturned(not(taskInput2.hash()));

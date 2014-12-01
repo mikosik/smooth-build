@@ -1,13 +1,13 @@
 package org.smoothbuild.util;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class CommandExecutorTest {
 
@@ -22,7 +22,7 @@ public class CommandExecutorTest {
     /**
      * This command should complete without errors on any OS.
      */
-    ImmutableList<String> command = ImmutableList.of("sleep", "0");
+    List<String> command = asList("sleep", "0");
 
     for (int i = 0; i < 10000; i++) {
       CommandExecutor.execute(command);
@@ -32,7 +32,7 @@ public class CommandExecutorTest {
   @Test
   public void runing_unknown_binary_throws_IOException() throws Exception {
     try {
-      CommandExecutor.execute(ImmutableList.of("binary_file_that_does_not_exist"));
+      CommandExecutor.execute(asList("binary_file_that_does_not_exist"));
       fail("exception should be thrown");
     } catch (IOException e) {
       // expected
@@ -43,7 +43,7 @@ public class CommandExecutorTest {
   public void failure_exit_code_is_returned() throws Exception {
     // linux command testing whether length of string "abc" is zero.
     // As it is not zero it will return non zero return code.
-    ImmutableList<String> command = ImmutableList.of("test", "-z", "abc");
+    List<String> command = asList("test", "-z", "abc");
     assertEquals(1, CommandExecutor.execute(command));
   }
 
@@ -51,7 +51,7 @@ public class CommandExecutorTest {
   public void success_exit_code_is_returned() throws Exception {
     // linux command testing whether length of string "abc" is not zero.
     // As it is not zero it will return zero return code.
-    ImmutableList<String> command = ImmutableList.of("test", "-n", "abc");
+    List<String> command = asList("test", "-n", "abc");
     assertEquals(0, CommandExecutor.execute(command));
   }
 }

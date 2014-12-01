@@ -1,5 +1,6 @@
 package org.smoothbuild.io.fs.base;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -8,6 +9,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -140,15 +142,15 @@ public class PathTest {
 
   @Test
   public void testParts() throws Exception {
-    assertParts(".", ImmutableList.<String> of());
+    assertParts(".", Arrays.<String> asList());
 
-    assertParts("abc", ImmutableList.of("abc"));
-    assertParts("abc/def", ImmutableList.of("abc", "def"));
-    assertParts("abc/def/ghi", ImmutableList.of("abc", "def", "ghi"));
+    assertParts("abc", asList("abc"));
+    assertParts("abc/def", asList("abc", "def"));
+    assertParts("abc/def/ghi", asList("abc", "def", "ghi"));
 
-    assertParts(" ", ImmutableList.of(" "));
-    assertParts(" / ", ImmutableList.of(" ", " "));
-    assertParts(" / / ", ImmutableList.of(" ", " ", " "));
+    assertParts(" ", asList(" "));
+    assertParts(" / ", asList(" ", " "));
+    assertParts(" / / ", asList(" ", " ", " "));
   }
 
   private static void assertParts(String input, List<String> expected) {

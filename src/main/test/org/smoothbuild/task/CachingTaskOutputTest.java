@@ -1,6 +1,7 @@
 package org.smoothbuild.task;
 
 import static com.google.inject.util.Modules.override;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
@@ -8,6 +9,7 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.when;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Before;
@@ -30,7 +32,6 @@ import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -69,7 +70,7 @@ public class CachingTaskOutputTest {
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), true));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), true));
     given(arrayExpression =
-        new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1, expression2), CL));
+        new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "1")));
@@ -82,7 +83,7 @@ public class CachingTaskOutputTest {
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), false));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), false));
     given(arrayExpression =
-        new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1, expression2), CL));
+        new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
@@ -92,12 +93,10 @@ public class CachingTaskOutputTest {
   public void expression_of_same_type_but_different_dependencies_do_not_share_cached_results()
       throws Exception {
     given(counter = new AtomicInteger());
-    given(expression1 =
-        new CountingExpression(counter, ImmutableList.of(stringExpression("dep1")), true));
-    given(expression2 =
-        new CountingExpression(counter, ImmutableList.of(stringExpression("dep2")), true));
+    given(expression1 = new CountingExpression(counter, asList(stringExpression("dep1")), true));
+    given(expression2 = new CountingExpression(counter, asList(stringExpression("dep2")), true));
     given(arrayExpression =
-        new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1, expression2), CL));
+        new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
@@ -150,8 +149,8 @@ public class CachingTaskOutputTest {
     private final AtomicInteger counter;
     private final boolean isCacheable;
 
-    public CountingExpression(AtomicInteger counter,
-        ImmutableList<? extends Expression<?>> dependencies, boolean isCacheable) {
+    public CountingExpression(AtomicInteger counter, List<? extends Expression<?>> dependencies,
+        boolean isCacheable) {
       super(STRING, dependencies, CL);
       this.counter = counter;
       this.isCacheable = isCacheable;

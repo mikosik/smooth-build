@@ -8,6 +8,7 @@ import static org.smoothbuild.lang.function.base.Parameters.filterRequiredParame
 import static org.smoothbuild.lang.function.base.Parameters.parametersToMap;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class ParametersPool {
   private final Map<Type<?>, Set<Parameter>> optionalParametersMap;
   private final Map<Type<?>, Set<Parameter>> requiredParametersMap;
 
-  public ParametersPool(ImmutableList<Parameter> parameters) {
+  public ParametersPool(List<Parameter> parameters) {
     this.parameters = parametersToMap(parameters);
     this.optionalParametersMap = createParametersMap(filterOptionalParameters(parameters));
     this.requiredParametersMap = createParametersMap(filterRequiredParameters(parameters));

@@ -2,6 +2,8 @@ package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.CodeLocation;
@@ -17,10 +19,10 @@ public abstract class Expression<T extends Value> {
   private final CodeLocation codeLocation;
   private final ImmutableList<? extends Expression<?>> dependencies;
 
-  public Expression(Type<T> type, ImmutableList<? extends Expression<?>> dependencies,
+  public Expression(Type<T> type, List<? extends Expression<?>> dependencies,
       CodeLocation codeLocation) {
     this.type = checkNotNull(type);
-    this.dependencies = checkNotNull(dependencies);
+    this.dependencies = ImmutableList.copyOf(dependencies);
     this.codeLocation = checkNotNull(codeLocation);
   }
 

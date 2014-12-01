@@ -1,5 +1,6 @@
 package org.smoothbuild.task.save.err;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
@@ -10,14 +11,12 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.LineBuilder;
 
-import com.google.common.collect.ImmutableList;
-
 public class DuplicatePathsInFileArrayArtifactErrorTest {
 
   @Test
   public void test() {
     Name name = name("func");
-    Iterable<Path> fileSet = ImmutableList.of(path("path1"), path("path2"), path("path3"));
+    Iterable<Path> fileSet = asList(path("path1"), path("path2"), path("path3"));
     Message error = new DuplicatePathsInFileArrayArtifactError(name, fileSet);
 
     LineBuilder builder = new LineBuilder();

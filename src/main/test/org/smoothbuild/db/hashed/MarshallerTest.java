@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static com.google.common.primitives.Ints.toByteArray;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
@@ -14,7 +15,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Hashed;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;
@@ -33,7 +33,7 @@ public class MarshallerTest {
     given(hashed1 = objectsDb.string("abc"));
     given(hashed2 = objectsDb.string("def"));
     given(marshaller = new Marshaller());
-    given(marshaller).write(ImmutableList.of(hashed1, hashed2));
+    given(marshaller).write(asList(hashed1, hashed2));
     when(marshaller).getBytes();
     thenReturned(Bytes.concat(toByteArray(2), hashed1.hash().asBytes(), hashed2.hash().asBytes()));
   }

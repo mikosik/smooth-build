@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.packagedJavaFileObjects;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.JarTester.jar;
@@ -8,6 +9,8 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+
+import java.util.List;
 
 import javax.tools.JavaFileObject;
 
@@ -18,7 +21,6 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.testory.Closure;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjectsTest {
@@ -34,7 +36,7 @@ public class PackagedJavaFileObjectsTest {
     given(file1 = objectsDb.file(path("my/package/MyKlass.class")));
     given(file2 = objectsDb.file(path("my/package/MyKlass2.class")));
     given(jar = jar(file1, file2));
-    given(objects = packagedJavaFileObjects(objectsDb, ImmutableList.of(jar)));
+    given(objects = packagedJavaFileObjects(objectsDb, asList(jar)));
     given(fileObject = objects.get("my.package").iterator().next());
 
     when(inputStreamToString(fileObject.openInputStream()));
@@ -48,11 +50,11 @@ public class PackagedJavaFileObjectsTest {
   public void duplicateClassFileException() throws Exception {
     given(file1 = objectsDb.file(path("my/package/MyKlass.class")));
     given(jar = jar(file1));
-    when(javaFileObjects(ImmutableList.of(jar, jar)));
+    when(javaFileObjects(asList(jar, jar)));
     thenThrown(DuplicateClassFileError.class);
   }
 
-  private Closure javaFileObjects(final ImmutableList<Blob> libraryJars) {
+  private Closure javaFileObjects(final List<Blob> libraryJars) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {

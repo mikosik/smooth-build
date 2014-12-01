@@ -1,5 +1,6 @@
 package org.smoothbuild.task;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
@@ -10,6 +11,8 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +37,6 @@ import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -80,7 +82,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_empty_array_expression() throws Exception {
     given(arrayExpression =
-        new ArrayExpression<>(STRING_ARRAY, ImmutableList.<Expression<SString>> of(), location));
+        new ArrayExpression<>(STRING_ARRAY, Arrays.<Expression<SString>> asList(), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(array()));
@@ -90,8 +92,7 @@ public class ExpressionExecutionTest {
   public void executes_array_expression() throws Exception {
     given(sstring = objectsDb.string(string));
     given(stringExpression = new ConstantExpression<>(STRING, sstring, location));
-    given(arrayExpression =
-        new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(stringExpression), location));
+    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, asList(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(array(sstring)));

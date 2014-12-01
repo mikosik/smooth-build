@@ -2,6 +2,7 @@ package org.smoothbuild.task.work;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Value;
@@ -26,16 +27,15 @@ public class NativeCallWorker<T extends Value> extends TaskWorker<T> {
   private final NativeFunction<T> function;
   private final ImmutableList<String> paramNames;
 
-  public NativeCallWorker(NativeFunction<T> function, ImmutableList<String> paramNames,
-      boolean isInternal, CodeLocation codeLocation) {
+  public NativeCallWorker(NativeFunction<T> function, List<String> paramNames, boolean isInternal,
+      CodeLocation codeLocation) {
     super(nativeCallWorkerHash(function, paramNames), function.type(), function.name().value(),
         isInternal, function.isCacheable(), codeLocation);
     this.function = function;
-    this.paramNames = paramNames;
+    this.paramNames = ImmutableList.copyOf(paramNames);
   }
 
-  private static HashCode nativeCallWorkerHash(NativeFunction<?> function,
-      ImmutableList<String> paramNames) {
+  private static HashCode nativeCallWorkerHash(NativeFunction<?> function, List<String> paramNames) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(function.hash().asBytes());
     for (String string : Ordering.natural().sortedCopy(paramNames)) {

@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.file.match.testing;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.builtin.file.match.Constants.DOUBLE_STAR;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
@@ -44,7 +45,7 @@ public class MatchingPathsGenerator {
     ImmutableList<String> parts = ImmutableList.copyOf(Splitter.on('/').split(pattern));
     for (int i = 0; i < parts.size(); i++) {
       if (i != 0) {
-        result.add(ImmutableList.of("/"));
+        result.add(asList("/"));
       }
 
       addNameGenerators(result, parts.get(i));
@@ -58,13 +59,13 @@ public class MatchingPathsGenerator {
     } else if (name.equals(SINGLE_STAR)) {
       result.add(ALL);
     } else {
-      ImmutableList<String> parts = namePattern(name).parts();
+      List<String> parts = namePattern(name).parts();
 
       for (String part : parts) {
         if (part.equals(SINGLE_STAR)) {
           result.add(ALL_WITH_EMPTY);
         } else {
-          result.add(ImmutableList.of(part));
+          result.add(asList(part));
         }
       }
     }

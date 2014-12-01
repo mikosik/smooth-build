@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.function.base.Name.name;
@@ -13,8 +14,6 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 
-import com.google.common.collect.ImmutableList;
-
 public class SignatureFactoryTest {
 
   @Test
@@ -25,7 +24,7 @@ public class SignatureFactoryTest {
     Signature<?> signature = SignatureFactory.create(method, FuncParams.class);
     assertEquals(FILE, signature.type());
     assertEquals(name("function"), signature.name());
-    assertEquals(ImmutableList.of(optionalParameter(FILE, "param1")), signature.parameters());
+    assertEquals(asList(optionalParameter(FILE, "param1")), signature.parameters());
   }
 
   public interface FuncParams {

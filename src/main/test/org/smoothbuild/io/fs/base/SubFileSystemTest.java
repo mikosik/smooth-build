@@ -1,5 +1,6 @@
 package org.smoothbuild.io.fs.base;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
@@ -12,18 +13,17 @@ import static org.testory.Testory.willReturn;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class SubFileSystemTest {
   FileSystem fileSystem = mock(FileSystem.class);
   Path root = path("my/root");
   Path path = path("my/path");
   Path absolutePath = root.append(path);
-  ImmutableList<String> strings;
-  ImmutableList<Path> pathList;
+  List<String> strings;
+  List<Path> pathList;
   InputStream inputStream;
 
   SubFileSystem subFileSystem = new SubFileSystem(fileSystem, root);
@@ -37,7 +37,7 @@ public class SubFileSystemTest {
 
   @Test
   public void childNames() {
-    given(strings = ImmutableList.of("abc"));
+    given(strings = asList("abc"));
     given(willReturn(strings), fileSystem).filesFrom(absolutePath);
     when(subFileSystem).filesFrom(path);
     thenReturned(sameInstance(strings));
@@ -45,7 +45,7 @@ public class SubFileSystemTest {
 
   @Test
   public void filesFrom() {
-    given(pathList = ImmutableList.of(path("some/path")));
+    given(pathList = asList(path("some/path")));
     given(willReturn(pathList), fileSystem).filesFromRecursive(absolutePath);
     when(subFileSystem).filesFromRecursive(path);
     thenReturned(sameInstance(pathList));

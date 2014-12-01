@@ -1,5 +1,6 @@
 package org.smoothbuild.db.hashed;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -18,7 +19,6 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
@@ -47,10 +47,10 @@ public class UnmarshallerTest {
     given(hashed1 = objectsDb.string("abc"));
     given(hashed2 = objectsDb.string("def"));
     given(marshaller = new Marshaller());
-    given(marshaller).write(ImmutableList.of(hashed1, hashed2));
+    given(marshaller).write(asList(hashed1, hashed2));
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller.readHashList());
-    thenReturned(ImmutableList.of(hashed1.hash(), hashed2.hash()));
+    thenReturned(asList(hashed1.hash(), hashed2.hash()));
   }
 
   @Test

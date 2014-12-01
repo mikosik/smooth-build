@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
@@ -7,15 +8,15 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableList;
-
 public class AbstractFunctionTest {
   Name name;
-  ImmutableList<Parameter> parameters;
+  List<Parameter> parameters;
   Signature<SString> signature;
   AbstractFunction<SString> function;
 
@@ -43,7 +44,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void params_returns_signature_params() {
-    given(parameters = ImmutableList.of(optionalParameter(STRING, "name")));
+    given(parameters = asList(optionalParameter(STRING, "name")));
     given(signature = new Signature<>(STRING, name("name"), parameters));
     given(function = new MyAbstractFunction(signature));
     when(function).parameters();

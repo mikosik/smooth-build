@@ -1,5 +1,6 @@
 package org.smoothbuild.task.base;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.message.base.MessageType.ERROR;
@@ -8,6 +9,9 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Value;
@@ -15,12 +19,10 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.testory.Closure;
 
-import com.google.common.collect.ImmutableList;
-
 public class TaskOutputTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private TaskOutput<SString> taskOutput;
-  private final ImmutableList<Message> messages = ImmutableList.of(new Message(ERROR, ""));
+  private final List<Message> messages = asList(new Message(ERROR, ""));
   private SString sstring;
   private SString otherSstring;
 
@@ -111,7 +113,7 @@ public class TaskOutputTest {
       throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(taskOutput = new TaskOutput<>(sstring, messages));
-    when(taskOutput).equals(new TaskOutput<>(sstring, ImmutableList.<Message> of()));
+    when(taskOutput).equals(new TaskOutput<>(sstring, Arrays.<Message> asList()));
     thenReturned(false);
   }
 
@@ -141,7 +143,7 @@ public class TaskOutputTest {
     thenReturned(new TaskOutput<>(sstring, messages).hashCode());
   }
 
-  private Closure newTaskOutput(final Value result, final ImmutableList<Message> messages) {
+  private Closure newTaskOutput(final Value result, final List<Message> messages) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
