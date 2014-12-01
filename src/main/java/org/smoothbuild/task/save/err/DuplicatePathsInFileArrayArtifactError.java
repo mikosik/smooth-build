@@ -8,7 +8,6 @@ import org.smoothbuild.message.base.Message;
 
 import com.google.common.base.Joiner;
 
-@SuppressWarnings("serial")
 public class DuplicatePathsInFileArrayArtifactError extends Message {
 
   public DuplicatePathsInFileArrayArtifactError(Name name, Iterable<Path> duplicates) {

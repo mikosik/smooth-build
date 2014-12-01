@@ -6,7 +6,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 
-@SuppressWarnings("serial")
 public class OverridenBuiltinFunctionError extends CodeMessage {
   public OverridenBuiltinFunctionError(CodeLocation codeLocation, Name name) {
     super(ERROR, codeLocation, "Function " + name

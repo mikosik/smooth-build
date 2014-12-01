@@ -131,7 +131,6 @@ public class NativeCallWorkerTest {
     assertExceptionIsLoggedAsProblem(exception, UnexpectedError.class);
   }
 
-  @SuppressWarnings("serial")
   private static class MyError extends Message {
     public MyError() {
       super(ERROR, "message");

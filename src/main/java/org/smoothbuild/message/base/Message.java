@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Throwables;
 
-@SuppressWarnings("serial")
 public class Message extends RuntimeException {
   private final MessageType type;
   private final String message;

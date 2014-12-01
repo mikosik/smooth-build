@@ -15,7 +15,7 @@ import org.smoothbuild.message.base.Message;
  * Plugin code should not catch this exception but let it propagate higher to
  * the caller (smooth build framework) which will correctly report it to user.
  */
-@SuppressWarnings("serial")
+
 public class FileSystemError extends Message {
 
   public FileSystemError(IOException e) {

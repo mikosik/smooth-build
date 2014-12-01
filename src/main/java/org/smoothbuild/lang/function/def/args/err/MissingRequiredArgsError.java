@@ -13,7 +13,6 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.util.LineBuilder;
 
-@SuppressWarnings("serial")
 public class MissingRequiredArgsError extends CodeMessage {
   public MissingRequiredArgsError(CodeLocation codeLocation, Function<?> function,
       Map<Parameter, Argument> mapBuilder, Set<Parameter> missingRequiredParameters) {

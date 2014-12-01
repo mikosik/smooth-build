@@ -7,7 +7,6 @@ import java.util.Set;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.LineBuilder;
 
-@SuppressWarnings("serial")
 public class IllegalTargetParamError extends Message {
   public IllegalTargetParamError(String value, Set<String> allowed) {
     super(ERROR, createMessage(value, allowed));

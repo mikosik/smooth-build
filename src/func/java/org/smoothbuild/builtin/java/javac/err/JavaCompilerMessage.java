@@ -8,7 +8,6 @@ import javax.tools.JavaFileObject;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 
-@SuppressWarnings("serial")
 public class JavaCompilerMessage extends Message {
   public JavaCompilerMessage(Diagnostic<? extends JavaFileObject> diagnostic) {
     super(typeOf(diagnostic), diagnostic.getMessage(null));

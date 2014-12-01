@@ -104,7 +104,6 @@ public class FakeLoggedMessagesTest {
     fakeLoggedMessages.assertNoProblems();
   }
 
-  @SuppressWarnings("serial")
   private static class MyInfo extends Message {
     public MyInfo() {
       super(INFO, "message");

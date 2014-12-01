@@ -2,7 +2,6 @@ package org.smoothbuild.lang.function.nativ.err;
 
 import java.lang.reflect.Method;
 
-@SuppressWarnings("serial")
 public class FunctionImplementationException extends NativeImplementationException {
 
   public FunctionImplementationException(Method method, String message) {

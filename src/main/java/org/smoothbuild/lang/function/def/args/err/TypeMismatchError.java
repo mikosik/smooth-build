@@ -6,7 +6,6 @@ import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.function.def.args.Argument;
 import org.smoothbuild.message.base.CodeMessage;
 
-@SuppressWarnings("serial")
 public class TypeMismatchError extends CodeMessage {
   public TypeMismatchError(Argument argument, Type<?> type) {
     super(ERROR, argument.codeLocation(), "Type mismatch, cannot convert from "

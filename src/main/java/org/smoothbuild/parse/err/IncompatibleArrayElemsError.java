@@ -6,7 +6,6 @@ import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 
-@SuppressWarnings("serial")
 public class IncompatibleArrayElemsError extends CodeMessage {
   public IncompatibleArrayElemsError(CodeLocation location, Type<?> firstElemType, int index,
       Type<?> indexElemType) {
