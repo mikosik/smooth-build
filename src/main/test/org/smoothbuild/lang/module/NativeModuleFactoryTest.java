@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.module;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.Types.FILE;
@@ -38,7 +39,6 @@ import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.util.Classes;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 
 public class NativeModuleFactoryTest {
@@ -123,7 +123,7 @@ public class NativeModuleFactoryTest {
   public void function_signature_contains_all_params() throws Exception {
     given(module = createNativeModule(ModuleWithTwoParamFunction.class));
     when(module.getFunction(name("func")).parameters());
-    thenReturned(ImmutableList.of(optionalParameter(STRING, "param1"), optionalParameter(STRING,
+    thenReturned(containsInAnyOrder(optionalParameter(STRING, "param1"), optionalParameter(STRING,
         "param2")));
   }
 
