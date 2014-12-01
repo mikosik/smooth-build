@@ -9,17 +9,15 @@ import com.google.common.collect.Sets;
 
 public class Parameters {
 
-  public static ImmutableList<Parameter> filterRequiredParameters(
-      ImmutableList<Parameter> parameters) {
+  public static ImmutableList<Parameter> filterRequiredParameters(Iterable<Parameter> parameters) {
     return filterParameters(parameters, true);
   }
 
-  public static ImmutableList<Parameter> filterOptionalParameters(
-      ImmutableList<Parameter> parameters) {
+  public static ImmutableList<Parameter> filterOptionalParameters(Iterable<Parameter> parameters) {
     return filterParameters(parameters, false);
   }
 
-  private static ImmutableList<Parameter> filterParameters(ImmutableList<Parameter> parameters,
+  private static ImmutableList<Parameter> filterParameters(Iterable<Parameter> parameters,
       boolean isRequired) {
     ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
     for (Parameter parameter : parameters) {

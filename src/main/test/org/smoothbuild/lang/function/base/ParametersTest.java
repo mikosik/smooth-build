@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.base.Parameter.requiredParameter;
@@ -7,14 +8,15 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ParametersTest {
-  ImmutableList<Parameter> parameters;
+  List<Parameter> parameters;
   Parameter parameter1;
   Parameter parameter2;
   Parameter parameter3;
@@ -31,7 +33,7 @@ public class ParametersTest {
   @Test
   public void filter_required_params_omits_optional_param() throws Exception {
     given(parameter1 = optionalParameter(STRING, "name"));
-    given(parameters = ImmutableList.of(parameter1));
+    given(parameters = asList(parameter1));
     when(Parameters.filterRequiredParameters(parameters));
     thenReturned(Empty.paramList());
   }
@@ -39,9 +41,9 @@ public class ParametersTest {
   @Test
   public void filter_required_params_keeps_required_param() throws Exception {
     given(parameter1 = requiredParameter(STRING, "name"));
-    given(parameters = ImmutableList.of(parameter1));
+    given(parameters = asList(parameter1));
     when(Parameters.filterRequiredParameters(parameters));
-    thenReturned(ImmutableList.of(parameter1));
+    thenReturned(asList(parameter1));
   }
 
   @Test
@@ -49,9 +51,9 @@ public class ParametersTest {
     given(parameter1 = requiredParameter(STRING, "name"));
     given(parameter2 = optionalParameter(STRING, "name"));
     given(parameter3 = requiredParameter(STRING, "name"));
-    given(parameters = ImmutableList.of(parameter1, parameter2, parameter3));
+    given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.filterRequiredParameters(parameters));
-    thenReturned(ImmutableList.of(parameter1, parameter3));
+    thenReturned(asList(parameter1, parameter3));
   }
 
   // filterRequiredParams()
@@ -66,7 +68,7 @@ public class ParametersTest {
   @Test
   public void filter_optional_params_omits_required_param() throws Exception {
     given(parameter1 = requiredParameter(STRING, "name"));
-    given(parameters = ImmutableList.of(parameter1));
+    given(parameters = asList(parameter1));
     when(Parameters.filterOptionalParameters(parameters));
     thenReturned(Empty.paramList());
   }
@@ -74,9 +76,9 @@ public class ParametersTest {
   @Test
   public void filter_optional_params_keeps_optional_param() throws Exception {
     given(parameter1 = optionalParameter(STRING, "name"));
-    given(parameters = ImmutableList.of(parameter1));
+    given(parameters = asList(parameter1));
     when(Parameters.filterOptionalParameters(parameters));
-    thenReturned(ImmutableList.of(parameter1));
+    thenReturned(asList(parameter1));
   }
 
   @Test
@@ -84,9 +86,9 @@ public class ParametersTest {
     given(parameter1 = optionalParameter(STRING, "name"));
     given(parameter2 = requiredParameter(STRING, "name"));
     given(parameter3 = optionalParameter(STRING, "name"));
-    given(parameters = ImmutableList.of(parameter1, parameter2, parameter3));
+    given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.filterOptionalParameters(parameters));
-    thenReturned(ImmutableList.of(parameter1, parameter3));
+    thenReturned(asList(parameter1, parameter3));
   }
 
   // paramsToNames()
@@ -96,9 +98,9 @@ public class ParametersTest {
     given(parameter1 = optionalParameter(STRING, "name1"));
     given(parameter2 = requiredParameter(STRING, "name2"));
     given(parameter3 = optionalParameter(STRING, "name3"));
-    given(parameters = ImmutableList.of(parameter1, parameter2, parameter3));
+    given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.parametersToNames(parameters));
-    thenReturned(ImmutableList.of("name1", "name2", "name3"));
+    thenReturned(asList("name1", "name2", "name3"));
   }
 
   // paramsToMap()
@@ -108,7 +110,7 @@ public class ParametersTest {
     given(parameter1 = requiredParameter(STRING, "alpha"));
     given(parameter2 = optionalParameter(STRING, "beta"));
     given(parameter3 = optionalParameter(STRING, "gamma"));
-    given(parameters = ImmutableList.of(parameter1, parameter2, parameter3));
+    given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.parametersToMap(parameters));
     thenReturned(ImmutableMap.of(parameter1.name(), parameter1, parameter2.name(), parameter2,
         parameter3.name(), parameter3));
@@ -128,9 +130,9 @@ public class ParametersTest {
     given(parameter1 = optionalParameter(STRING, "gamma"));
     given(parameter2 = requiredParameter(STRING, "alpha"));
     given(parameter3 = optionalParameter(STRING, "beta"));
-    given(parameters = ImmutableList.of(parameter1, parameter2, parameter3));
+    given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.sortedParameters(parameters));
-    thenReturned(ImmutableList.of(parameter2, parameter3, parameter1));
+    thenReturned(asList(parameter2, parameter3, parameter1));
   }
 
 }

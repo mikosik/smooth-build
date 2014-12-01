@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.java.junit;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
@@ -14,7 +15,6 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class BinaryNameToClassFileTest {
@@ -28,7 +28,7 @@ public class BinaryNameToClassFileTest {
     given(file1 = objectsDb.file(path("a/Klass.class")));
     given(file2 = objectsDb.file(path("b/Klass.class")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(objectsDb, ImmutableList.of(blob)));
+    when(binaryNameToClassFile(objectsDb, asList(blob)));
     thenReturned(ImmutableMap.of("a.Klass", file1, "b.Klass", file2));
   }
 
@@ -37,7 +37,7 @@ public class BinaryNameToClassFileTest {
     given(file1 = objectsDb.file(path("a/Klass.txt")));
     given(file2 = objectsDb.file(path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(objectsDb, ImmutableList.of(blob)));
+    when(binaryNameToClassFile(objectsDb, asList(blob)));
     thenReturned(ImmutableMap.of());
   }
 }

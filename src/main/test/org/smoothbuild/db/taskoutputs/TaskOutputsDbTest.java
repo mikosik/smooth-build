@@ -1,5 +1,6 @@
 package org.smoothbuild.db.taskoutputs;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.base.Types.BLOB;
@@ -35,7 +36,6 @@ import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.Streams;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class TaskOutputsDbTest {
@@ -80,7 +80,7 @@ public class TaskOutputsDbTest {
   public void written_messages_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string("abc"));
     given(message = new Message(ERROR, "message string"));
-    given(taskOutputsDb).write(hash, new TaskOutput<>(stringValue, ImmutableList.of(message)));
+    given(taskOutputsDb).write(hash, new TaskOutput<>(stringValue, asList(message)));
     when(taskOutputsDb.read(hash, STRING).messages());
     thenReturned(contains(message));
   }

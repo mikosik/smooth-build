@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.file.match;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.builtin.file.match.Constants.DOUBLE_STAR;
 import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
 import static org.testory.Testory.given;
@@ -9,8 +10,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.testory.Closure;
-
-import com.google.common.collect.ImmutableList;
 
 public class NamePatternTest {
   private NamePattern pattern;
@@ -140,21 +139,21 @@ public class NamePatternTest {
   public void parts_returns_pattern_parts() throws Exception {
     given(pattern = namePattern("abc*def*ghi"));
     when(pattern.parts());
-    thenReturned(ImmutableList.of("abc", "*", "def", "*", "ghi"));
+    thenReturned(asList("abc", "*", "def", "*", "ghi"));
   }
 
   @Test
   public void single_star_pattern_has_one_part() throws Exception {
     given(pattern = namePattern("*"));
     when(pattern.parts());
-    thenReturned(ImmutableList.of("*"));
+    thenReturned(asList("*"));
   }
 
   @Test
   public void double_star_pattern_has_one_part() throws Exception {
     given(pattern = namePattern("**"));
     when(pattern.parts());
-    thenReturned(ImmutableList.of("**"));
+    thenReturned(asList("**"));
   }
 
   private Closure namePatternClosure(final String value) {

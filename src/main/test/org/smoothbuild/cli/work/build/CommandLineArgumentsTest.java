@@ -1,16 +1,17 @@
 package org.smoothbuild.cli.work.build;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 
-import com.google.common.collect.ImmutableList;
-
 public class CommandLineArgumentsTest {
-  ImmutableList<Name> functions = ImmutableList.of(name("functionName"));
+  List<Name> functions = asList(name("functionName"));
   Path path = path("sctipt.smooth");
 
   @Test(expected = NullPointerException.class)

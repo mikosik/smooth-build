@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.STRING;
@@ -41,7 +42,6 @@ import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 import org.testory.common.Matcher;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
@@ -163,8 +163,8 @@ public class NativeFunctionFactoryTest {
   public void function_params_are_equal_to_params_of_java_method() throws Exception {
     given(function = function(FunctionWithDifferentParams.class.getMethods()[0]));
     when(function).parameters();
-    thenReturned(ImmutableList.of(optionalParameter(STRING_ARRAY, "array"), optionalParameter(
-        STRING, "string")));
+    thenReturned(asList(optionalParameter(STRING_ARRAY, "array"), optionalParameter(STRING,
+        "string")));
   }
 
   public interface DifferentParams {
@@ -219,7 +219,7 @@ public class NativeFunctionFactoryTest {
     thenReturned(BLOB);
 
     when(function.parameters());
-    thenReturned(ImmutableList.of(optionalParameter(STRING, "string")));
+    thenReturned(asList(optionalParameter(STRING, "string")));
 
     when(function.name());
     thenReturned(name("func"));

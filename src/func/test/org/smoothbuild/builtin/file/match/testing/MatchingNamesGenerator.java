@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.file.match.testing;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
 
@@ -43,7 +44,7 @@ public class MatchingNamesGenerator {
       if (part.equals(SINGLE_STAR)) {
         result.add(HelpTester.ALL_WITH_EMPTY);
       } else {
-        result.add(ImmutableList.of(part));
+        result.add(asList(part));
       }
     }
   }
