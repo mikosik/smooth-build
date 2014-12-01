@@ -18,7 +18,7 @@ public class Signature<T extends Value> {
   public Signature(Type<T> type, Name name, Iterable<Parameter> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
-    this.parameters = Parameters.sortedParameters(params);
+    this.parameters = ImmutableList.copyOf(params);
   }
 
   public Type<T> type() {

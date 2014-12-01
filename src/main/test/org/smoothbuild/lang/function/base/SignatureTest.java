@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertThat;
 import static org.smoothbuild.lang.base.Types.BLOB;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
@@ -36,16 +34,6 @@ public class SignatureTest {
   @Test(expected = NullPointerException.class)
   public void nullParamsIsForbidden() {
     new Signature<>(type, name, null);
-  }
-
-  @Test
-  public void paramsAreSortedAccordingToName() throws Exception {
-    Parameter parameter1 = optionalParameter(STRING, "aaa");
-    Parameter parameter2 = optionalParameter(STRING, "bbb");
-
-    ImmutableList<Parameter> parameters = ImmutableList.of(parameter2, parameter1);
-    Signature<?> signature = new Signature<>(type, name, parameters);
-    assertThat(signature.parameters(), contains(parameter1, parameter2));
   }
 
   @Test
