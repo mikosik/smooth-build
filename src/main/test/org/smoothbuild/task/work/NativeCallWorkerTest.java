@@ -47,8 +47,8 @@ public class NativeCallWorkerTest {
   FakeNativeApi nativeApi = new FakeNativeApi();
   HashCode hash = HashCode.fromInt(33);
 
-  private final Signature<SString> signature = new Signature<>(STRING, name("name"),
-      Empty.paramList());
+  private final Signature<SString> signature = new Signature<>(STRING, name("name"), Empty
+      .paramList());
   NativeFunction<?> function1 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
   NativeFunction<?> function2 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
 
@@ -57,23 +57,23 @@ public class NativeCallWorkerTest {
   HashCode hash1 = HashCode.fromInt(1);
   HashCode hash2 = HashCode.fromInt(2);
 
-  ImmutableList<Parameter> parameters = ImmutableList.of(parameter(STRING, name1, false), parameter(
-      STRING, name2, false));
+  ImmutableList<Parameter> parameters = ImmutableList.of(parameter(STRING, name1, false),
+      parameter(STRING, name2, false));
 
-  NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1,
-      ImmutableList.<String>of(), false, codeLocation(1));
+  NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList
+      .<String> of(), false, codeLocation(1));
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
     SString argValue = objectsDb.string("subTaskOutput");
 
     String name = "param";
-    NativeCallWorker<?> nativeCallTask = new NativeCallWorker<>(function1, ImmutableList.of(name),
-        false, codeLocation(1));
+    NativeCallWorker<?> nativeCallTask =
+        new NativeCallWorker<>(function1, ImmutableList.of(name), false, codeLocation(1));
 
     SString sstring = objectsDb.string("result");
-    given(willReturn(sstring), invoker).invoke(nativeApi, ImmutableMap.<String, Value>of(name,
-        argValue));
+    given(willReturn(sstring), invoker).invoke(nativeApi,
+        ImmutableMap.<String, Value> of(name, argValue));
 
     TaskInput taskInput = TaskInput.fromValues(ImmutableList.of(argValue));
     TaskOutput<?> actual = nativeCallTask.execute(taskInput, nativeApi);
@@ -92,8 +92,8 @@ public class NativeCallWorkerTest {
     ImmutableList<Parameter> parameters = ImmutableList.of();
     Signature<SString> signature = new Signature<>(STRING, name("name"), parameters);
     function1 = new NativeFunction<>(Hash.integer(33), signature, invoker, true);
-    nativeCallWorker = new NativeCallWorker<>(function1, ImmutableList.<String>of(), false,
-        codeLocation(1));
+    nativeCallWorker =
+        new NativeCallWorker<>(function1, ImmutableList.<String> of(), false, codeLocation(1));
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {
@@ -138,8 +138,8 @@ public class NativeCallWorkerTest {
     }
   }
 
-  private void assertExceptionIsLoggedAsProblem(Throwable thrown,
-      Class<? extends Message> expected) throws Exception {
+  private void assertExceptionIsLoggedAsProblem(Throwable thrown, Class<? extends Message> expected)
+      throws Exception {
     given(willThrow(thrown), invoker).invoke(nativeApi, Empty.stringValueMap());
     nativeCallWorker.execute(TaskInput.fromValues(Empty.valueList()), nativeApi);
     nativeApi.loggedMessages().assertContainsOnly(expected);

@@ -32,8 +32,8 @@ public class NativeFunctionFactory {
     return builder.build();
   }
 
-  public static NativeFunction<?> createNativeFunction(HashCode jarHash, Method method) throws
-      NativeImplementationException {
+  public static NativeFunction<?> createNativeFunction(HashCode jarHash, Method method)
+      throws NativeImplementationException {
     if (!isPublic(method)) {
       throw new NonPublicSmoothFunctionException(method);
     }
@@ -55,8 +55,8 @@ public class NativeFunctionFactory {
   }
 
   private static <T extends Value> NativeFunction<T> createNativeFunction(HashCode jarHash,
-      Method method, Signature<T> signature, Class<?> paramsInterface) throws
-      NativeImplementationException {
+      Method method, Signature<T> signature, Class<?> paramsInterface)
+      throws NativeImplementationException {
 
     /*
      * Cast is safe as T is return type of 'method'.
@@ -67,8 +67,8 @@ public class NativeFunctionFactory {
     return new NativeFunction<>(jarHash, signature, invoker, isCacheable(method));
   }
 
-  private static Invoker<?> createInvoker(Method method, Class<?> paramsInterface) throws
-      NativeImplementationException {
+  private static Invoker<?> createInvoker(Method method, Class<?> paramsInterface)
+      throws NativeImplementationException {
     ArgumentsCreator argumentsCreator = new ArgumentsCreator(paramsInterface);
     return new Invoker<>(method, argumentsCreator);
   }

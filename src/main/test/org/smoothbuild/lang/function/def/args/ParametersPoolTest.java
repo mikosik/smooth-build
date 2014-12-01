@@ -144,8 +144,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_string_array_param_is_available_in_optional_set_of_string_array_pool() throws
-      Exception {
+  public void optional_string_array_param_is_available_in_optional_set_of_string_array_pool()
+      throws Exception {
     given(parameter = parameter(STRING_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(STRING_ARRAY)).optionalParameters();
@@ -153,8 +153,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_string_array_param_is_available_in_required_set_of_string_array_pool() throws
-      Exception {
+  public void required_string_array_param_is_available_in_required_set_of_string_array_pool()
+      throws Exception {
     given(parameter = parameter(STRING_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(STRING_ARRAY)).requiredParameters();
@@ -162,8 +162,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_blob_array_param_is_available_in_optional_set_of_blob_array_pool() throws
-      Exception {
+  public void optional_blob_array_param_is_available_in_optional_set_of_blob_array_pool()
+      throws Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(BLOB_ARRAY)).optionalParameters();
@@ -171,8 +171,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_blob_array_param_is_available_in_required_set_of_blob_array_pool() throws
-      Exception {
+  public void required_blob_array_param_is_available_in_required_set_of_blob_array_pool()
+      throws Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(BLOB_ARRAY)).requiredParameters();
@@ -180,8 +180,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_blob_array_param_is_available_in_optional_set_of_file_array_pool() throws
-      Exception {
+  public void optional_blob_array_param_is_available_in_optional_set_of_file_array_pool()
+      throws Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParameters();
@@ -189,8 +189,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_blob_array_param_is_available_in_required_set_of_file_array_pool() throws
-      Exception {
+  public void required_blob_array_param_is_available_in_required_set_of_file_array_pool()
+      throws Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(FILE_ARRAY)).requiredParameters();
@@ -198,8 +198,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_file_array_param_is_available_in_optional_set_of_file_array_pool() throws
-      Exception {
+  public void optional_file_array_param_is_available_in_optional_set_of_file_array_pool()
+      throws Exception {
     given(parameter = parameter(FILE_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParameters();
@@ -207,8 +207,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_file_array_param_is_available_in_required_set_of_file_array_pool() throws
-      Exception {
+  public void required_file_array_param_is_available_in_required_set_of_file_array_pool()
+      throws Exception {
     given(parameter = parameter(FILE_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(FILE_ARRAY)).requiredParameters();
@@ -216,8 +216,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_string_array_param_is_available_in_optional_set_of_nil_pool() throws
-      Exception {
+  public void optional_string_array_param_is_available_in_optional_set_of_nil_pool()
+      throws Exception {
     given(parameter = parameter(STRING_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(NIL)).optionalParameters();
@@ -225,8 +225,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_string_array_param_is_available_in_required_set_of_nil_pool() throws
-      Exception {
+  public void required_string_array_param_is_available_in_required_set_of_nil_pool()
+      throws Exception {
     given(parameter = parameter(STRING_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(NIL)).requiredParameters();
@@ -234,8 +234,7 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_blob_array_param_is_available_in_optional_set_of_nil_pool() throws
-      Exception {
+  public void optional_blob_array_param_is_available_in_optional_set_of_nil_pool() throws Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(NIL)).optionalParameters();
@@ -243,8 +242,7 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_blob_array_param_is_available_in_required_set_of_nil_pool() throws
-      Exception {
+  public void required_blob_array_param_is_available_in_required_set_of_nil_pool() throws Exception {
     given(parameter = parameter(BLOB_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(NIL)).requiredParameters();
@@ -252,8 +250,7 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_file_array_param_is_available_in_optional_set_of_nil_pool() throws
-      Exception {
+  public void optional_file_array_param_is_available_in_optional_set_of_nil_pool() throws Exception {
     given(parameter = parameter(FILE_ARRAY, "NAME", false));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(NIL)).optionalParameters();
@@ -261,8 +258,7 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_file_array_param_is_available_in_required_set_of_nil_pool() throws
-      Exception {
+  public void required_file_array_param_is_available_in_required_set_of_nil_pool() throws Exception {
     given(parameter = parameter(FILE_ARRAY, "NAME", true));
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     when(parametersPool.assignableFrom(NIL)).requiredParameters();
@@ -309,6 +305,6 @@ public class ParametersPoolTest {
     given(parametersPool = new ParametersPool(ImmutableList.of(parameter)));
     given(parametersPool.take(parameter));
     when(parametersPool.allRequired());
-    thenReturned(ImmutableSet.<Parameter>of());
+    thenReturned(ImmutableSet.<Parameter> of());
   }
 }

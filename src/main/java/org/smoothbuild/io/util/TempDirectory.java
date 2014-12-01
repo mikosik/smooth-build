@@ -42,8 +42,7 @@ public class TempDirectory {
   }
 
   @VisibleForTesting
-  public TempDirectory(ValueFactory valueFactory, java.nio.file.Path rootPath,
-      FileSystem fileSystem) {
+  public TempDirectory(ValueFactory valueFactory, java.nio.file.Path rootPath, FileSystem fileSystem) {
     this.valueFactory = valueFactory;
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;

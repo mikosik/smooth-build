@@ -25,7 +25,8 @@ public class NativeModuleFactory {
     }
   }
 
-  private static Module createNativeModuleImpl(JarFile jar) throws IOException, NativeImplementationException {
+  private static Module createNativeModuleImpl(JarFile jar) throws IOException,
+      NativeImplementationException {
     ModuleBuilder builder = new ModuleBuilder();
     ClassLoader classLoader = classLoader(jar);
     try (JarInputStream jarInputStream = newJarInputStream(jar)) {

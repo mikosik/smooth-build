@@ -19,8 +19,7 @@ public class ConcatenateFilesFunction {
   }
 
   @SmoothFunction
-  public static Array<SFile> concatenateFiles(NativeApi nativeApi,
-      ConcatenateFilesParameters params) {
+  public static Array<SFile> concatenateFiles(NativeApi nativeApi, ConcatenateFilesParameters params) {
     ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);
 
     for (SFile file : params.files()) {

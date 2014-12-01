@@ -116,8 +116,8 @@ public class ArtifactTest {
 
     String functionName = "myFunction";
 
-    script(fileSystem,
-        functionName + " : [ content(file(" + path1 + ")) , content(file(" + path2 + ")) ] ;");
+    script(fileSystem, functionName + " : [ content(file(" + path1 + ")) , content(file(" + path2
+        + ")) ] ;");
 
     // when
     buildWorker.run(asList(functionName));
@@ -158,8 +158,8 @@ public class ArtifactTest {
   }
 
   @Test
-  public void storing_file_array_artifact_logs_error_when_files_have_duplicated_paths() throws
-      Exception {
+  public void storing_file_array_artifact_logs_error_when_files_have_duplicated_paths()
+      throws Exception {
     // given
     fileSystem.createFile(path1, content1);
 

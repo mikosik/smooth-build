@@ -52,8 +52,7 @@ public class TaskWorkerHashesTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void native_call_workers_with_different_functions_have_different_hashes() throws
-      Exception {
+  public void native_call_workers_with_different_functions_have_different_hashes() throws Exception {
     given(function = new NativeFunction<>(hash, signature("fA"), mock(Invoker.class), false));
     given(function2 = new NativeFunction<>(hash, signature("fB"), mock(Invoker.class), false));
     given(worker = new NativeCallWorker<>(function, ImmutableList.of("param"), false, CL));
@@ -68,8 +67,8 @@ public class TaskWorkerHashesTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void native_call_workers_with_same_functions_but_different_params_have_different_hashes() throws
-      Exception {
+  public void native_call_workers_with_same_functions_but_different_params_have_different_hashes()
+      throws Exception {
     given(function = new NativeFunction<>(hash, signature("fA"), mock(Invoker.class), false));
     given(worker = new NativeCallWorker<>(function, ImmutableList.of("paramA"), false, CL));
     given(worker2 = new NativeCallWorker<>(function, ImmutableList.of("paramB"), false, CL));

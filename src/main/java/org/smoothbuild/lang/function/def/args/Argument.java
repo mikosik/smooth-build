@@ -108,7 +108,8 @@ public class Argument {
   }
 
   public static ImmutableMultimap<Type<?>, Argument> filterNameless(Collection<Argument> arguments) {
-    ImmutableMultimap.Builder<Type<? extends Value>, Argument> builder = ImmutableMultimap.builder();
+    ImmutableMultimap.Builder<Type<? extends Value>, Argument> builder =
+        ImmutableMultimap.builder();
     for (Argument argument : arguments) {
       if (!argument.hasName()) {
         Type<?> type = argument.expression().type();

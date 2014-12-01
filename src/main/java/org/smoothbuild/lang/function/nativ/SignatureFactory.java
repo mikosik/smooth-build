@@ -24,8 +24,8 @@ import com.google.inject.TypeLiteral;
 
 public class SignatureFactory {
 
-  public static Signature<?> create(Method functionMethod, Class<?> paramsInterface) throws
-      NativeImplementationException {
+  public static Signature<?> create(Method functionMethod, Class<?> paramsInterface)
+      throws NativeImplementationException {
     Type<?> type = functionType(functionMethod);
     Name name = functionName(functionMethod);
     Iterable<Parameter> params = functionParams(functionMethod, paramsInterface);
@@ -54,8 +54,8 @@ public class SignatureFactory {
     return parameters;
   }
 
-  private static Parameter parameterMethodToParameter(Method functionMethod,
-      Method parameterMethod) throws NativeImplementationException {
+  private static Parameter parameterMethodToParameter(Method functionMethod, Method parameterMethod)
+      throws NativeImplementationException {
     if (parameterMethod.getParameterTypes().length != 0) {
       throw new ParamMethodHasArgumentsException(functionMethod, parameterMethod);
     }
@@ -75,8 +75,8 @@ public class SignatureFactory {
     return type;
   }
 
-  private static Type<?> parameterMethodType(Method functionMethod, Method paramMethod) throws
-      IllegalParamTypeException {
+  private static Type<?> parameterMethodType(Method functionMethod, Method paramMethod)
+      throws IllegalParamTypeException {
     TypeLiteral<?> jType = methodJType(paramMethod);
     Type<?> type = parameterJTypeToType(jType);
     if (type == null) {

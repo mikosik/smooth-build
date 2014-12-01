@@ -54,8 +54,7 @@ public class FilesFunction {
     }
   }
 
-  private static Array<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem,
-      Path path) {
+  private static Array<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem, Path path) {
     ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
     FileReader reader = new FileReader(nativeApi);
     for (Path filePath : fileSystem.filesFromRecursive(path)) {

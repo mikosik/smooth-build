@@ -63,41 +63,41 @@ public class CachingTaskOutputTest {
   }
 
   @Test
-  public void calculating_cacheable_expression_for_second_time_uses_cached_output() throws
-      Exception {
+  public void calculating_cacheable_expression_for_second_time_uses_cached_output()
+      throws Exception {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), true));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), true));
-    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1,
-        expression2), CL));
+    given(arrayExpression =
+        new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "1")));
   }
 
   @Test
-  public void calculating_non_cacheable_expression_for_second_time_does_not_use_cached_output() throws
-      Exception {
+  public void calculating_non_cacheable_expression_for_second_time_does_not_use_cached_output()
+      throws Exception {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), false));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), false));
-    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1,
-        expression2), CL));
+    given(arrayExpression =
+        new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
   }
 
   @Test
-  public void expression_of_same_type_but_different_dependencies_do_not_share_cached_results() throws
-      Exception {
+  public void expression_of_same_type_but_different_dependencies_do_not_share_cached_results()
+      throws Exception {
     given(counter = new AtomicInteger());
-    given(expression1 = new CountingExpression(counter, ImmutableList.of(stringExpression("dep1")),
-        true));
-    given(expression2 = new CountingExpression(counter, ImmutableList.of(stringExpression("dep2")),
-        true));
-    given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1,
-        expression2), CL));
+    given(expression1 =
+        new CountingExpression(counter, ImmutableList.of(stringExpression("dep1")), true));
+    given(expression2 =
+        new CountingExpression(counter, ImmutableList.of(stringExpression("dep2")), true));
+    given(arrayExpression =
+        new ArrayExpression<>(STRING_ARRAY, ImmutableList.of(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
@@ -125,8 +125,7 @@ public class CachingTaskOutputTest {
     private int counter = 0;
 
     @Override
-    protected void configure() {
-    }
+    protected void configure() {}
 
     @Provides
     @SmoothJar
@@ -168,8 +167,8 @@ public class CachingTaskOutputTest {
     private final AtomicInteger counter;
 
     public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
-      super(Hash.string("hash"), STRING, "counting", false, isCacheable, CodeLocation.codeLocation(
-          2));
+      super(Hash.string("hash"), STRING, "counting", false, isCacheable, CodeLocation
+          .codeLocation(2));
       this.counter = counter;
     }
 

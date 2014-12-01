@@ -41,8 +41,8 @@ public class ToFileTest {
 
     fileSystem.createFile(sourcePath, content);
 
-    script(fileSystem,
-        "run : [ toFile(path=" + destinationPath + ", content=file(" + sourcePath + ")) ];");
+    script(fileSystem, "run : [ toFile(path=" + destinationPath + ", content=file(" + sourcePath
+        + ")) ];");
 
     buildWorker.run(asList("run"));
 

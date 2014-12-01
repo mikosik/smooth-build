@@ -9,7 +9,7 @@ import org.smoothbuild.message.base.CodeMessage;
 @SuppressWarnings("serial")
 public class UnknownParamNameError extends CodeMessage {
   public UnknownParamNameError(Name name, Argument argument) {
-    super(ERROR, argument.codeLocation(), "Function " + name + " has no parameter named '" + argument.name()
-        + "'.");
+    super(ERROR, argument.codeLocation(), "Function " + name + " has no parameter named '"
+        + argument.name() + "'.");
   }
 }
