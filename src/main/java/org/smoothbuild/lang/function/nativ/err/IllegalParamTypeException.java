@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 
 import com.google.inject.TypeLiteral;
 
-@SuppressWarnings("serial")
 public class IllegalParamTypeException extends ParamsImplementationException {
 
   public IllegalParamTypeException(Method method, Method paramMethod, TypeLiteral<?> jType) {

@@ -6,7 +6,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 
-@SuppressWarnings("serial")
 public class UnknownFunctionCallError extends CodeMessage {
   public UnknownFunctionCallError(CodeLocation codeLocation, Name name) {
     super(ERROR, codeLocation, "Call to unknown function " + name);

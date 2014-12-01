@@ -10,7 +10,6 @@ import org.smoothbuild.util.LineBuilder;
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 
-@SuppressWarnings("serial")
 public class RunningAidlBinaryFailedError extends Message {
   public RunningAidlBinaryFailedError(List<String> command, IOException e) {
     super(MessageType.ERROR, createMessage(command, e));

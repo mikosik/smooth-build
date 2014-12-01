@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.nativ.err;
 
-@SuppressWarnings("serial")
 public class FunctionClassImplementationException extends NativeImplementationException {
   public FunctionClassImplementationException(Class<?> klass, String message) {
     super(buildMessage(klass, message));

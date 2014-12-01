@@ -8,7 +8,6 @@ import org.smoothbuild.builtin.android.EnvironmentVariable;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.LineBuilder;
 
-@SuppressWarnings("serial")
 public class AndroidSdkLacksFileError extends Message {
   public AndroidSdkLacksFileError(EnvironmentVariable androidSdkVar, Path requiredSdkFile) {
     super(ERROR, createMessage(androidSdkVar, requiredSdkFile));

@@ -1,6 +1,5 @@
 package org.smoothbuild.util;
 
-@SuppressWarnings("serial")
 public class UnescapingFailedException extends RuntimeException {
   private final int charIndex;
 

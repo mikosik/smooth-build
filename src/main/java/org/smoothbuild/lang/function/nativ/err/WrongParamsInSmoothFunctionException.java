@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 
 import org.smoothbuild.lang.base.NativeApi;
 
-@SuppressWarnings("serial")
 public class WrongParamsInSmoothFunctionException extends FunctionImplementationException {
   public WrongParamsInSmoothFunctionException(Method method) {
     super(method, "It should contains exactly two parameters. First of type '"

@@ -7,7 +7,6 @@ import java.util.Set;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.LineBuilder;
 
-@SuppressWarnings("serial")
 public class IllegalSourceParamError extends Message {
   public IllegalSourceParamError(String value, Set<String> allowed) {
     super(ERROR, createMessage(value, allowed));
