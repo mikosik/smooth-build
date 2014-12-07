@@ -32,7 +32,7 @@ public class TaskOutputsDb {
     this.objectsDb = objectsDb;
   }
 
-  public void write(HashCode taskHash, TaskOutput<? extends Value> taskOutput) {
+  public void write(HashCode taskHash, TaskOutput taskOutput) {
     Marshaller marshaller = new Marshaller();
 
     ImmutableList<Message> messages = taskOutput.messages();
@@ -55,7 +55,7 @@ public class TaskOutputsDb {
     return hashedDb.contains(taskHash);
   }
 
-  public <T extends Value> TaskOutput<T> read(HashCode taskHash, Type<T> type) {
+  public <T extends Value> TaskOutput read(HashCode taskHash, Type<T> type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash)) {
       int size = unmarshaller.readInt();
       List<Message> messages = newArrayList();
@@ -67,11 +67,11 @@ public class TaskOutputsDb {
       }
 
       if (Messages.containsProblems(messages)) {
-        return new TaskOutput<>(messages);
+        return new TaskOutput(messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
         T value = objectsDb.read(type, resultObjectHash);
-        return new TaskOutput<>(value, messages);
+        return new TaskOutput(value, messages);
       }
     }
   }

@@ -32,7 +32,7 @@ public class TaskHashesTest {
   public void hashes_of_tasks_with_same_worker_and_dependencies_are_equal() throws Exception {
     given(worker = new ConstantWorker<>(STRING, objectsDb.string("work"), CL));
     given(dep = mock(Task.class));
-    given(willReturn(new TaskOutput<>(objectsDb.string("abc"))), dep).output();
+    given(willReturn(new TaskOutput(objectsDb.string("abc"))), dep).output();
     given(task = new Task<>(worker, ImmutableList.<Task<?>> of(dep)));
     given(task2 = new Task<>(worker, ImmutableList.<Task<?>> of(dep)));
     when(task).hash();
@@ -44,9 +44,9 @@ public class TaskHashesTest {
       throws Exception {
     given(worker = new ConstantWorker<>(STRING, objectsDb.string("work"), CL));
     given(dep = mock(Task.class));
-    given(willReturn(new TaskOutput<>(objectsDb.string("abc"))), dep).output();
+    given(willReturn(new TaskOutput(objectsDb.string("abc"))), dep).output();
     given(dep2 = mock(Task.class));
-    given(willReturn(new TaskOutput<>(objectsDb.string("def"))), dep2).output();
+    given(willReturn(new TaskOutput(objectsDb.string("def"))), dep2).output();
     given(task = new Task<>(worker, ImmutableList.<Task<?>> of(dep)));
     given(task2 = new Task<>(worker, ImmutableList.<Task<?>> of(dep2)));
     when(task).hash();
@@ -59,7 +59,7 @@ public class TaskHashesTest {
     given(worker = new ConstantWorker<>(STRING, objectsDb.string("work"), CL));
     given(worker2 = new ConstantWorker<>(STRING, objectsDb.string("work2"), CL));
     given(dep = mock(Task.class));
-    given(willReturn(new TaskOutput<>(objectsDb.string("abc"))), dep).output();
+    given(willReturn(new TaskOutput(objectsDb.string("abc"))), dep).output();
     given(task = new Task<>(worker, ImmutableList.<Task<?>> of(dep)));
     given(task2 = new Task<>(worker2, ImmutableList.<Task<?>> of(dep)));
     when(task).hash();

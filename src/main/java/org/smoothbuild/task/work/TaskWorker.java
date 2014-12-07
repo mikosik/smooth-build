@@ -53,5 +53,5 @@ public abstract class TaskWorker<T extends Value> {
     return hash;
   }
 
-  public abstract TaskOutput<T> execute(TaskInput input, NativeApiImpl nativeApi);
+  public abstract TaskOutput execute(TaskInput input, NativeApiImpl nativeApi);
 }

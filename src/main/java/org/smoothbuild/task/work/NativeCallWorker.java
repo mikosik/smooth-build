@@ -48,7 +48,7 @@ public class NativeCallWorker<T extends Value> extends TaskWorker<T> {
   }
 
   @Override
-  public TaskOutput<T> execute(TaskInput input, NativeApiImpl nativeApi) {
+  public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
     T result = null;
     try {
       result = function.invoke(nativeApi, calculateArguments(input));
@@ -66,9 +66,9 @@ public class NativeCallWorker<T extends Value> extends TaskWorker<T> {
       }
     }
     if (result == null) {
-      return new TaskOutput<>(nativeApi.loggedMessages());
+      return new TaskOutput(nativeApi.loggedMessages());
     } else {
-      return new TaskOutput<>(result, nativeApi.loggedMessages());
+      return new TaskOutput(result, nativeApi.loggedMessages());
     }
   }
 

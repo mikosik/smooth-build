@@ -24,12 +24,12 @@ public class ArrayWorker<T extends Value> extends TaskWorker<Array<T>> {
   }
 
   @Override
-  public TaskOutput<Array<T>> execute(TaskInput input, NativeApiImpl nativeApi) {
+  public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
     ArrayBuilder<T> builder = nativeApi.arrayBuilder(arrayType);
     for (T value : (Iterable<T>) input.values()) {
       builder.add(value);
     }
     Array<T> result = builder.build();
-    return new TaskOutput<>(result);
+    return new TaskOutput(result);
   }
 }

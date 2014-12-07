@@ -77,8 +77,8 @@ public class NativeCallWorkerTest {
         ImmutableMap.<String, Value> of(name, argValue));
 
     TaskInput taskInput = TaskInput.fromValues(asList(argValue));
-    TaskOutput<?> actual = nativeCallTask.execute(taskInput, nativeApi);
-    assertEquals(new TaskOutput<>(sstring), actual);
+    TaskOutput actual = nativeCallTask.execute(taskInput, nativeApi);
+    assertEquals(new TaskOutput(sstring), actual);
   }
 
   @Test

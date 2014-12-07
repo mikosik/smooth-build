@@ -73,7 +73,7 @@ public class CachingTaskOutputTest {
         new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(stringArray("1", "1")));
+    thenEqual(task.output(), new TaskOutput(stringArray("1", "1")));
   }
 
   @Test
@@ -86,7 +86,7 @@ public class CachingTaskOutputTest {
         new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
+    thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
   }
 
   @Test
@@ -99,7 +99,7 @@ public class CachingTaskOutputTest {
         new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(stringArray("1", "2")));
+    thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
   }
 
   @Test
@@ -116,8 +116,8 @@ public class CachingTaskOutputTest {
     given(task2 = taskGraph2.createTasks(expression2));
     given(taskGraph).executeAll();
     when(taskGraph2).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(objectsDb.string("1")));
-    thenEqual(task2.output(), new TaskOutput<>(objectsDb.string("2")));
+    thenEqual(task.output(), new TaskOutput(objectsDb.string("1")));
+    thenEqual(task2.output(), new TaskOutput(objectsDb.string("2")));
   }
 
   private static class GrowingSmoothJarHashModule extends AbstractModule {
@@ -172,9 +172,9 @@ public class CachingTaskOutputTest {
     }
 
     @Override
-    public TaskOutput<SString> execute(TaskInput input, NativeApiImpl nativeApi) {
+    public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
       SString sstring = nativeApi.string(Integer.toString(counter.incrementAndGet()));
-      return new TaskOutput<>(sstring);
+      return new TaskOutput(sstring);
     }
   }
 }

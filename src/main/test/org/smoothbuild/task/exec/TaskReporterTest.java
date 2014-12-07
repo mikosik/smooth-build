@@ -34,7 +34,7 @@ public class TaskReporterTest {
   public void internal_task_with_message_is_printed() {
     given(task = createTask(true));
     given(messages = asList(new Message(WARNING, "message")));
-    given(task).setOutput(new TaskOutput<SString>(messages));
+    given(task).setOutput(new TaskOutput(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -50,7 +50,7 @@ public class TaskReporterTest {
   public void non_internal_task_with_message_is_printed() {
     given(messages = asList(new Message(WARNING, "message")));
     given(task = createTask(false));
-    given(task).setOutput(new TaskOutput<SString>(messages));
+    given(task).setOutput(new TaskOutput(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -59,7 +59,7 @@ public class TaskReporterTest {
   public void non_internal_task_without_message_is_printed() {
     given(task = createTask(false));
     given(messages = asList());
-    given(task).setOutput(new TaskOutput<SString>(messages));
+    given(task).setOutput(new TaskOutput(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -74,7 +74,7 @@ public class TaskReporterTest {
     }
 
     @Override
-    public TaskOutput<SString> execute(TaskInput input, NativeApiImpl nativeApi) {
+    public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
       return null;
     }
   }
