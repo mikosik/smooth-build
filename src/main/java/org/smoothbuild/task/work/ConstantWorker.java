@@ -24,7 +24,7 @@ public class ConstantWorker<T extends Value> extends TaskWorker<T> {
   }
 
   @Override
-  public TaskOutput<T> execute(TaskInput input, NativeApiImpl nativeApi) {
-    return new TaskOutput<>(value);
+  public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
+    return new TaskOutput(value);
   }
 }

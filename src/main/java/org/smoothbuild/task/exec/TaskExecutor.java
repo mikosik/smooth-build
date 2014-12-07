@@ -33,7 +33,7 @@ public class TaskExecutor {
     HashCode hash = taskHash(task);
     boolean isAlreadyCached = taskOutputsDb.contains(hash);
     if (isAlreadyCached) {
-      TaskOutput<T> output = taskOutputsDb.read(hash, task.resultType());
+      TaskOutput output = taskOutputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
       task.execute(nativeApi);

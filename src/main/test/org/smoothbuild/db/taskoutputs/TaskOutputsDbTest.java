@@ -65,7 +65,7 @@ public class TaskOutputsDbTest {
   @Test
   public void result_cache_contains_written_result() {
     given(taskOutputsDb).write(hash,
-        new TaskOutput<>(objectsDb.string("result"), Empty.messageList()));
+        new TaskOutput(objectsDb.string("result"), Empty.messageList()));
     when(taskOutputsDb.contains(hash));
     thenReturned(true);
   }
@@ -80,7 +80,7 @@ public class TaskOutputsDbTest {
   public void written_messages_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string("abc"));
     given(message = new Message(ERROR, "message string"));
-    given(taskOutputsDb).write(hash, new TaskOutput<>(stringValue, asList(message)));
+    given(taskOutputsDb).write(hash, new TaskOutput(stringValue, asList(message)));
     when(taskOutputsDb.read(hash, STRING).messages());
     thenReturned(contains(message));
   }
@@ -89,8 +89,8 @@ public class TaskOutputsDbTest {
   public void written_file_array_can_be_read_back() throws Exception {
     given(file = objectsDb.file(path, bytes));
     given(fileArray = objectsDb.arrayBuilder(FILE_ARRAY).add(file).build());
-    given(taskOutputsDb).write(hash, new TaskOutput<>(fileArray, Empty.messageList()));
-    when(taskOutputsDb.read(hash, FILE_ARRAY).returnValue().iterator().next());
+    given(taskOutputsDb).write(hash, new TaskOutput(fileArray, Empty.messageList()));
+    when(((Iterable<?>) taskOutputsDb.read(hash, FILE_ARRAY).returnValue()).iterator().next());
     thenReturned(file);
   }
 
@@ -98,8 +98,8 @@ public class TaskOutputsDbTest {
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
     given(blobArray = objectsDb.arrayBuilder(BLOB_ARRAY).add(blob).build());
-    given(taskOutputsDb).write(hash, new TaskOutput<>(blobArray, Empty.messageList()));
-    when(taskOutputsDb.read(hash, BLOB_ARRAY).returnValue().iterator().next());
+    given(taskOutputsDb).write(hash, new TaskOutput(blobArray, Empty.messageList()));
+    when(((Iterable<?>) taskOutputsDb.read(hash, BLOB_ARRAY).returnValue()).iterator().next());
     thenReturned(blob);
   }
 
@@ -107,15 +107,15 @@ public class TaskOutputsDbTest {
   public void written_string_array_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
     given(stringArray = objectsDb.arrayBuilder(STRING_ARRAY).add(stringValue).build());
-    given(taskOutputsDb).write(hash, new TaskOutput<>(stringArray, Empty.messageList()));
-    when(taskOutputsDb.read(hash, STRING_ARRAY).returnValue().iterator().next());
+    given(taskOutputsDb).write(hash, new TaskOutput(stringArray, Empty.messageList()));
+    when(((Iterable<?>) taskOutputsDb.read(hash, STRING_ARRAY).returnValue()).iterator().next());
     thenReturned(stringValue);
   }
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
     given(file = objectsDb.file(path, bytes));
-    given(taskOutputsDb).write(hash, new TaskOutput<>(file, Empty.messageList()));
+    given(taskOutputsDb).write(hash, new TaskOutput(file, Empty.messageList()));
     when(taskOutputsDb.read(hash, FILE).returnValue());
     thenReturned(file);
   }
@@ -123,7 +123,7 @@ public class TaskOutputsDbTest {
   @Test
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
-    given(taskOutputsDb).write(hash, new TaskOutput<>(blob, Empty.messageList()));
+    given(taskOutputsDb).write(hash, new TaskOutput(blob, Empty.messageList()));
     when(taskOutputsDb.read(hash, BLOB).returnValue());
     thenReturned(blob);
   }
@@ -131,8 +131,8 @@ public class TaskOutputsDbTest {
   @Test
   public void writtend_string_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
-    given(taskOutputsDb).write(hash, new TaskOutput<>(stringValue, Empty.messageList()));
-    when(taskOutputsDb.read(hash, STRING).returnValue().value());
+    given(taskOutputsDb).write(hash, new TaskOutput(stringValue, Empty.messageList()));
+    when(((SString) taskOutputsDb.read(hash, STRING).returnValue()).value());
     thenReturned(string);
   }
 

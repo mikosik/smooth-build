@@ -15,7 +15,7 @@ public class VirtualWorker<T extends Value> extends TaskWorker<T> {
   }
 
   @Override
-  public TaskOutput<T> execute(TaskInput input, NativeApiImpl nativeApi) {
-    return new TaskOutput<>((T) input.values().get(0));
+  public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
+    return new TaskOutput(input.values().get(0));
   }
 }

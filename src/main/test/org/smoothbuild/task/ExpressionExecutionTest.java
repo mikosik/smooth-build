@@ -68,7 +68,7 @@ public class ExpressionExecutionTest {
     given(stringExpression = new ConstantExpression<>(STRING, sstring, location));
     given(task = taskGraph.createTasks(stringExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(sstring));
+    thenEqual(task.output(), new TaskOutput(sstring));
   }
 
   @Test
@@ -85,7 +85,7 @@ public class ExpressionExecutionTest {
         new ArrayExpression<>(STRING_ARRAY, Arrays.<Expression<SString>> asList(), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(array()));
+    thenEqual(task.output(), new TaskOutput(array()));
   }
 
   @Test
@@ -95,7 +95,7 @@ public class ExpressionExecutionTest {
     given(arrayExpression = new ArrayExpression<>(STRING_ARRAY, asList(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(array(sstring)));
+    thenEqual(task.output(), new TaskOutput(array(sstring)));
   }
 
   @Test
@@ -107,7 +107,7 @@ public class ExpressionExecutionTest {
     given(callExpression = callExpression(function, false, location, Empty.stringExpressionMap()));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(sstring));
+    thenEqual(task.output(), new TaskOutput(sstring));
   }
 
   @Test
@@ -119,7 +119,7 @@ public class ExpressionExecutionTest {
         callExpression(function, false, location, ImmutableMap.of("param", stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput<>(sstring));
+    thenEqual(task.output(), new TaskOutput(sstring));
   }
 
   public static class SmoothModule {

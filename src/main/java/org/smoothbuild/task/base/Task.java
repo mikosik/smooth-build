@@ -16,7 +16,7 @@ import com.google.common.hash.Hasher;
 public class Task<T extends Value> {
   private final TaskWorker<T> worker;
   private final ImmutableList<Task<?>> dependencies;
-  private TaskOutput<T> output;
+  private TaskOutput output;
 
   public Task(TaskWorker<T> worker, ImmutableList<Task<?>> dependencies) {
     this.worker = worker;
@@ -56,12 +56,12 @@ public class Task<T extends Value> {
     output = worker.execute(input(), nativeApi);
   }
 
-  public TaskOutput<T> output() {
+  public TaskOutput output() {
     checkState(output != null);
     return output;
   }
 
-  public void setOutput(TaskOutput<T> output) {
+  public void setOutput(TaskOutput output) {
     this.output = output;
   }
 

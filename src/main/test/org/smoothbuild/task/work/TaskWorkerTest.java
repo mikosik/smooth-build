@@ -97,7 +97,7 @@ public class TaskWorkerTest {
     }
 
     @Override
-    public TaskOutput<T> execute(TaskInput input, NativeApiImpl nativeApi) {
+    public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
       return null;
     }
   }

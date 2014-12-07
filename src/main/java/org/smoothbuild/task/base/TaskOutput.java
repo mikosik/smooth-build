@@ -9,15 +9,15 @@ import org.smoothbuild.message.base.Message;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
-public class TaskOutput<T extends Value> {
-  private final T returnValue;
+public class TaskOutput {
+  private final Value returnValue;
   private final ImmutableList<Message> messages;
 
-  public TaskOutput(T returnValue) {
+  public TaskOutput(Value returnValue) {
     this(returnValue, ImmutableList.<Message> of());
   }
 
-  public TaskOutput(T returnValue, Iterable<? extends Message> messages) {
+  public TaskOutput(Value returnValue, Iterable<? extends Message> messages) {
     this.returnValue = checkNotNull(returnValue);
     this.messages = ImmutableList.copyOf(messages);
   }
@@ -31,7 +31,7 @@ public class TaskOutput<T extends Value> {
     return returnValue != null;
   }
 
-  public T returnValue() {
+  public Value returnValue() {
     checkState(hasReturnValue(), "TaskOutput does not contain any value.");
     return returnValue;
   }
@@ -45,7 +45,7 @@ public class TaskOutput<T extends Value> {
     if (!(object instanceof TaskOutput)) {
       return false;
     }
-    TaskOutput<?> that = (TaskOutput<?>) object;
+    TaskOutput that = (TaskOutput) object;
     return Objects.equal(this.returnValue, that.returnValue) && this.messages.equals(that.messages);
   }
 
