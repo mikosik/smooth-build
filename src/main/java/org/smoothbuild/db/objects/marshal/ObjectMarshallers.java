@@ -84,10 +84,6 @@ public class ObjectMarshallers {
   }
 
   public <T extends Value> ArrayMarshaller<T> arrayMarshaller(ArrayType<T> arrayType) {
-    /*
-     * Cast is safe as readersMap is immutable and constructed in proper way.
-     */
-    @SuppressWarnings("unchecked")
     ArrayMarshaller<T> reader = (ArrayMarshaller<T>) arrayMarshallersMap.get(arrayType);
     if (reader == null) {
       throw new Message(FATAL, "Unexpected value type: " + arrayType);
@@ -96,10 +92,6 @@ public class ObjectMarshallers {
   }
 
   public <T extends Value> ObjectMarshaller<T> marshaller(Type<T> type) {
-    /*
-     * Cast is safe as readersMap is immutable and constructed in proper way.
-     */
-    @SuppressWarnings("unchecked")
     ObjectMarshaller<T> reader = (ObjectMarshaller<T>) marshallersMap.get(type);
     if (reader == null) {
       throw new Message(FATAL, "Unexpected value type: " + type);

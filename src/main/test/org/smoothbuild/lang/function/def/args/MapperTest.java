@@ -623,7 +623,6 @@ public class MapperTest {
 
   private static Function<?> function(Iterable<Parameter> params) {
     Signature<SString> signature = new Signature<>(STRING, name("name"), params);
-    @SuppressWarnings("unchecked")
     Invoker<SString> invoker = mock(Invoker.class);
     return new NativeFunction<>(signature, invoker, true, Hash.integer(33));
   }

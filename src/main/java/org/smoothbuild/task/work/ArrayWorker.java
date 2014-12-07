@@ -25,10 +25,8 @@ public class ArrayWorker<T extends Value> extends TaskWorker<Array<T>> {
 
   @Override
   public TaskOutput<Array<T>> execute(TaskInput input, NativeApiImpl nativeApi) {
-    @SuppressWarnings("unchecked")
-    Iterable<T> castInput = (Iterable<T>) input.values();
     ArrayBuilder<T> builder = nativeApi.arrayBuilder(arrayType);
-    for (T value : castInput) {
+    for (T value : (Iterable<T>) input.values()) {
       builder.add(value);
     }
     Array<T> result = builder.build();

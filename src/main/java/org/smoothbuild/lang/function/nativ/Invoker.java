@@ -23,8 +23,6 @@ public class Invoker<T extends Value> {
     Object arguments = argumentsCreator.create(args);
     Object[] javaArguments = new Object[] { nativeApi, arguments };
 
-    @SuppressWarnings("unchecked")
-    T result = (T) method.invoke(null, javaArguments);
-    return result;
+    return (T) method.invoke(null, javaArguments);
   }
 }

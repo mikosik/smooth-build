@@ -16,8 +16,6 @@ public class VirtualWorker<T extends Value> extends TaskWorker<T> {
 
   @Override
   public TaskOutput<T> execute(TaskInput input, NativeApiImpl nativeApi) {
-    @SuppressWarnings("unchecked")
-    T output = (T) input.values().get(0);
-    return new TaskOutput<>(output);
+    return new TaskOutput<>((T) input.values().get(0));
   }
 }

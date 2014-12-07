@@ -38,7 +38,6 @@ public class FakeObjectsDb extends ObjectsDb {
     super(objectMarshallers, new ObjectBuilders(objectMarshallers));
   }
 
-  @SuppressWarnings("unchecked")
   public <T extends Value> Array<T> array(ArrayType<T> type, T... elements) {
     ArrayBuilder<T> arrayBuilder = arrayBuilder(type);
     for (T elem : elements) {

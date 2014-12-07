@@ -31,7 +31,6 @@ public class Cli {
     ArgumentParser argumentParser = parser.parser();
     try {
       Namespace namespace = argumentParser.parseArgs(args);
-      @SuppressWarnings("unchecked")
       Class<? extends Handler> handler = namespace.get(COMMAND_IMPLEMENTATION_DEST);
       return injector.getInstance(handler).run(namespace);
     } catch (ArgumentParserException e) {

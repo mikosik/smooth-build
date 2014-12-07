@@ -44,7 +44,6 @@ import com.google.common.hash.HashCode;
 
 public class NativeCallWorkerTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  @SuppressWarnings("unchecked")
   Invoker<SString> invoker = mock(Invoker.class);
   FakeNativeApi nativeApi = new FakeNativeApi();
   HashCode hash = HashCode.fromInt(33);

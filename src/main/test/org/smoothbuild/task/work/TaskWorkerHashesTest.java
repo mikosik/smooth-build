@@ -50,7 +50,6 @@ public class TaskWorkerHashesTest {
     thenReturned(not(worker2.hash()));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void native_call_workers_with_different_functions_have_different_hashes() throws Exception {
     given(function =
@@ -67,7 +66,6 @@ public class TaskWorkerHashesTest {
     return new Signature<>(STRING, name(name), Empty.paramList());
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void native_call_workers_with_same_functions_but_different_params_have_different_hashes()
       throws Exception {
@@ -78,7 +76,6 @@ public class TaskWorkerHashesTest {
     thenReturned(not(worker2.hash()));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void native_call_worker_and_constant_worker_have_different_hashes() throws Exception {
     given(function = new NativeFunction<>(signature("fA"), mock(Invoker.class), false, hash));
@@ -88,7 +85,6 @@ public class TaskWorkerHashesTest {
     thenReturned(not(worker2.hash()));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void native_call_worker_and_array_worker_have_different_hashes() throws Exception {
     given(function = new NativeFunction<>(signature("fA"), mock(Invoker.class), false, hash));

@@ -22,7 +22,6 @@ import com.google.common.collect.Multimap;
 public class SandboxedJavaFileManagerTest {
   private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
   private final ValueFactory valueFactory = new FakeObjectsDb();
-  @SuppressWarnings("unchecked")
   private final Multimap<String, JavaFileObject> packagedJavaFileObjects = mock(Multimap.class);
 
   private SandboxedJavaFileManager manager;
