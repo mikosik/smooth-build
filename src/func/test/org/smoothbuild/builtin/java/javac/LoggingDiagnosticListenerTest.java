@@ -19,7 +19,6 @@ import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.message.base.Message;
 
 public class LoggingDiagnosticListenerTest {
-  @SuppressWarnings("unchecked")
   private final Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
   private final NativeApi nativeApi = mock(NativeApi.class);
   private LoggingDiagnosticListener listener;

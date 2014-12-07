@@ -60,13 +60,7 @@ public class NativeFunctionFactory {
   private static <T extends Value> NativeFunction<T> createNativeFunction(HashCode jarHash,
       Method method, Signature<T> signature, Class<?> paramsInterface)
       throws NativeImplementationException {
-
-    /*
-     * Cast is safe as T is return type of 'method'.
-     */
-    @SuppressWarnings("unchecked")
     Invoker<T> invoker = (Invoker<T>) createInvoker(method, paramsInterface);
-
     return new NativeFunction<>(signature, invoker, isCacheable(method), functionHash(jarHash,
         signature));
   }

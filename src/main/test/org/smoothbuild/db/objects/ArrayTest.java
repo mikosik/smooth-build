@@ -98,7 +98,6 @@ public class ArrayTest {
     thenThrown(NullPointerException.class);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
     given(rawArrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));

@@ -20,8 +20,6 @@ public class Build implements Handler {
 
   @Override
   public boolean run(Namespace namespace) {
-    @SuppressWarnings("unchecked")
-    List<String> functions = namespace.get(FUNCTIONS_ARG);
-    return worker.run(functions);
+    return worker.run((List<String>) namespace.get(FUNCTIONS_ARG));
   }
 }

@@ -27,7 +27,6 @@ public class PredicatesTest {
     thenReturned(true);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void not_predicate_returns_false_when_wrapped_predicate_returns_true() throws Exception {
     given(predicate = mock(Predicate.class));
@@ -37,7 +36,6 @@ public class PredicatesTest {
     thenReturned(false);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void not_predicate_returns_true_when_wrapped_predicate_returns_false() throws Exception {
     given(predicate = mock(Predicate.class));
@@ -47,7 +45,6 @@ public class PredicatesTest {
     thenReturned(true);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void and_predicate_returns_true_when_both_wrapped_predicates_return_true()
       throws Exception {
@@ -60,7 +57,6 @@ public class PredicatesTest {
     thenReturned(true);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void and_predicate_returns_false_when_only_first_wrapped_predicate_returns_true()
       throws Exception {
@@ -73,7 +69,6 @@ public class PredicatesTest {
     thenReturned(false);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void and_predicate_returns_false_when_only_second_wrapped_predicate_returns_true()
       throws Exception {
@@ -86,7 +81,6 @@ public class PredicatesTest {
     thenReturned(false);
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void and_predicate_returns_false_when_no_wrapped_predicate_returns_true() throws Exception {
     given(predicate = mock(Predicate.class));

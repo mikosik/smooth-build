@@ -19,7 +19,6 @@ public class Utils {
     return !iterable.iterator().hasNext();
   }
 
-  @SuppressWarnings("unchecked")
   public static <T> Set<T> immutableSet(T... elements) {
     Set<T> set = new HashSet<>(elements.length);
     Collections.addAll(set, elements);

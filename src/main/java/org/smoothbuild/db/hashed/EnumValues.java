@@ -10,7 +10,6 @@ public class EnumValues<T> {
   private final ImmutableList<T> values;
   private final ImmutableMap<T, Byte> map;
 
-  @SuppressWarnings("unchecked")
   public EnumValues(T... values) {
     this.values = ImmutableList.copyOf(values);
     this.map = createMap(values);

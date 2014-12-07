@@ -37,13 +37,10 @@ public class Types {
   private static final ImmutableSet<ArrayType<?>> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY,
       BLOB_ARRAY, FILE_ARRAY, NIL);
 
-  @SuppressWarnings("unchecked")
   private static final ImmutableSet<Type<?>> RESULT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
-  @SuppressWarnings("unchecked")
   private static final ImmutableSet<Type<?>> PARAMETER_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
-  @SuppressWarnings("unchecked")
   private static final ImmutableSet<Type<?>> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
 
@@ -99,13 +96,7 @@ public class Types {
   }
 
   public static <T extends Value> ArrayType<T> arrayTypeContaining(Type<T> elemType) {
-    /*
-     * Cast is safe as ELEM_TYPE_TO_ARRAY_TYPE is immutable and it is
-     * initialized with proper mappings.
-     */
-    @SuppressWarnings("unchecked")
-    ArrayType<T> result = (ArrayType<T>) ELEM_TYPE_TO_ARRAY_TYPE.get(elemType);
-    return result;
+    return (ArrayType<T>) ELEM_TYPE_TO_ARRAY_TYPE.get(elemType);
   }
 
   private static ImmutableSet<TypeLiteral<?>> toJTypes(Iterable<Type<?>> types) {

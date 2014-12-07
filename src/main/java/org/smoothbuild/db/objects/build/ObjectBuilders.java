@@ -31,24 +31,19 @@ public class ObjectBuilders {
      * Each cast is safe as it is preceded by checking arrayType.
      */
     if (arrayType == FILE_ARRAY) {
-      return cast(createArrayBuilder(FILE_ARRAY));
+      return (ArrayBuilder<T>) createArrayBuilder(FILE_ARRAY);
     }
     if (arrayType == BLOB_ARRAY) {
-      return cast(createArrayBuilder(BLOB_ARRAY));
+      return (ArrayBuilder<T>) createArrayBuilder(BLOB_ARRAY);
     }
     if (arrayType == STRING_ARRAY) {
-      return cast(createArrayBuilder(STRING_ARRAY));
+      return (ArrayBuilder<T>) createArrayBuilder(STRING_ARRAY);
     }
     if (arrayType == NIL) {
-      return cast(new NilBuilder(objectMarshallers.arrayMarshaller(NIL)));
+      return (ArrayBuilder<T>) new NilBuilder(objectMarshallers.arrayMarshaller(NIL));
     }
 
     throw new IllegalArgumentException("Cannot create ArrayWriter for array type = " + arrayType);
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <T extends Value> ArrayBuilder<T> cast(ArrayBuilder<?> arrayWriter) {
-    return (ArrayBuilder<T>) arrayWriter;
   }
 
   private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType<T> arrayType) {

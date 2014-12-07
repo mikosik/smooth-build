@@ -25,21 +25,10 @@ public class ImplicitConverter {
   public <T extends Value> Expression<T> apply(Type<T> destinationType, Expression<?> source) {
     Type<?> sourceType = source.type();
     if (sourceType == destinationType) {
-      /*
-       * Cast is safe as 'if' above checked that source has proper type.
-       */
-      @SuppressWarnings("unchecked")
-      Expression<T> expression = (Expression<T>) source;
-      return expression;
+      return (Expression<T>) source;
     }
 
     Name functionName = convertFunctionName(sourceType, destinationType);
-
-    /*
-     * Cast is safe as we assume that Types.convertFunctionName() returns name
-     * of correct function.
-     */
-    @SuppressWarnings("unchecked")
     Function<T> function = (Function<T>) builtinModule.getFunction(functionName);
 
     String paramName = function.parameters().get(0).name();

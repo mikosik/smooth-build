@@ -44,11 +44,6 @@ public class ArtifactSaver {
   }
 
   public <T extends Value> void save(Name name, T value) {
-    /*
-     * Cast is safe as saversMap is constructed in proper way and it is
-     * immutable.
-     */
-    @SuppressWarnings("unchecked")
     Saver<T> saver = (Saver<T>) saversMap.get(value.type());
     if (saver != null) {
       saver.save(name, value);

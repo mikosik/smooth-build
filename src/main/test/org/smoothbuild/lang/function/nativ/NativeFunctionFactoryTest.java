@@ -59,7 +59,6 @@ public class NativeFunctionFactoryTest {
     thenReturned(new Matcher() {
       @Override
       public boolean matches(Object object) {
-        @SuppressWarnings("unchecked")
         List<NativeFunction<?>> functions = (List<NativeFunction<?>>) object;
         List<String> names = Lists.newArrayList();
         for (NativeFunction<?> function : functions) {
@@ -236,7 +235,6 @@ public class NativeFunctionFactoryTest {
     }
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void testInvokation() throws Exception {
     given(stringFunction =
