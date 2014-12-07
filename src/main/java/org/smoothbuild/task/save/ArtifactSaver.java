@@ -7,7 +7,6 @@ import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.base.Types.NIL;
 import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import javax.inject.Inject;
 
@@ -19,7 +18,6 @@ import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.SmoothExecutorMessages;
 
 import com.google.common.collect.ImmutableMap;
@@ -45,10 +43,6 @@ public class ArtifactSaver {
 
   public <T extends Value> void save(Name name, T value) {
     Saver<T> saver = (Saver<T>) saversMap.get(value.type());
-    if (saver != null) {
-      saver.save(name, value);
-    } else {
-      throw new Message(FATAL, "Unknown value type: " + value.getClass().getName());
-    }
+    saver.save(name, value);
   }
 }
