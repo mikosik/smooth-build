@@ -1,9 +1,6 @@
 package org.smoothbuild.db.objects.build;
 
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.base.Types.NIL;
-import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 
 import javax.inject.Inject;
 
@@ -27,23 +24,11 @@ public class ObjectBuilders {
   }
 
   public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
-    /*
-     * Each cast is safe as it is preceded by checking arrayType.
-     */
-    if (arrayType == FILE_ARRAY) {
-      return (ArrayBuilder<T>) createArrayBuilder(FILE_ARRAY);
-    }
-    if (arrayType == BLOB_ARRAY) {
-      return (ArrayBuilder<T>) createArrayBuilder(BLOB_ARRAY);
-    }
-    if (arrayType == STRING_ARRAY) {
-      return (ArrayBuilder<T>) createArrayBuilder(STRING_ARRAY);
-    }
     if (arrayType == NIL) {
       return (ArrayBuilder<T>) new NilBuilder(objectMarshallers.arrayMarshaller(NIL));
+    } else {
+      return createArrayBuilder(arrayType);
     }
-
-    throw new IllegalArgumentException("Cannot create ArrayWriter for array type = " + arrayType);
   }
 
   private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType<T> arrayType) {
