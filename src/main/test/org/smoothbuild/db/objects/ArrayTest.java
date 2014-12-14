@@ -17,11 +17,13 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.hash.HashCode;
 import com.google.inject.Guice;
@@ -29,6 +31,7 @@ import com.google.inject.Injector;
 
 public class ArrayTest {
   private ObjectsDb objectsDb;
+  private Blob blob;
   private SString sstring;
   private SString sstring2;
   private SString sstring3;
@@ -101,7 +104,8 @@ public class ArrayTest {
   @Test
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
     given(rawArrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
-    when(rawArrayBuilder).add(new MyNothing());
+    given(blob = new FakeObjectsDb().blob("content"));
+    when(rawArrayBuilder).add(blob);
     thenThrown(IllegalArgumentException.class);
   }
 
