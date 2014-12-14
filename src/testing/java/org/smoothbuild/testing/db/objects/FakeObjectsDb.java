@@ -12,7 +12,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SFile;
@@ -38,8 +37,8 @@ public class FakeObjectsDb extends ObjectsDb {
     super(objectMarshallers, new ObjectBuilders(objectMarshallers));
   }
 
-  public <T extends Value> Array<T> array(ArrayType<T> type, T... elements) {
-    ArrayBuilder<T> arrayBuilder = arrayBuilder(type);
+  public <T extends Value> Array<T> array(Class<T> elementType, T... elements) {
+    ArrayBuilder<T> arrayBuilder = arrayBuilder(elementType);
     for (T elem : elements) {
       arrayBuilder.add(elem);
     }

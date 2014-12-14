@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.io.IOException;
@@ -93,7 +92,7 @@ public class JavacFunction {
          */
         if (Iterables.isEmpty(inputSourceFiles)) {
           nativeApi.log(new NoJavaSourceFilesFoundWarning());
-          return nativeApi.arrayBuilder(FILE_ARRAY).build();
+          return nativeApi.arrayBuilder(SFile.class).build();
         }
 
         // run compilation task

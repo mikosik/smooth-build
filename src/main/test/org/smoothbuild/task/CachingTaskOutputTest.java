@@ -138,7 +138,7 @@ public class CachingTaskOutputTest {
   }
 
   private Array<SString> stringArray(String... strings) {
-    ArrayBuilder<SString> builder = objectsDb.arrayBuilder(STRING_ARRAY);
+    ArrayBuilder<SString> builder = objectsDb.arrayBuilder(SString.class);
     for (String string : strings) {
       builder.add(objectsDb.string(string));
     }

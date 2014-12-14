@@ -19,6 +19,7 @@ import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.Nothing;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Types;
@@ -49,61 +50,61 @@ public class ArrayTest {
 
   @Test
   public void type_of_string_array_is_string_array() throws Exception {
-    given(array = objectsDb.arrayBuilder(STRING_ARRAY).build());
+    given(array = objectsDb.arrayBuilder(SString.class).build());
     when(array.type());
     thenReturned(STRING_ARRAY);
   }
 
   @Test
   public void type_of_blob_array_is_blob_array() throws Exception {
-    given(array = objectsDb.arrayBuilder(BLOB_ARRAY).build());
+    given(array = objectsDb.arrayBuilder(Blob.class).build());
     when(array.type());
     thenReturned(BLOB_ARRAY);
   }
 
   @Test
   public void type_of_file_array_is_file_array() throws Exception {
-    given(array = objectsDb.arrayBuilder(FILE_ARRAY).build());
+    given(array = objectsDb.arrayBuilder(SFile.class).build());
     when(array.type());
     thenReturned(FILE_ARRAY);
   }
 
   @Test
   public void type_of_nil_is_nil() throws Exception {
-    given(array = objectsDb.arrayBuilder(NIL).build());
+    given(array = objectsDb.arrayBuilder(Nothing.class).build());
     when(array.type());
     thenReturned(NIL);
   }
 
   @Test
   public void adding_elements_to_nil_is_forbidden() throws Exception {
-    given(nilBuilder = objectsDb.arrayBuilder(NIL));
+    given(nilBuilder = objectsDb.arrayBuilder(Nothing.class));
     when(nilBuilder).add(new MyNothing());
     thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
   public void empty_array_is_empty() throws Exception {
-    when(objectsDb.arrayBuilder(STRING_ARRAY).build());
+    when(objectsDb.arrayBuilder(SString.class).build());
     thenReturned(emptyIterable());
   }
 
   @Test
   public void nil_array_is_empty() throws Exception {
-    when(objectsDb.arrayBuilder(NIL).build());
+    when(objectsDb.arrayBuilder(Nothing.class).build());
     thenReturned(emptyIterable());
   }
 
   @Test
   public void adding_null_is_forbidden() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     when(arrayBuilder).add(sstring);
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
-    given(rawArrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(rawArrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(blob = new FakeObjectsDb().blob("content"));
     when(rawArrayBuilder).add(blob);
     thenThrown(IllegalArgumentException.class);
@@ -111,7 +112,7 @@ public class ArrayTest {
 
   @Test
   public void array_contains_added_element() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(arrayBuilder).add(sstring);
     when(arrayBuilder).build();
@@ -120,7 +121,7 @@ public class ArrayTest {
 
   @Test
   public void array_contains_added_elements_in_correct_order() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
     given(sstring3 = objectsDb.string("ghi"));
@@ -133,7 +134,7 @@ public class ArrayTest {
 
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring);
@@ -143,16 +144,16 @@ public class ArrayTest {
 
   @Test
   public void arrays_with_same_elements_have_same_hash() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
-    when(objectsDb.arrayBuilder(STRING_ARRAY).add(sstring).add(sstring2).build().hash());
-    thenReturned(objectsDb.arrayBuilder(STRING_ARRAY).add(sstring).add(sstring2).build().hash());
+    when(objectsDb.arrayBuilder(SString.class).add(sstring).add(sstring2).build().hash());
+    thenReturned(objectsDb.arrayBuilder(SString.class).add(sstring).add(sstring2).build().hash());
   }
 
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(arrayBuilder).add(sstring);
     given(array = arrayBuilder.build());
@@ -163,25 +164,27 @@ public class ArrayTest {
   @Test
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes()
       throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
-    when(objectsDb.arrayBuilder(STRING_ARRAY).add(sstring).add(sstring2).build().hash());
-    thenReturned(not(objectsDb.arrayBuilder(STRING_ARRAY).add(sstring2).add(sstring).build().hash()));
+    when(objectsDb.arrayBuilder(SString.class).add(sstring).add(sstring2).build().hash());
+    thenReturned(not(objectsDb.arrayBuilder(SString.class).add(sstring2).add(sstring).build()
+        .hash()));
   }
 
   @Test
   public void array_with_one_more_element_have_different_hash() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
-    when(objectsDb.arrayBuilder(STRING_ARRAY).add(sstring).build().hash());
-    thenReturned(not(objectsDb.arrayBuilder(STRING_ARRAY).add(sstring2).add(sstring).build().hash()));
+    when(objectsDb.arrayBuilder(SString.class).add(sstring).build().hash());
+    thenReturned(not(objectsDb.arrayBuilder(SString.class).add(sstring2).add(sstring).build()
+        .hash()));
   }
 
   @Test
   public void array_can_be_read_back() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(arrayBuilder).add(objectsDb.string("abc"));
     given(arrayBuilder).add(objectsDb.string("def"));
     given(array = arrayBuilder.build());
@@ -191,7 +194,7 @@ public class ArrayTest {
 
   @Test
   public void array_read_back_contains_same_elements() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
     given(arrayBuilder).add(sstring);
@@ -203,7 +206,7 @@ public class ArrayTest {
 
   @Test
   public void array_read_back_has_same_hash() throws Exception {
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(sstring = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
     given(arrayBuilder).add(sstring);
@@ -217,7 +220,7 @@ public class ArrayTest {
   public void to_string_contains_all_elements_in_square_brackets() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
-    given(arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY));
+    given(arrayBuilder = objectsDb.arrayBuilder(SString.class));
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
@@ -227,7 +230,7 @@ public class ArrayTest {
 
   @Test
   public void nil_to_string_contains_square_brackets() throws Exception {
-    when(objectsDb.arrayBuilder(NIL).build().toString());
+    when(objectsDb.arrayBuilder(Nothing.class).build().toString());
     thenReturned("[]");
   }
 

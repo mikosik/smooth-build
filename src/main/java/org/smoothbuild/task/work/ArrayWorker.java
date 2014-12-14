@@ -25,7 +25,8 @@ public class ArrayWorker<T extends Value> extends TaskWorker<Array<T>> {
 
   @Override
   public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
-    ArrayBuilder<T> builder = nativeApi.arrayBuilder(arrayType);
+    Class<T> elementClass = (Class<T>) arrayType.elemType().jType().getRawType();
+    ArrayBuilder<T> builder = nativeApi.arrayBuilder(elementClass);
     for (T value : (Iterable<T>) input.values()) {
       builder.add(value);
     }

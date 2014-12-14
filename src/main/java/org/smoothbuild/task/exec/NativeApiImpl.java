@@ -8,7 +8,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.NativeApi;
@@ -39,8 +38,8 @@ public class NativeApiImpl implements NativeApi {
   }
 
   @Override
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
-    return valueFactory.arrayBuilder(arrayType);
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementType) {
+    return valueFactory.arrayBuilder(elementType);
   }
 
   @Override

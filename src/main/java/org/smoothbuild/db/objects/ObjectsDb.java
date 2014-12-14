@@ -6,7 +6,6 @@ import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.BlobBuilder;
 import org.smoothbuild.lang.base.SFile;
@@ -28,8 +27,8 @@ public class ObjectsDb implements ValueFactory {
   }
 
   @Override
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
-    return objectBuilders.arrayBuilder(arrayType);
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementType) {
+    return objectBuilders.arrayBuilder(elementType);
   }
 
   @Override

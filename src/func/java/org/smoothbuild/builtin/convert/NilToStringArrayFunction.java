@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.convert;
 
-import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
-
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Nothing;
@@ -17,6 +15,6 @@ public class NilToStringArrayFunction {
 
   @SmoothFunction
   public static Array<SString> nilToStringArray(NativeApi nativeApi, Parameters params) {
-    return nativeApi.arrayBuilder(STRING_ARRAY).build();
+    return nativeApi.arrayBuilder(SString.class).build();
   }
 }

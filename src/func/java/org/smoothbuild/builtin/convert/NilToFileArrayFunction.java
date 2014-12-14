@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.convert;
 
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Nothing;
@@ -18,6 +16,6 @@ public class NilToFileArrayFunction {
 
   @SmoothFunction
   public static Array<SFile> nilToFileArray(NativeApi nativeApi, Parameters params) {
-    return nativeApi.arrayBuilder(FILE_ARRAY).build();
+    return nativeApi.arrayBuilder(SFile.class).build();
   }
 }

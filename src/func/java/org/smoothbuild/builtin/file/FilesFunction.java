@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
@@ -55,7 +54,7 @@ public class FilesFunction {
   }
 
   private static Array<SFile> readFiles(NativeApiImpl nativeApi, FileSystem fileSystem, Path path) {
-    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(SFile.class);
     FileReader reader = new FileReader(nativeApi);
     for (Path filePath : fileSystem.filesFromRecursive(path)) {
       fileArrayBuilder.add(reader.createFile(filePath, path.append(filePath)));
