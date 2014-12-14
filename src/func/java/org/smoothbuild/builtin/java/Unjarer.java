@@ -5,7 +5,6 @@ import static com.google.common.base.Predicates.not;
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -46,7 +45,7 @@ public class Unjarer {
 
   public Array<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> fileArrayBuilder = valueFactory.arrayBuilder(SFile.class);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream())) {

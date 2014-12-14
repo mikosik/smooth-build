@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.blob;
 
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Blob;
@@ -21,7 +19,7 @@ public class ConcatenateBlobsFunction {
 
   @SmoothFunction
   public static Array<Blob> concatenateBlobs(NativeApi nativeApi, ConcatenateBlobsParameters params) {
-    ArrayBuilder<Blob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
+    ArrayBuilder<Blob> builder = nativeApi.arrayBuilder(Blob.class);
 
     for (Blob blob : params.blobs()) {
       builder.add(blob);

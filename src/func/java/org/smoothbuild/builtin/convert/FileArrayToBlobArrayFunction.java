@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.convert;
 
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Blob;
@@ -18,7 +16,7 @@ public class FileArrayToBlobArrayFunction {
 
   @SmoothFunction
   public static Array<Blob> fileArrayToBlobArray(NativeApi nativeApi, Parameters params) {
-    ArrayBuilder<Blob> builder = nativeApi.arrayBuilder(BLOB_ARRAY);
+    ArrayBuilder<Blob> builder = nativeApi.arrayBuilder(Blob.class);
     for (SFile file : params.input()) {
       builder.add(file.content());
     }

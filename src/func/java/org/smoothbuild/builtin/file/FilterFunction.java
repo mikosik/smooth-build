@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
@@ -29,7 +28,7 @@ public class FilterFunction {
   @SmoothFunction
   public static Array<SFile> filter(NativeApi nativeApi, FilterParameters params) {
     Predicate<Path> filter = createFilter(params.include().value());
-    ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(SFile.class);
 
     for (SFile file : params.files()) {
       if (filter.apply(file.path())) {

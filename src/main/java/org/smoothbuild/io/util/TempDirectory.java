@@ -1,7 +1,6 @@
 package org.smoothbuild.io.util;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,7 +106,7 @@ public class TempDirectory {
   }
 
   private Array<SFile> readFilesImpl() throws IOException {
-    ArrayBuilder<SFile> arrayBuilder = valueFactory.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> arrayBuilder = valueFactory.arrayBuilder(SFile.class);
     for (Path path : fileSystem.filesFromRecursive(Path.rootPath())) {
       Blob content = readContentImpl(path);
       SFile file = valueFactory.file(path, content);

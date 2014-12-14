@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.NativeApi;
@@ -20,7 +18,7 @@ public class ConcatenateFilesFunction {
 
   @SmoothFunction
   public static Array<SFile> concatenateFiles(NativeApi nativeApi, ConcatenateFilesParameters params) {
-    ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(FILE_ARRAY);
+    ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(SFile.class);
 
     for (SFile file : params.files()) {
       builder.add(file);

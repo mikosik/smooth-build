@@ -1,6 +1,8 @@
 package org.smoothbuild.db.objects.build;
 
 import static org.smoothbuild.lang.base.Types.NIL;
+import static org.smoothbuild.lang.base.Types.arrayTypeContaining;
+import static org.smoothbuild.lang.base.Types.resultJTypeToType;
 
 import javax.inject.Inject;
 
@@ -8,8 +10,15 @@ import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.ArrayType;
+import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.BlobBuilder;
+import org.smoothbuild.lang.base.Nothing;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
+
+import com.google.inject.TypeLiteral;
 
 public class ObjectBuilders {
   private final ObjectMarshallers objectMarshallers;
@@ -23,16 +32,22 @@ public class ObjectBuilders {
     return new BlobBuilderImpl(objectMarshallers.blobMarshaller());
   }
 
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(ArrayType<T> arrayType) {
-    if (arrayType == NIL) {
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementClass) {
+    if (!(elementClass == Nothing.class || elementClass == SString.class
+        || elementClass == Blob.class || elementClass == SFile.class)) {
+      throw new IllegalArgumentException("Illegal type " + elementClass.getCanonicalName());
+    }
+    if (elementClass == Nothing.class) {
       return (ArrayBuilder<T>) new NilBuilder(objectMarshallers.arrayMarshaller(NIL));
     } else {
-      return createArrayBuilder(arrayType);
+      Type<T> type = (Type<T>) resultJTypeToType(TypeLiteral.get(elementClass));
+      return createArrayBuilder(arrayTypeContaining(type), elementClass);
     }
   }
 
-  private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType<T> arrayType) {
-    ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(arrayType);
-    return new ArrayBuilderImpl<>(arrayType, marshaller);
+  private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType<T> type,
+      Class<?> elementClass) {
+    ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(type);
+    return new ArrayBuilderImpl<>(marshaller, elementClass);
   }
 }

@@ -157,7 +157,7 @@ public class ExpressionExecutionTest {
   }
 
   private Array<SString> array(SString... sstrings) {
-    ArrayBuilder<SString> arrayBuilder = objectsDb.arrayBuilder(STRING_ARRAY);
+    ArrayBuilder<SString> arrayBuilder = objectsDb.arrayBuilder(SString.class);
     for (SString sstring : sstrings) {
       arrayBuilder.add(sstring);
     }

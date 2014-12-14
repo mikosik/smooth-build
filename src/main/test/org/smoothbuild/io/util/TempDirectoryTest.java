@@ -2,7 +2,6 @@ package org.smoothbuild.io.util;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
@@ -85,14 +84,14 @@ public class TempDirectoryTest {
 
   @Test
   public void files_are_written_to_file_system() throws Exception {
-    given(array = objectsDb.array(FILE_ARRAY, objectsDb.file(path, content)));
+    given(array = objectsDb.array(SFile.class, objectsDb.file(path, content)));
     when(tempDirectory).writeFiles(array);
     then(inputStreamToString(fileSystem.openInputStream(path)).equals(content));
   }
 
   @Test
   public void writing_files_after_destroy_throws_exception() throws Exception {
-    given(array = objectsDb.array(FILE_ARRAY, objectsDb.file(path, content)));
+    given(array = objectsDb.array(SFile.class, objectsDb.file(path, content)));
     given(tempDirectory).destroy();
     when(tempDirectory).writeFiles(array);
     thenThrown(IllegalStateException.class);

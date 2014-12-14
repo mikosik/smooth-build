@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -25,7 +24,7 @@ public class OutputClassFileTest {
 
   @Test
   public void openOutputStream() throws IOException {
-    given(fileArrayBuilder = objectsDb.arrayBuilder(FILE_ARRAY));
+    given(fileArrayBuilder = objectsDb.arrayBuilder(SFile.class));
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, objectsDb));
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
     when(fileArrayBuilder).build();
@@ -35,7 +34,7 @@ public class OutputClassFileTest {
   @Test
   public void get_name_returns_file_path() throws Exception {
     given(outputClassFile =
-        new OutputClassFile(objectsDb.arrayBuilder(FILE_ARRAY), path, objectsDb));
+        new OutputClassFile(objectsDb.arrayBuilder(SFile.class), path, objectsDb));
     when(outputClassFile.getName());
     thenReturned("/" + path.value());
   }

@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.convert;
 
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.NativeApi;
@@ -18,6 +16,6 @@ public class NilToBlobArrayFunction {
 
   @SmoothFunction
   public static Array<Blob> nilToBlobArray(NativeApi nativeApi, Parameters params) {
-    return nativeApi.arrayBuilder(BLOB_ARRAY).build();
+    return nativeApi.arrayBuilder(Blob.class).build();
   }
 }
