@@ -44,14 +44,13 @@ import com.google.common.hash.HashCode;
 
 public class NativeCallWorkerTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  Invoker<SString> invoker = mock(Invoker.class);
+  Invoker invoker = mock(Invoker.class);
   FakeNativeApi nativeApi = new FakeNativeApi();
   HashCode hash = HashCode.fromInt(33);
 
-  private final Signature<SString> signature = new Signature<>(STRING, name("name"), Empty
-      .paramList());
-  NativeFunction<?> function1 = new NativeFunction<>(signature, invoker, true, Hash.integer(33));
-  NativeFunction<?> function2 = new NativeFunction<>(signature, invoker, true, Hash.integer(33));
+  private final Signature signature = new Signature(STRING, name("name"), Empty.paramList());
+  NativeFunction function1 = new NativeFunction(signature, invoker, true, Hash.integer(33));
+  NativeFunction function2 = new NativeFunction(signature, invoker, true, Hash.integer(33));
 
   String name1 = "name1";
   String name2 = "name2";
@@ -61,16 +60,16 @@ public class NativeCallWorkerTest {
   List<Parameter> parameters = asList(optionalParameter(STRING, name1), optionalParameter(STRING,
       name2));
 
-  NativeCallWorker<?> nativeCallWorker = new NativeCallWorker<>(function1,
-      Arrays.<String> asList(), false, codeLocation(1));
+  NativeCallWorker nativeCallWorker = new NativeCallWorker(function1, Arrays.<String> asList(),
+      false, codeLocation(1));
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
     SString argValue = objectsDb.string("subTaskOutput");
 
     String name = "param";
-    NativeCallWorker<?> nativeCallTask =
-        new NativeCallWorker<>(function1, asList(name), false, codeLocation(1));
+    NativeCallWorker nativeCallTask =
+        new NativeCallWorker(function1, asList(name), false, codeLocation(1));
 
     SString sstring = objectsDb.string("result");
     given(willReturn(sstring), invoker).invoke(nativeApi,
@@ -91,10 +90,10 @@ public class NativeCallWorkerTest {
   @Test
   public void null_can_be_returned_when_function_logged_errors() throws Exception {
     List<Parameter> parameters = asList();
-    Signature<SString> signature = new Signature<>(STRING, name("name"), parameters);
-    function1 = new NativeFunction<>(signature, invoker, true, Hash.integer(33));
+    Signature signature = new Signature(STRING, name("name"), parameters);
+    function1 = new NativeFunction(signature, invoker, true, Hash.integer(33));
     nativeCallWorker =
-        new NativeCallWorker<>(function1, Arrays.<String> asList(), false, codeLocation(1));
+        new NativeCallWorker(function1, Arrays.<String> asList(), false, codeLocation(1));
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {

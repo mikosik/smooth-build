@@ -3,19 +3,18 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class AbstractFunction<T extends Value> implements Function<T> {
-  private final Signature<T> signature;
+public abstract class AbstractFunction implements Function {
+  private final Signature signature;
 
-  public AbstractFunction(Signature<T> signature) {
+  public AbstractFunction(Signature signature) {
     this.signature = checkNotNull(signature);
   }
 
   @Override
-  public Type<T> type() {
+  public Type type() {
     return signature.type();
   }
 

@@ -9,7 +9,7 @@ import java.util.Map;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Value;
 
-public class Invoker<T extends Value> {
+public class Invoker {
   private final Method method;
   private final ArgumentsCreator argumentsCreator;
 
@@ -18,11 +18,11 @@ public class Invoker<T extends Value> {
     this.argumentsCreator = checkNotNull(argumentsCreator);
   }
 
-  public T invoke(NativeApi nativeApi, Map<String, Value> args) throws IllegalAccessException,
-      InvocationTargetException {
+  public Value invoke(NativeApi nativeApi, Map<String, Value> args) throws IllegalAccessException,
+  InvocationTargetException {
     Object arguments = argumentsCreator.create(args);
     Object[] javaArguments = new Object[] { nativeApi, arguments };
 
-    return (T) method.invoke(null, javaArguments);
+    return (Value) method.invoke(null, javaArguments);
   }
 }

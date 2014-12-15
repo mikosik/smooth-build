@@ -9,16 +9,16 @@ import org.smoothbuild.task.work.ConstantWorker;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
-public class ConstantExpression<T extends Value> extends Expression<T> {
-  private final T value;
+public class ConstantExpression extends Expression {
+  private final Value value;
 
-  public ConstantExpression(Type<T> type, T value, CodeLocation codeLocation) {
+  public ConstantExpression(Type type, Value value, CodeLocation codeLocation) {
     super(type, Empty.expressionList(), codeLocation);
     this.value = checkNotNull(value);
   }
 
   @Override
-  public TaskWorker<T> createWorker() {
-    return new ConstantWorker<>(type(), value, codeLocation());
+  public TaskWorker createWorker() {
+    return new ConstantWorker(type(), value, codeLocation());
   }
 }

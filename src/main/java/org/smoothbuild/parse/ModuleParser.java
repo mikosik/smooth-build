@@ -67,7 +67,7 @@ public class ModuleParser {
     detectUndefinedFunctions(loggedMessages, builtinModule, dependencies);
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
-    Map<Name, Function<?>> definedFunctions =
+    Map<Name, Function> definedFunctions =
         definedFunctionsCreator.createDefinedFunctions(loggedMessages, builtinModule, functions,
             sorted);
 

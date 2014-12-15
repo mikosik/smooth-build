@@ -45,8 +45,8 @@ public class MapToStringTest {
     assertEquals(expected.build(), actual);
   }
 
-  private static Argument arg(int number, Type<?> type, String name) {
-    Expression<?> expression = mock(Expression.class);
+  private static Argument arg(int number, Type type, String name) {
+    Expression expression = mock(Expression.class);
     given(willReturn(type), expression).type();
 
     return namedArgument(number, name, expression, codeLocation(2));

@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.base.Conversions.convertFunctionName;
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.base.Conversions;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Function;
@@ -22,14 +22,14 @@ public class ImplicitConverter {
     this.builtinModule = builtinModule;
   }
 
-  public <T extends Value> Expression<T> apply(Type<T> destinationType, Expression<?> source) {
-    Type<?> sourceType = source.type();
+  public <T extends Value> Expression apply(Type destinationType, Expression source) {
+    Type sourceType = source.type();
     if (sourceType == destinationType) {
-      return (Expression<T>) source;
+      return source;
     }
 
-    Name functionName = convertFunctionName(sourceType, destinationType);
-    Function<T> function = (Function<T>) builtinModule.getFunction(functionName);
+    Name functionName = Conversions.convertFunctionName(sourceType, destinationType);
+    Function function = builtinModule.getFunction(functionName);
 
     String paramName = function.parameters().get(0).name();
     return callExpression(function, true, source.codeLocation(), ImmutableMap.of(paramName, source));

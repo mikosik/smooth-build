@@ -75,7 +75,7 @@ public class ParameterTest {
 
     tester.addEqualityGroup(parameter(STRING, "equal", false), parameter(STRING, "equal", false));
 
-    for (Type<?> type : parameterTypes()) {
+    for (Type type : parameterTypes()) {
       tester.addEqualityGroup(parameter(type, "name", false));
       tester.addEqualityGroup(parameter(type, "name", true));
       tester.addEqualityGroup(parameter(type, "name2", false));
@@ -118,6 +118,6 @@ public class ParameterTest {
         + "  String: param1               \n" //
         + "  File[]: param3               \n" //
         + "  String: param2-with-very-long\n" //
-    );
+        );
   }
 }

@@ -55,6 +55,6 @@ public class TestExecutorModule extends AbstractModule {
     }
 
     @Override
-    public void report(Task<?> task, boolean resultFromCache) {}
+    public void report(Task task, boolean resultFromCache) {}
   }
 }

@@ -15,11 +15,11 @@ import com.google.common.collect.ImmutableMap;
 public class Conversions {
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
 
-  public static boolean canConvert(Type<?> from, Type<?> to) {
+  public static boolean canConvert(Type from, Type to) {
     return from == to || CONVERSIONS.containsKey(new TypeConversion(from, to));
   }
 
-  public static Name convertFunctionName(Type<?> from, Type<?> to) {
+  public static Name convertFunctionName(Type from, Type to) {
     return CONVERSIONS.get(new TypeConversion(from, to));
   }
 
@@ -36,10 +36,10 @@ public class Conversions {
   }
 
   private static class TypeConversion {
-    private final Type<?> from;
-    private final Type<?> to;
+    private final Type from;
+    private final Type to;
 
-    private TypeConversion(Type<?> from, Type<?> to) {
+    private TypeConversion(Type from, Type to) {
       this.from = from;
       this.to = to;
     }

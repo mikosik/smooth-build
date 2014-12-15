@@ -18,13 +18,12 @@ import com.google.common.hash.HashCode;
  *
  * @see DefinedFunction
  */
-public class NativeFunction<T extends Value> extends AbstractFunction<T> {
+public class NativeFunction extends AbstractFunction {
   private final HashCode hash;
-  private final Invoker<T> invoker;
+  private final Invoker invoker;
   private final boolean isCacheable;
 
-  public NativeFunction(Signature<T> signature, Invoker<T> invoker, boolean isCacheable,
-      HashCode hash) {
+  public NativeFunction(Signature signature, Invoker invoker, boolean isCacheable, HashCode hash) {
     super(signature);
     this.hash = hash;
     this.isCacheable = isCacheable;
@@ -39,7 +38,7 @@ public class NativeFunction<T extends Value> extends AbstractFunction<T> {
     return isCacheable;
   }
 
-  public T invoke(NativeApi nativeApi, ImmutableMap<String, Value> args)
+  public Value invoke(NativeApi nativeApi, ImmutableMap<String, Value> args)
       throws IllegalAccessException, InvocationTargetException {
     return invoker.invoke(nativeApi, args);
   }

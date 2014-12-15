@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
@@ -17,10 +16,10 @@ import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 
 public class ExpressionTest {
-  Type<SString> type = STRING;
-  CodeLocation codeLocation;
+  private final Type type = STRING;
+  private CodeLocation codeLocation;
 
-  MyExpression expression;
+  private MyExpression expression;
 
   @Before
   public void before() {
@@ -53,7 +52,7 @@ public class ExpressionTest {
     thenReturned(codeLocation);
   }
 
-  private static Closure $myExpression(final Type<SString> type, final CodeLocation codeLocation) {
+  private static Closure $myExpression(final Type type, final CodeLocation codeLocation) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
@@ -62,13 +61,13 @@ public class ExpressionTest {
     };
   }
 
-  public static class MyExpression extends Expression<SString> {
-    public MyExpression(Type<SString> type, CodeLocation codeLocation) {
+  public static class MyExpression extends Expression {
+    public MyExpression(Type type, CodeLocation codeLocation) {
       super(type, Empty.expressionList(), codeLocation);
     }
 
     @Override
-    public TaskWorker<SString> createWorker() {
+    public TaskWorker createWorker() {
       return null;
     }
   }

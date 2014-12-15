@@ -7,7 +7,6 @@ import static com.google.common.base.Strings.padEnd;
 import java.util.Collection;
 
 import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.message.base.CodeLocation;
 
@@ -18,26 +17,26 @@ import com.google.common.collect.Ordering;
 public class Argument {
   private final int number;
   private final String name;
-  private final Expression<?> expression;
+  private final Expression expression;
   private final CodeLocation codeLocation;
 
-  public static Argument namedArgument(int number, String name, Expression<?> expression,
+  public static Argument namedArgument(int number, String name, Expression expression,
       CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Argument(number, checkNotNull(name), expression, codeLocation);
   }
 
-  public static Argument namelessArgument(int number, Expression<?> expression,
+  public static Argument namelessArgument(int number, Expression expression,
       CodeLocation codeLocation) {
     checkArgument(0 < number);
     return new Argument(number, null, expression, codeLocation);
   }
 
-  public static Argument pipedArgument(Expression<?> expression, CodeLocation codeLocation) {
+  public static Argument pipedArgument(Expression expression, CodeLocation codeLocation) {
     return new Argument(0, null, expression, codeLocation);
   }
 
-  private Argument(int number, String name, Expression<?> expression, CodeLocation codeLocation) {
+  private Argument(int number, String name, Expression expression, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
@@ -64,11 +63,11 @@ public class Argument {
     return name == null ? "<nameless>" : name;
   }
 
-  public Type<?> type() {
+  public Type type() {
     return expression.type();
   }
 
-  public Expression<?> expression() {
+  public Expression expression() {
     return expression;
   }
 
@@ -107,12 +106,11 @@ public class Argument {
     return builder.build();
   }
 
-  public static ImmutableMultimap<Type<?>, Argument> filterNameless(Collection<Argument> arguments) {
-    ImmutableMultimap.Builder<Type<? extends Value>, Argument> builder =
-        ImmutableMultimap.builder();
+  public static ImmutableMultimap<Type, Argument> filterNameless(Collection<Argument> arguments) {
+    ImmutableMultimap.Builder<Type, Argument> builder = ImmutableMultimap.builder();
     for (Argument argument : arguments) {
       if (!argument.hasName()) {
-        Type<?> type = argument.expression().type();
+        Type type = argument.expression().type();
         builder.put(type, argument);
       }
     }

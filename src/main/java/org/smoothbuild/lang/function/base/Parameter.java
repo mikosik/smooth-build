@@ -14,37 +14,37 @@ import org.smoothbuild.util.LineBuilder;
 import com.google.common.hash.HashCode;
 
 public class Parameter {
-  private final Type<?> type;
+  private final Type type;
   private final String name;
   private final boolean isRequired;
   private final HashCode nameHash;
 
-  public static Parameter optionalParameter(Type<?> type, String name) {
+  public static Parameter optionalParameter(Type type, String name) {
     return parameter(type, name, false);
   }
 
-  public static Parameter requiredParameter(Type<?> type, String name) {
+  public static Parameter requiredParameter(Type type, String name) {
     return parameter(type, name, true);
   }
 
-  public static Parameter parameter(Type<?> type, String name, boolean isRequired) {
+  public static Parameter parameter(Type type, String name, boolean isRequired) {
     return new Parameter(type, name, isRequired);
   }
 
-  protected Parameter(Type<?> type, String name, boolean isRequired) {
+  protected Parameter(Type type, String name, boolean isRequired) {
     this.type = checkAllowedType(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
     this.nameHash = Hash.string(name);
   }
 
-  private Type<?> checkAllowedType(Type<?> type) {
+  private Type checkAllowedType(Type type) {
     checkNotNull(type);
     checkArgument(parameterTypes().contains(type));
     return type;
   }
 
-  public Type<?> type() {
+  public Type type() {
     return type;
   }
 

@@ -17,7 +17,7 @@ import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.util.Empty;
 
 public class SignatureTest {
-  private final Type<?> type = STRING;
+  private final Type type = STRING;
   private final Name name = name("name");
   private final List<Parameter> parameters = Empty.paramList();
   private Parameter parameter;
@@ -25,24 +25,24 @@ public class SignatureTest {
 
   @Test(expected = NullPointerException.class)
   public void nullTypeIsForbidden() {
-    new Signature<>(null, name, parameters);
+    new Signature(null, name, parameters);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullNameIsForbidden() {
-    new Signature<>(type, null, parameters);
+    new Signature(type, null, parameters);
   }
 
   @Test(expected = NullPointerException.class)
   public void nullParamsIsForbidden() {
-    new Signature<>(type, name, null);
+    new Signature(type, name, null);
   }
 
   @Test
   public void test_to_string() throws Exception {
     given(parameter = optionalParameter(BLOB, "blob"));
     given(parameter2 = optionalParameter(FILE, "file"));
-    when(new Signature<>(STRING, name, asList(parameter, parameter2))).toString();
+    when(new Signature(STRING, name, asList(parameter, parameter2))).toString();
     thenReturned(STRING.name() + " " + name.value() + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");
   }

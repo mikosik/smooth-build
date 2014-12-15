@@ -100,7 +100,7 @@ public class SStringTest {
   public void sstring_fetched_by_hash_has_same_value() throws Exception {
     given(sstring = objectsDb.string(string));
     given(hash = sstring.hash());
-    when(objectsDb.read(STRING, hash).value());
+    when(((SString) objectsDb.read(STRING, hash)).value());
     thenReturned(string);
   }
 

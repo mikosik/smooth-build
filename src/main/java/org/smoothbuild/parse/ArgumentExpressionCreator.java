@@ -25,21 +25,21 @@ public class ArgumentExpressionCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public ImmutableMap<String, Expression<?>> createArgExprs(CodeLocation codeLocation,
-      LoggedMessages messages, Function<?> function, Collection<Argument> arguments) {
+  public ImmutableMap<String, Expression> createArgExprs(CodeLocation codeLocation,
+      LoggedMessages messages, Function function, Collection<Argument> arguments) {
     Mapper mapper = new Mapper(codeLocation, messages, function, arguments);
     Map<Parameter, Argument> paramToArgMap = mapper.detectMapping();
     messages.failIfContainsProblems();
     return convert(paramToArgMap);
   }
 
-  private ImmutableMap<String, Expression<?>> convert(Map<Parameter, Argument> paramToArgMap) {
-    Builder<String, Expression<?>> builder = ImmutableMap.builder();
+  private ImmutableMap<String, Expression> convert(Map<Parameter, Argument> paramToArgMap) {
+    Builder<String, Expression> builder = ImmutableMap.builder();
 
     for (Map.Entry<Parameter, Argument> entry : paramToArgMap.entrySet()) {
       Parameter parameter = entry.getKey();
       Argument argument = entry.getValue();
-      Expression<?> expression = implicitConverter.apply(parameter.type(), argument.expression());
+      Expression expression = implicitConverter.apply(parameter.type(), argument.expression());
       builder.put(parameter.name(), expression);
     }
 

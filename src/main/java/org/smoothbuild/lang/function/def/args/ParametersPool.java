@@ -24,9 +24,9 @@ import com.google.common.collect.Sets;
 
 public class ParametersPool {
   private final ImmutableMap<String, Parameter> parameters;
-  private final ImmutableMap<Type<?>, TypedParametersPool> typePools;
-  private final Map<Type<?>, Set<Parameter>> optionalParametersMap;
-  private final Map<Type<?>, Set<Parameter>> requiredParametersMap;
+  private final ImmutableMap<Type, TypedParametersPool> typePools;
+  private final Map<Type, Set<Parameter>> optionalParametersMap;
+  private final Map<Type, Set<Parameter>> requiredParametersMap;
 
   public ParametersPool(List<Parameter> parameters) {
     this.parameters = parametersToMap(parameters);
@@ -55,7 +55,7 @@ public class ParametersPool {
     }
   }
 
-  public TypedParametersPool assignableFrom(Type<?> type) {
+  public TypedParametersPool assignableFrom(Type type) {
     return typePools.get(type);
   }
 
@@ -67,12 +67,12 @@ public class ParametersPool {
     return result;
   }
 
-  private static ImmutableMap<Type<?>, TypedParametersPool> createTypePools(
-      Map<Type<?>, Set<Parameter>> optionalParametersMap,
-      Map<Type<?>, Set<Parameter>> requiredParametersMap) {
+  private static ImmutableMap<Type, TypedParametersPool> createTypePools(
+      Map<Type, Set<Parameter>> optionalParametersMap,
+      Map<Type, Set<Parameter>> requiredParametersMap) {
 
-    Builder<Type<?>, TypedParametersPool> builder = ImmutableMap.builder();
-    for (Type<?> type : allTypes()) {
+    Builder<Type, TypedParametersPool> builder = ImmutableMap.builder();
+    for (Type type : allTypes()) {
       Set<Parameter> optional = parametersAssignableFromType(type, optionalParametersMap);
       Set<Parameter> required = parametersAssignableFromType(type, requiredParametersMap);
       builder.put(type, new TypedParametersPool(optional, required));
@@ -81,10 +81,10 @@ public class ParametersPool {
     return builder.build();
   }
 
-  private static Set<Parameter> parametersAssignableFromType(Type<?> type,
-      Map<Type<?>, Set<Parameter>> paramsMap) {
+  private static Set<Parameter> parametersAssignableFromType(Type type,
+      Map<Type, Set<Parameter>> paramsMap) {
     Set<Parameter> parameters = paramsMap.get(type);
-    for (Type<?> currentType : allTypes()) {
+    for (Type currentType : allTypes()) {
       if (canConvert(type, currentType)) {
         parameters = Sets.union(parameters, paramsMap.get(currentType));
       }
@@ -92,10 +92,9 @@ public class ParametersPool {
     return parameters;
   }
 
-  private static Map<Type<?>, Set<Parameter>> createParametersMap(
-      ImmutableList<Parameter> parameters) {
-    Map<Type<?>, Set<Parameter>> map = Maps.newHashMap();
-    for (Type<?> type : allTypes()) {
+  private static Map<Type, Set<Parameter>> createParametersMap(ImmutableList<Parameter> parameters) {
+    Map<Type, Set<Parameter>> map = Maps.newHashMap();
+    for (Type type : allTypes()) {
       HashSet<Parameter> set = Sets.newHashSet();
       for (Parameter parameter : parameters) {
         if (parameter.type() == type) {

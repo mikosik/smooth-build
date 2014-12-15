@@ -47,9 +47,9 @@ import com.google.common.hash.HashCode;
 
 public class NativeFunctionFactoryTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private NativeFunction<?> function;
-  private NativeFunction<?> function2;
-  private NativeFunction<SString> stringFunction;
+  private NativeFunction function;
+  private NativeFunction function2;
+  private NativeFunction stringFunction;
   private HashCode hash1;
   private HashCode hash2;
 
@@ -59,9 +59,9 @@ public class NativeFunctionFactoryTest {
     thenReturned(new Matcher() {
       @Override
       public boolean matches(Object object) {
-        List<NativeFunction<?>> functions = (List<NativeFunction<?>>) object;
+        List<NativeFunction> functions = (List<NativeFunction>) object;
         List<String> names = Lists.newArrayList();
-        for (NativeFunction<?> function : functions) {
+        for (NativeFunction function : functions) {
           names.add(function.name().value());
         }
         return Matchers.containsInAnyOrder("aFunction", "bFunction").matches(names);
@@ -237,8 +237,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void testInvokation() throws Exception {
-    given(stringFunction =
-        (NativeFunction<SString>) function(ConstantStringFunction.class.getMethods()[0]));
+    given(stringFunction = function(ConstantStringFunction.class.getMethods()[0]));
     when(stringFunction.invoke(null, Empty.stringValueMap()));
     thenReturned(objectsDb.string("constant string"));
   }
@@ -589,7 +588,7 @@ public class NativeFunctionFactoryTest {
     };
   }
 
-  private static NativeFunction<?> function(Method method) throws NativeImplementationException {
+  private static NativeFunction function(Method method) throws NativeImplementationException {
     return NativeFunctionFactory.createNativeFunction(Hash.integer(33), method);
   }
 }

@@ -62,7 +62,7 @@ public class AmbiguousNamelessArgsErrorTest {
 
     LineBuilder builder = new LineBuilder();
     builder
-        .addLine("ERROR [ line 7 ]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:");
+    .addLine("ERROR [ line 7 ]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:");
     builder.addLine("List of assignments that were successfully detected is following:");
     builder.addLine("  String  : param1 <- String  : arg1       #12 " + a1.codeLocation());
     builder.addLine("  String[]: param2 <- String[]: <nameless> #7  " + a2.codeLocation());
@@ -76,8 +76,8 @@ public class AmbiguousNamelessArgsErrorTest {
     assertEquals(builder.build(), error.toString());
   }
 
-  private Expression<?> expression(Type<?> type) {
-    Expression<?> result = mock(Expression.class);
+  private Expression expression(Type type) {
+    Expression result = mock(Expression.class);
     given(willReturn(type), result).type();
     return result;
   }

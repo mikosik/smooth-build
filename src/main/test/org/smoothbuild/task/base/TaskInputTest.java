@@ -15,8 +15,8 @@ import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Empty;
 
 public class TaskInputTest {
-  private Task<?> depTask1;
-  private Task<?> depTask2;
+  private Task depTask1;
+  private Task depTask2;
   private TaskInput taskInput;
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private SString sstring1;

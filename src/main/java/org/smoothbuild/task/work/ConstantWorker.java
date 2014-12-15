@@ -11,10 +11,10 @@ import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.hash.HashCode;
 
-public class ConstantWorker<T extends Value> extends TaskWorker<T> {
-  private final T value;
+public class ConstantWorker extends TaskWorker {
+  private final Value value;
 
-  public ConstantWorker(Type<T> type, T value, CodeLocation codeLocation) {
+  public ConstantWorker(Type type, Value value, CodeLocation codeLocation) {
     super(constantWorkerHash(value), type, type.name(), true, false, codeLocation);
     this.value = checkNotNull(value);
   }

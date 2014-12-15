@@ -7,22 +7,21 @@ package org.smoothbuild.lang.expr;
 
 import static java.util.Arrays.asList;
 
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.task.work.VirtualWorker;
 
-public class DefinedCallExpression<T extends Value> extends Expression<T> {
-  private final DefinedFunction<T> function;
+public class DefinedCallExpression extends Expression {
+  private final DefinedFunction function;
 
-  public DefinedCallExpression(DefinedFunction<T> function, CodeLocation codeLocation) {
+  public DefinedCallExpression(DefinedFunction function, CodeLocation codeLocation) {
     super(function.type(), asList(function.root()), codeLocation);
     this.function = function;
   }
 
   @Override
-  public TaskWorker<T> createWorker() {
-    return new VirtualWorker<T>(function, codeLocation());
+  public TaskWorker createWorker() {
+    return new VirtualWorker(function, codeLocation());
   }
 }

@@ -17,8 +17,8 @@ import com.google.common.collect.ImmutableSet;
 public class ImmutableModuleTest {
   Name name1 = name("name1");
   Name name2 = name("name2");
-  Function<?> function1 = mock(Function.class);
-  Function<?> function2 = mock(Function.class);
+  Function function1 = mock(Function.class);
+  Function function2 = mock(Function.class);
 
   ImmutableModule module;
 

@@ -27,11 +27,11 @@ import com.google.common.collect.Sets;
 public class Mapper {
   private final CodeLocation codeLocation;
   private final LoggedMessages messages;
-  private final Function<?> function;
+  private final Function function;
   private final ParametersPool parametersPool;
   private final Collection<Argument> allArguments;
 
-  public Mapper(CodeLocation codeLocation, LoggedMessages messages, Function<?> function,
+  public Mapper(CodeLocation codeLocation, LoggedMessages messages, Function function,
       Collection<Argument> arguments) {
     this.codeLocation = codeLocation;
     this.messages = messages;
@@ -94,7 +94,7 @@ public class Mapper {
       if (argument.hasName()) {
         String name = argument.name();
         Parameter parameter = parametersPool.take(name);
-        Type<?> paramType = parameter.type();
+        Type paramType = parameter.type();
         if (!canConvert(argument.type(), paramType)) {
           messages.log(new TypeMismatchError(argument, paramType));
         } else {
@@ -105,9 +105,9 @@ public class Mapper {
   }
 
   private void processNamelessArguments(Builder<Parameter, Argument> mapBuilder) {
-    ImmutableMultimap<Type<?>, Argument> namelessArgs = Argument.filterNameless(allArguments);
+    ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(allArguments);
 
-    for (Type<?> type : allTypes()) {
+    for (Type type : allTypes()) {
       Collection<Argument> availableArguments = namelessArgs.get(type);
       int argsSize = availableArguments.size();
       if (0 < argsSize) {

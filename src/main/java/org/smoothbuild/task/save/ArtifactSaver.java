@@ -24,11 +24,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class ArtifactSaver {
-  private final ImmutableMap<Type<?>, Saver<?>> saversMap;
+  private final ImmutableMap<Type, Saver<?>> saversMap;
 
   @Inject
   public ArtifactSaver(@SmoothDir FileSystem smoothFileSystem, SmoothExecutorMessages messages) {
-    Builder<Type<?>, Saver<?>> builder = ImmutableMap.builder();
+    Builder<Type, Saver<?>> builder = ImmutableMap.builder();
 
     builder.put(STRING, new StringSaver(smoothFileSystem));
     builder.put(BLOB, new BlobSaver(smoothFileSystem));

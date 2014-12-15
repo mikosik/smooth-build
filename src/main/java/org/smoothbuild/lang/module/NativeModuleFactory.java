@@ -26,7 +26,7 @@ public class NativeModuleFactory {
   }
 
   private static Module createNativeModuleImpl(JarFile jar) throws IOException,
-      NativeImplementationException {
+  NativeImplementationException {
     ModuleBuilder builder = new ModuleBuilder();
     ClassLoader classLoader = classLoader(jar);
     try (JarInputStream jarInputStream = newJarInputStream(jar)) {
@@ -35,7 +35,7 @@ public class NativeModuleFactory {
         String fileName = entry.getName();
         if (fileName.endsWith(CLASS_FILE_EXTENSION)) {
           Class<?> clazz = load(classLoader, binaryPathToBinaryName(fileName));
-          for (NativeFunction<?> function : createNativeFunctions(jar.hash(), clazz)) {
+          for (NativeFunction function : createNativeFunctions(jar.hash(), clazz)) {
             builder.addFunction(function);
           }
         }

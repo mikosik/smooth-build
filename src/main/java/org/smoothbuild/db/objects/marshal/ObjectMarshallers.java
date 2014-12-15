@@ -37,8 +37,8 @@ public class ObjectMarshallers {
   private final ArrayMarshaller<SFile> fileArrayMarshaller;
   private final ArrayMarshaller<Nothing> nilMarshaller;
 
-  private final ImmutableMap<Type<?>, ObjectMarshaller<?>> marshallersMap;
-  private final ImmutableMap<ArrayType<?>, ArrayMarshaller<?>> arrayMarshallersMap;
+  private final ImmutableMap<Type, ObjectMarshaller<?>> marshallersMap;
+  private final ImmutableMap<ArrayType, ArrayMarshaller<?>> arrayMarshallersMap;
 
   @Inject
   public ObjectMarshallers(@Objects HashedDb hashedDb) {
@@ -52,7 +52,7 @@ public class ObjectMarshallers {
     this.fileArrayMarshaller = new ArrayMarshaller<>(hashedDb, FILE_ARRAY, fileMarshaller);
     this.nilMarshaller = new ArrayMarshaller<>(hashedDb, NIL, nothingMarshaller);
 
-    Builder<Type<?>, ObjectMarshaller<?>> marshallersBuilder = ImmutableMap.builder();
+    Builder<Type, ObjectMarshaller<?>> marshallersBuilder = ImmutableMap.builder();
     marshallersBuilder.put(STRING, stringMarshaller);
     marshallersBuilder.put(BLOB, blobMarshaller);
     marshallersBuilder.put(FILE, fileMarshaller);
@@ -63,7 +63,7 @@ public class ObjectMarshallers {
     marshallersBuilder.put(NIL, nilMarshaller);
     this.marshallersMap = marshallersBuilder.build();
 
-    Builder<ArrayType<?>, ArrayMarshaller<?>> arrayMarshallersBuilder = ImmutableMap.builder();
+    Builder<ArrayType, ArrayMarshaller<?>> arrayMarshallersBuilder = ImmutableMap.builder();
     arrayMarshallersBuilder.put(STRING_ARRAY, stringArrayMarshaller);
     arrayMarshallersBuilder.put(BLOB_ARRAY, blobArrayMarshaller);
     arrayMarshallersBuilder.put(FILE_ARRAY, fileArrayMarshaller);
@@ -83,7 +83,7 @@ public class ObjectMarshallers {
     return fileMarshaller;
   }
 
-  public <T extends Value> ArrayMarshaller<T> arrayMarshaller(ArrayType<T> arrayType) {
+  public <T extends Value> ArrayMarshaller<T> arrayMarshaller(ArrayType arrayType) {
     ArrayMarshaller<T> reader = (ArrayMarshaller<T>) arrayMarshallersMap.get(arrayType);
     if (reader == null) {
       throw new Message(FATAL, "Unexpected value type: " + arrayType);
@@ -91,7 +91,7 @@ public class ObjectMarshallers {
     return reader;
   }
 
-  public <T extends Value> ObjectMarshaller<T> marshaller(Type<T> type) {
+  public <T extends Value> ObjectMarshaller<T> marshaller(Type type) {
     ObjectMarshaller<T> reader = (ObjectMarshaller<T>) marshallersMap.get(type);
     if (reader == null) {
       throw new Message(FATAL, "Unexpected value type: " + type);

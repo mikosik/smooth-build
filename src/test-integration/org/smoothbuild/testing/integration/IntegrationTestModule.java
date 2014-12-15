@@ -101,7 +101,7 @@ public class IntegrationTestModule extends AbstractModule {
     HashCode jarHash = Hash.integer(33);
     ModuleBuilder builder = new ModuleBuilder();
     for (Class<?> clazz : classes) {
-      for (NativeFunction<?> function : createNativeFunctions(jarHash, clazz)) {
+      for (NativeFunction function : createNativeFunctions(jarHash, clazz)) {
         builder.addFunction(function);
       }
     }

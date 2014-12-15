@@ -2,7 +2,6 @@ package org.smoothbuild.lang.function.def;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
@@ -13,15 +12,15 @@ import org.smoothbuild.lang.function.nativ.NativeFunction;
  *
  * @see NativeFunction
  */
-public class DefinedFunction<T extends Value> extends AbstractFunction<T> {
-  private final Expression<T> root;
+public class DefinedFunction extends AbstractFunction {
+  private final Expression root;
 
-  public DefinedFunction(Signature<T> signature, Expression<T> root) {
+  public DefinedFunction(Signature signature, Expression root) {
     super(signature);
     this.root = checkNotNull(root);
   }
 
-  public Expression<T> root() {
+  public Expression root() {
     return root;
   }
 }

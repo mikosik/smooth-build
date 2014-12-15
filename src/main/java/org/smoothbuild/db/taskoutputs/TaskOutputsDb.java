@@ -1,7 +1,6 @@
 package org.smoothbuild.db.taskoutputs;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.smoothbuild.lang.base.Types.STRING;
 
 import java.util.List;
 
@@ -13,6 +12,7 @@ import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
@@ -55,14 +55,15 @@ public class TaskOutputsDb {
     return hashedDb.contains(taskHash);
   }
 
-  public <T extends Value> TaskOutput read(HashCode taskHash, Type<T> type) {
+  public TaskOutput read(HashCode taskHash, Type type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash)) {
       int size = unmarshaller.readInt();
       List<Message> messages = newArrayList();
       for (int i = 0; i < size; i++) {
         MessageType messageType = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();
-        String messageString = objectsDb.read(STRING, messageStringHash).value();
+        SString messageSString = (SString) objectsDb.read(Types.STRING, messageStringHash);
+        String messageString = messageSString.value();
         messages.add(new Message(messageType, messageString));
       }
 
@@ -70,7 +71,7 @@ public class TaskOutputsDb {
         return new TaskOutput(messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
-        T value = objectsDb.read(type, resultObjectHash);
+        Value value = objectsDb.read(type, resultObjectHash);
         return new TaskOutput(value, messages);
       }
     }
