@@ -176,14 +176,14 @@ public class SFileTest {
   @Test
   public void file_read_by_hash_has_same_content() throws Exception {
     given(file = createFile(objectsDb, path, string));
-    when(objectsDb.read(FILE, file.hash()).content());
+    when(((SFile) objectsDb.read(FILE, file.hash())).content());
     thenReturned(file.content());
   }
 
   @Test
   public void file_read_by_hash_has_same_path() throws Exception {
     given(file = createFile(objectsDb, path, string));
-    when(objectsDb.read(FILE, file.hash()).path());
+    when(((SFile) objectsDb.read(FILE, file.hash())).path());
     thenReturned(file.path());
   }
 

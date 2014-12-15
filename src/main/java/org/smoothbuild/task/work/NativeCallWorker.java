@@ -23,11 +23,11 @@ import com.google.common.collect.Ordering;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
-public class NativeCallWorker<T extends Value> extends TaskWorker<T> {
-  private final NativeFunction<T> function;
+public class NativeCallWorker extends TaskWorker {
+  private final NativeFunction function;
   private final ImmutableList<String> paramNames;
 
-  public NativeCallWorker(NativeFunction<T> function, List<String> paramNames, boolean isInternal,
+  public NativeCallWorker(NativeFunction function, List<String> paramNames, boolean isInternal,
       CodeLocation codeLocation) {
     super(nativeCallWorkerHash(function, paramNames), function.type(), function.name().value(),
         isInternal, function.isCacheable(), codeLocation);
@@ -35,7 +35,7 @@ public class NativeCallWorker<T extends Value> extends TaskWorker<T> {
     this.paramNames = ImmutableList.copyOf(paramNames);
   }
 
-  private static HashCode nativeCallWorkerHash(NativeFunction<?> function, List<String> paramNames) {
+  private static HashCode nativeCallWorkerHash(NativeFunction function, List<String> paramNames) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(function.hash().asBytes());
     for (String string : Ordering.natural().sortedCopy(paramNames)) {
@@ -49,7 +49,7 @@ public class NativeCallWorker<T extends Value> extends TaskWorker<T> {
 
   @Override
   public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
-    T result = null;
+    Value result = null;
     try {
       result = function.invoke(nativeApi, calculateArguments(input));
       if (result == null && !nativeApi.loggedMessages().containsProblems()) {

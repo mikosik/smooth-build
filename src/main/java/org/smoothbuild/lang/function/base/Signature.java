@@ -3,25 +3,24 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * Function's signature.
  */
-public class Signature<T extends Value> {
-  private final Type<T> type;
+public class Signature {
+  private final Type type;
   private final Name name;
   private final ImmutableList<Parameter> parameters;
 
-  public Signature(Type<T> type, Name name, Iterable<Parameter> params) {
+  public Signature(Type type, Name name, Iterable<Parameter> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.parameters = ImmutableList.copyOf(params);
   }
 
-  public Type<T> type() {
+  public Type type() {
     return type;
   }
 

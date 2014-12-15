@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableMultimap;
 
 public class ArgumentTest {
   private final String name = "name";
-  private final Expression<?> expression = mock(Expression.class);
+  private final Expression expression = mock(Expression.class);
   private final CodeLocation codeLocation = codeLocation(1);
   private Argument argument;
   private Argument argument2;
@@ -185,8 +185,8 @@ public class ArgumentTest {
     return Argument.namedArgument(1, name, mock(Expression.class), codeLocation(1));
   }
 
-  private static Argument nameless(Type<?> type) {
-    Expression<?> expression = mock(Expression.class);
+  private static Argument nameless(Type type) {
+    Expression expression = mock(Expression.class);
     given(willReturn(type), expression).type();
     return Argument.namelessArgument(1, expression, codeLocation(1));
   }

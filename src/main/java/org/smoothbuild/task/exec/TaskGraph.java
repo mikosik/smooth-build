@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 
 public class TaskGraph {
   private final TaskExecutor taskExecutor;
-  private final List<Task<?>> rootTasks;
+  private final List<Task> rootTasks;
 
   @Inject
   public TaskGraph(TaskExecutor taskExecutor) {
@@ -22,34 +22,34 @@ public class TaskGraph {
     this.rootTasks = Lists.newArrayList();
   }
 
-  public <T extends Value> Task<T> createTasks(Expression<T> expression) {
-    Task<T> root = createTasksImpl(expression);
+  public <T extends Value> Task createTasks(Expression expression) {
+    Task root = createTasksImpl(expression);
     rootTasks.add(root);
     return root;
   }
 
-  private <T extends Value> Task<T> createTasksImpl(Expression<T> expression) {
-    ImmutableList<Task<?>> dependencies = createTasksImpl(expression.dependencies());
-    return new Task<>(expression.createWorker(), dependencies);
+  private <T extends Value> Task createTasksImpl(Expression expression) {
+    ImmutableList<Task> dependencies = createTasksImpl(expression.dependencies());
+    return new Task(expression.createWorker(), dependencies);
   }
 
-  private ImmutableList<Task<?>> createTasksImpl(ImmutableList<? extends Expression<?>> expressions) {
-    Builder<Task<?>> builder = ImmutableList.builder();
-    for (Expression<?> expression : expressions) {
-      Task<?> executor = createTasksImpl(expression);
+  private ImmutableList<Task> createTasksImpl(ImmutableList<? extends Expression> expressions) {
+    Builder<Task> builder = ImmutableList.builder();
+    for (Expression expression : expressions) {
+      Task executor = createTasksImpl(expression);
       builder.add(executor);
     }
     return builder.build();
   }
 
   public void executeAll() {
-    for (Task<?> task : rootTasks) {
+    for (Task task : rootTasks) {
       executeGraph(task);
     }
   }
 
-  private void executeGraph(Task<?> task) {
-    for (Task<?> subTask : task.dependencies()) {
+  private void executeGraph(Task task) {
+    for (Task subTask : task.dependencies()) {
       executeGraph(subTask);
     }
     taskExecutor.execute(task);

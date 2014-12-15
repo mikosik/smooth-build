@@ -18,15 +18,15 @@ public class Empty {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<String, Expression<?>> stringExpressionMap() {
+  public static ImmutableMap<String, Expression> stringExpressionMap() {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<Name, Function<?>> nameFunctionMap() {
+  public static ImmutableMap<Name, Function> nameFunctionMap() {
     return ImmutableMap.of();
   }
 
-  public static ImmutableMap<Type<?>, Function<?>> typeFunctionMap() {
+  public static ImmutableMap<Type, Function> typeFunctionMap() {
     return ImmutableMap.of();
   }
 
@@ -38,7 +38,7 @@ public class Empty {
     return ImmutableList.of();
   }
 
-  public static ImmutableList<Expression<?>> expressionList() {
+  public static ImmutableList<Expression> expressionList() {
     return ImmutableList.of();
   }
 
@@ -46,7 +46,7 @@ public class Empty {
     return ImmutableList.of();
   }
 
-  public static ImmutableList<Task<?>> taskList() {
+  public static ImmutableList<Task> taskList() {
     return ImmutableList.of();
   }
 

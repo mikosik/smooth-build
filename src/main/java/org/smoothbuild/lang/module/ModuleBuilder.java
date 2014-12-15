@@ -10,14 +10,14 @@ import org.smoothbuild.lang.function.base.Name;
 import com.google.common.collect.Maps;
 
 public class ModuleBuilder {
-  private final Map<Name, Function<?>> functions;
+  private final Map<Name, Function> functions;
 
   @Inject
   public ModuleBuilder() {
     this.functions = Maps.newHashMap();
   }
 
-  public void addFunction(Function<?> function) {
+  public void addFunction(Function function) {
     Name name = function.name();
     if (functions.containsKey(name)) {
       throw new IllegalArgumentException("Function " + name

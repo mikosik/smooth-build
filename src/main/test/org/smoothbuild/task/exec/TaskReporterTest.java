@@ -14,7 +14,6 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
@@ -28,7 +27,7 @@ public class TaskReporterTest {
   UserConsole userConsole = mock(UserConsole.class);
   TaskReporter taskReporter = new TaskReporter(userConsole);
   List<Message> messages;
-  Task<SString> task;
+  Task task;
 
   @Test
   public void internal_task_with_message_is_printed() {
@@ -64,11 +63,11 @@ public class TaskReporterTest {
     thenCalled(userConsole).print(header(task, false), messages);
   }
 
-  private static Task<SString> createTask(boolean isInternal) {
-    return new Task<>(new MyTaskWorker(isInternal), Empty.taskList());
+  private static Task createTask(boolean isInternal) {
+    return new Task(new MyTaskWorker(isInternal), Empty.taskList());
   }
 
-  private static final class MyTaskWorker extends TaskWorker<SString> {
+  private static final class MyTaskWorker extends TaskWorker {
     private MyTaskWorker(boolean isInternal) {
       super(null, STRING, "name", isInternal, true, CodeLocation.codeLocation(2));
     }

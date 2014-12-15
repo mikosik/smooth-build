@@ -21,7 +21,7 @@ public class SignatureFactoryTest {
     Method method =
         SignatureFactoryTest.class.getMethod("function", NativeApi.class, FuncParams.class);
 
-    Signature<?> signature = SignatureFactory.create(method, FuncParams.class);
+    Signature signature = SignatureFactory.create(method, FuncParams.class);
     assertEquals(FILE, signature.type());
     assertEquals(name("function"), signature.name());
     assertEquals(asList(optionalParameter(FILE, "param1")), signature.parameters());

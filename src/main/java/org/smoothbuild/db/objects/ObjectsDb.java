@@ -46,7 +46,7 @@ public class ObjectsDb implements ValueFactory {
     return objectMarshallers.stringMarshaller().write(string);
   }
 
-  public <T extends Value> T read(Type<T> type, HashCode hash) {
+  public Value read(Type type, HashCode hash) {
     return objectMarshallers.marshaller(type).read(hash);
   }
 }

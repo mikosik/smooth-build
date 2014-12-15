@@ -21,7 +21,7 @@ import com.google.common.collect.Maps;
 public class ArtifactBuilder {
   private final ArtifactSaver artifactSaver;
   private final TaskGraph taskGraph;
-  private final Map<Name, Task<?>> artifacts;
+  private final Map<Name, Task> artifacts;
 
   @Inject
   public ArtifactBuilder(ArtifactSaver artifactSaver, TaskGraph taskGraph) {
@@ -30,8 +30,8 @@ public class ArtifactBuilder {
     this.artifacts = Maps.newHashMap();
   }
 
-  public void addArtifact(Function<?> function) {
-    Expression<?> expression =
+  public void addArtifact(Function function) {
+    Expression expression =
         callExpression(function, false, CodeLocation.commandLine(), Empty.stringExpressionMap());
     artifacts.put(function.name(), taskGraph.createTasks(expression));
   }
@@ -42,9 +42,9 @@ public class ArtifactBuilder {
     } catch (BuildInterruptedException e) {
       return;
     }
-    for (Entry<Name, Task<?>> artifact : artifacts.entrySet()) {
+    for (Entry<Name, Task> artifact : artifacts.entrySet()) {
       Name name = artifact.getKey();
-      Task<?> task = artifact.getValue();
+      Task task = artifact.getValue();
       Value value = task.output().returnValue();
       artifactSaver.save(name, value);
     }

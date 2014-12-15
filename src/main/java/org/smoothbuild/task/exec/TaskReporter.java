@@ -18,7 +18,7 @@ public class TaskReporter {
     this.userConsole = userConsole;
   }
 
-  public void report(Task<?> task, boolean resultFromCache) {
+  public void report(Task task, boolean resultFromCache) {
     ImmutableList<Message> messages = task.output().messages();
     if (!(task.isInternal() && messages.isEmpty())) {
       String header = header(task, resultFromCache);
@@ -27,7 +27,7 @@ public class TaskReporter {
   }
 
   @VisibleForTesting
-  static String header(Task<?> task, boolean isResultFromCached) {
+  static String header(Task task, boolean isResultFromCached) {
     String locationString = task.codeLocation().toString();
     int paddedLength = UserConsole.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
     String name = Strings.padEnd(task.name(), paddedLength, ' ');

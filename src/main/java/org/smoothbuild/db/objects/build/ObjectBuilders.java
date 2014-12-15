@@ -38,15 +38,14 @@ public class ObjectBuilders {
       throw new IllegalArgumentException("Illegal type " + elementClass.getCanonicalName());
     }
     if (elementClass == Nothing.class) {
-      return (ArrayBuilder<T>) new NilBuilder(objectMarshallers.arrayMarshaller(NIL));
+      return (ArrayBuilder<T>) new NilBuilder(objectMarshallers.<Nothing>arrayMarshaller(NIL));
     } else {
-      Type<T> type = (Type<T>) resultJTypeToType(TypeLiteral.get(elementClass));
+      Type type = resultJTypeToType(TypeLiteral.get(elementClass));
       return createArrayBuilder(arrayTypeContaining(type), elementClass);
     }
   }
 
-  private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType<T> type,
-      Class<?> elementClass) {
+  private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type, Class<?> elementClass) {
     ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(type);
     return new ArrayBuilderImpl<>(marshaller, elementClass);
   }

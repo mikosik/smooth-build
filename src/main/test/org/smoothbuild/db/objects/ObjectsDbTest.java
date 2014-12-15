@@ -39,21 +39,21 @@ public class ObjectsDbTest {
 
   @Test
   public void reading_elements_from_not_stored_file_array_fails() throws Exception {
-    given(fileArray = objectsDb.read(FILE_ARRAY, HashCode.fromInt(33)));
+    given(fileArray = (Array<SFile>) objectsDb.read(FILE_ARRAY, HashCode.fromInt(33)));
     when(fileArray).iterator();
     thenThrown(NoObjectWithGivenHashError.class);
   }
 
   @Test
   public void reading_elements_from_not_stored_blob_array_fails() throws Exception {
-    given(blobArray = objectsDb.read(BLOB_ARRAY, HashCode.fromInt(33)));
+    given(blobArray = (Array<Blob>) objectsDb.read(BLOB_ARRAY, HashCode.fromInt(33)));
     when(blobArray).iterator();
     thenThrown(NoObjectWithGivenHashError.class);
   }
 
   @Test
   public void reading_elements_from_not_stored_string_array_fails() throws Exception {
-    given(stringArray = objectsDb.read(STRING_ARRAY, HashCode.fromInt(33)));
+    given(stringArray = (Array<SString>) objectsDb.read(STRING_ARRAY, HashCode.fromInt(33)));
     when(stringArray).iterator();
     thenThrown(NoObjectWithGivenHashError.class);
   }
@@ -66,14 +66,14 @@ public class ObjectsDbTest {
 
   @Test
   public void reading_not_stored_blob_fails() throws Exception {
-    given(blob = objectsDb.read(BLOB, HashCode.fromInt(33)));
+    given(blob = (Blob) objectsDb.read(BLOB, HashCode.fromInt(33)));
     when(blob).openInputStream();
     thenThrown(NoObjectWithGivenHashError.class);
   }
 
   @Test
   public void reading_not_stored_sstring_fails() throws Exception {
-    given(stringValue = objectsDb.read(STRING, HashCode.fromInt(33)));
+    given(stringValue = (SString) objectsDb.read(STRING, HashCode.fromInt(33)));
     when(stringValue).value();
     thenThrown(NoObjectWithGivenHashError.class);
   }

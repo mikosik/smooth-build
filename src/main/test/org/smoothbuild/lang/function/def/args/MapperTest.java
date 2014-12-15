@@ -27,7 +27,6 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
@@ -68,7 +67,7 @@ public class MapperTest {
     do_test_converting_named_argument(FILE_ARRAY, NIL);
   }
 
-  private void do_test_converting_named_argument(Type<?> paramType, Type<?> argType) {
+  private void do_test_converting_named_argument(Type paramType, Type argType) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(paramType, "name1");
@@ -101,7 +100,7 @@ public class MapperTest {
     do_test_duplicated_names(FILE_ARRAY, NIL);
   }
 
-  private void do_test_duplicated_names(Type<?> paramType, Type<?> argType) {
+  private void do_test_duplicated_names(Type paramType, Type argType) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(paramType, "name1");
@@ -195,7 +194,7 @@ public class MapperTest {
     do_test_type_mismatch_for_param_problem(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void do_test_type_mismatch_for_param_problem(Type<?> paramType, Type<?> argType)
+  private void do_test_type_mismatch_for_param_problem(Type paramType, Type argType)
       throws Exception {
     // given
     messages = new FakeLoggedMessages();
@@ -318,8 +317,8 @@ public class MapperTest {
     do_test_converting_single_nameless_argument(BLOB_ARRAY, NIL, STRING);
   }
 
-  private void do_test_converting_single_nameless_argument(Type<?> paramType, Type<?> argType,
-      Type<?> otherParamsType) {
+  private void do_test_converting_single_nameless_argument(Type paramType, Type argType,
+      Type otherParamsType) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(otherParamsType, "name1");
@@ -347,7 +346,7 @@ public class MapperTest {
     do_test_converting_single_nameless_argument_with_others_named(FILE_ARRAY);
   }
 
-  private void do_test_converting_single_nameless_argument_with_others_named(Type<?> type) {
+  private void do_test_converting_single_nameless_argument_with_others_named(Type type) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(type, "name1");
@@ -405,8 +404,7 @@ public class MapperTest {
     do_test_converting_two_nameless_arguments_with_different_types(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void do_test_converting_two_nameless_arguments_with_different_types(Type<?> type1,
-      Type<?> type2) {
+  private void do_test_converting_two_nameless_arguments_with_different_types(Type type1, Type type2) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(type1, "name1");
@@ -430,7 +428,7 @@ public class MapperTest {
     do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(FILE_ARRAY);
   }
 
-  private void do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(Type<?> type) {
+  private void do_test_doTestConvertingSingleNamelessArrayArgumentWhitOtherNamed(Type type) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(type, "name1");
@@ -461,8 +459,8 @@ public class MapperTest {
     converting_nameless_nil_arg_with_other_named_array(FILE_ARRAY, BLOB_ARRAY);
   }
 
-  private void converting_nameless_nil_arg_with_other_named_array(Type<?> arrayType,
-      Type<?> otherArrayType) {
+  private void converting_nameless_nil_arg_with_other_named_array(Type arrayType,
+      Type otherArrayType) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(arrayType, "name1");
@@ -505,8 +503,7 @@ public class MapperTest {
     do_test_ambiguous_nameless_argument(FILE_ARRAY, FILE_ARRAY, NIL);
   }
 
-  private void do_test_ambiguous_nameless_argument(Type<?> paramType, Type<?> paramType2,
-      Type<?> argType) {
+  private void do_test_ambiguous_nameless_argument(Type paramType, Type paramType2, Type argType) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(paramType, "name1");
@@ -588,7 +585,7 @@ public class MapperTest {
     do_test_no_param_with_proper_type_for_nameless_arg(NIL, FILE);
   }
 
-  private void do_test_no_param_with_proper_type_for_nameless_arg(Type<?> type, Type<?> otherType) {
+  private void do_test_no_param_with_proper_type_for_nameless_arg(Type type, Type otherType) {
     // given
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(otherType, "name1");
@@ -601,30 +598,30 @@ public class MapperTest {
     messages.assertContainsOnly(AmbiguousNamelessArgsError.class);
   }
 
-  private static Argument arg(Type<?> type) {
+  private static Argument arg(Type type) {
     return namelessArgument(1, expr(type), codeLocation(1));
   }
 
-  private static Argument arg(String name, Type<?> type) {
+  private static Argument arg(String name, Type type) {
     return namedArgument(1, name, expr(type), codeLocation(1));
   }
 
-  private static Expression<?> expr(Type<?> type) {
-    Expression<?> expression = mock(Expression.class);
+  private static Expression expr(Type type) {
+    Expression expression = mock(Expression.class);
     given(willReturn(type), expression).type();
     return expression;
   }
 
   private Map<Parameter, Argument> createMapping(Iterable<Parameter> params,
       List<Argument> arguments) {
-    Function<?> function = function(params);
+    Function function = function(params);
     return new Mapper(codeLocation(1), messages, function, arguments).detectMapping();
   }
 
-  private static Function<?> function(Iterable<Parameter> params) {
-    Signature<SString> signature = new Signature<>(STRING, name("name"), params);
-    Invoker<SString> invoker = mock(Invoker.class);
-    return new NativeFunction<>(signature, invoker, true, Hash.integer(33));
+  private static Function function(Iterable<Parameter> params) {
+    Signature signature = new Signature(STRING, name("name"), params);
+    Invoker invoker = mock(Invoker.class);
+    return new NativeFunction(signature, invoker, true, Hash.integer(33));
   }
 
   private static ArrayList<Argument> list(Argument... arguments) {

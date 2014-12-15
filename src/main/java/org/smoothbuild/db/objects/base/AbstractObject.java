@@ -8,10 +8,10 @@ import org.smoothbuild.lang.base.Value;
 import com.google.common.hash.HashCode;
 
 public abstract class AbstractObject implements Value {
-  private final Type<?> type;
+  private final Type type;
   private final HashCode hash;
 
-  public AbstractObject(Type<?> type, HashCode hash) {
+  public AbstractObject(Type type, HashCode hash) {
     this.type = checkNotNull(type);
     this.hash = checkNotNull(hash);
   }
@@ -22,7 +22,7 @@ public abstract class AbstractObject implements Value {
   }
 
   @Override
-  public Type<?> type() {
+  public Type type() {
     return type;
   }
 

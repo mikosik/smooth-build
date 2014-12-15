@@ -24,13 +24,13 @@ import com.google.inject.TypeLiteral;
 
 public class SignatureFactory {
 
-  public static Signature<?> create(Method functionMethod, Class<?> paramsInterface)
+  public static Signature create(Method functionMethod, Class<?> paramsInterface)
       throws NativeImplementationException {
-    Type<?> type = functionType(functionMethod);
+    Type type = functionType(functionMethod);
     Name name = functionName(functionMethod);
     Iterable<Parameter> params = functionParams(functionMethod, paramsInterface);
 
-    return new Signature<>(type, name, params);
+    return new Signature(type, name, params);
   }
 
   private static Name functionName(Method functionMethod) throws NativeImplementationException {
@@ -60,25 +60,25 @@ public class SignatureFactory {
       throw new ParamMethodHasArgumentsException(functionMethod, parameterMethod);
     }
 
-    Type<?> type = parameterMethodType(functionMethod, parameterMethod);
+    Type type = parameterMethodType(functionMethod, parameterMethod);
     String name = parameterMethod.getName();
     boolean isRequired = parameterMethod.getAnnotation(Required.class) != null;
     return Parameter.parameter(type, name, isRequired);
   }
 
-  private static Type<?> functionType(Method functionMethod) throws NativeImplementationException {
+  private static Type functionType(Method functionMethod) throws NativeImplementationException {
     TypeLiteral<?> jType = methodJType(functionMethod);
-    Type<?> type = resultJTypeToType(jType);
+    Type type = resultJTypeToType(jType);
     if (type == null) {
       throw new IllegalReturnTypeException(functionMethod, jType);
     }
     return type;
   }
 
-  private static Type<?> parameterMethodType(Method functionMethod, Method paramMethod)
+  private static Type parameterMethodType(Method functionMethod, Method paramMethod)
       throws IllegalParamTypeException {
     TypeLiteral<?> jType = methodJType(paramMethod);
-    Type<?> type = parameterJTypeToType(jType);
+    Type type = parameterJTypeToType(jType);
     if (type == null) {
       throw new IllegalParamTypeException(functionMethod, paramMethod, jType);
     }

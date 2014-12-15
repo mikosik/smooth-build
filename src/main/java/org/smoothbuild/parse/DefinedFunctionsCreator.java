@@ -32,7 +32,6 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
@@ -77,12 +76,12 @@ public class DefinedFunctionsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function<?>> createDefinedFunctions(LoggedMessages messages,
-      Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+  public Map<Name, Function> createDefinedFunctions(LoggedMessages messages, Module builtinModule,
+      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker =
         new Worker(messages, builtinModule, functionContexts, sorted, objectsDb,
             argumentExpressionCreator, implicitConverter);
-    Map<Name, Function<?>> result = worker.run();
+    Map<Name, Function> result = worker.run();
     messages.failIfContainsProblems();
     return result;
   }
@@ -96,7 +95,7 @@ public class DefinedFunctionsCreator {
     private final ArgumentExpressionCreator argumentExpressionCreator;
     private final ImplicitConverter implicitConverter;
 
-    private final Map<Name, Function<?>> functions = Maps.newHashMap();
+    private final Map<Name, Function> functions = Maps.newHashMap();
 
     public Worker(LoggedMessages messages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
@@ -110,28 +109,27 @@ public class DefinedFunctionsCreator {
       this.implicitConverter = implicitConverter;
     }
 
-    public Map<Name, Function<?>> run() {
+    public Map<Name, Function> run() {
       for (Name name : sorted) {
-        DefinedFunction<?> definedFunction = build(functionContexts.get(name));
+        DefinedFunction definedFunction = build(functionContexts.get(name));
         functions.put(name, definedFunction);
       }
       return functions;
     }
 
-    public DefinedFunction<?> build(FunctionContext function) {
-      Expression<?> expression = build(function.pipe());
+    public DefinedFunction build(FunctionContext function) {
+      Expression expression = build(function.pipe());
       return buildDefinedFunction(function, expression);
     }
 
-    private <T extends Value> DefinedFunction<T> buildDefinedFunction(FunctionContext function,
-        Expression<T> expression) {
+    private DefinedFunction buildDefinedFunction(FunctionContext function, Expression expression) {
       Name name = name(function.functionName().getText());
-      Signature<T> signature = new Signature<>(expression.type(), name, Empty.paramList());
-      return new DefinedFunction<>(signature, expression);
+      Signature signature = new Signature(expression.type(), name, Empty.paramList());
+      return new DefinedFunction(signature, expression);
     }
 
-    private Expression<?> build(PipeContext pipe) {
-      Expression<?> result = build(pipe.expression());
+    private Expression build(PipeContext pipe) {
+      Expression result = build(pipe.expression());
       List<CallContext> elements = pipe.call();
       for (int i = 0; i < elements.size(); i++) {
         CallContext call = elements.get(i);
@@ -144,7 +142,7 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
-    private Expression<?> build(ExpressionContext expression) {
+    private Expression build(ExpressionContext expression) {
       if (expression.array() != null) {
         return build(expression.array());
       }
@@ -158,45 +156,44 @@ public class DefinedFunctionsCreator {
           + " without children.");
     }
 
-    private Expression<?> build(ArrayContext list) {
+    private Expression build(ArrayContext list) {
       List<ArrayElemContext> elems = list.arrayElem();
-      ImmutableList<Expression<?>> elemExpressions = build(elems);
+      ImmutableList<Expression> elemExpressions = build(elems);
 
       CodeLocation location = locationOf(list);
-      Type<?> elemType = commonSuperType(elems, elemExpressions, location);
+      Type elemType = commonSuperType(elems, elemExpressions, location);
 
       if (elemType != null) {
         return buildArray(elemType, elemExpressions, location);
       } else {
-        return new InvalidExpression<>(NIL, location);
+        return new InvalidExpression(NIL, location);
       }
     }
 
-    private <T extends Value> Expression<Array<T>> buildArray(Type<T> elemType,
-        ImmutableList<Expression<?>> elemExpressions, CodeLocation location) {
-      ArrayType<T> arrayType = Types.arrayTypeContaining(elemType);
-      ImmutableList<Expression<T>> convertedExpression =
-          convertExpressions(elemType, elemExpressions);
-      return new ArrayExpression<>(arrayType, convertedExpression, location);
+    private <T extends Value> Expression buildArray(Type elemType,
+        ImmutableList<Expression> elemExpressions, CodeLocation location) {
+      ArrayType arrayType = Types.arrayTypeContaining(elemType);
+      ImmutableList<Expression> convertedExpression = convertExpressions(elemType, elemExpressions);
+      return new ArrayExpression(arrayType, convertedExpression, location);
     }
 
-    public <T extends Value> ImmutableList<Expression<T>> convertExpressions(Type<T> type,
-        Iterable<? extends Expression<?>> expressions) {
-      ImmutableList.Builder<Expression<T>> builder = ImmutableList.builder();
-      for (Expression<?> expression : expressions) {
+    public <T extends Value> ImmutableList<Expression> convertExpressions(Type type,
+        Iterable<? extends Expression> expressions) {
+      ImmutableList.Builder<Expression> builder = ImmutableList.builder();
+      for (Expression expression : expressions) {
         builder.add(implicitConverter.apply(type, expression));
       }
       return builder.build();
     }
 
-    private ImmutableList<Expression<?>> build(List<ArrayElemContext> elems) {
-      Builder<Expression<?>> builder = ImmutableList.builder();
+    private ImmutableList<Expression> build(List<ArrayElemContext> elems) {
+      Builder<Expression> builder = ImmutableList.builder();
       for (ArrayElemContext elem : elems) {
-        Expression<?> expression = build(elem);
+        Expression expression = build(elem);
         if (!basicTypes().contains(expression.type())) {
           CodeLocation location = locationOf(elem);
           messages.log(new ForbiddenArrayElemError(location, expression.type()));
-          builder.add(new InvalidExpression<>(NOTHING, location));
+          builder.add(new InvalidExpression(NOTHING, location));
         } else {
           builder.add(expression);
         }
@@ -204,7 +201,7 @@ public class DefinedFunctionsCreator {
       return builder.build();
     }
 
-    private Expression<?> build(ArrayElemContext elem) {
+    private Expression build(ArrayElemContext elem) {
       if (elem.STRING() != null) {
         return buildStringExpr(elem.STRING());
       }
@@ -216,16 +213,16 @@ public class DefinedFunctionsCreator {
           + " without children.");
     }
 
-    private Type<?> commonSuperType(List<ArrayElemContext> elems,
-        ImmutableList<Expression<?>> elemExpressions, CodeLocation location) {
+    private Type commonSuperType(List<ArrayElemContext> elems,
+        ImmutableList<Expression> elemExpressions, CodeLocation location) {
       if (elems.size() == 0) {
         return NOTHING;
       }
-      Type<?> firstType = elemExpressions.get(0).type();
-      Type<?> commonSuperType = firstType;
+      Type firstType = elemExpressions.get(0).type();
+      Type commonSuperType = firstType;
 
       for (int i = 1; i < elemExpressions.size(); i++) {
-        Type<?> currentType = elemExpressions.get(i).type();
+        Type currentType = elemExpressions.get(i).type();
         commonSuperType = commonSuperType(commonSuperType, currentType);
 
         if (commonSuperType == null) {
@@ -236,7 +233,7 @@ public class DefinedFunctionsCreator {
       return commonSuperType;
     }
 
-    private static Type<?> commonSuperType(Type<?> type1, Type<?> type2) {
+    private static Type commonSuperType(Type type1, Type type2) {
       if (type1 == STRING) {
         if (type2 == STRING) {
           return STRING;
@@ -261,34 +258,34 @@ public class DefinedFunctionsCreator {
       return null;
     }
 
-    private Expression<?> build(CallContext call) {
+    private Expression build(CallContext call) {
       List<Argument> arguments = build(call.argList());
       return build(call, arguments);
     }
 
-    private Expression<?> build(CallContext call, List<Argument> arguments) {
+    private Expression build(CallContext call, List<Argument> arguments) {
       String functionName = call.functionName().getText();
 
-      Function<?> function = getFunction(functionName);
+      Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      ImmutableMap<String, ? extends Expression<?>> namedArgs =
+      ImmutableMap<String, ? extends Expression> namedArgs =
           argumentExpressionCreator.createArgExprs(codeLocation, messages, function, arguments);
 
       if (namedArgs == null) {
-        return new InvalidExpression<>(function.type(), locationOf(call.functionName()));
+        return new InvalidExpression(function.type(), locationOf(call.functionName()));
       } else {
         return callExpression(function, false, codeLocation, namedArgs);
       }
     }
 
-    private Function<?> getFunction(String functionName) {
+    private Function getFunction(String functionName) {
       // UndefinedFunctionDetector has been run already so we can be sure at
       // this point that function with given name exists either among imported
       // functions or among already handled defined functions.
 
       Name name = Name.name(functionName);
-      Function<?> function = builtinModule.getFunction(name);
+      Function function = builtinModule.getFunction(name);
       if (function == null) {
         return functions.get(name);
       } else {
@@ -308,7 +305,7 @@ public class DefinedFunctionsCreator {
     }
 
     private Argument build(int index, ArgContext arg) {
-      Expression<?> expression = build(arg.expression());
+      Expression expression = build(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
@@ -319,16 +316,16 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private Expression<?> buildStringExpr(TerminalNode stringToken) {
+    private Expression buildStringExpr(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         SString stringValue = objectsDb.string(unescaped(string));
-        return new ConstantExpression<>(STRING, stringValue, locationOf(stringToken.getSymbol()));
+        return new ConstantExpression(STRING, stringValue, locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.log(new CodeMessage(ERROR, location, e.getMessage()));
-        return new InvalidExpression<>(STRING, locationOf(stringToken.getSymbol()));
+        return new InvalidExpression(STRING, locationOf(stringToken.getSymbol()));
       }
     }
   }

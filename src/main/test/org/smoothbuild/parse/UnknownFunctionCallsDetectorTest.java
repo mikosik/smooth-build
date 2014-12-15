@@ -38,7 +38,7 @@ public class UnknownFunctionCallsDetectorTest {
 
   @Test
   public void referenceToImportedFunction() {
-    Function<?> function = mock(Function.class);
+    Function function = mock(Function.class);
     Module builtinModule = new ImmutableModule(ImmutableMap.of(name2, function));
     Map<Name, Set<Dependency>> dependencyMap = ImmutableMap.of(name1, dependencies(name2));
 

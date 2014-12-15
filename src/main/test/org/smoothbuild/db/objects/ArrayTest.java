@@ -23,7 +23,6 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Types;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.hash.HashCode;
@@ -241,7 +240,7 @@ public class ArrayTest {
     }
 
     @Override
-    public Type<? extends Value> type() {
+    public Type type() {
       return Types.NOTHING;
     }
   }

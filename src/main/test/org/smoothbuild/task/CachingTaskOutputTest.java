@@ -49,9 +49,9 @@ public class CachingTaskOutputTest {
   private AtomicInteger counter;
   private CountingExpression expression1;
   private CountingExpression expression2;
-  private ArrayExpression<SString> arrayExpression;
-  private Task<?> task;
-  private Task<SString> task2;
+  private ArrayExpression arrayExpression;
+  private Task task;
+  private Task task2;
 
   private Module module;
   private Injector injector;
@@ -69,8 +69,7 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), true));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), true));
-    given(arrayExpression =
-        new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(stringArray("1", "1")));
@@ -82,8 +81,7 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), false));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), false));
-    given(arrayExpression =
-        new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
@@ -95,8 +93,7 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, asList(stringExpression("dep1")), true));
     given(expression2 = new CountingExpression(counter, asList(stringExpression("dep2")), true));
-    given(arrayExpression =
-        new ArrayExpression<>(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
@@ -133,8 +130,8 @@ public class CachingTaskOutputTest {
     }
   }
 
-  private ConstantExpression<SString> stringExpression(String string) {
-    return new ConstantExpression<>(STRING, objectsDb.string(string), CL);
+  private ConstantExpression stringExpression(String string) {
+    return new ConstantExpression(STRING, objectsDb.string(string), CL);
   }
 
   private Array<SString> stringArray(String... strings) {
@@ -145,11 +142,11 @@ public class CachingTaskOutputTest {
     return builder.build();
   }
 
-  private static class CountingExpression extends Expression<SString> {
+  private static class CountingExpression extends Expression {
     private final AtomicInteger counter;
     private final boolean isCacheable;
 
-    public CountingExpression(AtomicInteger counter, List<? extends Expression<?>> dependencies,
+    public CountingExpression(AtomicInteger counter, List<? extends Expression> dependencies,
         boolean isCacheable) {
       super(STRING, dependencies, CL);
       this.counter = counter;
@@ -157,12 +154,12 @@ public class CachingTaskOutputTest {
     }
 
     @Override
-    public TaskWorker<SString> createWorker() {
+    public TaskWorker createWorker() {
       return new MyCountingTaskWorker(counter, isCacheable);
     }
   }
 
-  private static class MyCountingTaskWorker extends TaskWorker<SString> {
+  private static class MyCountingTaskWorker extends TaskWorker {
     private final AtomicInteger counter;
 
     public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {

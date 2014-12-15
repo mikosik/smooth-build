@@ -17,10 +17,10 @@ import com.google.common.hash.HashCode;
 
 public class ArrayMarshaller<T extends Value> implements ObjectMarshaller<Array<T>> {
   private final HashedDb hashedDb;
-  private final ArrayType<T> arrayType;
+  private final ArrayType arrayType;
   private final ObjectMarshaller<T> elementMarshaller;
 
-  public ArrayMarshaller(HashedDb hashedDb, ArrayType<T> arrayType,
+  public ArrayMarshaller(HashedDb hashedDb, ArrayType arrayType,
       ObjectMarshaller<T> elementMarshaller) {
     this.hashedDb = checkNotNull(hashedDb);
     this.arrayType = checkNotNull(arrayType);

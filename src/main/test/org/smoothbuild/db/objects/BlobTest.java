@@ -131,7 +131,7 @@ public class BlobTest {
   public void blob_fetched_by_hash_has_same_content() throws Exception {
     given(blob = createBlob(objectsDb, string));
     given(hash = blob.hash());
-    when(inputStreamToString(objectsDb.read(BLOB, hash).openInputStream()));
+    when(inputStreamToString(((Blob) objectsDb.read(BLOB, hash)).openInputStream()));
     thenReturned(inputStreamToString(blob.openInputStream()));
   }
 

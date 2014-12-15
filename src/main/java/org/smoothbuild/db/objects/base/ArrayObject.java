@@ -13,7 +13,7 @@ import com.google.common.hash.HashCode;
 public class ArrayObject<T extends Value> extends AbstractObject implements Array<T> {
   private final ArrayMarshaller<T> marshaller;
 
-  public ArrayObject(HashCode hash, ArrayType<T> arrayType, ArrayMarshaller<T> marshaller) {
+  public ArrayObject(HashCode hash, ArrayType arrayType, ArrayMarshaller<T> marshaller) {
     super(arrayType, hash);
     this.marshaller = marshaller;
   }

@@ -29,7 +29,7 @@ public class TaskExecutor {
     this.reporter = reporter;
   }
 
-  public <T extends Value> void execute(Task<T> task) {
+  public <T extends Value> void execute(Task task) {
     HashCode hash = taskHash(task);
     boolean isAlreadyCached = taskOutputsDb.contains(hash);
     if (isAlreadyCached) {
@@ -47,7 +47,7 @@ public class TaskExecutor {
     }
   }
 
-  private <T extends Value> HashCode taskHash(Task<T> task) {
+  private <T extends Value> HashCode taskHash(Task task) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(smoothJarHash.asBytes());
     hasher.putBytes(task.hash().asBytes());

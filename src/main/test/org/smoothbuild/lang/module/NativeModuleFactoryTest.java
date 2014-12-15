@@ -43,7 +43,7 @@ import com.google.common.io.ByteStreams;
 
 public class NativeModuleFactoryTest {
   private Module module;
-  private Function<?> function;
+  private Function function;
 
   @Test
   public void module_available_names_contains_smooth_function_names() throws Exception {

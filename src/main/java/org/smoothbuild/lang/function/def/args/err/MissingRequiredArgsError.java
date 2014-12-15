@@ -14,12 +14,12 @@ import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.util.LineBuilder;
 
 public class MissingRequiredArgsError extends CodeMessage {
-  public MissingRequiredArgsError(CodeLocation codeLocation, Function<?> function,
+  public MissingRequiredArgsError(CodeLocation codeLocation, Function function,
       Map<Parameter, Argument> mapBuilder, Set<Parameter> missingRequiredParameters) {
     super(ERROR, codeLocation, createMesssage(function, mapBuilder, missingRequiredParameters));
   }
 
-  private static String createMesssage(Function<?> function, Map<Parameter, Argument> mapBuilder,
+  private static String createMesssage(Function function, Map<Parameter, Argument> mapBuilder,
       Set<Parameter> missingRequiredParameters) {
     LineBuilder builder = new LineBuilder();
 

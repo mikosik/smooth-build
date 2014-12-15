@@ -80,9 +80,9 @@ public class TypesTest {
 
   @Test
   public void all_types_returns_list_sorted_by_super_type_dependency() {
-    Set<Type<?>> visited = Sets.newHashSet();
-    for (Type<?> type : allTypes()) {
-      for (Type<?> visitedType : visited) {
+    Set<Type> visited = Sets.newHashSet();
+    for (Type type : allTypes()) {
+      for (Type visitedType : visited) {
         assertFalse(canConvert(visitedType, type));
       }
       visited.add(type);
@@ -91,14 +91,14 @@ public class TypesTest {
 
   @Test
   public void paramJTypeToType_works_for_all_types() {
-    for (Type<?> type : asList(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY)) {
+    for (Type type : asList(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY)) {
       assertEquals(type, parameterJTypeToType(type.jType()));
     }
   }
 
   @Test
   public void resultJTypeToType_works_for_all_types() {
-    for (Type<?> type : asList(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY)) {
+    for (Type type : asList(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY)) {
       assertEquals(type, resultJTypeToType(type.jType()));
     }
   }
