@@ -28,9 +28,6 @@ public class Signature {
     return name;
   }
 
-  /**
-   * @return Parameters ordered lexicographically by their names.
-   */
   public ImmutableList<Parameter> parameters() {
     return parameters;
   }
