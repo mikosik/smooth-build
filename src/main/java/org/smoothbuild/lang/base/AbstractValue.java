@@ -1,17 +1,14 @@
-package org.smoothbuild.db.objects.base;
+package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
-
 import com.google.common.hash.HashCode;
 
-public abstract class AbstractObject implements Value {
+public abstract class AbstractValue implements Value {
   private final Type type;
   private final HashCode hash;
 
-  public AbstractObject(Type type, HashCode hash) {
+  public AbstractValue(Type type, HashCode hash) {
     this.type = checkNotNull(type);
     this.hash = checkNotNull(hash);
   }
