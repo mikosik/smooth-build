@@ -3,7 +3,6 @@ package org.smoothbuild.db.objects.marshal;
 import java.io.InputStream;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.base.BlobObject;
 import org.smoothbuild.lang.base.Blob;
 
 import com.google.common.hash.HashCode;
@@ -22,7 +21,7 @@ public class BlobMarshaller implements ObjectMarshaller<Blob> {
 
   @Override
   public Blob read(HashCode hash) {
-    return new BlobObject(hash, this);
+    return new Blob(hash, this);
   }
 
   public InputStream openInputStream(HashCode hash) {

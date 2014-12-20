@@ -7,7 +7,6 @@ import java.util.List;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.db.objects.base.ArrayObject;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Value;
@@ -29,7 +28,7 @@ public class ArrayMarshaller<T extends Value> implements ObjectMarshaller<Array<
 
   @Override
   public Array<T> read(HashCode hash) {
-    return new ArrayObject<>(hash, arrayType, this);
+    return new Array<>(hash, arrayType, this);
   }
 
   public ImmutableList<T> readElements(HashCode hash) {
@@ -52,6 +51,6 @@ public class ArrayMarshaller<T extends Value> implements ObjectMarshaller<Array<
     byte[] bytes = marshaller.getBytes();
 
     HashCode hash = hashedDb.write(bytes);
-    return new ArrayObject<>(hash, arrayType, this);
+    return new Array<>(hash, arrayType, this);
   }
 }

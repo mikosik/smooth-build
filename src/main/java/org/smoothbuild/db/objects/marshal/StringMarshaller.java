@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedError;
-import org.smoothbuild.db.objects.base.StringObject;
 import org.smoothbuild.lang.base.SString;
 
 import com.google.common.hash.HashCode;
@@ -22,12 +21,12 @@ public class StringMarshaller implements ObjectMarshaller<SString> {
   public SString write(String string) {
     byte[] bytes = string.getBytes(CHARSET);
     HashCode hash = hashedDb.write(bytes);
-    return new StringObject(hash, this);
+    return new SString(hash, this);
   }
 
   @Override
   public SString read(HashCode hash) {
-    return new StringObject(hash, this);
+    return new SString(hash, this);
   }
 
   public String readValue(HashCode hash) {

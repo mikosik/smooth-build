@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.db.objects.base.FileObject;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
@@ -28,7 +27,7 @@ public class FileMarshaller implements ObjectMarshaller<SFile> {
     byte[] bytes = marshaller.getBytes();
 
     HashCode hash = hashedDb.write(bytes);
-    return new FileObject(hash, path, content);
+    return new SFile(hash, path, content);
   }
 
   @Override
@@ -38,7 +37,7 @@ public class FileMarshaller implements ObjectMarshaller<SFile> {
       Path path = unmarshaller.readPath();
       Blob blob = blobMarshaller.read(blobHash);
 
-      return new FileObject(hash, path, blob);
+      return new SFile(hash, path, blob);
     }
   }
 }
