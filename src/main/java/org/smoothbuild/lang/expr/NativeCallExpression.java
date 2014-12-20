@@ -1,8 +1,3 @@
-/*
- * Copyright 2014 Marcin Mikosik
- * All rights reserved.
- */
-
 package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.function.base.Function;
