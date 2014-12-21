@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.lang.reflect.InvocationTargetException;
 
 import org.smoothbuild.lang.function.base.AbstractFunction;
@@ -27,7 +25,7 @@ public class NativeFunctionLegacy extends AbstractFunction {
     super(signature);
     this.hash = hash;
     this.isCacheable = isCacheable;
-    this.invoker = checkNotNull(invoker);
+    this.invoker = invoker;
   }
 
   public HashCode hash() {

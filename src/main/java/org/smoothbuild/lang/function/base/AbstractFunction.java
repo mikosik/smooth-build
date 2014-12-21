@@ -13,6 +13,10 @@ public abstract class AbstractFunction implements Function {
     this.signature = checkNotNull(signature);
   }
 
+  public Signature signature() {
+    return signature;
+  }
+
   @Override
   public Type type() {
     return signature.type();
