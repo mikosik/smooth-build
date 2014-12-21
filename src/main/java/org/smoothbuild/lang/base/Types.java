@@ -56,6 +56,8 @@ public class Types {
       createToTypeMap(PARAMETER_TYPES);
   private static final ImmutableMap<TypeLiteral<?>, Type> RESULT_JTYPE_TO_TYPE =
       createToTypeMap(RESULT_TYPES);
+  private static final ImmutableMap<TypeLiteral<?>, Type> JTYPE_TO_TYPE =
+      createToTypeMap(ALL_TYPES);
   private static final ImmutableMap<Type, ArrayType> ELEM_TYPE_TO_ARRAY_TYPE =
       createElemTypeToArrayTypeMap(ARRAY_TYPES);
 
@@ -90,6 +92,10 @@ public class Types {
 
   public static Type resultJTypeToType(TypeLiteral<?> jType) {
     return RESULT_JTYPE_TO_TYPE.get(jType);
+  }
+
+  public static Type jTypeToType(TypeLiteral<?> jType) {
+    return JTYPE_TO_TYPE.get(jType);
   }
 
   public static <T extends Value> ArrayType arrayTypeContaining(Type elemType) {

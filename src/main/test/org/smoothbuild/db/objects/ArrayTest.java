@@ -14,18 +14,14 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Types;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
-import com.google.common.hash.HashCode;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -36,7 +32,6 @@ public class ArrayTest {
   private SString sstring2;
   private SString sstring3;
   private Array<?> array;
-  private ArrayBuilder<Nothing> nilBuilder;
   private ArrayBuilder<SString> arrayBuilder;
   @SuppressWarnings("rawtypes")
   private ArrayBuilder rawArrayBuilder;
@@ -73,13 +68,6 @@ public class ArrayTest {
     given(array = objectsDb.arrayBuilder(Nothing.class).build());
     when(array.type());
     thenReturned(NIL);
-  }
-
-  @Test
-  public void adding_elements_to_nil_is_forbidden() throws Exception {
-    given(nilBuilder = objectsDb.arrayBuilder(Nothing.class));
-    when(nilBuilder).add(new MyNothing());
-    thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
@@ -231,17 +219,5 @@ public class ArrayTest {
   public void nil_to_string_contains_square_brackets() throws Exception {
     when(objectsDb.arrayBuilder(Nothing.class).build().toString());
     thenReturned("[]");
-  }
-
-  private static class MyNothing implements Nothing {
-    @Override
-    public HashCode hash() {
-      return Hash.string("");
-    }
-
-    @Override
-    public Type type() {
-      return Types.NOTHING;
-    }
   }
 }

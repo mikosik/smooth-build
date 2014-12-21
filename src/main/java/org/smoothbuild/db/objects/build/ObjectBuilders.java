@@ -1,8 +1,7 @@
 package org.smoothbuild.db.objects.build;
 
-import static org.smoothbuild.lang.base.Types.NIL;
 import static org.smoothbuild.lang.base.Types.arrayTypeContaining;
-import static org.smoothbuild.lang.base.Types.resultJTypeToType;
+import static org.smoothbuild.lang.base.Types.jTypeToType;
 
 import javax.inject.Inject;
 
@@ -37,12 +36,8 @@ public class ObjectBuilders {
         || elementClass == Blob.class || elementClass == SFile.class)) {
       throw new IllegalArgumentException("Illegal type " + elementClass.getCanonicalName());
     }
-    if (elementClass == Nothing.class) {
-      return (ArrayBuilder<T>) new NilBuilder(objectMarshallers.<Nothing>arrayMarshaller(NIL));
-    } else {
-      Type type = resultJTypeToType(TypeLiteral.get(elementClass));
-      return createArrayBuilder(arrayTypeContaining(type), elementClass);
-    }
+    Type type = jTypeToType(TypeLiteral.get(elementClass));
+    return createArrayBuilder(arrayTypeContaining(type), elementClass);
   }
 
   private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type, Class<?> elementClass) {

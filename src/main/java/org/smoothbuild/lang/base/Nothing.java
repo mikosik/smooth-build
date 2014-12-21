@@ -1,3 +1,18 @@
 package org.smoothbuild.lang.base;
 
-public interface Nothing extends Value {}
+import com.google.common.hash.HashCode;
+
+public final class Nothing implements Value {
+
+  private Nothing() {}
+
+  @Override
+  public HashCode hash() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Type type() {
+    throw new UnsupportedOperationException();
+  }
+}
