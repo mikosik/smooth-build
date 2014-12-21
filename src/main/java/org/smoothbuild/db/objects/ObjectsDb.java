@@ -1,5 +1,6 @@
 package org.smoothbuild.db.objects;
 
+import static org.smoothbuild.lang.base.Types.arrayElementJTypes;
 import static org.smoothbuild.lang.base.Types.arrayTypeContaining;
 import static org.smoothbuild.lang.base.Types.jTypeToType;
 
@@ -12,7 +13,6 @@ import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.ArrayType;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.Nothing;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
@@ -30,8 +30,7 @@ public class ObjectsDb {
   }
 
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementClass) {
-    if (!(elementClass == Nothing.class || elementClass == SString.class
-        || elementClass == Blob.class || elementClass == SFile.class)) {
+    if (!(arrayElementJTypes().contains(TypeLiteral.get(elementClass)))) {
       throw new IllegalArgumentException("Illegal type " + elementClass.getCanonicalName());
     }
     Type type = jTypeToType(TypeLiteral.get(elementClass));
