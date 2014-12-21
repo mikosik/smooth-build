@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.db.objects.build.ObjectBuilders;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -34,7 +33,7 @@ public class FakeObjectsDb extends ObjectsDb {
   }
 
   public FakeObjectsDb(HashedDb hashedDb, ObjectMarshallers objectMarshallers) {
-    super(objectMarshallers, new ObjectBuilders(objectMarshallers));
+    super(objectMarshallers);
   }
 
   public <T extends Value> Array<T> array(Class<T> elementType, T... elements) {
