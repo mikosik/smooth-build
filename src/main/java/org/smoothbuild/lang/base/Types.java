@@ -38,6 +38,8 @@ public class Types {
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   private static final ImmutableSet<Type> PARAMETER_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
+  private static final ImmutableSet<Type> ARRAY_ELEMENT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+      NOTHING);
   private static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
 
@@ -47,6 +49,8 @@ public class Types {
 
   private static final ImmutableSet<TypeLiteral<?>> RESULT_JTYPES = toJTypes(RESULT_TYPES);
   private static final ImmutableSet<TypeLiteral<?>> PARAMETER_JTYPES = toJTypes(PARAMETER_TYPES);
+  private static final ImmutableSet<TypeLiteral<?>> ARRAY_ELEMENT_JTYPES =
+      toJTypes(ARRAY_ELEMENT_TYPES);
 
   /*
    * A few handy mappings.
@@ -84,6 +88,10 @@ public class Types {
 
   public static ImmutableSet<TypeLiteral<?>> parameterJTypes() {
     return PARAMETER_JTYPES;
+  }
+
+  public static ImmutableSet<TypeLiteral<?>> arrayElementJTypes() {
+    return ARRAY_ELEMENT_JTYPES;
   }
 
   public static Type parameterJTypeToType(TypeLiteral<?> jType) {
