@@ -28,7 +28,7 @@ public class ObjectBuilders {
   }
 
   public BlobBuilder blobBuilder() {
-    return new BlobBuilderImpl(objectMarshallers.blobMarshaller());
+    return new BlobBuilder(objectMarshallers.blobMarshaller());
   }
 
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementClass) {
@@ -42,6 +42,6 @@ public class ObjectBuilders {
 
   private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type, Class<?> elementClass) {
     ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(type);
-    return new ArrayBuilderImpl<>(marshaller, elementClass);
+    return new ArrayBuilder<>(marshaller, elementClass);
   }
 }
