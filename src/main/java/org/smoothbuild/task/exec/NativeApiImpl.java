@@ -2,6 +2,7 @@ package org.smoothbuild.task.exec;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -14,21 +15,20 @@ import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.base.ValueFactory;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 
 public class NativeApiImpl implements NativeApi {
   private final FileSystem projectFileSystem;
-  private final ValueFactory valueFactory;
+  private final ObjectsDb objectsDb;
   private final TempDirectoryManager tempDirectoryManager;
   private final LoggedMessages messages;
 
   @Inject
-  public NativeApiImpl(@ProjectDir FileSystem fileSystem, ValueFactory valueFactory,
+  public NativeApiImpl(@ProjectDir FileSystem fileSystem, ObjectsDb objectsDb,
       TempDirectoryManager tempDirectoryManager) {
     this.projectFileSystem = fileSystem;
-    this.valueFactory = valueFactory;
+    this.objectsDb = objectsDb;
     this.tempDirectoryManager = tempDirectoryManager;
     this.messages = new LoggedMessages();
   }
@@ -39,22 +39,22 @@ public class NativeApiImpl implements NativeApi {
 
   @Override
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementType) {
-    return valueFactory.arrayBuilder(elementType);
+    return objectsDb.arrayBuilder(elementType);
   }
 
   @Override
   public SFile file(Path path, Blob content) {
-    return valueFactory.file(path, content);
+    return objectsDb.file(path, content);
   }
 
   @Override
   public BlobBuilder blobBuilder() {
-    return valueFactory.blobBuilder();
+    return objectsDb.blobBuilder();
   }
 
   @Override
   public SString string(String string) {
-    return valueFactory.string(string);
+    return objectsDb.string(string);
   }
 
   public FileSystem projectFileSystem() {
