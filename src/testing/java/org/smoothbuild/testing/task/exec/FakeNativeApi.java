@@ -1,5 +1,7 @@
 package org.smoothbuild.testing.task.exec;
 
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -44,5 +46,13 @@ public class FakeNativeApi extends NativeApiImpl {
   @Override
   public void log(Message message) {
     messages.log(message);
+  }
+
+  public SFile file(Path path) {
+    return objectsDb.file(path);
+  }
+
+  public SFile file(Path path, String content) {
+    return objectsDb.file(path, content);
   }
 }

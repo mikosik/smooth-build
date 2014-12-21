@@ -18,13 +18,13 @@ import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.testory.Closure;
 
 import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjectsTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final FakeNativeApi nativeApi = new FakeNativeApi();
   private SFile file1;
   private SFile file2;
   private Blob jar;
@@ -33,10 +33,10 @@ public class PackagedJavaFileObjectsTest {
 
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
-    given(file1 = objectsDb.file(path("my/package/MyKlass.class")));
-    given(file2 = objectsDb.file(path("my/package/MyKlass2.class")));
+    given(file1 = nativeApi.file(path("my/package/MyKlass.class")));
+    given(file2 = nativeApi.file(path("my/package/MyKlass2.class")));
     given(jar = jar(file1, file2));
-    given(objects = packagedJavaFileObjects(objectsDb, asList(jar)));
+    given(objects = packagedJavaFileObjects(nativeApi, asList(jar)));
     given(fileObject = objects.get("my.package").iterator().next());
 
     when(inputStreamToString(fileObject.openInputStream()));
@@ -48,7 +48,7 @@ public class PackagedJavaFileObjectsTest {
 
   @Test
   public void duplicateClassFileException() throws Exception {
-    given(file1 = objectsDb.file(path("my/package/MyKlass.class")));
+    given(file1 = nativeApi.file(path("my/package/MyKlass.class")));
     given(jar = jar(file1));
     when(javaFileObjects(asList(jar, jar)));
     thenThrown(DuplicateClassFileError.class);
@@ -58,7 +58,7 @@ public class PackagedJavaFileObjectsTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return packagedJavaFileObjects(objectsDb, libraryJars);
+        return packagedJavaFileObjects(nativeApi, libraryJars);
       }
     };
   }

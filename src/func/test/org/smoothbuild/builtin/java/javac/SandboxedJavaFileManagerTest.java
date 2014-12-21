@@ -14,14 +14,14 @@ import javax.tools.StandardJavaFileManager;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.lang.base.ValueFactory;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
+import org.smoothbuild.lang.base.NativeApi;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManagerTest {
   private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  private final ValueFactory valueFactory = new FakeObjectsDb();
+  private final NativeApi nativeApi = new FakeNativeApi();
   private final Multimap<String, JavaFileObject> packagedJavaFileObjects = mock(Multimap.class);
 
   private SandboxedJavaFileManager manager;
@@ -29,14 +29,14 @@ public class SandboxedJavaFileManagerTest {
   @Test
   public void getJavaFile_output_is_not_forwarded_to_standard_manager_for_class_output()
       throws Exception {
-    given(manager = new SandboxedJavaFileManager(sfm, valueFactory, packagedJavaFileObjects));
+    given(manager = new SandboxedJavaFileManager(sfm, nativeApi, packagedJavaFileObjects));
     when(manager).getJavaFileForOutput(CLASS_OUTPUT, "className", Kind.CLASS, null);
     thenCalledTimes(0, onInstance(sfm));
   }
 
   @Test
   public void getJavaFileOutput_logs_error_when_class_name_is_illegal() throws Exception {
-    given(manager = new SandboxedJavaFileManager(sfm, valueFactory, packagedJavaFileObjects));
+    given(manager = new SandboxedJavaFileManager(sfm, nativeApi, packagedJavaFileObjects));
     when(manager).getJavaFileForOutput(CLASS_OUTPUT, ".illegal.MyClass", Kind.CLASS, null);
     thenThrown(IncorrectClassNameGivenByJavaCompilerError.class);
     thenCalledTimes(0, onInstance(sfm));

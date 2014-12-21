@@ -1,10 +1,19 @@
 package org.smoothbuild.lang.base;
 
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 
-public interface NativeApi extends ValueFactory {
+public interface NativeApi {
+  public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> arrayType);
+
+  public SFile file(Path path, Blob content);
+
+  public BlobBuilder blobBuilder();
+
+  public SString string(String string);
+
   public void log(Message message);
 
   /**

@@ -16,22 +16,22 @@ import javax.tools.StandardLocation;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.ValueFactory;
 
 import com.google.common.collect.Multimap;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-  private final ValueFactory valueFactory;
+  private final NativeApi nativeApi;
   private final Multimap<String, JavaFileObject> packageToJavaFileObjects;
   private final ArrayBuilder<SFile> resultClassFiles;
 
-  SandboxedJavaFileManager(StandardJavaFileManager fileManager, ValueFactory valueFactory,
+  SandboxedJavaFileManager(StandardJavaFileManager fileManager, NativeApi nativeApi,
       Multimap<String, JavaFileObject> packageToJavaFileObjects) {
     super(fileManager);
-    this.valueFactory = valueFactory;
+    this.nativeApi = nativeApi;
     this.packageToJavaFileObjects = packageToJavaFileObjects;
-    this.resultClassFiles = valueFactory.arrayBuilder(SFile.class);
+    this.resultClassFiles = nativeApi.arrayBuilder(SFile.class);
   }
 
   public Array<SFile> resultClassfiles() {
@@ -45,7 +45,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       String classFilePath = className.replace('.', '/') + ".class";
       String message = validationError(classFilePath);
       if (message == null) {
-        return new OutputClassFile(resultClassFiles, path(classFilePath), valueFactory);
+        return new OutputClassFile(resultClassFiles, path(classFilePath), nativeApi);
       } else {
         throw new IncorrectClassNameGivenByJavaCompilerError(className);
       }

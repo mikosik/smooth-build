@@ -17,12 +17,11 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.base.ValueFactory;
 
 import com.google.common.hash.HashCode;
 import com.google.inject.TypeLiteral;
 
-public class ObjectsDb implements ValueFactory {
+public class ObjectsDb {
   private final ObjectMarshallers objectMarshallers;
 
   @Inject
@@ -30,7 +29,6 @@ public class ObjectsDb implements ValueFactory {
     this.objectMarshallers = objectMarshallers;
   }
 
-  @Override
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementClass) {
     if (!(elementClass == Nothing.class || elementClass == SString.class
         || elementClass == Blob.class || elementClass == SFile.class)) {
@@ -45,17 +43,14 @@ public class ObjectsDb implements ValueFactory {
     return new ArrayBuilder<>(marshaller, elementClass);
   }
 
-  @Override
   public SFile file(Path path, Blob content) {
     return objectMarshallers.fileMarshaller().write(path, content);
   }
 
-  @Override
   public BlobBuilder blobBuilder() {
     return new BlobBuilder(objectMarshallers.blobMarshaller());
   }
 
-  @Override
   public SString string(String string) {
     return objectMarshallers.stringMarshaller().write(string);
   }

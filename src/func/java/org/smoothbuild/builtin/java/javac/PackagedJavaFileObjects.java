@@ -8,16 +8,16 @@ import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.ValueFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class PackagedJavaFileObjects {
-  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(ValueFactory valueFactory,
+  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(NativeApi nativeApi,
       Iterable<Blob> libraryJars) {
-    Unjarer unjarer = new Unjarer(valueFactory);
+    Unjarer unjarer = new Unjarer(nativeApi);
     Multimap<String, JavaFileObject> result = HashMultimap.create();
 
     for (Blob jarBlob : libraryJars) {
