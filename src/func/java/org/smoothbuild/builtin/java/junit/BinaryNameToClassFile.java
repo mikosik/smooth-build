@@ -10,17 +10,17 @@ import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.ValueFactory;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.Maps;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, SFile> binaryNameToClassFile(ValueFactory valueFactory,
+  public static Map<String, SFile> binaryNameToClassFile(NativeApi nativeApi,
       Iterable<Blob> libraryJars) {
-    Unjarer unjarer = new Unjarer(valueFactory);
+    Unjarer unjarer = new Unjarer(nativeApi);
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, SFile> binaryNameToClassFile = Maps.newHashMap();
 

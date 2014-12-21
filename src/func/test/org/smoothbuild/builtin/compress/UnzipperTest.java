@@ -24,6 +24,7 @@ import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 public class UnzipperTest {
   private String fileName1;
@@ -39,7 +40,7 @@ public class UnzipperTest {
     given(fileName1 = "file/path/file1.txt");
     given(fileName2 = "file/path/file2.txt");
     given(directoryName = "my/directory/");
-    given(unzipper = new Unzipper(new FakeObjectsDb()));
+    given(unzipper = new Unzipper(new FakeNativeApi()));
   }
 
   @Test
