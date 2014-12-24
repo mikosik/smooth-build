@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.function.base.Function;
@@ -21,6 +23,7 @@ import org.smoothbuild.lang.function.def.err.MissingRequiredArgsError;
 import org.smoothbuild.lang.function.def.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.err.UnknownParamNameError;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 
@@ -29,10 +32,12 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
 public class ArgumentExpressionCreator {
+  private final ObjectsDb objectsDb;
   private final ImplicitConverter implicitConverter;
 
   @Inject
-  public ArgumentExpressionCreator(ImplicitConverter implicitConverter) {
+  public ArgumentExpressionCreator(ObjectsDb objectsDb, ImplicitConverter implicitConverter) {
+    this.objectsDb = objectsDb;
     this.implicitConverter = implicitConverter;
   }
 
@@ -63,8 +68,15 @@ public class ArgumentExpressionCreator {
       return null;
     }
 
+    Map<String, Expression> argumentExpressions = convert(argumentMap);
+    for (Parameter parameter : parametersPool.allOptional()) {
+      Value value = parameter.type().defaultValue(objectsDb);
+      Expression expression = new DefaultValueExpression(value, codeLocation);
+      argumentExpressions.put(parameter.name(), expression);
+    }
+
     messages.failIfContainsProblems();
-    return convert(argumentMap);
+    return argumentExpressions;
   }
 
   private static void detectDuplicatedAndUnknownArgumentNames(Function function,
