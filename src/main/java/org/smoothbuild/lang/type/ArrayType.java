@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.type;
 
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
 
@@ -15,5 +16,11 @@ public class ArrayType extends Type {
 
   public Type elemType() {
     return elemType;
+  }
+
+  @Override
+  public Value defaultValue(ObjectsDb objectsDb) {
+    Class<? extends Value> rawType = (Class<? extends Value>) elemType.jType().getRawType();
+    return objectsDb.arrayBuilder(rawType).build();
   }
 }

@@ -68,6 +68,6 @@ public class ArgumentRequiredTest {
     script(fileSystem, "result : oneOptionalOneRequired('abc') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(artifactPath("result"), "abc:null");
+    fileSystem.assertFileContains(artifactPath("result"), "abc:");
   }
 }

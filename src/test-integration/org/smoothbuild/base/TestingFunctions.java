@@ -66,6 +66,17 @@ public class TestingFunctions {
     }
   }
 
+  public interface FileIdentityParams {
+    public SFile file();
+  }
+
+  public static class FileIdentity {
+    @SmoothFunction
+    public static SFile fileIdentity(NativeApi nativeApi, FileIdentityParams params) {
+      return params.file();
+    }
+  }
+
   public interface StringArrayIdentityParams {
     public Array<SString> stringArray();
   }

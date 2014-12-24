@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * missing arguments are initialized to default value of their type
  * added 'concatenateStrings' function
 
 Version 0.10.0 (2014.03.25)

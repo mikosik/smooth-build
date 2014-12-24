@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.type;
 
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.inject.TypeLiteral;
@@ -7,13 +8,9 @@ import com.google.inject.TypeLiteral;
 /**
  * Type in smooth language.
  */
-public class Type {
+public abstract class Type {
   private final String name;
   private final TypeLiteral<? extends Value> jType;
-
-  protected static <T extends Value> Type type(String name, Class<T> clazz) {
-    return new Type(name, TypeLiteral.get(clazz));
-  }
 
   protected Type(String name, Class<? extends Value> clazz) {
     this(name, TypeLiteral.get(clazz));
@@ -31,6 +28,8 @@ public class Type {
   public TypeLiteral<? extends Value> jType() {
     return jType;
   }
+
+  public abstract Value defaultValue(ObjectsDb objectsDb);
 
   @Override
   public final boolean equals(Object object) {
