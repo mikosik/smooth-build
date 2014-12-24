@@ -18,7 +18,7 @@ import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class ParameterTest {
+public class ArgumentTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
@@ -33,7 +33,7 @@ public class ParameterTest {
   }
 
   @Test
-  public void trailing_comma_is_allowed_in_parameter_list() throws IOException {
+  public void trailing_comma_is_allowed_in_argument_list() throws IOException {
     // given
     script(fileSystem, "run : toBlob(string='abc',) ;");
 
@@ -45,7 +45,7 @@ public class ParameterTest {
   }
 
   @Test
-  public void two_parameters_with_the_same_name_are_not_allowed() throws IOException {
+  public void two_arguments_with_the_same_name_are_not_allowed() throws IOException {
     // given
     script(fileSystem, "illegal : file(path='abc',path='cde') ;");
 
@@ -57,7 +57,7 @@ public class ParameterTest {
   }
 
   @Test
-  public void parameter_with_unknown_name_is_not_allowed() throws IOException {
+  public void argument_with_unknown_name_is_not_allowed() throws IOException {
     // given
     script(fileSystem, "illegal : file(unknown='abc') ;");
 
