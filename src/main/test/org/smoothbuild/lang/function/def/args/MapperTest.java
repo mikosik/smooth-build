@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def.args;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -20,7 +20,6 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,7 @@ public class MapperTest {
     Argument a1 = arg(p1.name(), argType);
 
     // when
-    Map<Parameter, Argument> mapping = createMapping(params(p1, p2), list(a1));
+    Map<Parameter, Argument> mapping = createMapping(asList(p1, p2), asList(a1));
 
     // then
     messages.assertNoProblems();
@@ -109,7 +108,7 @@ public class MapperTest {
     Argument a2 = arg(p1.name(), argType);
 
     // when
-    createMapping(params(p1), list(a1, a2));
+    createMapping(asList(p1), asList(a1, a2));
 
     // then
     messages.assertContainsOnly(DuplicateArgNameError.class);
@@ -123,7 +122,7 @@ public class MapperTest {
     Argument a1 = arg("otherName", STRING);
 
     // when
-    createMapping(params(p1), list(a1));
+    createMapping(asList(p1), asList(a1));
 
     // then
     messages.assertContainsOnly(UnknownParamNameError.class);
@@ -202,7 +201,7 @@ public class MapperTest {
     Argument a1 = arg(p1.name(), argType);
 
     // when
-    createMapping(params(p1), list(a1));
+    createMapping(asList(p1), asList(a1));
 
     // then
     messages.assertContainsOnly(TypeMismatchError.class);
@@ -215,7 +214,7 @@ public class MapperTest {
     Parameter p1 = optionalParameter(STRING, "name1");
 
     // when
-    Map<Parameter, Argument> mapping = createMapping(params(p1), list());
+    Map<Parameter, Argument> mapping = createMapping(asList(p1), Arrays.<Argument> asList());
 
     // then
     messages.assertNoProblems();
@@ -328,7 +327,7 @@ public class MapperTest {
     Argument a1 = arg(argType);
 
     // when
-    Map<Parameter, Argument> mapping = createMapping(params(p1, p2, p3), list(a1));
+    Map<Parameter, Argument> mapping = createMapping(asList(p1, p2, p3), asList(a1));
 
     // then
     messages.assertNoProblems();
@@ -358,7 +357,7 @@ public class MapperTest {
     Argument a3 = arg(p3.name(), type);
 
     // when
-    Map<Parameter, Argument> result = createMapping(params(p1, p2, p3), list(a1, a2, a3));
+    Map<Parameter, Argument> result = createMapping(asList(p1, p2, p3), asList(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
@@ -414,7 +413,7 @@ public class MapperTest {
     Argument a2 = arg(type2);
 
     // when
-    Map<Parameter, Argument> result = createMapping(params(p1, p2), list(a1, a2));
+    Map<Parameter, Argument> result = createMapping(asList(p1, p2), asList(a1, a2));
 
     // then
     messages.assertNoProblems();
@@ -440,7 +439,7 @@ public class MapperTest {
     Argument a3 = arg(p3.name(), type);
 
     // when
-    Map<Parameter, Argument> mapping = createMapping(params(p1, p2, p3), list(a1, a2, a3));
+    Map<Parameter, Argument> mapping = createMapping(asList(p1, p2, p3), asList(a1, a2, a3));
 
     // then
     messages.assertNoProblems();
@@ -470,7 +469,7 @@ public class MapperTest {
     Argument a2 = arg(NIL);
 
     // when
-    Map<Parameter, Argument> result = createMapping(params(p1, p2), list(a1, a2));
+    Map<Parameter, Argument> result = createMapping(asList(p1, p2), asList(a1, a2));
 
     // then
     messages.assertNoProblems();
@@ -508,11 +507,10 @@ public class MapperTest {
     messages = new FakeLoggedMessages();
     Parameter p1 = optionalParameter(paramType, "name1");
     Parameter p2 = optionalParameter(paramType2, "name2");
-
     Argument a1 = arg(argType);
 
     // when
-    createMapping(params(p1, p2), list(a1));
+    createMapping(asList(p1, p2), asList(a1));
 
     // then
     messages.assertContainsOnly(AmbiguousNamelessArgsError.class);
@@ -592,7 +590,7 @@ public class MapperTest {
     Argument a1 = arg(type);
 
     // when
-    createMapping(params(p1), list(a1));
+    createMapping(asList(p1), asList(a1));
 
     // then
     messages.assertContainsOnly(AmbiguousNamelessArgsError.class);
@@ -622,13 +620,5 @@ public class MapperTest {
     Signature signature = new Signature(STRING, name("name"), params);
     Invoker invoker = mock(Invoker.class);
     return new NativeFunction(signature, invoker, true, Hash.integer(33));
-  }
-
-  private static ArrayList<Argument> list(Argument... arguments) {
-    return newArrayList(arguments);
-  }
-
-  public static Iterable<Parameter> params(Parameter... parameters) {
-    return Arrays.asList(parameters);
   }
 }
