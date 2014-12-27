@@ -67,6 +67,14 @@ public class ParametersPool {
     return result;
   }
 
+  public Set<Parameter> allOptional() {
+    Set<Parameter> result = Sets.newHashSet();
+    for (TypedParametersPool typedParamPool : typePools.values()) {
+      Iterables.addAll(result, typedParamPool.optionalParameters());
+    }
+    return result;
+  }
+
   private static ImmutableMap<Type, TypedParametersPool> createTypePools(
       Map<Type, Set<Parameter>> optionalParametersMap,
       Map<Type, Set<Parameter>> requiredParametersMap) {

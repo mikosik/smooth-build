@@ -308,4 +308,47 @@ public class ParametersPoolTest {
     when(parametersPool.allRequired());
     thenReturned(ImmutableSet.<Parameter> of());
   }
+
+  // allOptional()
+
+  @Test
+  public void all_optional_params_contains_optional_string_param() throws Exception {
+    given(parameter = optionalParameter(STRING, "NAME"));
+    given(parametersPool = new ParametersPool(asList(parameter)));
+    when(parametersPool.allOptional());
+    thenReturned(ImmutableSet.of(parameter));
+  }
+
+  @Test
+  public void all_optional_params_contains_required_blob_param() throws Exception {
+    given(parameter = optionalParameter(BLOB, "NAME"));
+    given(parametersPool = new ParametersPool(asList(parameter)));
+    when(parametersPool.allOptional());
+    thenReturned(ImmutableSet.of(parameter));
+  }
+
+  @Test
+  public void all_optional_params_contains_required_file_param() throws Exception {
+    given(parameter = optionalParameter(FILE, "NAME"));
+    given(parametersPool = new ParametersPool(asList(parameter)));
+    when(parametersPool.allOptional());
+    thenReturned(ImmutableSet.of(parameter));
+  }
+
+  @Test
+  public void all_optional_params_contains_required_string_array_param() throws Exception {
+    given(parameter = optionalParameter(STRING_ARRAY, "NAME"));
+    given(parametersPool = new ParametersPool(asList(parameter)));
+    when(parametersPool.allOptional());
+    thenReturned(ImmutableSet.of(parameter));
+  }
+
+  @Test
+  public void all_optional_params_does_not_contain_taken_param() throws Exception {
+    given(parameter = optionalParameter(STRING, "NAME"));
+    given(parametersPool = new ParametersPool(asList(parameter)));
+    given(parametersPool.take(parameter));
+    when(parametersPool.allOptional());
+    thenReturned(ImmutableSet.<Parameter> of());
+  }
 }
