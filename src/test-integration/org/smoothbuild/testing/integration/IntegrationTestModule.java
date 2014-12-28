@@ -48,6 +48,17 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 public class IntegrationTestModule extends AbstractModule {
+  private final Class<?> nativeFunctions;
+
+  public IntegrationTestModule() {
+    this.nativeFunctions = null;
+  }
+
+  public IntegrationTestModule(Class<?> nativeFunctions) {
+    this.nativeFunctions = nativeFunctions;
+
+  }
+
   @Override
   protected void configure() {
     install(new TaskOutputsDbModule());
@@ -93,6 +104,9 @@ public class IntegrationTestModule extends AbstractModule {
     functions.add(UnjarFunction.class);
     functions.add(UnzipFunction.class);
     functions.add(ZipFunction.class);
+    if (nativeFunctions != null) {
+      functions.add(nativeFunctions);
+    }
 
     return createNativeModule(functions.toArray(new Class[] {}));
   }
