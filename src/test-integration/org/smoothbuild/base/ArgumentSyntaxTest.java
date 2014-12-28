@@ -18,7 +18,7 @@ import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class ArgumentTest {
+public class ArgumentSyntaxTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
