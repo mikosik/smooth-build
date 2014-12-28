@@ -3,6 +3,7 @@ package org.smoothbuild.testing.integration;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_DIR;
 import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 
@@ -16,5 +17,9 @@ public class IntegrationTestUtils {
 
   public static void script(FakeFileSystem fileSystem, String script) throws IOException {
     fileSystem.createFile(DEFAULT_SCRIPT, ScriptBuilder.script(script));
+  }
+
+  public static Path artifactPath(String artifact) {
+    return ARTIFACTS_PATH.append(path(artifact));
   }
 }
