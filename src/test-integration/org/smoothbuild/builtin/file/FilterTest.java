@@ -4,7 +4,7 @@ import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 import static org.testory.Testory.thenEqual;
 
@@ -39,13 +39,8 @@ public class FilterTest {
 
   @Test
   public void illegal_path_is_detected() throws IOException {
-    // given
-    script(fileSystem, "run : [] | filter('///');");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: [] | filter('///');");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(IllegalPathPatternError.class);
   }
 
@@ -132,7 +127,6 @@ public class FilterTest {
 
   private void doTestFiltering(String pattern, List<String> included, List<String> excluded)
       throws IOException {
-    // given
     Path pathA = path("arrayA");
     for (String path : included) {
       fileSystem.createFileContainingItsPath(pathA, path(path));
@@ -140,19 +134,15 @@ public class FilterTest {
     for (String path : excluded) {
       fileSystem.createFileContainingItsPath(pathA, path(path));
     }
-    script(fileSystem, "run : files(" + pathA + ") | filter('" + pattern + "') ;");
+    script(fileSystem, "result: files(" + pathA + ") | filter('" + pattern + "') ;");
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
     for (String path : excluded) {
-      thenEqual(fileSystem.pathState(artifactPath.append(path(path))), NOTHING);
+      thenEqual(fileSystem.pathState(artifactPath("result").append(path(path))), NOTHING);
     }
     for (String path : included) {
-      fileSystem.assertFileContainsItsPath(artifactPath, path(path));
+      fileSystem.assertFileContainsItsPath(artifactPath("result"), path(path));
     }
   }
 }

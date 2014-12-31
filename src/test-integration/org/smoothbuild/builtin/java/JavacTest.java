@@ -5,7 +5,7 @@ import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
@@ -50,17 +50,16 @@ public class JavacTest {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public private class MyClass {}");
 
-    script(fileSystem, "run : [ file(path=" + path + ") ] | javac ;");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: [ file(path=" + path + ") ] | javac ;");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertContainsOnly(JavaCompilerMessage.class);
   }
 
   @Test
   public void zero_files_can_be_compiled() throws Exception {
-    script(fileSystem, "run : [ ] | javac ;");
-    buildWorker.run(asList("run"));
-
+    script(fileSystem, "result: [ ] | javac ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(NoJavaSourceFilesFoundWarning.class);
   }
 
@@ -78,13 +77,11 @@ public class JavacTest {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, builder.build());
 
-    script(fileSystem, "run : [ file(path=" + path + ") ] | javac ;");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: [ file(path=" + path + ") ] | javac ;");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertNoProblems();
-
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    Path classFile = artifactPath.append(path("MyClass.class"));
+    Path classFile = artifactPath("result").append(path("MyClass.class"));
     Object result = invoke(classFile, "myMethod");
     assertEquals(result, returnedString);
   }
@@ -124,14 +121,13 @@ public class JavacTest {
     builder.addLine("libraryClasses : [ file(path=" + libraryJavaFile + ") ] | javac ;");
     builder.addLine("libraryJar: libraryClasses | jar ;");
     builder.addLine("appClasses: [ file(path=" + appJavaFile + ") ] | javac(libs=[libraryJar]) ;");
-    builder.addLine("run: libraryClasses | concatenateFiles(with=appClasses) ;");
+    builder.addLine("result: libraryClasses | concatenateFiles(with=appClasses) ;");
     script(fileSystem, builder.build());
 
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
 
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    Path libClassFile = artifactPath.append(path("library/LibraryClass.class"));
-    Path appClassFile = artifactPath.append(path("MyClass2.class"));
+    Path libClassFile = artifactPath("result").append(path("library/LibraryClass.class"));
+    Path appClassFile = artifactPath("result").append(path("MyClass2.class"));
 
     userConsole.messages().assertNoProblems();
     loadClass(byteCode(libClassFile));
@@ -145,8 +141,8 @@ public class JavacTest {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
 
-    script(fileSystem, "run : [ file(" + path + "), file(" + path + ") ] | javac ;");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: [ file(" + path + "), file(" + path + ") ] | javac ;");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertContainsOnly(JavaCompilerMessage.class);
   }
@@ -156,8 +152,8 @@ public class JavacTest {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
 
-    script(fileSystem, "run : [ file(path=" + path + ") ] | javac(source='0.9') ;");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: [ file(path=" + path + ") ] | javac(source='0.9') ;");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertContainsOnly(IllegalSourceParamError.class);
   }
@@ -167,8 +163,8 @@ public class JavacTest {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public class MyClass {}");
 
-    script(fileSystem, "run : [ file(path=" + path + ") ] | javac(target='0.9') ;");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: [ file(path=" + path + ") ] | javac(target='0.9') ;");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertContainsOnly(IllegalTargetParamError.class);
   }
@@ -179,8 +175,8 @@ public class JavacTest {
     Path path = path("MyClass.java");
     fileSystem.createFile(path, "public enum MyClass { VALUE }");
 
-    script(fileSystem, "run : [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertContainsOnly(JavaCompilerMessage.class);
   }

@@ -2,8 +2,7 @@ package org.smoothbuild.base;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
@@ -35,45 +34,34 @@ public class CommentTest {
 
   @Test
   public void full_line_comment_is_ignored() throws IOException {
-    // given
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("# full line comment");
-    builder.addLine("run: 'abc';");
+    builder.addLine("result: 'abc';");
     script(fileSystem, builder.build());
 
-    // when
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
 
-    // then
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "abc");
+    fileSystem.assertFileContains(artifactPath("result"), "abc");
   }
 
   @Test
   public void comments_are_ignored() throws IOException {
-    // given
     ScriptBuilder builder = new ScriptBuilder();
-    builder.addLine("run: 'abc' ; # comment at the end of line");
+    builder.addLine("result: 'abc' ; # comment at the end of line");
     script(fileSystem, builder.build());
 
-    // when
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
 
-    // then
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "abc");
+    fileSystem.assertFileContains(artifactPath("result"), "abc");
   }
 
   @Test
   public void comment_char_is_allowed_in_strings() throws IOException {
-    // given
-    script(fileSystem, "run: '###' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: '###' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "###");
+    fileSystem.assertFileContains(artifactPath("result"), "###");
   }
 }

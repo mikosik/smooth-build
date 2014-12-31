@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.blob;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
@@ -41,13 +41,11 @@ public class ToFileTest {
 
     fileSystem.createFile(sourcePath, content);
 
-    script(fileSystem, "run : [ toFile(path=" + destinationPath + ", content=file(" + sourcePath
+    script(fileSystem, "result : [ toFile(path=" + destinationPath + ", content=file(" + sourcePath
         + ")) ];");
-
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertNoProblems();
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(artifactPath.append(destinationPath), content);
+    fileSystem.assertFileContains(artifactPath("result").append(destinationPath), content);
   }
 }

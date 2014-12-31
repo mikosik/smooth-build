@@ -2,8 +2,7 @@ package org.smoothbuild.builtin.string;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
@@ -34,105 +33,65 @@ public class StringTest {
 
   @Test
   public void string_literal() throws IOException {
-    // given
-    script(fileSystem, "run : 'abc' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: 'abc' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "abc");
+    fileSystem.assertFileContains(artifactPath("result"), "abc");
   }
 
   @Test
   public void string_literal_with_escaped_tab() throws IOException {
-    // given
-    script(fileSystem, "run : '\\t' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: '\\t' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\t");
+    fileSystem.assertFileContains(artifactPath("result"), "\t");
   }
 
   @Test
   public void string_literal_with_escaped_backspace() throws IOException {
-    // given
-    script(fileSystem, "run : '\\b' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: '\\b' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\b");
+    fileSystem.assertFileContains(artifactPath("result"), "\b");
   }
 
   @Test
   public void string_literal_with_escaped_new_line() throws IOException {
-    // given
-    script(fileSystem, "run : '\\n' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: '\\n' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\n");
+    fileSystem.assertFileContains(artifactPath("result"), "\n");
   }
 
   @Test
   public void string_literal_with_escaped_carriage_return() throws IOException {
-    // given
-    script(fileSystem, "run : '\\r' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: '\\r' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\r");
+    fileSystem.assertFileContains(artifactPath("result"), "\r");
   }
 
   @Test
   public void string_literal_with_escaped_form_feed() throws IOException {
-    // given
-    script(fileSystem, "run : '\\f' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: '\\f' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\f");
+    fileSystem.assertFileContains(artifactPath("result"), "\f");
   }
 
   @Test
   public void string_literal_with_escaped_double_quotes() throws IOException {
-    // given
-    script(fileSystem, "run : '\\\"' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: '\\\"' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\"");
+    fileSystem.assertFileContains(artifactPath("result"), "\"");
   }
 
   @Test
   public void string_literal_with_escaped_backslash() throws IOException {
-    // given
-    script(fileSystem, "run : '\\\\' ;");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: '\\\\' ;");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    fileSystem.assertFileContains(ARTIFACTS_PATH.append(path("run")), "\\");
+    fileSystem.assertFileContains(artifactPath("result"), "\\");
   }
 }

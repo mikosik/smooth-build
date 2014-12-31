@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.java;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import javax.inject.Inject;
@@ -40,7 +40,6 @@ public class UnjarTest {
 
   @Test
   public void unjar_function() throws Exception {
-    // given
     Path path1 = path("a/fileA.txt");
     Path path2 = path("b/fileB.txt");
     Path jarPath = path("jar/input.jar");
@@ -54,16 +53,12 @@ public class UnjarTest {
     Blob jarBlob = JarTester.jar(file1, file2);
     Streams.copy(jarBlob.openInputStream(), fileSystem.openOutputStream(jarPath));
 
-    script(fileSystem, "run : file(" + jarPath + ") | unjar ;");
+    script(fileSystem, "result: file(" + jarPath + ") | unjar ;");
 
-    // when
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
 
-    // then
     userConsole.messages().assertNoProblems();
-
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContainsItsPath(artifactPath, path1);
-    fileSystem.assertFileContainsItsPath(artifactPath, path2);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path1);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path2);
   }
 }

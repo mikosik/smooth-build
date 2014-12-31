@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.blob;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import javax.inject.Inject;
@@ -43,37 +43,31 @@ public class BlobArrayTest {
     fileSystem.createFile(path1, content1);
     fileSystem.createFile(path2, content2);
 
-    script(fileSystem, "run: [content(file(" + path1 + ")) , content(file(" + path2 + "))];");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: [content(file(" + path1 + ")) , content(file(" + path2 + "))];");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertNoProblems();
-    Path arrayArtifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(arrayArtifactPath.append(path("0")), content1);
-    fileSystem.assertFileContains(arrayArtifactPath.append(path("1")), content2);
+    fileSystem.assertFileContains(artifactPath("result").append(path("0")), content1);
+    fileSystem.assertFileContains(artifactPath("result").append(path("1")), content2);
   }
 
   @Test
   public void array_containing_blob_and_string_is_forbidden() throws Exception {
-    // given
     fileSystem.createFile(path1, content1);
 
     ScriptBuilder scriptBuilder = new ScriptBuilder();
     scriptBuilder.addLine("myBlob: file(" + path1 + ") | content ;");
     scriptBuilder.addLine("myString: 'abc' ;");
-    scriptBuilder.addLine("run: [ myBlob, myString ] ;");
+    scriptBuilder.addLine("result: [ myBlob, myString ] ;");
 
     script(fileSystem, scriptBuilder.build());
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertContainsOnly(IncompatibleArrayElemsError.class);
   }
 
   @Test
   public void array_containing_blob_and_file_is_allowed() throws Exception {
-    // given
     fileSystem.createFile(path1, content1);
     fileSystem.createFile(path2, content2);
 
@@ -81,18 +75,13 @@ public class BlobArrayTest {
     scriptBuilder.addLine("myString: 'abc' ;");
     scriptBuilder.addLine("myBlob: file(" + path1 + ") | content ;");
     scriptBuilder.addLine("myFile: file(" + path2 + ") ;");
-    scriptBuilder.addLine("run: [ myBlob, myFile] ;");
+    scriptBuilder.addLine("result: [ myBlob, myFile] ;");
 
     script(fileSystem, scriptBuilder.build());
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertNoProblems();
-    Path arrayArtifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(arrayArtifactPath.append(path("0")), content1);
-    fileSystem.assertFileContains(arrayArtifactPath.append(path("1")), content2);
+    fileSystem.assertFileContains(artifactPath("result").append(path("0")), content1);
+    fileSystem.assertFileContains(artifactPath("result").append(path("1")), content2);
   }
 }
