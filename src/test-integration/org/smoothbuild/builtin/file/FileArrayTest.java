@@ -4,7 +4,7 @@ import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 import static org.testory.Testory.then;
 
@@ -48,37 +48,30 @@ public class FileArrayTest {
     fileSystem.createFile(path1, content1);
     fileSystem.createFile(path2, content2);
 
-    script(fileSystem, "run: [file(" + path1 + ") , file(" + path2 + ")];");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: [file(" + path1 + ") , file(" + path2 + ")];");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertNoProblems();
-    Path arrayArtifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(arrayArtifactPath.append(path1), content1);
-    fileSystem.assertFileContains(arrayArtifactPath.append(path2), content2);
+    fileSystem.assertFileContains(artifactPath("result").append(path1), content1);
+    fileSystem.assertFileContains(artifactPath("result").append(path2), content2);
   }
 
   @Test
   public void array_containing_file_and_string_is_forbidden() throws Exception {
-    // given
     fileSystem.createFile(path1, content1);
 
     ScriptBuilder scriptBuilder = new ScriptBuilder();
     scriptBuilder.addLine("myFile: file(" + path1 + ") ;");
     scriptBuilder.addLine("myString: 'abc' ;");
-    scriptBuilder.addLine("run: [ myFile, myString ] ;");
-
+    scriptBuilder.addLine("result: [ myFile, myString ] ;");
     script(fileSystem, scriptBuilder.build());
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertContainsOnly(IncompatibleArrayElemsError.class);
   }
 
   @Test
   public void array_containing_file_and_blob_is_allowed() throws Exception {
-    // given
     fileSystem.createFile(path1, content1);
     fileSystem.createFile(path2, content2);
 
@@ -86,19 +79,13 @@ public class FileArrayTest {
     scriptBuilder.addLine("myString: 'abc' ;");
     scriptBuilder.addLine("myFile: file(" + path1 + ") ;");
     scriptBuilder.addLine("myBlob: file(" + path2 + ") | content ;");
-    scriptBuilder.addLine("run: [ myFile, myBlob] ;");
-
+    scriptBuilder.addLine("result: [ myFile, myBlob] ;");
     script(fileSystem, scriptBuilder.build());
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertNoProblems();
-    Path arrayArtifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(arrayArtifactPath.append(path("0")), content1);
-    fileSystem.assertFileContains(arrayArtifactPath.append(path("1")), content2);
+    fileSystem.assertFileContains(artifactPath("result").append(path("0")), content1);
+    fileSystem.assertFileContains(artifactPath("result").append(path("1")), content2);
   }
 
   @Test
@@ -106,104 +93,66 @@ public class FileArrayTest {
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
-    script(fileSystem, "run : [ file(" + path1 + "), file(" + path2 + "), ];");
+    script(fileSystem, "result: [ file(" + path1 + "), file(" + path2 + "), ];");
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContainsItsPath(artifactPath, path1);
-    fileSystem.assertFileContainsItsPath(artifactPath, path2);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path1);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path2);
   }
 
   @Test
   public void file_array_with_only_comma_is_forbidden() throws Exception {
-    // given
-    script(fileSystem, "run : [ , ];");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: [ , ];");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(SyntaxError.class);
   }
 
   @Test
   public void save_file_array_with_two_files() throws IOException {
-    // given
     fileSystem.createFileContainingItsPath(path1);
     fileSystem.createFileContainingItsPath(path2);
 
-    script(fileSystem, "run : [ file(" + path1 + "), file(" + path2 + ") ];");
+    script(fileSystem, "result: [ file(" + path1 + "), file(" + path2 + ") ];");
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContainsItsPath(artifactPath, path1);
-    fileSystem.assertFileContainsItsPath(artifactPath, path2);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path1);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path2);
   }
 
   @Test
   public void save_file_array_with_one_file() throws IOException {
-    // given
     fileSystem.createFileContainingItsPath(path1);
-
-    script(fileSystem, "run : [ file(" + path1 + ") ];");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: [ file(" + path1 + ") ];");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContainsItsPath(artifactPath, path1);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path1);
   }
 
   @Test
   public void save_empty_file_array() throws IOException {
-    // given
-    script(fileSystem, "run : [ ];");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: [ ];");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
   }
 
   @Test
   public void file_array_can_contain_duplicate_values() throws Exception {
-    // given
     fileSystem.createFileContainingItsPath(path1);
-
-    script(fileSystem, "run : [ file(" + path1 + "), file(" + path1 + ") ] | filter('nothing');\n");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: [ file(" + path1 + "), file(" + path1
+        + ") ] | filter('nothing');\n");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
   }
 
   @Test
   public void empty_file_array_can_be_saved() throws IOException {
-    // given
     Path path = path("some/dir");
     fileSystem.createDir(path);
-    script(fileSystem, "run : files(" + path + ");");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result: files(" + path + ");");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    then(fileSystem.filesFrom(artifactPath), empty());
+    then(fileSystem.filesFrom(artifactPath("result")), empty());
   }
 }

@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.string;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import javax.inject.Inject;
@@ -39,51 +39,40 @@ public class StringArrayTest {
 
   @Test
   public void array_containing_two_strings_is_allowed() throws Exception {
-    script(fileSystem, "run: ['" + content1 + "' , '" + content2 + "'];");
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: ['" + content1 + "' , '" + content2 + "'];");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertNoProblems();
-    Path arrayArtifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(arrayArtifactPath.append(path("0")), content1);
-    fileSystem.assertFileContains(arrayArtifactPath.append(path("1")), content2);
+    fileSystem.assertFileContains(artifactPath("result").append(path("0")), content1);
+    fileSystem.assertFileContains(artifactPath("result").append(path("1")), content2);
   }
 
   @Test
   public void array_containing_string_and_blob_is_forbidden() throws Exception {
-    // given
     fileSystem.createFile(path1, content1);
 
     ScriptBuilder scriptBuilder = new ScriptBuilder();
     scriptBuilder.addLine("myString: 'abc' ;");
     scriptBuilder.addLine("myBlob: file(" + path1 + ") | content ;");
-    scriptBuilder.addLine("run: [ myString, myBlob ] ;");
-
+    scriptBuilder.addLine("result: [ myString, myBlob ] ;");
     script(fileSystem, scriptBuilder.build());
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertContainsOnly(IncompatibleArrayElemsError.class);
   }
 
   @Test
   public void array_containing_string_and_file_is_forbidden() throws Exception {
-    // given
     fileSystem.createFile(path1, content1);
 
     ScriptBuilder scriptBuilder = new ScriptBuilder();
     scriptBuilder.addLine("myString: 'abc' ;");
     scriptBuilder.addLine("myFile: file(" + path1 + ") ;");
-    scriptBuilder.addLine("run: [ myString, myFile ] ;");
-
+    scriptBuilder.addLine("result: [ myString, myFile ] ;");
     script(fileSystem, scriptBuilder.build());
-
-    // when
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
 
     // then
     userConsole.messages().assertContainsOnly(IncompatibleArrayElemsError.class);
   }
-
 }

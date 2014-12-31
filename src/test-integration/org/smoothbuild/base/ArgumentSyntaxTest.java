@@ -34,37 +34,22 @@ public class ArgumentSyntaxTest {
 
   @Test
   public void trailing_comma_is_allowed_in_argument_list() throws IOException {
-    // given
     script(fileSystem, "run : toBlob(string='abc',) ;");
-
-    // when
     buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertNoProblems();
   }
 
   @Test
   public void two_arguments_with_the_same_name_are_not_allowed() throws IOException {
-    // given
     script(fileSystem, "illegal : file(path='abc',path='cde') ;");
-
-    // when
     buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertContainsOnly(DuplicateArgNameError.class);
   }
 
   @Test
   public void argument_with_unknown_name_is_not_allowed() throws IOException {
-    // given
     script(fileSystem, "illegal : file(unknown='abc') ;");
-
-    // when
     buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertContainsOnly(UnknownParamNameError.class);
   }
 }

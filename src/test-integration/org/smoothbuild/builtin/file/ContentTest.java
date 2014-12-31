@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.file;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.IOException;
@@ -39,12 +39,10 @@ public class ContentTest {
     String content = "file content";
     fileSystem.createFile(path, content);
 
-    script(fileSystem, "run : file(" + path + ") | content ;");
-
-    buildWorker.run(asList("run"));
+    script(fileSystem, "result: file(" + path + ") | content ;");
+    buildWorker.run(asList("result"));
 
     userConsole.messages().assertNoProblems();
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(artifactPath, content);
+    fileSystem.assertFileContains(artifactPath("result"), content);
   }
 }

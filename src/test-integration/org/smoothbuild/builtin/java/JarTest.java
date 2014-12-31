@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import java.io.ByteArrayOutputStream;
@@ -40,25 +40,20 @@ public class JarTest {
 
   @Test
   public void jar_function() throws Exception {
-    // given
     Path root = path("dir");
     Path path1 = path("dir/fileA.txt");
     Path path2 = path("dir/fileB.txt");
     fileSystem.createFileContainingItsPath(root, path1);
     fileSystem.createFileContainingItsPath(root, path2);
 
-    script(fileSystem, "run : files(" + root + ") | jar ;");
+    script(fileSystem, "result: files(" + root + ") | jar ;");
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertNoProblems();
 
     byte[] buffer = new byte[2048];
     int fileCount = 0;
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    InputStream inputStream = fileSystem.openInputStream(artifactPath);
+    InputStream inputStream = fileSystem.openInputStream(artifactPath("result"));
     try (JarInputStream jarInputStream = new JarInputStream(inputStream)) {
       JarEntry entry = null;
       while ((entry = jarInputStream.getNextJarEntry()) != null) {

@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.compress;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import javax.inject.Inject;
@@ -34,21 +34,15 @@ public class UnzipTest {
 
   @Test
   public void unzip_function() throws Exception {
-    // given
     Path path1 = path("a/fileA.txt");
     Path path2 = path("b/fileB.txt");
     Path zipFile = ZipTester.zippedFiles(fileSystem, path1.value(), path2.value());
 
-    script(fileSystem, "run : file(" + zipFile + ") | unzip ;");
+    script(fileSystem, "result : file(" + zipFile + ") | unzip ;");
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertNoProblems();
-
-    Path dirPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContainsItsPath(dirPath, path1);
-    fileSystem.assertFileContainsItsPath(dirPath, path2);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path1);
+    fileSystem.assertFileContainsItsPath(artifactPath("result"), path2);
   }
 }

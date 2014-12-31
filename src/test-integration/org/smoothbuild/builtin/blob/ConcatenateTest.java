@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.blob;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 
 import javax.inject.Inject;
@@ -34,7 +34,6 @@ public class ConcatenateTest {
 
   @Test
   public void concatenate_blobs_function() throws Exception {
-    // given
     Path path1 = path("def/fileA.txt");
     Path path2 = path("def/fileB.txt");
     fileSystem.createFileContainingItsPath(path1);
@@ -43,16 +42,13 @@ public class ConcatenateTest {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("a : [ file(" + path1 + ") ];");
     builder.addLine("b : [ file(" + path2 + ") ];");
-    builder.addLine("run : concatenateBlobs(blobs=a, with=b) ;");
+    builder.addLine("result : concatenateBlobs(blobs=a, with=b) ;");
+
     script(fileSystem, builder.build());
+    buildWorker.run(asList("result"));
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
     userConsole.messages().assertNoProblems();
-    Path artifactPath = ARTIFACTS_PATH.append(path("run"));
-    fileSystem.assertFileContains(artifactPath.append(path("0")), path1.value());
-    fileSystem.assertFileContains(artifactPath.append(path("1")), path2.value());
+    fileSystem.assertFileContains(artifactPath("result").append(path("0")), path1.value());
+    fileSystem.assertFileContains(artifactPath("result").append(path("1")), path2.value());
   }
 }

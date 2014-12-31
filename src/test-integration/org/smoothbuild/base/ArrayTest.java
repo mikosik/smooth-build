@@ -3,8 +3,7 @@ package org.smoothbuild.base;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
-import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.ARTIFACTS_PATH;
+import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
 import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 import static org.testory.Testory.then;
 
@@ -57,30 +56,21 @@ public class ArrayTest {
    */
   @Test
   public void nested_arrays_are_forbidden_regression_test() throws IOException {
-    // given
     ScriptBuilder scriptBuilder = new ScriptBuilder();
     scriptBuilder.addLine("someArray: [ 'abc' ] ;");
-    scriptBuilder.addLine("run: [ someArray ] ;");
+    scriptBuilder.addLine("result: [ someArray ] ;");
 
     script(fileSystem, scriptBuilder.build());
 
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(ForbiddenArrayElemError.class);
   }
 
   @Test
   public void empty_array_can_be_saved() throws IOException {
-    // given
-    script(fileSystem, "run : [];");
-
-    // when
-    buildWorker.run(asList("run"));
-
-    // then
+    script(fileSystem, "result : [];");
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
-    then(fileSystem.filesFrom(ARTIFACTS_PATH.append(path("run"))), empty());
+    then(fileSystem.filesFrom(artifactPath("result")), empty());
   }
 }

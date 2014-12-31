@@ -41,17 +41,13 @@ public class ZipTest {
 
   @Test
   public void zip_function() throws IOException {
-    // given
     fileSystem.createFile(path("dir/fileA.txt"), "fileA.txt");
     fileSystem.createFile(path("dir/fileB.txt"), "fileB.txt");
     script(fileSystem, "run : files('dir') | zip ;");
 
-    // when
     buildWorker.run(asList("run"));
 
-    // then
     userConsole.messages().assertNoProblems();
-
     byte[] buffer = new byte[2048];
     int fileCount = 0;
     Path artifactPath = ARTIFACTS_PATH.append(path("run"));

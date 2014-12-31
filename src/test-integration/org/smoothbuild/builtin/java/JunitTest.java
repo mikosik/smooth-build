@@ -49,7 +49,7 @@ public class JunitTest {
 
     script(fileSystem, createscript());
 
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
     then(userConsole.messages().isEmpty());
   }
 
@@ -60,7 +60,7 @@ public class JunitTest {
 
     script(fileSystem, createscript());
 
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(JunitTestFailedError.class);
   }
 
@@ -71,7 +71,7 @@ public class JunitTest {
 
     script(fileSystem, createscript());
 
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
     userConsole.messages().assertContains(NoJunitTestFoundWarning.class);
   }
@@ -84,7 +84,7 @@ public class JunitTest {
 
     script(fileSystem, createscript(SUCCESS_TEST_CLASS + ".class"));
 
-    buildWorker.run(asList("run"));
+    buildWorker.run(asList("result"));
     then(userConsole.messages().isEmpty());
   }
 
@@ -98,7 +98,7 @@ public class JunitTest {
     builder.addLine("fakeJunitJar: files(" + fakeJunitPath + ") | javac | jar;");
     builder.addLine("jarFile: sources | javac(libs=[fakeJunitJar]) | jar;");
     String include = pattern == null ? "" : ", include='" + pattern + "'";
-    builder.addLine("run: junit(libs=[jarFile]" + include + ");");
+    builder.addLine("result: junit(libs=[jarFile]" + include + ");");
     return builder.build();
   }
 
