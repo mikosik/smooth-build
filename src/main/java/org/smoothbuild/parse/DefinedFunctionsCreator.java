@@ -321,7 +321,7 @@ public class DefinedFunctionsCreator {
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
         SString stringValue = objectsDb.string(unescaped(string));
-        return new ConstantExpression(STRING, stringValue, locationOf(stringToken.getSymbol()));
+        return new ConstantExpression(stringValue, locationOf(stringToken.getSymbol()));
       } catch (UnescapingFailedException e) {
         CodeLocation location = locationOf(stringToken.getSymbol());
         messages.log(new CodeMessage(ERROR, location, e.getMessage()));

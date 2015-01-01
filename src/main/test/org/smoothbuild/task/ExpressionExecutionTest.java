@@ -65,7 +65,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_string_literal_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpression(STRING, sstring, location));
+    given(stringExpression = new ConstantExpression(sstring, location));
     given(task = taskGraph.createTasks(stringExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(sstring));
@@ -91,7 +91,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_array_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpression(STRING, sstring, location));
+    given(stringExpression = new ConstantExpression(sstring, location));
     given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
@@ -101,7 +101,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_call_expression_using_defined_function() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpression(STRING, sstring, location));
+    given(stringExpression = new ConstantExpression(sstring, location));
     given(signature = new Signature(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction(signature, stringExpression));
     given(callExpression = callExpression(function, false, location, Empty.stringExpressionMap()));
@@ -114,7 +114,7 @@ public class ExpressionExecutionTest {
   public void executes_native_function_that_returns_its_argument() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(function = createNativeFunction(Hash.integer(33), SmoothModule.class.getMethods()[0]));
-    given(stringExpression = new ConstantExpression(STRING, sstring, codeLocation(2)));
+    given(stringExpression = new ConstantExpression(sstring, codeLocation(2)));
     given(callExpression =
         callExpression(function, false, location, ImmutableMap.of("param", stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
@@ -137,7 +137,7 @@ public class ExpressionExecutionTest {
   public void execution_fails_when_native_function_throws_runtime_exception() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(function = createNativeFunction(Hash.integer(33), SmoothModule2.class.getMethods()[0]));
-    given(stringExpression = new ConstantExpression(STRING, sstring, codeLocation(2)));
+    given(stringExpression = new ConstantExpression(sstring, codeLocation(2)));
     given(callExpression =
         callExpression(function, false, location, ImmutableMap.of("param", stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
