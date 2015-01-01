@@ -71,7 +71,7 @@ public class JunitFunction {
   }
 
   private static Predicate<Path> createFilter(SString includeParam) {
-    if (includeParam == null) {
+    if (includeParam == null || includeParam.value().isEmpty()) {
       return createFilter("**/*Test.class");
     } else {
       return createFilter(includeParam.value());

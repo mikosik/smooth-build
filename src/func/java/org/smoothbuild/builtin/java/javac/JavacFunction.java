@@ -122,7 +122,7 @@ public class JavacFunction {
     private Iterable<String> options() {
       List<String> result = Lists.newArrayList();
 
-      if (params.source() != null) {
+      if (params.source() != null && !params.source().value().isEmpty()) {
         String sourceArg = params.source().value();
         if (!SOURCE_VALUES.contains(sourceArg)) {
           throw new IllegalSourceParamError(sourceArg, SOURCE_VALUES);
@@ -131,7 +131,7 @@ public class JavacFunction {
         result.add(sourceArg);
       }
 
-      if (params.target() != null) {
+      if (params.target() != null && !params.target().value().isEmpty()) {
         String targetArg = params.target().value();
         if (!TARGET_VALUES.contains(targetArg)) {
           throw new IllegalTargetParamError(targetArg, TARGET_VALUES);
