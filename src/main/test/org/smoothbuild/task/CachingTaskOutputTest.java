@@ -131,7 +131,7 @@ public class CachingTaskOutputTest {
   }
 
   private ConstantExpression stringExpression(String string) {
-    return new ConstantExpression(STRING, objectsDb.string(string), CL);
+    return new ConstantExpression(objectsDb.string(string), CL);
   }
 
   private Array<SString> stringArray(String... strings) {
