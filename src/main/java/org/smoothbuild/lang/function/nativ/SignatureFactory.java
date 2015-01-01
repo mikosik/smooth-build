@@ -1,13 +1,12 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.base.Types.parameterJTypeToType;
-import static org.smoothbuild.lang.base.Types.resultJTypeToType;
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.lang.type.Types.parameterJTypeToType;
+import static org.smoothbuild.lang.type.Types.resultJTypeToType;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
@@ -18,6 +17,7 @@ import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.function.nativ.err.ParamsIsNotInterfaceException;
 import org.smoothbuild.lang.plugin.Required;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Lists;
 import com.google.inject.TypeLiteral;

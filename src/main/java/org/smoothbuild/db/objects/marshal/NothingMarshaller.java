@@ -1,6 +1,6 @@
 package org.smoothbuild.db.objects.marshal;
 
-import org.smoothbuild.lang.base.Nothing;
+import org.smoothbuild.lang.value.Nothing;
 
 import com.google.common.hash.HashCode;
 

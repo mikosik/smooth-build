@@ -9,12 +9,12 @@ import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.ArrayBuilder;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.util.Streams;
 

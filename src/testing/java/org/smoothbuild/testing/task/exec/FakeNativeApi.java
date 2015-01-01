@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.task.exec;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;

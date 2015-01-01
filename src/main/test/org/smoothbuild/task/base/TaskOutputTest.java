@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.testory.Closure;

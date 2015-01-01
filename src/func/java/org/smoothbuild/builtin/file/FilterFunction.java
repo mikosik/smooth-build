@@ -5,13 +5,13 @@ import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.ArrayBuilder;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 
 import com.google.common.base.Predicate;
 

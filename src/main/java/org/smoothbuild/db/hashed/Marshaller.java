@@ -7,7 +7,7 @@ import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
 import java.util.List;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteArrayDataOutput;

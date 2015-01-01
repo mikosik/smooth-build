@@ -11,7 +11,7 @@ import static org.testory.common.Matchers.same;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Classes;
 

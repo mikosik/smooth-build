@@ -6,8 +6,8 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
 
 import com.google.common.hash.HashCode;
 

@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.base.Objects;

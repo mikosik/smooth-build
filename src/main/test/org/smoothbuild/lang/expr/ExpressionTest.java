@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.base.Types.STRING;
+import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;

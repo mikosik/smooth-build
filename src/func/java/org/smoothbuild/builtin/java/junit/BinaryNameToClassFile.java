@@ -8,10 +8,10 @@ import java.util.Map;
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.Maps;

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.nativ.err;
 
-import static org.smoothbuild.lang.base.Types.parameterJTypes;
+import static org.smoothbuild.lang.type.Types.parameterJTypes;
 
 import java.lang.reflect.Method;
 

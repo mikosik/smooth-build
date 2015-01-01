@@ -8,9 +8,9 @@ import java.io.OutputStream;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class FileReader {

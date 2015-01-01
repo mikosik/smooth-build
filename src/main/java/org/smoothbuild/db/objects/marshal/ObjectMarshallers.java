@@ -1,26 +1,26 @@
 package org.smoothbuild.db.objects.marshal;
 
-import static org.smoothbuild.lang.base.Types.BLOB;
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.Types.FILE;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.base.Types.NIL;
-import static org.smoothbuild.lang.base.Types.NOTHING;
-import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.NOTHING;
+import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.Objects;
-import org.smoothbuild.lang.base.ArrayType;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.Nothing;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Nothing;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableMap;

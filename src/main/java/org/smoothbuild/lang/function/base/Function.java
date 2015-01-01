@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
-import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.ImmutableList;
 

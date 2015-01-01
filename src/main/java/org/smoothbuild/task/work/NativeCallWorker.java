@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.TaskInput;

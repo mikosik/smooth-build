@@ -3,12 +3,12 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
-import static org.smoothbuild.lang.base.Types.parameterTypes;
+import static org.smoothbuild.lang.type.Types.parameterTypes;
 
 import java.util.Set;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.hash.HashCode;

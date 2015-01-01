@@ -1,11 +1,11 @@
 package org.smoothbuild.builtin.convert;
 
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.Nothing;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Nothing;
+import org.smoothbuild.lang.value.SString;
 
 public class NilToStringArrayFunction {
   public interface Parameters {

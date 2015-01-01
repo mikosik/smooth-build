@@ -1,4 +1,6 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.type;
+
+import org.smoothbuild.lang.value.SString;
 
 public class StringType extends Type {
   protected StringType() {

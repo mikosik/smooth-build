@@ -1,4 +1,6 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.type;
+
+import org.smoothbuild.lang.value.Nothing;
 
 public class NothingType extends Type {
   protected NothingType() {

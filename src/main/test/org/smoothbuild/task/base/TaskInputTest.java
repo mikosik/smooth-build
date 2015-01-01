@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Empty;
 

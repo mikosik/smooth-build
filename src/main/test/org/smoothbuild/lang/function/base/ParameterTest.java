@@ -2,14 +2,14 @@ package org.smoothbuild.lang.function.base;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.base.Types.BLOB;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.base.Types.parameterTypes;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.function.base.Parameter.requiredParameter;
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.parameterTypes;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
@@ -18,7 +18,7 @@ import static org.testory.Testory.when;
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.testing.EqualsTester;
 

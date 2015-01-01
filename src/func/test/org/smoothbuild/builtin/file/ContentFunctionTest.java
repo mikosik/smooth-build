@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.ContentFunction.ContentParameters;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;

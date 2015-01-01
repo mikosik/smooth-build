@@ -2,7 +2,7 @@ package org.smoothbuild.db.objects;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.base.Types.FILE;
+import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
@@ -13,9 +13,9 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.SFile;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

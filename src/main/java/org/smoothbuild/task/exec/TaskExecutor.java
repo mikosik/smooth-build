@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDb;
 import org.smoothbuild.io.util.SmoothJar;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskOutput;
 

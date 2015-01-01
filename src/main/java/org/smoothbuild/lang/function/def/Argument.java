@@ -6,8 +6,8 @@ import static com.google.common.base.Strings.padEnd;
 
 import java.util.Collection;
 
-import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;

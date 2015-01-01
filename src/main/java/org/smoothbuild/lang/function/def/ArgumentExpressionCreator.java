@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.function.def;
 
-import static org.smoothbuild.lang.base.Conversions.canConvert;
-import static org.smoothbuild.lang.base.Types.allTypes;
 import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
+import static org.smoothbuild.lang.type.Conversions.canConvert;
+import static org.smoothbuild.lang.type.Types.allTypes;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.function.base.Function;
@@ -21,6 +20,7 @@ import org.smoothbuild.lang.function.def.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.err.MissingRequiredArgsError;
 import org.smoothbuild.lang.function.def.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.err.UnknownParamNameError;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 

@@ -1,22 +1,22 @@
 package org.smoothbuild.db.objects;
 
-import static org.smoothbuild.lang.base.Types.arrayElementJTypes;
-import static org.smoothbuild.lang.base.Types.arrayTypeContaining;
-import static org.smoothbuild.lang.base.Types.jTypeToType;
+import static org.smoothbuild.lang.type.Types.arrayElementJTypes;
+import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
+import static org.smoothbuild.lang.type.Types.jTypeToType;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.ArrayType;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.value.ArrayBuilder;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;
 import com.google.inject.TypeLiteral;

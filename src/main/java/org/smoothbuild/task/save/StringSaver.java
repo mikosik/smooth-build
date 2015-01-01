@@ -5,8 +5,8 @@ import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.value.SString;
 
 public class StringSaver implements Saver<SString> {
   private final FileSystem smoothFileSystem;

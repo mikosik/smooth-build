@@ -1,9 +1,9 @@
 package org.smoothbuild.parse.err;
 
-import static org.smoothbuild.lang.base.Types.basicTypes;
+import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
-import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 

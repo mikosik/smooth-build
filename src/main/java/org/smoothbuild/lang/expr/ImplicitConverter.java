@@ -4,12 +4,12 @@ import static org.smoothbuild.lang.expr.Expressions.callExpression;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.Conversions;
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
+import org.smoothbuild.lang.type.Conversions;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.Builtin;
 
 import com.google.common.collect.ImmutableMap;

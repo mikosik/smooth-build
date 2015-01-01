@@ -1,11 +1,11 @@
 package org.smoothbuild.util;
 
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Task;
 

@@ -1,30 +1,31 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.type;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.smoothbuild.lang.base.Conversions.canConvert;
-import static org.smoothbuild.lang.base.Types.BLOB;
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.Types.FILE;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.base.Types.NIL;
-import static org.smoothbuild.lang.base.Types.NOTHING;
-import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
-import static org.smoothbuild.lang.base.Types.allTypes;
-import static org.smoothbuild.lang.base.Types.arrayTypeContaining;
-import static org.smoothbuild.lang.base.Types.basicTypes;
-import static org.smoothbuild.lang.base.Types.parameterJTypeToType;
-import static org.smoothbuild.lang.base.Types.parameterTypes;
-import static org.smoothbuild.lang.base.Types.resultJTypeToType;
+import static org.smoothbuild.lang.type.Conversions.canConvert;
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.NOTHING;
+import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.allTypes;
+import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
+import static org.smoothbuild.lang.type.Types.basicTypes;
+import static org.smoothbuild.lang.type.Types.parameterJTypeToType;
+import static org.smoothbuild.lang.type.Types.parameterTypes;
+import static org.smoothbuild.lang.type.Types.resultJTypeToType;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import java.util.Set;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Sets;
 import com.google.common.testing.EqualsTester;
