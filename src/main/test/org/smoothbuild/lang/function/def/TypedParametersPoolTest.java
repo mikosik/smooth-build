@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args;
+package org.smoothbuild.lang.function.def;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.unmodifiableSet;

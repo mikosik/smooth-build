@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args;
+package org.smoothbuild.lang.function.def;
 
 import static org.smoothbuild.lang.base.Conversions.canConvert;
 import static org.smoothbuild.lang.base.Types.allTypes;
@@ -15,11 +15,11 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
-import org.smoothbuild.lang.function.def.args.err.DuplicateArgNameError;
-import org.smoothbuild.lang.function.def.args.err.MissingRequiredArgsError;
-import org.smoothbuild.lang.function.def.args.err.TypeMismatchError;
-import org.smoothbuild.lang.function.def.args.err.UnknownParamNameError;
+import org.smoothbuild.lang.function.def.err.AmbiguousNamelessArgsError;
+import org.smoothbuild.lang.function.def.err.DuplicateArgNameError;
+import org.smoothbuild.lang.function.def.err.MissingRequiredArgsError;
+import org.smoothbuild.lang.function.def.err.TypeMismatchError;
+import org.smoothbuild.lang.function.def.err.UnknownParamNameError;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args.err;
+package org.smoothbuild.lang.function.def.err;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
@@ -8,9 +8,9 @@ import java.util.Map;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.def.args.Argument;
-import org.smoothbuild.lang.function.def.args.MapToString;
-import org.smoothbuild.lang.function.def.args.TypedParametersPool;
+import org.smoothbuild.lang.function.def.Argument;
+import org.smoothbuild.lang.function.def.MapToString;
+import org.smoothbuild.lang.function.def.TypedParametersPool;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.util.LineBuilder;
 
