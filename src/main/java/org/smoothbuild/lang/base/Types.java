@@ -1,24 +1,22 @@
 package org.smoothbuild.lang.base;
 
-import static org.smoothbuild.lang.base.ArrayType.arrayType;
-import static org.smoothbuild.lang.base.Type.type;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class Types {
 
-  public static final Type STRING = type("String", SString.class);
-  public static final Type BLOB = type("Blob", Blob.class);
-  public static final Type FILE = type("File", SFile.class);
-  public static final Type NOTHING = type("Nothing", Nothing.class);
+  public static final Type STRING = new StringType();
+  public static final Type BLOB = new BlobType();
+  public static final Type FILE = new FileType();
+  public static final Type NOTHING = new NothingType();
 
-  public static final ArrayType STRING_ARRAY = arrayType(STRING,
+  public static final ArrayType STRING_ARRAY = new ArrayType(STRING,
       new TypeLiteral<Array<SString>>() {});
-  public static final ArrayType BLOB_ARRAY = arrayType(BLOB, new TypeLiteral<Array<Blob>>() {});
-  public static final ArrayType FILE_ARRAY = arrayType(FILE, new TypeLiteral<Array<SFile>>() {});
-  public static final ArrayType NIL = arrayType(NOTHING, new TypeLiteral<Array<Nothing>>() {});
+  public static final ArrayType BLOB_ARRAY = new ArrayType(BLOB, new TypeLiteral<Array<Blob>>() {});
+  public static final ArrayType FILE_ARRAY =
+      new ArrayType(FILE, new TypeLiteral<Array<SFile>>() {});
+  public static final ArrayType NIL = new ArrayType(NOTHING, new TypeLiteral<Array<Nothing>>() {});
 
   /*
    * Not each type can be used in every place. Each set below represent one
