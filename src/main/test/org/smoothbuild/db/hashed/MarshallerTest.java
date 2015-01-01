@@ -12,7 +12,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Hashed;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.hash.HashCode;
@@ -22,20 +22,20 @@ import com.google.common.primitives.Ints;
 public class MarshallerTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private Marshaller marshaller;
-  private Hashed hashed1;
-  private Hashed hashed2;
+  private Value value1;
+  private Value value2;
   private final Path path = path("my/path");
   private String string;
   private HashCode hashCode;
 
   @Test
   public void marshalling_list_of_hashed_objects() throws Exception {
-    given(hashed1 = objectsDb.string("abc"));
-    given(hashed2 = objectsDb.string("def"));
+    given(value1 = objectsDb.string("abc"));
+    given(value2 = objectsDb.string("def"));
     given(marshaller = new Marshaller());
-    given(marshaller).write(asList(hashed1, hashed2));
+    given(marshaller).write(asList(value1, value2));
     when(marshaller).getBytes();
-    thenReturned(Bytes.concat(toByteArray(2), hashed1.hash().asBytes(), hashed2.hash().asBytes()));
+    thenReturned(Bytes.concat(toByteArray(2), value1.hash().asBytes(), value2.hash().asBytes()));
   }
 
   @Test
