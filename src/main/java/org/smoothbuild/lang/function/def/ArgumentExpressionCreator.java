@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.base.Types.allTypes;
 import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,8 +25,6 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
@@ -37,8 +36,8 @@ public class ArgumentExpressionCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public ImmutableMap<String, Expression> createArgExprs(CodeLocation codeLocation,
-      LoggedMessages messages, Function function, Collection<Argument> arguments) {
+  public Map<String, Expression> createArgExprs(CodeLocation codeLocation, LoggedMessages messages,
+      Function function, Collection<Argument> arguments) {
     ParametersPool parametersPool = new ParametersPool(function.parameters());
     ImmutableList<Argument> namedArguments = Argument.filterNamed(arguments);
 
@@ -47,27 +46,25 @@ public class ArgumentExpressionCreator {
       return null;
     }
 
-    Builder<Parameter, Argument> mapBuilder = ImmutableMap.builder();
-    processNamedArguments(parametersPool, messages, mapBuilder, namedArguments);
+    Map<Parameter, Argument> argumentMap = new HashMap<>();
+    processNamedArguments(parametersPool, messages, argumentMap, namedArguments);
     if (messages.containsProblems()) {
       return null;
     }
 
-    processNamelessArguments(function, arguments, parametersPool, messages, mapBuilder);
+    processNamelessArguments(function, arguments, parametersPool, messages, argumentMap);
     if (messages.containsProblems()) {
       return null;
     }
-    ImmutableMap<Parameter, Argument> mapping = mapBuilder.build();
-
     Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
     if (missingRequiredParameters.size() != 0) {
-      messages.log(new MissingRequiredArgsError(codeLocation, function, mapping,
+      messages.log(new MissingRequiredArgsError(codeLocation, function, argumentMap,
           missingRequiredParameters));
       return null;
     }
 
     messages.failIfContainsProblems();
-    return convert(mapping);
+    return convert(argumentMap);
   }
 
   private static void detectDuplicatedAndUnknownArgumentNames(Function function,
@@ -90,7 +87,7 @@ public class ArgumentExpressionCreator {
   }
 
   private static void processNamedArguments(ParametersPool parametersPool, LoggedMessages messages,
-      Builder<Parameter, Argument> mapBuilder, Collection<Argument> namedArguments) {
+      Map<Parameter, Argument> argumentMap, Collection<Argument> namedArguments) {
     for (Argument argument : namedArguments) {
       if (argument.hasName()) {
         String name = argument.name();
@@ -99,15 +96,14 @@ public class ArgumentExpressionCreator {
         if (!canConvert(argument.type(), paramType)) {
           messages.log(new TypeMismatchError(argument, paramType));
         } else {
-          mapBuilder.put(parameter, argument);
+          argumentMap.put(parameter, argument);
         }
       }
     }
   }
 
   private static void processNamelessArguments(Function function, Collection<Argument> arguments,
-      ParametersPool parametersPool, LoggedMessages messages,
-      Builder<Parameter, Argument> mapBuilder) {
+      ParametersPool parametersPool, LoggedMessages messages, Map<Parameter, Argument> argumentMap) {
     ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
 
     for (Type type : allTypes()) {
@@ -119,12 +115,12 @@ public class ArgumentExpressionCreator {
         if (argsSize == 1 && availableTypedParams.hasCandidate()) {
           Argument onlyArgument = availableArguments.iterator().next();
           Parameter candidateParameter = availableTypedParams.candidate();
-          mapBuilder.put(candidateParameter, onlyArgument);
+          argumentMap.put(candidateParameter, onlyArgument);
           parametersPool.take(candidateParameter);
         } else {
           AmbiguousNamelessArgsError error =
-              new AmbiguousNamelessArgsError(function.name(), mapBuilder.build(),
-                  availableArguments, availableTypedParams);
+              new AmbiguousNamelessArgsError(function.name(), argumentMap, availableArguments,
+                  availableTypedParams);
           messages.log(error);
           return;
         }
@@ -132,16 +128,16 @@ public class ArgumentExpressionCreator {
     }
   }
 
-  private ImmutableMap<String, Expression> convert(Map<Parameter, Argument> paramToArgMap) {
-    Builder<String, Expression> builder = ImmutableMap.builder();
+  private Map<String, Expression> convert(Map<Parameter, Argument> paramToArgMap) {
+    Map<String, Expression> map = new HashMap<>();
 
     for (Map.Entry<Parameter, Argument> entry : paramToArgMap.entrySet()) {
       Parameter parameter = entry.getKey();
       Argument argument = entry.getValue();
       Expression expression = implicitConverter.apply(parameter.type(), argument.expression());
-      builder.put(parameter.name(), expression);
+      map.put(parameter.name(), expression);
     }
 
-    return builder.build();
+    return map;
   }
 }

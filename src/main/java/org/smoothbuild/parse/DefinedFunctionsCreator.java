@@ -60,7 +60,6 @@ import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -270,7 +269,7 @@ public class DefinedFunctionsCreator {
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      ImmutableMap<String, ? extends Expression> namedArgs =
+      Map<String, ? extends Expression> namedArgs =
           argumentExpressionCreator.createArgExprs(codeLocation, messages, function, arguments);
 
       if (namedArgs == null) {
