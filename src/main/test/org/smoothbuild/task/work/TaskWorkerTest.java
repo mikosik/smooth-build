@@ -8,9 +8,9 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Types;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.Types;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;

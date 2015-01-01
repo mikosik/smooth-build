@@ -1,7 +1,7 @@
 package org.smoothbuild.task.exec;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.base.Types.STRING;
+import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 import static org.smoothbuild.task.exec.TaskReporter.header;
 import static org.testory.Testory.given;

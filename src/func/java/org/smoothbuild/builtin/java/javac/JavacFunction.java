@@ -20,13 +20,13 @@ import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;

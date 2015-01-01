@@ -1,19 +1,19 @@
 package org.smoothbuild.lang.function.def;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.base.Conversions.canConvert;
-import static org.smoothbuild.lang.base.Types.allTypes;
 import static org.smoothbuild.lang.function.base.Parameters.filterOptionalParameters;
 import static org.smoothbuild.lang.function.base.Parameters.filterRequiredParameters;
 import static org.smoothbuild.lang.function.base.Parameters.parametersToMap;
+import static org.smoothbuild.lang.type.Conversions.canConvert;
+import static org.smoothbuild.lang.type.Types.allTypes;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

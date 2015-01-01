@@ -7,10 +7,10 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;

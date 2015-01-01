@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
 
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
@@ -16,6 +15,7 @@ import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.collect.ImmutableList;

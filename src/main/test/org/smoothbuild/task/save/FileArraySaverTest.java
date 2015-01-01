@@ -6,8 +6,8 @@ import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.task.save.err.DuplicatePathsInFileArrayArtifactError;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;

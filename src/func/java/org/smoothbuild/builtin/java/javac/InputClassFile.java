@@ -10,7 +10,7 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.SFile;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final SFile file;

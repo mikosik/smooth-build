@@ -1,12 +1,12 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.base.Types.BLOB;
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.Types.FILE;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.base.Types.NIL;
-import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 
 import org.smoothbuild.lang.function.base.Name;
 

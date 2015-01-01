@@ -1,23 +1,23 @@
 package org.smoothbuild.task.save;
 
-import static org.smoothbuild.lang.base.Types.BLOB;
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.Types.FILE;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.base.Types.NIL;
-import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.Nothing;
-import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.Type;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Nothing;
+import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.SmoothExecutorMessages;
 
 import com.google.common.collect.ImmutableMap;

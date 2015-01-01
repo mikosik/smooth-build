@@ -14,11 +14,11 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.ArrayBuilder;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.annotations.VisibleForTesting;

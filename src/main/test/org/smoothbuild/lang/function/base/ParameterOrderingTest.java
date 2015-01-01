@@ -2,9 +2,9 @@ package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.base.ParameterOrdering.PARAMETER_ORDERING;
+import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

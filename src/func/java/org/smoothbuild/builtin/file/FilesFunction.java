@@ -10,13 +10,13 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.ArrayBuilder;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 

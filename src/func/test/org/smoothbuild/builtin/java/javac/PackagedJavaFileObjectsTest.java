@@ -16,8 +16,8 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 import org.testory.Closure;
 

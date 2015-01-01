@@ -5,8 +5,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableMap;

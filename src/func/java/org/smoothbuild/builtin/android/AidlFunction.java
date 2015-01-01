@@ -7,12 +7,12 @@ import org.smoothbuild.builtin.android.err.AidlBinaryReturnedNonZeroCodeError;
 import org.smoothbuild.builtin.android.err.AidlShouldOutputExactlyOneFileError;
 import org.smoothbuild.builtin.android.err.RunningAidlBinaryFailedError;
 import org.smoothbuild.io.util.TempDirectory;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.CommandExecutor;
 
 import com.google.common.collect.Iterables;

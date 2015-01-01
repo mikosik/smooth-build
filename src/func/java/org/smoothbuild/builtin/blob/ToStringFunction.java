@@ -3,11 +3,11 @@ package org.smoothbuild.builtin.blob;
 import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.Streams;
 
 public class ToStringFunction {

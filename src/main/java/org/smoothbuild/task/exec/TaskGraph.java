@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;

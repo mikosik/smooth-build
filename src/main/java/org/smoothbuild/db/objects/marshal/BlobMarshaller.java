@@ -3,7 +3,7 @@ package org.smoothbuild.db.objects.marshal;
 import java.io.InputStream;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.value.Blob;
 
 import com.google.common.hash.HashCode;
 

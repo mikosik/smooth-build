@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.SString;
 
 public class ToBlobFunction {
   public interface ToBlobParameters {

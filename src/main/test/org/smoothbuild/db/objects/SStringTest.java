@@ -1,14 +1,14 @@
 package org.smoothbuild.db.objects;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.base.Types.STRING;
+import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 import com.google.inject.Guice;

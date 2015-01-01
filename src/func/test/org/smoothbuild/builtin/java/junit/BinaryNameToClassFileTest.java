@@ -10,8 +10,8 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 

@@ -6,9 +6,9 @@ import static org.testory.Testory.mock;
 import java.lang.reflect.Method;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableMap;

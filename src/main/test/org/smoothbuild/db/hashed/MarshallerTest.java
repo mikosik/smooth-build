@@ -12,7 +12,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.hash.HashCode;

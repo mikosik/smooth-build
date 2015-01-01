@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 public class JarTester {

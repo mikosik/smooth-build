@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 
 import com.google.common.io.CharStreams;
 

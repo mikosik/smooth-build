@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.value;
 
 import static org.junit.Assert.assertTrue;
 
@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
 import org.junit.Test;
+import org.smoothbuild.lang.value.Nothing;
 
 public class NothingTest {
   @Test

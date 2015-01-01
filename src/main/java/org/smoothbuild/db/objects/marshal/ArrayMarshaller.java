@@ -7,9 +7,9 @@ import java.util.List;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.ArrayType;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;

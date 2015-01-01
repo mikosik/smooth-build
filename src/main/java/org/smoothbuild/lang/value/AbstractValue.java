@@ -1,6 +1,8 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
 

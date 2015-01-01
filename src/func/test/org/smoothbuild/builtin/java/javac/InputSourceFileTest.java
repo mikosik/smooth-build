@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 public class InputSourceFileTest {

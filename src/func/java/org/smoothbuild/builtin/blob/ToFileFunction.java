@@ -3,12 +3,12 @@ package org.smoothbuild.builtin.blob;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 
 public class ToFileFunction {
   public interface ToFileParameters {

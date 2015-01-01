@@ -14,12 +14,12 @@ import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.ArrayBuilder;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.base.Predicate;

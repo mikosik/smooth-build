@@ -1,17 +1,17 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.type;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.smoothbuild.lang.base.Conversions.canConvert;
-import static org.smoothbuild.lang.base.Conversions.convertFunctionName;
-import static org.smoothbuild.lang.base.Types.BLOB;
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.Types.FILE;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.base.Types.NIL;
-import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.lang.type.Conversions.canConvert;
+import static org.smoothbuild.lang.type.Conversions.convertFunctionName;
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 

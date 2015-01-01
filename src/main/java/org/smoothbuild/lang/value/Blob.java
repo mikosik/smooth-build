@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.lang.base.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.BLOB;
 
 import java.io.IOException;
 import java.io.InputStream;

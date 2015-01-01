@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.base.Types.BLOB;
-import static org.smoothbuild.lang.base.Types.FILE;
-import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -13,7 +13,7 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.util.Empty;
 
 public class SignatureTest {

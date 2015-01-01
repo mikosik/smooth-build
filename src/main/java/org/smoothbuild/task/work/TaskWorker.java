@@ -2,7 +2,7 @@ package org.smoothbuild.task.work;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.base.Type;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;

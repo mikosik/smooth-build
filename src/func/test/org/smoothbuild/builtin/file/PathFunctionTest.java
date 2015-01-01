@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.PathFunction.PathParameters;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 

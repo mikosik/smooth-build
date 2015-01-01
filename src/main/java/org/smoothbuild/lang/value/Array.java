@@ -1,8 +1,9 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.value;
 
 import java.util.Iterator;
 
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
+import org.smoothbuild.lang.type.ArrayType;
 
 import com.google.common.base.Joiner;
 import com.google.common.hash.HashCode;

@@ -1,11 +1,11 @@
 package org.smoothbuild.db.objects;
 
-import static org.smoothbuild.lang.base.Types.BLOB;
-import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.Types.FILE;
-import static org.smoothbuild.lang.base.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -13,10 +13,10 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
-import org.smoothbuild.lang.base.Array;
-import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.SFile;
-import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 import com.google.inject.Guice;

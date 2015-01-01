@@ -1,7 +1,7 @@
 package org.smoothbuild.task.base;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
