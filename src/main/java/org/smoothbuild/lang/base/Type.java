@@ -13,6 +13,10 @@ public class Type {
     return new Type(name, TypeLiteral.get(clazz));
   }
 
+  protected Type(String name, Class<? extends Value> clazz) {
+    this(name, TypeLiteral.get(clazz));
+  }
+
   protected Type(String name, TypeLiteral<? extends Value> jType) {
     this.name = name;
     this.jType = jType;
