@@ -18,8 +18,8 @@ import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
 import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.BlobBuilder;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.base.Predicate;

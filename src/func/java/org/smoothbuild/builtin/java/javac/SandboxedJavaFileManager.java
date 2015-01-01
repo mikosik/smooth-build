@@ -16,8 +16,8 @@ import javax.tools.StandardLocation;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.Multimap;
 

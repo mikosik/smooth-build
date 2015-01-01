@@ -8,8 +8,8 @@ import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

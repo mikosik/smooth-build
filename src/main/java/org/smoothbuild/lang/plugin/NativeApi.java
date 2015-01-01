@@ -1,7 +1,13 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.plugin;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.lang.base.ArrayBuilder;
+import org.smoothbuild.lang.base.Blob;
+import org.smoothbuild.lang.base.BlobBuilder;
+import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 

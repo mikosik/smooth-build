@@ -4,11 +4,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
