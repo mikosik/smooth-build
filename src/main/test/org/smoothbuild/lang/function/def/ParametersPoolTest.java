@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args;
+package org.smoothbuild.lang.function.def;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.base.Types.BLOB;

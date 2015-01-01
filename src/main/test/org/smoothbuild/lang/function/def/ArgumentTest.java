@@ -1,13 +1,13 @@
-package org.smoothbuild.lang.function.def.args;
+package org.smoothbuild.lang.function.def;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.base.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.base.Types.FILE;
 import static org.smoothbuild.lang.base.Types.STRING;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
-import static org.smoothbuild.lang.function.def.args.Argument.pipedArgument;
+import static org.smoothbuild.lang.function.def.Argument.namedArgument;
+import static org.smoothbuild.lang.function.def.Argument.namelessArgument;
+import static org.smoothbuild.lang.function.def.Argument.pipedArgument;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;

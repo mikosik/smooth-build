@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args.err;
+package org.smoothbuild.lang.function.def.err;
 
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.message.base.MessageType.ERROR;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.def.args.Argument;
+import org.smoothbuild.lang.function.def.Argument;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.util.LineBuilder;

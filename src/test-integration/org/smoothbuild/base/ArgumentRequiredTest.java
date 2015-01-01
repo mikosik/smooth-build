@@ -13,7 +13,7 @@ import org.smoothbuild.base.TestingFunctions.OneRequired;
 import org.smoothbuild.base.TestingFunctions.TwoRequired;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
-import org.smoothbuild.lang.function.def.args.err.MissingRequiredArgsError;
+import org.smoothbuild.lang.function.def.err.MissingRequiredArgsError;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;

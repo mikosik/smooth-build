@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args;
+package org.smoothbuild.lang.function.def;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.base.Conversions.canConvert;

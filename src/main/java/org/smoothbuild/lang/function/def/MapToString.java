@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args;
+package org.smoothbuild.lang.function.def;
 
 import java.util.Collection;
 import java.util.Map;

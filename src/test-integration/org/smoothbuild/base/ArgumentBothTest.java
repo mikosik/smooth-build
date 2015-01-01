@@ -20,7 +20,7 @@ import org.smoothbuild.lang.base.Blob;
 import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
 import org.smoothbuild.lang.base.SString;
-import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
+import org.smoothbuild.lang.function.def.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;

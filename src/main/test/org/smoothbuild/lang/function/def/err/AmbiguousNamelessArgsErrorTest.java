@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def.args.err;
+package org.smoothbuild.lang.function.def.err;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static org.junit.Assert.assertEquals;
@@ -9,9 +9,9 @@ import static org.smoothbuild.lang.base.Types.STRING;
 import static org.smoothbuild.lang.base.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
-import static org.smoothbuild.lang.function.def.args.Argument.namedArgument;
-import static org.smoothbuild.lang.function.def.args.Argument.namelessArgument;
-import static org.smoothbuild.lang.function.def.args.Argument.pipedArgument;
+import static org.smoothbuild.lang.function.def.Argument.namedArgument;
+import static org.smoothbuild.lang.function.def.Argument.namelessArgument;
+import static org.smoothbuild.lang.function.def.Argument.pipedArgument;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -24,8 +24,8 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.Type;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.def.args.Argument;
-import org.smoothbuild.lang.function.def.args.TypedParametersPool;
+import org.smoothbuild.lang.function.def.Argument;
+import org.smoothbuild.lang.function.def.TypedParametersPool;
 import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableMap;

@@ -18,7 +18,7 @@ import org.smoothbuild.base.TestingFunctions.TwoBlobs;
 import org.smoothbuild.base.TestingFunctions.TwoStrings;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
-import org.smoothbuild.lang.function.def.args.err.AmbiguousNamelessArgsError;
+import org.smoothbuild.lang.function.def.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.testing.integration.IntegrationTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
