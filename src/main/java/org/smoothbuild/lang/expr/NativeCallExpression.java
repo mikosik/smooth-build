@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.expr;
 
+import java.util.Map;
+
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
@@ -15,12 +17,12 @@ public class NativeCallExpression extends Expression {
   private final ImmutableMap<String, ? extends Expression> args;
 
   public NativeCallExpression(NativeFunction function, boolean isGenerated,
-      CodeLocation codeLocation, ImmutableMap<String, ? extends Expression> args) {
+      CodeLocation codeLocation, Map<String, ? extends Expression> args) {
     super(function.type(), ImmutableList.copyOf(args.values()), codeLocation);
 
     this.function = function;
     this.isGenerated = isGenerated;
-    this.args = args;
+    this.args = ImmutableMap.copyOf(args);
   }
 
   @Override
