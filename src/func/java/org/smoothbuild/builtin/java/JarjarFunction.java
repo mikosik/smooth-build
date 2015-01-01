@@ -10,8 +10,8 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 

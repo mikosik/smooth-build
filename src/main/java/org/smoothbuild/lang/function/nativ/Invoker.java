@@ -6,8 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 public class Invoker {
   private final Method method;

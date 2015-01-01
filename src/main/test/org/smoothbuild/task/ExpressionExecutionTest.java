@@ -20,7 +20,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.base.Array;
 import org.smoothbuild.lang.base.ArrayBuilder;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SString;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
@@ -30,6 +29,7 @@ import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExpression
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;

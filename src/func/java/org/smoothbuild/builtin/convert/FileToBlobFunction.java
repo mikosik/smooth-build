@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.convert;
 
 import org.smoothbuild.lang.base.Blob;
-import org.smoothbuild.lang.base.NativeApi;
 import org.smoothbuild.lang.base.SFile;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 

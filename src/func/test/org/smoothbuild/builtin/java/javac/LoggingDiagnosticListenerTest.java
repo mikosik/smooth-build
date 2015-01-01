@@ -15,7 +15,7 @@ import javax.tools.JavaFileObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
-import org.smoothbuild.lang.base.NativeApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.message.base.Message;
 
 public class LoggingDiagnosticListenerTest {

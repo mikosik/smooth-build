@@ -14,7 +14,7 @@ import javax.tools.StandardJavaFileManager;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.lang.base.NativeApi;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
 import com.google.common.collect.Multimap;
