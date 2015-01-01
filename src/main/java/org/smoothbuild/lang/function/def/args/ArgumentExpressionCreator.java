@@ -1,4 +1,4 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.lang.function.def.args;
 
 import java.util.Collection;
 import java.util.Map;
@@ -9,8 +9,6 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.def.args.Argument;
-import org.smoothbuild.lang.function.def.args.Mapper;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 
