@@ -39,7 +39,7 @@ public class FakeNativeApi extends NativeApiImpl {
   }
 
   @Override
-  public FakeLoggedMessages loggedMessages() {
+  public FakeLoggedMessages messages() {
     return messages;
   }
 

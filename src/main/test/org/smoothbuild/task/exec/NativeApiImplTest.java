@@ -42,7 +42,7 @@ public class NativeApiImplTest {
   public void messages_are_logged() throws Exception {
     given(message = new Message(ERROR, "message"));
     when(nativeApiImpl).log(message);
-    then(nativeApiImpl.loggedMessages(), contains(message));
+    then(nativeApiImpl.messages(), contains(message));
   }
 
   @Test

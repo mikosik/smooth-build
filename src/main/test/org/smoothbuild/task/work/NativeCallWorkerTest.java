@@ -84,7 +84,7 @@ public class NativeCallWorkerTest {
   public void null_result_is_logged_when_function_has_non_void_return_type() throws Exception {
     given(willReturn(null), invoker).invoke(nativeApi, Empty.stringValueMap());
     nativeCallWorker.execute(TaskInput.fromValues(Empty.valueList()), nativeApi);
-    nativeApi.loggedMessages().assertContainsOnly(NullResultError.class);
+    nativeApi.messages().assertContainsOnly(NullResultError.class);
   }
 
   @Test
@@ -105,7 +105,7 @@ public class NativeCallWorkerTest {
 
     nativeCallWorker.execute(TaskInput.fromValues(Empty.valueList()), nativeApi);
 
-    nativeApi.loggedMessages().assertContainsOnly(CodeMessage.class);
+    nativeApi.messages().assertContainsOnly(CodeMessage.class);
   }
 
   @Test
@@ -141,6 +141,6 @@ public class NativeCallWorkerTest {
       throws Exception {
     given(willThrow(thrown), invoker).invoke(nativeApi, Empty.stringValueMap());
     nativeCallWorker.execute(TaskInput.fromValues(Empty.valueList()), nativeApi);
-    nativeApi.loggedMessages().assertContainsOnly(expected);
+    nativeApi.messages().assertContainsOnly(expected);
   }
 }
