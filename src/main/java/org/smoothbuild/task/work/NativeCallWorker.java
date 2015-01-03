@@ -52,7 +52,7 @@ public class NativeCallWorker extends TaskWorker {
     Value result = null;
     try {
       result = function.invoke(nativeApi, calculateArguments(input));
-      if (result == null && !nativeApi.loggedMessages().containsProblems()) {
+      if (result == null && !nativeApi.messages().containsProblems()) {
         nativeApi.log(new NullResultError());
       }
     } catch (IllegalAccessException e) {
@@ -66,9 +66,9 @@ public class NativeCallWorker extends TaskWorker {
       }
     }
     if (result == null) {
-      return new TaskOutput(nativeApi.loggedMessages());
+      return new TaskOutput(nativeApi.messages());
     } else {
-      return new TaskOutput(result, nativeApi.loggedMessages());
+      return new TaskOutput(result, nativeApi.messages());
     }
   }
 
