@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.module;
 
 import static org.smoothbuild.io.util.JarFile.jarFile;
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy.createNativeFunctions;
 import static org.smoothbuild.util.Classes.CLASS_FILE_EXTENSION;
 import static org.smoothbuild.util.Classes.binaryPathToBinaryName;
 

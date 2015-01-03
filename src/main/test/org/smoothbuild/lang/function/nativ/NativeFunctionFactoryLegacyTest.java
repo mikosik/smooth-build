@@ -4,8 +4,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy.createNativeFunction;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy.createNativeFunctions;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
@@ -45,7 +45,7 @@ import org.testory.common.Matcher;
 import com.google.common.collect.Lists;
 import com.google.common.hash.HashCode;
 
-public class NativeFunctionFactoryTest {
+public class NativeFunctionFactoryLegacyTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private NativeFunction function;
   private NativeFunction function2;
@@ -589,6 +589,6 @@ public class NativeFunctionFactoryTest {
   }
 
   private static NativeFunction function(Method method) throws NativeImplementationException {
-    return NativeFunctionFactory.createNativeFunction(Hash.integer(33), method);
+    return NativeFunctionFactoryLegacy.createNativeFunction(Hash.integer(33), method);
   }
 }
