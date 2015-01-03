@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
-public class NativeFunctionFactory {
+public class NativeFunctionFactoryLegacy {
   public static ImmutableList<NativeFunction> createNativeFunctions(HashCode jarHash, Class<?> clazz)
       throws NativeImplementationException {
     Builder<NativeFunction> builder = ImmutableList.builder();

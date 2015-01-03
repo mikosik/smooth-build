@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.integration;
 
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy.createNativeFunctions;
 
 import java.util.ArrayList;
 import java.util.List;

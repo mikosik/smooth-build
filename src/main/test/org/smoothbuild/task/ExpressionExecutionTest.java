@@ -3,7 +3,7 @@ package org.smoothbuild.task;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunction;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy.createNativeFunction;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
