@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Empty;
@@ -28,8 +28,8 @@ public class TaskWorkerHashesTest {
   private TaskWorker worker;
   private TaskWorker worker2;
 
-  private NativeFunction function;
-  private NativeFunction function2;
+  private NativeFunctionLegacy function;
+  private NativeFunctionLegacy function2;
 
   private final HashCode hash = Hash.integer(33);
 
@@ -52,9 +52,9 @@ public class TaskWorkerHashesTest {
   @Test
   public void native_call_workers_with_different_functions_have_different_hashes() throws Exception {
     given(function =
-        new NativeFunction(signature("fA"), mock(Invoker.class), false, Hash.integer(33)));
+        new NativeFunctionLegacy(signature("fA"), mock(Invoker.class), false, Hash.integer(33)));
     given(function2 =
-        new NativeFunction(signature("fB"), mock(Invoker.class), false, Hash.integer(34)));
+        new NativeFunctionLegacy(signature("fB"), mock(Invoker.class), false, Hash.integer(34)));
     given(worker = new NativeCallWorker(function, asList("param"), false, CL));
     given(worker2 = new NativeCallWorker(function2, asList("param"), false, CL));
     when(worker).hash();
@@ -68,7 +68,7 @@ public class TaskWorkerHashesTest {
   @Test
   public void native_call_workers_with_same_functions_but_different_params_have_different_hashes()
       throws Exception {
-    given(function = new NativeFunction(signature("fA"), mock(Invoker.class), false, hash));
+    given(function = new NativeFunctionLegacy(signature("fA"), mock(Invoker.class), false, hash));
     given(worker = new NativeCallWorker(function, asList("paramA"), false, CL));
     given(worker2 = new NativeCallWorker(function, asList("paramB"), false, CL));
     when(worker).hash();
@@ -77,7 +77,7 @@ public class TaskWorkerHashesTest {
 
   @Test
   public void native_call_worker_and_constant_worker_have_different_hashes() throws Exception {
-    given(function = new NativeFunction(signature("fA"), mock(Invoker.class), false, hash));
+    given(function = new NativeFunctionLegacy(signature("fA"), mock(Invoker.class), false, hash));
     given(worker = new NativeCallWorker(function, asList("param"), false, CL));
     given(worker2 = new ConstantWorker(STRING, objectsDb.string("abc"), CL));
     when(worker).hash();
@@ -86,7 +86,7 @@ public class TaskWorkerHashesTest {
 
   @Test
   public void native_call_worker_and_array_worker_have_different_hashes() throws Exception {
-    given(function = new NativeFunction(signature("fA"), mock(Invoker.class), false, hash));
+    given(function = new NativeFunctionLegacy(signature("fA"), mock(Invoker.class), false, hash));
     given(worker = new NativeCallWorker(function, asList("param"), false, CL));
     given(worker2 = new ArrayWorker(STRING_ARRAY, CL));
     when(worker).hash();
