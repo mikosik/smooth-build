@@ -47,9 +47,9 @@ import com.google.common.hash.HashCode;
 
 public class NativeFunctionFactoryLegacyTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private NativeFunction function;
-  private NativeFunction function2;
-  private NativeFunction stringFunction;
+  private NativeFunctionLegacy function;
+  private NativeFunctionLegacy function2;
+  private NativeFunctionLegacy stringFunction;
   private HashCode hash1;
   private HashCode hash2;
 
@@ -59,9 +59,9 @@ public class NativeFunctionFactoryLegacyTest {
     thenReturned(new Matcher() {
       @Override
       public boolean matches(Object object) {
-        List<NativeFunction> functions = (List<NativeFunction>) object;
+        List<NativeFunctionLegacy> functions = (List<NativeFunctionLegacy>) object;
         List<String> names = Lists.newArrayList();
-        for (NativeFunction function : functions) {
+        for (NativeFunctionLegacy function : functions) {
           names.add(function.name().value());
         }
         return Matchers.containsInAnyOrder("aFunction", "bFunction").matches(names);
@@ -588,7 +588,7 @@ public class NativeFunctionFactoryLegacyTest {
     };
   }
 
-  private static NativeFunction function(Method method) throws NativeImplementationException {
+  private static NativeFunctionLegacy function(Method method) throws NativeImplementationException {
     return NativeFunctionFactoryLegacy.createNativeFunction(Hash.integer(33), method);
   }
 }

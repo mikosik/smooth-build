@@ -35,7 +35,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDbModule;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
 import org.smoothbuild.io.util.SmoothJar;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.module.ModuleBuilder;
@@ -115,7 +115,7 @@ public class IntegrationTestModule extends AbstractModule {
     HashCode jarHash = Hash.integer(33);
     ModuleBuilder builder = new ModuleBuilder();
     for (Class<?> clazz : classes) {
-      for (NativeFunction function : createNativeFunctions(jarHash, clazz)) {
+      for (NativeFunctionLegacy function : createNativeFunctions(jarHash, clazz)) {
         builder.addFunction(function);
       }
     }

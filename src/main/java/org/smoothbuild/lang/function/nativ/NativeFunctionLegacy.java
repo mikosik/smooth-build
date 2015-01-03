@@ -18,12 +18,12 @@ import com.google.common.hash.HashCode;
  *
  * @see DefinedFunction
  */
-public class NativeFunction extends AbstractFunction {
+public class NativeFunctionLegacy extends AbstractFunction {
   private final HashCode hash;
   private final Invoker invoker;
   private final boolean isCacheable;
 
-  public NativeFunction(Signature signature, Invoker invoker, boolean isCacheable, HashCode hash) {
+  public NativeFunctionLegacy(Signature signature, Invoker invoker, boolean isCacheable, HashCode hash) {
     super(signature);
     this.hash = hash;
     this.isCacheable = isCacheable;

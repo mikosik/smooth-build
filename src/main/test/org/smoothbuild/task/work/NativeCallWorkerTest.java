@@ -22,7 +22,7 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.Invoker;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
@@ -49,8 +49,8 @@ public class NativeCallWorkerTest {
   HashCode hash = HashCode.fromInt(33);
 
   private final Signature signature = new Signature(STRING, name("name"), Empty.paramList());
-  NativeFunction function1 = new NativeFunction(signature, invoker, true, Hash.integer(33));
-  NativeFunction function2 = new NativeFunction(signature, invoker, true, Hash.integer(33));
+  NativeFunctionLegacy function1 = new NativeFunctionLegacy(signature, invoker, true, Hash.integer(33));
+  NativeFunctionLegacy function2 = new NativeFunctionLegacy(signature, invoker, true, Hash.integer(33));
 
   String name1 = "name1";
   String name2 = "name2";
@@ -91,7 +91,7 @@ public class NativeCallWorkerTest {
   public void null_can_be_returned_when_function_logged_errors() throws Exception {
     List<Parameter> parameters = asList();
     Signature signature = new Signature(STRING, name("name"), parameters);
-    function1 = new NativeFunction(signature, invoker, true, Hash.integer(33));
+    function1 = new NativeFunctionLegacy(signature, invoker, true, Hash.integer(33));
     nativeCallWorker =
         new NativeCallWorker(function1, Arrays.<String> asList(), false, codeLocation(1));
     given(new Handler() {

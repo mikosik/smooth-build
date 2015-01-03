@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
@@ -24,10 +24,10 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
 public class NativeCallWorker extends TaskWorker {
-  private final NativeFunction function;
+  private final NativeFunctionLegacy function;
   private final ImmutableList<String> paramNames;
 
-  public NativeCallWorker(NativeFunction function, List<String> paramNames, boolean isInternal,
+  public NativeCallWorker(NativeFunctionLegacy function, List<String> paramNames, boolean isInternal,
       CodeLocation codeLocation) {
     super(nativeCallWorkerHash(function, paramNames), function.type(), function.name().value(),
         isInternal, function.isCacheable(), codeLocation);
@@ -35,7 +35,7 @@ public class NativeCallWorker extends TaskWorker {
     this.paramNames = ImmutableList.copyOf(paramNames);
   }
 
-  private static HashCode nativeCallWorkerHash(NativeFunction function, List<String> paramNames) {
+  private static HashCode nativeCallWorkerHash(NativeFunctionLegacy function, List<String> paramNames) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(function.hash().asBytes());
     for (String string : Ordering.natural().sortedCopy(paramNames)) {

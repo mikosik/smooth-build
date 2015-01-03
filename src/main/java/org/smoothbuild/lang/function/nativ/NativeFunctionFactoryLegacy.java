@@ -24,9 +24,9 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
 public class NativeFunctionFactoryLegacy {
-  public static ImmutableList<NativeFunction> createNativeFunctions(HashCode jarHash, Class<?> clazz)
+  public static ImmutableList<NativeFunctionLegacy> createNativeFunctions(HashCode jarHash, Class<?> clazz)
       throws NativeImplementationException {
-    Builder<NativeFunction> builder = ImmutableList.builder();
+    Builder<NativeFunctionLegacy> builder = ImmutableList.builder();
     for (Method method : clazz.getDeclaredMethods()) {
       if (method.isAnnotationPresent(SmoothFunction.class)) {
         builder.add(createNativeFunction(jarHash, method));
@@ -35,7 +35,7 @@ public class NativeFunctionFactoryLegacy {
     return builder.build();
   }
 
-  public static NativeFunction createNativeFunction(HashCode jarHash, Method method)
+  public static NativeFunctionLegacy createNativeFunction(HashCode jarHash, Method method)
       throws NativeImplementationException {
     if (!isPublic(method)) {
       throw new NonPublicSmoothFunctionException(method);
@@ -57,11 +57,11 @@ public class NativeFunctionFactoryLegacy {
     return createNativeFunction(jarHash, method, signature, paramsInterface);
   }
 
-  private static <T extends Value> NativeFunction createNativeFunction(HashCode jarHash,
+  private static <T extends Value> NativeFunctionLegacy createNativeFunction(HashCode jarHash,
       Method method, Signature signature, Class<?> paramsInterface)
           throws NativeImplementationException {
     Invoker invoker = createInvoker(method, paramsInterface);
-    return new NativeFunction(signature, invoker, isCacheable(method), functionHash(jarHash,
+    return new NativeFunctionLegacy(signature, invoker, isCacheable(method), functionHash(jarHash,
         signature));
   }
 
