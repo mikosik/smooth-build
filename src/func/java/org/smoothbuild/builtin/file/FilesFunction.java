@@ -10,9 +10,10 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
@@ -21,16 +22,12 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class FilesFunction {
-
-  public interface FilesParameters {
-    @Required
-    public SString dir();
-  }
-
-  @SmoothFunctionLegacy
+  @SmoothFunction
   @NotCacheable
-  public static Array<SFile> files(NativeApiImpl nativeApi, FilesParameters params) {
-    Path path = validatedPath("dir", params.dir());
+  public static Array<SFile> files( //
+      NativeApiImpl nativeApi, //
+      @Required @Name("dir") SString dir) {
+    Path path = validatedPath("dir", dir);
     FileSystem fileSystem = nativeApi.projectFileSystem();
 
     if (path.isRoot()) {

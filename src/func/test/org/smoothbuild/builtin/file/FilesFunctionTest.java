@@ -10,7 +10,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.FilesFunction.FilesParameters;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
@@ -26,7 +25,7 @@ import org.testory.Closure;
 
 public class FilesFunctionTest {
   private FakeObjectsDb objectsDb;
-  private FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeNativeApi nativeApi = new FakeNativeApi();
   private Path path;
   private Path path1;
   private Path path2;
@@ -86,20 +85,15 @@ public class FilesFunctionTest {
     thenReturned(containsInAnyOrder(objectsDb.file(path1, "file1"), objectsDb.file(path2, "file2")));
   }
 
-  private static FilesParameters params(final String dir) {
-    return new FilesParameters() {
-      @Override
-      public SString dir() {
-        return new FakeObjectsDb().string(dir);
-      }
-    };
+  private static SString params(final String dir) {
+    return new FakeObjectsDb().string(dir);
   }
 
-  private static Closure $files(final NativeApiImpl nativeApi, final FilesParameters params) {
+  private static Closure $files(final NativeApiImpl nativeApi, final SString dir) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return FilesFunction.files(nativeApi, params);
+        return FilesFunction.files(nativeApi, dir);
       }
     };
   }
