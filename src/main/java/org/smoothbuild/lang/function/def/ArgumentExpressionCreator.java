@@ -28,6 +28,8 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
@@ -76,7 +78,17 @@ public class ArgumentExpressionCreator {
     }
 
     messages.failIfContainsProblems();
-    return argumentExpressions;
+    return sortAccordingToParametersOrder(argumentExpressions, function);
+  }
+
+  private Map<String, Expression> sortAccordingToParametersOrder(
+      Map<String, Expression> argumentExpressions, Function function) {
+    Builder<String, Expression> builder = ImmutableMap.builder();
+    for (Parameter parameter : function.parameters()) {
+      String name = parameter.name();
+      builder.put(name, argumentExpressions.get(name));
+    }
+    return builder.build();
   }
 
   private static void detectDuplicatedAndUnknownArgumentNames(Function function,
