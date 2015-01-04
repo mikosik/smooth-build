@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.SFile;
 
 public class SignatureFactoryTest {
@@ -31,7 +31,7 @@ public class SignatureFactoryTest {
     public SFile param1();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static SFile function(NativeApi nativeApi, FuncParams funcParams) {
     return null;
   }

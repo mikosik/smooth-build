@@ -18,7 +18,7 @@ import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.lang.function.def.err.AmbiguousNamelessArgsError;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
@@ -72,7 +72,7 @@ public class ArgumentBothTest {
   }
 
   public static class Many {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString many(NativeApi nativeApi, ManyParams params) throws IOException {
       InputStream fileStream = params.file().content().openInputStream();
       InputStream blobStream = params.blob().openInputStream();

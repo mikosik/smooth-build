@@ -32,7 +32,7 @@ import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionExcept
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -70,12 +70,12 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class ClassWithManyFunctions {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString aFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString bFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -101,7 +101,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class NamedFunc {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -116,12 +116,12 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FunctionHashes {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction2(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -138,7 +138,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FunctionHash {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -152,7 +152,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FunctionReturningSString {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -173,7 +173,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FunctionWithDifferentParams {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, DifferentParams params) {
       return null;
     }
@@ -188,7 +188,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class NonCacheableFunction {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -203,7 +203,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class NotCacheableFunction {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     @NotCacheable
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
@@ -229,7 +229,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class SignatureTestFunction {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Blob func(NativeApi nativeApi, SignatureTestParameters params) {
       return null;
     }
@@ -243,7 +243,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class ConstantStringFunction {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString constantStringFunction(NativeApi nativeApi, EmptyParameters params) {
       return new FakeObjectsDb().string("constant string");
     }
@@ -270,7 +270,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithAllowedParamTypes {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, AllowedParameters params) {
       return null;
     }
@@ -289,7 +289,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithRequiredParam {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, RequiredParam params) {
       return null;
     }
@@ -307,7 +307,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithNotRequiredParam {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, NotRequiredParam params) {
       return null;
     }
@@ -324,7 +324,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithArrayOfArrayParamType {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, ArrayOfArrayParams params) {
       return null;
     }
@@ -341,7 +341,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithForbiddenParamType {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, ForbiddenParams params) {
       return null;
     }
@@ -356,7 +356,7 @@ public class NativeFunctionFactoryLegacyTest {
   public interface EmptyParameters {}
 
   public static class FuncWithEmptyParameters {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -369,7 +369,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithStringResult {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -382,7 +382,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithBlobResult {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Blob myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -395,7 +395,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithFileResult {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SFile myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -408,7 +408,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithStringArrayResult {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<SString> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -421,7 +421,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithBlobArrayResult {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<Blob> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -434,7 +434,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithFileArrayResult {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<SFile> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -447,7 +447,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithIllegalReturnType {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Runnable myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -460,7 +460,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithArrayOfArrayReturnType {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<Array<SFile>> myFunction(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -473,7 +473,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithParamThatIsNotInterface {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, String string) {
       return null;
     }
@@ -486,7 +486,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithIllegalFunctionName {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString my$function(NativeApi nativeApi, EmptyParameters params) {
       return null;
     }
@@ -499,7 +499,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithPrivateSmoothMethod {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     private static void myFunction(NativeApi nativeApi, EmptyParameters params) {}
   }
 
@@ -514,7 +514,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithParamMethodThatHasParameters {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, ParametersWithMethodWithParameters params) {
       return null;
     }
@@ -527,7 +527,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithNonStaticSmoothMethod {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public void myFunction(NativeApi nativeApi, EmptyParameters params) {}
   }
 
@@ -538,7 +538,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithSmoothMethodWithZeroParams {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static void myFunction() {}
   }
 
@@ -549,7 +549,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithSmoothMethodWithOneParam {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static void myFunction() {}
   }
 
@@ -560,7 +560,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithSmoothMethodWithWrongFirstParam {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static void myFunction(EmptyParameters wrong, EmptyParameters params) {}
   }
 
@@ -571,7 +571,7 @@ public class NativeFunctionFactoryLegacyTest {
   }
 
   public static class FuncWithSmoothMethodWithWrongSecondParam {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString myFunction(NativeApi nativeApi, Integer wrong) {
       return null;
     }

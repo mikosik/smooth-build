@@ -9,7 +9,7 @@ import org.smoothbuild.builtin.android.err.RunningAidlBinaryFailedError;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
@@ -31,7 +31,7 @@ public class AidlFunction {
     public SFile interfaceFile();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static SFile aidl(NativeApi nativeApi, AidlParameters params) throws InterruptedException {
     String buildToolsVersion = params.buildToolsVersion().value();
     String apiLevel = params.apiLevel().value();

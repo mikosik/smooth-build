@@ -27,7 +27,7 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
@@ -127,7 +127,7 @@ public class ExpressionExecutionTest {
       SString param();
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return params.param();
     }
@@ -150,7 +150,7 @@ public class ExpressionExecutionTest {
       SString param();
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       throw new RuntimeException();
     }
