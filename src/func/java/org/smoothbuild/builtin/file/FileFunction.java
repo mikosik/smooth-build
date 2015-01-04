@@ -11,7 +11,7 @@ import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.Message;
@@ -23,7 +23,7 @@ public class FileFunction {
     public SString path();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   @NotCacheable
   public static SFile file(NativeApiImpl nativeApi, FileParameters params) {
     Path path = validatedPath("path", params.path());

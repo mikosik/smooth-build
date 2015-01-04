@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -21,7 +21,7 @@ public class TestingFunctions {
   }
 
   public static class StringIdentity {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString stringIdentity(NativeApi nativeApi, StringIdentityParams params) {
       return params.string();
     }
@@ -34,7 +34,7 @@ public class TestingFunctions {
   }
 
   public static class TwoStrings {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString twoStrings(NativeApi nativeApi, TwoStringsParams params) {
       String s1 = params.stringA().value();
       String s2 = params.stringB().value();
@@ -47,7 +47,7 @@ public class TestingFunctions {
   }
 
   public static class BlobIdentity {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Blob blobIdentity(NativeApi nativeApi, BlobParams params) {
       return params.blob();
     }
@@ -60,7 +60,7 @@ public class TestingFunctions {
   }
 
   public static class TwoBlobs {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Blob twoBlobs(NativeApi nativeApi, TwoBlobsParams params) {
       return params.blob1();
     }
@@ -71,7 +71,7 @@ public class TestingFunctions {
   }
 
   public static class FileIdentity {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SFile fileIdentity(NativeApi nativeApi, FileIdentityParams params) {
       return params.file();
     }
@@ -82,7 +82,7 @@ public class TestingFunctions {
   }
 
   public static class StringArrayIdentity {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<SString> stringArrayIdentity(NativeApi nativeApi,
         StringArrayIdentityParams params) {
       return params.stringArray();
@@ -96,7 +96,7 @@ public class TestingFunctions {
   }
 
   public static class FileAndBlob {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString fileAndBlob(NativeApi nativeApi, FileAndBlobParams params)
         throws IOException {
       InputStream fileStream = params.file().content().openInputStream();
@@ -114,7 +114,7 @@ public class TestingFunctions {
   }
 
   public static class OneRequired {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString oneRequired(NativeApi nativeApi, OneRequiredParams params) {
       return params.string();
     }
@@ -129,7 +129,7 @@ public class TestingFunctions {
   }
 
   public static class TwoRequired {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString twoRequired(NativeApi nativeApi, TwoRequiredParams params) {
       return nativeApi.string(params.stringA() + ":" + params.stringB());
     }
@@ -143,7 +143,7 @@ public class TestingFunctions {
   }
 
   public static class OneOptionalOneRequired {
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString oneOptionalOneRequired(NativeApi nativeApi,
         OneOptionalOneRequiredParams params) {
       return nativeApi.string(params.stringA() + ":" + params.stringB());

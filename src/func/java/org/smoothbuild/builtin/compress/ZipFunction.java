@@ -10,7 +10,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -26,7 +26,7 @@ public class ZipFunction {
     // add missing parameters: level, comment, method
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static Blob zip(NativeApi nativeApi, ZipParameters params) {
     return new Worker(nativeApi, params).execute();
   }

@@ -11,7 +11,7 @@ import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 
@@ -26,7 +26,7 @@ public class JarjarFunction {
     public Blob in();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static Blob jarjar(NativeApi nativeApi, JarjarParameters params) {
     TempDirectory tempDir = nativeApi.createTempDirectory();
 

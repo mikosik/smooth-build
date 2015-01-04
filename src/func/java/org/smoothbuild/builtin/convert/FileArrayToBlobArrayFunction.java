@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.convert;
 
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -14,7 +14,7 @@ public class FileArrayToBlobArrayFunction {
     public Array<SFile> input();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static Array<Blob> fileArrayToBlobArray(NativeApi nativeApi, Parameters params) {
     ArrayBuilder<Blob> builder = nativeApi.arrayBuilder(Blob.class);
     for (SFile file : params.input()) {

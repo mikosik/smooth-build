@@ -13,7 +13,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -28,7 +28,7 @@ public class JarFunction {
     public Blob manifest();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static Blob jar(NativeApi nativeApi, JarParameters params) {
     return new Worker(nativeApi, params).execute();
   }

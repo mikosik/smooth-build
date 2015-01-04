@@ -32,7 +32,7 @@ import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.ParamMethodHasArgumentsException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -55,7 +55,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithOneFunction {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -71,12 +71,12 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithTwoFunctions {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func1(NativeApi nativeApi, Parameters params) {
       return null;
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func2(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -92,12 +92,12 @@ public class NativeModuleFactoryTest {
 
     public interface Parameters2 {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters2 params) {
       return null;
     }
@@ -113,7 +113,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithSStringFunction {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -134,7 +134,7 @@ public class NativeModuleFactoryTest {
       SString param2();
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -162,7 +162,7 @@ public class NativeModuleFactoryTest {
       public Array<Blob> blobArray();
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -182,7 +182,7 @@ public class NativeModuleFactoryTest {
       public SString param();
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -201,7 +201,7 @@ public class NativeModuleFactoryTest {
       public SString param();
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -217,7 +217,7 @@ public class NativeModuleFactoryTest {
       public Array<Array<SString>> param();
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -233,7 +233,7 @@ public class NativeModuleFactoryTest {
       public String param();
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -248,7 +248,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionWithNoParameter {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -265,7 +265,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionReturningString {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -282,7 +282,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionReturningBlob {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Blob func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -299,7 +299,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionReturningFile {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SFile func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -316,7 +316,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionReturningStringArray {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<SString> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -333,7 +333,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionReturningBlobArray {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<Blob> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -350,7 +350,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionReturningFileArray {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<SFile> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -364,7 +364,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionReturningArrayOfArrays {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static Array<Array<SString>> func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -378,7 +378,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionReturningNonSmoothType {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static String func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -392,7 +392,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithFunctionWithIllegalName {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString my$function(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -406,7 +406,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithNonPublicFunction {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     protected static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -420,7 +420,7 @@ public class NativeModuleFactoryTest {
   public static class ModuleWithNonStaticFunction {
     public interface Parameters {}
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }
@@ -436,7 +436,7 @@ public class NativeModuleFactoryTest {
       SString param(SString notAllowed);
     }
 
-    @SmoothFunction
+    @SmoothFunctionLegacy
     public static SString func(NativeApi nativeApi, Parameters params) {
       return null;
     }

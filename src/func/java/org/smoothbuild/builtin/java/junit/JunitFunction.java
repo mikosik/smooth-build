@@ -16,7 +16,7 @@ import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -33,7 +33,7 @@ public class JunitFunction {
     SString include();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static SString junit(NativeApi nativeApi, JunitParameters params) {
     Map<String, SFile> binaryNameToClassFile =
         binaryNameToClassFile(nativeApi, nullToEmpty(params.libs()));

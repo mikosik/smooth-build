@@ -14,7 +14,7 @@ import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.WrongParamsInSmoothFunctionException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.NotCacheable;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.NativeApiImpl;
 
@@ -28,7 +28,7 @@ public class NativeFunctionFactoryLegacy {
       throws NativeImplementationException {
     Builder<NativeFunctionLegacy> builder = ImmutableList.builder();
     for (Method method : clazz.getDeclaredMethods()) {
-      if (method.isAnnotationPresent(SmoothFunction.class)) {
+      if (method.isAnnotationPresent(SmoothFunctionLegacy.class)) {
         builder.add(createNativeFunction(jarHash, method));
       }
     }

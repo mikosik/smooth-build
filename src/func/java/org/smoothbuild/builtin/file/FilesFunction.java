@@ -12,7 +12,7 @@ import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
@@ -27,7 +27,7 @@ public class FilesFunction {
     public SString dir();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   @NotCacheable
   public static Array<SFile> files(NativeApiImpl nativeApi, FilesParameters params) {
     Path path = validatedPath("dir", params.dir());

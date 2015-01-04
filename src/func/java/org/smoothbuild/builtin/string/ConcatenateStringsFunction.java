@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.string;
 
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
@@ -17,7 +17,7 @@ public class ConcatenateStringsFunction {
     public Array<SString> with();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static Array<SString> concatenateStrings(NativeApi nativeApi,
       ConcatenateStringsParameters params) {
     ArrayBuilder<SString> builder = nativeApi.arrayBuilder(SString.class);

@@ -7,7 +7,7 @@ import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
@@ -25,7 +25,7 @@ public class FilterFunction {
     public SString include();
   }
 
-  @SmoothFunction
+  @SmoothFunctionLegacy
   public static Array<SFile> filter(NativeApi nativeApi, FilterParameters params) {
     Predicate<Path> filter = createFilter(params.include().value());
     ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(SFile.class);
