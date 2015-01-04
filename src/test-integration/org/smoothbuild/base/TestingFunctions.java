@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -16,14 +18,10 @@ import com.google.common.io.CharStreams;
 
 public class TestingFunctions {
 
-  public interface StringIdentityParams {
-    public SString string();
-  }
-
   public static class StringIdentity {
-    @SmoothFunctionLegacy
-    public static SString stringIdentity(NativeApi nativeApi, StringIdentityParams params) {
-      return params.string();
+    @SmoothFunction
+    public static SString stringIdentity(NativeApi nativeApi, @Name("string") SString string) {
+      return string;
     }
   }
 
