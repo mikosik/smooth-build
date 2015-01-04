@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.module;
 
 import static org.smoothbuild.io.util.JarFile.jarFile;
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy.createNativeFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 import static org.smoothbuild.util.Classes.CLASS_FILE_EXTENSION;
 import static org.smoothbuild.util.Classes.binaryPathToBinaryName;
 
@@ -12,6 +12,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.io.util.JarFile;
+import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy;
 import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.util.ClassLoaders;
@@ -35,7 +37,11 @@ public class NativeModuleFactory {
         String fileName = entry.getName();
         if (fileName.endsWith(CLASS_FILE_EXTENSION)) {
           Class<?> clazz = load(classLoader, binaryPathToBinaryName(fileName));
-          for (NativeFunctionLegacy function : createNativeFunctions(jar.hash(), clazz)) {
+          for (NativeFunctionLegacy function : NativeFunctionFactoryLegacy.createNativeFunctions(
+              jar.hash(), clazz)) {
+            builder.addFunction(function);
+          }
+          for (NativeFunction function : nativeFunctions(clazz, jar.hash())) {
             builder.addFunction(function);
           }
         }

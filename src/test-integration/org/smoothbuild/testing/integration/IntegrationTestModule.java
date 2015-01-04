@@ -1,5 +1,6 @@
 package org.smoothbuild.testing.integration;
 
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy.createNativeFunctions;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDbModule;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
 import org.smoothbuild.io.util.SmoothJar;
+import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.lang.module.Module;
@@ -116,6 +118,9 @@ public class IntegrationTestModule extends AbstractModule {
     ModuleBuilder builder = new ModuleBuilder();
     for (Class<?> clazz : classes) {
       for (NativeFunctionLegacy function : createNativeFunctions(jarHash, clazz)) {
+        builder.addFunction(function);
+      }
+      for (NativeFunction function : nativeFunctions(clazz, jarHash)) {
         builder.addFunction(function);
       }
     }
