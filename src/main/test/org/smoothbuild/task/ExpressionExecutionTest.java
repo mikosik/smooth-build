@@ -3,7 +3,7 @@ package org.smoothbuild.task;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy.createNativeFunction;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunction;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
@@ -26,8 +26,9 @@ import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExpression
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
@@ -113,45 +114,37 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_native_function_that_returns_its_argument() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(function = createNativeFunction(Hash.integer(33), SmoothModule.class.getMethods()[0]));
+    given(function = nativeFunction(SmoothModule.class.getMethods()[0], Hash.integer(33)));
     given(stringExpression = new ConstantExpression(sstring, codeLocation(2)));
     given(callExpression =
-        callExpression(function, false, location, ImmutableMap.of("param", stringExpression)));
+        callExpression(function, false, location, ImmutableMap.of("string", stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(sstring));
   }
 
   public static class SmoothModule {
-    public interface Parameters {
-      SString param();
-    }
-
-    @SmoothFunctionLegacy
-    public static SString func(NativeApi nativeApi, Parameters params) {
-      return params.param();
+    @SmoothFunction
+    public static SString func(NativeApi nativeApi, @Name("string") SString string) {
+      return string;
     }
   }
 
   @Test
   public void execution_fails_when_native_function_throws_runtime_exception() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(function = createNativeFunction(Hash.integer(33), SmoothModule2.class.getMethods()[0]));
+    given(function = nativeFunction(SmoothModule2.class.getMethods()[0], Hash.integer(33)));
     given(stringExpression = new ConstantExpression(sstring, codeLocation(2)));
     given(callExpression =
-        callExpression(function, false, location, ImmutableMap.of("param", stringExpression)));
+        callExpression(function, false, location, ImmutableMap.of("string", stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output().hasReturnValue(), false);
   }
 
   public static class SmoothModule2 {
-    public interface Parameters {
-      SString param();
-    }
-
-    @SmoothFunctionLegacy
-    public static SString func(NativeApi nativeApi, Parameters params) {
+    @SmoothFunction
+    public static SString func(NativeApi nativeApi, @Name("string") SString string) {
       throw new RuntimeException();
     }
   }
