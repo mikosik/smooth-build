@@ -23,11 +23,11 @@ import com.google.common.collect.Ordering;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
-public class NativeCallWorker extends TaskWorker {
+public class NativeCallWorkerLegacy extends TaskWorker {
   private final NativeFunctionLegacy function;
   private final ImmutableList<String> paramNames;
 
-  public NativeCallWorker(NativeFunctionLegacy function, List<String> paramNames, boolean isInternal,
+  public NativeCallWorkerLegacy(NativeFunctionLegacy function, List<String> paramNames, boolean isInternal,
       CodeLocation codeLocation) {
     super(nativeCallWorkerHash(function, paramNames), function.type(), function.name().value(),
         isInternal, function.isCacheable(), codeLocation);
@@ -44,7 +44,7 @@ public class NativeCallWorker extends TaskWorker {
     }
     HashCode hash = hasher.hash();
 
-    return WorkerHashes.workerHash(NativeCallWorker.class, hash);
+    return WorkerHashes.workerHash(NativeCallWorkerLegacy.class, hash);
   }
 
   @Override

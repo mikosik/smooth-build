@@ -42,15 +42,17 @@ import org.testory.proxy.Invocation;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
-public class NativeCallWorkerTest {
+public class NativeCallWorkerLegacyTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   Invoker invoker = mock(Invoker.class);
   FakeNativeApi nativeApi = new FakeNativeApi();
   HashCode hash = HashCode.fromInt(33);
 
   private final Signature signature = new Signature(STRING, name("name"), Empty.paramList());
-  NativeFunctionLegacy function1 = new NativeFunctionLegacy(signature, invoker, true, Hash.integer(33));
-  NativeFunctionLegacy function2 = new NativeFunctionLegacy(signature, invoker, true, Hash.integer(33));
+  NativeFunctionLegacy function1 = new NativeFunctionLegacy(signature, invoker, true, Hash
+      .integer(33));
+  NativeFunctionLegacy function2 = new NativeFunctionLegacy(signature, invoker, true, Hash
+      .integer(33));
 
   String name1 = "name1";
   String name2 = "name2";
@@ -60,16 +62,16 @@ public class NativeCallWorkerTest {
   List<Parameter> parameters = asList(optionalParameter(STRING, name1), optionalParameter(STRING,
       name2));
 
-  NativeCallWorker nativeCallWorker = new NativeCallWorker(function1, Arrays.<String> asList(),
-      false, codeLocation(1));
+  NativeCallWorkerLegacy nativeCallWorker = new NativeCallWorkerLegacy(function1, Arrays
+      .<String> asList(), false, codeLocation(1));
 
   @Test
   public void calculate_result() throws IllegalAccessException, InvocationTargetException {
     SString argValue = objectsDb.string("subTaskOutput");
 
     String name = "param";
-    NativeCallWorker nativeCallTask =
-        new NativeCallWorker(function1, asList(name), false, codeLocation(1));
+    NativeCallWorkerLegacy nativeCallTask =
+        new NativeCallWorkerLegacy(function1, asList(name), false, codeLocation(1));
 
     SString sstring = objectsDb.string("result");
     given(willReturn(sstring), invoker).invoke(nativeApi,
@@ -93,7 +95,7 @@ public class NativeCallWorkerTest {
     Signature signature = new Signature(STRING, name("name"), parameters);
     function1 = new NativeFunctionLegacy(signature, invoker, true, Hash.integer(33));
     nativeCallWorker =
-        new NativeCallWorker(function1, Arrays.<String> asList(), false, codeLocation(1));
+        new NativeCallWorkerLegacy(function1, Arrays.<String> asList(), false, codeLocation(1));
     given(new Handler() {
       @Override
       public Object handle(Invocation invocation) throws Throwable {
