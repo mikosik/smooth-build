@@ -1,29 +1,25 @@
 package org.smoothbuild.builtin.file;
 
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
-import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
+import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 
 public class ConcatenateFilesFunction {
-  public interface ConcatenateFilesParameters {
-    @Required
-    public Array<SFile> files();
-
-    @Required
-    public Array<SFile> with();
-  }
-
-  @SmoothFunctionLegacy
-  public static Array<SFile> concatenateFiles(NativeApi nativeApi, ConcatenateFilesParameters params) {
+  @SmoothFunction
+  public static Array<SFile> concatenateFiles( //
+      NativeApi nativeApi, //
+      @Required @Name("files") Array<SFile> files, //
+      @Required @Name("with") Array<SFile> with) {
     ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(SFile.class);
 
-    for (SFile file : params.files()) {
+    for (SFile file : files) {
       builder.add(file);
     }
-    for (SFile file : params.with()) {
+    for (SFile file : with) {
       builder.add(file);
     }
 
