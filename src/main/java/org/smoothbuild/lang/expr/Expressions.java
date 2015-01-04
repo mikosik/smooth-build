@@ -13,7 +13,7 @@ public class Expressions {
   public static Expression callExpression(Function function, boolean isGenerated,
       CodeLocation codeLocation, Map<String, ? extends Expression> args) {
     if (function instanceof NativeFunctionLegacy) {
-      return new NativeCallExpression((NativeFunctionLegacy) function, isGenerated, codeLocation, args);
+      return new NativeCallExpressionLegacy((NativeFunctionLegacy) function, isGenerated, codeLocation, args);
     } else if (function instanceof DefinedFunction) {
       checkArgument(args.isEmpty());
       checkArgument(!isGenerated);

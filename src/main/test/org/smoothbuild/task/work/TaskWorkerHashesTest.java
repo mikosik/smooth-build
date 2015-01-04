@@ -55,8 +55,8 @@ public class TaskWorkerHashesTest {
         new NativeFunctionLegacy(signature("fA"), mock(Invoker.class), false, Hash.integer(33)));
     given(function2 =
         new NativeFunctionLegacy(signature("fB"), mock(Invoker.class), false, Hash.integer(34)));
-    given(worker = new NativeCallWorker(function, asList("param"), false, CL));
-    given(worker2 = new NativeCallWorker(function2, asList("param"), false, CL));
+    given(worker = new NativeCallWorkerLegacy(function, asList("param"), false, CL));
+    given(worker2 = new NativeCallWorkerLegacy(function2, asList("param"), false, CL));
     when(worker).hash();
     thenReturned(not(worker2.hash()));
   }
@@ -69,8 +69,8 @@ public class TaskWorkerHashesTest {
   public void native_call_workers_with_same_functions_but_different_params_have_different_hashes()
       throws Exception {
     given(function = new NativeFunctionLegacy(signature("fA"), mock(Invoker.class), false, hash));
-    given(worker = new NativeCallWorker(function, asList("paramA"), false, CL));
-    given(worker2 = new NativeCallWorker(function, asList("paramB"), false, CL));
+    given(worker = new NativeCallWorkerLegacy(function, asList("paramA"), false, CL));
+    given(worker2 = new NativeCallWorkerLegacy(function, asList("paramB"), false, CL));
     when(worker).hash();
     thenReturned(not(worker2.hash()));
   }
@@ -78,7 +78,7 @@ public class TaskWorkerHashesTest {
   @Test
   public void native_call_worker_and_constant_worker_have_different_hashes() throws Exception {
     given(function = new NativeFunctionLegacy(signature("fA"), mock(Invoker.class), false, hash));
-    given(worker = new NativeCallWorker(function, asList("param"), false, CL));
+    given(worker = new NativeCallWorkerLegacy(function, asList("param"), false, CL));
     given(worker2 = new ConstantWorker(STRING, objectsDb.string("abc"), CL));
     when(worker).hash();
     thenReturned(not(worker2.hash()));
@@ -87,7 +87,7 @@ public class TaskWorkerHashesTest {
   @Test
   public void native_call_worker_and_array_worker_have_different_hashes() throws Exception {
     given(function = new NativeFunctionLegacy(signature("fA"), mock(Invoker.class), false, hash));
-    given(worker = new NativeCallWorker(function, asList("param"), false, CL));
+    given(worker = new NativeCallWorkerLegacy(function, asList("param"), false, CL));
     given(worker2 = new ArrayWorker(STRING_ARRAY, CL));
     when(worker).hash();
     thenReturned(not(worker2.hash()));
