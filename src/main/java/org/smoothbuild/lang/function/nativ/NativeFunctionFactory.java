@@ -47,7 +47,7 @@ public class NativeFunctionFactory {
     return result;
   }
 
-  private static NativeFunction nativeFunction(Method method, HashCode jarHash)
+  public static NativeFunction nativeFunction(Method method, HashCode jarHash)
       throws NativeImplementationException {
     if (!isStatic(method)) {
       throw new NonStaticSmoothFunctionException(method);

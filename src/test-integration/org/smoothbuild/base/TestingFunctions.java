@@ -8,7 +8,6 @@ import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.plugin.SmoothFunctionLegacy;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -25,126 +24,77 @@ public class TestingFunctions {
     }
   }
 
-  public interface TwoStringsParams {
-    public SString stringA();
-
-    public SString stringB();
-  }
-
   public static class TwoStrings {
-    @SmoothFunctionLegacy
-    public static SString twoStrings(NativeApi nativeApi, TwoStringsParams params) {
-      String s1 = params.stringA().value();
-      String s2 = params.stringB().value();
-      return nativeApi.string(s1 + ":" + s2);
+    @SmoothFunction
+    public static SString twoStrings(NativeApi nativeApi, @Name("stringA") SString stringA,
+        @Name("stringB") SString stringB) {
+      return nativeApi.string(stringA.value() + ":" + stringB.value());
     }
-  }
-
-  public interface BlobParams {
-    public Blob blob();
   }
 
   public static class BlobIdentity {
-    @SmoothFunctionLegacy
-    public static Blob blobIdentity(NativeApi nativeApi, BlobParams params) {
-      return params.blob();
+    @SmoothFunction
+    public static Blob blobIdentity(NativeApi nativeApi, @Name("blob") Blob blob) {
+      return blob;
     }
-  }
-
-  public interface TwoBlobsParams {
-    public Blob blob1();
-
-    public Blob blob2();
   }
 
   public static class TwoBlobs {
-    @SmoothFunctionLegacy
-    public static Blob twoBlobs(NativeApi nativeApi, TwoBlobsParams params) {
-      return params.blob1();
+    @SmoothFunction
+    public static Blob twoBlobs(NativeApi nativeApi, @Name("blob1") Blob blob1,
+        @Name("blob2") Blob blob2) {
+      return blob1;
     }
-  }
-
-  public interface FileIdentityParams {
-    public SFile file();
   }
 
   public static class FileIdentity {
-    @SmoothFunctionLegacy
-    public static SFile fileIdentity(NativeApi nativeApi, FileIdentityParams params) {
-      return params.file();
+    @SmoothFunction
+    public static SFile fileIdentity(NativeApi nativeApi, @Name("file") SFile file) {
+      return file;
     }
-  }
-
-  public interface StringArrayIdentityParams {
-    public Array<SString> stringArray();
   }
 
   public static class StringArrayIdentity {
-    @SmoothFunctionLegacy
+    @SmoothFunction
     public static Array<SString> stringArrayIdentity(NativeApi nativeApi,
-        StringArrayIdentityParams params) {
-      return params.stringArray();
+        @Name("stringArray") Array<SString> stringArray) {
+      return stringArray;
     }
-  }
-
-  public interface FileAndBlobParams {
-    public SFile file();
-
-    public Blob blob();
   }
 
   public static class FileAndBlob {
-    @SmoothFunctionLegacy
-    public static SString fileAndBlob(NativeApi nativeApi, FileAndBlobParams params)
-        throws IOException {
-      InputStream fileStream = params.file().content().openInputStream();
-      InputStream blobStream = params.blob().openInputStream();
-      String file = CharStreams.toString(new InputStreamReader(fileStream));
-      String blob = CharStreams.toString(new InputStreamReader(blobStream));
+    @SmoothFunction
+    public static SString fileAndBlob(NativeApi nativeApi, @Name("file") SFile file,
+        @Name("blob") Blob blob) throws IOException {
+      InputStream fileStream = file.content().openInputStream();
+      InputStream blobStream = blob.openInputStream();
+      String fileString = CharStreams.toString(new InputStreamReader(fileStream));
+      String blobString = CharStreams.toString(new InputStreamReader(blobStream));
 
-      return nativeApi.string(file + ":" + blob);
+      return nativeApi.string(fileString + ":" + blobString);
     }
-  }
-
-  public interface OneRequiredParams {
-    @Required
-    public SString string();
   }
 
   public static class OneRequired {
-    @SmoothFunctionLegacy
-    public static SString oneRequired(NativeApi nativeApi, OneRequiredParams params) {
-      return params.string();
+    @SmoothFunction
+    public static SString oneRequired(NativeApi nativeApi, @Required @Name("string") SString stringA) {
+      return stringA;
     }
-  }
-
-  public interface TwoRequiredParams {
-    @Required
-    public SString stringA();
-
-    @Required
-    public SString stringB();
   }
 
   public static class TwoRequired {
-    @SmoothFunctionLegacy
-    public static SString twoRequired(NativeApi nativeApi, TwoRequiredParams params) {
-      return nativeApi.string(params.stringA() + ":" + params.stringB());
+    @SmoothFunction
+    public static SString twoRequired(NativeApi nativeApi,
+        @Required @Name("stringA") SString stringA, @Required @Name("stringB") SString stringB) {
+      return nativeApi.string(stringA.value() + ":" + stringB.value());
     }
   }
 
-  public interface OneOptionalOneRequiredParams {
-    @Required
-    public SString stringA();
-
-    public SString stringB();
-  }
-
-  public static class OneOptionalOneRequired {
-    @SmoothFunctionLegacy
+  public static class OneRequiredOneOptional {
+    @SmoothFunction
     public static SString oneOptionalOneRequired(NativeApi nativeApi,
-        OneOptionalOneRequiredParams params) {
-      return nativeApi.string(params.stringA() + ":" + params.stringB());
+        @Required @Name("stringA") SString stringA, @Name("stringB") SString stringB) {
+      return nativeApi.string(stringA.value() + ":" + stringB.value());
     }
   }
 }
