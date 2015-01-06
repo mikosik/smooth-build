@@ -16,11 +16,10 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.DuplicatedParameterException;
-import org.smoothbuild.lang.function.nativ.err.FunctionImplementationException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
 import org.smoothbuild.lang.function.nativ.err.MissingNativeApiParameterException;
-import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
+import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -38,7 +37,7 @@ import com.google.inject.TypeLiteral;
 public class NativeFunctionFactory {
 
   public static Set<NativeFunction> nativeFunctions(Class<?> clazz, HashCode jarHash)
-      throws NativeImplementationException {
+      throws NativeFunctionImplementationException {
     HashSet<NativeFunction> result = new HashSet<>();
     for (Method method : clazz.getDeclaredMethods()) {
       if (method.isAnnotationPresent(SmoothFunction.class)) {
@@ -49,7 +48,7 @@ public class NativeFunctionFactory {
   }
 
   public static NativeFunction nativeFunction(Method method, HashCode jarHash)
-      throws NativeImplementationException {
+      throws NativeFunctionImplementationException {
     if (!isStatic(method)) {
       throw new NonStaticSmoothFunctionException(method);
     }
@@ -64,13 +63,14 @@ public class NativeFunctionFactory {
     return new NativeFunction(method, signature, cacheable, hash);
   }
 
-  private static Signature createSignature(Method method) throws NativeImplementationException {
+  private static Signature createSignature(Method method)
+      throws NativeFunctionImplementationException {
     Type returnType = functionType(method);
     return new Signature(returnType, createName(method), createParameters(method));
   }
 
   private static ImmutableList<Parameter> createParameters(Method method)
-      throws FunctionImplementationException {
+      throws NativeFunctionImplementationException {
     Class<?>[] types = method.getParameterTypes();
     if (types.length == 0 || (types[0] != NativeApi.class && types[0] != NativeApiImpl.class)) {
       throw new MissingNativeApiParameterException(method);
@@ -101,7 +101,8 @@ public class NativeFunctionFactory {
     }
   }
 
-  private static Type functionType(Method functionMethod) throws NativeImplementationException {
+  private static Type functionType(Method functionMethod)
+      throws NativeFunctionImplementationException {
     TypeLiteral<?> jType = methodJType(functionMethod);
     Type type = resultJTypeToType(jType);
     if (type == null) {

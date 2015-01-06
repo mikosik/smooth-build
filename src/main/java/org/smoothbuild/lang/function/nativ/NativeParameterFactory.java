@@ -10,7 +10,7 @@ import java.util.Collection;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.nativ.err.DuplicatedAnnotationException;
-import org.smoothbuild.lang.function.nativ.err.FunctionImplementationException;
+import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParameterNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParameterTypeException;
 import org.smoothbuild.lang.function.nativ.err.MissingNameAnnotationException;
@@ -24,7 +24,7 @@ import com.google.inject.TypeLiteral;
 public class NativeParameterFactory {
 
   public static Parameter createParameter(Method method, java.lang.reflect.Type reflectType,
-      Annotation[] annotations) throws FunctionImplementationException {
+      Annotation[] annotations) throws NativeFunctionImplementationException {
     Multimap<Class<?>, Annotation> annotationMap = annotationsMap(annotations);
     Type type = type(method, reflectType);
     boolean isRequired = isRequired(method, annotationMap);
@@ -42,7 +42,7 @@ public class NativeParameterFactory {
   }
 
   private static String name(Method method, Multimap<Class<?>, Annotation> annotations)
-      throws FunctionImplementationException {
+      throws NativeFunctionImplementationException {
     Collection<Annotation> names = annotations.get(org.smoothbuild.lang.plugin.Name.class);
     switch (names.size()) {
       case 0:
