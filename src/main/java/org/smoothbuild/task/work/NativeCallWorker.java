@@ -27,11 +27,7 @@ public class NativeCallWorker extends TaskWorker {
   @Override
   public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
     Value result = function.invoke(nativeApi, calculateArguments(input));
-    if (result == null) {
-      return new TaskOutput(nativeApi.messages());
-    } else {
-      return new TaskOutput(result, nativeApi.messages());
-    }
+    return new TaskOutput(result, nativeApi.messages());
   }
 
   private List<Value> calculateArguments(TaskInput input) {
