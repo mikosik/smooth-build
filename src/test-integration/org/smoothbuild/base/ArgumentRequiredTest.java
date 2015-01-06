@@ -8,7 +8,7 @@ import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
 import javax.inject.Inject;
 
 import org.junit.Test;
-import org.smoothbuild.base.TestingFunctions.OneOptionalOneRequired;
+import org.smoothbuild.base.TestingFunctions.OneRequiredOneOptional;
 import org.smoothbuild.base.TestingFunctions.OneRequired;
 import org.smoothbuild.base.TestingFunctions.TwoRequired;
 import org.smoothbuild.cli.work.BuildWorker;
@@ -64,7 +64,7 @@ public class ArgumentRequiredTest {
   @Test
   public void nameless_argument_with_type_matching_two_parameters_is_assigned_two_required_one()
       throws Exception {
-    createInjector(new IntegrationTestModule(OneOptionalOneRequired.class)).injectMembers(this);
+    createInjector(new IntegrationTestModule(OneRequiredOneOptional.class)).injectMembers(this);
     script(fileSystem, "result : oneOptionalOneRequired('abc') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();

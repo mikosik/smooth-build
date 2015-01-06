@@ -8,14 +8,12 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.FileFunction.FileParameters;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
@@ -28,7 +26,7 @@ public class FileFunctionTest {
   @Test
   public void accessToSmoothDirIsReported() throws Exception {
     try {
-      execute(params(SMOOTH_DIR.value()));
+      execute(SMOOTH_DIR.value());
       fail("exception should be thrown");
     } catch (IllegalReadFromSmoothDirError e) {
       // expected
@@ -38,7 +36,7 @@ public class FileFunctionTest {
   @Test
   public void accessToSmoothSubDirIsReported() throws Exception {
     try {
-      execute(params(SMOOTH_DIR.value() + Path.SEPARATOR + "abc"));
+      execute(SMOOTH_DIR.value() + Path.SEPARATOR + "abc");
       fail("exception should be thrown");
     } catch (IllegalReadFromSmoothDirError e) {
       // expected
@@ -50,7 +48,7 @@ public class FileFunctionTest {
     for (String path : PathTesting.listOfInvalidPaths()) {
       nativeApi = new FakeNativeApi();
       try {
-        execute(params(path));
+        execute(path);
         fail("exception should be thrown");
       } catch (IllegalPathError e) {
         // expected
@@ -62,7 +60,7 @@ public class FileFunctionTest {
   public void nonexistentPathIsReported() throws Exception {
 
     try {
-      execute(params("some/path/file.txt"));
+      execute("some/path/file.txt");
       fail("exception should be thrown");
     } catch (NoSuchFileError e) {
       // expected
@@ -76,7 +74,7 @@ public class FileFunctionTest {
     nativeApi.projectFileSystem().createFileContainingItsPath(file);
 
     try {
-      execute(params(dir.value()));
+      execute(dir.value());
       fail("exception should be thrown");
     } catch (NoSuchFileButDirError e) {
       // expected
@@ -86,20 +84,11 @@ public class FileFunctionTest {
   @Test
   public void execute() throws Exception {
     given(nativeApi.projectFileSystem()).createFileContainingItsPath(path);
-    when(execute(params(path.value())));
+    when(execute(path.value()));
     thenReturned(objectsDb.file(path));
   }
 
-  private FileParameters params(final String path) {
-    return new FileParameters() {
-      @Override
-      public SString path() {
-        return objectsDb.string(path);
-      }
-    };
-  }
-
-  private SFile execute(FileParameters params) {
-    return FileFunction.file(nativeApi, params);
+  private SFile execute(String file) {
+    return FileFunction.file(nativeApi, nativeApi.string(file));
   }
 }

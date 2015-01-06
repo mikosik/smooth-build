@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.builtin.file.ContentFunction.ContentParameters;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.task.exec.NativeApiImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -30,16 +29,7 @@ public class ContentFunctionTest {
   @Test
   public void content_of_file_is_returned_as_blob() {
     given(file = objectsDb.file(path("some/path"), objectsDb.blob("content")));
-    when(content(nativeApi, params(file)));
+    when(content(nativeApi, file));
     thenReturned(file.content());
-  }
-
-  private static ContentParameters params(final SFile file) {
-    return new ContentParameters() {
-      @Override
-      public SFile file() {
-        return file;
-      }
-    };
   }
 }

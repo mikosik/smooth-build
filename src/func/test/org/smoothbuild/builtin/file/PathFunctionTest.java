@@ -6,7 +6,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.PathFunction.PathParameters;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
@@ -22,16 +21,7 @@ public class PathFunctionTest {
   public void file_path_is_returned_as_string() throws Exception {
     given(path = path("some/path"));
     given(file = objectsDb.file(path, ""));
-    when(PathFunction.path(nativeApi, params(file)));
+    when(PathFunction.path(nativeApi, file));
     thenReturned(objectsDb.string(path.value()));
-  }
-
-  private static PathParameters params(final SFile file) {
-    return new PathParameters() {
-      @Override
-      public SFile file() {
-        return file;
-      }
-    };
   }
 }

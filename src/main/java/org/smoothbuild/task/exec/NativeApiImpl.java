@@ -33,10 +33,6 @@ public class NativeApiImpl implements NativeApi {
     this.messages = new LoggedMessages();
   }
 
-  public LoggedMessages messages() {
-    return messages;
-  }
-
   @Override
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementType) {
     return objectsDb.arrayBuilder(elementType);
@@ -66,7 +62,7 @@ public class NativeApiImpl implements NativeApi {
     messages.log(message);
   }
 
-  public LoggedMessages loggedMessages() {
+  public LoggedMessages messages() {
     return messages;
   }
 

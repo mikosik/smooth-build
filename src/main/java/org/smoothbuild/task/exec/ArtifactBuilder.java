@@ -32,7 +32,7 @@ public class ArtifactBuilder {
 
   public void addArtifact(Function function) {
     Expression expression =
-        callExpression(function, false, CodeLocation.commandLine(), Empty.stringExpressionMap());
+        callExpression(function, false, CodeLocation.commandLine(), Empty.expressionList());
     artifacts.put(function.name(), taskGraph.createTasks(expression));
   }
 

@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -20,6 +19,7 @@ import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -36,21 +36,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 public class JavacFunction {
-
-  public interface JavacParameters {
-    @Required
-    Array<SFile> sources();
-
-    Array<Blob> libs();
-
-    SString source();
-
-    SString target();
-  }
-
   @SmoothFunction
-  public static Array<SFile> javac(NativeApi nativeApi, JavacParameters params) {
-    return new Worker(nativeApi, params).execute();
+  public static Array<SFile> javac( //
+      NativeApi nativeApi, //
+      @Required @Name("sources") Array<SFile> sources, //
+      @Name("libs") Array<Blob> libs, //
+      @Name("source") SString source, //
+      @Name("target") SString target) {
+    return new Worker(nativeApi, sources, libs, source, target).execute();
   }
 
   private static class Worker {
@@ -61,19 +54,29 @@ public class JavacFunction {
 
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
-    private final JavacParameters params;
+    private final Array<SFile> sources;
+    private final Array<Blob> libs;
+    private final SString source;
+    private final SString target;
 
-    public Worker(NativeApi nativeApi, JavacParameters params) {
+    public Worker(NativeApi nativeApi, //
+        Array<SFile> sources, //
+        Array<Blob> libs, //
+        SString source, //
+        SString target) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
-      this.params = params;
+      this.sources = sources;
+      this.libs = libs;
+      this.source = source;
+      this.target = target;
     }
 
     public Array<SFile> execute() {
       if (compiler == null) {
         throw new NoCompilerAvailableError();
       }
-      return compile(params.sources());
+      return compile(sources);
     }
 
     public Array<SFile> compile(Array<SFile> files) {
@@ -122,8 +125,8 @@ public class JavacFunction {
     private Iterable<String> options() {
       List<String> result = Lists.newArrayList();
 
-      if (params.source() != null && !params.source().value().isEmpty()) {
-        String sourceArg = params.source().value();
+      if (!source.value().isEmpty()) {
+        String sourceArg = source.value();
         if (!SOURCE_VALUES.contains(sourceArg)) {
           throw new IllegalSourceParamError(sourceArg, SOURCE_VALUES);
         }
@@ -131,8 +134,8 @@ public class JavacFunction {
         result.add(sourceArg);
       }
 
-      if (params.target() != null && !params.target().value().isEmpty()) {
-        String targetArg = params.target().value();
+      if (!target.value().isEmpty()) {
+        String targetArg = target.value();
         if (!TARGET_VALUES.contains(targetArg)) {
           throw new IllegalTargetParamError(targetArg, TARGET_VALUES);
         }
@@ -147,7 +150,7 @@ public class JavacFunction {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
       Multimap<String, JavaFileObject> libsClasses =
-          PackagedJavaFileObjects.packagedJavaFileObjects(nativeApi, nullToEmpty(params.libs()));
+          PackagedJavaFileObjects.packagedJavaFileObjects(nativeApi, libs);
       return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
     }
 
