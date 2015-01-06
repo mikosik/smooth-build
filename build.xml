@@ -8,7 +8,7 @@
     <property name="dir.src.func.test" location="${dir.src}/func/test"/>
     <property name="dir.src.testing.java" location="${dir.src}/testing/java"/>
     <property name="dir.src.testing.test" location="${dir.src}/testing/test"/>
-    <property name="dir.src.test-integration" location="${dir.src}/test-integration"/>
+    <property name="dir.src.acceptance" location="${dir.src}/acceptance"/>
     <property name="dir.src.script" location="${dir.src}/script"/>
     <property name="dir.build" location="build"/>
     <property name="dir.build.java" location="${dir.build}/java"/>
@@ -20,8 +20,7 @@
     <property name="dir.build.class.func.test" location="${dir.build.class}/func/test"/>
     <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java"/>
     <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test"/>
-    <property name="dir.build.class.test-integration"
-              location="${dir.build.class}/test-integration"/>
+    <property name="dir.build.class.acceptance" location="${dir.build.class}/acceptance"/>
     <property name="dir.build.jar" location="${dir.build}/jar"/>
     <property name="dir.build.smooth-polluted.jar" location="${dir.build.jar}/smooth-polluted.jar"/>
     <property name="dir.build.smooth.jar" location="${dir.build.jar}/smooth.jar"/>
@@ -58,7 +57,7 @@
         <mkdir dir="${dir.build.class.func.test}"/>
         <mkdir dir="${dir.build.class.testing.java}"/>
         <mkdir dir="${dir.build.class.testing.test}"/>
-        <mkdir dir="${dir.build.class.test-integration}"/>
+        <mkdir dir="${dir.build.class.acceptance}"/>
         <mkdir dir="${dir.build.jar}"/>
         <mkdir dir="${dir.build.release}"/>
     </target>
@@ -239,30 +238,30 @@
         <pathelement location="${dir.build.class.testing.test}"/>
     </path>
 
-    <!-- build integration-tests -->
+    <!-- build acceptance-tests -->
 
-    <path id="classpath.for.test-integration">
+    <path id="classpath.for.acceptance">
         <path refid="classpath.with.testing.java"/>
         <path refid="classpath.with.func.java"/>
         <pathelement location="${lib.hamcrest-library}"/>
         <pathelement location="${lib.testory}"/>
     </path>
 
-    <target name="compile-integration-tests" depends="compile-testing.java">
-        <javac destdir="${dir.build.class.test-integration}"
+    <target name="compile-acceptance-tests" depends="compile-testing.java">
+        <javac destdir="${dir.build.class.acceptance}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <src path="${dir.src.test-integration}"/>
+            <src path="${dir.src.acceptance}"/>
             <classpath>
-                <path refid="classpath.for.test-integration"/>
+                <path refid="classpath.for.acceptance"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.test-integration">
-        <path refid="classpath.for.test-integration"/>
-        <pathelement location="${dir.build.class.test-integration}"/>
+    <path id="classpath.with.acceptance">
+        <path refid="classpath.for.acceptance"/>
+        <pathelement location="${dir.build.class.acceptance}"/>
     </path>
 
     <!-- run testing.test -->
@@ -307,22 +306,22 @@
         </junit>
     </target>
 
-    <!-- run test-integration -->
+    <!-- run acceptance -->
 
-    <target name="test-integration" depends="compile-integration-tests"
-            description="runs integration tests">
+    <target name="run-acceptance.test" depends="compile-acceptance-tests"
+            description="runs acceptance tests">
         <junit haltonfailure="yes" reloading="false">
             <classpath>
-                <path refid="classpath.with.test-integration"/>
+                <path refid="classpath.with.acceptance"/>
             </classpath>
             <formatter type="brief" usefile="false"/>
             <batchtest fork="no" todir="${dir.build}">
-                <fileset dir="${dir.build.class.test-integration}" includes="**/*Test.class"/>
+                <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
     </target>
 
-    <target name="test" depends="run-testing.test, run-main.test, run-func.test, test-integration">
+    <target name="test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance.test">
     </target>
 
     <!-- funcs.jar file -->
