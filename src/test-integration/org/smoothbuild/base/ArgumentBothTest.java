@@ -17,6 +17,7 @@ import org.smoothbuild.base.TestingFunctions.TwoStrings;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.lang.function.def.err.AmbiguousNamelessArgsError;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Blob;
@@ -63,23 +64,16 @@ public class ArgumentBothTest {
     assertEquals(expected, userConsole.messages().iterator().next().toString());
   }
 
-  public interface ManyParams {
-    public SFile file();
-
-    public Blob blob();
-
-    public SString string();
-  }
-
   public static class Many {
     @SmoothFunction
-    public static SString many(NativeApi nativeApi, ManyParams params) throws IOException {
-      InputStream fileStream = params.file().content().openInputStream();
-      InputStream blobStream = params.blob().openInputStream();
-      String file = CharStreams.toString(new InputStreamReader(fileStream));
-      String blob = CharStreams.toString(new InputStreamReader(blobStream));
+    public static SString many(NativeApi nativeApi, @Name("file") SFile file,
+        @Name("blob") Blob blob, @Name("string") SString string) throws IOException {
+      InputStream fileStream = file.content().openInputStream();
+      InputStream blobStream = blob.openInputStream();
+      String fileString = CharStreams.toString(new InputStreamReader(fileStream));
+      String blobString = CharStreams.toString(new InputStreamReader(blobStream));
 
-      return nativeApi.string(file + ":" + blob);
+      return nativeApi.string(fileString + ":" + blobString);
     }
   }
 }

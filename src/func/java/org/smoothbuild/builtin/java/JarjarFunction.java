@@ -9,6 +9,7 @@ import java.io.IOException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -18,24 +19,19 @@ import org.smoothbuild.lang.value.SString;
 import com.tonicsystems.jarjar.Main;
 
 public class JarjarFunction {
-  public interface JarjarParameters {
-    @Required
-    public SString rules();
-
-    @Required
-    public Blob in();
-  }
-
   @SmoothFunction
-  public static Blob jarjar(NativeApi nativeApi, JarjarParameters params) {
+  public static Blob jarjar( //
+      NativeApi nativeApi, //
+      @Required @Name("rules") SString rules, //
+      @Required @Name("in") Blob in) {
     TempDirectory tempDir = nativeApi.createTempDirectory();
 
     Path rulesPath = path("rules");
     Path inJarPath = path("in.jar");
     Path outJarPath = path("out.jar");
 
-    tempDir.writeFile(rulesPath, stringToBlob(nativeApi, params.rules()));
-    tempDir.writeFile(inJarPath, params.in());
+    tempDir.writeFile(rulesPath, stringToBlob(nativeApi, rules));
+    tempDir.writeFile(inJarPath, in);
 
     File rulesFile = new File(tempDir.asOsPath(rulesPath));
     File inJarFile = new File(tempDir.asOsPath(inJarPath));

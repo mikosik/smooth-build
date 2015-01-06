@@ -1,34 +1,26 @@
 package org.smoothbuild.lang.expr;
 
-import java.util.Map;
+import java.util.List;
 
-import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.work.NativeCallWorker;
 import org.smoothbuild.task.work.TaskWorker;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
 public class NativeCallExpression extends Expression {
-  private final Function function;
+  private final NativeFunction function;
   private final boolean isGenerated;
-  private final ImmutableMap<String, ? extends Expression> args;
 
   public NativeCallExpression(NativeFunction function, boolean isGenerated,
-      CodeLocation codeLocation, Map<String, ? extends Expression> args) {
-    super(function.type(), ImmutableList.copyOf(args.values()), codeLocation);
+      CodeLocation codeLocation, List<? extends Expression> args) {
+    super(function.type(), args, codeLocation);
 
     this.function = function;
     this.isGenerated = isGenerated;
-    this.args = ImmutableMap.copyOf(args);
   }
 
   @Override
   public TaskWorker createWorker() {
-    NativeFunction nativeFunction = (NativeFunction) function;
-    ImmutableList<String> parameterNames = ImmutableList.copyOf(args.keySet());
-    return new NativeCallWorker(nativeFunction, parameterNames, isGenerated, codeLocation());
+    return new NativeCallWorker(function, isGenerated, codeLocation());
   }
 }

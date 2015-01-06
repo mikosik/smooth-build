@@ -5,6 +5,7 @@ import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -16,21 +17,15 @@ import org.smoothbuild.lang.value.SString;
 import com.google.common.base.Predicate;
 
 public class FilterFunction {
-
-  public interface FilterParameters {
-    @Required
-    public Array<SFile> files();
-
-    @Required
-    public SString include();
-  }
-
   @SmoothFunction
-  public static Array<SFile> filter(NativeApi nativeApi, FilterParameters params) {
-    Predicate<Path> filter = createFilter(params.include().value());
+  public static Array<SFile> filter( //
+      NativeApi nativeApi, //
+      @Required @Name("files") Array<SFile> files, //
+      @Required @Name("include") SString include) {
+    Predicate<Path> filter = createFilter(include.value());
     ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(SFile.class);
 
-    for (SFile file : params.files()) {
+    for (SFile file : files) {
       if (filter.apply(file.path())) {
         builder.add(file);
       }

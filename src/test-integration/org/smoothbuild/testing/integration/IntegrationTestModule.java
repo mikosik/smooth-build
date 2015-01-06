@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.integration;
 
-import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.createNativeFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +115,7 @@ public class IntegrationTestModule extends AbstractModule {
     HashCode jarHash = Hash.integer(33);
     ModuleBuilder builder = new ModuleBuilder();
     for (Class<?> clazz : classes) {
-      for (NativeFunction function : createNativeFunctions(jarHash, clazz)) {
+      for (NativeFunction function : nativeFunctions(clazz, jarHash)) {
         builder.addFunction(function);
       }
     }

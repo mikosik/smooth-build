@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.java.junit;
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.util.Empty.nullToEmpty;
 
 import java.util.Map;
 
@@ -15,6 +14,7 @@ import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -26,21 +26,16 @@ import org.smoothbuild.message.base.Message;
 import com.google.common.base.Predicate;
 
 public class JunitFunction {
-
-  public interface JunitParameters {
-    Array<Blob> libs();
-
-    SString include();
-  }
-
   @SmoothFunction
-  public static SString junit(NativeApi nativeApi, JunitParameters params) {
-    Map<String, SFile> binaryNameToClassFile =
-        binaryNameToClassFile(nativeApi, nullToEmpty(params.libs()));
+  public static SString junit( //
+      NativeApi nativeApi, //
+      @Name("libs") Array<Blob> libs, //
+      @Name("include") SString include) {
+    Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(nativeApi, libs);
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
     JUnitCore jUnitCore = new JUnitCore();
 
-    Predicate<Path> filter = createFilter(params.include());
+    Predicate<Path> filter = createFilter(include);
     int testCount = 0;
     for (String binaryName : binaryNameToClassFile.keySet()) {
       Path filePath = binaryNameToClassFile.get(binaryName).path();

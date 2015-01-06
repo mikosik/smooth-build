@@ -8,6 +8,7 @@ import java.util.zip.ZipOutputStream;
 import org.smoothbuild.builtin.compress.err.CannotAddDuplicatePathError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -19,28 +20,25 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
 
-  public interface ZipParameters {
-    @Required
-    public Array<SFile> files();
-
-    // add missing parameters: level, comment, method
-  }
+  // add missing parameters: level, comment, method
 
   @SmoothFunction
-  public static Blob zip(NativeApi nativeApi, ZipParameters params) {
-    return new Worker(nativeApi, params).execute();
+  public static Blob zip( //
+      NativeApi nativeApi, //
+      @Required @Name("file") Array<SFile> files) {
+    return new Worker(nativeApi, files).execute();
   }
 
   private static class Worker {
     private final NativeApi nativeApi;
-    private final ZipParameters params;
+    private final Array<SFile> files;
 
     private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
     private final DuplicatesDetector<Path> duplicatesDetector;
 
-    public Worker(NativeApi nativeApi, ZipParameters params) {
+    public Worker(NativeApi nativeApi, Array<SFile> files) {
       this.nativeApi = nativeApi;
-      this.params = params;
+      this.files = files;
       this.duplicatesDetector = new DuplicatesDetector<>();
     }
 
@@ -48,7 +46,7 @@ public class ZipFunction {
       BlobBuilder blobBuilder = nativeApi.blobBuilder();
 
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.openOutputStream())) {
-        for (SFile file : params.files()) {
+        for (SFile file : files) {
           addEntry(zipOutputStream, file);
         }
       } catch (IOException e) {

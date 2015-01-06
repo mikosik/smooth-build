@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.type.Types.allTypes;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class ArgumentExpressionCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<String, Expression> createArgExprs(CodeLocation codeLocation, LoggedMessages messages,
+  public List<Expression> createArgExprs(CodeLocation codeLocation, LoggedMessages messages,
       Function function, Collection<Argument> arguments) {
     ParametersPool parametersPool = new ParametersPool(function.parameters());
     ImmutableList<Argument> namedArguments = Argument.filterNamed(arguments);
@@ -76,7 +77,16 @@ public class ArgumentExpressionCreator {
     }
 
     messages.failIfContainsProblems();
-    return argumentExpressions;
+    return sortAccordingToParametersOrder(argumentExpressions, function);
+  }
+
+  private List<Expression> sortAccordingToParametersOrder(
+      Map<String, Expression> argumentExpressions, Function function) {
+    ImmutableList.Builder<Expression> builder = ImmutableList.builder();
+    for (Parameter parameter : function.parameters()) {
+      builder.add(argumentExpressions.get(parameter.name()));
+    }
+    return builder.build();
   }
 
   private static void detectDuplicatedAndUnknownArgumentNames(Function function,

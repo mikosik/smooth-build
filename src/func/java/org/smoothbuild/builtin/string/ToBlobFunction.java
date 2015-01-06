@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -14,14 +15,11 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 
 public class ToBlobFunction {
-  public interface ToBlobParameters {
-    @Required
-    public SString string();
-  }
-
   @SmoothFunction
-  public static Blob toBlob(NativeApi nativeApi, ToBlobParameters params) {
-    return stringToBlob(nativeApi, params.string());
+  public static Blob toBlob( //
+      NativeApi nativeApi, //
+      @Required @Name("string") SString string) {
+    return stringToBlob(nativeApi, string);
   }
 
   public static Blob stringToBlob(NativeApi nativeApi, SString string) {
