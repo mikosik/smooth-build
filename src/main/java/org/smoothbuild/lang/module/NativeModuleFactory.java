@@ -13,8 +13,6 @@ import java.util.jar.JarInputStream;
 
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.function.nativ.NativeFunctionFactoryLegacy;
-import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
 import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
 import org.smoothbuild.util.ClassLoaders;
 
@@ -28,7 +26,7 @@ public class NativeModuleFactory {
   }
 
   private static Module createNativeModuleImpl(JarFile jar) throws IOException,
-  NativeImplementationException {
+      NativeImplementationException {
     ModuleBuilder builder = new ModuleBuilder();
     ClassLoader classLoader = classLoader(jar);
     try (JarInputStream jarInputStream = newJarInputStream(jar)) {
@@ -37,10 +35,6 @@ public class NativeModuleFactory {
         String fileName = entry.getName();
         if (fileName.endsWith(CLASS_FILE_EXTENSION)) {
           Class<?> clazz = load(classLoader, binaryPathToBinaryName(fileName));
-          for (NativeFunctionLegacy function : NativeFunctionFactoryLegacy.createNativeFunctions(
-              jar.hash(), clazz)) {
-            builder.addFunction(function);
-          }
           for (NativeFunction function : nativeFunctions(clazz, jar.hash())) {
             builder.addFunction(function);
           }

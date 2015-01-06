@@ -5,12 +5,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
+import org.smoothbuild.lang.function.nativ.NativeFunction;
 
 /**
  * Smooth function defined in smooth language via smooth expression.
  *
- * @see NativeFunctionLegacy
+ * @see NativeFunction
  */
 public class DefinedFunction extends AbstractFunction {
   private final Expression root;

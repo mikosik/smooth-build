@@ -7,7 +7,6 @@ import java.util.Map;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.function.nativ.NativeFunctionLegacy;
 import org.smoothbuild.message.base.CodeLocation;
 
 public class Expressions {
@@ -15,9 +14,6 @@ public class Expressions {
       CodeLocation codeLocation, Map<String, ? extends Expression> args) {
     if (function instanceof NativeFunction) {
       return new NativeCallExpression((NativeFunction) function, isGenerated, codeLocation, args);
-    } else if (function instanceof NativeFunctionLegacy) {
-      return new NativeCallExpressionLegacy((NativeFunctionLegacy) function, isGenerated,
-          codeLocation, args);
     } else if (function instanceof DefinedFunction) {
       checkArgument(args.isEmpty());
       checkArgument(!isGenerated);
