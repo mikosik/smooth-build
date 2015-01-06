@@ -1,4 +1,4 @@
-package org.smoothbuild.testing.integration;
+package org.smoothbuild.testing.acceptance;
 
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 
@@ -47,14 +47,14 @@ import com.google.common.hash.HashCode;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class IntegrationTestModule extends AbstractModule {
+public class AcceptanceTestModule extends AbstractModule {
   private final Class<?> nativeFunctions;
 
-  public IntegrationTestModule() {
+  public AcceptanceTestModule() {
     this.nativeFunctions = null;
   }
 
-  public IntegrationTestModule(Class<?> nativeFunctions) {
+  public AcceptanceTestModule(Class<?> nativeFunctions) {
     this.nativeFunctions = nativeFunctions;
 
   }

@@ -4,8 +4,8 @@ import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
+import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.artifactPath;
+import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.script;
 
 import javax.inject.Inject;
 
@@ -19,7 +19,7 @@ import org.smoothbuild.base.TestingFunctions.TwoStrings;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.lang.function.def.err.AmbiguousNamelessArgsError;
-import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.acceptance.AcceptanceTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
@@ -36,7 +36,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void one_nameless_argument_and_zero_parameters_with_same_type() throws Exception {
-    createInjector(new IntegrationTestModule(BlobIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(BlobIdentity.class)).injectMembers(this);
     script(fileSystem, "result : blobIdentity('abc') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(AmbiguousNamelessArgsError.class);
@@ -44,7 +44,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void one_nameless_argument_and_one_parameter_with_same_type() throws Exception {
-    createInjector(new IntegrationTestModule(StringIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(StringIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringIdentity('abc') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
@@ -53,7 +53,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void two_nameless_arguments_and_one_parameter_with_the_same_type() throws Exception {
-    createInjector(new IntegrationTestModule(StringIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(StringIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringIdentity('abc', 'def') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(AmbiguousNamelessArgsError.class);
@@ -61,7 +61,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void one_nameless_argument_and_two_parameters_with_same_type() throws Exception {
-    createInjector(new IntegrationTestModule(TwoStrings.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(TwoStrings.class)).injectMembers(this);
     script(fileSystem, "result : twoStrings('abc') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(AmbiguousNamelessArgsError.class);
@@ -69,7 +69,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void two_nameless_arguments_and_two_parameters_with_same_type() throws Exception {
-    createInjector(new IntegrationTestModule(TwoStrings.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(TwoStrings.class)).injectMembers(this);
     script(fileSystem, "result : twoStrings('abc', 'def') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(AmbiguousNamelessArgsError.class);
@@ -78,7 +78,7 @@ public class ArgumentNamelessTest {
   @Test
   public void two_nameless_arguments_one_with_type_one_with_subtype_and_two_parameters_one_with_type_one_with_subtype()
       throws Exception {
-    createInjector(new IntegrationTestModule(FileAndBlob.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(FileAndBlob.class)).injectMembers(this);
     fileSystem.createFileContainingItsPath(path("file1.txt"));
     fileSystem.createFileContainingItsPath(path("file2.txt"));
     script(fileSystem, "result : fileAndBlob(file('file1.txt'), content(file('file2.txt'))) ;");
@@ -93,7 +93,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void one_nameless_argument_and_one_parameter_with_subtype() throws Exception {
-    createInjector(new IntegrationTestModule(BlobIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(BlobIdentity.class)).injectMembers(this);
     fileSystem.createFileContainingItsPath(path("file.txt"));
     script(fileSystem, "result : blobIdentity(file('file.txt')) ;");
     buildWorker.run(asList("result"));
@@ -103,7 +103,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void one_nameless_argument_and_two_parameters_with_subtype() throws Exception {
-    createInjector(new IntegrationTestModule(TwoBlobs.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(TwoBlobs.class)).injectMembers(this);
     fileSystem.createFileContainingItsPath(path("file.txt"));
     script(fileSystem, "result : twoBlobs(file('file.txt')) ;");
     buildWorker.run(asList("result"));
@@ -112,7 +112,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void two_nameless_arguments_and_one_parameter_with_subtype() throws Exception {
-    createInjector(new IntegrationTestModule(BlobIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(BlobIdentity.class)).injectMembers(this);
     fileSystem.createFileContainingItsPath(path("file.txt"));
     script(fileSystem, "result : blobIdentity(file('file.txt'), file('file.txt')) ;");
     buildWorker.run(asList("result"));
@@ -122,7 +122,7 @@ public class ArgumentNamelessTest {
   @Test
   public void two_nameless_arguments_and_two_parameters_one_with_subtype_and_one_with_type()
       throws Exception {
-    createInjector(new IntegrationTestModule(TwoBlobs.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(TwoBlobs.class)).injectMembers(this);
     fileSystem.createFileContainingItsPath(path("file.txt"));
     script(fileSystem, "result : twoBlobs(file('file.txt'), file('file.txt')) ;");
     buildWorker.run(asList("result"));
@@ -133,7 +133,7 @@ public class ArgumentNamelessTest {
 
   @Test
   public void nil_is_mapped_to_string_array() throws Exception {
-    createInjector(new IntegrationTestModule(StringArrayIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(StringArrayIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringArrayIdentity([]) ;");
 
     buildWorker.run(asList("result"));

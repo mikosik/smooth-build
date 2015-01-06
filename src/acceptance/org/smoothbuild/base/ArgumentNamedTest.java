@@ -4,8 +4,8 @@ import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
+import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.artifactPath;
+import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.script;
 
 import javax.inject.Inject;
 
@@ -18,7 +18,7 @@ import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.lang.function.def.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.err.UnknownParamNameError;
-import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.acceptance.AcceptanceTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
@@ -36,7 +36,7 @@ public class ArgumentNamedTest {
   @Test
   public void one_named_argument_and_one_parameter_with_given_type_but_different_name()
       throws Exception {
-    createInjector(new IntegrationTestModule(StringIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(StringIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringIdentity(wrongName='abc') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(UnknownParamNameError.class);
@@ -45,7 +45,7 @@ public class ArgumentNamedTest {
   @Test
   public void one_named_argument_and_one_parameter_with_given_name_but_different_type()
       throws Exception {
-    createInjector(new IntegrationTestModule(BlobIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(BlobIdentity.class)).injectMembers(this);
     script(fileSystem, "result : blobIdentity(blob='abc') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(TypeMismatchError.class);
@@ -53,7 +53,7 @@ public class ArgumentNamedTest {
 
   @Test
   public void one_named_argument_and_one_parameter_with_given_name_and_type() throws Exception {
-    createInjector(new IntegrationTestModule(StringIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(StringIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringIdentity(string='abc') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
@@ -62,7 +62,7 @@ public class ArgumentNamedTest {
 
   @Test
   public void one_argument_and_one_parameter_with_given_name_and_subtype() throws Exception {
-    createInjector(new IntegrationTestModule(BlobIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(BlobIdentity.class)).injectMembers(this);
     fileSystem.createFileContainingItsPath(path("file.txt"));
     script(fileSystem, "result : blobIdentity(blob=file('file.txt')) ;");
     buildWorker.run(asList("result"));
@@ -72,7 +72,7 @@ public class ArgumentNamedTest {
 
   @Test
   public void nil_argument_can_be_assigned_to_string_array_parameter() throws Exception {
-    createInjector(new IntegrationTestModule(StringArrayIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(StringArrayIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringArrayIdentity(stringArray=[]) ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
@@ -83,7 +83,7 @@ public class ArgumentNamedTest {
 
   @Test
   public void two_arguments_with_the_same_name_causes_error() throws Exception {
-    createInjector(new IntegrationTestModule(StringIdentity.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(StringIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringIdentity(string='abc', string='def') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertContainsOnly(DuplicateArgNameError.class);
