@@ -38,7 +38,6 @@ import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -105,7 +104,7 @@ public class ExpressionExecutionTest {
     given(stringExpression = new ConstantExpression(sstring, location));
     given(signature = new Signature(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction(signature, stringExpression));
-    given(callExpression = callExpression(function, false, location, Empty.stringExpressionMap()));
+    given(callExpression = callExpression(function, false, location, Empty.expressionList()));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(sstring));
@@ -116,8 +115,7 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string("abc"));
     given(function = nativeFunction(SmoothModule.class.getMethods()[0], Hash.integer(33)));
     given(stringExpression = new ConstantExpression(sstring, codeLocation(2)));
-    given(callExpression =
-        callExpression(function, false, location, ImmutableMap.of("string", stringExpression)));
+    given(callExpression = callExpression(function, false, location, asList(stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(sstring));
@@ -135,8 +133,7 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string("abc"));
     given(function = nativeFunction(SmoothModule2.class.getMethods()[0], Hash.integer(33)));
     given(stringExpression = new ConstantExpression(sstring, codeLocation(2)));
-    given(callExpression =
-        callExpression(function, false, location, ImmutableMap.of("string", stringExpression)));
+    given(callExpression = callExpression(function, false, location, asList(stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output().hasReturnValue(), false);
