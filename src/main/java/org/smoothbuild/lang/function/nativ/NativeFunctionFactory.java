@@ -27,6 +27,7 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -71,7 +72,7 @@ public class NativeFunctionFactory {
   private static ImmutableList<Parameter> createParameters(Method method)
       throws FunctionImplementationException {
     Class<?>[] types = method.getParameterTypes();
-    if (types.length == 0 || types[0] != NativeApi.class) {
+    if (types.length == 0 || (types[0] != NativeApi.class && types[0] != NativeApiImpl.class)) {
       throw new MissingNativeApiParameterException(method);
     }
 

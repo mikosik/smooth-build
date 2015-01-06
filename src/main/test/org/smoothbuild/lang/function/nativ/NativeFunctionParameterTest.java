@@ -19,6 +19,7 @@ import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.task.exec.NativeApiImpl;
 
 public class NativeFunctionParameterTest {
   private NativeFunction function;
@@ -113,6 +114,19 @@ public class NativeFunctionParameterTest {
   public static class MethodWithNonNativeApiAsFirstParameter {
     @SmoothFunction
     public static SString function(SString parameter) {
+      return null;
+    }
+  }
+
+  @Test
+  public void method_with_first_parameter_that_is_native_api_impl_is_accepted() throws Exception {
+    when($nativeFunctions(MethodWithNativeApiImplAsFirstParameter.class));
+    thenReturned();
+  }
+
+  public static class MethodWithNativeApiImplAsFirstParameter {
+    @SmoothFunction
+    public static SString function(NativeApiImpl nativeApi) {
       return null;
     }
   }
