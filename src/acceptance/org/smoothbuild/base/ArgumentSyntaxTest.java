@@ -2,7 +2,7 @@ package org.smoothbuild.base;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
+import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.script;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.lang.function.def.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.err.UnknownParamNameError;
-import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.acceptance.AcceptanceTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
@@ -29,7 +29,7 @@ public class ArgumentSyntaxTest {
 
   @Before
   public void before() {
-    createInjector(new IntegrationTestModule()).injectMembers(this);
+    createInjector(new AcceptanceTestModule()).injectMembers(this);
   }
 
   @Test

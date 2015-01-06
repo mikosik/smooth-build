@@ -3,8 +3,8 @@ package org.smoothbuild.base;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.artifactPath;
-import static org.smoothbuild.testing.integration.IntegrationTestUtils.script;
+import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.artifactPath;
+import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.script;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +23,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.testing.integration.IntegrationTestModule;
+import org.smoothbuild.testing.acceptance.AcceptanceTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
@@ -40,7 +40,7 @@ public class ArgumentBothTest {
 
   @Test
   public void one_named_one_nameless_and_two_parameters_with_type() throws Exception {
-    createInjector(new IntegrationTestModule(TwoStrings.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(TwoStrings.class)).injectMembers(this);
     script(fileSystem, "result : twoStrings(stringA='abc', 'def') ;");
     buildWorker.run(asList("result"));
     userConsole.messages().assertNoProblems();
@@ -49,7 +49,7 @@ public class ArgumentBothTest {
 
   @Test
   public void error_message_in_ambiguous_argument_mapping() throws Exception {
-    createInjector(new IntegrationTestModule(Many.class)).injectMembers(this);
+    createInjector(new AcceptanceTestModule(Many.class)).injectMembers(this);
     script(fileSystem, "result : many(string='abc', 'def') ;");
     buildWorker.run(asList("result"));
 
