@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.type.Types.allTypes;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,8 +29,6 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
@@ -43,7 +42,7 @@ public class ArgumentExpressionCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<String, Expression> createArgExprs(CodeLocation codeLocation, LoggedMessages messages,
+  public List<Expression> createArgExprs(CodeLocation codeLocation, LoggedMessages messages,
       Function function, Collection<Argument> arguments) {
     ParametersPool parametersPool = new ParametersPool(function.parameters());
     ImmutableList<Argument> namedArguments = Argument.filterNamed(arguments);
@@ -81,12 +80,11 @@ public class ArgumentExpressionCreator {
     return sortAccordingToParametersOrder(argumentExpressions, function);
   }
 
-  private Map<String, Expression> sortAccordingToParametersOrder(
+  private List<Expression> sortAccordingToParametersOrder(
       Map<String, Expression> argumentExpressions, Function function) {
-    Builder<String, Expression> builder = ImmutableMap.builder();
+    ImmutableList.Builder<Expression> builder = ImmutableList.builder();
     for (Parameter parameter : function.parameters()) {
-      String name = parameter.name();
-      builder.put(name, argumentExpressions.get(name));
+      builder.add(argumentExpressions.get(parameter.name()));
     }
     return builder.build();
   }

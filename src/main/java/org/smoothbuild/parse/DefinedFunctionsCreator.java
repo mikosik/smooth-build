@@ -269,7 +269,7 @@ public class DefinedFunctionsCreator {
       Function function = getFunction(functionName);
 
       CodeLocation codeLocation = locationOf(call.functionName());
-      Map<String, ? extends Expression> namedArgs =
+      List<Expression> namedArgs =
           argumentExpressionCreator.createArgExprs(codeLocation, messages, function, arguments);
 
       if (namedArgs == null) {
