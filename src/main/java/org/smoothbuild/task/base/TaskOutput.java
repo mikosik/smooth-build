@@ -1,6 +1,5 @@
 package org.smoothbuild.task.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.lang.value.Value;
@@ -17,13 +16,12 @@ public class TaskOutput {
     this(returnValue, ImmutableList.<Message> of());
   }
 
-  public TaskOutput(Value returnValue, Iterable<? extends Message> messages) {
-    this.returnValue = checkNotNull(returnValue);
-    this.messages = ImmutableList.copyOf(messages);
+  public TaskOutput(Iterable<? extends Message> messages) {
+    this(null, messages);
   }
 
-  public TaskOutput(Iterable<? extends Message> messages) {
-    this.returnValue = null;
+  public TaskOutput(Value returnValue, Iterable<? extends Message> messages) {
+    this.returnValue = returnValue;
     this.messages = ImmutableList.copyOf(messages);
   }
 
