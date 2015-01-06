@@ -27,12 +27,6 @@ public class TaskOutputTest {
   private SString otherSstring;
 
   @Test
-  public void null_result_is_forbidden() {
-    when(newTaskOutput(null, messages));
-    thenThrown(NullPointerException.class);
-  }
-
-  @Test
   public void null_messages_are_forbidden() {
     given(sstring = objectsDb.string("abc"));
     when(newTaskOutput(sstring, null));
