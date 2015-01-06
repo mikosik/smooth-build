@@ -1,11 +1,9 @@
 package org.smoothbuild.util;
 
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
-import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
@@ -176,18 +174,5 @@ public class EmptyTest {
   @Test
   public void empty_task_list_always_returns_the_same_object() {
     assertSame(Empty.taskList(), Empty.taskList());
-  }
-
-  // nullToEmpty
-
-  @Test
-  public void null_is_changed_into_empty_iterable() throws Exception {
-    assertThat(Empty.nullToEmpty(null), emptyIterable());
-  }
-
-  @Test
-  public void null_to_empty_does_not_change_non_empty_iterable() throws Exception {
-    Iterable<String> iterable = mock(Iterable.class);
-    assertSame(iterable, Empty.nullToEmpty(iterable));
   }
 }
