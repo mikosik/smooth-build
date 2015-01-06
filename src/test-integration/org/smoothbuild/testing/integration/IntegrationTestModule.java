@@ -36,7 +36,7 @@ import org.smoothbuild.db.objects.ObjectsDbModule;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
 import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
+import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.module.ModuleBuilder;
 import org.smoothbuild.parse.Builtin;
@@ -76,7 +76,7 @@ public class IntegrationTestModule extends AbstractModule {
   @Provides
   @Singleton
   @Builtin
-  public Module provideBuiltinModule() throws NativeImplementationException {
+  public Module provideBuiltinModule() throws NativeFunctionImplementationException {
     List<Class<?>> functions = new ArrayList<>();
 
     functions.add(FileToBlobFunction.class);
@@ -111,7 +111,8 @@ public class IntegrationTestModule extends AbstractModule {
     return createNativeModule(functions.toArray(new Class[] {}));
   }
 
-  public static Module createNativeModule(Class<?>... classes) throws NativeImplementationException {
+  public static Module createNativeModule(Class<?>... classes)
+      throws NativeFunctionImplementationException {
     HashCode jarHash = Hash.integer(33);
     ModuleBuilder builder = new ModuleBuilder();
     for (Class<?> clazz : classes) {

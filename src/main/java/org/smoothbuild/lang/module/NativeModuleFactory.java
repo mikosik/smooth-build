@@ -13,11 +13,12 @@ import java.util.jar.JarInputStream;
 
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
+import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.util.ClassLoaders;
 
 public class NativeModuleFactory {
-  public static Module createNativeModule(Path jarPath) throws NativeImplementationException {
+  public static Module createNativeModule(Path jarPath)
+      throws NativeFunctionImplementationException {
     try {
       return createNativeModuleImpl(jarFile(jarPath));
     } catch (IOException e) {
@@ -26,7 +27,7 @@ public class NativeModuleFactory {
   }
 
   private static Module createNativeModuleImpl(JarFile jar) throws IOException,
-      NativeImplementationException {
+      NativeFunctionImplementationException {
     ModuleBuilder builder = new ModuleBuilder();
     ClassLoader classLoader = classLoader(jar);
     try (JarInputStream jarInputStream = newJarInputStream(jar)) {

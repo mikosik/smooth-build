@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFu
 
 import java.util.Set;
 
-import org.smoothbuild.lang.function.nativ.err.NativeImplementationException;
+import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.testory.Closure;
 
 import com.google.common.hash.HashCode;
@@ -21,12 +21,13 @@ public class TestingUtils {
     };
   }
 
-  public static NativeFunction function(Class<?> clazz) throws NativeImplementationException {
+  public static NativeFunction function(Class<?> clazz)
+      throws NativeFunctionImplementationException {
     return function(clazz, HashCode.fromInt(13));
   }
 
   public static NativeFunction function(Class<?> clazz, HashCode hash)
-      throws NativeImplementationException {
+      throws NativeFunctionImplementationException {
     Set<NativeFunction> functions = nativeFunctions(clazz, hash);
     assertEquals(1, functions.size());
     return functions.iterator().next();
