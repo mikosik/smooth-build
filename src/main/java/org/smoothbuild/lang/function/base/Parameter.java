@@ -3,7 +3,6 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
-import static org.smoothbuild.lang.type.Types.parameterTypes;
 
 import java.util.Set;
 
@@ -40,7 +39,7 @@ public class Parameter {
 
   private Type checkAllowedType(Type type) {
     checkNotNull(type);
-    checkArgument(parameterTypes().contains(type));
+    checkArgument(type.isAllowedAsParameter());
     return type;
   }
 

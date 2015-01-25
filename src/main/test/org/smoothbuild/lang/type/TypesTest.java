@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -16,8 +15,6 @@ import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
 import static org.smoothbuild.lang.type.Types.basicTypes;
-import static org.smoothbuild.lang.type.Types.parameterJTypeToType;
-import static org.smoothbuild.lang.type.Types.parameterTypes;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
@@ -34,12 +31,6 @@ public class TypesTest {
   public void basic_types() {
     when(basicTypes());
     thenReturned(containsInAnyOrder(STRING, BLOB, FILE));
-  }
-
-  @Test
-  public void param_types() {
-    when(parameterTypes());
-    thenReturned(containsInAnyOrder(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL));
   }
 
   @Test
@@ -85,13 +76,6 @@ public class TypesTest {
         assertFalse(canConvert(visitedType, type));
       }
       visited.add(type);
-    }
-  }
-
-  @Test
-  public void paramJTypeToType_works_for_all_types() {
-    for (Type type : asList(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY)) {
-      assertEquals(type, parameterJTypeToType(type.jType()));
     }
   }
 

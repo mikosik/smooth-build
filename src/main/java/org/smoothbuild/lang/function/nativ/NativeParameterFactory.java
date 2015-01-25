@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
-import static org.smoothbuild.lang.type.Types.parameterJTypeToType;
+import static org.smoothbuild.lang.type.Types.jTypeToType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -10,10 +10,10 @@ import java.util.Collection;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.nativ.err.DuplicatedAnnotationException;
-import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParameterNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParameterTypeException;
 import org.smoothbuild.lang.function.nativ.err.MissingNameAnnotationException;
+import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.type.Type;
 
@@ -34,8 +34,8 @@ public class NativeParameterFactory {
 
   private static Type type(Method method, java.lang.reflect.Type reflectType)
       throws IllegalParameterTypeException {
-    Type type = parameterJTypeToType(TypeLiteral.get(reflectType));
-    if (type == null) {
+    Type type = jTypeToType(TypeLiteral.get(reflectType));
+    if (type == null || !type.isAllowedAsParameter()) {
       throw new IllegalParameterTypeException(method, reflectType);
     }
     return type;

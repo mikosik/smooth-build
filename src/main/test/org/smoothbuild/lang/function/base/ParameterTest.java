@@ -9,7 +9,6 @@ import static org.smoothbuild.lang.function.base.Parameter.requiredParameter;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.parameterTypes;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
@@ -19,6 +18,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.Types;
 
 import com.google.common.testing.EqualsTester;
 
@@ -75,11 +75,13 @@ public class ParameterTest {
 
     tester.addEqualityGroup(parameter(STRING, "equal", false), parameter(STRING, "equal", false));
 
-    for (Type type : parameterTypes()) {
-      tester.addEqualityGroup(parameter(type, "name", false));
-      tester.addEqualityGroup(parameter(type, "name", true));
-      tester.addEqualityGroup(parameter(type, "name2", false));
-      tester.addEqualityGroup(parameter(type, "name2", true));
+    for (Type type : Types.allTypes()) {
+      if (type.isAllowedAsParameter()) {
+        tester.addEqualityGroup(parameter(type, "name", false));
+        tester.addEqualityGroup(parameter(type, "name", true));
+        tester.addEqualityGroup(parameter(type, "name2", false));
+        tester.addEqualityGroup(parameter(type, "name2", true));
+      }
     }
 
     tester.testEquals();
@@ -118,6 +120,6 @@ public class ParameterTest {
         + "  String: param1               \n" //
         + "  File[]: param3               \n" //
         + "  String: param2-with-very-long\n" //
-        );
+    );
   }
 }
