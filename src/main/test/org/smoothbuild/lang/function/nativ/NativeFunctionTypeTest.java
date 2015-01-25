@@ -2,6 +2,7 @@ package org.smoothbuild.lang.function.nativ;
 
 import static org.smoothbuild.lang.function.nativ.TestingUtils.$nativeFunctions;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
+import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.testory.Testory.given;
@@ -90,16 +91,16 @@ public class NativeFunctionTypeTest {
   }
 
   @Test
-  public void method_with_nil_return_type_causes_exception() throws Exception {
-    when($nativeFunctions(NilReturnType.class));
-    thenThrown(IllegalReturnTypeException.class);
+  public void method_with_nil_return_type_is_allowed() throws Exception {
+    given(function = function(NilReturnType.class));
+    when(function.type());
+    thenReturned(NIL);
   }
 
   public static class NilReturnType {
     @SmoothFunction
     public static Array<Nothing> function(NativeApi nativeApi) {
-      return null;
+      return nativeApi.arrayBuilder(Nothing.class).build();
     }
   }
-
 }
