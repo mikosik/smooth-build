@@ -37,7 +37,7 @@ public class TaskOutputTest {
   public void value_returns_result_value() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).returnValue();
+    when(taskOutput).result();
     thenReturned(sstring);
   }
 
@@ -60,7 +60,7 @@ public class TaskOutputTest {
   @Test
   public void value_throws_exception_when_no_value_is_present() throws Exception {
     given(taskOutput = new TaskOutput(messages));
-    when(taskOutput).returnValue();
+    when(taskOutput).result();
     thenThrown(IllegalStateException.class);
   }
 
@@ -68,14 +68,14 @@ public class TaskOutputTest {
   public void has_value_returns_true_when_value_is_present() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).hasReturnValue();
+    when(taskOutput).hasResult();
     thenReturned(true);
   }
 
   @Test
   public void has_value_returns_false_when_value_is_present() throws Exception {
     given(taskOutput = new TaskOutput(messages));
-    when(taskOutput).hasReturnValue();
+    when(taskOutput).hasResult();
     thenReturned(false);
   }
 

@@ -11,7 +11,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
+import org.smoothbuild.lang.function.nativ.err.IllegalResultTypeException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -54,7 +54,7 @@ public class NativeFunctionTypeTest {
   @Test
   public void method_with_illegal_return_type_causes_exception() throws Exception {
     when($nativeFunctions(IllegalReturnType.class));
-    thenThrown(IllegalReturnTypeException.class);
+    thenThrown(IllegalResultTypeException.class);
   }
 
   public static class IllegalReturnType {
@@ -67,7 +67,7 @@ public class NativeFunctionTypeTest {
   @Test
   public void method_with_value_as_return_type_causes_exception() throws Exception {
     when($nativeFunctions(ValueAsReturnType.class));
-    thenThrown(IllegalReturnTypeException.class);
+    thenThrown(IllegalResultTypeException.class);
   }
 
   public static class ValueAsReturnType {
@@ -80,7 +80,7 @@ public class NativeFunctionTypeTest {
   @Test
   public void method_with_void_return_type_causes_exception() throws Exception {
     when($nativeFunctions(VoidReturnType.class));
-    thenThrown(IllegalReturnTypeException.class);
+    thenThrown(IllegalResultTypeException.class);
   }
 
   public static class VoidReturnType {
