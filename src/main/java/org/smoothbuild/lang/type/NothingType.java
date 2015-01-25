@@ -18,4 +18,9 @@ public class NothingType extends Type {
   public boolean isAllowedAsResult() {
     return false;
   }
+
+  @Override
+  public boolean isAllowedAsParameter() {
+    return false;
+  }
 }

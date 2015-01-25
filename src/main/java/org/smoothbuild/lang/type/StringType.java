@@ -18,4 +18,9 @@ public class StringType extends Type {
   public boolean isAllowedAsResult() {
     return true;
   }
+
+  @Override
+  public boolean isAllowedAsParameter() {
+    return true;
+  }
 }
