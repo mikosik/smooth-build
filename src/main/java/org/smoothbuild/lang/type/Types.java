@@ -39,8 +39,6 @@ public class Types {
   private static final ImmutableSet<ArrayType> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY,
       BLOB_ARRAY, FILE_ARRAY, NIL);
 
-  private static final ImmutableSet<Type> RESULT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
-      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY);
   private static final ImmutableSet<Type> PARAMETER_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
   private static final ImmutableSet<Type> ARRAY_ELEMENT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
@@ -52,7 +50,6 @@ public class Types {
    * Some of the set above converted to java types.
    */
 
-  private static final ImmutableSet<TypeLiteral<?>> RESULT_JTYPES = toJTypes(RESULT_TYPES);
   private static final ImmutableSet<TypeLiteral<?>> PARAMETER_JTYPES = toJTypes(PARAMETER_TYPES);
   private static final ImmutableSet<TypeLiteral<?>> ARRAY_ELEMENT_JTYPES =
       toJTypes(ARRAY_ELEMENT_TYPES);
@@ -63,8 +60,6 @@ public class Types {
 
   private static final ImmutableMap<TypeLiteral<?>, Type> PARAMETER_JTYPE_TO_TYPE =
       createToTypeMap(PARAMETER_TYPES);
-  private static final ImmutableMap<TypeLiteral<?>, Type> RESULT_JTYPE_TO_TYPE =
-      createToTypeMap(RESULT_TYPES);
   private static final ImmutableMap<TypeLiteral<?>, Type> JTYPE_TO_TYPE =
       createToTypeMap(ALL_TYPES);
   private static final ImmutableMap<Type, ArrayType> ELEM_TYPE_TO_ARRAY_TYPE =
@@ -87,10 +82,6 @@ public class Types {
     return ALL_TYPES;
   }
 
-  public static ImmutableSet<TypeLiteral<?>> resultJTypes() {
-    return RESULT_JTYPES;
-  }
-
   public static ImmutableSet<TypeLiteral<?>> parameterJTypes() {
     return PARAMETER_JTYPES;
   }
@@ -101,10 +92,6 @@ public class Types {
 
   public static Type parameterJTypeToType(TypeLiteral<?> jType) {
     return PARAMETER_JTYPE_TO_TYPE.get(jType);
-  }
-
-  public static Type resultJTypeToType(TypeLiteral<?> jType) {
-    return RESULT_JTYPE_TO_TYPE.get(jType);
   }
 
   public static Type jTypeToType(TypeLiteral<?> jType) {

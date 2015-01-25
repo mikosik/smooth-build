@@ -9,7 +9,13 @@ public class StringType extends Type {
     super("String", SString.class);
   }
 
+  @Override
   public Value defaultValue(ObjectsDb objectsDb) {
     return objectsDb.string("");
+  }
+
+  @Override
+  public boolean isAllowedAsResult() {
+    return true;
   }
 }

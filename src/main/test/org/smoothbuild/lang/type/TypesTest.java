@@ -18,14 +18,12 @@ import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
 import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.lang.type.Types.parameterJTypeToType;
 import static org.smoothbuild.lang.type.Types.parameterTypes;
-import static org.smoothbuild.lang.type.Types.resultJTypeToType;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import java.util.Set;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Sets;
 import com.google.common.testing.EqualsTester;
@@ -94,13 +92,6 @@ public class TypesTest {
   public void paramJTypeToType_works_for_all_types() {
     for (Type type : asList(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY)) {
       assertEquals(type, parameterJTypeToType(type.jType()));
-    }
-  }
-
-  @Test
-  public void resultJTypeToType_works_for_all_types() {
-    for (Type type : asList(STRING, BLOB, FILE, STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY)) {
-      assertEquals(type, resultJTypeToType(type.jType()));
     }
   }
 

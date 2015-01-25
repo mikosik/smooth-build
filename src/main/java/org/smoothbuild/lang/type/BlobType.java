@@ -16,4 +16,9 @@ public class BlobType extends Type {
     blobBuilder.openOutputStream();
     return blobBuilder.build();
   }
+
+  @Override
+  public boolean isAllowedAsResult() {
+    return true;
+  }
 }

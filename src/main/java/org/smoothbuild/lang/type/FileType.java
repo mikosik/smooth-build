@@ -16,4 +16,9 @@ public class FileType extends Type {
   public Value defaultValue(ObjectsDb objectsDb) {
     return objectsDb.file(path("."), (Blob) Types.BLOB.defaultValue(objectsDb));
   }
+
+  @Override
+  public boolean isAllowedAsResult() {
+    return true;
+  }
 }

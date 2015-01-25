@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static org.smoothbuild.lang.function.nativ.NativeParameterFactory.createParameter;
-import static org.smoothbuild.lang.type.Types.resultJTypeToType;
+import static org.smoothbuild.lang.type.Types.jTypeToType;
 import static org.smoothbuild.util.ReflexiveUtils.isPublic;
 import static org.smoothbuild.util.ReflexiveUtils.isStatic;
 
@@ -104,8 +104,8 @@ public class NativeFunctionFactory {
   private static Type functionType(Method functionMethod)
       throws NativeFunctionImplementationException {
     TypeLiteral<?> jType = methodJType(functionMethod);
-    Type type = resultJTypeToType(jType);
-    if (type == null) {
+    Type type = jTypeToType(jType);
+    if (type == null || !type.isAllowedAsResult()) {
       throw new IllegalReturnTypeException(functionMethod, jType);
     }
     return type;

@@ -13,4 +13,9 @@ public class NothingType extends Type {
   public Value defaultValue(ObjectsDb objectsDb) {
     throw new UnsupportedOperationException("Nothing type doesn't have default value.");
   }
+
+  @Override
+  public boolean isAllowedAsResult() {
+    return false;
+  }
 }
