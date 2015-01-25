@@ -136,7 +136,7 @@ public class ExpressionExecutionTest {
     given(callExpression = callExpression(function, false, location, asList(stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output().hasReturnValue(), false);
+    thenEqual(task.output().hasResult(), false);
   }
 
   public static class SmoothModule2 {

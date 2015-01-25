@@ -17,7 +17,7 @@ import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.DuplicatedParameterException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
-import org.smoothbuild.lang.function.nativ.err.IllegalReturnTypeException;
+import org.smoothbuild.lang.function.nativ.err.IllegalResultTypeException;
 import org.smoothbuild.lang.function.nativ.err.MissingNativeApiParameterException;
 import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
@@ -106,7 +106,7 @@ public class NativeFunctionFactory {
     TypeLiteral<?> jType = methodJType(functionMethod);
     Type type = jTypeToType(jType);
     if (type == null || !type.isAllowedAsResult()) {
-      throw new IllegalReturnTypeException(functionMethod, jType);
+      throw new IllegalResultTypeException(functionMethod, jType);
     }
     return type;
   }

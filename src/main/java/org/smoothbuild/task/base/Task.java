@@ -76,6 +76,6 @@ public class Task {
   }
 
   private TaskInput input() {
-    return TaskInput.fromTaskReturnValues(dependencies);
+    return TaskInput.fromResults(dependencies);
   }
 }

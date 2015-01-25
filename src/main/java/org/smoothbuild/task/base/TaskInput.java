@@ -12,8 +12,8 @@ public class TaskInput {
   private final ImmutableList<Value> values;
   private final HashCode hash;
 
-  public static TaskInput fromTaskReturnValues(Iterable<? extends Task> deps) {
-    return fromValues(toReturnedValues(deps));
+  public static TaskInput fromResults(Iterable<? extends Task> deps) {
+    return fromValues(toResults(deps));
   }
 
   public static TaskInput fromValues(Iterable<? extends Value> values) {
@@ -33,10 +33,10 @@ public class TaskInput {
     return hash;
   }
 
-  private static ImmutableList<Value> toReturnedValues(Iterable<? extends Task> deps) {
+  private static ImmutableList<Value> toResults(Iterable<? extends Task> deps) {
     Builder<Value> builder = ImmutableList.builder();
     for (Task task : deps) {
-      builder.add(task.output().returnValue());
+      builder.add(task.output().result());
     }
     return builder.build();
   }

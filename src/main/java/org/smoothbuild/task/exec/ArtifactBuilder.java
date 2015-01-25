@@ -45,7 +45,7 @@ public class ArtifactBuilder {
     for (Entry<Name, Task> artifact : artifacts.entrySet()) {
       Name name = artifact.getKey();
       Task task = artifact.getValue();
-      Value value = task.output().returnValue();
+      Value value = task.output().result();
       artifactSaver.save(name, value);
     }
   }

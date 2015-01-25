@@ -9,29 +9,29 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
 public class TaskOutput {
-  private final Value returnValue;
+  private final Value result;
   private final ImmutableList<Message> messages;
 
-  public TaskOutput(Value returnValue) {
-    this(returnValue, ImmutableList.<Message> of());
+  public TaskOutput(Value result) {
+    this(result, ImmutableList.<Message> of());
   }
 
   public TaskOutput(Iterable<? extends Message> messages) {
     this(null, messages);
   }
 
-  public TaskOutput(Value returnValue, Iterable<? extends Message> messages) {
-    this.returnValue = returnValue;
+  public TaskOutput(Value result, Iterable<? extends Message> messages) {
+    this.result = result;
     this.messages = ImmutableList.copyOf(messages);
   }
 
-  public boolean hasReturnValue() {
-    return returnValue != null;
+  public boolean hasResult() {
+    return result != null;
   }
 
-  public Value returnValue() {
-    checkState(hasReturnValue(), "TaskOutput does not contain any value.");
-    return returnValue;
+  public Value result() {
+    checkState(hasResult(), "TaskOutput does not contain result.");
+    return result;
   }
 
   public ImmutableList<Message> messages() {
@@ -44,16 +44,16 @@ public class TaskOutput {
       return false;
     }
     TaskOutput that = (TaskOutput) object;
-    return Objects.equal(this.returnValue, that.returnValue) && this.messages.equals(that.messages);
+    return Objects.equal(this.result, that.result) && this.messages.equals(that.messages);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(returnValue, messages);
+    return Objects.hashCode(result, messages);
   }
 
   @Override
   public String toString() {
-    return "TaskOutput(" + returnValue + ", " + messages + ")";
+    return "TaskOutput(" + result + ", " + messages + ")";
   }
 }
