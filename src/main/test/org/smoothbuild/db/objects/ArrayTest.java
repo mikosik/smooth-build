@@ -3,9 +3,6 @@ package org.smoothbuild.db.objects;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
-import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -17,8 +14,6 @@ import org.junit.Test;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Nothing;
-import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
@@ -43,42 +38,8 @@ public class ArrayTest {
   }
 
   @Test
-  public void type_of_string_array_is_string_array() throws Exception {
-    given(array = objectsDb.arrayBuilder(SString.class).build());
-    when(array.type());
-    thenReturned(STRING_ARRAY);
-  }
-
-  @Test
-  public void type_of_blob_array_is_blob_array() throws Exception {
-    given(array = objectsDb.arrayBuilder(Blob.class).build());
-    when(array.type());
-    thenReturned(BLOB_ARRAY);
-  }
-
-  @Test
-  public void type_of_file_array_is_file_array() throws Exception {
-    given(array = objectsDb.arrayBuilder(SFile.class).build());
-    when(array.type());
-    thenReturned(FILE_ARRAY);
-  }
-
-  @Test
-  public void type_of_nil_is_nil() throws Exception {
-    given(array = objectsDb.arrayBuilder(Nothing.class).build());
-    when(array.type());
-    thenReturned(NIL);
-  }
-
-  @Test
   public void empty_array_is_empty() throws Exception {
     when(objectsDb.arrayBuilder(SString.class).build());
-    thenReturned(emptyIterable());
-  }
-
-  @Test
-  public void nil_array_is_empty() throws Exception {
-    when(objectsDb.arrayBuilder(Nothing.class).build());
     thenReturned(emptyIterable());
   }
 
@@ -215,9 +176,4 @@ public class ArrayTest {
     thenReturned("[abc, def]");
   }
 
-  @Test
-  public void nil_to_string_contains_square_brackets() throws Exception {
-    when(objectsDb.arrayBuilder(Nothing.class).build().toString());
-    thenReturned("[]");
-  }
 }
