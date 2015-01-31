@@ -4,10 +4,12 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
@@ -109,5 +111,12 @@ public class SStringTest {
     given(sstring = objectsDb.string(string));
     when(sstring).toString();
     thenReturned(string);
+  }
+
+  @Test
+  public void reading_not_stored_sstring_fails() throws Exception {
+    given(sstring = (SString) objectsDb.read(STRING, HashCode.fromInt(33)));
+    when(sstring).value();
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 }

@@ -12,11 +12,13 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 
+import com.google.common.hash.HashCode;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -202,5 +204,11 @@ public class SFileTest {
     BlobBuilder blobBuilder = objectsDb.blobBuilder();
     writeAndClose(blobBuilder.openOutputStream(), content);
     return blobBuilder.build();
+  }
+
+  @Test
+  public void reading_not_stored_file_fails() throws Exception {
+    when(objectsDb).read(FILE, HashCode.fromInt(33));
+    thenThrown(NoObjectWithGivenHashError.class);
   }
 }
