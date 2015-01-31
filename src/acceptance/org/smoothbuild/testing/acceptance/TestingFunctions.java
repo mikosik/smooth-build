@@ -1,4 +1,4 @@
-package org.smoothbuild.base;
+package org.smoothbuild.testing.acceptance;
 
 import java.io.IOException;
 import java.io.InputStream;

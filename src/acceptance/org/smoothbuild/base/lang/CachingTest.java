@@ -1,4 +1,4 @@
-package org.smoothbuild.base;
+package org.smoothbuild.base.lang;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
@@ -33,7 +33,7 @@ public class CachingTest {
   private BuildWorker buildWorker;
 
   @Test
-  public void second_call_to_a_function_use_cached_result() throws Exception {
+  public void second_call_to_a_function_uses_cached_result() throws Exception {
     createInjector(new AcceptanceTestModule(CacheableRandom.class)).injectMembers(this);
     String script = "result1 : random(); " + "result2 : random(); ";
     script(fileSystem, script);

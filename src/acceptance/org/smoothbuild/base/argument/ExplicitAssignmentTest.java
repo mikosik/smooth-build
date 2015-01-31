@@ -1,4 +1,4 @@
-package org.smoothbuild.base;
+package org.smoothbuild.base.argument;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
@@ -10,19 +10,19 @@ import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.script;
 import javax.inject.Inject;
 
 import org.junit.Test;
-import org.smoothbuild.base.TestingFunctions.BlobIdentity;
-import org.smoothbuild.base.TestingFunctions.StringArrayIdentity;
-import org.smoothbuild.base.TestingFunctions.StringIdentity;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.lang.function.def.err.DuplicateArgNameError;
 import org.smoothbuild.lang.function.def.err.TypeMismatchError;
 import org.smoothbuild.lang.function.def.err.UnknownParamNameError;
 import org.smoothbuild.testing.acceptance.AcceptanceTestModule;
+import org.smoothbuild.testing.acceptance.TestingFunctions.BlobIdentity;
+import org.smoothbuild.testing.acceptance.TestingFunctions.StringArrayIdentity;
+import org.smoothbuild.testing.acceptance.TestingFunctions.StringIdentity;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
-public class ArgumentNamedTest {
+public class ExplicitAssignmentTest {
   @Inject
   @ProjectDir
   private FakeFileSystem fileSystem;
@@ -31,11 +31,8 @@ public class ArgumentNamedTest {
   @Inject
   private BuildWorker buildWorker;
 
-  // one to one assignment
-
   @Test
-  public void one_named_argument_and_one_parameter_with_given_type_but_different_name()
-      throws Exception {
+  public void fails_when_parameter_does_not_exist() throws Exception {
     createInjector(new AcceptanceTestModule(StringIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringIdentity(wrongName='abc') ;");
     buildWorker.run(asList("result"));
@@ -43,8 +40,7 @@ public class ArgumentNamedTest {
   }
 
   @Test
-  public void one_named_argument_and_one_parameter_with_given_name_but_different_type()
-      throws Exception {
+  public void fails_when_parameter_has_incompatible_type() throws Exception {
     createInjector(new AcceptanceTestModule(BlobIdentity.class)).injectMembers(this);
     script(fileSystem, "result : blobIdentity(blob='abc') ;");
     buildWorker.run(asList("result"));
@@ -52,7 +48,7 @@ public class ArgumentNamedTest {
   }
 
   @Test
-  public void one_named_argument_and_one_parameter_with_given_name_and_type() throws Exception {
+  public void assigns_to_parameter_with_same_type() throws Exception {
     createInjector(new AcceptanceTestModule(StringIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringIdentity(string='abc') ;");
     buildWorker.run(asList("result"));
@@ -61,7 +57,7 @@ public class ArgumentNamedTest {
   }
 
   @Test
-  public void one_argument_and_one_parameter_with_given_name_and_subtype() throws Exception {
+  public void assigns_to_parameter_with_supertype() throws Exception {
     createInjector(new AcceptanceTestModule(BlobIdentity.class)).injectMembers(this);
     fileSystem.createFileContainingItsPath(path("file.txt"));
     script(fileSystem, "result : blobIdentity(blob=file('file.txt')) ;");
@@ -71,7 +67,7 @@ public class ArgumentNamedTest {
   }
 
   @Test
-  public void nil_argument_can_be_assigned_to_string_array_parameter() throws Exception {
+  public void assigns_nil_to_string_array() throws Exception {
     createInjector(new AcceptanceTestModule(StringArrayIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringArrayIdentity(stringArray=[]) ;");
     buildWorker.run(asList("result"));
@@ -79,10 +75,8 @@ public class ArgumentNamedTest {
     assertFalse(fileSystem.filesFrom(artifactPath("result")).iterator().hasNext());
   }
 
-  // two arguments
-
   @Test
-  public void two_arguments_with_the_same_name_causes_error() throws Exception {
+  public void fails_when_two_arguments_are_assigned_to_same_parameter() throws Exception {
     createInjector(new AcceptanceTestModule(StringIdentity.class)).injectMembers(this);
     script(fileSystem, "result : stringIdentity(string='abc', string='def') ;");
     buildWorker.run(asList("result"));

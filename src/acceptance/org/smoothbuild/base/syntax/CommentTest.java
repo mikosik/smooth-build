@@ -1,4 +1,4 @@
-package org.smoothbuild.base;
+package org.smoothbuild.base.syntax;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
@@ -46,7 +46,7 @@ public class CommentTest {
   }
 
   @Test
-  public void comments_are_ignored() throws IOException {
+  public void trailing_comment_is_ignored() throws IOException {
     ScriptBuilder builder = new ScriptBuilder();
     builder.addLine("result: 'abc' ; # comment at the end of line");
     script(fileSystem, builder.build());
