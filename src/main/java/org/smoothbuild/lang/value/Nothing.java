@@ -4,9 +4,11 @@ import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
 
-public final class Nothing implements Value {
+public final class Nothing extends Value {
 
-  private Nothing() {}
+  private Nothing() {
+    super(null, null);
+  }
 
   @Override
   public HashCode hash() {
