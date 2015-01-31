@@ -1,4 +1,4 @@
-package org.smoothbuild.base;
+package org.smoothbuild.base.lang;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
@@ -9,13 +9,13 @@ import static org.smoothbuild.testing.acceptance.AcceptanceTestUtils.script;
 import javax.inject.Inject;
 
 import org.junit.Test;
-import org.smoothbuild.base.TestingFunctions.BlobIdentity;
-import org.smoothbuild.base.TestingFunctions.FileIdentity;
-import org.smoothbuild.base.TestingFunctions.StringArrayIdentity;
-import org.smoothbuild.base.TestingFunctions.StringIdentity;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.testing.acceptance.AcceptanceTestModule;
+import org.smoothbuild.testing.acceptance.TestingFunctions.BlobIdentity;
+import org.smoothbuild.testing.acceptance.TestingFunctions.FileIdentity;
+import org.smoothbuild.testing.acceptance.TestingFunctions.StringArrayIdentity;
+import org.smoothbuild.testing.acceptance.TestingFunctions.StringIdentity;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
 
