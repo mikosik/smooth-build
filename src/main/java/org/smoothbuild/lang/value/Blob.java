@@ -16,7 +16,7 @@ import com.google.common.io.CountingInputStream;
 /**
  * Blob value in smooth language.
  */
-public class Blob extends AbstractValue {
+public class Blob extends Value {
   private final BlobMarshaller marshaller;
 
   public Blob(HashCode hash, BlobMarshaller marshaller) {

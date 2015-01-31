@@ -10,7 +10,7 @@ import com.google.common.hash.HashCode;
 /**
  * File value in smooth language.
  */
-public class SFile extends AbstractValue {
+public class SFile extends Value {
   private final Path path;
   private final Blob content;
 

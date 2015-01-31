@@ -10,7 +10,7 @@ import com.google.common.hash.HashCode;
 /**
  * String value in smooth language.
  */
-public class SString extends AbstractValue {
+public class SString extends Value {
   private final StringMarshaller marshaller;
 
   public SString(HashCode hash, StringMarshaller marshaller) {

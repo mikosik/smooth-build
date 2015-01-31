@@ -11,7 +11,7 @@ import com.google.common.hash.HashCode;
 /**
  * Array value in smooth language.
  */
-public class Array<T extends Value> extends AbstractValue implements Iterable<T> {
+public class Array<T extends Value> extends Value implements Iterable<T> {
   private final ArrayMarshaller<T> marshaller;
 
   public Array(HashCode hash, ArrayType arrayType, ArrayMarshaller<T> marshaller) {
