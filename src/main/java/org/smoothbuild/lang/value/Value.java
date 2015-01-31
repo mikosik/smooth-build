@@ -5,7 +5,7 @@ import org.smoothbuild.lang.type.Type;
 import com.google.common.hash.HashCode;
 
 /**
- * A value in smooth language.
+ * Value in smooth language.
  */
 public interface Value {
   public Type type();

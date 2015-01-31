@@ -8,7 +8,7 @@ import org.smoothbuild.db.objects.marshal.StringMarshaller;
 import com.google.common.hash.HashCode;
 
 /**
- * Smooth String. String value in smooth language.
+ * String value in smooth language.
  */
 public class SString extends AbstractValue {
   private final StringMarshaller marshaller;

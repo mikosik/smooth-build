@@ -8,7 +8,7 @@ import org.smoothbuild.io.fs.base.Path;
 import com.google.common.hash.HashCode;
 
 /**
- * Smooth File. File value in smooth language.
+ * File value in smooth language.
  */
 public class SFile extends AbstractValue {
   private final Path path;
