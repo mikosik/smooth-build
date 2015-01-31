@@ -9,7 +9,7 @@ import com.google.common.base.Joiner;
 import com.google.common.hash.HashCode;
 
 /**
- * Array Value in smooth language.
+ * Array value in smooth language.
  */
 public class Array<T extends Value> extends AbstractValue implements Iterable<T> {
   private final ArrayMarshaller<T> marshaller;
