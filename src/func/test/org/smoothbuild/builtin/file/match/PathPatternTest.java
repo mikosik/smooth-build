@@ -1,6 +1,11 @@
 package org.smoothbuild.builtin.file.match;
 
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.builtin.file.match.PathPattern.pathPattern;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 
@@ -8,6 +13,28 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class PathPatternTest {
+  private PathPattern pattern;
+
+  @Test
+  public void single_star_pattern_has_one_part() throws Exception {
+    given(pattern = pathPattern("**"));
+    when(pattern.parts());
+    thenReturned(contains("**"));
+  }
+
+  @Test
+  public void double_star_pattern_has_one_part() throws Exception {
+    given(pattern = pathPattern("**"));
+    when(pattern.parts());
+    thenReturned(contains("**"));
+  }
+
+  @Test
+  public void multi_part_patern_has_many_parts() throws Exception {
+    given(pattern = pathPattern("a/b/c"));
+    when(pattern.parts());
+    thenReturned(contains("a", "b", "c"));
+  }
 
   @Test
   public void validationErrorReturnsMessageForInvalidPattern() {
