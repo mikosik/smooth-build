@@ -28,4 +28,16 @@ public class Predicates {
       }
     };
   }
+
+  public static <T> Predicate<T> equalTo(final T object) {
+    return new Predicate<T>() {
+      @Override
+      public boolean test(T value) {
+        if (object == null) {
+          return value == null;
+        }
+        return object.equals(value);
+      }
+    };
+  }
 }
