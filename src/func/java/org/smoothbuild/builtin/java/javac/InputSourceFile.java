@@ -1,16 +1,12 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static com.google.common.base.Charsets.UTF_8;
-
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.Scanner;
 
 import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.lang.value.SFile;
-
-import com.google.common.io.CharStreams;
 
 public class InputSourceFile extends SimpleJavaFileObject {
   private final SFile file;
@@ -22,8 +18,9 @@ public class InputSourceFile extends SimpleJavaFileObject {
 
   @Override
   public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-    try (InputStreamReader is = new InputStreamReader(file.content().openInputStream(), UTF_8)) {
-      return CharStreams.toString(is);
+    try (Scanner scanner = new Scanner(file.content().openInputStream(), "UTF-8")) {
+      scanner.useDelimiter("\\A");
+      return scanner.hasNext() ? scanner.next() : "";
     }
   }
 }

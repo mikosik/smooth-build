@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.builtin.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
+import static org.smoothbuild.builtin.util.Utils.checkArgument;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,23 +1,21 @@
 package org.smoothbuild.builtin.file.match.testing;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.builtin.file.match.testing.MatchingNamesGenerator.generateNames;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 import org.testory.Closure;
 
-import com.google.common.base.Function;
-
 public class MatchingNamesGeneratorTest {
 
   @Test
   public void test() {
-    List<String> expected = newArrayList();
+    List<String> expected = new ArrayList<>();
     expected.add("xz");
 
     expected.add("xaz");
@@ -49,13 +47,12 @@ public class MatchingNamesGeneratorTest {
     thenReturned(contains(expectedNames));
   }
 
-  private static class CollectingConsumer implements Function<String, Void> {
-    private final List<String> generatedNames = newArrayList();
+  private static class CollectingConsumer implements Consumer<String> {
+    private final List<String> generatedNames = new ArrayList<>();
 
     @Override
-    public Void apply(String name) {
+    public void consume(String name) {
       generatedNames.add(name);
-      return null;
     }
   }
 }

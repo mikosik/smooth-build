@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.file.match;
 
-import org.smoothbuild.io.fs.base.Path;
+import static java.util.Arrays.asList;
 
-import com.google.common.base.Splitter;
+import org.smoothbuild.io.fs.base.Path;
 
 public class PathPattern {
   private static final String DOUBLE_STAR_ERROR_MESSAGE = "Pattern can contain '**' only when "
@@ -24,7 +24,7 @@ public class PathPattern {
   }
 
   public Iterable<String> parts() {
-    return Splitter.on(Path.SEPARATOR_CHARACTER).split(value);
+    return asList(value.split(Path.SEPARATOR));
   }
 
   private static void checkIsValid(String value) {

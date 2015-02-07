@@ -7,10 +7,10 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
+import org.junit.Test;
 
 public class PathPatternTest {
   private PathPattern pattern;
@@ -48,71 +48,71 @@ public class PathPatternTest {
     }
   }
 
-  private static ImmutableList<String> listOfInvalidPatterns() {
-    Builder<String> builder = ImmutableList.builder();
+  private static List<String> listOfInvalidPatterns() {
+    List<String> result = new ArrayList<>();
 
-    builder.add("");
+    result.add("");
 
-    builder.add(".");
-    builder.add("./");
-    builder.add("/.");
-    builder.add("./.");
-    builder.add("././");
+    result.add(".");
+    result.add("./");
+    result.add("/.");
+    result.add("./.");
+    result.add("././");
 
-    builder.add("abc/");
-    builder.add("abc/def/");
-    builder.add("abc/def/ghi/");
+    result.add("abc/");
+    result.add("abc/def/");
+    result.add("abc/def/ghi/");
 
-    builder.add("./abc");
-    builder.add("./abc/def");
-    builder.add("./abc/def/ghi");
-    builder.add("./abc/def/ghi/ijk");
+    result.add("./abc");
+    result.add("./abc/def");
+    result.add("./abc/def/ghi");
+    result.add("./abc/def/ghi/ijk");
 
-    builder.add("abc/.");
-    builder.add("abc/def/.");
-    builder.add("abc/def/ghi/.");
-    builder.add("abc/def/ghi/ijk/.");
+    result.add("abc/.");
+    result.add("abc/def/.");
+    result.add("abc/def/ghi/.");
+    result.add("abc/def/ghi/ijk/.");
 
-    builder.add("..");
-    builder.add("../");
-    builder.add("./../");
-    builder.add("../abc");
-    builder.add("abc/..");
-    builder.add("abc/../def");
-    builder.add("../..");
+    result.add("..");
+    result.add("../");
+    result.add("./../");
+    result.add("../abc");
+    result.add("abc/..");
+    result.add("abc/../def");
+    result.add("../..");
 
-    builder.add("/");
-    builder.add("//");
-    builder.add("///");
+    result.add("/");
+    result.add("//");
+    result.add("///");
 
-    builder.add("/abc");
-    builder.add("//abc");
-    builder.add("///abc");
+    result.add("/abc");
+    result.add("//abc");
+    result.add("///abc");
 
-    builder.add("abc//");
-    builder.add("abc///");
+    result.add("abc//");
+    result.add("abc///");
 
-    builder.add("abc//def");
-    builder.add("abc///def");
+    result.add("abc//def");
+    result.add("abc///def");
 
-    builder.add("*/");
-    builder.add("/*");
+    result.add("*/");
+    result.add("/*");
 
-    builder.add("**/");
-    builder.add("/**");
+    result.add("**/");
+    result.add("/**");
 
-    builder.add("a**");
-    builder.add("**a");
-    builder.add("a/b**/c");
-    builder.add("a/**b/c");
+    result.add("a**");
+    result.add("**a");
+    result.add("a/b**/c");
+    result.add("a/**b/c");
 
-    builder.add("**/**");
-    builder.add("a/**/**");
-    builder.add("**/**/b");
-    builder.add("a/**/**/b");
+    result.add("**/**");
+    result.add("a/**/**");
+    result.add("**/**/b");
+    result.add("a/**/**/b");
 
-    builder.add("***");
+    result.add("***");
 
-    return builder.build();
+    return result;
   }
 }

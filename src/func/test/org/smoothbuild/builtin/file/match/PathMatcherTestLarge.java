@@ -7,10 +7,9 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.smoothbuild.builtin.file.match.testing.Consumer;
+import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 /**
  * This test is not automatically run by ant as it takes more than 1 hour to
@@ -24,27 +23,25 @@ public class PathMatcherTestLarge {
     generatePatterns(5, doTestPatternConsumer());
   }
 
-  private static Function<String, Void> doTestPatternConsumer() {
-    return new Function<String, Void>() {
+  private static Consumer<String> doTestPatternConsumer() {
+    return new Consumer<String>() {
       private int count = 0;
 
       @Override
-      public Void apply(String pattern) {
+      public void consume(String pattern) {
         count++;
         System.out.println(count + ": " + pattern);
         generatePaths(pattern, assertThatPathMatchesPatternConsumer(pattern));
-        return null;
       }
     };
   }
 
-  private static Function<String, Void> assertThatPathMatchesPatternConsumer(String pattern) {
+  private static Consumer<String> assertThatPathMatchesPatternConsumer(String pattern) {
     final Predicate<Path> matcher = pathMatcher(pattern);
-    return new Function<String, Void>() {
+    return new Consumer<String>() {
       @Override
-      public Void apply(String path) {
-        matcher.apply(path(path));
-        return null;
+      public void consume(String path) {
+        matcher.test(path(path));
       }
     };
   }

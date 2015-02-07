@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.java.junit;
 
-import static com.google.common.base.Throwables.getStackTraceAsString;
+import static org.smoothbuild.builtin.util.Exceptions.stackTraceToString;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 
@@ -33,7 +33,7 @@ public class FileClassLoader extends ClassLoader {
       return inputStreamToByteArray(file.content().openInputStream());
     } catch (IOException e) {
       throw new Message(FATAL, "Error reading from " + file.path() + ". Java exception is:\n"
-          + getStackTraceAsString(e));
+          + stackTraceToString(e));
     }
   }
 }

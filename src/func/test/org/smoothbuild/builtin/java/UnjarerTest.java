@@ -7,13 +7,12 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
-
-import com.google.common.base.Predicates;
 
 public class UnjarerTest {
   private final Path path1 = path("file/path/file1.txt");

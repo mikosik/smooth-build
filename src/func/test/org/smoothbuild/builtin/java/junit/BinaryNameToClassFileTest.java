@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.java.junit;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
@@ -8,14 +9,14 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.JarTester;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
-
-import com.google.common.collect.ImmutableMap;
 
 public class BinaryNameToClassFileTest {
   private final FakeNativeApi nativeApi = new FakeNativeApi();
@@ -29,7 +30,14 @@ public class BinaryNameToClassFileTest {
     given(file2 = nativeApi.file(path("b/Klass.class")));
     given(blob = JarTester.jar(file1, file2));
     when(binaryNameToClassFile(nativeApi, asList(blob)));
-    thenReturned(ImmutableMap.of("a.Klass", file1, "b.Klass", file2));
+    thenReturned(mapOf("a.Klass", file1, "b.Klass", file2));
+  }
+
+  private static Map<String, SFile> mapOf(String name1, SFile file1, String name2, SFile file2) {
+    HashMap<String, SFile> result = new HashMap<>();
+    result.put(name1, file1);
+    result.put(name2, file2);
+    return result;
   }
 
   @Test
@@ -37,7 +45,7 @@ public class BinaryNameToClassFileTest {
     given(file1 = nativeApi.file(path("a/Klass.txt")));
     given(file2 = nativeApi.file(path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(nativeApi, asList(blob)));
-    thenReturned(ImmutableMap.of());
+    when(binaryNameToClassFile(nativeApi, asList(blob)).entrySet());
+    thenReturned(empty());
   }
 }

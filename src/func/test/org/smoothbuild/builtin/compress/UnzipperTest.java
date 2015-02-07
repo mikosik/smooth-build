@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.compress;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.hasSize;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
@@ -13,6 +12,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -46,10 +46,18 @@ public class UnzipperTest {
   @Test
   public void unzips_files() throws Exception {
     given(blob = zipped(fileName1, fileName2));
-    when(files = newArrayList(unzipper.unzip(blob)));
+    when(files = iterableToList(unzipper.unzip(blob)));
     then(files, hasSize(2));
     assertContent(files.get(0).content().openInputStream(), files.get(0).path().value());
     assertContent(files.get(1).content().openInputStream(), files.get(1).path().value());
+  }
+
+  private static List<SFile> iterableToList(Iterable<SFile> iterable) {
+    ArrayList<SFile> result = new ArrayList<>();
+    for (SFile file : iterable) {
+      result.add(file);
+    }
+    return result;
   }
 
   @Test

@@ -4,16 +4,14 @@ import static org.smoothbuild.builtin.file.match.PathPattern.pathPattern;
 import static org.smoothbuild.builtin.file.match.testing.PathPatternGenerator.generatePatterns;
 
 import org.junit.Test;
-
-import com.google.common.base.Function;
+import org.smoothbuild.builtin.file.match.testing.Consumer;
 
 public class PathPatternMediumTest {
   @Test
   public void allGeneratedPatternsAreValid() throws Exception {
-    Function<String, Void> consumer = new Function<String, Void>() {
-      public Void apply(String pattern) {
+    Consumer<String> consumer = new Consumer<String>() {
+      public void consume(String pattern) {
         pathPattern(pattern);
-        return null;
       }
     };
 

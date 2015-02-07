@@ -1,32 +1,43 @@
 package org.smoothbuild.builtin.file.match.testing;
 
-import static com.google.common.base.CharMatcher.JAVA_LETTER;
+import static java.lang.Character.isLetter;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelpTester {
 
-  public static final ImmutableList<String> ALL = ImmutableList.of("a", "b", "c", "aa", "ab", "ac",
-      "ba", "bb", "bc", "ca", "cb", "cc");
-  public static final ImmutableList<String> ALL_WITH_EMPTY = ImmutableList.of("", "a", "b", "c",
-      "aa", "ab", "ac", "ba", "bb", "bc", "ca", "cb", "cc");
-  public static final ImmutableList<String> ALL_DOUBLE_STARS = allDoubleStars();
+  public static final List<String> ALL = unmodifiableList(asList("a", "b", "c", "aa", "ab", "ac",
+      "ba", "bb", "bc", "ca", "cb", "cc"));
+  public static final List<String> ALL_WITH_EMPTY = unmodifiableList(asList("", "a", "b", "c",
+      "aa", "ab", "ac", "ba", "bb", "bc", "ca", "cb", "cc"));
+  public static final List<String> ALL_DOUBLE_STARS = unmodifiableList(allDoubleStars());
 
   public static boolean endsWithThreeLetters(String pattern) {
     boolean isLongEnough = 3 <= pattern.length();
-    return isLongEnough && JAVA_LETTER.matchesAllOf(pattern.substring(pattern.length() - 3));
+    return isLongEnough && containsOnlyLetters(pattern.substring(pattern.length() - 3));
   }
 
-  private static ImmutableList<String> allDoubleStars() {
-    ImmutableList.Builder<String> builder = ImmutableList.builder();
-
-    builder.add("");
-    builder.addAll(ALL);
-    for (String a : ALL) {
-      for (String b : ALL) {
-        builder.add(a + "/" + b);
+  private static boolean containsOnlyLetters(String string) {
+    for (int i = 0; i < string.length(); i++) {
+      if (!isLetter(string.charAt(i))) {
+        return false;
       }
     }
-    return builder.build();
+    return true;
+  }
+
+  private static List<String> allDoubleStars() {
+    List<String> result = new ArrayList<>();
+    result.add("");
+    result.addAll(ALL);
+    for (String a : ALL) {
+      for (String b : ALL) {
+        result.add(a + "/" + b);
+      }
+    }
+    return result;
   }
 }

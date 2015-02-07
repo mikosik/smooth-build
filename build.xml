@@ -188,7 +188,6 @@
     <path id="classpath.for.func.test">
         <path refid="classpath.with.testing.java"/>
         <path refid="classpath.with.func.java"/>
-        <pathelement location="${lib.guava-testlib}"/>
         <pathelement location="${lib.hamcrest-library}"/>
         <pathelement location="${lib.junit}"/>
         <pathelement location="${lib.testory}"/>
@@ -345,15 +344,12 @@
 
             <zipfileset dir="${dir.build.class.func.java}"/>
             <zipfileset file="LICENSE"/>
-            <zipfileset src="${lib.guava}"/>
 
             <!-- TODO can be removed once jarjar function becomes separate plugin -->
             <zipfileset file="${lib.jarjar.license}"/>
             <!-- TODO can be removed once junit function becomes separate plugin -->
             <zipfileset file="${lib.junit.license}"/>
             <zipfileset file="${lib.hamcrest.license}"/>
-
-            <rule pattern="com.google.**" result="org.smoothbuild.builtin.guava.@1"/>
         </jarjar>
 
         <!--

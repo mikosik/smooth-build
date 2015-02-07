@@ -8,7 +8,8 @@ import static org.testory.Testory.thenCalledTimes;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import javax.tools.JavaFileObject;
+import java.util.ArrayList;
+
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 
@@ -17,12 +18,10 @@ import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompi
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.task.exec.FakeNativeApi;
 
-import com.google.common.collect.Multimap;
-
 public class SandboxedJavaFileManagerTest {
   private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
   private final NativeApi nativeApi = new FakeNativeApi();
-  private final Multimap<String, JavaFileObject> packagedJavaFileObjects = mock(Multimap.class);
+  private final Iterable<InputClassFile> packagedJavaFileObjects = new ArrayList<>();
 
   private SandboxedJavaFileManager manager;
 

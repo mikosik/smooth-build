@@ -3,8 +3,6 @@ package org.smoothbuild.builtin.file.match.testing;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.endsWithThreeLetters;
 
-import com.google.common.base.Function;
-
 public class PathPatternGenerator {
 
   /**
@@ -15,15 +13,15 @@ public class PathPatternGenerator {
    * or separator "/" (which is not taken into account when calculating pattern
    * size).
    */
-  public static void generatePatterns(int maxSize, Function<String, Void> consumer) {
+  public static void generatePatterns(int maxSize, Consumer<String> consumer) {
     for (int i = 1; i <= maxSize; i++) {
       generatePatterns("", i, consumer);
     }
   }
 
-  private static void generatePatterns(String pattern, int size, Function<String, Void> consumer) {
+  private static void generatePatterns(String pattern, int size, Consumer<String> consumer) {
     if (size == 0) {
-      consumer.apply(pattern);
+      consumer.consume(pattern);
     } else {
       if (!endsWithThreeLetters(pattern)) {
         generatePatterns(pattern + "a", size - 1, consumer);

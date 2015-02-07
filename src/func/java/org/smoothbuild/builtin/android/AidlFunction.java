@@ -1,6 +1,8 @@
 package org.smoothbuild.builtin.android;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.builtin.android.err.AidlBinaryReturnedNonZeroCodeError;
@@ -15,9 +17,6 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.CommandExecutor;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class AidlFunction {
 
@@ -40,20 +39,26 @@ public class AidlFunction {
 
     TempDirectory outputFilesDir = nativeApi.createTempDirectory();
 
-    List<String> command = Lists.newArrayList();
+    List<String> command = new ArrayList<>();
     command.add(aidlBinary);
     command.add("-p" + frameworkAidl);
     command.add("-o" + outputFilesDir.rootOsPath());
     command.add(inputFilesDir.asOsPath(interfaceFile.path()));
 
     executeCommand(command);
+    return onlyElement(outputFilesDir.readFiles());
+  }
 
-    Array<SFile> outputFiles = outputFilesDir.readFiles();
-    if (Iterables.size(outputFiles) != 1) {
+  private static SFile onlyElement(Array<SFile> outputFiles) {
+    Iterator<SFile> iterator = outputFiles.iterator();
+    if (!iterator.hasNext()) {
       throw new AidlShouldOutputExactlyOneFileError(outputFiles);
     }
-
-    return outputFiles.iterator().next();
+    SFile result = iterator.next();
+    if (iterator.hasNext()) {
+      throw new AidlShouldOutputExactlyOneFileError(outputFiles);
+    }
+    return result;
   }
 
   private static void executeCommand(List<String> command) throws InterruptedException {

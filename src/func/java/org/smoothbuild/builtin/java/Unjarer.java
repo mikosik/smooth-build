@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java;
 
-import static com.google.common.base.Predicates.and;
-import static com.google.common.base.Predicates.not;
+import static org.smoothbuild.builtin.util.Predicates.and;
+import static org.smoothbuild.builtin.util.Predicates.not;
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
@@ -15,6 +15,8 @@ import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.builtin.util.EndsWithPredicate;
+import org.smoothbuild.builtin.util.Predicate;
+import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -24,9 +26,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 public class Unjarer {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
@@ -52,7 +51,7 @@ public class Unjarer {
         JarEntry entry;
         while ((entry = jarInputStream.getNextJarEntry()) != null) {
           String fileName = entry.getName();
-          if (filter.apply(fileName)) {
+          if (filter.test(fileName)) {
             SFile file = unjarEntry(jarInputStream, fileName);
             Path path = file.path();
             if (duplicatesDetector.addValue(path)) {

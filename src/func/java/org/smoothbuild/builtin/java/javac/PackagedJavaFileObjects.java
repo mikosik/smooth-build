@@ -2,7 +2,8 @@ package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 
-import javax.tools.JavaFileObject;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
@@ -11,24 +12,20 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 public class PackagedJavaFileObjects {
-  public static Multimap<String, JavaFileObject> packagedJavaFileObjects(NativeApi nativeApi,
+  public static Iterable<InputClassFile> classesFromJars(NativeApi nativeApi,
       Iterable<Blob> libraryJars) {
     Unjarer unjarer = new Unjarer(nativeApi);
-    Multimap<String, JavaFileObject> result = HashMultimap.create();
+    Set<InputClassFile> result = new HashSet<>();
 
     for (Blob jarBlob : libraryJars) {
       Array<SFile> files = unjarer.unjar(jarBlob, isClassFilePredicate());
       for (SFile classFile : files) {
         InputClassFile inputClassFile = new InputClassFile(classFile);
-        String aPackage = inputClassFile.aPackage();
-        if (result.containsEntry(aPackage, inputClassFile)) {
+        if (result.contains(inputClassFile)) {
           throw new DuplicateClassFileError(classFile.path());
         } else {
-          result.put(aPackage, inputClassFile);
+          result.add(inputClassFile);
         }
       }
     }

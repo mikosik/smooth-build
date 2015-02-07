@@ -1,23 +1,23 @@
 package org.smoothbuild.builtin.file.match;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
+import static org.smoothbuild.builtin.util.Utils.checkArgument;
 
+import java.util.List;
+
+import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 
 /**
  * Matches file/directory name against given pattern.
- * 
+ *
  * <pre>
  * Each star '*' in pattern matches zero or more characters.
  * Double stars "**" are forbidden.
  * </pre>
  */
 public class NameMatcher implements Predicate<Path> {
-  private final ImmutableList<String> patternParts;
+  private final List<String> patternParts;
 
   public NameMatcher(NamePattern pattern) {
     checkArgument(!pattern.isDoubleStar());
@@ -25,7 +25,7 @@ public class NameMatcher implements Predicate<Path> {
   }
 
   @Override
-  public boolean apply(Path path) {
+  public boolean test(Path path) {
     String string = path.value();
 
     // matching leftmost characters to first '*'
