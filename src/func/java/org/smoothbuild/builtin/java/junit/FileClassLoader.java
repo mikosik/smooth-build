@@ -14,7 +14,7 @@ public class FileClassLoader extends ClassLoader {
   private final Map<String, SFile> binaryNameToFile;
 
   public FileClassLoader(Map<String, SFile> binaryNameToFile) {
-    super(Thread.currentThread().getContextClassLoader());
+    super(FileClassLoader.class.getClassLoader());
     this.binaryNameToFile = binaryNameToFile;
   }
 
