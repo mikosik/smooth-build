@@ -6,9 +6,8 @@ import static org.smoothbuild.builtin.file.match.testing.MatchingNamesGenerator.
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.file.match.testing.Consumer;
 import org.smoothbuild.builtin.file.match.testing.NamePatternGenerator;
-
-import com.google.common.base.Function;
 
 public class NameMatcherMediumTest {
 
@@ -17,21 +16,19 @@ public class NameMatcherMediumTest {
     NamePatternGenerator.generatePatterns(5, doTestPatternConsumer());
   }
 
-  private static Function<String, Void> doTestPatternConsumer() {
-    return new Function<String, Void>() {
-      public Void apply(String pattern) {
+  private static Consumer<String> doTestPatternConsumer() {
+    return new Consumer<String>() {
+      public void consume(String pattern) {
         generateNames(pattern, assertThatNameMatchesPatternConsumer(pattern));
-        return null;
       }
     };
   }
 
-  private static Function<String, Void> assertThatNameMatchesPatternConsumer(String pattern) {
+  private static Consumer<String> assertThatNameMatchesPatternConsumer(String pattern) {
     final NameMatcher matcher = new NameMatcher(namePattern(pattern));
-    return new Function<String, Void>() {
-      public Void apply(String name) {
-        assertTrue(matcher.apply(path(name)));
-        return null;
+    return new Consumer<String>() {
+      public void consume(String name) {
+        assertTrue(matcher.test(path(name)));
       }
     };
   }

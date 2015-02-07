@@ -1,26 +1,23 @@
 package org.smoothbuild.builtin.file.match.testing;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.builtin.file.match.testing.MatchingPathsGenerator.generatePaths;
 import static org.testory.Testory.then;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-
-import com.google.common.base.Function;
 
 public class MatchingPathsGeneratorTest {
 
   @Test
   public void single_star_set_for_whole_name() {
     // given
-    final List<String> generatedPaths = newArrayList();
-    Function<String, Void> consumer = new Function<String, Void>() {
-      public Void apply(String string) {
+    final List<String> generatedPaths = new ArrayList<>();
+    Consumer<String> consumer = new Consumer<String>() {
+      public void consume(String string) {
         generatedPaths.add(string);
-        return null;
       }
     };
 
@@ -32,11 +29,10 @@ public class MatchingPathsGeneratorTest {
   @Test
   public void single_star_set_as_part_of_name() {
     // given
-    final List<String> generatedPaths = newArrayList();
-    Function<String, Void> consumer = new Function<String, Void>() {
-      public Void apply(String string) {
+    final List<String> generatedPaths = new ArrayList<>();
+    Consumer<String> consumer = new Consumer<String>() {
+      public void consume(String string) {
         generatedPaths.add(string);
-        return null;
       }
     };
 

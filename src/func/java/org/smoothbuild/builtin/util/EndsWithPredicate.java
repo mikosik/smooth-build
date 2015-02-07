@@ -1,8 +1,6 @@
 package org.smoothbuild.builtin.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.base.Predicate;
+import static org.smoothbuild.builtin.util.Utils.checkNotNull;
 
 public class EndsWithPredicate implements Predicate<String> {
   private final String suffix;
@@ -12,7 +10,7 @@ public class EndsWithPredicate implements Predicate<String> {
   }
 
   @Override
-  public boolean apply(String string) {
+  public boolean test(String string) {
     return string.endsWith(suffix);
   }
 }

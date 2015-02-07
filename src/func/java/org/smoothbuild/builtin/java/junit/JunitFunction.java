@@ -13,6 +13,7 @@ import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
+import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -22,8 +23,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.Message;
-
-import com.google.common.base.Predicate;
 
 public class JunitFunction {
   @SmoothFunction
@@ -39,7 +38,7 @@ public class JunitFunction {
     int testCount = 0;
     for (String binaryName : binaryNameToClassFile.keySet()) {
       Path filePath = binaryNameToClassFile.get(binaryName).path();
-      if (filter.apply(filePath)) {
+      if (filter.test(filePath)) {
         testCount++;
         Class<?> testClass = loadClass(classLoader, binaryName);
         Result result = jUnitCore.run(testClass);

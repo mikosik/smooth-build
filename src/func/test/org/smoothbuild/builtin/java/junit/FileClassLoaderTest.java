@@ -9,13 +9,13 @@ import static org.testory.Testory.when;
 import static org.testory.common.Matchers.same;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Classes;
-
-import com.google.common.collect.ImmutableMap;
 
 public class FileClassLoaderTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
@@ -27,9 +27,15 @@ public class FileClassLoaderTest {
   public void loads_class_from_binary() throws Exception {
     given(klass = FileClassLoaderTest.MyClass.class);
     given(file = createByteCodeFile(klass));
-    given(fileClassLoader = new FileClassLoader(ImmutableMap.of(klass.getName(), file)));
+    given(fileClassLoader = new FileClassLoader(map(klass.getName(), file)));
     when(fileClassLoader.findClass(klass.getName()).getClassLoader());
     thenReturned(same(fileClassLoader));
+  }
+
+  private static Map<String, SFile> map(String name, SFile file) {
+    HashMap<String, SFile> result = new HashMap<>();
+    result.put(name, file);
+    return result;
   }
 
   private SFile createByteCodeFile(Class<?> klass) throws IOException {

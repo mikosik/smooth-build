@@ -8,8 +8,6 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.LineBuilder;
 
-import com.google.common.collect.Iterables;
-
 public class AidlShouldOutputExactlyOneFileError extends Message {
   public AidlShouldOutputExactlyOneFileError(Array<SFile> outputFiles) {
     super(ERROR, createMessage(outputFiles));
@@ -17,7 +15,7 @@ public class AidlShouldOutputExactlyOneFileError extends Message {
 
   private static String createMessage(Array<SFile> outputFiles) {
     String aidl = AIDL_BINARY;
-    if (Iterables.size(outputFiles) == 0) {
+    if (!outputFiles.iterator().hasNext()) {
       return aidl + " binary should return exactly one file but returned zero.";
     } else {
       LineBuilder b = new LineBuilder();

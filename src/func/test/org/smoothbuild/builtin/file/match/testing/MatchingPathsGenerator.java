@@ -8,24 +8,20 @@ import static org.smoothbuild.builtin.file.match.testing.HelpTester.ALL;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.ALL_DOUBLE_STARS;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.ALL_WITH_EMPTY;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.base.Function;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class MatchingPathsGenerator {
 
-  public static void generatePaths(String pattern, Function<String, Void> consumer) {
+  public static void generatePaths(String pattern, Consumer<String> consumer) {
     List<List<String>> template = createGeneratorTemplate(pattern);
     generatePaths("", template, 0, consumer);
   }
 
   private static void generatePaths(String path, List<List<String>> template, int index,
-      Function<String, Void> consumer) {
+      Consumer<String> consumer) {
     if (index == template.size()) {
-      consumer.apply(path);
+      consumer.consume(path);
     } else {
       for (String suffix : template.get(index)) {
         if (!(suffix.equals("/") && (path.endsWith("/") || path.isEmpty()))) {
@@ -36,19 +32,19 @@ public class MatchingPathsGenerator {
   }
 
   private static List<List<String>> createGeneratorTemplate(String pattern) {
-    List<List<String>> result = Lists.newArrayList();
+    List<List<String>> result = new ArrayList<>();
 
     if (pattern.endsWith("**")) {
       pattern = pattern + "/*";
     }
 
-    ImmutableList<String> parts = ImmutableList.copyOf(Splitter.on('/').split(pattern));
-    for (int i = 0; i < parts.size(); i++) {
+    String[] parts = pattern.split("/");
+    for (int i = 0; i < parts.length; i++) {
       if (i != 0) {
         result.add(asList("/"));
       }
 
-      addNameGenerators(result, parts.get(i));
+      addNameGenerators(result, parts[i]);
     }
     return result;
   }

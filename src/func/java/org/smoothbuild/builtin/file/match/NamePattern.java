@@ -1,16 +1,17 @@
 package org.smoothbuild.builtin.file.match;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.builtin.file.match.Constants.DOUBLE_STAR;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR_CHAR;
+import static org.smoothbuild.builtin.util.Utils.checkArgument;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Pattern for matching directory/file name.
- * 
+ *
  * <ul>
  * <li>Each star '*' in pattern matches zero or more characters.</li>
  * <li>Double stars "**" are forbidden unless whole pattern equals to "**". Such
@@ -47,26 +48,26 @@ public class NamePattern {
     return value.equals(DOUBLE_STAR);
   }
 
-  public ImmutableList<String> parts() {
+  public List<String> parts() {
     if (isDoubleStar()) {
-      return ImmutableList.of(DOUBLE_STAR);
+      return Arrays.asList(DOUBLE_STAR);
     }
 
-    Builder<String> builder = ImmutableList.builder();
+    List<String> result = new ArrayList<>();
     int startIndex = 0;
     while (startIndex < value.length()) {
       int foundIndex = value.indexOf(SINGLE_STAR_CHAR, startIndex);
       if (foundIndex == -1) {
-        builder.add(value.substring(startIndex));
+        result.add(value.substring(startIndex));
         startIndex = value.length();
       } else {
         if (foundIndex != startIndex) {
-          builder.add(value.substring(startIndex, foundIndex));
+          result.add(value.substring(startIndex, foundIndex));
         }
-        builder.add(SINGLE_STAR);
+        result.add(SINGLE_STAR);
         startIndex = foundIndex + 1;
       }
     }
-    return builder.build();
+    return result;
   }
 }

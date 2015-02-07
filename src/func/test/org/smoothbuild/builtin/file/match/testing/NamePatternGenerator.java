@@ -3,31 +3,27 @@ package org.smoothbuild.builtin.file.match.testing;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.endsWithThreeLetters;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-
 public class NamePatternGenerator {
 
   /**
    * Generates all name patterns containing 'size' or less elements and pass it
    * to given 'consumer'.
-   * 
+   *
    * Element is either "*" wildcard or one of the letters {a, b, b}.
    */
-  public static void generatePatterns(int maxSize, Function<String, Void> consumer) {
+  public static void generatePatterns(int maxSize, Consumer<String> consumer) {
     for (int i = 1; i <= maxSize; i++) {
       generatePatternsImpl(i, consumer);
     }
   }
 
-  @VisibleForTesting
-  static void generatePatternsImpl(int size, Function<String, Void> consumer) {
+  static void generatePatternsImpl(int size, Consumer<String> consumer) {
     generatePatterns("", size, consumer);
   }
 
-  private static void generatePatterns(String pattern, int size, Function<String, Void> consumer) {
+  private static void generatePatterns(String pattern, int size, Consumer<String> consumer) {
     if (size == 0) {
-      consumer.apply(pattern);
+      consumer.consume(pattern);
     } else {
       if (!endsWithThreeLetters(pattern)) {
         generatePatterns(pattern + "a", size - 1, consumer);

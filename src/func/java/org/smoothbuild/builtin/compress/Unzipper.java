@@ -12,6 +12,7 @@ import java.util.zip.ZipInputStream;
 import org.smoothbuild.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
 import org.smoothbuild.builtin.util.EndsWithPredicate;
+import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -21,8 +22,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
-
-import com.google.common.base.Predicate;
 
 public class Unzipper {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
@@ -42,7 +41,7 @@ public class Unzipper {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream())) {
         ZipEntry entry;
         while ((entry = zipInputStream.getNextEntry()) != null) {
-          if (!IS_DIRECTORY.apply(entry.getName())) {
+          if (!IS_DIRECTORY.test(entry.getName())) {
             fileArrayBuilder.add(unzipEntry(zipInputStream, entry));
           }
         }

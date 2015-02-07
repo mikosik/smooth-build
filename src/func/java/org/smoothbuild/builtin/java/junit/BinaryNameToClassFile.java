@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.java.junit;
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.smoothbuild.builtin.java.Unjarer;
@@ -14,15 +15,13 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
-import com.google.common.collect.Maps;
-
 public class BinaryNameToClassFile {
 
   public static Map<String, SFile> binaryNameToClassFile(NativeApi nativeApi,
       Iterable<Blob> libraryJars) {
     Unjarer unjarer = new Unjarer(nativeApi);
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    Map<String, SFile> binaryNameToClassFile = Maps.newHashMap();
+    Map<String, SFile> binaryNameToClassFile = new HashMap<>();
 
     for (Blob jarBlob : libraryJars) {
       Array<SFile> fileArray = unjarer.unjar(jarBlob, isClassFilePredicate());

@@ -4,22 +4,19 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
 public class MatchingNamesGenerator {
-  public static void generateNames(String pattern, Function<String, Void> consumer) {
+  public static void generateNames(String pattern, Consumer<String> consumer) {
     List<List<String>> template = createGeneratorTemplate(pattern);
     generateNames("", template, 0, consumer);
   }
 
   private static void generateNames(String name, List<List<String>> template, int index,
-      Function<String, Void> consumer) {
+      Consumer<String> consumer) {
     if (index == template.size()) {
-      consumer.apply(name);
+      consumer.consume(name);
     } else {
       for (String elem : template.get(index)) {
         generateNames(name + elem, template, index + 1, consumer);
@@ -28,7 +25,7 @@ public class MatchingNamesGenerator {
   }
 
   private static List<List<String>> createGeneratorTemplate(String pattern) {
-    List<List<String>> result = Lists.newArrayList();
+    List<List<String>> result = new ArrayList<>();
     addNameGenerators(result, pattern);
     return result;
   }
@@ -38,7 +35,7 @@ public class MatchingNamesGenerator {
       result.add(HelpTester.ALL);
     }
 
-    ImmutableList<String> parts = namePattern(namePattern).parts();
+    List<String> parts = namePattern(namePattern).parts();
 
     for (String part : parts) {
       if (part.equals(SINGLE_STAR)) {

@@ -5,9 +5,8 @@ import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.Test;
+import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
-
-import com.google.common.base.Predicate;
 
 public class PathMatcherTest {
 
@@ -178,6 +177,6 @@ public class PathMatcherTest {
 
   private static void assertMatchingResult(String pattern, String path, boolean expected) {
     Predicate<Path> matcher = pathMatcher(pattern);
-    assertEquals(matcher.apply(path(path)), expected);
+    assertEquals(matcher.test(path(path)), expected);
   }
 }

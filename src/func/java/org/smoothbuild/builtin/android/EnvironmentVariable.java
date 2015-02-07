@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.android;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.builtin.util.Utils.checkNotNull;
 
 public class EnvironmentVariable {
   private final String name;
@@ -23,7 +22,10 @@ public class EnvironmentVariable {
   }
 
   public String value() {
-    checkState(isSet, "Cannot call EnvironmentVariable.value() when isSet() == false");
+    if (!isSet) {
+      throw new IllegalStateException(
+          "Cannot call EnvironmentVariable.value() when isSet() == false");
+    }
     return value;
   }
 

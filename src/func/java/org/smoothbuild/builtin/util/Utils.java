@@ -19,10 +19,9 @@ public class Utils {
     return !iterable.iterator().hasNext();
   }
 
-  public static <T> Set<T> immutableSet(T... elements) {
+  public static <T> Set<T> unmodifiableSet(T... elements) {
     Set<T> set = new HashSet<>(elements.length);
     Collections.addAll(set, elements);
-
     return Collections.unmodifiableSet(set);
   }
 
@@ -31,5 +30,17 @@ public class Utils {
       throw new NullPointerException();
     }
     return object;
+  }
+
+  public static void checkArgument(boolean conditions) {
+    if (!conditions) {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  public static void checkArgument(boolean conditions, String message) {
+    if (!conditions) {
+      throw new IllegalArgumentException(message);
+    }
   }
 }

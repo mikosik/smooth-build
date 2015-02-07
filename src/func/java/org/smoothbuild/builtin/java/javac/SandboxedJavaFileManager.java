@@ -4,6 +4,10 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.tools.FileObject;
@@ -19,19 +23,31 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 
-import com.google.common.collect.Multimap;
-
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final NativeApi nativeApi;
-  private final Multimap<String, JavaFileObject> packageToJavaFileObjects;
+  private final Map<String, Set<JavaFileObject>> packageToJavaFileObjects;
   private final ArrayBuilder<SFile> resultClassFiles;
 
   SandboxedJavaFileManager(StandardJavaFileManager fileManager, NativeApi nativeApi,
-      Multimap<String, JavaFileObject> packageToJavaFileObjects) {
+      Iterable<InputClassFile> objects) {
     super(fileManager);
     this.nativeApi = nativeApi;
-    this.packageToJavaFileObjects = packageToJavaFileObjects;
+    this.packageToJavaFileObjects = groupIntoPackages(objects);
     this.resultClassFiles = nativeApi.arrayBuilder(SFile.class);
+  }
+
+  private static Map<String, Set<JavaFileObject>> groupIntoPackages(Iterable<InputClassFile> objects) {
+    HashMap<String, Set<JavaFileObject>> result = new HashMap<>();
+    for (InputClassFile object : objects) {
+      String packageName = object.aPackage();
+      Set<JavaFileObject> aPackage = result.get(packageName);
+      if (aPackage == null) {
+        aPackage = new HashSet<>();
+        result.put(packageName, aPackage);
+      }
+      aPackage.add(object);
+    }
+    return result;
   }
 
   public Array<SFile> resultClassfiles() {
@@ -71,7 +87,12 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
         throw new UnsupportedOperationException(
             "recurse is not supported by SandboxedJavaFileManager.list()");
       }
-      return packageToJavaFileObjects.get(packageName);
+      Set<JavaFileObject> result = packageToJavaFileObjects.get(packageName);
+      if (result == null) {
+        return new ArrayList<>();
+      } else {
+        return result;
+      }
     } else {
       return super.list(location, packageName, kinds, recurse);
     }

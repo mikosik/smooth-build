@@ -1,8 +1,9 @@
 package org.smoothbuild.io.fs.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 /**
  * Path within a project.
@@ -98,15 +99,15 @@ public class Path {
     }
   }
 
-  public ImmutableList<Path> parts() {
+  public List<Path> parts() {
     if (this == ROOT_PATH) {
-      return ImmutableList.of();
+      return new ArrayList<>();
     } else {
-      Builder<Path> builder = ImmutableList.builder();
+      List<Path> result = new ArrayList<>();
       for (String string : Splitter.on(SEPARATOR_CHARACTER).split(value)) {
-        builder.add(new Path(string));
+        result.add(new Path(string));
       }
-      return builder.build();
+      return result;
     }
   }
 

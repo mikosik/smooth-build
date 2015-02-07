@@ -1,14 +1,17 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
+import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
+import static org.smoothbuild.builtin.util.Utils.unmodifiableSet;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
@@ -28,13 +31,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-
 public class JavacFunction {
   @SmoothFunction
   public static Array<SFile> javac( //
@@ -47,10 +43,10 @@ public class JavacFunction {
   }
 
   private static class Worker {
-    private static final ImmutableSet<String> SOURCE_VALUES = ImmutableSet.of("1.3", "1.4", "1.5",
-        "5", "1.6", "6", "1.7", "7");
-    private static final ImmutableSet<String> TARGET_VALUES = ImmutableSet.of("1.1", "1.2", "1.3",
-        "1.4", "1.5", "5", "1.6", "6", "1.7", "7");
+    private static final Set<String> SOURCE_VALUES = unmodifiableSet("1.3", "1.4", "1.5", "5",
+        "1.6", "6", "1.7", "7");
+    private static final Set<String> TARGET_VALUES = unmodifiableSet("1.1", "1.2", "1.3", "1.4",
+        "1.5", "5", "1.6", "6", "1.7", "7");
 
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
@@ -93,7 +89,7 @@ public class JavacFunction {
         /*
          * Java compiler fails miserably when there's no java files.
          */
-        if (Iterables.isEmpty(inputSourceFiles)) {
+        if (!inputSourceFiles.iterator().hasNext()) {
           nativeApi.log(new NoJavaSourceFilesFoundWarning());
           return nativeApi.arrayBuilder(SFile.class).build();
         }
@@ -123,7 +119,7 @@ public class JavacFunction {
     }
 
     private Iterable<String> options() {
-      List<String> result = Lists.newArrayList();
+      List<String> result = new ArrayList<>();
 
       if (!source.value().isEmpty()) {
         String sourceArg = source.value();
@@ -149,18 +145,16 @@ public class JavacFunction {
     private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic) {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      Multimap<String, JavaFileObject> libsClasses =
-          PackagedJavaFileObjects.packagedJavaFileObjects(nativeApi, libs);
+      Iterable<InputClassFile> libsClasses = classesFromJars(nativeApi, libs);
       return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<SFile> sourceFiles) {
-      return FluentIterable.from(sourceFiles).transform(new Function<SFile, InputSourceFile>() {
-        @Override
-        public InputSourceFile apply(SFile file) {
-          return new InputSourceFile(file);
-        }
-      });
+      ArrayList<InputSourceFile> result = new ArrayList<>();
+      for (SFile file : sourceFiles) {
+        result.add(new InputSourceFile(file));
+      }
+      return result;
     }
   }
 }

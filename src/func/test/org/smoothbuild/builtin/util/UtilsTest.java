@@ -58,7 +58,7 @@ public class UtilsTest {
 
   @Test
   public void immutable_set_cannot_be_changed() throws Exception {
-    given(set = Utils.immutableSet(new Object(), new Object()));
+    given(set = Utils.unmodifiableSet(new Object(), new Object()));
     when(set).add(new Object());
     thenThrown(UnsupportedOperationException.class);
   }
@@ -67,7 +67,7 @@ public class UtilsTest {
   public void immutable_set_contains_all_elements() throws Exception {
     given(object1 = new Object());
     given(object2 = new Object());
-    when(Utils.immutableSet(object1, object2));
+    when(Utils.unmodifiableSet(object1, object2));
     thenReturned(containsInAnyOrder(object1, object2));
   }
 

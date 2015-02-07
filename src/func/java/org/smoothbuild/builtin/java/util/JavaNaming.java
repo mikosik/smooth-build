@@ -3,9 +3,8 @@ package org.smoothbuild.builtin.java.util;
 import javax.tools.JavaFileObject.Kind;
 
 import org.smoothbuild.builtin.util.EndsWithPredicate;
+import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
-
-import com.google.common.base.Predicate;
 
 public class JavaNaming {
   private static final String CLASS_FILE_EXTENSION = Kind.CLASS.extension;
