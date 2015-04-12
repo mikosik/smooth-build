@@ -7,8 +7,7 @@ expression : call | STRING | array;
 call: functionName ( '(' argList? ')' )? ;
 argList: arg ( ',' arg )* ','? ;
 arg: ( paramName '=' )? expression ; 
-array: '[' ( arrayElem (',' arrayElem)* (',')? )?  ']' ;
-arrayElem: call | STRING ;
+array: '[' ( expression (',' expression)* (',')? )?  ']' ;
 
 
 functionName: IDENTIFIER ;
