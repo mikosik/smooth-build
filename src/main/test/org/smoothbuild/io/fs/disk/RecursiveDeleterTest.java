@@ -7,13 +7,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
 
 public class RecursiveDeleterTest {
   List<File> files;
@@ -21,7 +20,7 @@ public class RecursiveDeleterTest {
 
   @Before
   public void before() throws IOException {
-    files = Lists.newArrayList();
+    files = new ArrayList<>();
     root = com.google.common.io.Files.createTempDir();
     files.add(root);
   }

@@ -1,7 +1,6 @@
 package org.smoothbuild.db.taskoutputs;
 
-import static com.google.common.collect.Lists.newArrayList;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -58,7 +57,7 @@ public class TaskOutputsDb {
   public TaskOutput read(HashCode taskHash, Type type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash)) {
       int size = unmarshaller.readInt();
-      List<Message> messages = newArrayList();
+      List<Message> messages = new ArrayList<>();
       for (int i = 0; i < size; i++) {
         MessageType messageType = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();

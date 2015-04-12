@@ -3,6 +3,7 @@ package org.smoothbuild.testing.message;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.message.base.Message;
@@ -10,10 +11,8 @@ import org.smoothbuild.message.base.MessageType;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.util.LineBuilder;
 
-import com.google.common.collect.Lists;
-
 public class FakeLoggedMessages extends LoggedMessages {
-  private final List<Message> messages = Lists.newArrayList();
+  private final List<Message> messages = new ArrayList<>();
 
   @Override
   public void log(Message message) {

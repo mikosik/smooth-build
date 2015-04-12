@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,7 +19,6 @@ import org.smoothbuild.testing.io.fs.base.PathTesting;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.Lists;
 import com.google.common.testing.EqualsTester;
 
 public class PathTest {
@@ -154,7 +154,7 @@ public class PathTest {
   }
 
   private static void assertParts(String input, List<String> expected) {
-    List<String> list = Lists.newArrayList();
+    List<String> list = new ArrayList<>();
     for (Path path : path(input).parts()) {
       list.add(path.value());
     }

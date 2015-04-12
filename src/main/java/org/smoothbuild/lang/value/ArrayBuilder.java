@@ -2,11 +2,10 @@ package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
-
-import com.google.common.collect.Lists;
 
 public class ArrayBuilder<T extends Value> {
   private final ArrayMarshaller<T> marshaller;
@@ -16,7 +15,7 @@ public class ArrayBuilder<T extends Value> {
   public ArrayBuilder(ArrayMarshaller<T> arrayMarshaller, Class<?> elementClass) {
     this.marshaller = arrayMarshaller;
     this.elementClass = elementClass;
-    this.result = Lists.newArrayList();
+    this.result = new ArrayList<>();
   }
 
   public ArrayBuilder<T> add(T elem) {

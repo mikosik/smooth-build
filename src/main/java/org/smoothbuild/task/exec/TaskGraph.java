@@ -1,5 +1,6 @@
 package org.smoothbuild.task.exec;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,7 +11,6 @@ import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.Lists;
 
 public class TaskGraph {
   private final TaskExecutor taskExecutor;
@@ -19,7 +19,7 @@ public class TaskGraph {
   @Inject
   public TaskGraph(TaskExecutor taskExecutor) {
     this.taskExecutor = taskExecutor;
-    this.rootTasks = Lists.newArrayList();
+    this.rootTasks = new ArrayList<>();
   }
 
   public <T extends Value> Task createTasks(Expression expression) {
