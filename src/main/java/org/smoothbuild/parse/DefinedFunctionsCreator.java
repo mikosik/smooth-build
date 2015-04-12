@@ -15,6 +15,7 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import org.smoothbuild.antlr.SmoothParser.ArrayContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
+import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.db.objects.ObjectsDb;
@@ -56,9 +58,6 @@ import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
@@ -115,104 +114,103 @@ public class DefinedFunctionsCreator {
       return functions;
     }
 
-    public DefinedFunction build(FunctionContext function) {
-      Expression expression = build(function.pipe());
-      return buildDefinedFunction(function, expression);
+    public DefinedFunction build(FunctionContext functionContext) {
+      return toFunction(functionContext);
     }
 
-    private DefinedFunction buildDefinedFunction(FunctionContext function, Expression expression) {
-      Name name = name(function.functionName().getText());
+    private DefinedFunction toFunction(FunctionContext functionContext) {
+      Expression expression = toExpression(functionContext.pipe());
+      Name name = name(functionContext.functionName().getText());
       Signature signature = new Signature(expression.type(), name, Empty.paramList());
       return new DefinedFunction(signature, expression);
     }
 
-    private Expression build(PipeContext pipe) {
-      Expression result = build(pipe.expression());
-      List<CallContext> elements = pipe.call();
-      for (int i = 0; i < elements.size(); i++) {
-        CallContext call = elements.get(i);
-        List<Argument> arguments = build(call.argList());
+    private Expression toExpression(PipeContext pipeContext) {
+      Expression result = toExpression(pipeContext.expression());
+      List<CallContext> calls = pipeContext.call();
+      for (int i = 0; i < calls.size(); i++) {
+        CallContext call = calls.get(i);
+        List<Argument> arguments = toArguments(call.argList());
         // nameless piped argument's location is set to the pipe character '|'
-        CodeLocation codeLocation = locationOf(pipe.p.get(i));
+        CodeLocation codeLocation = locationOf(pipeContext.p.get(i));
         arguments.add(pipedArgument(result, codeLocation));
-        result = build(call, arguments);
+        result = toExpression(call, arguments);
       }
       return result;
     }
 
-    private ImmutableList<Expression> buildExpressions(List<ExpressionContext> expressions) {
-      Builder<Expression> builder = ImmutableList.builder();
-      for (ExpressionContext expression : expressions) {
-        builder.add(build(expression));
+    private List<Expression> toExpression(List<ExpressionContext> expressionContexts) {
+      List<Expression> result = new ArrayList<>();
+      for (ExpressionContext expressionContext : expressionContexts) {
+        result.add(toExpression(expressionContext));
       }
-      return builder.build();
+      return result;
     }
 
-    private Expression build(ExpressionContext expression) {
-      if (expression.array() != null) {
-        return build(expression.array());
+    private Expression toExpression(ExpressionContext expressionContext) {
+      if (expressionContext.array() != null) {
+        return toExpression(expressionContext.array());
       }
-      if (expression.call() != null) {
-        return build(expression.call());
+      if (expressionContext.call() != null) {
+        return toExpression(expressionContext.call());
       }
-      if (expression.STRING() != null) {
-        return buildStringExpr(expression.STRING());
+      if (expressionContext.STRING() != null) {
+        return toStringExpression(expressionContext.STRING());
       }
       throw new Message(FATAL, "Illegal parse tree: " + ExpressionContext.class.getSimpleName()
           + " without children.");
     }
 
-    private Expression build(ArrayContext array) {
+    private Expression toExpression(ArrayContext array) {
       List<ExpressionContext> elems = array.expression();
-      ImmutableList<Expression> elemExpressions = buildExpressions(elems);
+      List<Expression> expressions = toExpression(elems);
 
       CodeLocation location = locationOf(array);
-      Type elemType = commonSuperType(elemExpressions, location);
+      Type elemType = commonSuperType(expressions, location);
 
       if (elemType != null) {
-        return buildArray(elemType, elemExpressions, location);
+        return toArrayExpression(elemType, expressions, location);
       } else {
         return new InvalidExpression(NIL, location);
       }
     }
 
-    private <T extends Value> Expression buildArray(Type elemType,
-        ImmutableList<Expression> elemExpressions, CodeLocation location) {
+    private <T extends Value> Expression toArrayExpression(Type elemType,
+        List<Expression> expressions, CodeLocation location) {
       ArrayType arrayType = Types.arrayTypeContaining(elemType);
       if (arrayType == null) {
         messages.log(new ForbiddenArrayElemError(location, elemType));
         return new InvalidExpression(NIL, location);
       }
-      ImmutableList<Expression> convertedExpression = convertExpressions(elemType, elemExpressions);
-      return new ArrayExpression(arrayType, convertedExpression, location);
+      return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions), location);
     }
 
-    public <T extends Value> ImmutableList<Expression> convertExpressions(Type type,
-        Iterable<? extends Expression> expressions) {
-      ImmutableList.Builder<Expression> builder = ImmutableList.builder();
+    public <T extends Value> List<Expression> toConvertedExpressions(Type type,
+        Iterable<Expression> expressions) {
+      List<Expression> result = new ArrayList<>();
       for (Expression expression : expressions) {
-        builder.add(implicitConverter.apply(type, expression));
+        result.add(implicitConverter.apply(type, expression));
       }
-      return builder.build();
+      return result;
     }
 
-    private Type commonSuperType(List<Expression> elemExpressions, CodeLocation location) {
-      if (elemExpressions.size() == 0) {
+    private Type commonSuperType(List<Expression> expressions, CodeLocation location) {
+      if (expressions.size() == 0) {
         return NOTHING;
       }
-      Type firstType = elemExpressions.get(0).type();
-      Type commonSuperType = firstType;
+      Type firstType = expressions.get(0).type();
+      Type superType = firstType;
 
-      for (int i = 1; i < elemExpressions.size(); i++) {
-        Type currentType = elemExpressions.get(i).type();
-        commonSuperType = commonSuperType(commonSuperType, currentType);
+      for (int i = 1; i < expressions.size(); i++) {
+        Type type = expressions.get(i).type();
+        superType = commonSuperType(superType, type);
 
-        if (commonSuperType == null) {
-          messages.log(new IncompatibleArrayElemsError(location, firstType, i, currentType));
+        if (superType == null) {
+          messages.log(new IncompatibleArrayElemsError(location, firstType, i, type));
           return null;
         }
       }
-      return commonSuperType;
+      return superType;
     }
 
     private static Type commonSuperType(Type type1, Type type2) {
@@ -240,33 +238,28 @@ public class DefinedFunctionsCreator {
       return null;
     }
 
-    private Expression build(CallContext call) {
-      List<Argument> arguments = build(call.argList());
-      return build(call, arguments);
+    private Expression toExpression(CallContext callContext) {
+      return toExpression(callContext, toArguments(callContext.argList()));
     }
 
-    private Expression build(CallContext call, List<Argument> arguments) {
-      String functionName = call.functionName().getText();
-
-      Function function = getFunction(functionName);
-
-      CodeLocation codeLocation = locationOf(call.functionName());
-      List<Expression> namedArgs =
+    private Expression toExpression(CallContext callContext, List<Argument> arguments) {
+      FunctionNameContext functionNameContext = callContext.functionName();
+      Function function = getFunction(name(functionNameContext.getText()));
+      CodeLocation codeLocation = locationOf(functionNameContext);
+      List<Expression> argumentExpressions =
           argumentExpressionCreator.createArgExprs(codeLocation, messages, function, arguments);
 
-      if (namedArgs == null) {
-        return new InvalidExpression(function.type(), locationOf(call.functionName()));
+      if (argumentExpressions == null) {
+        return new InvalidExpression(function.type(), codeLocation);
       } else {
-        return callExpression(function, false, codeLocation, namedArgs);
+        return callExpression(function, false, codeLocation, argumentExpressions);
       }
     }
 
-    private Function getFunction(String functionName) {
+    private Function getFunction(Name name) {
       // UndefinedFunctionDetector has been run already so we can be sure at
       // this point that function with given name exists either among imported
       // functions or among already handled defined functions.
-
-      Name name = Name.name(functionName);
       Function function = builtinModule.getFunction(name);
       if (function == null) {
         return functions.get(name);
@@ -275,19 +268,19 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private List<Argument> build(ArgListContext argList) {
-      List<Argument> result = Lists.newArrayList();
-      if (argList != null) {
-        List<ArgContext> argContextList = argList.arg();
-        for (int i = 0; i < argContextList.size(); i++) {
-          result.add(build(i, argContextList.get(i)));
+    private List<Argument> toArguments(ArgListContext argListContext) {
+      List<Argument> result = new ArrayList<>();
+      if (argListContext != null) {
+        List<ArgContext> argContexts = argListContext.arg();
+        for (int i = 0; i < argContexts.size(); i++) {
+          result.add(toArgument(i, argContexts.get(i)));
         }
       }
       return result;
     }
 
-    private Argument build(int index, ArgContext arg) {
-      Expression expression = build(arg.expression());
+    private Argument toArgument(int index, ArgContext arg) {
+      Expression expression = toExpression(arg.expression());
 
       CodeLocation location = locationOf(arg);
       ParamNameContext paramName = arg.paramName();
@@ -298,7 +291,7 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    private Expression buildStringExpr(TerminalNode stringToken) {
+    private Expression toStringExpression(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       try {
