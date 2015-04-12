@@ -9,12 +9,11 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
-
-import com.google.common.collect.Lists;
 
 public class RecursiveFilesIterableTest {
 
@@ -44,7 +43,7 @@ public class RecursiveFilesIterableTest {
         new String[] { "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt" };
     String[] expectedNames =
         new String[] { "xyz/prs/1.txt", "xyz/prs/2.txt", "xyz/prs/3.txt", "xyz/prs/def/4.txt",
-            "xyz/prs/def/5.txt", "xyz/prs/ghi/6.txt" };
+        "xyz/prs/def/5.txt", "xyz/prs/ghi/6.txt" };
 
     doTestIterable("abc/xyz/prs", names, "abc", expectedNames);
   }
@@ -78,7 +77,7 @@ public class RecursiveFilesIterableTest {
       fileSystem.createFileContainingItsPath(path(rootDir).append(path(name)));
     }
 
-    List<Path> created = Lists.newArrayList();
+    List<Path> created = new ArrayList<>();
     for (String name : expectedNames) {
       created.add(path(name));
     }

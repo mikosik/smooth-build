@@ -3,6 +3,7 @@ package org.smoothbuild.message.listen;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterators.unmodifiableIterator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,14 +11,12 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageStats;
 import org.smoothbuild.util.LineBuilder;
 
-import com.google.common.collect.Lists;
-
 public class LoggedMessages implements Iterable<Message> {
   private final List<Message> messages;
   private final MessageStats stats;
 
   public LoggedMessages() {
-    this.messages = Lists.newArrayList();
+    this.messages = new ArrayList<>();
     this.stats = new MessageStats();
   }
 
