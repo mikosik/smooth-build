@@ -10,7 +10,6 @@ import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -25,7 +24,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.SmoothParser.ArrayContext;
-import org.smoothbuild.antlr.SmoothParser.ArrayElemContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
@@ -142,6 +140,14 @@ public class DefinedFunctionsCreator {
       return result;
     }
 
+    private ImmutableList<Expression> buildExpressions(List<ExpressionContext> expressions) {
+      Builder<Expression> builder = ImmutableList.builder();
+      for (ExpressionContext expression : expressions) {
+        builder.add(build(expression));
+      }
+      return builder.build();
+    }
+
     private Expression build(ExpressionContext expression) {
       if (expression.array() != null) {
         return build(expression.array());
@@ -156,12 +162,12 @@ public class DefinedFunctionsCreator {
           + " without children.");
     }
 
-    private Expression build(ArrayContext list) {
-      List<ArrayElemContext> elems = list.arrayElem();
-      ImmutableList<Expression> elemExpressions = build(elems);
+    private Expression build(ArrayContext array) {
+      List<ExpressionContext> elems = array.expression();
+      ImmutableList<Expression> elemExpressions = buildExpressions(elems);
 
-      CodeLocation location = locationOf(list);
-      Type elemType = commonSuperType(elems, elemExpressions, location);
+      CodeLocation location = locationOf(array);
+      Type elemType = commonSuperType(elemExpressions, location);
 
       if (elemType != null) {
         return buildArray(elemType, elemExpressions, location);
@@ -173,6 +179,10 @@ public class DefinedFunctionsCreator {
     private <T extends Value> Expression buildArray(Type elemType,
         ImmutableList<Expression> elemExpressions, CodeLocation location) {
       ArrayType arrayType = Types.arrayTypeContaining(elemType);
+      if (arrayType == null) {
+        messages.log(new ForbiddenArrayElemError(location, elemType));
+        return new InvalidExpression(NIL, location);
+      }
       ImmutableList<Expression> convertedExpression = convertExpressions(elemType, elemExpressions);
       return new ArrayExpression(arrayType, convertedExpression, location);
     }
@@ -186,36 +196,8 @@ public class DefinedFunctionsCreator {
       return builder.build();
     }
 
-    private ImmutableList<Expression> build(List<ArrayElemContext> elems) {
-      Builder<Expression> builder = ImmutableList.builder();
-      for (ArrayElemContext elem : elems) {
-        Expression expression = build(elem);
-        if (!basicTypes().contains(expression.type())) {
-          CodeLocation location = locationOf(elem);
-          messages.log(new ForbiddenArrayElemError(location, expression.type()));
-          builder.add(new InvalidExpression(NOTHING, location));
-        } else {
-          builder.add(expression);
-        }
-      }
-      return builder.build();
-    }
-
-    private Expression build(ArrayElemContext elem) {
-      if (elem.STRING() != null) {
-        return buildStringExpr(elem.STRING());
-      }
-      if (elem.call() != null) {
-        return build(elem.call());
-      }
-
-      throw new Message(FATAL, "Illegal parse tree: " + ArrayElemContext.class.getSimpleName()
-          + " without children.");
-    }
-
-    private Type commonSuperType(List<ArrayElemContext> elems,
-        ImmutableList<Expression> elemExpressions, CodeLocation location) {
-      if (elems.size() == 0) {
+    private Type commonSuperType(List<Expression> elemExpressions, CodeLocation location) {
+      if (elemExpressions.size() == 0) {
         return NOTHING;
       }
       Type firstType = elemExpressions.get(0).type();

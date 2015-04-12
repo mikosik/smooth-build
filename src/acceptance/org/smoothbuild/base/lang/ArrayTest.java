@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.smoothbuild.cli.work.BuildWorker;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.parse.err.ForbiddenArrayElemError;
-import org.smoothbuild.parse.err.SyntaxError;
 import org.smoothbuild.testing.acceptance.AcceptanceTestModule;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.message.FakeUserConsole;
@@ -45,7 +44,7 @@ public class ArrayTest {
     buildWorker.run(asList("run"));
 
     // then
-    userConsole.messages().assertContainsOnly(SyntaxError.class);
+    userConsole.messages().assertContainsOnly(ForbiddenArrayElemError.class);
   }
 
   /**
