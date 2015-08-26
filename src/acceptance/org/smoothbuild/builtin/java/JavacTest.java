@@ -178,7 +178,7 @@ public class JavacTest {
     script(fileSystem, "result: [ file(path=" + path + ") ] | javac(source='1.4', target='1.4') ;");
     buildWorker.run(asList("result"));
 
-    userConsole.messages().assertContainsOnly(JavaCompilerMessage.class);
+    userConsole.messages().assertContains(JavaCompilerMessage.class);
   }
 
   private Object invoke(Path appClassFile, String method) throws IOException,
