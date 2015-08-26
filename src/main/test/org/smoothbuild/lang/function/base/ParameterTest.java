@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.base;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
@@ -14,7 +13,8 @@ import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.Type;
@@ -110,7 +110,7 @@ public class ParameterTest {
 
   @Test
   public void params_to_string() {
-    Set<Parameter> parameters = newHashSet();
+    List<Parameter> parameters = new ArrayList<>();
     parameters.add(parameter(STRING, "param1", false));
     parameters.add(parameter(STRING, "param2-with-very-long", false));
     parameters.add(parameter(FILE_ARRAY, "param3", true));
@@ -118,8 +118,8 @@ public class ParameterTest {
     when(parametersToString(parameters));
     thenReturned("" //
         + "  String: param1               \n" //
-        + "  File[]: param3               \n" //
         + "  String: param2-with-very-long\n" //
+        + "  File[]: param3               \n" //
     );
   }
 }

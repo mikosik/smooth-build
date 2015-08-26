@@ -4,8 +4,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 
-import java.util.Set;
-
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.util.LineBuilder;
@@ -85,7 +83,7 @@ public class Parameter {
     return "Param(" + type.name() + ": " + name + ")";
   }
 
-  public static String parametersToString(Set<Parameter> parameters) {
+  public static String parametersToString(Iterable<Parameter> parameters) {
     int typeLength = longestParameterType(parameters);
     int nameLength = longestParameterName(parameters);
 
@@ -96,7 +94,7 @@ public class Parameter {
     return builder.build();
   }
 
-  private static int longestParameterType(Set<Parameter> parameters) {
+  private static int longestParameterType(Iterable<Parameter> parameters) {
     int result = 0;
     for (Parameter parameter : parameters) {
       result = Math.max(result, parameter.type().name().length());
@@ -104,7 +102,7 @@ public class Parameter {
     return result;
   }
 
-  private static int longestParameterName(Set<Parameter> parameters) {
+  private static int longestParameterName(Iterable<Parameter> parameters) {
     int result = 0;
     for (Parameter parameter : parameters) {
       result = Math.max(result, parameter.name().length());
