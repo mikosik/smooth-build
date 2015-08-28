@@ -1,5 +1,7 @@
 <project name="smooth-build" basedir="." default="all">
 
+    <property name="zipped.dir" value="smooth"/>
+
     <property name="dir.lib" location="lib"/>
     <property name="dir.src" location="src"/>
     <property name="dir.src.main.java" location="${dir.src}/main/java"/>
@@ -415,10 +417,10 @@
 
     <target name="release" depends="smooth-jar-file, funcs-jar-file">
         <zip destfile="${dir.build.release.file}" level="9">
-            <zipfileset prefix="smooth" file="${dir.build.smooth.jar}"/>
-            <zipfileset prefix="smooth/lib" file="${dir.build.funcs.jar}"/>
-            <zipfileset prefix="smooth" file="${dir.src.script}/smooth" filemode="755"/>
-            <zipfileset prefix="smooth" file="${dir.src.script}/smooth.bat"/>
+            <zipfileset prefix="${zipped.dir}" file="${dir.build.smooth.jar}"/>
+            <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.funcs.jar}"/>
+            <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth" filemode="755"/>
+            <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth.bat"/>
         </zip>
     </target>
 
