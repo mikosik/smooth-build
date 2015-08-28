@@ -1,4 +1,4 @@
-<project name="smooth-build" basedir=".">
+<project name="smooth-build" basedir="." default="all">
 
     <property name="dir.lib" location="lib"/>
     <property name="dir.src" location="src"/>
@@ -320,7 +320,7 @@
         </junit>
     </target>
 
-    <target name="test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance">
+    <target name="run-all.test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance">
     </target>
 
     <!-- funcs.jar file -->
@@ -424,5 +424,6 @@
              classname="com.tonicsystems.jarjar.JarJarTask"
              classpath="${lib.jarjar}"/>
 
+    <target name="all" depends="release, run-all.test"/>
 </project>
 
