@@ -50,6 +50,8 @@
     <property name="lib.testory" value="${dir.lib}/testory-0.18.0.jar"/>
 
     <target name="init">
+        <delete dir="${dir.build}"/>
+
         <mkdir dir="${dir.build.java.parser}"/>
         <mkdir dir="${dir.build.class.main.java}"/>
         <mkdir dir="${dir.build.class.main.test}"/>
