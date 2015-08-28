@@ -237,7 +237,7 @@
         <pathelement location="${dir.build.class.testing.test}"/>
     </path>
 
-    <!-- build acceptance-tests -->
+    <!-- build acceptance -->
 
     <path id="classpath.for.acceptance">
         <path refid="classpath.with.testing.java"/>
@@ -307,7 +307,7 @@
 
     <!-- run acceptance -->
 
-    <target name="run-acceptance.test" depends="compile-acceptance-tests"
+    <target name="run-acceptance" depends="compile-acceptance-tests"
             description="runs acceptance tests">
         <junit haltonfailure="yes" reloading="false">
             <classpath>
@@ -320,7 +320,7 @@
         </junit>
     </target>
 
-    <target name="test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance.test">
+    <target name="test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance">
     </target>
 
     <!-- funcs.jar file -->
