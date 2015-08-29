@@ -24,9 +24,7 @@
     <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test"/>
     <property name="dir.build.class.acceptance" location="${dir.build.class}/acceptance"/>
     <property name="dir.build.jar" location="${dir.build}/jar"/>
-    <property name="dir.build.smooth-polluted.jar" location="${dir.build.jar}/smooth-polluted.jar"/>
     <property name="dir.build.smooth.jar" location="${dir.build.jar}/smooth.jar"/>
-    <property name="dir.build.funcs-polluted.jar" location="${dir.build.jar}/funcs-polluted.jar"/>
     <property name="dir.build.funcs.jar" location="${dir.build.jar}/funcs.jar"/>
     <property name="dir.build.release" location="${dir.build}/release"/>
     <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip"/>
@@ -330,15 +328,7 @@
     <!-- funcs.jar file -->
 
     <target name="funcs-jar-file" depends="compile-func.java">
-        <jarjar destfile="${dir.build.funcs-polluted.jar}">
-            <!--
-            'excludes' make sure that manifest files
-            and other files from top directories
-            in dependent jars are not copied
-            -->
-            <!-- TODO can be removed once jarjar function becomes separate plugin -->
-            <!-- some classes have to be removed as they reference Ant classes and
-                 cause NoClassDefFoundError when smooth searches jar for functions -->
+        <jar destfile="${dir.build.funcs.jar}">
             <zipfileset
                     excludes="* META-INF/** com/tonicsystems/jarjar/JarJarTask.class com/tonicsystems/jarjar/ext_util/AntJarProcessor.class"
                     src="${lib.jarjar}"/>
@@ -354,35 +344,19 @@
             <!-- TODO can be removed once junit function becomes separate plugin -->
             <zipfileset file="${lib.junit.license}"/>
             <zipfileset file="${lib.hamcrest.license}"/>
-        </jarjar>
-
-        <!--
-        Due to a bug https://code.google.com/p/jarjar/issues/detail?id=60
-        we need to get rid of empty directories left by jarjar.
-        We just repackage everthing once again.
-        -->
-        <jarjar destfile="${dir.build.funcs.jar}">
-            <!-- TODO help.txt can be removed once jarjar function becomes separate plugin -->
-            <zipfileset includes="* **/*.class com/tonicsystems/jarjar/help.txt"
-                        src="${dir.build.funcs-polluted.jar}"/>
-        </jarjar>
+        </jar>
     </target>
 
     <!-- smooth.jar file -->
 
     <target name="smooth-jar-file" depends="compile-main.java">
-        <jarjar destfile="${dir.build.smooth-polluted.jar}">
-            <!--
-            'excludes' make sure that manifest files
-            and other files from top directories
-            in dependent jars are not copied
-            -->
-            <zipfileset excludes="* META-INF/**" src="${lib.antlr}"/>
-            <zipfileset excludes="* META-INF/**" src="${lib.aopalliance}"/>
-            <zipfileset excludes="* META-INF/**" src="${lib.argparse4j}"/>
-            <zipfileset excludes="* META-INF/**" src="${lib.guava}"/>
-            <zipfileset excludes="* META-INF/**" src="${lib.guice}"/>
-            <zipfileset excludes="* META-INF/**" src="${lib.javax.inject}"/>
+        <jar destfile="${dir.build.smooth.jar}">
+            <zipfileset src="${lib.antlr}"        excludes="* META-INF/**"/>
+            <zipfileset src="${lib.aopalliance}"  excludes="* META-INF/**"/>
+            <zipfileset src="${lib.argparse4j}"   excludes="* META-INF/**"/>
+            <zipfileset src="${lib.guava}"        excludes="* META-INF/**"/>
+            <zipfileset src="${lib.guice}"        excludes="* META-INF/**"/>
+            <zipfileset src="${lib.javax.inject}" excludes="* META-INF/**"/>
 
             <zipfileset dir="${dir.build.class.main.java}"/>
             <zipfileset file="LICENSE"/>
@@ -391,26 +365,7 @@
             <zipfileset file="${lib.argparse4j.license}"/>
             <zipfileset file="${lib.guava.license}"/>
             <zipfileset file="${lib.guice.license}"/>
-
-            <rule pattern="javax.inject.**" result="org.smoothbuild.javax.inject.@1"/>
-            <rule pattern="net.sourceforge.argparse4j.**" result="org.smoothbuild.argparse4j.@1"/>
-            <rule pattern="com.google.**" result="org.smoothbuild.google.@1"/>
-            <rule pattern="org.aopalliance.**" result="org.smoothbuild.aop.@1"/>
-            <!-- antlr -->
-            <rule pattern="org.abego.**" result="org.smoothbuild.abego.@1"/>
-            <rule pattern="org.antlr.**" result="org.smoothbuild.antlr.@1"/>
-            <rule pattern="org.stringtemplate.**" result="org.smoothbuild.stringtemplate.@1"/>
-        </jarjar>
-
-        <!--
-        Due to a bug https://code.google.com/p/jarjar/issues/detail?id=60
-        we need to get rid of empty directories left by jarjar.
-        We just repackage everthing once again.
-        -->
-        <jarjar destfile="${dir.build.smooth.jar}">
-            <!-- TODO help.txt can be removed once jarjar function becomes separate plugin -->
-            <zipfileset includes="* **/*.class" src="${dir.build.smooth-polluted.jar}"/>
-        </jarjar>
+        </jar>
     </target>
 
     <!-- smooth.zip release -->
@@ -423,10 +378,6 @@
             <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth.bat"/>
         </zip>
     </target>
-
-    <taskdef name="jarjar"
-             classname="com.tonicsystems.jarjar.JarJarTask"
-             classpath="${lib.jarjar}"/>
 
     <target name="all" depends="release, run-all.test"/>
 </project>
