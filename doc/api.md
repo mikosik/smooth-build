@@ -12,7 +12,6 @@ class source code from android aidl file.
  * [filter](api/filter.md) Filters files according to glob pattern.
  * [jar](api/jar.md) Jars (api/compresses) set of files.
  * [javac](api/javac.md) Compiles set of java files.
- * [jarjar](api/jarjar.md) Repackages java library using jarjar utility.
  * [junit](api/junit.md) Runs junit tests.
  * [path](api/path.md) Returns File's path.
  * [toBlob](api/toBlob.md) Converts String to Blob.

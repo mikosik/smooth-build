@@ -16,7 +16,6 @@
 	<classpathentry kind="lib" path="lib/guice-3.0.jar" sourcepath="lib/guice-3.0-src.zip"/>
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar" sourcepath="lib/hamcrest-core-1.3-sources.jar"/>
 	<classpathentry kind="lib" path="lib/hamcrest-library-1.3.jar" sourcepath="lib/hamcrest-library-1.3-sources.jar"/>
-	<classpathentry kind="lib" path="lib/jarjar-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/javax.inject.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.11.jar" sourcepath="lib/junit-4.11-sources.jar"/>
 	<classpathentry kind="lib" path="lib/testory-0.18.0.jar"/>
