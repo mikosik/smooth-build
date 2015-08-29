@@ -25,7 +25,6 @@ import org.smoothbuild.builtin.file.FilesFunction;
 import org.smoothbuild.builtin.file.FilterFunction;
 import org.smoothbuild.builtin.file.PathFunction;
 import org.smoothbuild.builtin.java.JarFunction;
-import org.smoothbuild.builtin.java.JarjarFunction;
 import org.smoothbuild.builtin.java.UnjarFunction;
 import org.smoothbuild.builtin.java.javac.JavacFunction;
 import org.smoothbuild.builtin.java.junit.JunitFunction;
@@ -93,7 +92,6 @@ public class AcceptanceTestModule extends AbstractModule {
     functions.add(FileFunction.class);
     functions.add(FilesFunction.class);
     functions.add(FilterFunction.class);
-    functions.add(JarjarFunction.class);
     functions.add(JavacFunction.class);
     functions.add(JarFunction.class);
     functions.add(JunitFunction.class);
