@@ -23,8 +23,7 @@ If you downloaded
 repository, note that it contains set of exampleXX directories.
 Each directory is a separate project so each contains single `build.smooth` file.
 
-To run build process enter directory `example01` and type `smooth build release.jar`
-(on Linux) or `smooth.bat build release.jar` (on Windows).
+To run build process enter directory `example01` and type `smooth build release.jar`.
 If you installed smooth correctly and added it to your system PATH as advised by
 [download / install](https://github.com/mikosik/smooth-build/blob/master/doc/install.md)
 you should get smooth running successfully with output equal to the one below:

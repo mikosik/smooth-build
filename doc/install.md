@@ -9,9 +9,7 @@ Download Java Development Kit version 7 (or newer) and install it on your
 system. 
 It is needed as Smooth is implemented in Java.
 
-Smooth can be run by one of script files unzipped from smooth.zip.
- * "smooth/smooth" script on Linux systems
- * "smooth/smooth.bat" file on Windows system
+Smooth can be run by `smooth/smooth` script unzipped from smooth.zip.
 
 You may add unzipped "smooth" directory to your system PATH to make smooth
 runnable from any directory.
