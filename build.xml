@@ -366,7 +366,6 @@
             <zipfileset prefix="${zipped.dir}" file="${dir.build.smooth.jar}"/>
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.funcs.jar}"/>
             <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth" filemode="755"/>
-            <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth.bat"/>
         </zip>
     </target>
 
