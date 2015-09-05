@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * extended 'javac' function by adding support to "1.8"/"8" values to 'source' and 'target' parameters
  * removed support for Windows OS
  * removed 'jarjar' function, jarjar project looks abandoned and doesn't have support for java 8
  * missing arguments are initialized to default value of their type
