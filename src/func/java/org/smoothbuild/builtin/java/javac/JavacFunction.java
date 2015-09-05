@@ -44,9 +44,9 @@ public class JavacFunction {
 
   private static class Worker {
     private static final Set<String> SOURCE_VALUES = unmodifiableSet("1.3", "1.4", "1.5", "5",
-        "1.6", "6", "1.7", "7");
+        "1.6", "6", "1.7", "7", "1.8", "8");
     private static final Set<String> TARGET_VALUES = unmodifiableSet("1.1", "1.2", "1.3", "1.4",
-        "1.5", "5", "1.6", "6", "1.7", "7");
+        "1.5", "5", "1.6", "6", "1.7", "7", "1.8", "8");
 
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
