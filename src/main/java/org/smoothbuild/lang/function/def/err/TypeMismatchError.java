@@ -8,7 +8,7 @@ import org.smoothbuild.message.base.CodeMessage;
 
 public class TypeMismatchError extends CodeMessage {
   public TypeMismatchError(Argument argument, Type type) {
-    super(ERROR, argument.codeLocation(), "Type mismatch, cannot convert from "
+    super(ERROR, argument.codeLocation(), "Type mismatch, cannot convert "
         + argument.type().name() + " to " + type.name());
   }
 }
