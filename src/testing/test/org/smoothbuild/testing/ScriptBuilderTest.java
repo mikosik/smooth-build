@@ -1,6 +1,5 @@
 package org.smoothbuild.testing;
 
-import static org.smoothbuild.testing.parse.ScriptBuilder.script;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -29,22 +28,10 @@ public class ScriptBuilderTest {
   }
 
   @Test
-  public void single_quotes_are_changed_to_double_quotes_by_single_line_script() throws Exception {
-    when(script("a 'message' quoted"));
-    thenReturned("a \"message\" quoted");
-  }
-
-  @Test
   public void double_quotes_are_unchanged() throws Exception {
     given(builder = new ScriptBuilder());
     given(builder).addLine("a \"message\" quoted");
     when(builder).build();
     thenReturned("a \"message\" quoted\n");
-  }
-
-  @Test
-  public void double_quotes_are_unchanged_by_single_line_script() throws Exception {
-    when(script("a \"message\" quoted"));
-    thenReturned("a \"message\" quoted");
   }
 }

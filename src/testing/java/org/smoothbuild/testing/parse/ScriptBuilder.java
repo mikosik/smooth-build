@@ -9,10 +9,6 @@ package org.smoothbuild.testing.parse;
 public class ScriptBuilder {
   private final StringBuilder builder = new StringBuilder();
 
-  public static String script(String string) {
-    return fromSingleToDoubleQuotes(string);
-  }
-
   public ScriptBuilder addLine(String string) {
     builder.append(fromSingleToDoubleQuotes(string));
     builder.append("\n");
