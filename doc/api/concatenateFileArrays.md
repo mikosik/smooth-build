@@ -1,4 +1,4 @@
-## concatenateFiles
+## concatenateFileArrays
 
 Concatenates two File[].
 
@@ -15,5 +15,5 @@ Returns array of all Files from 'src/common' or 'src/main' directories.
 ```
 commonSource: files("src/common");
 mainSource: files("src/main");
-allSource: concatenateFiles(files=commonSource, with=mainSource);
+allSource: concatenateFileArrays(files=commonSource, with=mainSource);
 ```

@@ -8,9 +8,9 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 
-public class ConcatenateFilesFunction {
+public class ConcatenateFileArraysFunction {
   @SmoothFunction
-  public static Array<SFile> concatenateFiles( //
+  public static Array<SFile> concatenateFileArrays( //
       NativeApi nativeApi, //
       @Required @Name("files") Array<SFile> files, //
       @Required @Name("with") Array<SFile> with) {

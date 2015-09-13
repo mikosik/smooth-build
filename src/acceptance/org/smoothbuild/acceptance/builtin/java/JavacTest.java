@@ -62,7 +62,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("srclib/library/LibraryClass.java", librarySource.toString());
     givenBuildScript(script("libraryJar: files('srclib') | javac | jar;"
         + "result: files('src') | javac(libs=[libraryJar])"
-        + " | concatenateFiles(with=javac(files('srclib')));"));
+        + " | concatenateFileArrays(with=javac(files('srclib')));"));
     whenRunSmoothBuild("result");
     thenReturnedCode(0);
 

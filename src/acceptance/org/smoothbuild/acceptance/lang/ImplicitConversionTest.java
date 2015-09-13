@@ -47,7 +47,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
 
   @Test
   public void nil_is_implicitly_converted_to_file_array() throws IOException {
-    givenBuildScript("result: concatenateFiles([], with=[]);");
+    givenBuildScript("result: concatenateFileArrays([], with=[]);");
     whenRunSmoothBuild("result");
     thenReturnedCode(0);
     thenArtifact("result", isArrayWith());
