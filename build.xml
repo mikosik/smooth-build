@@ -28,6 +28,7 @@
     <property name="dir.build.funcs.jar" location="${dir.build.jar}/funcs.jar"/>
     <property name="dir.build.release" location="${dir.build}/release"/>
     <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip"/>
+    <property name="dir.build.acceptance" location="${dir.build}/acceptance"/>
 
     <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar"/>
     <property name="lib.antlr.license" value="${dir.lib}/antlr.LICENSE"/>
@@ -60,6 +61,7 @@
         <mkdir dir="${dir.build.class.acceptance}"/>
         <mkdir dir="${dir.build.jar}"/>
         <mkdir dir="${dir.build.release}"/>
+        <mkdir dir="${dir.build.acceptance}"/>
     </target>
 
     <target name="generate-java-grammar" depends="init">
@@ -74,7 +76,7 @@
         </java>
     </target>
 
-    <!-- build main.java -->
+    <!-- compile src/main/java -->
 
     <path id="classpath.for.main.java">
         <pathelement location="${lib.antlr}"/>
@@ -104,7 +106,7 @@
     </path>
 
 
-    <!-- build func.java -->
+    <!-- compile src/func/java -->
 
     <path id="classpath.for.func.java">
         <path refid="classpath.with.main.java"/>
@@ -129,7 +131,7 @@
         <pathelement location="${dir.build.class.func.java}"/>
     </path>
 
-    <!-- build testing.java -->
+    <!-- compile src/testing/java -->
 
     <path id="classpath.for.main.testing.java">
         <path refid="classpath.with.main.java"/>
@@ -154,7 +156,7 @@
         <pathelement location="${dir.build.class.testing.java}"/>
     </path>
 
-    <!-- build main.test -->
+    <!-- compile src/main/test -->
 
     <path id="classpath.for.main.test">
         <path refid="classpath.with.testing.java"/>
@@ -181,7 +183,7 @@
         <pathelement location="${dir.build.class.main.test}"/>
     </path>
 
-    <!-- build func.test -->
+    <!-- compile src/func/test -->
 
     <path id="classpath.for.func.test">
         <path refid="classpath.with.testing.java"/>
@@ -208,7 +210,7 @@
         <pathelement location="${dir.build.class.func.test}"/>
     </path>
 
-    <!-- build testing.test -->
+    <!-- compile src/testing/test -->
 
     <path id="classpath.for.testing.test">
         <path refid="classpath.with.testing.java"/>
@@ -235,7 +237,7 @@
         <pathelement location="${dir.build.class.testing.test}"/>
     </path>
 
-    <!-- build acceptance -->
+    <!-- compile src/acceptance -->
 
     <path id="classpath.for.acceptance">
         <path refid="classpath.with.testing.java"/>
@@ -261,7 +263,7 @@
         <pathelement location="${dir.build.class.acceptance}"/>
     </path>
 
-    <!-- run testing.test -->
+    <!-- run src/testing/test -->
 
     <target name="run-testing.test" depends="compile-testing.test">
         <junit haltonfailure="yes" reloading="false">
@@ -275,7 +277,7 @@
         </junit>
     </target>
 
-    <!-- run main.test -->
+    <!-- run src/main/test -->
 
     <target name="run-main.test" depends="compile-main.test" description="runs main.test">
         <junit haltonfailure="yes" reloading="false">
@@ -289,7 +291,7 @@
         </junit>
     </target>
 
-    <!-- run func.test -->
+    <!-- run src/func/test -->
 
     <target name="run-func.test" depends="compile-func.test">
         <junit haltonfailure="yes" reloading="false">
@@ -303,25 +305,7 @@
         </junit>
     </target>
 
-    <!-- run acceptance -->
-
-    <target name="run-acceptance" depends="compile-acceptance-tests"
-            description="runs acceptance tests">
-        <junit haltonfailure="yes" reloading="false">
-            <classpath>
-                <path refid="classpath.with.acceptance"/>
-            </classpath>
-            <formatter type="brief" usefile="false"/>
-            <batchtest fork="no" todir="${dir.build}">
-                <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
-            </batchtest>
-        </junit>
-    </target>
-
-    <target name="run-all.test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance">
-    </target>
-
-    <!-- funcs.jar file -->
+    <!-- build funcs.jar file -->
 
     <target name="funcs-jar-file" depends="compile-func.java">
         <jar destfile="${dir.build.funcs.jar}">
@@ -338,7 +322,7 @@
         </jar>
     </target>
 
-    <!-- smooth.jar file -->
+    <!-- build smooth.jar file -->
 
     <target name="smooth-jar-file" depends="compile-main.java">
         <jar destfile="${dir.build.smooth.jar}">
@@ -359,7 +343,7 @@
         </jar>
     </target>
 
-    <!-- smooth.zip release -->
+    <!-- build smooth.zip release -->
 
     <target name="release" depends="smooth-jar-file, funcs-jar-file">
         <zip destfile="${dir.build.release.file}" level="9">
@@ -367,6 +351,30 @@
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.funcs.jar}"/>
             <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth" filemode="755"/>
         </zip>
+    </target>
+
+    <!-- run src/acceptance -->
+
+    <target name="run-acceptance" depends="compile-acceptance-tests, release"
+            description="runs acceptance tests">
+        <unzip src="${dir.build.release.file}" dest="${dir.build.acceptance}"/>
+        <zip destfile="${dir.build.acceptance}/${zipped.dir}/lib/funcs.jar" update="true">
+            <zipfileset dir="${dir.build.class.acceptance}" includes="org/smoothbuild/acceptance/TestingFunctions**"/>
+        </zip>
+        <chmod file="${dir.build.acceptance}/${zipped.dir}/smooth" perm="u+x"/>
+        <junit haltonfailure="yes" reloading="false">
+            <classpath>
+                <path refid="classpath.with.acceptance"/>
+            </classpath>
+            <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
+            <formatter type="brief" usefile="false"/>
+            <batchtest fork="yes" todir="${dir.build}">
+                <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="run-all.test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance">
     </target>
 
     <target name="all" depends="release, run-all.test"/>

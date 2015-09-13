@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.parse.ScriptBuilder.script;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -103,5 +102,9 @@ public class ScriptParserTest {
   private static void runScriptParser(String string, LoggedMessages messages) {
     ByteArrayInputStream inputStream = new ByteArrayInputStream(string.getBytes(CHARSET));
     ScriptParser.parseScript(messages, inputStream, path("filename.smooth"));
+  }
+
+  private static String script(String string) {
+    return string.replace('\'', '"');
   }
 }
