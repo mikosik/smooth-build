@@ -31,7 +31,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
 
   @Test
   public void nil_is_implicitly_converted_to_string_array() throws IOException {
-    givenBuildScript("result: concatenateStrings([], with=[]);");
+    givenBuildScript("result: concatenateStringArrays([], with=[]);");
     whenRunSmoothBuild("result");
     thenReturnedCode(0);
     thenArtifact("result", isArrayWith());

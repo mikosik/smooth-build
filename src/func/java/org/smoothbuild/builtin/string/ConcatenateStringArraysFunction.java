@@ -8,9 +8,9 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
 
-public class ConcatenateStringsFunction {
+public class ConcatenateStringArraysFunction {
   @SmoothFunction
-  public static Array<SString> concatenateStrings( //
+  public static Array<SString> concatenateStringArrays( //
       NativeApi nativeApi, //
       @Required @Name("strings") Array<SString> strings, //
       @Required @Name("with") Array<SString> with) {
