@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * renamed 'concatenateStrings' to 'concatenateStringArrays'
  * renamed 'concatenateFiles' to 'concatenateFileArrays'
  * renamed 'concatenateBlobs' to 'concatenateBlobArrays'
  * extended 'javac' function by adding support to "1.8"/"8" values to 'source' and 'target' parameters

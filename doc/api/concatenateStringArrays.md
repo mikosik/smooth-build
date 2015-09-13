@@ -1,4 +1,4 @@
-## concatenateStrings
+## concatenateStringArrays
 
 Concatenates two String[].
 
@@ -15,5 +15,5 @@ Returns array of all Strings combined from 'first' and 'second' array.
 ```
 first: [ "abc", "def" ] ;
 second: [ "ghi", "jkl" ] ;
-all: concatenateStrings(first, with=second);
+all: concatenateStringArrays(first, with=second);
 ```

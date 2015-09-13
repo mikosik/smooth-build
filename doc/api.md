@@ -5,7 +5,7 @@ Core smooth functions
 class source code from android aidl file.
  * [concatenateBlobArrays](api/concatenateBlobArrays.md) Concatenates two Blob[].
  * [concatenateFileArrays](api/concatenateFileArrays.md) Concatenates two File[].
- * [concatenateStrings](api/concatenateStrings.md) Concatenates two String[].
+ * [concatenateStringArrays](api/concatenateStringArrays.md) Concatenates two String[].
  * [content](api/content.md) Returns File's content.
  * [file](api/file.md) Reads single file from project filesystem.
  * [files](api/files.md) Reads set of files from project filesystem.
