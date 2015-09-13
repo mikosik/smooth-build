@@ -6,7 +6,6 @@ import static com.google.common.base.Strings.padEnd;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.hash.HashCode;
 
@@ -87,11 +86,11 @@ public class Parameter {
     int typeLength = longestParameterType(parameters);
     int nameLength = longestParameterName(parameters);
 
-    LineBuilder builder = new LineBuilder();
+    StringBuilder builder = new StringBuilder();
     for (Parameter parameter : parameters) {
-      builder.addLine("  " + parameter.toPaddedString(typeLength, nameLength));
+      builder.append("  " + parameter.toPaddedString(typeLength, nameLength) + "\n");
     }
-    return builder.build();
+    return builder.toString();
   }
 
   private static int longestParameterType(Iterable<Parameter> parameters) {

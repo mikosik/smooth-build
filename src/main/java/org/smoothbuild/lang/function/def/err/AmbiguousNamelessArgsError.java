@@ -12,7 +12,6 @@ import org.smoothbuild.lang.function.def.Argument;
 import org.smoothbuild.lang.function.def.MapToString;
 import org.smoothbuild.lang.function.def.TypedParametersPool;
 import org.smoothbuild.message.base.CodeMessage;
-import org.smoothbuild.util.LineBuilder;
 
 public class AmbiguousNamelessArgsError extends CodeMessage {
 
@@ -36,15 +35,15 @@ public class AmbiguousNamelessArgsError extends CodeMessage {
           + " function for some nameless argument(s):\n"
           + "List of assignments that were successfully detected so far is following:\n"
           + assignmentList
-          + "List of arguments for which no parameter could be found is following:\n"
-          + argsToList(availableArguments);
+          + "List of arguments for which no parameter could be found is following:\n" + argsToList(
+              availableArguments);
     } else {
       return "Can't decide unambiguously to which parameters in " + functionName
           + " function some nameless arguments should be assigned:\n"
           + "List of assignments that were successfully detected is following:\n" + assignmentList
           + "List of nameless arguments that caused problems:\n" + argsToList(availableArguments)
-          + "List of unassigned parameters of desired type is following:\n"
-          + availableTypedParams.toFormattedString();
+          + "List of unassigned parameters of desired type is following:\n" + availableTypedParams
+              .toFormattedString();
     }
   }
 
@@ -53,11 +52,11 @@ public class AmbiguousNamelessArgsError extends CodeMessage {
     int nameLength = longestArgName(arguments);
     int numberLength = longestArgNumber(arguments);
 
-    LineBuilder builder = new LineBuilder();
+    StringBuilder builder = new StringBuilder();
     for (Argument argument : arguments) {
-      builder.addLine("  " + argument.toPaddedString(typeLength, nameLength, numberLength));
+      builder.append("  " + argument.toPaddedString(typeLength, nameLength, numberLength) + "\n");
     }
-    return builder.build();
+    return builder.toString();
   }
 
   private static int longestArgType(List<Argument> arguments) {

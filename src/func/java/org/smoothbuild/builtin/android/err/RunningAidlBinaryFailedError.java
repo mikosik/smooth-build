@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
-import org.smoothbuild.util.LineBuilder;
 
 public class RunningAidlBinaryFailedError extends Message {
   public RunningAidlBinaryFailedError(List<String> command, IOException e) {
@@ -15,14 +14,12 @@ public class RunningAidlBinaryFailedError extends Message {
   }
 
   private static String createMessage(List<String> command, IOException e) {
-    LineBuilder b = new LineBuilder();
-
-    b.addLine("Following command line failed:");
-    b.addLine(join(command));
-    b.addLine("stack trace is:");
-    b.add(stackTraceToString(e));
-
-    return b.build();
+    StringBuilder builder = new StringBuilder();
+    builder.append("Following command line failed:\n");
+    builder.append(join(command) + "\n");
+    builder.append("stack trace is:\n");
+    builder.append(stackTraceToString(e));
+    return builder.toString();
   }
 
   private static String join(List<String> command) {

@@ -6,7 +6,6 @@ import java.util.Deque;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.util.LineBuilder;
 
 public class DependencyStack {
   private final Deque<DependencyStackElem> stack = new ArrayDeque<>();
@@ -40,16 +39,15 @@ public class DependencyStack {
     if (first == -1) {
       throw new IllegalStateException("Couldn't find expected cycle in call graph.");
     }
-    LineBuilder builder = new LineBuilder();
+    StringBuilder builder = new StringBuilder();
     for (int i = first; i < array.length; i++) {
       DependencyStackElem current = array[i];
       Dependency missing = current.missing();
-      builder.addLine(current.name().value() + missing.location() + " -> "
-          + missing.functionName().value());
+      builder.append(current.name().value() + missing.location() + " -> " + missing.functionName()
+          .value() + "\n");
     }
-
     CodeLocation location = array[first].missing().location();
-    String message = builder.build();
+    String message = builder.toString();
 
     return new CycleInCallGraphError(location, message);
   }
