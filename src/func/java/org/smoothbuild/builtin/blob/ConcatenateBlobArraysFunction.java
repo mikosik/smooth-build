@@ -8,10 +8,10 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 
-public class ConcatenateBlobsFunction {
+public class ConcatenateBlobArraysFunction {
 
   @SmoothFunction
-  public static Array<Blob> concatenateBlobs( //
+  public static Array<Blob> concatenateBlobArrays( //
       NativeApi nativeApi, //
       @Required @Name("blobs") Array<Blob> blobs, //
       @Required @Name("with") Array<Blob> with) {

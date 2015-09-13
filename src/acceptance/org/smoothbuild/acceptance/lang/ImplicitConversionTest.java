@@ -23,7 +23,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
     givenBuildScript(script(
-        "result: concatenateBlobs([file('file1.txt')], with=[file('file2.txt')]);"));
+        "result: concatenateBlobArrays([file('file1.txt')], with=[file('file2.txt')]);"));
     whenRunSmoothBuild("result");
     thenReturnedCode(0);
     thenArtifact("result", isArrayWith("abc", "def"));
@@ -39,7 +39,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
 
   @Test
   public void nil_is_implicitly_converted_to_blob_array() throws IOException {
-    givenBuildScript("result: concatenateBlobs([], with=[]);");
+    givenBuildScript("result: concatenateBlobArrays([], with=[]);");
     whenRunSmoothBuild("result");
     thenReturnedCode(0);
     thenArtifact("result", isArrayWith());

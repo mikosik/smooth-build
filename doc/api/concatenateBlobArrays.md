@@ -1,4 +1,4 @@
-## concatenateBlobs
+## concatenateBlobArrays
 
 Concatenates two Blob[].
 
@@ -16,5 +16,5 @@ directory.
 ```
 commonSource: files("src/common");
 mainSource: files("src/main");
-allSource: concatenateBlobs(blobs=commonSource, with=mainSource);
+allSource: concatenateBlobArrays(blobs=commonSource, with=mainSource);
 ```
