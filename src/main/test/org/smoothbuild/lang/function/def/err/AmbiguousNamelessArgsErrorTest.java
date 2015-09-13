@@ -26,7 +26,6 @@ import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.def.Argument;
 import org.smoothbuild.lang.function.def.TypedParametersPool;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.util.LineBuilder;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -53,27 +52,26 @@ public class AmbiguousNamelessArgsErrorTest {
 
     Parameter p4 = optionalParameter(FILE_ARRAY, "param4");
     Parameter p5 = optionalParameter(STRING_ARRAY, "param5");
-    TypedParametersPool availableParams =
-        new TypedParametersPool(newHashSet(p4, p5), Sets.<Parameter> newHashSet());
+    TypedParametersPool availableParams = new TypedParametersPool(newHashSet(p4, p5), Sets
+        .<Parameter> newHashSet());
 
-    AmbiguousNamelessArgsError error =
-        new AmbiguousNamelessArgsError(name("func"), paramToArgMap, availableArguments,
-            availableParams);
+    AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(name("func"), paramToArgMap,
+        availableArguments, availableParams);
 
-    LineBuilder builder = new LineBuilder();
-    builder
-    .addLine("ERROR [ line 7 ]: Can't decide unambiguously to which parameters in 'func' function some nameless arguments should be assigned:");
-    builder.addLine("List of assignments that were successfully detected is following:");
-    builder.addLine("  String  : param1 <- String  : arg1       #12 " + a1.codeLocation());
-    builder.addLine("  String[]: param2 <- String[]: <nameless> #7  " + a2.codeLocation());
-    builder.addLine("  File    : param3 <- File    : <nameless> #|  " + a3.codeLocation());
-    builder.addLine("List of nameless arguments that caused problems:");
-    builder.addLine("  Nothing[]: arg4 #3 " + a4.codeLocation());
-    builder.addLine("List of unassigned parameters of desired type is following:");
-    builder.addLine("  String[]: param5");
-    builder.addLine("  File[]  : param4");
+    StringBuilder builder = new StringBuilder();
+    builder.append("ERROR [ line 7 ]: Can't decide unambiguously to which parameters in "
+        + "'func' function some nameless arguments should be assigned:\n");
+    builder.append("List of assignments that were successfully detected is following:\n");
+    builder.append("  String  : param1 <- String  : arg1       #12 " + a1.codeLocation() + "\n");
+    builder.append("  String[]: param2 <- String[]: <nameless> #7  " + a2.codeLocation() + "\n");
+    builder.append("  File    : param3 <- File    : <nameless> #|  " + a3.codeLocation() + "\n");
+    builder.append("List of nameless arguments that caused problems:\n");
+    builder.append("  Nothing[]: arg4 #3 " + a4.codeLocation() + "\n");
+    builder.append("List of unassigned parameters of desired type is following:\n");
+    builder.append("  String[]: param5\n");
+    builder.append("  File[]  : param4\n");
 
-    assertEquals(builder.build(), error.toString());
+    assertEquals(builder.toString(), error.toString());
   }
 
   private Expression expression(Type type) {

@@ -14,7 +14,6 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.util.LineBuilder;
 
 public class UserConsoleTest {
   String name = "GROUP NAME";
@@ -29,11 +28,11 @@ public class UserConsoleTest {
 
     userConsole.print(name, loggedMessages);
 
-    LineBuilder builder = new LineBuilder();
-    builder.addLine(" + GROUP NAME");
-    builder.addLine("   + ERROR: message string");
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + ERROR: message string\n");
 
-    assertEquals(builder.build(), outputStream.toString());
+    assertEquals(builder.toString(), outputStream.toString());
   }
 
   @Test
@@ -43,11 +42,11 @@ public class UserConsoleTest {
 
     userConsole.print(name, loggedMessages);
 
-    LineBuilder builder = new LineBuilder();
-    builder.addLine(" + GROUP NAME");
-    builder.addLine("   + WARNING: message string");
-    builder.addLine("     second line");
-    assertEquals(builder.build(), outputStream.toString());
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + WARNING: message string\n");
+    builder.append("     second line\n");
+    assertEquals(builder.toString(), outputStream.toString());
   }
 
   // isProblemReported()
@@ -109,13 +108,13 @@ public class UserConsoleTest {
     userConsole.print(name, loggedMessages);
     userConsole.printFinalSummary();
 
-    LineBuilder builder = new LineBuilder();
-    builder.addLine(" + GROUP NAME");
-    builder.addLine("   + WARNING: message string");
-    builder.addLine(" + SUCCESS :)");
-    builder.addLine("   + 1 warning(s)");
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + WARNING: message string\n");
+    builder.append(" + SUCCESS :)\n");
+    builder.append("   + 1 warning(s)\n");
 
-    assertEquals(builder.build(), outputStream.toString());
+    assertEquals(builder.toString(), outputStream.toString());
   }
 
   @Test
@@ -126,13 +125,13 @@ public class UserConsoleTest {
     userConsole.print(name, loggedMessages);
     userConsole.printFinalSummary();
 
-    LineBuilder builder = new LineBuilder();
-    builder.addLine(" + GROUP NAME");
-    builder.addLine("   + ERROR: message string");
-    builder.addLine(" + FAILED :(");
-    builder.addLine("   + 1 error(s)");
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + ERROR: message string\n");
+    builder.append(" + FAILED :(\n");
+    builder.append("   + 1 error(s)\n");
 
-    assertEquals(builder.build(), outputStream.toString());
+    assertEquals(builder.toString(), outputStream.toString());
   }
 
   @Test
@@ -155,29 +154,29 @@ public class UserConsoleTest {
     userConsole.print(name, loggedMessages);
     userConsole.printFinalSummary();
 
-    LineBuilder builder = new LineBuilder();
-    builder.addLine(" + GROUP NAME");
-    builder.addLine("   + INFO: info string");
+    StringBuilder builder = new StringBuilder();
+    builder.append(" + GROUP NAME\n");
+    builder.append("   + INFO: info string\n");
     for (int i = 0; i < 2; i++) {
-      builder.addLine("   + SUGGESTION: suggestion string");
+      builder.append("   + SUGGESTION: suggestion string\n");
     }
     for (int i = 0; i < 3; i++) {
-      builder.addLine("   + WARNING: warning string");
+      builder.append("   + WARNING: warning string\n");
     }
     for (int i = 0; i < 4; i++) {
-      builder.addLine("   + ERROR: error string");
+      builder.append("   + ERROR: error string\n");
     }
     for (int i = 0; i < 5; i++) {
-      builder.addLine("   + FATAL: fatal string");
+      builder.append("   + FATAL: fatal string\n");
     }
 
-    builder.addLine(" + FAILED :(");
-    builder.addLine("   + 5 fatal(s)");
-    builder.addLine("   + 4 error(s)");
-    builder.addLine("   + 3 warning(s)");
-    builder.addLine("   + 2 suggestion(s)");
-    builder.addLine("   + 1 info(s)");
+    builder.append(" + FAILED :(\n");
+    builder.append("   + 5 fatal(s)\n");
+    builder.append("   + 4 error(s)\n");
+    builder.append("   + 3 warning(s)\n");
+    builder.append("   + 2 suggestion(s)\n");
+    builder.append("   + 1 info(s)\n");
 
-    assertEquals(builder.build(), outputStream.toString());
+    assertEquals(builder.toString(), outputStream.toString());
   }
 }

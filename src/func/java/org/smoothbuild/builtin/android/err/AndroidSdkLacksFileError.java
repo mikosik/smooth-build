@@ -6,7 +6,6 @@ import java.nio.file.Path;
 
 import org.smoothbuild.builtin.android.EnvironmentVariable;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.util.LineBuilder;
 
 public class AndroidSdkLacksFileError extends Message {
   public AndroidSdkLacksFileError(EnvironmentVariable androidSdkVar, Path requiredSdkFile) {
@@ -14,12 +13,10 @@ public class AndroidSdkLacksFileError extends Message {
   }
 
   private static String createMessage(EnvironmentVariable androidSdkVar, Path requiredSdkFile) {
-    LineBuilder b = new LineBuilder();
-
-    b.addLine("Can't find " + requiredSdkFile + " file in android sdk.");
-    b.addLine("Path to Android SDK was set by the following environment variable:");
-    b.addLine(androidSdkVar.toString());
-
-    return b.build();
+    StringBuilder builder = new StringBuilder();
+    builder.append("Can't find " + requiredSdkFile + " file in android sdk.\n");
+    builder.append("Path to Android SDK was set by the following environment variable:\n");
+    builder.append(androidSdkVar.toString() + "\n");
+    return builder.toString();
   }
 }

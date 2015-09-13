@@ -11,7 +11,6 @@ import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.def.Argument;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
-import org.smoothbuild.util.LineBuilder;
 
 public class MissingRequiredArgsError extends CodeMessage {
   public MissingRequiredArgsError(CodeLocation codeLocation, Function function,
@@ -21,14 +20,12 @@ public class MissingRequiredArgsError extends CodeMessage {
 
   private static String createMesssage(Function function, Map<Parameter, Argument> mapBuilder,
       Set<Parameter> missingRequiredParameters) {
-    LineBuilder builder = new LineBuilder();
-
-    builder.addLine("Not all parameters required by " + function.name()
-        + " function has been specified.\n" + "Missing required parameters:");
-    builder.add(parametersToString(missingRequiredParameters));
-    builder.addLine("All correct 'parameters <- arguments' assignments:");
-    builder.add(mapBuilder.toString());
-
-    return builder.build();
+    StringBuilder builder = new StringBuilder();
+    builder.append("Not all parameters required by " + function.name()
+        + " function has been specified.\n" + "Missing required parameters:\n");
+    builder.append(parametersToString(missingRequiredParameters));
+    builder.append("All correct 'parameters <- arguments' assignments:\n");
+    builder.append(mapBuilder.toString());
+    return builder.toString();
   }
 }

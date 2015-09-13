@@ -9,7 +9,6 @@ import java.util.List;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.util.LineBuilder;
 
 public class FakeLoggedMessages extends LoggedMessages {
   private final List<Message> messages = new ArrayList<>();
@@ -47,11 +46,11 @@ public class FakeLoggedMessages extends LoggedMessages {
   }
 
   private String messagesToString() {
-    LineBuilder builder = new LineBuilder();
+    StringBuilder builder = new StringBuilder();
     for (Message message : messages) {
-      builder.addLine(message.getClass().getSimpleName());
-      builder.addLine(message.toString());
+      builder.append(message.getClass().getSimpleName() + "\n");
+      builder.append(message.toString() + "\n");
     }
-    return builder.build();
+    return builder.toString();
   }
 }

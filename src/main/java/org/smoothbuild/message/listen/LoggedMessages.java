@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageStats;
-import org.smoothbuild.util.LineBuilder;
 
 public class LoggedMessages implements Iterable<Message> {
   private final List<Message> messages;
@@ -50,10 +49,11 @@ public class LoggedMessages implements Iterable<Message> {
 
   @Override
   public String toString() {
-    LineBuilder builder = new LineBuilder();
+    StringBuilder builder = new StringBuilder();
     for (Message message : messages) {
-      builder.addLine(message.toString());
+      builder.append(message.toString());
+      builder.append("\n");
     }
-    return builder.build();
+    return builder.toString();
   }
 }
