@@ -5,8 +5,12 @@ import static org.smoothbuild.message.base.Messages.containsProblems;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.db.taskoutputs.TaskOutputsDb;
+import org.smoothbuild.io.fs.ProjectDir;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.SmoothJar;
+import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskOutput;
@@ -16,17 +20,22 @@ import com.google.common.hash.Hasher;
 
 public class TaskExecutor {
   private final HashCode smoothJarHash;
-  private final NativeApiImpl nativeApi;
   private final TaskOutputsDb taskOutputsDb;
   private final TaskReporter reporter;
+  private final FileSystem projectFileSystem;
+  private final ObjectsDb objectsDb;
+  private final TempDirectoryManager tempDirectoryManager;
 
   @Inject
-  public TaskExecutor(@SmoothJar HashCode smoothJarHash, NativeApiImpl nativeApi,
-      TaskOutputsDb taskOutputsDb, TaskReporter reporter) {
+  public TaskExecutor(@SmoothJar HashCode smoothJarHash, TaskOutputsDb taskOutputsDb,
+      TaskReporter reporter, @ProjectDir FileSystem projectFileSystem, ObjectsDb objectsDb,
+      TempDirectoryManager tempDirectoryManager) {
     this.smoothJarHash = smoothJarHash;
-    this.nativeApi = nativeApi;
     this.taskOutputsDb = taskOutputsDb;
     this.reporter = reporter;
+    this.projectFileSystem = projectFileSystem;
+    this.objectsDb = objectsDb;
+    this.tempDirectoryManager = tempDirectoryManager;
   }
 
   public <T extends Value> void execute(Task task) {
@@ -36,7 +45,7 @@ public class TaskExecutor {
       TaskOutput output = taskOutputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
-      task.execute(nativeApi);
+      task.execute(new NativeApiImpl(projectFileSystem, objectsDb, tempDirectoryManager));
       if (task.isCacheable()) {
         taskOutputsDb.write(hash, task.output());
       }

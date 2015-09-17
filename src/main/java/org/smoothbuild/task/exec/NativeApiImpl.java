@@ -1,9 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.util.TempDirectory;
@@ -24,10 +21,9 @@ public class NativeApiImpl implements NativeApi {
   private final TempDirectoryManager tempDirectoryManager;
   private final LoggedMessages messages;
 
-  @Inject
-  public NativeApiImpl(@ProjectDir FileSystem fileSystem, ObjectsDb objectsDb,
+  public NativeApiImpl(FileSystem projectFileSystem, ObjectsDb objectsDb,
       TempDirectoryManager tempDirectoryManager) {
-    this.projectFileSystem = fileSystem;
+    this.projectFileSystem = projectFileSystem;
     this.objectsDb = objectsDb;
     this.tempDirectoryManager = tempDirectoryManager;
     this.messages = new LoggedMessages();
