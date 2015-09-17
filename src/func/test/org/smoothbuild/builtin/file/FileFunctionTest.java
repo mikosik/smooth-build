@@ -16,11 +16,11 @@ import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class FileFunctionTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private FakeNativeApi nativeApi = new FakeNativeApi();
+  private FakeContainer container = new FakeContainer();
   private final Path path = path("file/path/file.txt");
 
   @Test
@@ -46,7 +46,7 @@ public class FileFunctionTest {
   @Test
   public void illegalPathIsReported() {
     for (String path : PathTesting.listOfInvalidPaths()) {
-      nativeApi = new FakeNativeApi();
+      container = new FakeContainer();
       try {
         execute(path);
         fail("exception should be thrown");
@@ -71,7 +71,7 @@ public class FileFunctionTest {
   public void nonFilePathIsReported() throws Exception {
     Path dir = path("some/path");
     Path file = dir.append(path("file.txt"));
-    nativeApi.projectFileSystem().createFileContainingItsPath(file);
+    container.projectFileSystem().createFileContainingItsPath(file);
 
     try {
       execute(dir.value());
@@ -83,12 +83,12 @@ public class FileFunctionTest {
 
   @Test
   public void execute() throws Exception {
-    given(nativeApi.projectFileSystem()).createFileContainingItsPath(path);
+    given(container.projectFileSystem()).createFileContainingItsPath(path);
     when(execute(path.value()));
     thenReturned(objectsDb.file(path));
   }
 
   private SFile execute(String file) {
-    return FileFunction.file(nativeApi, nativeApi.string(file));
+    return FileFunction.file(container, container.string(file));
   }
 }

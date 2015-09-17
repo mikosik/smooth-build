@@ -16,20 +16,20 @@ import org.junit.Test;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.JarTester;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class BinaryNameToClassFileTest {
-  private final FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeContainer container = new FakeContainer();
   private Blob blob;
   private SFile file1;
   private SFile file2;
 
   @Test
   public void binary_names_are_mapped_to_proper_class_files() throws IOException {
-    given(file1 = nativeApi.file(path("a/Klass.class")));
-    given(file2 = nativeApi.file(path("b/Klass.class")));
+    given(file1 = container.file(path("a/Klass.class")));
+    given(file2 = container.file(path("b/Klass.class")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(nativeApi, asList(blob)));
+    when(binaryNameToClassFile(container, asList(blob)));
     thenReturned(mapOf("a.Klass", file1, "b.Klass", file2));
   }
 
@@ -42,10 +42,10 @@ public class BinaryNameToClassFileTest {
 
   @Test
   public void non_class_files_are_not_mapped() throws IOException {
-    given(file1 = nativeApi.file(path("a/Klass.txt")));
-    given(file2 = nativeApi.file(path("b/Klass.java")));
+    given(file1 = container.file(path("a/Klass.txt")));
+    given(file2 = container.file(path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(nativeApi, asList(blob)).entrySet());
+    when(binaryNameToClassFile(container, asList(blob)).entrySet());
     thenReturned(empty());
   }
 }

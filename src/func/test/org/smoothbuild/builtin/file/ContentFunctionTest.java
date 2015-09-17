@@ -10,26 +10,26 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class ContentFunctionTest {
   private FakeObjectsDb objectsDb;
-  private NativeApiImpl nativeApi;
+  private ContainerImpl container;
   private SFile file;
 
   @Before
   public void before() {
     givenTest(this);
     given(objectsDb = new FakeObjectsDb());
-    given(nativeApi = new FakeNativeApi());
+    given(container = new FakeContainer());
   }
 
   @Test
   public void content_of_file_is_returned_as_blob() {
     given(file = objectsDb.file(path("some/path"), objectsDb.blob("content")));
-    when(content(nativeApi, file));
+    when(content(container, file));
     thenReturned(file.content());
   }
 }

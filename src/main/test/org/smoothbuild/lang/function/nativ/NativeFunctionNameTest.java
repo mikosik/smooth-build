@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
@@ -22,7 +22,7 @@ public class NativeFunctionNameTest {
 
   public static class IllegalFunctionName {
     @SmoothFunction
-    public static SString illegal_$_name(NativeApi nativeApi) {
+    public static SString illegal_$_name(Container container) {
       return null;
     }
   }
@@ -35,7 +35,7 @@ public class NativeFunctionNameTest {
 
   public static class SimpleFunction {
     @SmoothFunction
-    public static SString myFunction(NativeApi nativeApi) {
+    public static SString myFunction(Container container) {
       return null;
     }
   }

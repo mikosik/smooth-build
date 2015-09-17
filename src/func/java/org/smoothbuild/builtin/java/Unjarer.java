@@ -19,7 +19,7 @@ import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -30,11 +30,11 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class Unjarer {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
 
-  private final NativeApi nativeApi;
+  private final Container container;
   private final byte[] buffer;
 
-  public Unjarer(NativeApi nativeApi) {
-    this.nativeApi = nativeApi;
+  public Unjarer(Container container) {
+    this.container = container;
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
@@ -44,7 +44,7 @@ public class Unjarer {
 
   public Array<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> fileArrayBuilder = container.arrayBuilder(SFile.class);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream())) {
@@ -76,11 +76,11 @@ public class Unjarer {
 
     Path path = path(fileName);
     Blob content = unjarEntryContent(jarInputStream);
-    return nativeApi.file(path, content);
+    return container.file(path, content);
   }
 
   private Blob unjarEntryContent(JarInputStream jarInputStream) {
-    BlobBuilder contentBuilder = nativeApi.blobBuilder();
+    BlobBuilder contentBuilder = container.blobBuilder();
     try {
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len;

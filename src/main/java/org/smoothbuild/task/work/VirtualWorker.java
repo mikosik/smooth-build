@@ -4,7 +4,7 @@ import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 
 public class VirtualWorker extends TaskWorker {
 
@@ -14,7 +14,7 @@ public class VirtualWorker extends TaskWorker {
   }
 
   @Override
-  public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
+  public TaskOutput execute(TaskInput input, ContainerImpl container) {
     return new TaskOutput(input.values().get(0));
   }
 }

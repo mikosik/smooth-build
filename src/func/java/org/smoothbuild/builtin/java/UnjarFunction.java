@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java;
 
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -11,8 +11,8 @@ import org.smoothbuild.lang.value.SFile;
 public class UnjarFunction {
   @SmoothFunction
   public static Array<SFile> unjar( //
-      NativeApi nativeApi, //
+      Container container, //
       @Required @Name("blob") Blob blob) {
-    return new Unjarer(nativeApi).unjar(blob);
+    return new Unjarer(container).unjar(blob);
   }
 }

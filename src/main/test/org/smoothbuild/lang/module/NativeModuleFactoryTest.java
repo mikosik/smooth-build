@@ -16,7 +16,7 @@ import java.util.zip.ZipEntry;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.Classes;
@@ -47,12 +47,12 @@ public class NativeModuleFactoryTest {
     public interface Parameters {}
 
     @SmoothFunction
-    public static SString func1(NativeApi nativeApi) {
+    public static SString func1(Container container) {
       return null;
     }
 
     @SmoothFunction
-    public static SString func2(NativeApi nativeApi) {
+    public static SString func2(Container container) {
       return null;
     }
   }
@@ -64,14 +64,14 @@ public class NativeModuleFactoryTest {
 
   public static class ModuleAWithFuncA {
     @SmoothFunction
-    public static SString funcA(NativeApi nativeApi) {
+    public static SString funcA(Container container) {
       return null;
     }
   }
 
   public static class ModuleBWithFuncA {
     @SmoothFunction
-    public static SString funcA(NativeApi nativeApi) {
+    public static SString funcA(Container container) {
       return null;
     }
   }

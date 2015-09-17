@@ -11,8 +11,8 @@ import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.CannotAddDuplicatePathError;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -24,29 +24,29 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class JarFunction {
   @SmoothFunction
   public static Blob jar( //
-      NativeApi nativeApi, //
+      Container container, //
       @Required @Name("files") Array<SFile> files, //
       @Name("manifest") Blob manifest) {
-    return new Worker(nativeApi, files, manifest).execute();
+    return new Worker(container, files, manifest).execute();
   }
 
   private static class Worker {
-    private final NativeApi nativeApi;
+    private final Container container;
     private final Array<SFile> files;
     private final Blob manifest;
 
     private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
     private final DuplicatesDetector<Path> duplicatesDetector;
 
-    public Worker(NativeApi nativeApi, Array<SFile> files, Blob manifest) {
-      this.nativeApi = nativeApi;
+    public Worker(Container container, Array<SFile> files, Blob manifest) {
+      this.container = container;
       this.files = files;
       this.manifest = manifest;
       this.duplicatesDetector = new DuplicatesDetector<>();
     }
 
     public Blob execute() {
-      BlobBuilder blobBuilder = nativeApi.blobBuilder();
+      BlobBuilder blobBuilder = container.blobBuilder();
       try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder)) {
         for (SFile file : files) {
           addEntry(jarOutputStream, file);

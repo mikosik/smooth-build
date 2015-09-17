@@ -18,38 +18,38 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
-public class NativeApiImplTest {
+public class ContainerTest {
   private final FakeFileSystem fileSystem = new FakeFileSystem();
   private final FakeObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
   private final TempDirectoryManager tempDirectoryManager = mock(TempDirectoryManager.class);
 
-  private NativeApiImpl nativeApiImpl;
+  private ContainerImpl containerImpl;
   private Message message;
   private TempDirectory tempDirectory;
 
   @Before
   public void before() {
-    given(nativeApiImpl = new NativeApiImpl(fileSystem, objectsDb, tempDirectoryManager));
+    given(containerImpl = new ContainerImpl(fileSystem, objectsDb, tempDirectoryManager));
   }
 
   @Test
   public void fileSystem() throws Exception {
-    when(nativeApiImpl.projectFileSystem());
+    when(containerImpl.projectFileSystem());
     thenReturned(same(fileSystem));
   }
 
   @Test
   public void messages_are_logged() throws Exception {
     given(message = new Message(ERROR, "message"));
-    when(nativeApiImpl).log(message);
-    then(nativeApiImpl.messages(), contains(message));
+    when(containerImpl).log(message);
+    then(containerImpl.messages(), contains(message));
   }
 
   @Test
   public void create_temp_directory_call_is_forwarded_to_temp_directory_manager() throws Exception {
     given(tempDirectory = mock(TempDirectory.class));
     given(willReturn(tempDirectory), tempDirectoryManager).createTempDirectory();
-    when(nativeApiImpl).createTempDirectory();
+    when(containerImpl).createTempDirectory();
     thenReturned(tempDirectory);
   }
 }

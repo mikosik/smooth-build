@@ -7,15 +7,15 @@ import java.util.Set;
 
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 
 public class PackagedJavaFileObjects {
-  public static Iterable<InputClassFile> classesFromJars(NativeApi nativeApi,
+  public static Iterable<InputClassFile> classesFromJars(Container container,
       Iterable<Blob> libraryJars) {
-    Unjarer unjarer = new Unjarer(nativeApi);
+    Unjarer unjarer = new Unjarer(container);
     Set<InputClassFile> result = new HashSet<>();
 
     for (Blob jarBlob : libraryJars) {

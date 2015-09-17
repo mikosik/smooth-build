@@ -18,15 +18,15 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.err.DuplicatedParameterException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalResultTypeException;
-import org.smoothbuild.lang.function.nativ.err.MissingNativeApiParameterException;
+import org.smoothbuild.lang.function.nativ.err.MissingContainerParameterException;
 import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -72,8 +72,8 @@ public class NativeFunctionFactory {
   private static ImmutableList<Parameter> createParameters(Method method)
       throws NativeFunctionImplementationException {
     Class<?>[] types = method.getParameterTypes();
-    if (types.length == 0 || (types[0] != NativeApi.class && types[0] != NativeApiImpl.class)) {
-      throw new MissingNativeApiParameterException(method);
+    if (types.length == 0 || (types[0] != Container.class && types[0] != ContainerImpl.class)) {
+      throw new MissingContainerParameterException(method);
     }
 
     java.lang.reflect.Type[] parameterTypes = method.getGenericParameterTypes();

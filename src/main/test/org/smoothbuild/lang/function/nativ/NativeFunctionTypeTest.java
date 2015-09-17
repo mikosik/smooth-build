@@ -12,7 +12,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.nativ.err.IllegalResultTypeException;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Nothing;
@@ -31,7 +31,7 @@ public class NativeFunctionTypeTest {
 
   public static class FunctionReturningString {
     @SmoothFunction
-    public static SString myFunction(NativeApi nativeApi) {
+    public static SString myFunction(Container container) {
       return null;
     }
   }
@@ -46,7 +46,7 @@ public class NativeFunctionTypeTest {
 
   public static class FunctionReturningStringArray {
     @SmoothFunction
-    public static Array<SString> myFunction(NativeApi nativeApi) {
+    public static Array<SString> myFunction(Container container) {
       return null;
     }
   }
@@ -59,7 +59,7 @@ public class NativeFunctionTypeTest {
 
   public static class IllegalReturnType {
     @SmoothFunction
-    public static Object function(NativeApi nativeApi) {
+    public static Object function(Container container) {
       return null;
     }
   }
@@ -72,7 +72,7 @@ public class NativeFunctionTypeTest {
 
   public static class ValueAsReturnType {
     @SmoothFunction
-    public static Value function(NativeApi nativeApi) {
+    public static Value function(Container container) {
       return null;
     }
   }
@@ -85,7 +85,7 @@ public class NativeFunctionTypeTest {
 
   public static class VoidReturnType {
     @SmoothFunction
-    public static void function(NativeApi nativeApi) {
+    public static void function(Container container) {
       return;
     }
   }
@@ -99,8 +99,8 @@ public class NativeFunctionTypeTest {
 
   public static class NilReturnType {
     @SmoothFunction
-    public static Array<Nothing> function(NativeApi nativeApi) {
-      return nativeApi.arrayBuilder(Nothing.class).build();
+    public static Array<Nothing> function(Container container) {
+      return container.arrayBuilder(Nothing.class).build();
     }
   }
 }

@@ -9,10 +9,10 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.err.JavaInvocationError;
 import org.smoothbuild.lang.function.nativ.err.NullResultError;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
 
@@ -41,30 +41,30 @@ public class NativeFunction extends AbstractFunction {
     return isCacheable;
   }
 
-  public Value invoke(NativeApiImpl nativeApi, List<Value> arguments) {
+  public Value invoke(ContainerImpl container, List<Value> arguments) {
     try {
-      Value result = (Value) method.invoke(null, createArguments(nativeApi, arguments));
-      if (result == null && !nativeApi.messages().containsProblems()) {
-        nativeApi.log(new NullResultError(this));
+      Value result = (Value) method.invoke(null, createArguments(container, arguments));
+      if (result == null && !container.messages().containsProblems()) {
+        container.log(new NullResultError(this));
       }
       return result;
     } catch (IllegalAccessException e) {
-      nativeApi.log(new JavaInvocationError(this, e));
+      container.log(new JavaInvocationError(this, e));
       return null;
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Message) {
-        nativeApi.log((Message) cause);
+        container.log((Message) cause);
       } else {
-        nativeApi.log(new JavaInvocationError(this, e));
+        container.log(new JavaInvocationError(this, e));
       }
       return null;
     }
   }
 
-  private static Object[] createArguments(NativeApi nativeApi, List<Value> arguments) {
+  private static Object[] createArguments(Container container, List<Value> arguments) {
     Object[] nativeArguments = new Object[1 + arguments.size()];
-    nativeArguments[0] = nativeApi;
+    nativeArguments[0] = container;
     for (int i = 0; i < arguments.size(); i++) {
       nativeArguments[i + 1] = arguments.get(i);
     }

@@ -45,7 +45,7 @@ public class TaskExecutor {
       TaskOutput output = taskOutputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
-      task.execute(new NativeApiImpl(projectFileSystem, objectsDb, tempDirectoryManager));
+      task.execute(new ContainerImpl(projectFileSystem, objectsDb, tempDirectoryManager));
       if (task.isCacheable()) {
         taskOutputsDb.write(hash, task.output());
       }

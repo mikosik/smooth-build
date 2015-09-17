@@ -7,7 +7,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
@@ -44,14 +44,14 @@ public class NativeFunctionHashTest {
 
   public static class FirstFunction {
     @SmoothFunction
-    public static SString firstFunction(NativeApi nativeApi) {
+    public static SString firstFunction(Container container) {
       return null;
     }
   }
 
   public static class SecondFunction {
     @SmoothFunction
-    public static SString secondFunction(NativeApi nativeApi) {
+    public static SString secondFunction(Container container) {
       return null;
     }
   }

@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.blob;
 
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -12,10 +12,10 @@ public class ConcatenateBlobArraysFunction {
 
   @SmoothFunction
   public static Array<Blob> concatenateBlobArrays( //
-      NativeApi nativeApi, //
+      Container container, //
       @Required @Name("blobs") Array<Blob> blobs, //
       @Required @Name("with") Array<Blob> with) {
-    ArrayBuilder<Blob> builder = nativeApi.arrayBuilder(Blob.class);
+    ArrayBuilder<Blob> builder = container.arrayBuilder(Blob.class);
 
     for (Blob blob : blobs) {
       builder.add(blob);

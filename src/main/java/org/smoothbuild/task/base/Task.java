@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
@@ -51,8 +51,8 @@ public class Task {
     return worker.codeLocation();
   }
 
-  public void execute(NativeApiImpl nativeApi) {
-    output = worker.execute(input(), nativeApi);
+  public void execute(ContainerImpl container) {
+    output = worker.execute(input(), container);
   }
 
   public TaskOutput output() {

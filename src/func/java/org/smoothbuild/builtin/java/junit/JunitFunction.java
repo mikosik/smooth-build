@@ -15,8 +15,8 @@ import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -27,10 +27,10 @@ import org.smoothbuild.message.base.Message;
 public class JunitFunction {
   @SmoothFunction
   public static SString junit( //
-      NativeApi nativeApi, //
+      Container container, //
       @Name("libs") Array<Blob> libs, //
       @Name("include") SString include) {
-    Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(nativeApi, libs);
+    Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(container, libs);
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
     JUnitCore jUnitCore = new JUnitCore();
 
@@ -44,16 +44,16 @@ public class JunitFunction {
         Result result = jUnitCore.run(testClass);
         if (!result.wasSuccessful()) {
           for (Failure failure : result.getFailures()) {
-            nativeApi.log(new JunitTestFailedError(failure));
+            container.log(new JunitTestFailedError(failure));
           }
-          return nativeApi.string("FAILURE");
+          return container.string("FAILURE");
         }
       }
     }
     if (testCount == 0) {
-      nativeApi.log(new NoJunitTestFoundWarning());
+      container.log(new NoJunitTestFoundWarning());
     }
-    return nativeApi.string("SUCCESS");
+    return container.string("SUCCESS");
   }
 
   private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {

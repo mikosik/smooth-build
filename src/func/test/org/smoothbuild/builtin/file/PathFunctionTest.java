@@ -9,11 +9,11 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class PathFunctionTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeContainer container = new FakeContainer();
   private Path path;
   private SFile file;
 
@@ -21,7 +21,7 @@ public class PathFunctionTest {
   public void file_path_is_returned_as_string() throws Exception {
     given(path = path("some/path"));
     given(file = objectsDb.file(path, ""));
-    when(PathFunction.path(nativeApi, file));
+    when(PathFunction.path(container, file));
     thenReturned(objectsDb.string(path.value()));
   }
 }
