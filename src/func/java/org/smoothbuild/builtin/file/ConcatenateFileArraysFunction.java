@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -11,10 +11,10 @@ import org.smoothbuild.lang.value.SFile;
 public class ConcatenateFileArraysFunction {
   @SmoothFunction
   public static Array<SFile> concatenateFileArrays( //
-      NativeApi nativeApi, //
+      Container container, //
       @Required @Name("files") Array<SFile> files, //
       @Required @Name("with") Array<SFile> with) {
-    ArrayBuilder<SFile> builder = nativeApi.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> builder = container.arrayBuilder(SFile.class);
 
     for (SFile file : files) {
       builder.add(file);

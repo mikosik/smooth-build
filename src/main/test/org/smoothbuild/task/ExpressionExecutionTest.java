@@ -26,8 +26,8 @@ import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExpression
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -123,7 +123,7 @@ public class ExpressionExecutionTest {
 
   public static class SmoothModule {
     @SmoothFunction
-    public static SString func(NativeApi nativeApi, @Name("string") SString string) {
+    public static SString func(Container container, @Name("string") SString string) {
       return string;
     }
   }
@@ -141,7 +141,7 @@ public class ExpressionExecutionTest {
 
   public static class SmoothModule2 {
     @SmoothFunction
-    public static SString func(NativeApi nativeApi, @Name("string") SString string) {
+    public static SString func(Container container, @Name("string") SString string) {
       throw new RuntimeException();
     }
   }

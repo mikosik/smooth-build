@@ -27,7 +27,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
@@ -169,8 +169,8 @@ public class CachingTaskOutputTest {
     }
 
     @Override
-    public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
-      SString sstring = nativeApi.string(Integer.toString(counter.incrementAndGet()));
+    public TaskOutput execute(TaskInput input, ContainerImpl container) {
+      SString sstring = container.string(Integer.toString(counter.incrementAndGet()));
       return new TaskOutput(sstring);
     }
   }

@@ -18,22 +18,22 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-  private final NativeApi nativeApi;
+  private final Container container;
   private final Map<String, Set<JavaFileObject>> packageToJavaFileObjects;
   private final ArrayBuilder<SFile> resultClassFiles;
 
-  SandboxedJavaFileManager(StandardJavaFileManager fileManager, NativeApi nativeApi,
+  SandboxedJavaFileManager(StandardJavaFileManager fileManager, Container container,
       Iterable<InputClassFile> objects) {
     super(fileManager);
-    this.nativeApi = nativeApi;
+    this.container = container;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
-    this.resultClassFiles = nativeApi.arrayBuilder(SFile.class);
+    this.resultClassFiles = container.arrayBuilder(SFile.class);
   }
 
   private static Map<String, Set<JavaFileObject>> groupIntoPackages(Iterable<InputClassFile> objects) {
@@ -61,7 +61,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       String classFilePath = className.replace('.', '/') + ".class";
       String message = validationError(classFilePath);
       if (message == null) {
-        return new OutputClassFile(resultClassFiles, path(classFilePath), nativeApi);
+        return new OutputClassFile(resultClassFiles, path(classFilePath), container);
       } else {
         throw new IncorrectClassNameGivenByJavaCompilerError(className);
       }

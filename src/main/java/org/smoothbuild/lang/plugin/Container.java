@@ -11,7 +11,7 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 
-public interface NativeApi {
+public interface Container {
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> arrayType);
 
   public SFile file(Path path, Blob content);

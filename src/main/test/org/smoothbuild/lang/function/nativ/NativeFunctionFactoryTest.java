@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
 import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
@@ -22,7 +22,7 @@ public class NativeFunctionFactoryTest {
   }
 
   public static class NotAnnotatedMethod {
-    public static SString function(NativeApi nativeApi) {
+    public static SString function(Container container) {
       return null;
     }
   }
@@ -35,7 +35,7 @@ public class NativeFunctionFactoryTest {
 
   public static class NonStaticMethod {
     @SmoothFunction
-    public SString function(NativeApi nativeApi) {
+    public SString function(Container container) {
       return null;
     }
   }
@@ -48,7 +48,7 @@ public class NativeFunctionFactoryTest {
 
   public static class NonPublicMethod {
     @SmoothFunction
-    protected static SString function(NativeApi nativeApi) {
+    protected static SString function(Container container) {
       return null;
     }
   }

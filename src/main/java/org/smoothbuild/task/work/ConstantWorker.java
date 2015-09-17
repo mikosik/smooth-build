@@ -7,7 +7,7 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
 
@@ -24,7 +24,7 @@ public class ConstantWorker extends TaskWorker {
   }
 
   @Override
-  public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
+  public TaskOutput execute(TaskInput input, ContainerImpl container) {
     return new TaskOutput(value);
   }
 }

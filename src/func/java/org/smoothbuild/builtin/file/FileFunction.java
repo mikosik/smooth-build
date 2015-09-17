@@ -16,23 +16,23 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 
 public class FileFunction {
   @SmoothFunction
   @NotCacheable
   public static SFile file( //
-      NativeApiImpl nativeApi, //
+      ContainerImpl container, //
       @Required @Name("path") SString pathString) {
     Path path = validatedPath("path", pathString);
     if (!path.isRoot() && path.firstPart().equals(SMOOTH_DIR)) {
       throw new IllegalReadFromSmoothDirError(path);
     }
 
-    FileSystem fileSystem = nativeApi.projectFileSystem();
+    FileSystem fileSystem = container.projectFileSystem();
     switch (fileSystem.pathState(path)) {
       case FILE:
-        FileReader reader = new FileReader(nativeApi);
+        FileReader reader = new FileReader(container);
         return reader.createFile(path, path);
       case DIR:
         throw new NoSuchFileButDirError(path);

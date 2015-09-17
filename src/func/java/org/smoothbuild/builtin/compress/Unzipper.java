@@ -15,7 +15,7 @@ import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -26,17 +26,17 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class Unzipper {
   private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
   private final byte[] buffer;
-  private final NativeApi nativeApi;
+  private final Container container;
   private DuplicatesDetector<Path> duplicatesDetector;
 
-  public Unzipper(NativeApi nativeApi) {
-    this.nativeApi = nativeApi;
+  public Unzipper(Container container) {
+    this.container = container;
     this.buffer = new byte[Constants.BUFFER_SIZE];
   }
 
   public Array<SFile> unzip(Blob zipBlob) {
     this.duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder<SFile> fileArrayBuilder = nativeApi.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> fileArrayBuilder = container.arrayBuilder(SFile.class);
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream())) {
         ZipEntry entry;
@@ -64,12 +64,12 @@ public class Unzipper {
     }
 
     Blob content = unzipEntryContent(zipInputStream);
-    return nativeApi.file(path, content);
+    return container.file(path, content);
   }
 
   private Blob unzipEntryContent(ZipInputStream zipInputStream) {
     try {
-      BlobBuilder contentBuilder = nativeApi.blobBuilder();
+      BlobBuilder contentBuilder = container.blobBuilder();
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len;
         while ((len = zipInputStream.read(buffer)) > 0) {

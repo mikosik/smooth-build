@@ -6,7 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
@@ -23,7 +23,7 @@ public class NativeFunctionCacheableTest {
 
   public static class WithoutAnnotation {
     @SmoothFunction
-    public static SString myFunction(NativeApi nativeApi) {
+    public static SString myFunction(Container container) {
       return null;
     }
   }
@@ -38,7 +38,7 @@ public class NativeFunctionCacheableTest {
   public static class WithNotCacheableAnnotation {
     @SmoothFunction
     @NotCacheable
-    public static SString myFunction(NativeApi nativeApi) {
+    public static SString myFunction(Container container) {
       return null;
     }
   }

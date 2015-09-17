@@ -73,7 +73,7 @@ public class TaskReporterTest {
     }
 
     @Override
-    public TaskOutput execute(TaskInput input, NativeApiImpl nativeApi) {
+    public TaskOutput execute(TaskInput input, ContainerImpl container) {
       return null;
     }
   }

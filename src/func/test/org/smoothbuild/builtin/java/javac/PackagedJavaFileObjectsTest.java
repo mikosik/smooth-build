@@ -16,27 +16,27 @@ import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.smoothbuild.testing.task.exec.FakeContainer;
 import org.testory.Closure;
 
 public class PackagedJavaFileObjectsTest {
-  private final FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeContainer container = new FakeContainer();
   private SFile file1;
   private SFile file2;
   private Blob jar;
 
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
-    given(file1 = nativeApi.file(path("my/package/MyKlass.class")));
-    given(file2 = nativeApi.file(path("my/package/MyKlass2.class")));
+    given(file1 = container.file(path("my/package/MyKlass.class")));
+    given(file2 = container.file(path("my/package/MyKlass2.class")));
     given(jar = jar(file1, file2));
-    when(classesFromJars(nativeApi, asList(jar)));
+    when(classesFromJars(container, asList(jar)));
     thenReturned(containsInAnyOrder(new InputClassFile(file1), new InputClassFile(file2)));
   }
 
   @Test
   public void duplicateClassFileException() throws Exception {
-    given(file1 = nativeApi.file(path("my/package/MyKlass.class")));
+    given(file1 = container.file(path("my/package/MyKlass.class")));
     given(jar = jar(file1));
     when(javaFileObjects(asList(jar, jar)));
     thenThrown(DuplicateClassFileError.class);
@@ -46,7 +46,7 @@ public class PackagedJavaFileObjectsTest {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return classesFromJars(nativeApi, libraryJars);
+        return classesFromJars(container, libraryJars);
       }
     };
   }

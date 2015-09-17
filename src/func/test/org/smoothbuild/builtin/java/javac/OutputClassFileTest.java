@@ -12,10 +12,10 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.StreamTester;
-import org.smoothbuild.testing.task.exec.FakeNativeApi;
+import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class OutputClassFileTest {
-  private final FakeNativeApi nativeApi = new FakeNativeApi();
+  private final FakeContainer container = new FakeContainer();
   private final Path path = Path.path("my/path");
   private final String content = "content";
 
@@ -24,17 +24,17 @@ public class OutputClassFileTest {
 
   @Test
   public void openOutputStream() throws IOException {
-    given(fileArrayBuilder = nativeApi.arrayBuilder(SFile.class));
-    given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi));
+    given(fileArrayBuilder = container.arrayBuilder(SFile.class));
+    given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, container));
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
     when(fileArrayBuilder).build();
-    thenReturned(Matchers.contains(nativeApi.file(path, content)));
+    thenReturned(Matchers.contains(container.file(path, content)));
   }
 
   @Test
   public void get_name_returns_file_path() throws Exception {
     given(outputClassFile =
-        new OutputClassFile(nativeApi.arrayBuilder(SFile.class), path, nativeApi));
+        new OutputClassFile(container.arrayBuilder(SFile.class), path, container));
     when(outputClassFile.getName());
     thenReturned("/" + path.value());
   }

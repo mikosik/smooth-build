@@ -9,7 +9,7 @@ import java.util.Map;
 import org.smoothbuild.builtin.java.Unjarer;
 import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -17,9 +17,9 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, SFile> binaryNameToClassFile(NativeApi nativeApi,
+  public static Map<String, SFile> binaryNameToClassFile(Container container,
       Iterable<Blob> libraryJars) {
-    Unjarer unjarer = new Unjarer(nativeApi);
+    Unjarer unjarer = new Unjarer(container);
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, SFile> binaryNameToClassFile = new HashMap<>();
 

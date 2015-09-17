@@ -11,15 +11,15 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.nativ.err.DuplicatedParameterException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParameterNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParameterTypeException;
+import org.smoothbuild.lang.function.nativ.err.MissingContainerParameterException;
 import org.smoothbuild.lang.function.nativ.err.MissingNameAnnotationException;
-import org.smoothbuild.lang.function.nativ.err.MissingNativeApiParameterException;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.exec.NativeApiImpl;
+import org.smoothbuild.task.exec.ContainerImpl;
 
 public class NativeFunctionParameterTest {
   private NativeFunction function;
@@ -33,7 +33,7 @@ public class NativeFunctionParameterTest {
 
   public static class ParameterWithName {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, @Name("paramName") SString parameter) {
+    public static SString function(Container container, @Name("paramName") SString parameter) {
       return null;
     }
   }
@@ -46,7 +46,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithParameterWithNameEqualEmptyString {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, @Name("") SString parameter) {
+    public static SString function(Container container, @Name("") SString parameter) {
       return null;
     }
   }
@@ -59,7 +59,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithParameterWithIllegalName {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, @Name("abc#def") SString parameter) {
+    public static SString function(Container container, @Name("abc#def") SString parameter) {
       return null;
     }
   }
@@ -72,7 +72,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithParameterWithoutName {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, SString parameter) {
+    public static SString function(Container container, SString parameter) {
       return null;
     }
   }
@@ -85,7 +85,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithTwoParametersWithSameName {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, @Name("nameA") SString parameterA,
+    public static SString function(Container container, @Name("nameA") SString parameterA,
         @Name("nameA") SString parameterB) {
       return null;
     }
@@ -93,11 +93,11 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void method_without_native_api_parameter_causes_exception() throws Exception {
-    when($nativeFunctions(MethodWithoutNativeApiParameter.class));
-    thenThrown(MissingNativeApiParameterException.class);
+    when($nativeFunctions(MethodWithoutContainerParameter.class));
+    thenThrown(MissingContainerParameterException.class);
   }
 
-  public static class MethodWithoutNativeApiParameter {
+  public static class MethodWithoutContainerParameter {
     @SmoothFunction
     public static SString function() {
       return null;
@@ -107,11 +107,11 @@ public class NativeFunctionParameterTest {
   @Test
   public void method_with_first_parameter_that_is_not_native_api_causes_exception()
       throws Exception {
-    when($nativeFunctions(MethodWithNonNativeApiAsFirstParameter.class));
-    thenThrown(MissingNativeApiParameterException.class);
+    when($nativeFunctions(MethodWithNonContainerAsFirstParameter.class));
+    thenThrown(MissingContainerParameterException.class);
   }
 
-  public static class MethodWithNonNativeApiAsFirstParameter {
+  public static class MethodWithNonContainerAsFirstParameter {
     @SmoothFunction
     public static SString function(SString parameter) {
       return null;
@@ -120,13 +120,13 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void method_with_first_parameter_that_is_native_api_impl_is_accepted() throws Exception {
-    when($nativeFunctions(MethodWithNativeApiImplAsFirstParameter.class));
+    when($nativeFunctions(MethodWithContainerImplAsFirstParameter.class));
     thenReturned();
   }
 
-  public static class MethodWithNativeApiImplAsFirstParameter {
+  public static class MethodWithContainerImplAsFirstParameter {
     @SmoothFunction
-    public static SString function(NativeApiImpl nativeApi) {
+    public static SString function(ContainerImpl container) {
       return null;
     }
   }
@@ -139,7 +139,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithParameterWithIllegalType {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, Object parameter) {
+    public static SString function(Container container, Object parameter) {
       return null;
     }
   }
@@ -152,7 +152,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithParameterWithValueType {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, Value parameter) {
+    public static SString function(Container container, Value parameter) {
       return null;
     }
   }
@@ -166,7 +166,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithNotRequiredParameter {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, @Name("name") SString parameter) {
+    public static SString function(Container container, @Name("name") SString parameter) {
       return null;
     }
   }
@@ -180,7 +180,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithRequiredParameter {
     @SmoothFunction
-    public static SString function(NativeApi nativeApi, @Required @Name("name") SString parameter) {
+    public static SString function(Container container, @Required @Name("name") SString parameter) {
       return null;
     }
   }

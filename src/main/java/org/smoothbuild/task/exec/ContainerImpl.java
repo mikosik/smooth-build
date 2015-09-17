@@ -5,7 +5,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.io.util.TempDirectoryManager;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -15,13 +15,13 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 
-public class NativeApiImpl implements NativeApi {
+public class ContainerImpl implements Container {
   private final FileSystem projectFileSystem;
   private final ObjectsDb objectsDb;
   private final TempDirectoryManager tempDirectoryManager;
   private final LoggedMessages messages;
 
-  public NativeApiImpl(FileSystem projectFileSystem, ObjectsDb objectsDb,
+  public ContainerImpl(FileSystem projectFileSystem, ObjectsDb objectsDb,
       TempDirectoryManager tempDirectoryManager) {
     this.projectFileSystem = projectFileSystem;
     this.objectsDb = objectsDb;

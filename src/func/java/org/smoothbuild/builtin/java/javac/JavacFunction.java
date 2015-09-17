@@ -22,8 +22,8 @@ import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -34,12 +34,12 @@ import org.smoothbuild.lang.value.SString;
 public class JavacFunction {
   @SmoothFunction
   public static Array<SFile> javac( //
-      NativeApi nativeApi, //
+      Container container, //
       @Required @Name("sources") Array<SFile> sources, //
       @Name("libs") Array<Blob> libs, //
       @Name("source") SString source, //
       @Name("target") SString target) {
-    return new Worker(nativeApi, sources, libs, source, target).execute();
+    return new Worker(container, sources, libs, source, target).execute();
   }
 
   private static class Worker {
@@ -49,19 +49,19 @@ public class JavacFunction {
         "1.5", "5", "1.6", "6", "1.7", "7", "1.8", "8");
 
     private final JavaCompiler compiler;
-    private final NativeApi nativeApi;
+    private final Container container;
     private final Array<SFile> sources;
     private final Array<Blob> libs;
     private final SString source;
     private final SString target;
 
-    public Worker(NativeApi nativeApi, //
+    public Worker(Container container, //
         Array<SFile> sources, //
         Array<Blob> libs, //
         SString source, //
         SString target) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
-      this.nativeApi = nativeApi;
+      this.container = container;
       this.sources = sources;
       this.libs = libs;
       this.source = source;
@@ -79,7 +79,7 @@ public class JavacFunction {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
-      LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(nativeApi);
+      LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(container);
       Iterable<String> options = options();
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
@@ -90,8 +90,8 @@ public class JavacFunction {
          * Java compiler fails miserably when there's no java files.
          */
         if (!inputSourceFiles.iterator().hasNext()) {
-          nativeApi.log(new NoJavaSourceFilesFoundWarning());
-          return nativeApi.arrayBuilder(SFile.class).build();
+          container.log(new NoJavaSourceFilesFoundWarning());
+          return container.arrayBuilder(SFile.class).build();
         }
 
         // run compilation task
@@ -102,18 +102,18 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          nativeApi.log(new CompilerFailedWithoutDiagnosticsError());
+          container.log(new CompilerFailedWithoutDiagnosticsError());
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
-          nativeApi.log(new AdditionalCompilerInfo(additionalInfo));
+          container.log(new AdditionalCompilerInfo(additionalInfo));
         }
         return fileManager.resultClassfiles();
       } finally {
         try {
           fileManager.close();
         } catch (IOException e) {
-          nativeApi.log(new FileSystemError(e));
+          container.log(new FileSystemError(e));
         }
       }
     }
@@ -145,8 +145,8 @@ public class JavacFunction {
     private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic) {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      Iterable<InputClassFile> libsClasses = classesFromJars(nativeApi, libs);
-      return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
+      Iterable<InputClassFile> libsClasses = classesFromJars(container, libs);
+      return new SandboxedJavaFileManager(fileManager, container, libsClasses);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<SFile> sourceFiles) {
