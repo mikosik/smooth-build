@@ -6,7 +6,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
 import org.junit.Test;
-import org.smoothbuild.lang.value.Nothing;
 
 public class NothingTest {
   @Test
