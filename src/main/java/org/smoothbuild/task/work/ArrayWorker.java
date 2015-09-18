@@ -12,7 +12,7 @@ public class ArrayWorker extends TaskWorker {
   private static final HashCode ARRAY_WORKER_HASH = workerHash(ArrayWorker.class);
 
   public ArrayWorker(ArrayType arrayType, CodeLocation codeLocation) {
-    super(new ArrayAlgorithm(arrayType), ARRAY_WORKER_HASH, arrayType, arrayType.name(), true, true,
+    super(new ArrayAlgorithm(arrayType), ARRAY_WORKER_HASH, arrayType.name(), true, true,
         codeLocation);
   }
 }

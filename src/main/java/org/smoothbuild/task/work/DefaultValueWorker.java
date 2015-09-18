@@ -9,8 +9,8 @@ import com.google.common.hash.HashCode;
 
 public class DefaultValueWorker extends TaskWorker {
   public DefaultValueWorker(Type type, Value value, CodeLocation codeLocation) {
-    super(new ConstantAlgorithm(value), defaultValueWorkerHash(value), type, type.name(), true,
-        true, codeLocation);
+    super(new ConstantAlgorithm(value), defaultValueWorkerHash(value), type.name(), true, true,
+        codeLocation);
   }
 
   private static HashCode defaultValueWorkerHash(Value value) {

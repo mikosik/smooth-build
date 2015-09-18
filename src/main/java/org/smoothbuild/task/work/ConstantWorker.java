@@ -9,7 +9,7 @@ import com.google.common.hash.HashCode;
 
 public class ConstantWorker extends TaskWorker {
   public ConstantWorker(Type type, Value value, CodeLocation codeLocation) {
-    super(new ConstantAlgorithm(value), constantWorkerHash(value), type, type.name(), true, false,
+    super(new ConstantAlgorithm(value), constantWorkerHash(value), type.name(), true, false,
         codeLocation);
   }
 

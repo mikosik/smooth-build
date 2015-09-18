@@ -8,8 +8,8 @@ import com.google.common.hash.HashCode;
 
 public class NativeCallWorker extends TaskWorker {
   public NativeCallWorker(NativeFunction function, boolean isInternal, CodeLocation codeLocation) {
-    super(new NativeCallAlgorithm(function), nativeCallWorkerHash(function), function.type(),
-        function.name().value(), isInternal, function.isCacheable(), codeLocation);
+    super(new NativeCallAlgorithm(function), nativeCallWorkerHash(function), function.name()
+        .value(), isInternal, function.isCacheable(), codeLocation);
   }
 
   private static HashCode nativeCallWorkerHash(NativeFunction function) {

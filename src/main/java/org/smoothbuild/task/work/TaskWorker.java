@@ -14,17 +14,15 @@ import com.google.common.hash.HashCode;
 public class TaskWorker {
   private final Algorithm algorithm;
   private final HashCode hash;
-  private final Type type;
   private final String name;
   private final boolean isInternal;
   private final boolean isCacheable;
   private final CodeLocation codeLocation;
 
-  public TaskWorker(Algorithm algorithm, HashCode hash, Type type, String name, boolean isInternal,
+  public TaskWorker(Algorithm algorithm, HashCode hash, String name, boolean isInternal,
       boolean isCacheable, CodeLocation codeLocation) {
     this.algorithm = algorithm;
     this.hash = hash;
-    this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.isInternal = isInternal;
     this.isCacheable = isCacheable;
@@ -32,7 +30,7 @@ public class TaskWorker {
   }
 
   public Type resultType() {
-    return type;
+    return algorithm.resultType();
   }
 
   public String name() {
