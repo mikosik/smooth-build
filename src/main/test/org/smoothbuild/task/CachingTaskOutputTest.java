@@ -27,6 +27,7 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
+import org.smoothbuild.task.compute.Algorithm;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.task.work.TaskWorker;
@@ -69,7 +70,8 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), true));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), true));
-    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2),
+        CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(stringArray("1", "1")));
@@ -81,7 +83,8 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), false));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), false));
-    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2),
+        CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
@@ -93,7 +96,8 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, asList(stringExpression("dep1")), true));
     given(expression2 = new CountingExpression(counter, asList(stringExpression("dep2")), true));
-    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2),
+        CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
@@ -160,11 +164,16 @@ public class CachingTaskOutputTest {
   }
 
   private static class MyCountingTaskWorker extends TaskWorker {
+    public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
+      super(new MyCountingAlgorithm(counter), Hash.string("hash"), STRING, "counting", false,
+          isCacheable, CodeLocation.codeLocation(2));
+    }
+  }
+
+  private static class MyCountingAlgorithm implements Algorithm {
     private final AtomicInteger counter;
 
-    public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
-      super(Hash.string("hash"), STRING, "counting", false, isCacheable, CodeLocation
-          .codeLocation(2));
+    public MyCountingAlgorithm(AtomicInteger counter) {
       this.counter = counter;
     }
 

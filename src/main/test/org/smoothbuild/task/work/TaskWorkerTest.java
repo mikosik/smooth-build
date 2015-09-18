@@ -93,7 +93,7 @@ public class TaskWorkerTest {
   public static class MyTaskWorker extends TaskWorker {
     public MyTaskWorker(HashCode hash, Type type, String name, boolean isInternal,
         CodeLocation codeLocation) {
-      super(hash, type, name, isInternal, true, codeLocation);
+      super(null, hash, type, name, isInternal, true, codeLocation);
     }
 
     @Override
