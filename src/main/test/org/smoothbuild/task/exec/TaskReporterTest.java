@@ -69,7 +69,7 @@ public class TaskReporterTest {
 
   private static final class MyTaskWorker extends TaskWorker {
     private MyTaskWorker(boolean isInternal) {
-      super(null, STRING, "name", isInternal, true, CodeLocation.codeLocation(2));
+      super(null, null, STRING, "name", isInternal, true, CodeLocation.codeLocation(2));
     }
 
     @Override
