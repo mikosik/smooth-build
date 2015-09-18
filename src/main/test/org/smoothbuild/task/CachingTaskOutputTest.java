@@ -20,6 +20,7 @@ import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
@@ -165,8 +166,8 @@ public class CachingTaskOutputTest {
 
   private static class MyCountingTaskWorker extends TaskWorker {
     public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
-      super(new MyCountingAlgorithm(counter), Hash.string("hash"), STRING, "counting", false,
-          isCacheable, CodeLocation.codeLocation(2));
+      super(new MyCountingAlgorithm(counter), Hash.string("hash"), "counting", false, isCacheable,
+          CodeLocation.codeLocation(2));
     }
   }
 
@@ -181,6 +182,11 @@ public class CachingTaskOutputTest {
     public TaskOutput execute(TaskInput input, ContainerImpl container) {
       SString sstring = container.string(Integer.toString(counter.incrementAndGet()));
       return new TaskOutput(sstring);
+    }
+
+    @Override
+    public Type resultType() {
+      return STRING;
     }
   }
 }

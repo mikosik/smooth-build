@@ -3,6 +3,7 @@ package org.smoothbuild.task.compute;
 import java.util.List;
 
 import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
@@ -13,6 +14,11 @@ public class NativeCallAlgorithm implements Algorithm {
 
   public NativeCallAlgorithm(NativeFunction function) {
     this.function = function;
+  }
+
+  @Override
+  public Type resultType() {
+    return function.type();
   }
 
   @Override

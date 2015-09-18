@@ -1,7 +1,6 @@
 package org.smoothbuild.task.exec;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 import static org.smoothbuild.task.exec.TaskReporter.header;
 import static org.testory.Testory.given;
@@ -69,7 +68,7 @@ public class TaskReporterTest {
 
   private static final class MyTaskWorker extends TaskWorker {
     private MyTaskWorker(boolean isInternal) {
-      super(null, null, STRING, "name", isInternal, true, CodeLocation.codeLocation(2));
+      super(null, null, "name", isInternal, true, CodeLocation.codeLocation(2));
     }
 
     @Override

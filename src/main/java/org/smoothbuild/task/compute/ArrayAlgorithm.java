@@ -1,6 +1,7 @@
 package org.smoothbuild.task.compute;
 
 import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Value;
@@ -13,6 +14,11 @@ public class ArrayAlgorithm implements Algorithm {
 
   public ArrayAlgorithm(ArrayType arrayType) {
     this.arrayType = arrayType;
+  }
+
+  @Override
+  public Type resultType() {
+    return arrayType;
   }
 
   @Override

@@ -1,5 +1,6 @@
 package org.smoothbuild.task.compute;
 
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
@@ -10,6 +11,11 @@ public class ConstantAlgorithm implements Algorithm {
 
   public ConstantAlgorithm(Value value) {
     this.value = value;
+  }
+
+  @Override
+  public Type resultType() {
+    return value.type();
   }
 
   @Override
