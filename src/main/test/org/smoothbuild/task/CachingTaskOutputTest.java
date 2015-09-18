@@ -166,8 +166,8 @@ public class CachingTaskOutputTest {
 
   private static class MyCountingTaskWorker extends TaskWorker {
     public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
-      super(new MyCountingAlgorithm(counter), Hash.string("hash"), "counting", false, isCacheable,
-          CodeLocation.codeLocation(2));
+      super(new MyCountingAlgorithm(counter), "counting", false, isCacheable, CodeLocation
+          .codeLocation(2));
     }
   }
 
@@ -182,6 +182,11 @@ public class CachingTaskOutputTest {
     public TaskOutput execute(TaskInput input, ContainerImpl container) {
       SString sstring = container.string(Integer.toString(counter.incrementAndGet()));
       return new TaskOutput(sstring);
+    }
+
+    @Override
+    public HashCode hash() {
+      return Hash.string("hash");
     }
 
     @Override

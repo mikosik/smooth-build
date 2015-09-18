@@ -13,20 +13,22 @@ import com.google.common.hash.HashCode;
 
 public class TaskWorker {
   private final Algorithm algorithm;
-  private final HashCode hash;
   private final String name;
   private final boolean isInternal;
   private final boolean isCacheable;
   private final CodeLocation codeLocation;
 
-  public TaskWorker(Algorithm algorithm, HashCode hash, String name, boolean isInternal,
-      boolean isCacheable, CodeLocation codeLocation) {
+  public TaskWorker(Algorithm algorithm, String name, boolean isInternal, boolean isCacheable,
+      CodeLocation codeLocation) {
     this.algorithm = algorithm;
-    this.hash = hash;
     this.name = checkNotNull(name);
     this.isInternal = isInternal;
     this.isCacheable = isCacheable;
     this.codeLocation = checkNotNull(codeLocation);
+  }
+
+  public HashCode hash() {
+    return algorithm.hash();
   }
 
   public Type resultType() {
@@ -47,10 +49,6 @@ public class TaskWorker {
 
   public CodeLocation codeLocation() {
     return codeLocation;
-  }
-
-  public HashCode hash() {
-    return hash;
   }
 
   public TaskOutput execute(TaskInput input, ContainerImpl container) {
