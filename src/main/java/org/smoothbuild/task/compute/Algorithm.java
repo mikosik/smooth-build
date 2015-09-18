@@ -5,7 +5,11 @@ import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.ContainerImpl;
 
+import com.google.common.hash.HashCode;
+
 public interface Algorithm {
+  public HashCode hash();
+
   public Type resultType();
 
   public TaskOutput execute(TaskInput input, ContainerImpl container);
