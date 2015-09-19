@@ -16,10 +16,10 @@ import org.junit.Test;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
+import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.compute.Computer;
 import org.smoothbuild.util.Empty;
 
 public class TaskReporterTest {

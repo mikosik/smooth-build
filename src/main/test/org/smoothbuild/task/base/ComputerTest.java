@@ -1,4 +1,4 @@
-package org.smoothbuild.task.compute;
+package org.smoothbuild.task.base;
 
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
@@ -9,8 +9,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.Input;
-import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.testory.Closure;
 

@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.task.compute.Computer.constantComputer;
+import static org.smoothbuild.task.base.Computer.constantComputer;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -11,7 +11,6 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.compute.Computer;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableList;
