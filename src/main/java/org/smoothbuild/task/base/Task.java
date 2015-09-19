@@ -75,7 +75,7 @@ public class Task {
     return hasher.hash();
   }
 
-  private TaskInput input() {
-    return TaskInput.fromResults(dependencies);
+  private Input input() {
+    return Input.fromResults(dependencies);
   }
 }

@@ -25,8 +25,8 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.compute.Algorithm;
 import org.smoothbuild.task.compute.Computer;
@@ -179,7 +179,7 @@ public class CachingTaskOutputTest {
     }
 
     @Override
-    public TaskOutput execute(TaskInput input, ContainerImpl container) {
+    public TaskOutput execute(Input input, ContainerImpl container) {
       SString sstring = container.string(Integer.toString(counter.incrementAndGet()));
       return new TaskOutput(sstring);
     }

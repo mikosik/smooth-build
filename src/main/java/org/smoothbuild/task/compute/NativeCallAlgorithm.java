@@ -7,7 +7,7 @@ import java.util.List;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.base.TaskInput;
+import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.ContainerImpl;
 
@@ -31,12 +31,12 @@ public class NativeCallAlgorithm implements Algorithm {
   }
 
   @Override
-  public TaskOutput execute(TaskInput input, ContainerImpl container) {
+  public TaskOutput execute(Input input, ContainerImpl container) {
     Value result = function.invoke(container, calculateArguments(input));
     return new TaskOutput(result, container.messages());
   }
 
-  private List<Value> calculateArguments(TaskInput input) {
+  private List<Value> calculateArguments(Input input) {
     return input.values();
   }
 }

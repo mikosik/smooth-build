@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.TaskInput;
+import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.testory.Closure;
@@ -76,7 +76,7 @@ public class ComputerTest {
     }
 
     @Override
-    public TaskOutput execute(TaskInput input, ContainerImpl container) {
+    public TaskOutput execute(Input input, ContainerImpl container) {
       return null;
     }
   }

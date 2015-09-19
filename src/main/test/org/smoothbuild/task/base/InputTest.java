@@ -14,22 +14,22 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Empty;
 
-public class TaskInputTest {
+public class InputTest {
   private Task depTask1;
   private Task depTask2;
-  private TaskInput taskInput;
+  private Input input;
+  private Input input2;
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
   private SString sstring1;
   private SString sstring2;
-  private TaskInput taskInput2;
 
   @Test
-  public void task_input_takes_values_from_dependency_tasks() {
+  public void input_takes_values_from_dependency_tasks() {
     given(depTask1 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
     given(willReturn(new TaskOutput(sstring1)), depTask1).output();
-    given(taskInput = TaskInput.fromResults(asList(depTask1)));
-    when(taskInput).values();
+    given(input = Input.fromResults(asList(depTask1)));
+    when(input).values();
     thenReturned(contains(sstring1));
   }
 
@@ -41,10 +41,10 @@ public class TaskInputTest {
     given(sstring2 = objectsDb.string("def"));
     given(willReturn(new TaskOutput(sstring1)), depTask1).output();
     given(willReturn(new TaskOutput(sstring2)), depTask2).output();
-    given(taskInput = TaskInput.fromResults(asList(depTask1)));
-    given(taskInput2 = TaskInput.fromResults(asList(depTask2)));
-    when(taskInput).hash();
-    thenReturned(not(taskInput2.hash()));
+    given(input = Input.fromResults(asList(depTask1)));
+    given(input2 = Input.fromResults(asList(depTask2)));
+    when(input).hash();
+    thenReturned(not(input2.hash()));
   }
 
   @Test
@@ -56,10 +56,10 @@ public class TaskInputTest {
     given(sstring2 = objectsDb.string("def"));
     given(willReturn(new TaskOutput(sstring1)), depTask1).output();
     given(willReturn(new TaskOutput(sstring2)), depTask2).output();
-    given(taskInput = TaskInput.fromResults(asList(depTask1, depTask2)));
-    given(taskInput2 = TaskInput.fromResults(asList(depTask2, depTask1)));
-    when(taskInput).hash();
-    thenReturned(not(taskInput2.hash()));
+    given(input = Input.fromResults(asList(depTask1, depTask2)));
+    given(input2 = Input.fromResults(asList(depTask2, depTask1)));
+    when(input).hash();
+    thenReturned(not(input2.hash()));
   }
 
   @Test
@@ -69,10 +69,10 @@ public class TaskInputTest {
     given(sstring1 = objectsDb.string("abc"));
     given(willReturn(new TaskOutput(sstring1)), depTask1).output();
     given(willReturn(new TaskOutput(sstring1)), depTask2).output();
-    given(taskInput = TaskInput.fromResults(asList(depTask1)));
-    given(taskInput2 = TaskInput.fromResults(asList(depTask2)));
-    when(taskInput).hash();
-    thenReturned(taskInput2.hash());
+    given(input = Input.fromResults(asList(depTask1)));
+    given(input2 = Input.fromResults(asList(depTask2)));
+    when(input).hash();
+    thenReturned(input2.hash());
   }
 
   @Test
@@ -81,9 +81,9 @@ public class TaskInputTest {
     given(depTask2 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
     given(willReturn(new TaskOutput(sstring1)), depTask1).output();
-    given(taskInput = TaskInput.fromResults(asList(depTask1)));
-    given(taskInput2 = TaskInput.fromResults(Empty.taskList()));
-    when(taskInput).hash();
-    thenReturned(not(taskInput2.hash()));
+    given(input = Input.fromResults(asList(depTask1)));
+    given(input2 = Input.fromResults(Empty.taskList()));
+    when(input).hash();
+    thenReturned(not(input2.hash()));
   }
 }
