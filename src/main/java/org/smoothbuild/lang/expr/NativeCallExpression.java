@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.expr;
 
+import static org.smoothbuild.task.work.TaskWorker.nativeCallWorker;
+
 import java.util.List;
 
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.NativeCallWorker;
 import org.smoothbuild.task.work.TaskWorker;
 
 public class NativeCallExpression extends Expression {
@@ -21,6 +22,6 @@ public class NativeCallExpression extends Expression {
 
   @Override
   public TaskWorker createWorker() {
-    return new NativeCallWorker(function, isGenerated, codeLocation());
+    return nativeCallWorker(function, isGenerated, codeLocation());
   }
 }
