@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.expr;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.task.work.TaskWorker.virtualWorker;
+import static org.smoothbuild.task.compute.Computer.virtualComputer;
 
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.task.compute.Computer;
 
 public class DefinedCallExpression extends Expression {
   private final DefinedFunction function;
@@ -16,7 +16,7 @@ public class DefinedCallExpression extends Expression {
   }
 
   @Override
-  public TaskWorker createWorker() {
-    return virtualWorker(function, codeLocation());
+  public Computer createComputer() {
+    return virtualComputer(function, codeLocation());
   }
 }
