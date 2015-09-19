@@ -21,6 +21,29 @@ public class Computer {
   private final boolean isCacheable;
   private final CodeLocation codeLocation;
 
+  public static Computer constantComputer(Type type, Value value, CodeLocation codeLocation) {
+    return new Computer(new ConstantAlgorithm(value), type.name(), true, false, codeLocation);
+  }
+
+  public static Computer defaultValueComputer(Type type, Value value, CodeLocation codeLocation) {
+    return new Computer(new ConstantAlgorithm(value), type.name(), true, true, codeLocation);
+  }
+
+  public static Computer arrayComputer(ArrayType arrayType, CodeLocation codeLocation) {
+    return new Computer(new ArrayAlgorithm(arrayType), arrayType.name(), true, true, codeLocation);
+  }
+
+  public static Computer nativeCallComputer(NativeFunction function, boolean isInternal,
+      CodeLocation codeLocation) {
+    return new Computer(new NativeCallAlgorithm(function), function.name().value(), isInternal,
+        function.isCacheable(), codeLocation);
+  }
+
+  public static Computer virtualComputer(DefinedFunction function, CodeLocation codeLocation) {
+    return new Computer(new IdentityAlgorithm(function.type()), function.name().value(), false,
+        true, codeLocation);
+  }
+
   public Computer(Algorithm algorithm, String name, boolean isInternal, boolean isCacheable,
       CodeLocation codeLocation) {
     this.algorithm = algorithm;
@@ -56,29 +79,5 @@ public class Computer {
 
   public TaskOutput execute(TaskInput input, ContainerImpl container) {
     return algorithm.execute(input, container);
-  }
-
-  public static Computer virtualComputer(DefinedFunction function, CodeLocation codeLocation) {
-    return new Computer(new IdentityAlgorithm(function.type()), function.name().value(), false,
-        true, codeLocation);
-  }
-
-  public static Computer nativeCallComputer(NativeFunction function, boolean isInternal,
-      CodeLocation codeLocation) {
-    return new Computer(new NativeCallAlgorithm(function), function.name().value(), isInternal,
-        function.isCacheable(), codeLocation);
-  }
-
-  public static Computer arrayComputer(ArrayType arrayType, CodeLocation codeLocation) {
-    return new Computer(new ArrayAlgorithm(arrayType), arrayType.name(), true, true,
-        codeLocation);
-  }
-
-  public static Computer defaultValueComputer(Type type, Value value, CodeLocation codeLocation) {
-    return new Computer(new ConstantAlgorithm(value), type.name(), true, true, codeLocation);
-  }
-
-  public static Computer constantComputer(Type type, Value value, CodeLocation codeLocation) {
-    return new Computer(new ConstantAlgorithm(value), type.name(), true, false, codeLocation);
   }
 }
