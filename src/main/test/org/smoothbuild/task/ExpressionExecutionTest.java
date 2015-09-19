@@ -22,7 +22,7 @@ import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.InvalidExpression;
-import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExpressionError;
+import org.smoothbuild.lang.expr.err.CannotCreateComputerFromInvalidExpressionError;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -76,7 +76,7 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string(string));
     given(expression = new InvalidExpression(STRING, location));
     when(taskGraph).createTasks(expression);
-    thenThrown(new CannotCreateTaskWorkerFromInvalidExpressionError());
+    thenThrown(new CannotCreateComputerFromInvalidExpressionError());
   }
 
   @Test

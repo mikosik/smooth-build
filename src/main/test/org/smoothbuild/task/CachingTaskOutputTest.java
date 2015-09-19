@@ -29,9 +29,9 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.compute.Algorithm;
+import org.smoothbuild.task.compute.Computer;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.task.exec.TaskGraph;
-import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.hash.HashCode;
@@ -159,13 +159,13 @@ public class CachingTaskOutputTest {
     }
 
     @Override
-    public TaskWorker createWorker() {
-      return new MyCountingTaskWorker(counter, isCacheable);
+    public Computer createComputer() {
+      return new MyCountingComputer(counter, isCacheable);
     }
   }
 
-  private static class MyCountingTaskWorker extends TaskWorker {
-    public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
+  private static class MyCountingComputer extends Computer {
+    public MyCountingComputer(AtomicInteger counter, boolean isCacheable) {
       super(new MyCountingAlgorithm(counter), "counting", false, isCacheable, CodeLocation
           .codeLocation(2));
     }

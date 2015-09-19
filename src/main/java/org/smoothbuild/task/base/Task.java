@@ -5,26 +5,26 @@ import static com.google.common.base.Preconditions.checkState;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.compute.Computer;
 import org.smoothbuild.task.exec.ContainerImpl;
-import org.smoothbuild.task.work.TaskWorker;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
 public class Task {
-  private final TaskWorker worker;
+  private final Computer computer;
   private final ImmutableList<Task> dependencies;
   private TaskOutput output;
 
-  public Task(TaskWorker worker, ImmutableList<Task> dependencies) {
-    this.worker = worker;
+  public Task(Computer computer, ImmutableList<Task> dependencies) {
+    this.computer = computer;
     this.dependencies = dependencies;
     this.output = null;
   }
 
-  public TaskWorker worker() {
-    return worker;
+  public Computer computer() {
+    return computer;
   }
 
   public ImmutableList<Task> dependencies() {
@@ -32,27 +32,27 @@ public class Task {
   }
 
   public String name() {
-    return worker.name();
+    return computer.name();
   }
 
   public Type resultType() {
-    return worker.resultType();
+    return computer.resultType();
   }
 
   public boolean isInternal() {
-    return worker.isInternal();
+    return computer.isInternal();
   }
 
   public boolean isCacheable() {
-    return worker.isCacheable();
+    return computer.isCacheable();
   }
 
   public CodeLocation codeLocation() {
-    return worker.codeLocation();
+    return computer.codeLocation();
   }
 
   public void execute(ContainerImpl container) {
-    output = worker.execute(input(), container);
+    output = computer.execute(input(), container);
   }
 
   public TaskOutput output() {
@@ -70,7 +70,7 @@ public class Task {
 
   public HashCode hash() {
     Hasher hasher = Hash.newHasher();
-    hasher.putBytes(worker.hash().asBytes());
+    hasher.putBytes(computer.hash().asBytes());
     hasher.putBytes(input().hash().asBytes());
     return hasher.hash();
   }

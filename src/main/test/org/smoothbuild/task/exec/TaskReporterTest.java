@@ -19,7 +19,7 @@ import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
-import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.task.compute.Computer;
 import org.smoothbuild.util.Empty;
 
 public class TaskReporterTest {
@@ -63,11 +63,11 @@ public class TaskReporterTest {
   }
 
   private static Task createTask(boolean isInternal) {
-    return new Task(new MyTaskWorker(isInternal), Empty.taskList());
+    return new Task(new MyComputer(isInternal), Empty.taskList());
   }
 
-  private static final class MyTaskWorker extends TaskWorker {
-    private MyTaskWorker(boolean isInternal) {
+  private static final class MyComputer extends Computer {
+    private MyComputer(boolean isInternal) {
       super(null, "name", isInternal, true, CodeLocation.codeLocation(2));
     }
 

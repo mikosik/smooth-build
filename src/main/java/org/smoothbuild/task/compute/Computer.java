@@ -1,4 +1,4 @@
-package org.smoothbuild.task.work;
+package org.smoothbuild.task.compute;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -10,23 +10,18 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.TaskInput;
 import org.smoothbuild.task.base.TaskOutput;
-import org.smoothbuild.task.compute.Algorithm;
-import org.smoothbuild.task.compute.ArrayAlgorithm;
-import org.smoothbuild.task.compute.ConstantAlgorithm;
-import org.smoothbuild.task.compute.IdentityAlgorithm;
-import org.smoothbuild.task.compute.NativeCallAlgorithm;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
 
-public class TaskWorker {
+public class Computer {
   private final Algorithm algorithm;
   private final String name;
   private final boolean isInternal;
   private final boolean isCacheable;
   private final CodeLocation codeLocation;
 
-  public TaskWorker(Algorithm algorithm, String name, boolean isInternal, boolean isCacheable,
+  public Computer(Algorithm algorithm, String name, boolean isInternal, boolean isCacheable,
       CodeLocation codeLocation) {
     this.algorithm = algorithm;
     this.name = checkNotNull(name);
@@ -63,27 +58,27 @@ public class TaskWorker {
     return algorithm.execute(input, container);
   }
 
-  public static TaskWorker virtualWorker(DefinedFunction function, CodeLocation codeLocation) {
-    return new TaskWorker(new IdentityAlgorithm(function.type()), function.name().value(), false,
+  public static Computer virtualComputer(DefinedFunction function, CodeLocation codeLocation) {
+    return new Computer(new IdentityAlgorithm(function.type()), function.name().value(), false,
         true, codeLocation);
   }
 
-  public static TaskWorker nativeCallWorker(NativeFunction function, boolean isInternal,
+  public static Computer nativeCallComputer(NativeFunction function, boolean isInternal,
       CodeLocation codeLocation) {
-    return new TaskWorker(new NativeCallAlgorithm(function), function.name().value(), isInternal,
+    return new Computer(new NativeCallAlgorithm(function), function.name().value(), isInternal,
         function.isCacheable(), codeLocation);
   }
 
-  public static TaskWorker arrayWorker(ArrayType arrayType, CodeLocation codeLocation) {
-    return new TaskWorker(new ArrayAlgorithm(arrayType), arrayType.name(), true, true,
+  public static Computer arrayComputer(ArrayType arrayType, CodeLocation codeLocation) {
+    return new Computer(new ArrayAlgorithm(arrayType), arrayType.name(), true, true,
         codeLocation);
   }
 
-  public static TaskWorker defaultValueWorker(Type type, Value value, CodeLocation codeLocation) {
-    return new TaskWorker(new ConstantAlgorithm(value), type.name(), true, true, codeLocation);
+  public static Computer defaultValueComputer(Type type, Value value, CodeLocation codeLocation) {
+    return new Computer(new ConstantAlgorithm(value), type.name(), true, true, codeLocation);
   }
 
-  public static TaskWorker constantWorker(Type type, Value value, CodeLocation codeLocation) {
-    return new TaskWorker(new ConstantAlgorithm(value), type.name(), true, false, codeLocation);
+  public static Computer constantComputer(Type type, Value value, CodeLocation codeLocation) {
+    return new Computer(new ConstantAlgorithm(value), type.name(), true, false, codeLocation);
   }
 }
