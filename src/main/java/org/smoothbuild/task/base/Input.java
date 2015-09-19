@@ -8,19 +8,19 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
-public class TaskInput {
+public class Input {
   private final ImmutableList<Value> values;
   private final HashCode hash;
 
-  public static TaskInput fromResults(Iterable<? extends Task> deps) {
+  public static Input fromResults(Iterable<? extends Task> deps) {
     return fromValues(toResults(deps));
   }
 
-  public static TaskInput fromValues(Iterable<? extends Value> values) {
-    return new TaskInput(values, calculateHash(values));
+  public static Input fromValues(Iterable<? extends Value> values) {
+    return new Input(values, calculateHash(values));
   }
 
-  private TaskInput(Iterable<? extends Value> values, HashCode hash) {
+  private Input(Iterable<? extends Value> values, HashCode hash) {
     this.values = ImmutableList.copyOf(values);
     this.hash = hash;
   }
