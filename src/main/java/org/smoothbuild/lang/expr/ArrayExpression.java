@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.expr;
 
+import static org.smoothbuild.task.work.TaskWorker.arrayWorker;
+
 import java.util.List;
 
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.ArrayWorker;
 import org.smoothbuild.task.work.TaskWorker;
 
 public class ArrayExpression extends Expression {
@@ -18,6 +19,6 @@ public class ArrayExpression extends Expression {
 
   @Override
   public TaskWorker createWorker() {
-    return new ArrayWorker(arrayType, codeLocation());
+    return arrayWorker(arrayType, codeLocation());
   }
 }
