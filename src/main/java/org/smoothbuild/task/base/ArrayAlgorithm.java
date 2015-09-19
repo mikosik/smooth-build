@@ -1,14 +1,12 @@
-package org.smoothbuild.task.compute;
+package org.smoothbuild.task.base;
 
-import static org.smoothbuild.task.compute.AlgorithmHashes.arrayAlgorithmHash;
+import static org.smoothbuild.task.base.AlgorithmHashes.arrayAlgorithmHash;
 
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.base.Input;
-import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;

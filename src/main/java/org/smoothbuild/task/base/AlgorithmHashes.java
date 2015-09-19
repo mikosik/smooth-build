@@ -1,4 +1,4 @@
-package org.smoothbuild.task.compute;
+package org.smoothbuild.task.base;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.nativ.NativeFunction;

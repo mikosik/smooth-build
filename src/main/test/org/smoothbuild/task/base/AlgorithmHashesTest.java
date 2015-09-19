@@ -1,9 +1,9 @@
-package org.smoothbuild.task.compute;
+package org.smoothbuild.task.base;
 
-import static org.smoothbuild.task.compute.AlgorithmHashes.arrayAlgorithmHash;
-import static org.smoothbuild.task.compute.AlgorithmHashes.constantAlgorithmHash;
-import static org.smoothbuild.task.compute.AlgorithmHashes.identityAlgorithmHash;
-import static org.smoothbuild.task.compute.AlgorithmHashes.nativeCallAlgorithmHash;
+import static org.smoothbuild.task.base.AlgorithmHashes.arrayAlgorithmHash;
+import static org.smoothbuild.task.base.AlgorithmHashes.constantAlgorithmHash;
+import static org.smoothbuild.task.base.AlgorithmHashes.identityAlgorithmHash;
+import static org.smoothbuild.task.base.AlgorithmHashes.nativeCallAlgorithmHash;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;

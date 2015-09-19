@@ -1,10 +1,8 @@
-package org.smoothbuild.task.compute;
+package org.smoothbuild.task.base;
 
-import static org.smoothbuild.task.compute.AlgorithmHashes.identityAlgorithmHash;
+import static org.smoothbuild.task.base.AlgorithmHashes.identityAlgorithmHash;
 
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.task.base.Input;
-import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;

@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.task.compute.Computer.constantComputer;
+import static org.smoothbuild.task.base.Computer.constantComputer;
 
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.compute.Computer;
+import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.util.Empty;
 
 public class DefaultValueExpression extends Expression {

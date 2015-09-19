@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.task.compute.Computer.arrayComputer;
+import static org.smoothbuild.task.base.Computer.arrayComputer;
 
 import java.util.List;
 
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.compute.Computer;
+import org.smoothbuild.task.base.Computer;
 
 public class ArrayExpression extends Expression {
   private final ArrayType arrayType;

@@ -1,4 +1,4 @@
-package org.smoothbuild.task.compute;
+package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -8,8 +8,6 @@ import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.base.Input;
-import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;

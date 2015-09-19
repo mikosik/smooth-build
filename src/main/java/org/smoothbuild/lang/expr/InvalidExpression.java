@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.lang.expr.err.CannotCreateComputerFromInvalidExpressionError;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.compute.Computer;
+import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.util.Empty;
 
 public class InvalidExpression extends Expression {
