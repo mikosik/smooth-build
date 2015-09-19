@@ -17,8 +17,8 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Input;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.compute.Computer;
 import org.smoothbuild.util.Empty;
 
@@ -32,7 +32,7 @@ public class TaskReporterTest {
   public void internal_task_with_message_is_printed() {
     given(task = createTask(true));
     given(messages = asList(new Message(WARNING, "message")));
-    given(task).setOutput(new TaskOutput(messages));
+    given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -48,7 +48,7 @@ public class TaskReporterTest {
   public void non_internal_task_with_message_is_printed() {
     given(messages = asList(new Message(WARNING, "message")));
     given(task = createTask(false));
-    given(task).setOutput(new TaskOutput(messages));
+    given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -57,7 +57,7 @@ public class TaskReporterTest {
   public void non_internal_task_without_message_is_printed() {
     given(task = createTask(false));
     given(messages = asList());
-    given(task).setOutput(new TaskOutput(messages));
+    given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
     thenCalled(userConsole).print(header(task, false), messages);
   }
@@ -72,7 +72,7 @@ public class TaskReporterTest {
     }
 
     @Override
-    public TaskOutput execute(Input input, ContainerImpl container) {
+    public Output execute(Input input, ContainerImpl container) {
       return null;
     }
   }

@@ -27,7 +27,7 @@ public class InputTest {
   public void input_takes_values_from_dependency_tasks() {
     given(depTask1 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
-    given(willReturn(new TaskOutput(sstring1)), depTask1).output();
+    given(willReturn(new Output(sstring1)), depTask1).output();
     given(input = Input.fromResults(asList(depTask1)));
     when(input).values();
     thenReturned(contains(sstring1));
@@ -39,8 +39,8 @@ public class InputTest {
     given(depTask2 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
-    given(willReturn(new TaskOutput(sstring1)), depTask1).output();
-    given(willReturn(new TaskOutput(sstring2)), depTask2).output();
+    given(willReturn(new Output(sstring1)), depTask1).output();
+    given(willReturn(new Output(sstring2)), depTask2).output();
     given(input = Input.fromResults(asList(depTask1)));
     given(input2 = Input.fromResults(asList(depTask2)));
     when(input).hash();
@@ -54,8 +54,8 @@ public class InputTest {
     given(depTask2 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
     given(sstring2 = objectsDb.string("def"));
-    given(willReturn(new TaskOutput(sstring1)), depTask1).output();
-    given(willReturn(new TaskOutput(sstring2)), depTask2).output();
+    given(willReturn(new Output(sstring1)), depTask1).output();
+    given(willReturn(new Output(sstring2)), depTask2).output();
     given(input = Input.fromResults(asList(depTask1, depTask2)));
     given(input2 = Input.fromResults(asList(depTask2, depTask1)));
     when(input).hash();
@@ -67,8 +67,8 @@ public class InputTest {
     given(depTask1 = mock(Task.class));
     given(depTask2 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
-    given(willReturn(new TaskOutput(sstring1)), depTask1).output();
-    given(willReturn(new TaskOutput(sstring1)), depTask2).output();
+    given(willReturn(new Output(sstring1)), depTask1).output();
+    given(willReturn(new Output(sstring1)), depTask2).output();
     given(input = Input.fromResults(asList(depTask1)));
     given(input2 = Input.fromResults(asList(depTask2)));
     when(input).hash();
@@ -80,7 +80,7 @@ public class InputTest {
     given(depTask1 = mock(Task.class));
     given(depTask2 = mock(Task.class));
     given(sstring1 = objectsDb.string("abc"));
-    given(willReturn(new TaskOutput(sstring1)), depTask1).output();
+    given(willReturn(new Output(sstring1)), depTask1).output();
     given(input = Input.fromResults(asList(depTask1)));
     given(input2 = Input.fromResults(Empty.taskList()));
     when(input).hash();
