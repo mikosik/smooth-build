@@ -15,7 +15,7 @@ import com.google.common.hash.Hasher;
 public class Task {
   private final Computer computer;
   private final ImmutableList<Task> dependencies;
-  private TaskOutput output;
+  private Output output;
 
   public Task(Computer computer, ImmutableList<Task> dependencies) {
     this.computer = computer;
@@ -55,12 +55,12 @@ public class Task {
     output = computer.execute(input(), container);
   }
 
-  public TaskOutput output() {
+  public Output output() {
     checkState(output != null);
     return output;
   }
 
-  public void setOutput(TaskOutput output) {
+  public void setOutput(Output output) {
     this.output = output;
   }
 

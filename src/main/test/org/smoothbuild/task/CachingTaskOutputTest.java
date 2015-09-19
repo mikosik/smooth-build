@@ -26,8 +26,8 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Input;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.compute.Algorithm;
 import org.smoothbuild.task.compute.Computer;
 import org.smoothbuild.task.exec.ContainerImpl;
@@ -75,7 +75,7 @@ public class CachingTaskOutputTest {
         CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(stringArray("1", "1")));
+    thenEqual(task.output(), new Output(stringArray("1", "1")));
   }
 
   @Test
@@ -88,7 +88,7 @@ public class CachingTaskOutputTest {
         CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
+    thenEqual(task.output(), new Output(stringArray("1", "2")));
   }
 
   @Test
@@ -101,7 +101,7 @@ public class CachingTaskOutputTest {
         CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
+    thenEqual(task.output(), new Output(stringArray("1", "2")));
   }
 
   @Test
@@ -118,8 +118,8 @@ public class CachingTaskOutputTest {
     given(task2 = taskGraph2.createTasks(expression2));
     given(taskGraph).executeAll();
     when(taskGraph2).executeAll();
-    thenEqual(task.output(), new TaskOutput(objectsDb.string("1")));
-    thenEqual(task2.output(), new TaskOutput(objectsDb.string("2")));
+    thenEqual(task.output(), new Output(objectsDb.string("1")));
+    thenEqual(task2.output(), new Output(objectsDb.string("2")));
   }
 
   private static class GrowingSmoothJarHashModule extends AbstractModule {
@@ -179,9 +179,9 @@ public class CachingTaskOutputTest {
     }
 
     @Override
-    public TaskOutput execute(Input input, ContainerImpl container) {
+    public Output execute(Input input, ContainerImpl container) {
       SString sstring = container.string(Integer.toString(counter.incrementAndGet()));
-      return new TaskOutput(sstring);
+      return new Output(sstring);
     }
 
     @Override

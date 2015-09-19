@@ -4,7 +4,7 @@ import static org.smoothbuild.task.compute.AlgorithmHashes.identityAlgorithmHash
 
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Input;
-import org.smoothbuild.task.base.TaskOutput;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
@@ -27,7 +27,7 @@ public class IdentityAlgorithm implements Algorithm {
   }
 
   @Override
-  public TaskOutput execute(Input input, ContainerImpl container) {
-    return new TaskOutput(input.values().get(0));
+  public Output execute(Input input, ContainerImpl container) {
+    return new Output(input.values().get(0));
   }
 }

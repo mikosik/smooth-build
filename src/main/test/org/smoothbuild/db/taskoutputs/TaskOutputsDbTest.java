@@ -30,7 +30,7 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.task.base.TaskOutput;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.util.Empty;
@@ -65,7 +65,7 @@ public class TaskOutputsDbTest {
   @Test
   public void result_cache_contains_written_result() {
     given(taskOutputsDb).write(hash,
-        new TaskOutput(objectsDb.string("result"), Empty.messageList()));
+        new Output(objectsDb.string("result"), Empty.messageList()));
     when(taskOutputsDb.contains(hash));
     thenReturned(true);
   }
@@ -80,7 +80,7 @@ public class TaskOutputsDbTest {
   public void written_messages_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string("abc"));
     given(message = new Message(ERROR, "message string"));
-    given(taskOutputsDb).write(hash, new TaskOutput(stringValue, asList(message)));
+    given(taskOutputsDb).write(hash, new Output(stringValue, asList(message)));
     when(taskOutputsDb.read(hash, STRING).messages());
     thenReturned(contains(message));
   }
@@ -89,7 +89,7 @@ public class TaskOutputsDbTest {
   public void written_file_array_can_be_read_back() throws Exception {
     given(file = objectsDb.file(path, bytes));
     given(fileArray = objectsDb.arrayBuilder(SFile.class).add(file).build());
-    given(taskOutputsDb).write(hash, new TaskOutput(fileArray, Empty.messageList()));
+    given(taskOutputsDb).write(hash, new Output(fileArray, Empty.messageList()));
     when(((Iterable<?>) taskOutputsDb.read(hash, FILE_ARRAY).result()).iterator().next());
     thenReturned(file);
   }
@@ -98,7 +98,7 @@ public class TaskOutputsDbTest {
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
     given(blobArray = objectsDb.arrayBuilder(Blob.class).add(blob).build());
-    given(taskOutputsDb).write(hash, new TaskOutput(blobArray, Empty.messageList()));
+    given(taskOutputsDb).write(hash, new Output(blobArray, Empty.messageList()));
     when(((Iterable<?>) taskOutputsDb.read(hash, BLOB_ARRAY).result()).iterator().next());
     thenReturned(blob);
   }
@@ -107,7 +107,7 @@ public class TaskOutputsDbTest {
   public void written_string_array_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
     given(stringArray = objectsDb.arrayBuilder(SString.class).add(stringValue).build());
-    given(taskOutputsDb).write(hash, new TaskOutput(stringArray, Empty.messageList()));
+    given(taskOutputsDb).write(hash, new Output(stringArray, Empty.messageList()));
     when(((Iterable<?>) taskOutputsDb.read(hash, STRING_ARRAY).result()).iterator().next());
     thenReturned(stringValue);
   }
@@ -115,7 +115,7 @@ public class TaskOutputsDbTest {
   @Test
   public void written_file_can_be_read_back() throws Exception {
     given(file = objectsDb.file(path, bytes));
-    given(taskOutputsDb).write(hash, new TaskOutput(file, Empty.messageList()));
+    given(taskOutputsDb).write(hash, new Output(file, Empty.messageList()));
     when(taskOutputsDb.read(hash, FILE).result());
     thenReturned(file);
   }
@@ -123,7 +123,7 @@ public class TaskOutputsDbTest {
   @Test
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = writeBlob(objectsDb, bytes));
-    given(taskOutputsDb).write(hash, new TaskOutput(blob, Empty.messageList()));
+    given(taskOutputsDb).write(hash, new Output(blob, Empty.messageList()));
     when(taskOutputsDb.read(hash, BLOB).result());
     thenReturned(blob);
   }
@@ -131,7 +131,7 @@ public class TaskOutputsDbTest {
   @Test
   public void writtend_string_can_be_read_back() throws Exception {
     given(stringValue = objectsDb.string(string));
-    given(taskOutputsDb).write(hash, new TaskOutput(stringValue, Empty.messageList()));
+    given(taskOutputsDb).write(hash, new Output(stringValue, Empty.messageList()));
     when(((SString) taskOutputsDb.read(hash, STRING).result()).value());
     thenReturned(string);
   }

@@ -8,7 +8,7 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Input;
-import org.smoothbuild.task.base.TaskOutput;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
@@ -31,10 +31,10 @@ public class ArrayAlgorithm implements Algorithm {
   }
 
   @Override
-  public TaskOutput execute(Input input, ContainerImpl container) {
+  public Output execute(Input input, ContainerImpl container) {
     Class<? extends Value> elementClass = (Class<? extends Value>) arrayType.elemType().jType()
         .getRawType();
-    return new TaskOutput(inputToArray(input, container, elementClass));
+    return new Output(inputToArray(input, container, elementClass));
   }
 
   private <T extends Value> Array<T> inputToArray(Input input, ContainerImpl container,

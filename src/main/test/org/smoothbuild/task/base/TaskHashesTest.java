@@ -31,7 +31,7 @@ public class TaskHashesTest {
   public void hashes_of_tasks_with_same_computer_and_dependencies_are_equal() throws Exception {
     given(computer = constantComputer(STRING, objectsDb.string("work"), CL));
     given(dep = mock(Task.class));
-    given(willReturn(new TaskOutput(objectsDb.string("abc"))), dep).output();
+    given(willReturn(new Output(objectsDb.string("abc"))), dep).output();
     given(task = new Task(computer, ImmutableList.<Task> of(dep)));
     given(task2 = new Task(computer, ImmutableList.<Task> of(dep)));
     when(task).hash();
@@ -43,9 +43,9 @@ public class TaskHashesTest {
       throws Exception {
     given(computer = constantComputer(STRING, objectsDb.string("work"), CL));
     given(dep = mock(Task.class));
-    given(willReturn(new TaskOutput(objectsDb.string("abc"))), dep).output();
+    given(willReturn(new Output(objectsDb.string("abc"))), dep).output();
     given(dep2 = mock(Task.class));
-    given(willReturn(new TaskOutput(objectsDb.string("def"))), dep2).output();
+    given(willReturn(new Output(objectsDb.string("def"))), dep2).output();
     given(task = new Task(computer, ImmutableList.<Task> of(dep)));
     given(task2 = new Task(computer, ImmutableList.<Task> of(dep2)));
     when(task).hash();
@@ -58,7 +58,7 @@ public class TaskHashesTest {
     given(computer = constantComputer(STRING, objectsDb.string("work"), CL));
     given(computer2 = constantComputer(STRING, objectsDb.string("work2"), CL));
     given(dep = mock(Task.class));
-    given(willReturn(new TaskOutput(objectsDb.string("abc"))), dep).output();
+    given(willReturn(new Output(objectsDb.string("abc"))), dep).output();
     given(task = new Task(computer, ImmutableList.<Task> of(dep)));
     given(task2 = new Task(computer2, ImmutableList.<Task> of(dep)));
     when(task).hash();
