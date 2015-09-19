@@ -25,10 +25,6 @@ public class Computer {
     return new Computer(new ConstantAlgorithm(value), type.name(), true, true, codeLocation);
   }
 
-  public static Computer defaultValueComputer(Type type, Value value, CodeLocation codeLocation) {
-    return new Computer(new ConstantAlgorithm(value), type.name(), true, true, codeLocation);
-  }
-
   public static Computer arrayComputer(ArrayType arrayType, CodeLocation codeLocation) {
     return new Computer(new ArrayAlgorithm(arrayType), arrayType.name(), true, true, codeLocation);
   }
