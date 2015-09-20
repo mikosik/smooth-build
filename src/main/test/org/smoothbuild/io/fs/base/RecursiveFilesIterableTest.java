@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
 public class RecursiveFilesIterableTest {
 
@@ -50,7 +50,7 @@ public class RecursiveFilesIterableTest {
 
   @Test
   public void isEmptyWhenDirectoryDoesNotExist() throws Exception {
-    FakeFileSystem fileSystem = new FakeFileSystem();
+    FileSystem fileSystem = new MemoryFileSystem();
     Path path = path("my/file");
 
     assertTrue(isEmpty(recursiveFilesIterable(fileSystem, path)));
@@ -58,7 +58,7 @@ public class RecursiveFilesIterableTest {
 
   @Test
   public void throwsExceptionWhenDirectoryIsAFile() throws Exception {
-    FakeFileSystem fileSystem = new FakeFileSystem();
+    FileSystem fileSystem = new MemoryFileSystem();
     Path path = path("my/file");
     createFile(fileSystem, path, "content");
 
@@ -72,7 +72,7 @@ public class RecursiveFilesIterableTest {
 
   private void doTestIterable(String rootDir, String[] names, String expectedRootDir,
       String[] expectedNames) throws IOException {
-    FakeFileSystem fileSystem = new FakeFileSystem();
+    FileSystem fileSystem = new MemoryFileSystem();
     for (String name : names) {
       createFile(fileSystem, path(rootDir).append(path(name)), "content");
     }

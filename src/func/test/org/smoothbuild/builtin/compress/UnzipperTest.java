@@ -18,12 +18,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.ZipTester;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class UnzipperTest {
@@ -75,7 +76,7 @@ public class UnzipperTest {
   }
 
   private static Blob zipped(String... fileNames) throws IOException {
-    FakeFileSystem fileSystem = new FakeFileSystem();
+    FileSystem fileSystem = new MemoryFileSystem();
     Path path = ZipTester.zippedFiles(fileSystem, fileNames);
     return new FakeObjectsDb().blob(inputStreamToBytes(fileSystem.openInputStream(path)));
   }
