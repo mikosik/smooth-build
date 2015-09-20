@@ -13,9 +13,9 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.objects.ObjectsDb;
-import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
+import org.smoothbuild.lang.expr.ValueExpression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.def.err.AmbiguousNamelessArgsError;
@@ -72,7 +72,7 @@ public class ArgumentExpressionCreator {
     Map<String, Expression> argumentExpressions = convert(argumentMap);
     for (Parameter parameter : parametersPool.allOptional()) {
       Value value = parameter.type().defaultValue(objectsDb);
-      Expression expression = new DefaultValueExpression(value, codeLocation);
+      Expression expression = new ValueExpression(value, codeLocation);
       argumentExpressions.put(parameter.name(), expression);
     }
 
@@ -125,7 +125,8 @@ public class ArgumentExpressionCreator {
   }
 
   private static void processNamelessArguments(Function function, Collection<Argument> arguments,
-      ParametersPool parametersPool, LoggedMessages messages, Map<Parameter, Argument> argumentMap) {
+      ParametersPool parametersPool, LoggedMessages messages,
+      Map<Parameter, Argument> argumentMap) {
     ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
 
     for (Type type : allTypes()) {
@@ -140,9 +141,8 @@ public class ArgumentExpressionCreator {
           argumentMap.put(candidateParameter, onlyArgument);
           parametersPool.take(candidateParameter);
         } else {
-          AmbiguousNamelessArgsError error =
-              new AmbiguousNamelessArgsError(function.name(), argumentMap, availableArguments,
-                  availableTypedParams);
+          AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
+              argumentMap, availableArguments, availableTypedParams);
           messages.log(error);
           return;
         }
