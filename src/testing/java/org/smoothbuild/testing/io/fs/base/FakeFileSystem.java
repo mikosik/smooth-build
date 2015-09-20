@@ -47,8 +47,4 @@ public class FakeFileSystem extends SubFileSystem {
     InputStream inputStream = openInputStream(path);
     assertContent(inputStream, content);
   }
-
-  public FakeFileSystem subFileSystem(Path root) {
-    return new FakeFileSystem(this, root);
-  }
 }

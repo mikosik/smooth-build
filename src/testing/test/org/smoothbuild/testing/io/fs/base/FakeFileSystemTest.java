@@ -102,12 +102,4 @@ public class FakeFileSystemTest {
     }
     fail("exception should be thrown");
   }
-
-  @Test
-  public void subFileSystem() throws Exception {
-    OutputStream os = fileSystem.openOutputStream(root.append(path));
-    writeAndClose(os, path.value());
-
-    fileSystem.subFileSystem(root).assertFileContainsItsPath(path);
-  }
 }
