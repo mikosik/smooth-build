@@ -35,7 +35,6 @@ public class DependencyCollectorTest {
 
   @Test
   public void singleFunction() {
-
     FakeModuleContext module = moduleCtx();
     FakeFunctionContext function = module.addFunctionCtx(name1.value());
     FakePipeContext pipe = function.addPipeExpressionCtx();
