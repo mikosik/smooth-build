@@ -24,12 +24,6 @@ public class FakeFileSystemTest {
   }
 
   @Test
-  public void createFileContiningItsPathWithRoot() throws Exception {
-    fileSystem.createFileContainingItsPath(root, path);
-    assertContent(fileSystem.openInputStream(root.append(path)), path.value());
-  }
-
-  @Test
   public void assertFileContainsItsPathSucceedsWhenContentMatches() throws Exception {
     OutputStream os = fileSystem.openOutputStream(path);
     writeAndClose(os, path.value());
