@@ -4,6 +4,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
+import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
@@ -26,7 +27,7 @@ public class FileArraySaverTest {
 
   @Test
   public void duplicated_file_paths_causes_error() throws Exception {
-    fileSystem.createFile(targetPath(file1.content()), "ignored");
+    createFile(fileSystem, targetPath(file1.content()), "ignored");
 
     fileArraySaver = new FileArraySaver(fileSystem, messages);
     fileArraySaver.save(name, objectsDb.array(SFile.class, file1, file1));
@@ -35,8 +36,8 @@ public class FileArraySaverTest {
 
   @Test
   public void all_files_are_stored() throws Exception {
-    fileSystem.createFile(targetPath(file1.content()), file1.path().value());
-    fileSystem.createFile(targetPath(file2.content()), file2.path().value());
+    createFile(fileSystem, targetPath(file1.content()), file1.path().value());
+    createFile(fileSystem, targetPath(file2.content()), file2.path().value());
 
     fileArraySaver = new FileArraySaver(fileSystem, messages);
     fileArraySaver.save(name, objectsDb.array(SFile.class, file1, file2));

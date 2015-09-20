@@ -1,16 +1,15 @@
 package org.smoothbuild.testing.io.fs.base;
 
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
+import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SubFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.testing.common.StreamTester;
 
 public class FakeFileSystem extends SubFileSystem {
 
@@ -23,16 +22,11 @@ public class FakeFileSystem extends SubFileSystem {
   }
 
   public void createFileContainingItsPath(Path path) throws IOException {
-    createFile(path, path.value());
+    createFile(this, path, path.value());
   }
 
   public void createFileContainingItsPath(Path root, Path path) throws IOException {
-    createFile(root.append(path), path.value());
-  }
-
-  public void createFile(Path path, String content) throws IOException {
-    OutputStream outputStream = openOutputStream(path);
-    StreamTester.writeAndClose(outputStream, content);
+    createFile(this, root.append(path), path.value());
   }
 
   public void assertFileContainsItsPath(Path path) throws IOException {
