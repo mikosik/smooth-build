@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.file;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -71,7 +72,7 @@ public class FileFunctionTest {
   public void nonFilePathIsReported() throws Exception {
     Path dir = path("some/path");
     Path file = dir.append(path("file.txt"));
-    container.projectFileSystem().createFileContainingItsPath(file);
+    createFile(container.projectFileSystem(), file, "content");
 
     try {
       execute(dir.value());
@@ -83,9 +84,9 @@ public class FileFunctionTest {
 
   @Test
   public void execute() throws Exception {
-    given(container.projectFileSystem()).createFileContainingItsPath(path);
+    given(createFile(container.projectFileSystem(), path, "content"));
     when(execute(path.value()));
-    thenReturned(objectsDb.file(path));
+    thenReturned(objectsDb.file(path, "content"));
   }
 
   private SFile execute(String file) {

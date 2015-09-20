@@ -1,7 +1,6 @@
 package org.smoothbuild.testing.io.fs.base;
 
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
-import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,10 +18,6 @@ public class FakeFileSystem extends SubFileSystem {
 
   public FakeFileSystem(FileSystem fileSystem, Path root) {
     super(fileSystem, root);
-  }
-
-  public void createFileContainingItsPath(Path path) throws IOException {
-    createFile(this, path, path.value());
   }
 
   public void assertFileContainsItsPath(Path path) throws IOException {

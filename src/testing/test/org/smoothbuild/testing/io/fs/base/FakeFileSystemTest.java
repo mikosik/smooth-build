@@ -2,7 +2,6 @@ package org.smoothbuild.testing.io.fs.base;
 
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 
 import java.io.OutputStream;
@@ -16,12 +15,6 @@ public class FakeFileSystemTest {
   String content = "my content";
 
   FakeFileSystem fileSystem = new FakeFileSystem();
-
-  @Test
-  public void createFileContiningItsPath() throws Exception {
-    fileSystem.createFileContainingItsPath(path);
-    assertContent(fileSystem.openInputStream(path), path.value());
-  }
 
   @Test
   public void assertFileContainsItsPathSucceedsWhenContentMatches() throws Exception {
