@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.givenTest;
 
 import java.util.List;
@@ -20,6 +20,7 @@ import org.smoothbuild.testing.message.FakeLoggedMessages;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class DependencySorterTest {
   private Name name1;
@@ -100,5 +101,13 @@ public class DependencySorterTest {
       messages.log(e);
       return null;
     }
+  }
+
+  private static Set<Dependency> dependencies(Name... names) {
+    Set<Dependency> result = Sets.newHashSet();
+    for (Name name : names) {
+      result.add(new Dependency(codeLocation(1), name));
+    }
+    return result;
   }
 }
