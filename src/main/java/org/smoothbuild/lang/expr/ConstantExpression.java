@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.task.base.Computer.constantComputer;
 
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.ConstantWorker;
-import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.util.Empty;
 
 public class ConstantExpression extends Expression {
@@ -17,7 +17,7 @@ public class ConstantExpression extends Expression {
   }
 
   @Override
-  public TaskWorker createWorker() {
-    return new ConstantWorker(type(), value, codeLocation());
+  public Computer createComputer() {
+    return constantComputer(type(), value, codeLocation());
   }
 }

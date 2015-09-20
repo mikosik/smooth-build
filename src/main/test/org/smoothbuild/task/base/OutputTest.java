@@ -19,9 +19,9 @@ import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.testory.Closure;
 
-public class TaskOutputTest {
+public class OutputTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private TaskOutput taskOutput;
+  private Output output;
   private final List<Message> messages = asList(new Message(ERROR, ""));
   private SString sstring;
   private SString otherSstring;
@@ -29,119 +29,119 @@ public class TaskOutputTest {
   @Test
   public void null_messages_are_forbidden() {
     given(sstring = objectsDb.string("abc"));
-    when(newTaskOutput(sstring, null));
+    when(newOutput(sstring, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void value_returns_result_value() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).result();
+    given(output = new Output(sstring, messages));
+    when(output).result();
     thenReturned(sstring);
   }
 
   @Test
   public void messages_returns_messages() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).messages();
+    given(output = new Output(sstring, messages));
+    when(output).messages();
     thenReturned(messages);
   }
 
   @Test
-  public void task_result_created_without_messages_has_no_messages() throws Exception {
+  public void output_created_without_messages_has_no_messages() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(taskOutput = new TaskOutput(sstring));
-    when(taskOutput).messages();
+    given(output = new Output(sstring));
+    when(output).messages();
     thenReturned(empty());
   }
 
   @Test
   public void value_throws_exception_when_no_value_is_present() throws Exception {
-    given(taskOutput = new TaskOutput(messages));
-    when(taskOutput).result();
+    given(output = new Output(messages));
+    when(output).result();
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void has_value_returns_true_when_value_is_present() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).hasResult();
+    given(output = new Output(sstring, messages));
+    when(output).hasResult();
     thenReturned(true);
   }
 
   @Test
   public void has_value_returns_false_when_value_is_present() throws Exception {
-    given(taskOutput = new TaskOutput(messages));
-    when(taskOutput).hasResult();
+    given(output = new Output(messages));
+    when(output).hasResult();
     thenReturned(false);
   }
 
   @Test
-  public void task_results_with_same_return_value_and_messages_are_equal() throws Exception {
+  public void outputs_with_same_return_value_and_messages_are_equal() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).equals(new TaskOutput(sstring, messages));
+    given(output = new Output(sstring, messages));
+    when(output).equals(new Output(sstring, messages));
     thenReturned(true);
   }
 
   @Test
-  public void task_results_with_same_return_value_and_no_messages_are_equal() throws Exception {
+  public void outputs_with_same_return_value_and_no_messages_are_equal() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(taskOutput = new TaskOutput(sstring));
-    when(taskOutput).equals(new TaskOutput(sstring));
+    given(output = new Output(sstring));
+    when(output).equals(new Output(sstring));
     thenReturned(true);
   }
 
   @Test
-  public void task_results_with_same_message_and_no_return_value_are_equal() throws Exception {
-    given(taskOutput = new TaskOutput(messages));
-    when(taskOutput).equals(new TaskOutput(messages));
+  public void outputs_with_same_message_and_no_return_value_are_equal() throws Exception {
+    given(output = new Output(messages));
+    when(output).equals(new Output(messages));
     thenReturned(true);
   }
 
   @Test
-  public void task_results_with_same_return_value_but_different_messages_are_not_equal()
+  public void outputs_with_same_return_value_but_different_messages_are_not_equal()
       throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).equals(new TaskOutput(sstring, Arrays.<Message> asList()));
+    given(output = new Output(sstring, messages));
+    when(output).equals(new Output(sstring, Arrays.<Message> asList()));
     thenReturned(false);
   }
 
   @Test
-  public void task_results_with_different_return_values_and_same_messages_are_not_equal()
+  public void outputs_with_different_return_values_and_same_messages_are_not_equal()
       throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(otherSstring = objectsDb.string("def"));
-    given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).equals(new TaskOutput(otherSstring, messages));
+    given(output = new Output(sstring, messages));
+    when(output).equals(new Output(otherSstring, messages));
     thenReturned(false);
   }
 
   @Test
-  public void task_result_without_return_value_is_not_equal_to_task_result_with_result_value()
+  public void output_without_return_value_is_not_equal_to_output_with_result_value()
       throws Exception {
     given(sstring = objectsDb.string("abc"));
-    when(taskOutput = new TaskOutput(sstring, messages));
-    thenReturned(not(new TaskOutput(messages)));
+    when(output = new Output(sstring, messages));
+    thenReturned(not(new Output(messages)));
   }
 
   @Test
-  public void identical_task_results_have_same_hash_code() throws Exception {
+  public void identical_outputs_have_same_hash_code() throws Exception {
     given(sstring = objectsDb.string("abc"));
-    given(taskOutput = new TaskOutput(sstring, messages));
-    when(taskOutput).hashCode();
-    thenReturned(new TaskOutput(sstring, messages).hashCode());
+    given(output = new Output(sstring, messages));
+    when(output).hashCode();
+    thenReturned(new Output(sstring, messages).hashCode());
   }
 
-  private Closure newTaskOutput(final Value result, final List<Message> messages) {
+  private Closure newOutput(final Value result, final List<Message> messages) {
     return new Closure() {
       @Override
       public Object invoke() throws Throwable {
-        return new TaskOutput(result, messages);
+        return new Output(result, messages);
       }
     };
   }

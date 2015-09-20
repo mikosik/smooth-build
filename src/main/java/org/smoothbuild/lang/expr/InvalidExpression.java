@@ -2,10 +2,10 @@ package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExpressionError;
+import org.smoothbuild.lang.expr.err.CannotCreateComputerFromInvalidExpressionError;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.util.Empty;
 
 public class InvalidExpression extends Expression {
@@ -22,7 +22,7 @@ public class InvalidExpression extends Expression {
   }
 
   @Override
-  public TaskWorker createWorker() {
-    throw new CannotCreateTaskWorkerFromInvalidExpressionError();
+  public Computer createComputer() {
+    throw new CannotCreateComputerFromInvalidExpressionError();
   }
 }

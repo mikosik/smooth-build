@@ -12,8 +12,8 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.TaskOutput;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
@@ -42,7 +42,7 @@ public class TaskExecutor {
     HashCode hash = taskHash(task);
     boolean isAlreadyCached = taskOutputsDb.contains(hash);
     if (isAlreadyCached) {
-      TaskOutput output = taskOutputsDb.read(hash, task.resultType());
+      Output output = taskOutputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
       task.execute(new ContainerImpl(projectFileSystem, objectsDb, tempDirectoryManager));

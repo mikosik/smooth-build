@@ -22,7 +22,7 @@ import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.InvalidExpression;
-import org.smoothbuild.lang.expr.err.CannotCreateTaskWorkerFromInvalidExpressionError;
+import org.smoothbuild.lang.expr.err.CannotCreateComputerFromInvalidExpressionError;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -33,8 +33,8 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.TaskGraph;
 import org.smoothbuild.util.Empty;
 
@@ -68,7 +68,7 @@ public class ExpressionExecutionTest {
     given(stringExpression = new ConstantExpression(sstring, location));
     given(task = taskGraph.createTasks(stringExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(sstring));
+    thenEqual(task.output(), new Output(sstring));
   }
 
   @Test
@@ -76,7 +76,7 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string(string));
     given(expression = new InvalidExpression(STRING, location));
     when(taskGraph).createTasks(expression);
-    thenThrown(new CannotCreateTaskWorkerFromInvalidExpressionError());
+    thenThrown(new CannotCreateComputerFromInvalidExpressionError());
   }
 
   @Test
@@ -85,7 +85,7 @@ public class ExpressionExecutionTest {
         new ArrayExpression(STRING_ARRAY, Arrays.<Expression> asList(), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(array()));
+    thenEqual(task.output(), new Output(array()));
   }
 
   @Test
@@ -95,7 +95,7 @@ public class ExpressionExecutionTest {
     given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(array(sstring)));
+    thenEqual(task.output(), new Output(array(sstring)));
   }
 
   @Test
@@ -107,7 +107,7 @@ public class ExpressionExecutionTest {
     given(callExpression = callExpression(function, false, location, Empty.expressionList()));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(sstring));
+    thenEqual(task.output(), new Output(sstring));
   }
 
   @Test
@@ -118,7 +118,7 @@ public class ExpressionExecutionTest {
     given(callExpression = callExpression(function, false, location, asList(stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(sstring));
+    thenEqual(task.output(), new Output(sstring));
   }
 
   public static class SmoothModule {

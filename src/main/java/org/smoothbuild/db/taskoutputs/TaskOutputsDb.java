@@ -16,7 +16,7 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageType;
 import org.smoothbuild.message.base.Messages;
-import org.smoothbuild.task.base.TaskOutput;
+import org.smoothbuild.task.base.Output;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -31,10 +31,10 @@ public class TaskOutputsDb {
     this.objectsDb = objectsDb;
   }
 
-  public void write(HashCode taskHash, TaskOutput taskOutput) {
+  public void write(HashCode taskHash, Output output) {
     Marshaller marshaller = new Marshaller();
 
-    ImmutableList<Message> messages = taskOutput.messages();
+    ImmutableList<Message> messages = output.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
       SString messageString = objectsDb.string(message.message());
@@ -44,7 +44,7 @@ public class TaskOutputsDb {
     }
 
     if (!Messages.containsProblems(messages)) {
-      marshaller.write(taskOutput.result().hash());
+      marshaller.write(output.result().hash());
     }
 
     hashedDb.write(taskHash, marshaller.getBytes());
@@ -54,7 +54,7 @@ public class TaskOutputsDb {
     return hashedDb.contains(taskHash);
   }
 
-  public TaskOutput read(HashCode taskHash, Type type) {
+  public Output read(HashCode taskHash, Type type) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash)) {
       int size = unmarshaller.readInt();
       List<Message> messages = new ArrayList<>();
@@ -67,11 +67,11 @@ public class TaskOutputsDb {
       }
 
       if (Messages.containsProblems(messages)) {
-        return new TaskOutput(messages);
+        return new Output(messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
         Value value = objectsDb.read(type, resultObjectHash);
-        return new TaskOutput(value, messages);
+        return new Output(value, messages);
       }
     }
   }

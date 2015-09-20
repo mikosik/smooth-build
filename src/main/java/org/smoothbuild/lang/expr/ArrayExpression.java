@@ -1,11 +1,12 @@
 package org.smoothbuild.lang.expr;
 
+import static org.smoothbuild.task.base.Computer.arrayComputer;
+
 import java.util.List;
 
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.ArrayWorker;
-import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.task.base.Computer;
 
 public class ArrayExpression extends Expression {
   private final ArrayType arrayType;
@@ -17,7 +18,7 @@ public class ArrayExpression extends Expression {
   }
 
   @Override
-  public TaskWorker createWorker() {
-    return new ArrayWorker(arrayType, codeLocation());
+  public Computer createComputer() {
+    return arrayComputer(arrayType, codeLocation());
   }
 }
