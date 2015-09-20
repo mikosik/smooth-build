@@ -12,14 +12,15 @@ import static org.testory.common.Matchers.same;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 public class ContainerTest {
-  private final FakeFileSystem fileSystem = new FakeFileSystem();
+  private final FileSystem fileSystem = new MemoryFileSystem();
   private final FakeObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
   private final TempDirectoryManager tempDirectoryManager = mock(TempDirectoryManager.class);
 

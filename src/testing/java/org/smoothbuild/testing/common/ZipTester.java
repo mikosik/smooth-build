@@ -7,12 +7,12 @@ import java.io.OutputStreamWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 public class ZipTester {
 
-  public static Path zippedFiles(FakeFileSystem fileSystem, String... fileNames) throws IOException {
+  public static Path zippedFiles(FileSystem fileSystem, String... fileNames) throws IOException {
     Path path = path("input.zip");
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(fileSystem.openOutputStream(path))) {
       for (String fileName : fileNames) {
@@ -23,7 +23,8 @@ public class ZipTester {
     return path;
   }
 
-  private static void addEntry(ZipOutputStream zipOutputStream, String fileName) throws IOException {
+  private static void addEntry(ZipOutputStream zipOutputStream, String fileName)
+      throws IOException {
     ZipEntry entry = new ZipEntry(fileName);
     zipOutputStream.putNextEntry(entry);
 

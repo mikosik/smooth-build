@@ -11,7 +11,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
+import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
 import com.google.common.hash.HashCode;
 
@@ -20,7 +21,7 @@ public class HashedDbTest {
   byte[] bytes2 = new byte[] { 1, 2 };
   HashCode hash;
 
-  FakeFileSystem fileSystem = new FakeFileSystem();
+  FileSystem fileSystem = new MemoryFileSystem();
   HashedDb hashedDb = new HashedDb(fileSystem);
 
   @Test

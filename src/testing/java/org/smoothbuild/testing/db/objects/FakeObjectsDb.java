@@ -9,23 +9,22 @@ import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.util.Streams;
 
 public class FakeObjectsDb extends ObjectsDb {
-
   public FakeObjectsDb() {
-    this(new FakeFileSystem());
+    this(new MemoryFileSystem());
   }
 
-  public FakeObjectsDb(FileSystem fakeFileSystem) {
-    this(new HashedDb(fakeFileSystem));
+  public FakeObjectsDb(FileSystem fileSystem) {
+    this(new HashedDb(fileSystem));
   }
 
   public FakeObjectsDb(HashedDb hashedDb) {
@@ -70,5 +69,4 @@ public class FakeObjectsDb extends ObjectsDb {
     }
     return builder.build();
   }
-
 }

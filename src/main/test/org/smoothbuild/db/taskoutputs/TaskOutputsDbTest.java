@@ -24,6 +24,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -32,7 +33,6 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.Streams;
 
@@ -40,7 +40,7 @@ import com.google.common.hash.HashCode;
 
 public class TaskOutputsDbTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final HashedDb taskOutputsHashedDb = new HashedDb(new FakeFileSystem());
+  private final HashedDb taskOutputsHashedDb = new HashedDb(new MemoryFileSystem());
   private final TaskOutputsDb taskOutputsDb = new TaskOutputsDb(taskOutputsHashedDb, objectsDb);
   private final HashCode hash = Hash.string("abc");
 
@@ -64,8 +64,7 @@ public class TaskOutputsDbTest {
 
   @Test
   public void result_cache_contains_written_result() {
-    given(taskOutputsDb).write(hash,
-        new Output(objectsDb.string("result"), Empty.messageList()));
+    given(taskOutputsDb).write(hash, new Output(objectsDb.string("result"), Empty.messageList()));
     when(taskOutputsDb.contains(hash));
     thenReturned(true);
   }

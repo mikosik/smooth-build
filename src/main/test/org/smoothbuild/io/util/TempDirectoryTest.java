@@ -16,12 +16,13 @@ import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.testory.common.Matcher;
 
 public class TempDirectoryTest {
@@ -30,14 +31,14 @@ public class TempDirectoryTest {
   private final java.nio.file.Path rootPath = Paths.get("/fake/path");
 
   private FakeObjectsDb objectsDb;
-  private FakeFileSystem fileSystem;
+  private FileSystem fileSystem;
   private TempDirectory tempDirectory;
   private Array<SFile> array;
 
   @Before
   public void before() {
     objectsDb = new FakeObjectsDb();
-    fileSystem = new FakeFileSystem();
+    fileSystem = new MemoryFileSystem();
     tempDirectory = new TempDirectory(objectsDb, rootPath, fileSystem);
   }
 
