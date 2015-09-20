@@ -1,7 +1,6 @@
 package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.task.base.Computer.valueComputer;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -28,7 +27,7 @@ public class TaskHashesTest {
 
   @Test
   public void hashes_of_tasks_with_same_computer_and_dependencies_are_equal() throws Exception {
-    given(computer = valueComputer(STRING, objectsDb.string("work"), CL));
+    given(computer = valueComputer(objectsDb.string("work"), CL));
     given(dep = mock(Task.class));
     given(willReturn(new Output(objectsDb.string("abc"))), dep).output();
     given(task = new Task(computer, ImmutableList.<Task> of(dep)));
@@ -40,7 +39,7 @@ public class TaskHashesTest {
   @Test
   public void hashes_of_tasks_with_same_computer_and_different_dependencies_are_not_equal()
       throws Exception {
-    given(computer = valueComputer(STRING, objectsDb.string("work"), CL));
+    given(computer = valueComputer(objectsDb.string("work"), CL));
     given(dep = mock(Task.class));
     given(willReturn(new Output(objectsDb.string("abc"))), dep).output();
     given(dep2 = mock(Task.class));
@@ -54,8 +53,8 @@ public class TaskHashesTest {
   @Test
   public void hashes_of_tasks_with_different_computer_and_same_dependencies_are_not_equal()
       throws Exception {
-    given(computer = valueComputer(STRING, objectsDb.string("work"), CL));
-    given(computer2 = valueComputer(STRING, objectsDb.string("work2"), CL));
+    given(computer = valueComputer(objectsDb.string("work"), CL));
+    given(computer2 = valueComputer(objectsDb.string("work2"), CL));
     given(dep = mock(Task.class));
     given(willReturn(new Output(objectsDb.string("abc"))), dep).output();
     given(task = new Task(computer, ImmutableList.<Task> of(dep)));
