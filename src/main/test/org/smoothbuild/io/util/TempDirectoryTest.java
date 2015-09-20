@@ -2,6 +2,7 @@ package org.smoothbuild.io.util;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
@@ -15,12 +16,13 @@ import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 import org.testory.common.Matcher;
 
 public class TempDirectoryTest {
@@ -29,14 +31,14 @@ public class TempDirectoryTest {
   private final java.nio.file.Path rootPath = Paths.get("/fake/path");
 
   private FakeObjectsDb objectsDb;
-  private FakeFileSystem fileSystem;
+  private FileSystem fileSystem;
   private TempDirectory tempDirectory;
   private Array<SFile> array;
 
   @Before
   public void before() {
     objectsDb = new FakeObjectsDb();
-    fileSystem = new FakeFileSystem();
+    fileSystem = new MemoryFileSystem();
     tempDirectory = new TempDirectory(objectsDb, rootPath, fileSystem);
   }
 
@@ -99,7 +101,7 @@ public class TempDirectoryTest {
 
   @Test
   public void files_are_read_from_file_system() throws Exception {
-    given(fileSystem).createFile(path, content);
+    given(createFile(fileSystem, path, content));
     when(tempDirectory.readFiles());
     thenReturned(contains(objectsDb.file(path, content)));
   }
@@ -113,14 +115,14 @@ public class TempDirectoryTest {
 
   @Test
   public void content_is_read_from_file_system() throws Exception {
-    given(fileSystem).createFile(path, content);
+    given(createFile(fileSystem, path, content));
     when(tempDirectory).readContent(path);
     thenReturned(blobContains(content));
   }
 
   @Test
   public void reading_content_after_destroy_throws_exception() throws Exception {
-    given(fileSystem).createFile(path, content);
+    given(createFile(fileSystem, path, content));
     given(tempDirectory).destroy();
     when(tempDirectory).readContent(path);
     thenThrown(IllegalStateException.class);
