@@ -2,6 +2,7 @@ package org.smoothbuild.io.util;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
@@ -99,7 +100,7 @@ public class TempDirectoryTest {
 
   @Test
   public void files_are_read_from_file_system() throws Exception {
-    given(fileSystem).createFile(path, content);
+    given(createFile(fileSystem, path, content));
     when(tempDirectory.readFiles());
     thenReturned(contains(objectsDb.file(path, content)));
   }
@@ -113,14 +114,14 @@ public class TempDirectoryTest {
 
   @Test
   public void content_is_read_from_file_system() throws Exception {
-    given(fileSystem).createFile(path, content);
+    given(createFile(fileSystem, path, content));
     when(tempDirectory).readContent(path);
     thenReturned(blobContains(content));
   }
 
   @Test
   public void reading_content_after_destroy_throws_exception() throws Exception {
-    given(fileSystem).createFile(path, content);
+    given(createFile(fileSystem, path, content));
     given(tempDirectory).destroy();
     when(tempDirectory).readContent(path);
     thenThrown(IllegalStateException.class);

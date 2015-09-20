@@ -30,12 +30,6 @@ public class FakeFileSystemTest {
   }
 
   @Test
-  public void createFile() throws Exception {
-    fileSystem.createFile(path, content);
-    assertContent(fileSystem.openInputStream(path), content);
-  }
-
-  @Test
   public void assertFileContainsItsPathSucceedsWhenContentMatches() throws Exception {
     OutputStream os = fileSystem.openOutputStream(path);
     writeAndClose(os, path.value());

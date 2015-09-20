@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
+import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -66,7 +67,7 @@ public class FilesFunctionTest {
   @Test
   public void non_dir_path_is_forbidden() throws Exception {
     given(path = path("some/path/file.txt"));
-    given(container.projectFileSystem()).createFile(path, "");
+    given(createFile(container.projectFileSystem(), path, ""));
     when($files(container, params(path.value())));
     thenThrown(NoSuchDirButFileError.class);
   }
@@ -76,13 +77,14 @@ public class FilesFunctionTest {
     given(dir = path("root/path"));
     given(path1 = path("file/file.txt"));
     given(path2 = path("file/file2.txt"));
-    given(container.projectFileSystem()).createFile(dir.append(path1), "file1");
-    given(container.projectFileSystem()).createFile(dir.append(path2), "file2");
+    given(createFile(container.projectFileSystem(), dir.append(path1), "file1"));
+    given(createFile(container.projectFileSystem(), dir.append(path2), "file2"));
     given(objectsDb = new FakeObjectsDb());
 
     when($files(container, params(dir.value())));
 
-    thenReturned(containsInAnyOrder(objectsDb.file(path1, "file1"), objectsDb.file(path2, "file2")));
+    thenReturned(containsInAnyOrder(objectsDb.file(path1, "file1"), objectsDb.file(path2,
+        "file2")));
   }
 
   private static SString params(final String dir) {
