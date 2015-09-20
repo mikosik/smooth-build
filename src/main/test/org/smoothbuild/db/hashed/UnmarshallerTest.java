@@ -14,16 +14,17 @@ import org.smoothbuild.db.hashed.err.CorruptedEnumValue;
 import org.smoothbuild.db.hashed.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValue;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.io.fs.base.FakeFileSystem;
 
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
   private final FakeObjectsDb objectsDb = new FakeObjectsDb();
-  private final FakeFileSystem fileSystem = new FakeFileSystem();
+  private final FileSystem fileSystem = new MemoryFileSystem();
   private final HashedDb hashedDb = new HashedDb(fileSystem);
   private SString hashed1;
   private SString hashed2;
