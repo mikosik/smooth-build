@@ -22,7 +22,6 @@ import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.InvalidExpression;
-import org.smoothbuild.lang.expr.err.CannotCreateComputerFromInvalidExpressionError;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -76,13 +75,13 @@ public class ExpressionExecutionTest {
     given(sstring = objectsDb.string(string));
     given(expression = new InvalidExpression(STRING, location));
     when(taskGraph).createTasks(expression);
-    thenThrown(new CannotCreateComputerFromInvalidExpressionError());
+    thenThrown(RuntimeException.class);
   }
 
   @Test
   public void executes_empty_array_expression() throws Exception {
-    given(arrayExpression =
-        new ArrayExpression(STRING_ARRAY, Arrays.<Expression> asList(), location));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, Arrays.<Expression> asList(),
+        location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new Output(array()));
