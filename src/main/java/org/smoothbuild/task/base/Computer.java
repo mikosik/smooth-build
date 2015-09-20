@@ -19,8 +19,8 @@ public class Computer {
   private final boolean isCacheable;
   private final CodeLocation codeLocation;
 
-  public static Computer constantComputer(Type type, Value value, CodeLocation codeLocation) {
-    return new Computer(new ConstantAlgorithm(value), type.name(), true, true, codeLocation);
+  public static Computer valueComputer(Type type, Value value, CodeLocation codeLocation) {
+    return new Computer(new ValueAlgorithm(value), type.name(), true, true, codeLocation);
   }
 
   public static Computer arrayComputer(ArrayType arrayType, CodeLocation codeLocation) {

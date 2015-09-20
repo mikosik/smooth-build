@@ -19,9 +19,9 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
-import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.InvalidExpression;
+import org.smoothbuild.lang.expr.ValueExpression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -64,7 +64,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_string_literal_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpression(sstring, location));
+    given(stringExpression = new ValueExpression(sstring, location));
     given(task = taskGraph.createTasks(stringExpression));
     when(taskGraph).executeAll();
     thenEqual(task.output(), new Output(sstring));
@@ -90,7 +90,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_array_expression() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpression(sstring, location));
+    given(stringExpression = new ValueExpression(sstring, location));
     given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
@@ -100,7 +100,7 @@ public class ExpressionExecutionTest {
   @Test
   public void executes_call_expression_using_defined_function() throws Exception {
     given(sstring = objectsDb.string(string));
-    given(stringExpression = new ConstantExpression(sstring, location));
+    given(stringExpression = new ValueExpression(sstring, location));
     given(signature = new Signature(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction(signature, stringExpression));
     given(callExpression = callExpression(function, false, location, Empty.expressionList()));
@@ -113,7 +113,7 @@ public class ExpressionExecutionTest {
   public void executes_native_function_that_returns_its_argument() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(function = nativeFunction(SmoothModule.class.getMethods()[0], Hash.integer(33)));
-    given(stringExpression = new ConstantExpression(sstring, codeLocation(2)));
+    given(stringExpression = new ValueExpression(sstring, codeLocation(2)));
     given(callExpression = callExpression(function, false, location, asList(stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();
@@ -131,7 +131,7 @@ public class ExpressionExecutionTest {
   public void execution_fails_when_native_function_throws_runtime_exception() throws Exception {
     given(sstring = objectsDb.string("abc"));
     given(function = nativeFunction(SmoothModule2.class.getMethods()[0], Hash.integer(33)));
-    given(stringExpression = new ConstantExpression(sstring, codeLocation(2)));
+    given(stringExpression = new ValueExpression(sstring, codeLocation(2)));
     given(callExpression = callExpression(function, false, location, asList(stringExpression)));
     given(task = taskGraph.createTasks(callExpression));
     when(taskGraph).executeAll();

@@ -7,7 +7,7 @@ import org.smoothbuild.lang.value.Value;
 import com.google.common.hash.HashCode;
 
 public class AlgorithmHashes {
-  public static HashCode constantAlgorithmHash(Value value) {
+  public static HashCode valueAlgorithmHash(Value value) {
     return hash(0, value.hash());
   }
 

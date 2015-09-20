@@ -2,9 +2,9 @@ package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.task.base.AlgorithmHashes.arrayAlgorithmHash;
-import static org.smoothbuild.task.base.AlgorithmHashes.constantAlgorithmHash;
 import static org.smoothbuild.task.base.AlgorithmHashes.identityAlgorithmHash;
 import static org.smoothbuild.task.base.AlgorithmHashes.nativeCallAlgorithmHash;
+import static org.smoothbuild.task.base.AlgorithmHashes.valueAlgorithmHash;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -34,7 +34,7 @@ public class AlgorithmHashesTest {
     given(willReturn(Hash.integer(0)), function).hash();
     given(value = mock(Value.class));
     given(willReturn(Hash.integer(0)), value).hash();
-    given(hashes.add(constantAlgorithmHash(value)));
+    given(hashes.add(valueAlgorithmHash(value)));
     given(hashes.add(arrayAlgorithmHash()));
     given(hashes.add(identityAlgorithmHash()));
     given(hashes.add(nativeCallAlgorithmHash(function)));
@@ -43,13 +43,13 @@ public class AlgorithmHashesTest {
   }
 
   @Test
-  public void constant_algorithm_has_different_hash_for_different_values() throws Exception {
+  public void value_algorithm_has_different_hash_for_different_values() throws Exception {
     given(value = mock(Value.class));
     given(willReturn(Hash.integer(1)), value).hash();
     given(value2 = mock(Value.class));
     given(willReturn(Hash.integer(2)), value2).hash();
-    when(constantAlgorithmHash(value));
-    thenReturned(not(constantAlgorithmHash(value2)));
+    when(valueAlgorithmHash(value));
+    thenReturned(not(valueAlgorithmHash(value2)));
   }
 
   @Test
