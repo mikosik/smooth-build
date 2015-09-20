@@ -18,6 +18,6 @@ public class ValueExpression extends Expression {
 
   @Override
   public Computer createComputer() {
-    return valueComputer(type(), value, codeLocation());
+    return valueComputer(value, codeLocation());
   }
 }
