@@ -18,8 +18,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.expr.ArrayExpression;
-import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.ValueExpression;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -135,8 +135,8 @@ public class CachingTaskOutputTest {
     }
   }
 
-  private ConstantExpression stringExpression(String string) {
-    return new ConstantExpression(objectsDb.string(string), CL);
+  private ValueExpression stringExpression(String string) {
+    return new ValueExpression(objectsDb.string(string), CL);
   }
 
   private Array<SString> stringArray(String... strings) {

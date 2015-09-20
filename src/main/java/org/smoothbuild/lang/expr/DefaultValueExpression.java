@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.task.base.Computer.constantComputer;
+import static org.smoothbuild.task.base.Computer.valueComputer;
 
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
@@ -18,6 +18,6 @@ public class DefaultValueExpression extends Expression {
 
   @Override
   public Computer createComputer() {
-    return constantComputer(type(), value, codeLocation());
+    return valueComputer(type(), value, codeLocation());
   }
 }
