@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.task.work.TaskWorker;
+import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 
@@ -67,7 +67,7 @@ public class ExpressionTest {
     }
 
     @Override
-    public TaskWorker createWorker() {
+    public Computer createComputer() {
       return null;
     }
   }

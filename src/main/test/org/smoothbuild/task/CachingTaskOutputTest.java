@@ -20,16 +20,18 @@ import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.ConstantExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.task.base.Algorithm;
+import org.smoothbuild.task.base.Computer;
+import org.smoothbuild.task.base.Input;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.TaskInput;
-import org.smoothbuild.task.base.TaskOutput;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.task.exec.TaskGraph;
-import org.smoothbuild.task.work.TaskWorker;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.hash.HashCode;
@@ -69,10 +71,11 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), true));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), true));
-    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2),
+        CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(stringArray("1", "1")));
+    thenEqual(task.output(), new Output(stringArray("1", "1")));
   }
 
   @Test
@@ -81,10 +84,11 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), false));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), false));
-    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2),
+        CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
+    thenEqual(task.output(), new Output(stringArray("1", "2")));
   }
 
   @Test
@@ -93,10 +97,11 @@ public class CachingTaskOutputTest {
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, asList(stringExpression("dep1")), true));
     given(expression2 = new CountingExpression(counter, asList(stringExpression("dep2")), true));
-    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2), CL));
+    given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(expression1, expression2),
+        CL));
     given(task = taskGraph.createTasks(arrayExpression));
     when(taskGraph).executeAll();
-    thenEqual(task.output(), new TaskOutput(stringArray("1", "2")));
+    thenEqual(task.output(), new Output(stringArray("1", "2")));
   }
 
   @Test
@@ -113,8 +118,8 @@ public class CachingTaskOutputTest {
     given(task2 = taskGraph2.createTasks(expression2));
     given(taskGraph).executeAll();
     when(taskGraph2).executeAll();
-    thenEqual(task.output(), new TaskOutput(objectsDb.string("1")));
-    thenEqual(task2.output(), new TaskOutput(objectsDb.string("2")));
+    thenEqual(task.output(), new Output(objectsDb.string("1")));
+    thenEqual(task2.output(), new Output(objectsDb.string("2")));
   }
 
   private static class GrowingSmoothJarHashModule extends AbstractModule {
@@ -154,24 +159,39 @@ public class CachingTaskOutputTest {
     }
 
     @Override
-    public TaskWorker createWorker() {
-      return new MyCountingTaskWorker(counter, isCacheable);
+    public Computer createComputer() {
+      return new MyCountingComputer(counter, isCacheable);
     }
   }
 
-  private static class MyCountingTaskWorker extends TaskWorker {
+  private static class MyCountingComputer extends Computer {
+    public MyCountingComputer(AtomicInteger counter, boolean isCacheable) {
+      super(new MyCountingAlgorithm(counter), "counting", false, isCacheable, CodeLocation
+          .codeLocation(2));
+    }
+  }
+
+  private static class MyCountingAlgorithm implements Algorithm {
     private final AtomicInteger counter;
 
-    public MyCountingTaskWorker(AtomicInteger counter, boolean isCacheable) {
-      super(Hash.string("hash"), STRING, "counting", false, isCacheable, CodeLocation
-          .codeLocation(2));
+    public MyCountingAlgorithm(AtomicInteger counter) {
       this.counter = counter;
     }
 
     @Override
-    public TaskOutput execute(TaskInput input, ContainerImpl container) {
+    public Output execute(Input input, ContainerImpl container) {
       SString sstring = container.string(Integer.toString(counter.incrementAndGet()));
-      return new TaskOutput(sstring);
+      return new Output(sstring);
+    }
+
+    @Override
+    public HashCode hash() {
+      return Hash.string("hash");
+    }
+
+    @Override
+    public Type resultType() {
+      return STRING;
     }
   }
 }

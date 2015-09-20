@@ -8,19 +8,19 @@ import org.smoothbuild.message.base.Message;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
-public class TaskOutput {
+public class Output {
   private final Value result;
   private final ImmutableList<Message> messages;
 
-  public TaskOutput(Value result) {
+  public Output(Value result) {
     this(result, ImmutableList.<Message> of());
   }
 
-  public TaskOutput(Iterable<? extends Message> messages) {
+  public Output(Iterable<? extends Message> messages) {
     this(null, messages);
   }
 
-  public TaskOutput(Value result, Iterable<? extends Message> messages) {
+  public Output(Value result, Iterable<? extends Message> messages) {
     this.result = result;
     this.messages = ImmutableList.copyOf(messages);
   }
@@ -30,7 +30,7 @@ public class TaskOutput {
   }
 
   public Value result() {
-    checkState(hasResult(), "TaskOutput does not contain result.");
+    checkState(hasResult(), "Output does not contain result.");
     return result;
   }
 
@@ -40,10 +40,10 @@ public class TaskOutput {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof TaskOutput)) {
+    if (!(object instanceof Output)) {
       return false;
     }
-    TaskOutput that = (TaskOutput) object;
+    Output that = (Output) object;
     return Objects.equal(this.result, that.result) && this.messages.equals(that.messages);
   }
 

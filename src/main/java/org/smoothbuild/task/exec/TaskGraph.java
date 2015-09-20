@@ -30,7 +30,7 @@ public class TaskGraph {
 
   private <T extends Value> Task createTasksImpl(Expression expression) {
     ImmutableList<Task> dependencies = createTasksImpl(expression.dependencies());
-    return new Task(expression.createWorker(), dependencies);
+    return new Task(expression.createComputer(), dependencies);
   }
 
   private ImmutableList<Task> createTasksImpl(ImmutableList<? extends Expression> expressions) {
