@@ -4,8 +4,8 @@ import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
-import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
 import static org.smoothbuild.testing.parse.FakeModuleContext.moduleCtx;
 
 import java.util.Map;
@@ -19,6 +19,7 @@ import org.smoothbuild.testing.parse.FakeModuleContext;
 import org.smoothbuild.testing.parse.FakePipeContext;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class DependencyCollectorTest {
   Name name1 = name("funcation1");
@@ -66,5 +67,13 @@ public class DependencyCollectorTest {
     expected.put(name2, dependencies(name1));
 
     assertEquals(expected, collectDependencies(messages, module));
+  }
+
+  private static Set<Dependency> dependencies(Name... names) {
+    Set<Dependency> result = Sets.newHashSet();
+    for (Name name : names) {
+      result.add(new Dependency(codeLocation(1), name));
+    }
+    return result;
   }
 }

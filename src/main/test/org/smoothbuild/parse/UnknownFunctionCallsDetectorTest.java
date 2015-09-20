@@ -2,8 +2,8 @@ package org.smoothbuild.parse;
 
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.UnknownFunctionCallsDetector.detectUndefinedFunctions;
-import static org.smoothbuild.testing.parse.FakeDependency.dependencies;
 import static org.testory.Testory.mock;
 
 import java.util.Map;
@@ -21,6 +21,7 @@ import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class UnknownFunctionCallsDetectorTest {
   Name name1 = name("function1");
@@ -49,8 +50,8 @@ public class UnknownFunctionCallsDetectorTest {
 
   @Test
   public void referenceToDefinedFunction() {
-    Map<Name, Set<Dependency>> dependencyMap =
-        ImmutableMap.of(name1, dependencies(name2), name2, dependencies(name1));
+    Map<Name, Set<Dependency>> dependencyMap = ImmutableMap.of(name1, dependencies(name2), name2,
+        dependencies(name1));
 
     detectUndefinedFunctions(messages, emptyBuiltinModule, dependencyMap);
 
@@ -69,5 +70,13 @@ public class UnknownFunctionCallsDetectorTest {
     }
 
     messages.assertContainsOnly(UnknownFunctionCallError.class);
+  }
+
+  private static Set<Dependency> dependencies(Name... names) {
+    Set<Dependency> result = Sets.newHashSet();
+    for (Name name : names) {
+      result.add(new Dependency(codeLocation(1), name));
+    }
+    return result;
   }
 }
