@@ -1,8 +1,12 @@
 package org.smoothbuild.parse;
 
+import static org.hamcrest.Matchers.emptyIterable;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.message.ContainsMessage.containsMessage;
+import static org.smoothbuild.testing.message.ContainsOnlyMessageMatcher.containsOnlyMessage;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,7 +15,6 @@ import org.junit.Test;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.message.listen.PhaseFailedException;
 import org.smoothbuild.parse.err.SyntaxError;
-import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 public class ScriptParserTest {
 
@@ -52,13 +55,13 @@ public class ScriptParserTest {
 
   @Test
   public void notClosedStringLiteralFails() throws Exception {
-    FakeLoggedMessages messages = new FakeLoggedMessages();
+    LoggedMessages messages = new LoggedMessages();
     try {
       runScriptParser(script("functionA : 'abc ;"), messages);
       fail("exception should be thrown");
     } catch (PhaseFailedException e) {
       // expected
-      messages.assertContains(SyntaxError.class);
+      assertThat(messages, containsMessage(SyntaxError.class));
     }
   }
 
@@ -78,24 +81,23 @@ public class ScriptParserTest {
   }
 
   private static void assertParsingSucceeds(String script) throws IOException {
-    FakeLoggedMessages messages = new FakeLoggedMessages();
+    LoggedMessages messages = new LoggedMessages();
     try {
       runScriptParser(script, messages);
     } catch (PhaseFailedException e) {
-      messages.assertNoProblems();
       fail("no exception should be thrown");
     }
-    messages.assertNoProblems();
+    assertThat(messages, emptyIterable());
   }
 
   private static void assertParsingFails(String script) throws IOException {
-    FakeLoggedMessages messages = new FakeLoggedMessages();
+    LoggedMessages messages = new LoggedMessages();
     try {
       runScriptParser(script, messages);
       fail("exception should be thrown");
     } catch (PhaseFailedException e) {
       // expected
-      messages.assertContainsOnly(SyntaxError.class);
+      assertThat(messages, containsOnlyMessage(SyntaxError.class));
     }
   }
 

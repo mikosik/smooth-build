@@ -1,9 +1,11 @@
 package org.smoothbuild.parse;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.emptyIterable;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.testing.message.ContainsOnlyMessageMatcher.containsOnlyMessage;
 import static org.testory.Testory.givenTest;
 
 import java.util.List;
@@ -15,8 +17,8 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.message.base.Message;
+import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.CycleInCallGraphError;
-import org.smoothbuild.testing.message.FakeLoggedMessages;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.Maps;
@@ -30,7 +32,7 @@ public class DependencySorterTest {
   private Name name5;
   private Name name6;
 
-  FakeLoggedMessages messages = new FakeLoggedMessages();
+  LoggedMessages messages = new LoggedMessages();
 
   @Before
   public void before() {
@@ -46,7 +48,7 @@ public class DependencySorterTest {
     map.put(name2, dependencies(name3));
 
     assertThat(sort(map), contains(name4, name3, name2, name1));
-    messages.assertNoProblems();
+    assertThat(messages, emptyIterable());
   }
 
   @Test
@@ -67,8 +69,7 @@ public class DependencySorterTest {
     assertTrue(actual.indexOf(name6) < actual.indexOf(name5));
     assertTrue(actual.indexOf(name5) < actual.indexOf(name3));
     assertTrue(actual.indexOf(name3) < actual.indexOf(name1));
-
-    messages.assertNoProblems();
+    assertThat(messages, emptyIterable());
   }
 
   @Test
@@ -77,8 +78,7 @@ public class DependencySorterTest {
     map.put(name1, dependencies(name1));
 
     sort(map);
-
-    messages.assertContainsOnly(CycleInCallGraphError.class);
+    assertThat(messages, containsOnlyMessage(CycleInCallGraphError.class));
   }
 
   @Test
@@ -89,8 +89,7 @@ public class DependencySorterTest {
     map.put(name3, dependencies(name1));
 
     sort(map);
-
-    messages.assertContainsOnly(CycleInCallGraphError.class);
+    assertThat(messages, containsOnlyMessage(CycleInCallGraphError.class));
   }
 
   private List<Name> sort(Map<Name, Set<Dependency>> map) {

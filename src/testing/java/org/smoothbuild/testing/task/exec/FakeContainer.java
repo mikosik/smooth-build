@@ -8,14 +8,11 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.testing.db.objects.FakeObjectsDb;
-import org.smoothbuild.testing.message.FakeLoggedMessages;
 
 public class FakeContainer extends ContainerImpl {
   private final FileSystem fileSystem;
-  private final FakeLoggedMessages messages;
   private final FakeObjectsDb objectsDb;
 
   public FakeContainer() {
@@ -29,7 +26,6 @@ public class FakeContainer extends ContainerImpl {
   public FakeContainer(FileSystem fileSystem, FakeObjectsDb objectsDb) {
     super(fileSystem, objectsDb, createTempDirectoryManager(objectsDb));
     this.fileSystem = fileSystem;
-    this.messages = new FakeLoggedMessages();
     this.objectsDb = objectsDb;
   }
 
@@ -49,16 +45,6 @@ public class FakeContainer extends ContainerImpl {
 
   public FakeObjectsDb objectsDb() {
     return objectsDb;
-  }
-
-  @Override
-  public FakeLoggedMessages messages() {
-    return messages;
-  }
-
-  @Override
-  public void log(Message message) {
-    messages.log(message);
   }
 
   public SFile file(Path path) {
