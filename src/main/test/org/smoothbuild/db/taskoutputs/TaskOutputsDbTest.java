@@ -2,6 +2,7 @@ package org.smoothbuild.db.taskoutputs;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
@@ -10,6 +11,7 @@ import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.testing.db.objects.ValueCreators.file;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -32,14 +34,13 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.base.Output;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.hash.HashCode;
 
 public class TaskOutputsDbTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
   private final HashedDb taskOutputsHashedDb = new HashedDb(new MemoryFileSystem());
   private final TaskOutputsDb taskOutputsDb = new TaskOutputsDb(taskOutputsHashedDb, objectsDb);
   private final HashCode hash = Hash.string("abc");
@@ -86,7 +87,7 @@ public class TaskOutputsDbTest {
 
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
-    given(file = objectsDb.file(path, bytes));
+    given(file = file(objectsDb, path, bytes));
     given(fileArray = objectsDb.arrayBuilder(SFile.class).add(file).build());
     given(taskOutputsDb).write(hash, new Output(fileArray, Empty.messageList()));
     when(((Iterable<?>) taskOutputsDb.read(hash, FILE_ARRAY).result()).iterator().next());
@@ -113,7 +114,7 @@ public class TaskOutputsDbTest {
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
-    given(file = objectsDb.file(path, bytes));
+    given(file = file(objectsDb, path, bytes));
     given(taskOutputsDb).write(hash, new Output(file, Empty.messageList()));
     when(taskOutputsDb.read(hash, FILE).result());
     thenReturned(file);

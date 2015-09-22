@@ -6,9 +6,12 @@ import static org.smoothbuild.lang.type.Types.jTypeToType;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
 import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -30,6 +33,14 @@ public class ObjectsDb implements ValueFactory {
     this.objectMarshallers = objectMarshallers;
   }
 
+  public static ObjectsDb objectsDb() {
+    return objectsDb(new MemoryFileSystem());
+  }
+
+  public static ObjectsDb objectsDb(FileSystem fileSystem) {
+    return new ObjectsDb(new ObjectMarshallers(new HashedDb(fileSystem)));
+  }
+
   @Override
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementClass) {
     if (!(arrayElementJTypes().contains(TypeLiteral.get(elementClass)))) {
@@ -39,7 +50,8 @@ public class ObjectsDb implements ValueFactory {
     return createArrayBuilder(arrayTypeContaining(type), elementClass);
   }
 
-  private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type, Class<?> elementClass) {
+  private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type,
+      Class<?> elementClass) {
     ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(type);
     return new ArrayBuilder<>(marshaller, elementClass);
   }

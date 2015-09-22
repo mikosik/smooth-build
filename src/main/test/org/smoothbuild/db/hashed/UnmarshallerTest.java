@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -14,16 +15,16 @@ import org.smoothbuild.db.hashed.err.CorruptedEnumValue;
 import org.smoothbuild.db.hashed.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValue;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
   private final FileSystem fileSystem = new MemoryFileSystem();
   private final HashedDb hashedDb = new HashedDb(fileSystem);
   private SString hashed1;

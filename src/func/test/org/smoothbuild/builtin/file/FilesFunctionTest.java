@@ -2,8 +2,10 @@ package org.smoothbuild.builtin.file;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
+import static org.smoothbuild.testing.db.objects.ValueCreators.file;
 import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -14,18 +16,18 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
 import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.exec.ContainerImpl;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.task.exec.FakeContainer;
 import org.testory.Closure;
 
 public class FilesFunctionTest {
-  private FakeObjectsDb objectsDb;
+  private ObjectsDb objectsDb;
   private final FakeContainer container = new FakeContainer();
   private Path path;
   private Path path1;
@@ -79,16 +81,16 @@ public class FilesFunctionTest {
     given(path2 = path("file/file2.txt"));
     given(createFile(container.projectFileSystem(), dir.append(path1), "file1"));
     given(createFile(container.projectFileSystem(), dir.append(path2), "file2"));
-    given(objectsDb = new FakeObjectsDb());
+    given(objectsDb = objectsDb());
 
     when($files(container, params(dir.value())));
 
-    thenReturned(containsInAnyOrder(objectsDb.file(path1, "file1"), objectsDb.file(path2,
+    thenReturned(containsInAnyOrder(file(objectsDb, path1, "file1"), file(objectsDb, path2,
         "file2")));
   }
 
   private static SString params(final String dir) {
-    return new FakeObjectsDb().string(dir);
+    return objectsDb().string(dir);
   }
 
   private static Closure $files(final ContainerImpl container, final SString dir) {

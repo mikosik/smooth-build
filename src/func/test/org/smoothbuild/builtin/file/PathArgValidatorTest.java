@@ -1,14 +1,15 @@
 package org.smoothbuild.builtin.file;
 
 import static org.junit.Assert.fail;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 
 public class PathArgValidatorTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
 
   @Test
   public void illegalPathsAreReported() {

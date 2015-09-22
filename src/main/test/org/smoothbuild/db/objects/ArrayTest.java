@@ -3,7 +3,9 @@ package org.smoothbuild.db.objects;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.testing.db.objects.ValueCreators.blob;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -15,7 +17,6 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -53,7 +54,7 @@ public class ArrayTest {
   @Test
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
     given(rawArrayBuilder = objectsDb.arrayBuilder(SString.class));
-    given(blob = new FakeObjectsDb().blob("content"));
+    given(blob = blob(objectsDb(), "content"));
     when(rawArrayBuilder).add(blob);
     thenThrown(IllegalArgumentException.class);
   }

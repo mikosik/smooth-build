@@ -2,7 +2,9 @@ package org.smoothbuild.builtin.file;
 
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.db.objects.ValueCreators.file;
 import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -11,16 +13,16 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class FileFunctionTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
   private FakeContainer container = new FakeContainer();
   private final Path path = path("file/path/file.txt");
 
@@ -86,7 +88,7 @@ public class FileFunctionTest {
   public void execute() throws Exception {
     given(createFile(container.projectFileSystem(), path, "content"));
     when(execute(path.value()));
-    thenReturned(objectsDb.file(path, "content"));
+    thenReturned(file(objectsDb, path, "content"));
   }
 
   private SFile execute(String file) {

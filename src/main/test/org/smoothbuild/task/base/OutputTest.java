@@ -3,6 +3,7 @@ package org.smoothbuild.task.base;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -13,14 +14,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.testory.Closure;
 
 public class OutputTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
   private Output output;
   private final List<Message> messages = asList(new Message(ERROR, ""));
   private SString sstring;
