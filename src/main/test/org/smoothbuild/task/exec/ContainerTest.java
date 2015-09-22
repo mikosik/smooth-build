@@ -1,6 +1,7 @@
 package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.contains;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -17,11 +18,9 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 public class ContainerTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb(fileSystem);
   private final TempDirectoryManager tempDirectoryManager = mock(TempDirectoryManager.class);
 
   private ContainerImpl containerImpl;
@@ -30,7 +29,7 @@ public class ContainerTest {
 
   @Before
   public void before() {
-    given(containerImpl = new ContainerImpl(fileSystem, objectsDb, tempDirectoryManager));
+    given(containerImpl = new ContainerImpl(fileSystem, objectsDb(), tempDirectoryManager));
   }
 
   @Test

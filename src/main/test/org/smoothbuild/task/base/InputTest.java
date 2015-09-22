@@ -3,6 +3,7 @@ package org.smoothbuild.task.base;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -10,8 +11,8 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Empty;
 
 public class InputTest {
@@ -19,7 +20,7 @@ public class InputTest {
   private Task depTask2;
   private Input input;
   private Input input2;
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
   private SString sstring1;
   private SString sstring2;
 

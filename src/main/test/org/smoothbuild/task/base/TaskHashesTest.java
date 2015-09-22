@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.task.base.Computer.valueComputer;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -9,14 +10,14 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.collect.ImmutableList;
 
 public class TaskHashesTest {
   private static final CodeLocation CL = CodeLocation.codeLocation(2);
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
 
   private Task dep;
   private Task dep2;

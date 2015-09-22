@@ -1,7 +1,9 @@
 package org.smoothbuild.builtin.java.junit;
 
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
+import static org.smoothbuild.testing.db.objects.ValueCreators.file;
 import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -13,12 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 import org.smoothbuild.util.Classes;
 
 public class FileClassLoaderTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
   private FileClassLoader fileClassLoader;
   private SFile file;
   private Class<MyClass> klass;
@@ -40,7 +42,7 @@ public class FileClassLoaderTest {
 
   private SFile createByteCodeFile(Class<?> klass) throws IOException {
     byte[] byteCode = inputStreamToBytes(Classes.byteCodeAsInputStream(klass));
-    return objectsDb.file(path(binaryPath(klass)), byteCode);
+    return file(objectsDb, path(binaryPath(klass)), byteCode);
   }
 
   public static class MyClass {

@@ -5,22 +5,23 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.testing.db.objects.FakeObjectsDb;
 
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;
 
 public class MarshallerTest {
-  private final FakeObjectsDb objectsDb = new FakeObjectsDb();
+  private final ObjectsDb objectsDb = objectsDb();
   private Marshaller marshaller;
   private Value value1;
   private Value value2;
