@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.smoothbuild.testing.db.objects.ValueCreators.file;
 import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.testory.Testory.given;
@@ -18,12 +19,12 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
 import org.smoothbuild.io.fs.base.err.NoSuchFileError;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
-import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class FileFunctionTest {
   private final ObjectsDb objectsDb = objectsDb();
-  private FakeContainer container = new FakeContainer();
+  private ContainerImpl container = containerImpl();
   private final Path path = path("file/path/file.txt");
 
   @Test
@@ -49,7 +50,7 @@ public class FileFunctionTest {
   @Test
   public void illegalPathIsReported() {
     for (String path : PathTesting.listOfInvalidPaths()) {
-      container = new FakeContainer();
+      container = containerImpl();
       try {
         execute(path);
         fail("exception should be thrown");
