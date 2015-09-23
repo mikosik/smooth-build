@@ -8,16 +8,21 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 
-public interface Container {
+public interface Container extends ValueFactory {
+  @Override
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> arrayType);
 
+  @Override
   public SFile file(Path path, Blob content);
 
+  @Override
   public BlobBuilder blobBuilder();
 
+  @Override
   public SString string(String string);
 
   public void log(Message message);
