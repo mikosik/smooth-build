@@ -1,5 +1,7 @@
 package org.smoothbuild.message.listen;
 
+import static com.google.common.io.ByteStreams.nullOutputStream;
+
 import java.io.PrintStream;
 import java.util.Iterator;
 
@@ -29,6 +31,10 @@ public class UserConsole {
   public UserConsole(PrintStream printStream) {
     this.printStream = printStream;
     this.messageStats = new MessageStats();
+  }
+
+  public static UserConsole userConsole() {
+    return new UserConsole(new PrintStream(nullOutputStream()));
   }
 
   public void print(String header, Iterable<? extends Message> messages) {
