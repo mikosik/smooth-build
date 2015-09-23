@@ -1,8 +1,13 @@
 package org.smoothbuild.task.exec;
 
+import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
+
+import javax.inject.Provider;
+
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.plugin.Container;
@@ -27,6 +32,18 @@ public class ContainerImpl implements Container {
     this.objectsDb = objectsDb;
     this.tempDirectoryManager = tempDirectoryManager;
     this.messages = new LoggedMessages();
+  }
+
+  public static ContainerImpl containerImpl() {
+    final ObjectsDb objectsDb = objectsDb();
+    Provider<TempDirectory> tempDirectoryProvider = new Provider<TempDirectory>() {
+      @Override
+      public TempDirectory get() {
+        return new TempDirectory(objectsDb);
+      }
+    };
+    return new ContainerImpl(new MemoryFileSystem(), objectsDb, new TempDirectoryManager(
+        tempDirectoryProvider));
   }
 
   @Override

@@ -5,6 +5,7 @@ import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.rootPath;
+import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.smoothbuild.testing.db.objects.ValueCreators.file;
 import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.testory.Testory.given;
@@ -23,12 +24,11 @@ import org.smoothbuild.io.fs.base.err.NoSuchDirError;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
-import org.smoothbuild.testing.task.exec.FakeContainer;
 import org.testory.Closure;
 
 public class FilesFunctionTest {
   private ObjectsDb objectsDb;
-  private final FakeContainer container = new FakeContainer();
+  private final ContainerImpl container = containerImpl();
   private Path path;
   private Path path1;
   private Path path2;

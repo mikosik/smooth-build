@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
+import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.onInstance;
@@ -16,11 +17,10 @@ import javax.tools.StandardJavaFileManager;
 import org.junit.Test;
 import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class SandboxedJavaFileManagerTest {
   private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  private final Container container = new FakeContainer();
+  private final Container container = containerImpl();
   private final Iterable<InputClassFile> packagedJavaFileObjects = new ArrayList<>();
 
   private SandboxedJavaFileManager manager;

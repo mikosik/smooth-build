@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.ContentFunction.content;
 import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.smoothbuild.testing.db.objects.ValueCreators.blob;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
@@ -14,7 +15,6 @@ import org.junit.Test;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.task.exec.ContainerImpl;
-import org.smoothbuild.testing.task.exec.FakeContainer;
 
 public class ContentFunctionTest {
   private ObjectsDb objectsDb;
@@ -25,7 +25,7 @@ public class ContentFunctionTest {
   public void before() {
     givenTest(this);
     given(objectsDb = objectsDb());
-    given(container = new FakeContainer());
+    given(container = containerImpl());
   }
 
   @Test

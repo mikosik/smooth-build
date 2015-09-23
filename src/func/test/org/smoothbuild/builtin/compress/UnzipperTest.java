@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.compress;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.hasSize;
 import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
+import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.db.objects.ValueCreators.blob;
@@ -26,9 +27,6 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.ZipTester;
-import org.smoothbuild.testing.task.exec.FakeContainer;
-
-
 
 public class UnzipperTest {
   private String fileName1;
@@ -44,7 +42,7 @@ public class UnzipperTest {
     given(fileName1 = "file/path/file1.txt");
     given(fileName2 = "file/path/file2.txt");
     given(directoryName = "my/directory/");
-    given(unzipper = new Unzipper(new FakeContainer()));
+    given(unzipper = new Unzipper(containerImpl()));
   }
 
   @Test

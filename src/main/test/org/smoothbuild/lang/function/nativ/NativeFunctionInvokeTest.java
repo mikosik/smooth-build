@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.isA;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
@@ -23,20 +24,20 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.testing.task.exec.FakeContainer;
+import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.hash.HashCode;
 
 public class NativeFunctionInvokeTest {
   private NativeFunction function;
-  private FakeContainer container;
+  private ContainerImpl container;
   private SString string;
   private Method method;
 
   @Test
   public void invoke_returns_result_from_invokation_of_native_java_method() throws Exception {
-    given(container = new FakeContainer());
+    given(container = containerImpl());
     given(function = function(StringFunction.class));
     when(function).invoke(container, Empty.valueList());
     thenReturned(container.string("abc"));
@@ -51,7 +52,7 @@ public class NativeFunctionInvokeTest {
 
   @Test
   public void invoke_passes_arguments_to_java_method() throws Exception {
-    given(container = new FakeContainer());
+    given(container = containerImpl());
     given(function = function(StringIdentity.class));
     given(string = container.string("abc"));
     when(function).invoke(container, Arrays.<Value> asList(string));
@@ -67,7 +68,7 @@ public class NativeFunctionInvokeTest {
 
   @Test
   public void error_reported_by_java_method_is_logged() throws Exception {
-    given(container = new FakeContainer());
+    given(container = containerImpl());
     given(function = function(ErrorReporting.class));
     when(function).invoke(container, Empty.valueList());
     then(container.messages(), contains(isA(MyError.class)));
@@ -90,7 +91,7 @@ public class NativeFunctionInvokeTest {
   @Test
   public void invoke_logs_error_when_java_method_returns_null_without_logging_error()
       throws Exception {
-    given(container = new FakeContainer());
+    given(container = containerImpl());
     given(function = function(NullReturning.class));
     when(function).invoke(container, Empty.valueList());
     then(container.messages(), contains(isA(NullResultError.class)));
@@ -106,11 +107,11 @@ public class NativeFunctionInvokeTest {
   @Test
   public void invoke_logs_error_when_java_method_returns_null_and_logs_only_warning()
       throws Exception {
-    given(container = new FakeContainer());
+    given(container = containerImpl());
     given(function = function(WarningReporting.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(MyWarning.class),
-        instanceOf(NullResultError.class)));
+    then(container.messages(), contains(instanceOf(MyWarning.class), instanceOf(
+        NullResultError.class)));
   }
 
   public static class WarningReporting {
@@ -129,7 +130,7 @@ public class NativeFunctionInvokeTest {
 
   @Test
   public void invoke_wraps_illegal_access_exception_into_java_invocation_error() throws Exception {
-    given(container = new FakeContainer());
+    given(container = containerImpl());
     given(function = function(NormalFunction.class));
     given(method = PrivateMethod.class.getDeclaredMethods()[0]);
     given(function = new NativeFunction(method, function.signature(), true, HashCode.fromInt(13)));
@@ -153,7 +154,7 @@ public class NativeFunctionInvokeTest {
 
   @Test
   public void invoke_wraps_normal_java_exception_into_java_invocation_error() throws Exception {
-    given(container = new FakeContainer());
+    given(container = containerImpl());
     given(function = function(ThrowRuntimeExceptiton.class));
     when(function).invoke(container, Empty.valueList());
     then(container.messages(), contains(instanceOf(JavaInvocationError.class)));
@@ -168,7 +169,7 @@ public class NativeFunctionInvokeTest {
 
   @Test
   public void invoke_adds_thrown_messages_to_logged_messages() throws Exception {
-    given(container = new FakeContainer());
+    given(container = containerImpl());
     given(function = function(ThrowMessage.class));
     when(function).invoke(container, Empty.valueList());
     then(container.messages(), contains(instanceOf(MyMessage.class)));
