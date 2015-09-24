@@ -15,7 +15,6 @@ import org.smoothbuild.db.hashed.err.CorruptedEnumValue;
 import org.smoothbuild.db.hashed.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedError;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValue;
-import org.smoothbuild.db.hashed.err.WritingHashedObjectFailedError;
 import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.collect.ImmutableList;
@@ -121,7 +120,7 @@ public class Unmarshaller implements Closeable {
     try {
       inputStream.close();
     } catch (IOException e) {
-      throw new WritingHashedObjectFailedError(hash, e);
+      throw new ReadingHashedObjectFailedError(hash, e);
     }
   }
 }
