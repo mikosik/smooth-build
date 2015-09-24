@@ -51,7 +51,7 @@ public class FilesFunction {
   }
 
   private static Array<SFile> readFiles(ContainerImpl container, FileSystem fileSystem, Path path) {
-    ArrayBuilder<SFile> fileArrayBuilder = container.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     FileReader reader = new FileReader(container);
     for (Path filePath : fileSystem.filesFromRecursive(path)) {
       fileArrayBuilder.add(reader.createFile(filePath, path.append(filePath)));

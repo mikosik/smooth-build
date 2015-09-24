@@ -16,7 +16,7 @@ public class ToStringFunction {
   public static SString toString(Container container, @Required @Name("blob") Blob blob) {
     try {
       String string = Streams.inputStreamToString(blob.openInputStream());
-      return container.string(string);
+      return container.create().string(string);
     } catch (IOException e) {
       throw new FileSystemError(e);
     }

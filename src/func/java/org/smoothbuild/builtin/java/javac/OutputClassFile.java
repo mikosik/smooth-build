@@ -24,7 +24,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;
     this.container = container;
-    this.contentBuilder = container.blobBuilder();
+    this.contentBuilder = container.create().blobBuilder();
   }
 
   @Override
@@ -34,7 +34,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         outputStream.close();
-        SFile file = container.file(path, contentBuilder.build());
+        SFile file = container.create().file(path, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
     };

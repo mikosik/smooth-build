@@ -100,7 +100,7 @@ public class NativeFunctionTypeTest {
   public static class NilReturnType {
     @SmoothFunction
     public static Array<Nothing> function(Container container) {
-      return container.arrayBuilder(Nothing.class).build();
+      return container.create().arrayBuilder(Nothing.class).build();
     }
   }
 }

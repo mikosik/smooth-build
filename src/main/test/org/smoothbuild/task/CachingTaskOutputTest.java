@@ -180,7 +180,7 @@ public class CachingTaskOutputTest {
 
     @Override
     public Output execute(Input input, ContainerImpl container) {
-      SString sstring = container.string(Integer.toString(counter.incrementAndGet()));
+      SString sstring = container.create().string(Integer.toString(counter.incrementAndGet()));
       return new Output(sstring);
     }
 

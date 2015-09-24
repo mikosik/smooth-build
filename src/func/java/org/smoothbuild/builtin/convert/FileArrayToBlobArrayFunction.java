@@ -14,7 +14,7 @@ public class FileArrayToBlobArrayFunction {
   public static Array<Blob> fileArrayToBlobArray( //
       Container container, //
       @Required @Name("input") Array<SFile> input) {
-    ArrayBuilder<Blob> builder = container.arrayBuilder(Blob.class);
+    ArrayBuilder<Blob> builder = container.create().arrayBuilder(Blob.class);
     for (SFile file : input) {
       builder.add(file.content());
     }

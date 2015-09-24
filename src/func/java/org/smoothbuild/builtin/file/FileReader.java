@@ -21,12 +21,12 @@ public class FileReader {
   }
 
   public SFile createFile(Path path, Path projectPath) {
-    return container.file(path, createContent(projectPath));
+    return container.create().file(path, createContent(projectPath));
   }
 
   private Blob createContent(Path path) {
     InputStream inputStream = container.projectFileSystem().openInputStream(path);
-    BlobBuilder contentBuilder = container.blobBuilder();
+    BlobBuilder contentBuilder = container.create().blobBuilder();
     doCopy(inputStream, contentBuilder.openOutputStream());
     return contentBuilder.build();
   }

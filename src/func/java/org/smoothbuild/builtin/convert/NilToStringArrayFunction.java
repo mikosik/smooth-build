@@ -13,6 +13,6 @@ public class NilToStringArrayFunction {
   public static Array<SString> nilToStringArray( //
       Container container, //
       @Required @Name("input") Array<Nothing> input) {
-    return container.arrayBuilder(SString.class).build();
+    return container.create().arrayBuilder(SString.class).build();
   }
 }

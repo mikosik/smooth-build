@@ -12,6 +12,6 @@ public class PathFunction {
   public static SString path( //
       Container container, //
       @Required @Name("file") SFile file) {
-    return container.string(file.path().value());
+    return container.create().string(file.path().value());
   }
 }

@@ -46,14 +46,14 @@ public class JunitFunction {
           for (Failure failure : result.getFailures()) {
             container.log(new JunitTestFailedError(failure));
           }
-          return container.string("FAILURE");
+          return container.create().string("FAILURE");
         }
       }
     }
     if (testCount == 0) {
       container.log(new NoJunitTestFoundWarning());
     }
-    return container.string("SUCCESS");
+    return container.create().string("SUCCESS");
   }
 
   private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {

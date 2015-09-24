@@ -36,7 +36,7 @@ public class Unzipper {
 
   public Array<SFile> unzip(Blob zipBlob) {
     this.duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder<SFile> fileArrayBuilder = container.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     try {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream())) {
         ZipEntry entry;
@@ -64,12 +64,12 @@ public class Unzipper {
     }
 
     Blob content = unzipEntryContent(zipInputStream);
-    return container.file(path, content);
+    return container.create().file(path, content);
   }
 
   private Blob unzipEntryContent(ZipInputStream zipInputStream) {
     try {
-      BlobBuilder contentBuilder = container.blobBuilder();
+      BlobBuilder contentBuilder = container.create().blobBuilder();
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len;
         while ((len = zipInputStream.read(buffer)) > 0) {

@@ -33,7 +33,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     super(fileManager);
     this.container = container;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
-    this.resultClassFiles = container.arrayBuilder(SFile.class);
+    this.resultClassFiles = container.create().arrayBuilder(SFile.class);
   }
 
   private static Map<String, Set<JavaFileObject>> groupIntoPackages(Iterable<InputClassFile> objects) {

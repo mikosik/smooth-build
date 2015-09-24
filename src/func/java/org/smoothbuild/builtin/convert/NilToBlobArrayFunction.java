@@ -13,6 +13,6 @@ public class NilToBlobArrayFunction {
   public static Array<Blob> nilToBlobArray( //
       Container container, //
       @Required @Name("input") Array<Nothing> input) {
-    return container.arrayBuilder(Blob.class).build();
+    return container.create().arrayBuilder(Blob.class).build();
   }
 }

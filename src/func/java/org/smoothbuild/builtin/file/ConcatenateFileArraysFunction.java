@@ -14,7 +14,7 @@ public class ConcatenateFileArraysFunction {
       Container container, //
       @Required @Name("files") Array<SFile> files, //
       @Required @Name("with") Array<SFile> with) {
-    ArrayBuilder<SFile> builder = container.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> builder = container.create().arrayBuilder(SFile.class);
 
     for (SFile file : files) {
       builder.add(file);

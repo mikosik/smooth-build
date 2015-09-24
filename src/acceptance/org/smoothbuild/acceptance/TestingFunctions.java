@@ -30,7 +30,7 @@ public class TestingFunctions {
     @SmoothFunction
     public static SString twoStrings(Container container, @Name("stringA") SString stringA,
         @Name("stringB") SString stringB) {
-      return container.string(stringA.value() + ":" + stringB.value());
+      return container.create().string(stringA.value() + ":" + stringB.value());
     }
   }
 
@@ -73,7 +73,7 @@ public class TestingFunctions {
       String fileString = CharStreams.toString(new InputStreamReader(fileStream));
       String blobString = CharStreams.toString(new InputStreamReader(blobStream));
 
-      return container.string(fileString + ":" + blobString);
+      return container.create().string(fileString + ":" + blobString);
     }
   }
 
@@ -89,7 +89,7 @@ public class TestingFunctions {
     @SmoothFunction
     public static SString twoRequired(Container container,
         @Required @Name("stringA") SString stringA, @Required @Name("stringB") SString stringB) {
-      return container.string(stringA.value() + ":" + stringB.value());
+      return container.create().string(stringA.value() + ":" + stringB.value());
     }
   }
 
@@ -97,7 +97,7 @@ public class TestingFunctions {
     @SmoothFunction
     public static SString oneOptionalOneRequired(Container container,
         @Name("stringA") SString stringA, @Required @Name("stringB") SString stringB) {
-      return container.string(stringA.value() + ":" + stringB.value());
+      return container.create().string(stringA.value() + ":" + stringB.value());
     }
   }
 
@@ -105,7 +105,7 @@ public class TestingFunctions {
     @SmoothFunction
     public static SString cacheableRandom(Container container) {
       long randomLong = new Random().nextLong();
-      return container.string(Long.toString(randomLong));
+      return container.create().string(Long.toString(randomLong));
     }
   }
 
@@ -114,7 +114,7 @@ public class TestingFunctions {
     @NotCacheable
     public static SString notCacheableRandom(Container container) {
       long randomLong = new Random().nextLong();
-      return container.string(Long.toString(randomLong));
+      return container.create().string(Long.toString(randomLong));
     }
   }
 }

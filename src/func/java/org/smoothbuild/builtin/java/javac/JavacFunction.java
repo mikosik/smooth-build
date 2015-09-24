@@ -91,7 +91,7 @@ public class JavacFunction {
          */
         if (!inputSourceFiles.iterator().hasNext()) {
           container.log(new NoJavaSourceFilesFoundWarning());
-          return container.arrayBuilder(SFile.class).build();
+          return container.create().arrayBuilder(SFile.class).build();
         }
 
         // run compilation task

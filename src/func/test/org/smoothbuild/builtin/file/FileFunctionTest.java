@@ -93,6 +93,6 @@ public class FileFunctionTest {
   }
 
   private SFile execute(String file) {
-    return FileFunction.file(container, container.string(file));
+    return FileFunction.file(container, container.create().string(file));
   }
 }
