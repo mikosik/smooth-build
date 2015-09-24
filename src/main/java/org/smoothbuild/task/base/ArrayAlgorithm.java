@@ -37,7 +37,7 @@ public class ArrayAlgorithm implements Algorithm {
 
   private <T extends Value> Array<T> inputToArray(Input input, ContainerImpl container,
       Class<T> elementClass) {
-    ArrayBuilder<T> builder = container.arrayBuilder(elementClass);
+    ArrayBuilder<T> builder = container.create().arrayBuilder(elementClass);
     for (T value : (Iterable<T>) input.values()) {
       builder.add(value);
     }

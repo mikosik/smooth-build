@@ -46,7 +46,7 @@ public class JarFunction {
     }
 
     public Blob execute() {
-      BlobBuilder blobBuilder = container.blobBuilder();
+      BlobBuilder blobBuilder = container.create().blobBuilder();
       try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder)) {
         for (SFile file : files) {
           addEntry(jarOutputStream, file);

@@ -22,7 +22,7 @@ public class FilterFunction {
       @Required @Name("files") Array<SFile> files, //
       @Required @Name("include") SString include) {
     Predicate<Path> filter = createFilter(include.value());
-    ArrayBuilder<SFile> builder = container.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> builder = container.create().arrayBuilder(SFile.class);
 
     for (SFile file : files) {
       if (filter.test(file.path())) {

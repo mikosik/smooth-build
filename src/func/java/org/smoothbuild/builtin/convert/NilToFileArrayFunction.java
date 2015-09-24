@@ -13,6 +13,6 @@ public class NilToFileArrayFunction {
   public static Array<SFile> nilToFileArray( //
       Container container, //
       @Required @Name("input") Array<Nothing> input) {
-    return container.arrayBuilder(SFile.class).build();
+    return container.create().arrayBuilder(SFile.class).build();
   }
 }

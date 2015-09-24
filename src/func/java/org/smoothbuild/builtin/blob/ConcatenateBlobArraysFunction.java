@@ -15,7 +15,7 @@ public class ConcatenateBlobArraysFunction {
       Container container, //
       @Required @Name("blobs") Array<Blob> blobs, //
       @Required @Name("with") Array<Blob> with) {
-    ArrayBuilder<Blob> builder = container.arrayBuilder(Blob.class);
+    ArrayBuilder<Blob> builder = container.create().arrayBuilder(Blob.class);
 
     for (Blob blob : blobs) {
       builder.add(blob);

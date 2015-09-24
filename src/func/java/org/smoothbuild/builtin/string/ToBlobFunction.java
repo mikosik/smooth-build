@@ -23,7 +23,7 @@ public class ToBlobFunction {
   }
 
   public static Blob stringToBlob(Container container, SString string) {
-    BlobBuilder builder = container.blobBuilder();
+    BlobBuilder builder = container.create().blobBuilder();
     try (OutputStreamWriter writer = new OutputStreamWriter(builder.openOutputStream(), CHARSET)) {
       writer.write(string.value());
     } catch (IOException e) {

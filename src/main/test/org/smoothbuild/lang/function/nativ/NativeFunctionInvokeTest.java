@@ -40,13 +40,13 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(StringFunction.class));
     when(function).invoke(container, Empty.valueList());
-    thenReturned(container.string("abc"));
+    thenReturned(container.create().string("abc"));
   }
 
   public static class StringFunction {
     @SmoothFunction
     public static SString stringFunction(Container container) {
-      return container.string("abc");
+      return container.create().string("abc");
     }
   }
 
@@ -54,9 +54,9 @@ public class NativeFunctionInvokeTest {
   public void invoke_passes_arguments_to_java_method() throws Exception {
     given(container = containerImpl());
     given(function = function(StringIdentity.class));
-    given(string = container.string("abc"));
+    given(string = container.create().string("abc"));
     when(function).invoke(container, Arrays.<Value> asList(string));
-    thenReturned(container.string("abc"));
+    thenReturned(container.create().string("abc"));
   }
 
   public static class StringIdentity {

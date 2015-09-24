@@ -14,7 +14,7 @@ public class ConcatenateStringArraysFunction {
       Container container, //
       @Required @Name("strings") Array<SString> strings, //
       @Required @Name("with") Array<SString> with) {
-    ArrayBuilder<SString> builder = container.arrayBuilder(SString.class);
+    ArrayBuilder<SString> builder = container.create().arrayBuilder(SString.class);
 
     for (SString string : strings) {
       builder.add(string);

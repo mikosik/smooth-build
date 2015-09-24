@@ -27,7 +27,7 @@ public class OutputClassFileTest {
 
   @Test
   public void openOutputStream() throws IOException {
-    given(fileArrayBuilder = container.arrayBuilder(SFile.class));
+    given(fileArrayBuilder = container.create().arrayBuilder(SFile.class));
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, container));
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
     when(fileArrayBuilder).build();
@@ -36,7 +36,7 @@ public class OutputClassFileTest {
 
   @Test
   public void get_name_returns_file_path() throws Exception {
-    given(outputClassFile = new OutputClassFile(container.arrayBuilder(SFile.class), path,
+    given(outputClassFile = new OutputClassFile(container.create().arrayBuilder(SFile.class), path,
         container));
     when(outputClassFile.getName());
     thenReturned("/" + path.value());

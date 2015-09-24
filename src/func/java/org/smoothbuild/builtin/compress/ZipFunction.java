@@ -43,7 +43,7 @@ public class ZipFunction {
     }
 
     public Blob execute() {
-      BlobBuilder blobBuilder = container.blobBuilder();
+      BlobBuilder blobBuilder = container.create().blobBuilder();
 
       try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.openOutputStream())) {
         for (SFile file : files) {

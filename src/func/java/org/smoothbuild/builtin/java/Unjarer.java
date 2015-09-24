@@ -44,7 +44,7 @@ public class Unjarer {
 
   public Array<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder<SFile> fileArrayBuilder = container.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream())) {
@@ -76,11 +76,11 @@ public class Unjarer {
 
     Path path = path(fileName);
     Blob content = unjarEntryContent(jarInputStream);
-    return container.file(path, content);
+    return container.create().file(path, content);
   }
 
   private Blob unjarEntryContent(JarInputStream jarInputStream) {
-    BlobBuilder contentBuilder = container.blobBuilder();
+    BlobBuilder contentBuilder = container.create().blobBuilder();
     try {
       try (OutputStream outputStream = contentBuilder.openOutputStream()) {
         int len;

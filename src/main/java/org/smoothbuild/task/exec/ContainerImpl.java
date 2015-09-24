@@ -6,17 +6,11 @@ import javax.inject.Provider;
 
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 
@@ -47,23 +41,8 @@ public class ContainerImpl implements Container {
   }
 
   @Override
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementType) {
-    return objectsDb.arrayBuilder(elementType);
-  }
-
-  @Override
-  public SFile file(Path path, Blob content) {
-    return objectsDb.file(path, content);
-  }
-
-  @Override
-  public BlobBuilder blobBuilder() {
-    return objectsDb.blobBuilder();
-  }
-
-  @Override
-  public SString string(String string) {
-    return objectsDb.string(string);
+  public ValueFactory create() {
+    return objectsDb;
   }
 
   public FileSystem projectFileSystem() {
