@@ -22,8 +22,14 @@ public class BlobBuilder {
   }
 
   public Blob build() {
-    checkState(outputStream != null, "No content available. Create one via openOutputStream()");
-    byte[] bytes = outputStream.toByteArray();
-    return marshaller.write(bytes);
+    return marshaller.write(getBytes());
+  }
+
+  private byte[] getBytes() {
+    if (outputStream == null) {
+      return new byte[] {};
+    } else {
+      return outputStream.toByteArray();
+    }
   }
 }
