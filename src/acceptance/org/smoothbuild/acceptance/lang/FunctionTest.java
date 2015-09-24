@@ -10,6 +10,22 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class FunctionTest extends AcceptanceTestCase {
 
   @Test
+  public void illegal_function_name_is_forbidden() throws Exception {
+    givenBuildScript(script("function^name: 'abc';"));
+    whenRunSmoothBuild("function^name");
+    thenReturnedCode(1);
+    thenPrinted(containsString("Illegal function name 'function^name'"));
+  }
+
+  @Test
+  public void duplicate_function_is_forbidden() throws Exception {
+    givenBuildScript(script("function1: 'abc'; function1: 'def'"));
+    whenRunSmoothBuild("function1");
+    thenReturnedCode(1);
+    thenPrinted(containsString("Duplicate function 'function1'"));
+  }
+
+  @Test
   public void overriding_core_function_is_forbidden() throws Exception {
     givenBuildScript(script("file: 'abc';"));
     whenRunSmoothBuild("file");
