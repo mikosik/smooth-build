@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
@@ -43,10 +44,8 @@ public class ModuleParser {
   }
 
   public Module createModule(CommandLineArguments args) {
-    Path scriptFile = args.scriptFile();
-    InputStream inputStream = scriptInputStream(scriptFile);
-
-    return createModule(messages, inputStream, scriptFile);
+    InputStream inputStream = scriptInputStream(DEFAULT_SCRIPT);
+    return createModule(messages, inputStream, DEFAULT_SCRIPT);
   }
 
   private InputStream scriptInputStream(Path scriptFile) {
@@ -67,9 +66,8 @@ public class ModuleParser {
     detectUndefinedFunctions(loggedMessages, builtinModule, dependencies);
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
-    Map<Name, Function> definedFunctions =
-        definedFunctionsCreator.createDefinedFunctions(loggedMessages, builtinModule, functions,
-            sorted);
+    Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
+        loggedMessages, builtinModule, functions, sorted);
 
     return new ImmutableModule(definedFunctions);
   }

@@ -2,7 +2,6 @@ package org.smoothbuild.cli.work.build;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.testing.message.ContainsOnlyMessageMatcher.containsOnlyMessage;
 import static org.testory.Testory.given;
@@ -43,13 +42,5 @@ public class CommandLineParserTest {
     given(parser = new CommandLineParser(messages));
     when(parser).parse(asList("abc", "def", "abc"));
     then(messages, containsOnlyMessage(DuplicatedFunctionNameWarning.class));
-  }
-
-  @Test
-  public void command_line_arguments_contains_default_script_file() throws Exception {
-    given(parser = new CommandLineParser(new LoggedMessages()));
-    given(args = parser.parse(asList(functionName)));
-    when(args).scriptFile();
-    thenReturned(DEFAULT_SCRIPT);
   }
 }

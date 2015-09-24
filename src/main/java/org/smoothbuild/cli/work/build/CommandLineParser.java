@@ -1,6 +1,5 @@
 package org.smoothbuild.cli.work.build;
 
-import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 
@@ -28,7 +27,7 @@ public class CommandLineParser {
   }
 
   public CommandLineArguments parse(List<String> args) {
-    return new CommandLineArguments(DEFAULT_SCRIPT, names(args));
+    return new CommandLineArguments(names(args));
   }
 
   private Set<Name> names(List<String> args) {
