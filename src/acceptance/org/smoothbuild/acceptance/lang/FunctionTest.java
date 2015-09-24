@@ -19,7 +19,7 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void duplicate_function_is_forbidden() throws Exception {
-    givenBuildScript(script("function1: 'abc'; function1: 'def'"));
+    givenBuildScript(script("function1: 'abc'; function1: 'def';"));
     whenRunSmoothBuild("function1");
     thenReturnedCode(1);
     thenPrinted(containsString("Duplicate function 'function1'"));
