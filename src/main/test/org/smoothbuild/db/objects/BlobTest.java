@@ -35,10 +35,11 @@ public class BlobTest {
   }
 
   @Test
-  public void creating_blob_without_content_fails() throws Exception {
+  public void creating_blob_without_content_creates_empty_blob() throws Exception {
     given(blobBuilder = objectsDb.blobBuilder());
-    when(blobBuilder).build();
-    thenThrown(IllegalStateException.class);
+    given(blob = blobBuilder.build());
+    when(inputStreamToString(blob.openInputStream()));
+    thenReturned("");
   }
 
   @Test
