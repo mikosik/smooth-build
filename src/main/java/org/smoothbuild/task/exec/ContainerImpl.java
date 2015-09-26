@@ -11,7 +11,6 @@ import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
-import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.message.base.Message;
@@ -20,15 +19,15 @@ import org.smoothbuild.message.listen.LoggedMessages;
 public class ContainerImpl implements Container {
   private final FileSystem projectFileSystem;
   private final ObjectsDb objectsDb;
-  private final TempDirectoryManager tempDirectoryManager;
+  private final Provider<TempDirectory> tempDirectoryProvider;
   private final LoggedMessages messages;
   private final List<TempDirectory> tempDirectories;
 
   public ContainerImpl(FileSystem projectFileSystem, ObjectsDb objectsDb,
-      TempDirectoryManager tempDirectoryManager) {
+      Provider<TempDirectory> tempDirectoryProvider) {
     this.projectFileSystem = projectFileSystem;
     this.objectsDb = objectsDb;
-    this.tempDirectoryManager = tempDirectoryManager;
+    this.tempDirectoryProvider = tempDirectoryProvider;
     this.messages = new LoggedMessages();
     this.tempDirectories = new ArrayList<>();
   }
@@ -41,8 +40,7 @@ public class ContainerImpl implements Container {
         return new TempDirectory(objectsDb);
       }
     };
-    return new ContainerImpl(new MemoryFileSystem(), objectsDb, new TempDirectoryManager(
-        tempDirectoryProvider));
+    return new ContainerImpl(new MemoryFileSystem(), objectsDb, tempDirectoryProvider);
   }
 
   @Override
@@ -65,7 +63,7 @@ public class ContainerImpl implements Container {
 
   @Override
   public TempDirectory createTempDirectory() {
-    TempDirectory tempDirectory = tempDirectoryManager.createTempDirectory();
+    TempDirectory tempDirectory = tempDirectoryProvider.get();
     tempDirectories.add(tempDirectory);
     return tempDirectory;
   }

@@ -11,17 +11,18 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 import static org.testory.common.Matchers.same;
 
+import javax.inject.Provider;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
-import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.message.base.Message;
 
 public class ContainerImplTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
-  private final TempDirectoryManager tempDirectoryManager = mock(TempDirectoryManager.class);
+  private final Provider<TempDirectory> tempDirectoryProvider = mock(Provider.class);
 
   private ContainerImpl containerImpl;
   private Message message;
@@ -29,7 +30,7 @@ public class ContainerImplTest {
 
   @Before
   public void before() {
-    given(containerImpl = new ContainerImpl(fileSystem, objectsDb(), tempDirectoryManager));
+    given(containerImpl = new ContainerImpl(fileSystem, objectsDb(), tempDirectoryProvider));
   }
 
   @Test
@@ -48,7 +49,7 @@ public class ContainerImplTest {
   @Test
   public void create_temp_directory_call_is_forwarded_to_temp_directory_manager() throws Exception {
     given(tempDirectory = mock(TempDirectory.class));
-    given(willReturn(tempDirectory), tempDirectoryManager).createTempDirectory();
+    given(willReturn(tempDirectory), tempDirectoryProvider).get();
     when(containerImpl).createTempDirectory();
     thenReturned(tempDirectory);
   }
