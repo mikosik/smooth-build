@@ -19,7 +19,7 @@ public class Help implements Handler {
   }
 
   @Override
-  public boolean run(Namespace namespace) {
+  public int run(Namespace namespace) {
     String commandName = namespace.get(ARGUMENT_NAME);
 
     if (commandName == null) {
@@ -32,6 +32,6 @@ public class Help implements Handler {
         parser.printHelpFor(command);
       }
     }
-    return true;
+    return 0;
   }
 }

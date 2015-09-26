@@ -20,7 +20,7 @@ public class CleanWorker {
     this.userConsole = userConsole;
   }
 
-  public boolean run() {
+  public int run() {
     try {
       fileSystem.delete(SMOOTH_DIR);
     } catch (Message e) {
@@ -29,6 +29,6 @@ public class CleanWorker {
       userConsole.print("CLEAN", messages);
     }
     userConsole.printFinalSummary();
-    return !userConsole.isProblemReported();
+    return userConsole.isProblemReported() ? 1 : 0;
   }
 }

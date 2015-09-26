@@ -29,7 +29,7 @@ public class BuildWorker {
     this.smoothExecutorPhase = smoothExecutorPhase;
   }
 
-  public boolean run(List<String> functions) {
+  public int run(List<String> functions) {
     CommandLineArguments args = commandLineParserPhase.execute(ImmutableList.copyOf(functions));
 
     if (!userConsole.isProblemReported()) {
@@ -40,6 +40,6 @@ public class BuildWorker {
     }
 
     userConsole.printFinalSummary();
-    return !userConsole.isProblemReported();
+    return userConsole.isProblemReported() ? 1 : 0;
   }
 }
