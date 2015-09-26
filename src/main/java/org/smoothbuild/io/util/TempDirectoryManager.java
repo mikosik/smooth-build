@@ -21,10 +21,4 @@ public class TempDirectoryManager {
     tempDirectories.add(tempDirectory);
     return tempDirectory;
   }
-
-  public void destroyTempDirectories() {
-    for (TempDirectory tempDirectory : tempDirectories) {
-      tempDirectory.destroy();
-    }
-  }
 }

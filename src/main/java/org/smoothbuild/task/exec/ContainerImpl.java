@@ -2,6 +2,9 @@ package org.smoothbuild.task.exec;
 
 import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Provider;
 
 import org.smoothbuild.db.objects.ObjectsDb;
@@ -19,6 +22,7 @@ public class ContainerImpl implements Container {
   private final ObjectsDb objectsDb;
   private final TempDirectoryManager tempDirectoryManager;
   private final LoggedMessages messages;
+  private final List<TempDirectory> tempDirectories;
 
   public ContainerImpl(FileSystem projectFileSystem, ObjectsDb objectsDb,
       TempDirectoryManager tempDirectoryManager) {
@@ -26,6 +30,7 @@ public class ContainerImpl implements Container {
     this.objectsDb = objectsDb;
     this.tempDirectoryManager = tempDirectoryManager;
     this.messages = new LoggedMessages();
+    this.tempDirectories = new ArrayList<>();
   }
 
   public static ContainerImpl containerImpl() {
@@ -60,6 +65,14 @@ public class ContainerImpl implements Container {
 
   @Override
   public TempDirectory createTempDirectory() {
-    return tempDirectoryManager.createTempDirectory();
+    TempDirectory tempDirectory = tempDirectoryManager.createTempDirectory();
+    tempDirectories.add(tempDirectory);
+    return tempDirectory;
+  }
+
+  public void destroy() {
+    for (TempDirectory tempDirectory : tempDirectories) {
+      tempDirectory.destroy();
+    }
   }
 }

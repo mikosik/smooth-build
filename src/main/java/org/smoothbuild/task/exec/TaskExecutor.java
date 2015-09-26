@@ -45,7 +45,10 @@ public class TaskExecutor {
       Output output = taskOutputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
-      task.execute(new ContainerImpl(projectFileSystem, objectsDb, tempDirectoryManager));
+      ContainerImpl container = new ContainerImpl(projectFileSystem, objectsDb,
+          tempDirectoryManager);
+      task.execute(container);
+      container.destroy();
       if (task.isCacheable()) {
         taskOutputsDb.write(hash, task.output());
       }

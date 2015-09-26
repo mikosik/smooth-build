@@ -1,10 +1,14 @@
 package org.smoothbuild.acceptance;
 
+import static org.smoothbuild.io.fs.base.Path.path;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
 
+import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NotCacheable;
@@ -115,6 +119,16 @@ public class TestingFunctions {
     public static SString notCacheableRandom(Container container) {
       long randomLong = new Random().nextLong();
       return container.create().string(Long.toString(randomLong));
+    }
+  }
+
+  public static class TempFilePath {
+    @SmoothFunction
+    public static SString tempFilePath(Container container) {
+      TempDirectory tempDirectory = container.createTempDirectory();
+      String osPath = tempDirectory.asOsPath(path("file.txt"));
+      new File(osPath).mkdirs();
+      return container.create().string(osPath);
     }
   }
 }
