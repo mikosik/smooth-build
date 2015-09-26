@@ -12,7 +12,7 @@ public abstract class MessageCatchingExecutor<A, R> {
     this.name = name;
     this.loggedMessages = loggedMessages;
   }
-
+ 
   public R execute(A argument) {
     try {
       return executeImpl(argument);

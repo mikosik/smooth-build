@@ -25,7 +25,7 @@ public class Cli {
     this.parser = parser;
   }
 
-  public boolean run(String[] args) {
+  public int run(String[] args) {
     args = convertArgs(args);
 
     ArgumentParser argumentParser = parser.parser();
@@ -35,7 +35,7 @@ public class Cli {
       return injector.getInstance(handler).run(namespace);
     } catch (ArgumentParserException e) {
       argumentParser.handleError(e);
-      return false;
+      return 1;
     }
   }
 

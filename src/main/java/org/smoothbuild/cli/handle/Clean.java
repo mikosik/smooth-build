@@ -15,7 +15,7 @@ public class Clean implements Handler {
   }
 
   @Override
-  public boolean run(Namespace namespace) {
+  public int run(Namespace namespace) {
     return worker.run();
   }
 }
