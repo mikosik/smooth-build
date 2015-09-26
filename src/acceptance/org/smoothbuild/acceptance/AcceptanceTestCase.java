@@ -3,6 +3,7 @@ package org.smoothbuild.acceptance;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.Files.createTempDir;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
@@ -22,6 +23,8 @@ import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.io.ByteStreams;
 
 public class AcceptanceTestCase {
@@ -39,7 +42,7 @@ public class AcceptanceTestCase {
 
   @After
   public void after() throws IOException {
-    deleteRecursively(tempDir.toPath());
+    deleteRecursively(projectDir().toPath());
   }
 
   protected void givenBuildScript(String buildScript) throws IOException {
@@ -47,7 +50,7 @@ public class AcceptanceTestCase {
   }
 
   protected void givenFile(String path, String content) throws IOException {
-    Path fullPath = Paths.get(tempDir.getPath(), path);
+    Path fullPath = Paths.get(projectDir().getPath(), path);
     Files.createDirectories(fullPath.getParent());
     try (FileWriter writer = new FileWriter(fullPath.toString())) {
       content.getBytes(UTF_8);
@@ -56,14 +59,22 @@ public class AcceptanceTestCase {
   }
 
   protected void givenDir(String path) throws IOException {
-    Path fullPath = Paths.get(tempDir.getPath(), path);
+    Path fullPath = Paths.get(projectDir().getPath(), path);
     Files.createDirectories(fullPath);
   }
 
   protected void whenRunSmoothBuild(String command) {
+    whenRunSmooth("build ", command);
+  }
+
+  protected void whenRunSmoothClean() {
+    whenRunSmooth("clean ");
+  }
+
+  public void whenRunSmooth(String... smoothCommandArgs) {
     try {
-      ProcessBuilder processBuilder = new ProcessBuilder(smoothBinaryPath(), "build ", command);
-      processBuilder.directory(tempDir);
+      ProcessBuilder processBuilder = new ProcessBuilder(processArgs(smoothCommandArgs));
+      processBuilder.directory(projectDir());
       Process process = processBuilder.start();
       drainDataFromErrorStream(process);
       outputData = readOutputData(process);
@@ -74,6 +85,13 @@ public class AcceptanceTestCase {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static ImmutableList<String> processArgs(String... params) {
+    Builder<String> builder = ImmutableList.builder();
+    builder.add(smoothBinaryPath());
+    builder.addAll(asList(params));
+    return builder.build();
   }
 
   private static String smoothBinaryPath() {
@@ -119,7 +137,11 @@ public class AcceptanceTestCase {
   }
 
   protected File artifactFile(String name) {
-    return new File(tempDir, ARTIFACTS_DIR_PATH + name);
+    return new File(projectDir(), ARTIFACTS_DIR_PATH + name);
+  }
+
+  protected File projectDir() {
+    return tempDir;
   }
 
   public static String script(String string) {
