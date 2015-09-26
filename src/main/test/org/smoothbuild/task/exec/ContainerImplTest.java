@@ -19,7 +19,7 @@ import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.io.util.TempDirectoryManager;
 import org.smoothbuild.message.base.Message;
 
-public class ContainerTest {
+public class ContainerImplTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
   private final TempDirectoryManager tempDirectoryManager = mock(TempDirectoryManager.class);
 
