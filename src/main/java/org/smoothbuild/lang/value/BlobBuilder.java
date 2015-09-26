@@ -10,18 +10,22 @@ import org.smoothbuild.db.objects.marshal.BlobMarshaller;
 public class BlobBuilder {
   private final BlobMarshaller marshaller;
   private ByteArrayOutputStream outputStream;
+  private boolean closed;
 
   public BlobBuilder(BlobMarshaller marshaller) {
     this.marshaller = marshaller;
+    this.closed = false;
   }
 
   public OutputStream openOutputStream() {
-    checkState(this.outputStream == null, "Cannot open output stream twice.");
-    this.outputStream = new ByteArrayOutputStream();
+    checkState(!closed, "Cannot open output stream as close() has been already called.");
+    checkState(outputStream == null, "Cannot open output stream twice.");
+    outputStream = new ByteArrayOutputStream();
     return outputStream;
   }
 
   public Blob build() {
+    closed = true;
     return marshaller.write(getBytes());
   }
 
