@@ -64,11 +64,11 @@ public class AcceptanceTestCase {
   }
 
   protected void whenRunSmoothBuild(String command) {
-    whenRunSmooth("build ", command);
+    whenRunSmooth("build", command);
   }
 
   protected void whenRunSmoothClean() {
-    whenRunSmooth("clean ");
+    whenRunSmooth("clean");
   }
 
   public void whenRunSmooth(String... smoothCommandArgs) {
