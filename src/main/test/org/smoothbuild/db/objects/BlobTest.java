@@ -51,6 +51,14 @@ public class BlobTest {
   }
 
   @Test
+  public void opening_output_stream_after_calling_build_is_forbidden() throws Exception {
+    given(blobBuilder = objectsDb.blobBuilder());
+    given(blobBuilder).build();
+    when(blobBuilder).openOutputStream();
+    thenThrown(RuntimeException.class);
+  }
+
+  @Test
   public void type_of_blob_is_blob() throws Exception {
     given(blob = createBlob(objectsDb, string));
     when(blob).type();
