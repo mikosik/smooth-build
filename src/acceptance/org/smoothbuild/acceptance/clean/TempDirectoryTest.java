@@ -11,8 +11,8 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class TempDirectoryTest extends AcceptanceTestCase {
   @Test
   public void temp_directory_is_deleted_after_build_execution() throws Exception {
-    givenBuildScript(script("result: tempFilePath();"));
-    whenRunSmoothBuild("result");
+    givenScript("result: tempFilePath();");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
     when(new File(artifactContent("result"))).exists();
     thenReturned(false);

@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
+import static org.testory.Testory.then;
 
 import java.io.IOException;
 
@@ -11,17 +12,17 @@ public class CommentTest extends AcceptanceTestCase {
 
   @Test
   public void full_line_comment() throws IOException {
-    givenBuildScript(script("# ((( full line comment '\n result : '';"));
-    whenRunSmoothBuild("result");
+    givenScript("# ((( full line comment '\n result : '';");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", hasContent(""));
+    then(artifact("result"), hasContent(""));
   }
 
   @Test
   public void trailing_comment() throws IOException {
-    givenBuildScript(script("result : '' ;  # comment at the end of line"));
-    whenRunSmoothBuild("result");
+    givenScript("result : '' ;  # comment at the end of line");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", hasContent(""));
+    then(artifact("result"), hasContent(""));
   }
 }

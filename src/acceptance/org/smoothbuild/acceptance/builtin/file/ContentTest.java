@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.builtin.file;
 
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
+import static org.testory.Testory.then;
 
 import java.io.IOException;
 
@@ -11,9 +12,9 @@ public class ContentTest extends AcceptanceTestCase {
   @Test
   public void content_function() throws IOException {
     givenFile("file1.txt", "abc");
-    givenBuildScript(script("result: file('file1.txt') | content;"));
-    whenRunSmoothBuild("result");
+    givenScript("result: file('file1.txt') | content;");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", hasContent("abc"));
+    then(artifact("result"), hasContent("abc"));
   }
 }

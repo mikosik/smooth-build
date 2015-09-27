@@ -11,10 +11,10 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class CleanCommandTest extends AcceptanceTestCase {
   @Test
   public void clean_command_deletes_smooth_directory() throws Exception {
-    givenBuildScript(script("result: 'abc';"));
-    whenRunSmoothBuild("result");
+    givenScript("result: 'abc';");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    whenRunSmoothClean();
+    whenSmoothClean();
     thenReturnedCode(0);
     thenEqual(new File(projectDir(), SMOOTH_DIR.toString()).exists(), false);
   }

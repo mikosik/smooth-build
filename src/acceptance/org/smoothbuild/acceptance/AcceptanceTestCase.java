@@ -4,7 +4,6 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.Files.createTempDir;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Streams.inputStreamToString;
@@ -19,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 
@@ -31,13 +29,13 @@ public class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
   private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
 
-  private File tempDir;
+  private File projectDir;
   private Integer exitCode;
   private String outputData;
 
   @Before
   public void before() {
-    tempDir = createTempDir();
+    projectDir = createTempDir();
   }
 
   @After
@@ -45,7 +43,11 @@ public class AcceptanceTestCase {
     deleteRecursively(projectDir().toPath());
   }
 
-  protected void givenBuildScript(String buildScript) throws IOException {
+  protected void givenScript(String buildScript) throws IOException {
+    givenRawScript(buildScript.replace('\'', '"'));
+  }
+
+  protected void givenRawScript(String buildScript) throws IOException {
     givenFile(DEFAULT_BUILD_SCRIPT_FILE, buildScript);
   }
 
@@ -63,15 +65,15 @@ public class AcceptanceTestCase {
     Files.createDirectories(fullPath);
   }
 
-  protected void whenRunSmoothBuild(String command) {
-    whenRunSmooth("build", command);
+  protected void whenSmoothBuild(String command) {
+    whenSmooth("build", command);
   }
 
-  protected void whenRunSmoothClean() {
-    whenRunSmooth("clean");
+  protected void whenSmoothClean() {
+    whenSmooth("clean");
   }
 
-  public void whenRunSmooth(String... smoothCommandArgs) {
+  public void whenSmooth(String... smoothCommandArgs) {
     try {
       ProcessBuilder processBuilder = new ProcessBuilder(processArgs(smoothCommandArgs));
       processBuilder.directory(projectDir());
@@ -128,27 +130,19 @@ public class AcceptanceTestCase {
     }
   }
 
-  protected void thenArtifact(String name, Matcher<File> matcher) {
-    assertThat(artifactFile(name), matcher);
+  protected String output() {
+    return outputData;
   }
 
-  protected void thenPrinted(Matcher<String> matcher) {
-    assertThat(outputData, matcher);
-  }
-
-  protected File artifactFile(String name) {
+  protected File artifact(String name) {
     return new File(projectDir(), ARTIFACTS_DIR_PATH + name);
   }
 
   protected File projectDir() {
-    return tempDir;
-  }
-
-  public static String script(String string) {
-    return string.replace('\'', '"');
+    return projectDir;
   }
 
   protected String artifactContent(String artifact) throws IOException {
-    return inputStreamToString(new FileInputStream(artifactFile(artifact)));
+    return inputStreamToString(new FileInputStream(artifact(artifact)));
   }
 }

@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.builtin.blob;
 
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
+import static org.testory.Testory.then;
 
 import java.io.IOException;
 
@@ -11,9 +12,9 @@ public class ToFileTest extends AcceptanceTestCase {
   @Test
   public void to_file_function() throws IOException {
     givenFile("file.txt", "abc");
-    givenBuildScript(script("result: [toFile(path='newFile.txt', content=file('file.txt'))];"));
-    whenRunSmoothBuild("result");
+    givenScript("result: [toFile(path='newFile.txt', content=file('file.txt'))];");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", isFileArrayWith("newFile.txt", "abc"));
+    then(artifact("result"), isFileArrayWith("newFile.txt", "abc"));
   }
 }
