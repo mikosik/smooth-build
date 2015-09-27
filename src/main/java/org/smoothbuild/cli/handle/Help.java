@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 import org.smoothbuild.cli.CliParser;
-import org.smoothbuild.cli.Command;
+import org.smoothbuild.cli.spec.Command;
 
 public class Help implements Handler {
 
