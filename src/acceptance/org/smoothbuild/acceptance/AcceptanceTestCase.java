@@ -14,9 +14,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,8 +49,8 @@ public class AcceptanceTestCase {
   }
 
   protected void givenFile(String path, String content) throws IOException {
-    Path fullPath = Paths.get(projectDir().getPath(), path);
-    Files.createDirectories(fullPath.getParent());
+    File fullPath = file(path);
+    fullPath.getParentFile().mkdirs();
     try (FileWriter writer = new FileWriter(fullPath.toString())) {
       content.getBytes(UTF_8);
       writer.write(content);
@@ -61,8 +58,7 @@ public class AcceptanceTestCase {
   }
 
   protected void givenDir(String path) throws IOException {
-    Path fullPath = Paths.get(projectDir().getPath(), path);
-    Files.createDirectories(fullPath);
+    file(path).mkdirs();
   }
 
   protected void whenSmoothBuild(String command) {
@@ -135,7 +131,11 @@ public class AcceptanceTestCase {
   }
 
   protected File artifact(String name) {
-    return new File(projectDir(), ARTIFACTS_DIR_PATH + name);
+    return file(ARTIFACTS_DIR_PATH + name);
+  }
+
+  protected File file(String path) {
+    return new File(projectDir(), path);
   }
 
   protected File projectDir() {
