@@ -2,6 +2,7 @@ package org.smoothbuild.acceptance.lang;
 
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
+import static org.testory.Testory.then;
 
 import java.io.IOException;
 
@@ -12,44 +13,43 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   @Test
   public void file_is_implicitly_converted_to_blob() throws IOException {
     givenFile("file.txt", "abc");
-    givenBuildScript(script("result: file('file.txt') | toString;"));
-    whenRunSmoothBuild("result");
+    givenScript("result: file('file.txt') | toString;");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", hasContent("abc"));
+    then(artifact("result"), hasContent("abc"));
   }
 
   @Test
   public void file_array_is_implicitly_converted_to_blob_array() throws IOException {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenBuildScript(script(
-        "result: concatenateBlobArrays([file('file1.txt')], with=[file('file2.txt')]);"));
-    whenRunSmoothBuild("result");
+    givenScript("result: concatenateBlobArrays([file('file1.txt')], with=[file('file2.txt')]);");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", isArrayWith("abc", "def"));
+    then(artifact("result"), isArrayWith("abc", "def"));
   }
 
   @Test
   public void nil_is_implicitly_converted_to_string_array() throws IOException {
-    givenBuildScript("result: concatenateStringArrays([], with=[]);");
-    whenRunSmoothBuild("result");
+    givenScript("result: concatenateStringArrays([], with=[]);");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", isArrayWith());
+    then(artifact("result"), isArrayWith());
   }
 
   @Test
   public void nil_is_implicitly_converted_to_blob_array() throws IOException {
-    givenBuildScript("result: concatenateBlobArrays([], with=[]);");
-    whenRunSmoothBuild("result");
+    givenScript("result: concatenateBlobArrays([], with=[]);");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", isArrayWith());
+    then(artifact("result"), isArrayWith());
   }
 
   @Test
   public void nil_is_implicitly_converted_to_file_array() throws IOException {
-    givenBuildScript("result: concatenateFileArrays([], with=[]);");
-    whenRunSmoothBuild("result");
+    givenScript("result: concatenateFileArrays([], with=[]);");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", isArrayWith());
+    then(artifact("result"), isArrayWith());
   }
 }

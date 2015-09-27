@@ -2,6 +2,7 @@ package org.smoothbuild.acceptance.lang;
 
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
+import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -9,41 +10,41 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class DefaultValueTest extends AcceptanceTestCase {
   @Test
   public void default_value_for_string_is_empty_string() throws Exception {
-    givenBuildScript(script("result: stringIdentity();"));
-    whenRunSmoothBuild("result");
+    givenScript("result: stringIdentity();");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", hasContent(""));
+    then(artifact("result"), hasContent(""));
   }
 
   @Test
   public void default_value_for_blob_is_empty_stream() throws Exception {
-    givenBuildScript(script("result: blobIdentity();"));
-    whenRunSmoothBuild("result");
+    givenScript("result: blobIdentity();");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", hasContent(""));
+    then(artifact("result"), hasContent(""));
   }
 
   @Test
   public void default_value_for_file_has_empty_path() throws Exception {
-    givenBuildScript(script("result: fileIdentity() | path;"));
-    whenRunSmoothBuild("result");
+    givenScript("result: fileIdentity() | path;");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", hasContent("."));
+    then(artifact("result"), hasContent("."));
   }
 
   @Test
   public void default_value_for_file_has_empty_content() throws Exception {
-    givenBuildScript(script("result: fileIdentity() | content;"));
-    whenRunSmoothBuild("result");
+    givenScript("result: fileIdentity() | content;");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", hasContent(""));
+    then(artifact("result"), hasContent(""));
   }
 
   @Test
   public void default_value_for_array_is_empty_array() throws Exception {
-    givenBuildScript(script("result: stringArrayIdentity();"));
-    whenRunSmoothBuild("result");
+    givenScript("result: stringArrayIdentity();");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", isArrayWith());
+    then(artifact("result"), isArrayWith());
   }
 }

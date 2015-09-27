@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.builtin.java;
 
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
+import static org.testory.Testory.then;
 
 import java.io.IOException;
 
@@ -12,9 +13,9 @@ public class JarUnjarTest extends AcceptanceTestCase {
   public void jar_unjar() throws IOException {
     givenFile("dir/file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenBuildScript(script("result: [file('dir/file1.txt'), file('file2.txt')] | jar | unjar;"));
-    whenRunSmoothBuild("result");
+    givenScript("result: [file('dir/file1.txt'), file('file2.txt')] | jar | unjar;");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", isFileArrayWith("dir/file1.txt", "abc", "file2.txt", "def"));
+    then(artifact("result"), isFileArrayWith("dir/file1.txt", "abc", "file2.txt", "def"));
   }
 }

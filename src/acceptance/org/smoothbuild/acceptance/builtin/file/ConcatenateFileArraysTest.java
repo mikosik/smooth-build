@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.builtin.file;
 
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
+import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -10,10 +11,10 @@ public class ConcatenateFileArraysTest extends AcceptanceTestCase {
   public void concatenate_file_arrays_function() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenBuildScript(script(
-        "result: concatenateFileArrays(files=[file('file1.txt')], with=[file('file2.txt')]);"));
-    whenRunSmoothBuild("result");
+    givenScript(
+        "result: concatenateFileArrays(files=[file('file1.txt')], with=[file('file2.txt')]);");
+    whenSmoothBuild("result");
     thenReturnedCode(0);
-    thenArtifact("result", isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
+    then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
   }
 }
