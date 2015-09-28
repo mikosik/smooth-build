@@ -12,20 +12,17 @@ import org.smoothbuild.cli.handle.Handler;
 
 import com.google.inject.Injector;
 
-/**
- * Command Line Interface.
- */
-public class Cli {
+public class Argparse4j {
   private final Injector injector;
   private final CliParser parser;
 
   @Inject
-  public Cli(Injector injector, CliParser parser) {
+  public Argparse4j(Injector injector, CliParser parser) {
     this.injector = injector;
     this.parser = parser;
   }
 
-  public int run(String[] args) {
+  public int parse(String[] args) {
     args = convertArgs(args);
 
     ArgumentParser argumentParser = parser.parser();
