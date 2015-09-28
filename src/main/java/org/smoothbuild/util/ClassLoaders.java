@@ -8,11 +8,12 @@ import java.nio.file.Path;
 
 public class ClassLoaders {
   public static URLClassLoader jarClassLoader(ClassLoader parent, Path jarPath) {
-    if (!Files.exists(jarPath)) {
-      throw new RuntimeException("Cannot find '" + jarPath + "' file");
+    Path absolutePath = jarPath.toAbsolutePath();
+    if (!Files.exists(absolutePath)) {
+      throw new RuntimeException("Cannot find '" + absolutePath + "' file");
     }
 
-    return new URLClassLoader(new URL[] { toUrl(jarPath) }, parent);
+    return new URLClassLoader(new URL[] { toUrl(absolutePath) }, parent);
   }
 
   private static URL toUrl(Path funcsJarPath) {
