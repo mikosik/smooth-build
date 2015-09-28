@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -61,12 +62,23 @@ public class AcceptanceTestCase {
     file(path).mkdirs();
   }
 
-  protected void whenSmoothBuild(String command) {
-    whenSmooth("build", command);
+  protected void whenSmoothBuild(String... args) {
+    whenSmooth(join("build", args));
   }
 
-  protected void whenSmoothClean() {
-    whenSmooth("clean");
+  protected void whenSmoothHelp(String... args) {
+    whenSmooth(join("help", args));
+  }
+
+  protected void whenSmoothClean(String... args) {
+    whenSmooth(join("clean", args));
+  }
+
+  private static String[] join(String command, String[] args) {
+    ArrayList<String> result = new ArrayList<>();
+    result.add(command);
+    result.addAll(asList(args));
+    return result.toArray(new String[] {});
   }
 
   public void whenSmooth(String... smoothCommandArgs) {
