@@ -11,6 +11,6 @@ import org.smoothbuild.message.base.Message;
 public class NoFunctionSpecifiedError extends Message {
   public NoFunctionSpecifiedError(Collection<Name> availableNames) {
     super(ERROR, "No function passed to build command.\n"
-        + "Pass at least one from following available functions: " + nameList(availableNames));
+        + "Pass at least one from following available functions:" + nameList(availableNames));
   }
 }
