@@ -14,7 +14,7 @@ import com.google.common.collect.Ordering;
 public class UnknownFunctionError extends Message {
   public UnknownFunctionError(Name name, Collection<Name> availableNames) {
     super(ERROR, "Unknown function " + name + " passed in command line.\n"
-        + "Only following function(s) are available: " + nameList(availableNames));
+        + "Only following function(s) are available:" + nameList(availableNames));
   }
 
   public static String nameList(Collection<Name> availableNames) {
