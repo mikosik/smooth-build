@@ -1,4 +1,4 @@
-package org.smoothbuild.cli.work;
+package org.smoothbuild.cli;
 
 import java.util.List;
 
@@ -14,23 +14,20 @@ import org.smoothbuild.task.exec.SmoothExecutorPhase;
 
 import com.google.common.collect.ImmutableList;
 
-public class BuildWorker {
-  private final UserConsole userConsole;
-  private final CommandLineParserPhase commandLineParserPhase;
-  private final ModuleParserPhase moduleParserPhase;
-  private final SmoothExecutorPhase smoothExecutorPhase;
-
+public class Build implements Command {
   @Inject
-  public BuildWorker(UserConsole userConsole, CommandLineParserPhase commandLineParserPhase,
-      ModuleParserPhase moduleParserPhase, SmoothExecutorPhase smoothExecutorPhase) {
-    this.userConsole = userConsole;
-    this.commandLineParserPhase = commandLineParserPhase;
-    this.moduleParserPhase = moduleParserPhase;
-    this.smoothExecutorPhase = smoothExecutorPhase;
-  }
+  private UserConsole userConsole;
+  @Inject
+  private CommandLineParserPhase commandLineParserPhase;
+  @Inject
+  private ModuleParserPhase moduleParserPhase;
+  @Inject
+  private SmoothExecutorPhase smoothExecutorPhase;
 
-  public int run(List<String> functions) {
-    CommandLineArguments args = commandLineParserPhase.execute(ImmutableList.copyOf(functions));
+  @Override
+  public int run(String... functions) {
+    List<String> functionList = ImmutableList.copyOf(functions).subList(1, functions.length);
+    CommandLineArguments args = commandLineParserPhase.execute(functionList);
 
     if (!userConsole.isProblemReported()) {
       Module module = moduleParserPhase.execute(args);

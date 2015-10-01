@@ -33,8 +33,6 @@
     <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar"/>
     <property name="lib.antlr.license" value="${dir.lib}/antlr.LICENSE"/>
     <property name="lib.aopalliance" value="${dir.lib}/aopalliance.jar"/>
-    <property name="lib.argparse4j" value="${dir.lib}/argparse4j-0.4.3.jar"/>
-    <property name="lib.argparse4j.license" value="${dir.lib}/argparse4j.LICENSE"/>
     <property name="lib.guava" value="${dir.lib}/guava-17.0.jar"/>
     <property name="lib.guava.license" value="${dir.lib}/guava.LICENSE"/>
     <property name="lib.guava-testlib" value="${dir.lib}/guava-testlib-17.0.jar"/>
@@ -81,7 +79,6 @@
     <path id="classpath.for.main.java">
         <pathelement location="${lib.antlr}"/>
         <pathelement location="${lib.aopalliance}"/>
-        <pathelement location="${lib.argparse4j}"/>
         <pathelement location="${lib.guava}"/>
         <pathelement location="${lib.guice}"/>
         <pathelement location="${lib.javax.inject}"/>
@@ -328,7 +325,6 @@
         <jar destfile="${dir.build.smooth.jar}">
             <zipfileset src="${lib.antlr}"        excludes="* META-INF/**"/>
             <zipfileset src="${lib.aopalliance}"  excludes="* META-INF/**"/>
-            <zipfileset src="${lib.argparse4j}"   excludes="* META-INF/**"/>
             <zipfileset src="${lib.guava}"        excludes="* META-INF/**"/>
             <zipfileset src="${lib.guice}"        excludes="* META-INF/**"/>
             <zipfileset src="${lib.javax.inject}" excludes="* META-INF/**"/>
@@ -337,7 +333,6 @@
             <zipfileset file="LICENSE"/>
 
             <zipfileset file="${lib.antlr.license}"/>
-            <zipfileset file="${lib.argparse4j.license}"/>
             <zipfileset file="${lib.guava.license}"/>
             <zipfileset file="${lib.guice.license}"/>
         </jar>
