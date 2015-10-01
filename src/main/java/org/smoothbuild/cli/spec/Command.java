@@ -1,12 +1,10 @@
 package org.smoothbuild.cli.spec;
 
-import org.smoothbuild.cli.handle.Build;
 import org.smoothbuild.cli.handle.Clean;
 import org.smoothbuild.cli.handle.Handler;
 import org.smoothbuild.cli.handle.Help;
 
 public enum Command {
-  BUILD(new BuildSpec(), Build.class),
   CLEAN(new CleanSpec(), Clean.class),
   HELP(new HelpSpec(), Help.class);
 
