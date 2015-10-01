@@ -5,33 +5,16 @@ import static org.smoothbuild.cli.Commands.COMMANDS;
 
 import java.util.Map.Entry;
 
-public class HelpCommand implements Command {
+public class Help implements Command {
   @Override
-  public String shortDescription() {
-    return "Print help about given command";
-  }
-
-  @Override
-  public String longDescription() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("usage: smooth help <command>\n");
-    builder.append("\n");
-    builder.append(shortDescription() + "\n");
-    builder.append("\n");
-    builder.append("arguments:\n");
-    builder.append("  <command>  command for which help is printed");
-    return builder.toString();
-  }
-
-  @Override
-  public int execute(String[] args) {
+  public int run(String... args) {
     if (1 < args.length) {
-      Command command = COMMANDS.get(args[1]);
-      if (command == null) {
+      CommandSpec commandSpec = COMMANDS.get(args[1]);
+      if (commandSpec == null) {
         System.out.println("smooth: unknown '" + args[1] + "' command. See 'smooth help'.");
         return 1;
       } else {
-        System.out.println(command.longDescription());
+        System.out.println(commandSpec.longDescription());
         return 0;
       }
     } else {
@@ -39,12 +22,12 @@ public class HelpCommand implements Command {
     }
   }
 
-  private int generalHelp() {
+  private static int generalHelp() {
     StringBuilder builder = new StringBuilder();
     builder.append("usage: smooth <command> <arg>...\n");
     builder.append("\n");
     builder.append("All available commands are:\n");
-    for (Entry<String, Command> entry : COMMANDS.entrySet()) {
+    for (Entry<String, CommandSpec> entry : COMMANDS.entrySet()) {
       builder.append("  ");
       builder.append(padEnd(entry.getKey(), 8, ' '));
       builder.append(entry.getValue().shortDescription());
