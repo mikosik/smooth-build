@@ -26,7 +26,7 @@ public class OutputClassFileTest {
   private OutputClassFile outputClassFile;
 
   @Test
-  public void openOutputStream() throws IOException {
+  public void open_output_stream() throws IOException {
     given(fileArrayBuilder = container.create().arrayBuilder(SFile.class));
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, container));
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);

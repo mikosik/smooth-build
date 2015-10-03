@@ -60,7 +60,7 @@ public class StreamTesterTest {
   }
 
   @Test
-  public void testAssertContentSucceedsWhenContentIsEqual() throws Exception {
+  public void assert_content_succeeds_when_content_is_equal() throws Exception {
     String content = "content";
     InputStream inputStream = inputStreamContaining(content);
 
@@ -68,7 +68,7 @@ public class StreamTesterTest {
   }
 
   @Test
-  public void testAssertContentFailsWhenContentIsNotEqual() throws Exception {
+  public void assert_content_fails_when_content_is_not_equal() throws Exception {
     String content = "content";
     InputStream inputStream = inputStreamContaining(content + "suffix");
 
@@ -100,7 +100,7 @@ public class StreamTesterTest {
   }
 
   @Test
-  public void inputStreamToBytesClosesStream() throws Exception {
+  public void input_stream_to_bytes_closes_stream() throws Exception {
     InputStream inputStream = mock(InputStream.class);
     given(willReturn(-1), inputStream).read(any(byte[].class));
 

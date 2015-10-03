@@ -28,7 +28,7 @@ public class FileFunctionTest {
   private final Path path = path("file/path/file.txt");
 
   @Test
-  public void accessToSmoothDirIsReported() throws Exception {
+  public void access_to_smooth_dir_is_reported() throws Exception {
     try {
       execute(SMOOTH_DIR.value());
       fail("exception should be thrown");
@@ -38,7 +38,7 @@ public class FileFunctionTest {
   }
 
   @Test
-  public void accessToSmoothSubDirIsReported() throws Exception {
+  public void access_to_subdir_in_smooth_dir_is_reported() throws Exception {
     try {
       execute(SMOOTH_DIR.value() + Path.SEPARATOR + "abc");
       fail("exception should be thrown");
@@ -48,7 +48,7 @@ public class FileFunctionTest {
   }
 
   @Test
-  public void illegalPathIsReported() {
+  public void illegal_path_is_reported() {
     for (String path : PathTesting.listOfInvalidPaths()) {
       container = containerImpl();
       try {
@@ -61,7 +61,7 @@ public class FileFunctionTest {
   }
 
   @Test
-  public void nonexistentPathIsReported() throws Exception {
+  public void nonexistent_path_is_reported() throws Exception {
 
     try {
       execute("some/path/file.txt");
@@ -72,7 +72,7 @@ public class FileFunctionTest {
   }
 
   @Test
-  public void nonFilePathIsReported() throws Exception {
+  public void dir_path_is_reported() throws Exception {
     Path dir = path("some/path");
     Path file = dir.append(path("file.txt"));
     createFile(container.projectFileSystem(), file, "content");

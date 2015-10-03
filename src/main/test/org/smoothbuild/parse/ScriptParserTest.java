@@ -19,42 +19,42 @@ import org.smoothbuild.parse.err.SyntaxError;
 public class ScriptParserTest {
 
   @Test
-  public void emptyScriptSucceeds() throws Exception {
+  public void parsing_empty_script_succeeds() throws Exception {
     assertParsingSucceeds("");
   }
 
   @Test
-  public void simpleFunctionDefinition() throws Exception {
+  public void parsing_simple_function_definition_succeeds() throws Exception {
     assertParsingSucceeds("functionA: functionB;");
   }
 
   @Test
-  public void pipedFunctionDefinition() throws Exception {
+  public void parsing_piped_function_definition_succeeds() throws Exception {
     assertParsingSucceeds("functionA: functionB | functionC;");
   }
 
   @Test
-  public void functionDefinitionWithoutSemicolonFails() throws Exception {
+  public void parsing_function_definition_without_semicolon_fails() throws Exception {
     assertParsingFails("functionA : functionB ");
   }
 
   @Test
-  public void functionDefinitionWithoutBodyFails() throws Exception {
+  public void parsing_function_definition_without_body_fails() throws Exception {
     assertParsingFails("functionA : ;");
   }
 
   @Test
-  public void functionDefinedAsStringLiteral() throws Exception {
+  public void parsing_function_defined_as_string_literal_succeeds() throws Exception {
     assertParsingSucceeds(script("functionA : 'abc' ;"));
   }
 
   @Test
-  public void emptyStringsAreAllowed() throws Exception {
+  public void parsing_empty_strings_succeeds() throws Exception {
     assertParsingSucceeds(script("functionA : '' ;"));
   }
 
   @Test
-  public void notClosedStringLiteralFails() throws Exception {
+  public void parsing_not_closed_string_literal_fails() throws Exception {
     LoggedMessages messages = new LoggedMessages();
     try {
       runScriptParser(script("functionA : 'abc ;"), messages);
@@ -66,17 +66,17 @@ public class ScriptParserTest {
   }
 
   @Test
-  public void functionCallWithFunctionCallArgument() throws Exception {
+  public void parsing_function_call_with_function_call_argument_succeeds() throws Exception {
     assertParsingSucceeds("functionA: functionB(param1=functionC);");
   }
 
   @Test
-  public void functionCallWithStringLiteralArgument() throws Exception {
+  public void parsing_function_call_with_string_literal_argument_succeeds() throws Exception {
     assertParsingSucceeds(script("functionA: functionB(param1='abc');"));
   }
 
   @Test
-  public void incorrectScriptFails() throws Exception {
+  public void parsing_incorrect_script_fails() throws Exception {
     assertParsingFails("abc");
   }
 

@@ -10,7 +10,7 @@ import org.junit.Test;
 public class ReflexiveUtilsTest {
 
   @Test
-  public void testIsMethodPublic() throws Exception {
+  public void is_method_public() throws Exception {
     Class<?> klass = MyClass.class;
 
     assertTrue(isPublic(klass.getDeclaredMethod("publicMethod")));
@@ -27,7 +27,7 @@ public class ReflexiveUtilsTest {
   }
 
   @Test
-  public void testIsMethodStatic() throws Exception {
+  public void is_method_static() throws Exception {
     Class<?> klass = MyClass.class;
 
     assertFalse(isStatic(klass.getDeclaredMethod("publicMethod")));
@@ -64,7 +64,7 @@ public class ReflexiveUtilsTest {
   }
 
   @Test
-  public void testIsConstructorPublic() throws Exception {
+  public void is_constructor_public() throws Exception {
     assertTrue(isPublic(MyPublicConstructorClass.class.getDeclaredConstructor()));
     assertFalse(isPublic(MyPackageConstructorClass.class.getDeclaredConstructor()));
     assertFalse(isPublic(MyProtectedConstructorClass.class.getDeclaredConstructor()));

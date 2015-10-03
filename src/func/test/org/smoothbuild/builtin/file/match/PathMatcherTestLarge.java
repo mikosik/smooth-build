@@ -19,7 +19,7 @@ import org.smoothbuild.io.fs.base.Path;
 public class PathMatcherTestLarge {
 
   @Test
-  public void testGeneratedPatterns() throws Exception {
+  public void test_generated_patterns() throws Exception {
     generatePatterns(5, doTestPatternConsumer());
   }
 

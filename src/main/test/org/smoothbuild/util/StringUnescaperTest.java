@@ -31,7 +31,7 @@ public class StringUnescaperTest {
   private static final Map<String, String> UNESCAPE = unescapeMap();
 
   @Test
-  public void stringThatDoesNotNeedUnescapingAreNotChanged() {
+  public void string_that_doesnt_need_unescaping_is_not_changed() {
     assertUnescapedResult("", "");
     assertUnescapedResult(" ", " ");
     assertUnescapedResult("  ", "  ");
@@ -43,13 +43,13 @@ public class StringUnescaperTest {
   }
 
   @Test
-  public void slashAtTheEndOfStringCannotBeUnescaped() throws Exception {
+  public void slash_at_the_end_of_string_cannot_be_unescaped() throws Exception {
     assertUnescapingFails(S, 0);
     assertUnescapingFails("abc" + S, 3);
   }
 
   @Test
-  public void incorrectUnescapeCodeCannotBeUnescaped() throws Exception {
+  public void incorrect_unescape_code_cannot_be_unescaped() throws Exception {
     assertUnescapingFails(S + "x", 1);
     assertUnescapingFails(S + "a", 1);
     assertUnescapingFails(S + "w", 1);
@@ -67,14 +67,14 @@ public class StringUnescaperTest {
   }
 
   @Test
-  public void unescapingSingleEscapedElement() throws Exception {
+  public void unescaping_single_escaped_element() throws Exception {
     for (Map.Entry<String, String> entry : UNESCAPE.entrySet()) {
       assertUnescapedResult(entry.getKey(), entry.getValue());
     }
   }
 
   @Test
-  public void unescapingTwoEscapedElements() throws Exception {
+  public void unescaping_two_escaped_elements() throws Exception {
     for (Map.Entry<String, String> entry1 : UNESCAPE.entrySet()) {
       for (Map.Entry<String, String> entry2 : UNESCAPE.entrySet()) {
         String escaped = entry1.getKey() + entry2.getKey();
@@ -85,7 +85,7 @@ public class StringUnescaperTest {
   }
 
   @Test
-  public void unescapingThreeEscapedElements() throws Exception {
+  public void unescaping_three_escaped_elements() throws Exception {
     for (Map.Entry<String, String> entry1 : UNESCAPE.entrySet()) {
       for (Map.Entry<String, String> entry2 : UNESCAPE.entrySet()) {
         for (Map.Entry<String, String> entry3 : UNESCAPE.entrySet()) {

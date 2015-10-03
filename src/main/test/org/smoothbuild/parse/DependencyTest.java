@@ -10,7 +10,7 @@ import com.google.common.testing.EqualsTester;
 public class DependencyTest {
 
   @Test
-  public void testEqualsAndHashCode() {
+  public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
 
     tester.addEqualityGroup(dependency(11, "equal"), dependency(11, "equal"));

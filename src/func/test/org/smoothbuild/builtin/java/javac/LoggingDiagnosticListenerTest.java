@@ -30,21 +30,21 @@ public class LoggingDiagnosticListenerTest {
   }
 
   @Test
-  public void diagnosticIsReportedAsError() {
+  public void diagnostic_is_reported_as_error() {
     given(listener = new LoggingDiagnosticListener(container));
     when(listener).report(diagnostic);
     thenCalled(container).log(any(Message.class, instanceOf(JavaCompilerMessage.class)));
   }
 
   @Test
-  public void initiallyNoErrorsReported() throws Exception {
+  public void initially_no_error_is_reported() throws Exception {
     given(listener = new LoggingDiagnosticListener(container));
     when(listener).errorReported();
     thenReturned(false);
   }
 
   @Test
-  public void diagnosticMakesErrorReportedReturnsTrue() throws Exception {
+  public void error_reported_returns_true_when_diagnostic_has_been_reported() throws Exception {
     given(listener = new LoggingDiagnosticListener(container));
     given(listener).report(diagnostic);
     when(listener).errorReported();

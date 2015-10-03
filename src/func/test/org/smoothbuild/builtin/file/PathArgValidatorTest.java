@@ -12,7 +12,7 @@ public class PathArgValidatorTest {
   private final ObjectsDb objectsDb = objectsDb();
 
   @Test
-  public void illegalPathsAreReported() {
+  public void illegal_paths_are_reported() {
     String name = "name";
     for (String path : PathTesting.listOfInvalidPaths()) {
       try {
@@ -25,7 +25,7 @@ public class PathArgValidatorTest {
   }
 
   @Test
-  public void validPathsAreAccepted() {
+  public void valid_paths_are_accepted() {
     for (String path : PathTesting.listOfCorrectPaths()) {
       PathArgValidator.validatedPath("name", objectsDb.string(path));
     }
