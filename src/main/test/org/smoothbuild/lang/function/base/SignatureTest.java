@@ -24,17 +24,17 @@ public class SignatureTest {
   private Parameter parameter2;
 
   @Test(expected = NullPointerException.class)
-  public void nullTypeIsForbidden() {
+  public void null_type_is_forbidden() {
     new Signature(null, name, parameters);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullNameIsForbidden() {
+  public void null_name_is_forbidden() {
     new Signature(type, null, parameters);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullParamsIsForbidden() {
+  public void null_param_is_forbidden() {
     new Signature(type, name, null);
   }
 

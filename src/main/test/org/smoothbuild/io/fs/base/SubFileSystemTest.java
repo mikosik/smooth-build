@@ -26,17 +26,18 @@ public class SubFileSystemTest {
   List<Path> pathList;
   InputStream inputStream;
 
+  OutputStream outputStream;
   SubFileSystem subFileSystem = new SubFileSystem(fileSystem, root);
 
   @Test
-  public void pathKind() throws Exception {
+  public void path_state_is_forwarded() throws Exception {
     given(willReturn(FILE), fileSystem).pathState(absolutePath);
     when(subFileSystem).pathState(path);
     thenReturned(FILE);
   }
 
   @Test
-  public void childNames() {
+  public void files_from_is_forwarded() {
     given(strings = asList("abc"));
     given(willReturn(strings), fileSystem).filesFrom(absolutePath);
     when(subFileSystem).filesFrom(path);
@@ -44,7 +45,7 @@ public class SubFileSystemTest {
   }
 
   @Test
-  public void filesFrom() {
+  public void files_from_recursive_is_forwarded() {
     given(pathList = asList(path("some/path")));
     given(willReturn(pathList), fileSystem).filesFromRecursive(absolutePath);
     when(subFileSystem).filesFromRecursive(path);
@@ -52,23 +53,21 @@ public class SubFileSystemTest {
   }
 
   @Test
-  public void deleteDirectoryRecursively() {
+  public void delete_is_forwarded() {
     when(subFileSystem).delete(path);
     thenCalled(fileSystem).delete(absolutePath);
   }
 
   @Test
-  public void createInputStream() {
+  public void open_input_stream_is_forwarded() {
     given(inputStream = mock(InputStream.class));
     given(willReturn(inputStream), fileSystem).openInputStream(absolutePath);
     when(subFileSystem).openInputStream(path);
     thenReturned(sameInstance(inputStream));
   }
 
-  OutputStream outputStream;
-
   @Test
-  public void createOutputStream() {
+  public void open_output_stream_is_forwarded() {
     given(outputStream = mock(OutputStream.class));
     given(willReturn(outputStream), fileSystem).openOutputStream(absolutePath);
     when(subFileSystem).openOutputStream(path);
@@ -76,7 +75,7 @@ public class SubFileSystemTest {
   }
 
   @Test
-  public void createLink() {
+  public void create_link_is_forwarded() {
     Path link = path("my/link");
     Path absoluteLink = root.append(link);
 
@@ -85,7 +84,7 @@ public class SubFileSystemTest {
   }
 
   @Test
-  public void createDir() {
+  public void create_dir_is_forwarded() {
     Path path = path("my/dir");
     Path absolutePath = root.append(path);
 

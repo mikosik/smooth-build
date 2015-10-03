@@ -8,7 +8,7 @@ import org.smoothbuild.builtin.file.match.testing.Consumer;
 
 public class PathPatternMediumTest {
   @Test
-  public void allGeneratedPatternsAreValid() throws Exception {
+  public void all_generated_patterns_are_valid() throws Exception {
     Consumer<String> consumer = new Consumer<String>() {
       public void consume(String pattern) {
         pathPattern(pattern);

@@ -26,24 +26,24 @@ public class MessageTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullMessageIsForbidden() throws Exception {
+  public void null_message_is_forbidden() throws Exception {
     new Message(WARNING, null);
   }
 
   @Test(expected = NullPointerException.class)
-  public void nullTypeIsForbidden() throws Exception {
+  public void null_type_is_forbidden() throws Exception {
     new Message(null, messageString);
   }
 
   @Test
-  public void testError() {
+  public void test_error() {
     when(message = new Message(ERROR, messageString));
     thenEqual(message.type(), ERROR);
     thenEqual(message.message(), messageString);
   }
 
   @Test
-  public void testWarning() {
+  public void test_warning() {
     when(message = new Message(WARNING, messageString));
     thenEqual(message.type(), WARNING);
     thenEqual(message.message(), messageString);
@@ -64,7 +64,7 @@ public class MessageTest {
   }
 
   @Test
-  public void equalsAndHashCode() throws Exception {
+  public void equals_and_hash_code() throws Exception {
     EqualsTester tester = new EqualsTester();
 
     tester.addEqualityGroup(new Message(WARNING, "equal"), new Message(WARNING, "equal"));

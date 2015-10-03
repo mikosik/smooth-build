@@ -258,7 +258,7 @@ public abstract class GenericFileSystemTestCase {
   }
 
   @Test
-  public void link_to_a_directory_can_be_used_to_access_its_file() throws Exception {
+  public void link_to_directory_can_be_used_to_access_its_file() throws Exception {
     given(this).createFile(path, content);
     when(fileSystem).createLink(linkPath, path.parent());
     thenEqual(inputStreamToString(fileSystem.openInputStream(linkPath.append(path.lastPart()))),

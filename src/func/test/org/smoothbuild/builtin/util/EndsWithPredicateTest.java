@@ -11,7 +11,7 @@ public class EndsWithPredicateTest {
   private final String suffix = "suffix";
 
   @Test(expected = NullPointerException.class)
-  public void nullSuffixIsForbidden() throws Exception {
+  public void null_suffix_is_forbidden() throws Exception {
     new EndsWithPredicate(null);
   }
 

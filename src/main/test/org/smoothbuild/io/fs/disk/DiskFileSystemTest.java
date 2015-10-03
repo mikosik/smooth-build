@@ -36,7 +36,7 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   }
 
   @Test
-  public void openOutputStreamReturnsBufferedStream() throws Exception {
+  public void open_output_stream_returns_buffered_stream() throws Exception {
     when(fileSystem.openOutputStream(path));
     thenReturned(instanceOf(BufferedOutputStream.class));
   }

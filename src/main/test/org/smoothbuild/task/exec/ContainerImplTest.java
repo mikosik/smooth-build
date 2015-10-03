@@ -34,7 +34,7 @@ public class ContainerImplTest {
   }
 
   @Test
-  public void fileSystem() throws Exception {
+  public void file_system() throws Exception {
     when(containerImpl.projectFileSystem());
     thenReturned(same(fileSystem));
   }

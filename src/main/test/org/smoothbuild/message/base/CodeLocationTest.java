@@ -26,12 +26,12 @@ public class CodeLocationTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void negativeLineIsForbidden() throws Exception {
+  public void negative_line_is_forbidden() throws Exception {
     codeLocation(-1);
   }
 
   @Test
-  public void equalsAndHashCode() throws Exception {
+  public void equals_and_hash_code() throws Exception {
     EqualsTester tester = new EqualsTester();
 
     tester.addEqualityGroup(codeLocation(1));

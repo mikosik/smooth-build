@@ -34,14 +34,14 @@ public class UnknownFunctionCallsDetectorTest {
   Module emptyBuiltinModule = new ImmutableModule(Empty.nameFunctionMap());
 
   @Test
-  public void emptyFunctionSetHasNoProblems() {
+  public void empty_function_set_has_no_problems() {
     Map<Name, Set<Dependency>> dependencyMap = Maps.newHashMap();
     detectUndefinedFunctions(messages, emptyBuiltinModule, dependencyMap);
     assertThat(messages, emptyIterable());
   }
 
   @Test
-  public void referenceToImportedFunction() {
+  public void reference_to_imported_function() {
     Function function = mock(Function.class);
     Module builtinModule = new ImmutableModule(ImmutableMap.of(name2, function));
     Map<Name, Set<Dependency>> dependencyMap = ImmutableMap.of(name1, dependencies(name2));
@@ -52,7 +52,7 @@ public class UnknownFunctionCallsDetectorTest {
   }
 
   @Test
-  public void referenceToDefinedFunction() {
+  public void reference_to_defined_function() {
     Map<Name, Set<Dependency>> dependencyMap = ImmutableMap.of(name1, dependencies(name2), name2,
         dependencies(name1));
 
@@ -62,7 +62,7 @@ public class UnknownFunctionCallsDetectorTest {
   }
 
   @Test
-  public void referenceToUndefinedFunctionIsLoggedAsError() {
+  public void reference_to_undefined_function_is_logged_as_error() {
     Map<Name, Set<Dependency>> dependencyMap = ImmutableMap.of(name1, dependencies(name2));
 
     try {

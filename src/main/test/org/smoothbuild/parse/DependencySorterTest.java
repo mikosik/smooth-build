@@ -40,7 +40,7 @@ public class DependencySorterTest {
   }
 
   @Test
-  public void linearDependency() {
+  public void linear_dependency() {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(name3, dependencies(name4));
     map.put(name1, dependencies(name2));
@@ -52,7 +52,7 @@ public class DependencySorterTest {
   }
 
   @Test
-  public void treeDependency() {
+  public void tree_dependency() {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(name1, dependencies(name2, name3));
     map.put(name2, dependencies(name4));
@@ -73,7 +73,7 @@ public class DependencySorterTest {
   }
 
   @Test
-  public void simpleRecursionIsLoggedAsError() throws Exception {
+  public void simple_recursion_is_logged_as_error() throws Exception {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(name1, dependencies(name1));
 
@@ -82,7 +82,7 @@ public class DependencySorterTest {
   }
 
   @Test
-  public void cycleIsLoggedAsError() throws Exception {
+  public void cycle_is_logged_as_error() throws Exception {
     Map<Name, Set<Dependency>> map = Maps.newHashMap();
     map.put(name1, dependencies(name2));
     map.put(name2, dependencies(name3));

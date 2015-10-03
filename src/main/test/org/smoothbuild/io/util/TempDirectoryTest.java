@@ -57,7 +57,7 @@ public class TempDirectoryTest {
   }
 
   @Test
-  public void rootOsPath() {
+  public void root_os_path() {
     when(tempDirectory.rootOsPath());
     thenReturned(rootPath.toString());
   }

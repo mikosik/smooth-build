@@ -32,7 +32,7 @@ public class LocationHelpersTest {
   }
 
   @Test
-  public void locationOfArgContextWithName() {
+  public void location_of_arg_context_with_param_name() {
     given(willReturn(paramNameContext), argContext).paramName();
     given(willReturn(startToken), paramNameContext).getStart();
     given(willReturn(line), startToken).getLine();
@@ -42,7 +42,7 @@ public class LocationHelpersTest {
   }
 
   @Test
-  public void locationOfArgContextWithoutParamName() {
+  public void locatin_of_arg_context_without_param_name() {
     given(willReturn(expressionContext), argContext).expression();
     given(willReturn(startToken), expressionContext).getStart();
     given(willReturn(line), startToken).getLine();
@@ -52,7 +52,7 @@ public class LocationHelpersTest {
   }
 
   @Test
-  public void locationOfParserRuleContext() {
+  public void location_of_parser_rule_context() {
     given(willReturn(startToken), parserRuleContext).getStart();
     given(willReturn(line), startToken).getLine();
     given(location = locationOf(parserRuleContext));
@@ -61,7 +61,7 @@ public class LocationHelpersTest {
   }
 
   @Test
-  public void locationOfToken() {
+  public void location_of_token() {
     given(willReturn(line), startToken).getLine();
     when(location = locationOf(startToken));
     when(location.line());

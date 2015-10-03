@@ -11,8 +11,8 @@ import org.smoothbuild.builtin.file.match.testing.NamePatternGenerator;
 
 public class NameMatcherMediumTest {
 
-  @Test
-  public void testGeneratedPatterns() throws Exception {
+  @Test 
+  public void test_generated_patterns() throws Exception {
     NamePatternGenerator.generatePatterns(5, doTestPatternConsumer());
   }
 
