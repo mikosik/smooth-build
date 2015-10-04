@@ -1,14 +1,15 @@
 package org.smoothbuild.cli.work.build;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.listen.MessageCatchingExecutor;
 import org.smoothbuild.message.listen.UserConsole;
 
-public class CommandLineParserPhase extends
-    MessageCatchingExecutor<List<String>, CommandLineArguments> {
+public class CommandLineParserPhase extends MessageCatchingExecutor<List<String>, Set<Name>> {
 
   private final CommandLineParser commandLineParser;
 
@@ -20,7 +21,7 @@ public class CommandLineParserPhase extends
   }
 
   @Override
-  public CommandLineArguments executeImpl(List<String> arguments) {
+  public Set<Name> executeImpl(List<String> arguments) {
     return commandLineParser.parse(arguments);
   }
 }

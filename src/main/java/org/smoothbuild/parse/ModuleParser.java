@@ -16,7 +16,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.work.build.CommandLineArguments;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -43,7 +42,7 @@ public class ModuleParser {
     this.definedFunctionsCreator = definedFunctionsCreator;
   }
 
-  public Module createModule(CommandLineArguments args) {
+  public Module createModule(Set<Name> args) {
     InputStream inputStream = scriptInputStream(DEFAULT_SCRIPT);
     return createModule(messages, inputStream, DEFAULT_SCRIPT);
   }

@@ -26,8 +26,8 @@ public class CommandLineParser {
     this.messages = messages;
   }
 
-  public CommandLineArguments parse(List<String> args) {
-    return new CommandLineArguments(names(args));
+  public Set<Name> parse(List<String> args) {
+    return names(args);
   }
 
   private Set<Name> names(List<String> args) {

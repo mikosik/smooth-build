@@ -1,13 +1,15 @@
 package org.smoothbuild.parse;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.work.build.CommandLineArguments;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.listen.MessageCatchingExecutor;
 import org.smoothbuild.message.listen.UserConsole;
 
-public class ModuleParserPhase extends MessageCatchingExecutor<CommandLineArguments, Module> {
+public class ModuleParserPhase extends MessageCatchingExecutor<Set<Name>, Module> {
   private final ModuleParser moduleParser;
 
   @Inject
@@ -18,7 +20,7 @@ public class ModuleParserPhase extends MessageCatchingExecutor<CommandLineArgume
   }
 
   @Override
-  public Module executeImpl(CommandLineArguments arguments) {
+  public Module executeImpl(Set<Name> arguments) {
     return moduleParser.createModule(arguments);
   }
 }

@@ -1,8 +1,9 @@
 package org.smoothbuild.task.exec;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.work.build.CommandLineArguments;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
@@ -18,13 +19,13 @@ public class SmoothExecutor {
   }
 
   public void execute(ExecutionData executionData) {
-    CommandLineArguments args = executionData.args();
+    Set<Name> functions = executionData.functions();
     Module module = executionData.module();
 
-    if (args.functionsToRun().isEmpty()) {
+    if (functions.isEmpty()) {
       throw new NoFunctionSpecifiedError(module.availableNames());
     }
-    for (Name name : args.functionsToRun()) {
+    for (Name name : executionData.functions()) {
       Function function = module.getFunction(name);
       if (function == null) {
         throw new UnknownFunctionError(name, module.availableNames());
