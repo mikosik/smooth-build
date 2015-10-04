@@ -15,7 +15,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: file('file.txt') | toString;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
   }
 
@@ -25,7 +25,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
     givenFile("file2.txt", "def");
     givenScript("result: concatenateBlobArrays([file('file1.txt')], with=[file('file2.txt')]);");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
   }
 
@@ -33,7 +33,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   public void nil_is_implicitly_converted_to_string_array() throws IOException {
     givenScript("result: concatenateStringArrays([], with=[]);");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
   }
 
@@ -41,7 +41,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   public void nil_is_implicitly_converted_to_blob_array() throws IOException {
     givenScript("result: concatenateBlobArrays([], with=[]);");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
   }
 
@@ -49,7 +49,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   public void nil_is_implicitly_converted_to_file_array() throws IOException {
     givenScript("result: concatenateFileArrays([], with=[]);");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
   }
 }

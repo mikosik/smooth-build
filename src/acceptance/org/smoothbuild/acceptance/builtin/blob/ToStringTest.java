@@ -14,7 +14,7 @@ public class ToStringTest extends AcceptanceTestCase {
     givenFile("file1.txt", "abc");
     givenScript("result: file('file1.txt') | content | toString;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
   }
 }

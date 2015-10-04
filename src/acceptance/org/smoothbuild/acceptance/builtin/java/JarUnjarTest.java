@@ -15,7 +15,7 @@ public class JarUnjarTest extends AcceptanceTestCase {
     givenFile("file2.txt", "def");
     givenScript("result: [file('dir/file1.txt'), file('file2.txt')] | jar | unjar;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file1.txt", "abc", "file2.txt", "def"));
   }
 }

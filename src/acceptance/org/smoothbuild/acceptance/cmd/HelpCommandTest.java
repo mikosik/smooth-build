@@ -10,7 +10,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   @Test
   public void help_command_prints_general_help() throws Exception {
     whenSmoothHelp();
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(output(), containsString(generalHelp()));
   }
 
@@ -29,7 +29,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   @Test
   public void help_build_command_prints_help_for_build() throws Exception {
     whenSmoothHelp("build");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(output(), containsString(buildHelp()));
   }
 
@@ -46,7 +46,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   @Test
   public void help_clean_command_prints_help_for_clean() throws Exception {
     whenSmoothHelp("clean");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(output(), containsString(buildClean()));
   }
 

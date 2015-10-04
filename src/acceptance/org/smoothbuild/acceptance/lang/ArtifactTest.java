@@ -15,7 +15,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   public void store_string_artifact() throws Exception {
     givenScript("result: 'abc';");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
   }
 
@@ -24,7 +24,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: file('file.txt') | content;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
   }
 
@@ -33,7 +33,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: file('file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
   }
 
@@ -41,7 +41,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   public void store_string_array_artifact() throws Exception {
     givenScript("result : ['abc', 'def']  ;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
   }
 
@@ -51,7 +51,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenFile("file2.txt", "def");
     givenScript("result: [content(file('file1.txt')), content(file('file2.txt'))];");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
   }
 
@@ -61,7 +61,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenFile("file2.txt", "def");
     givenScript("result: [file('file1.txt'), file('file2.txt')];");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
   }
 
@@ -70,7 +70,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenFile("file1.txt", "abc");
     givenScript("result: [file('file1.txt'), file('file1.txt')];");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString(""));
   }
 }

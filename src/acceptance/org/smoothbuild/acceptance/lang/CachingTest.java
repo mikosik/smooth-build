@@ -13,7 +13,7 @@ public class CachingTest extends AcceptanceTestCase {
     givenScript("result1: cacheableRandom(); result2 : cacheableRandom();");
     whenSmoothBuild("result1");
     whenSmoothBuild("result2");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result1"), hasContent(artifactContent("result2")));
   }
 
@@ -22,7 +22,7 @@ public class CachingTest extends AcceptanceTestCase {
     givenScript("result1: notCacheableRandom(); result2 : notCacheableRandom();");
     whenSmoothBuild("result1");
     whenSmoothBuild("result2");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result1"), not(hasContent(artifactContent("result2"))));
   }
 }

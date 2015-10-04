@@ -14,7 +14,7 @@ public class ToBlobTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: toBlob('abc');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
   }
 }

@@ -13,9 +13,9 @@ public class CleanCommandTest extends AcceptanceTestCase {
   public void clean_command_deletes_smooth_directory() throws Exception {
     givenScript("result: 'abc';");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     whenSmoothClean();
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     thenEqual(new File(projectDir(), SMOOTH_DIR.toString()).exists(), false);
   }
 }

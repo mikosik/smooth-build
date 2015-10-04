@@ -11,7 +11,7 @@ public class ConcatenateStringArraysTest extends AcceptanceTestCase {
   public void concatenate_string_arrays_function() throws Exception {
     givenScript("result: concatenateStringArrays(strings=['abc'], with=['def']);");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
   }
 }

@@ -14,7 +14,7 @@ public class ConcatenateFileArraysTest extends AcceptanceTestCase {
     givenScript(
         "result: concatenateFileArrays(files=[file('file1.txt')], with=[file('file2.txt')]);");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
   }
 }

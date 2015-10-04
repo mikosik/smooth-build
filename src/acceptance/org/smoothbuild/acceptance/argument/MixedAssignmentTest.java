@@ -12,7 +12,7 @@ public class MixedAssignmentTest extends AcceptanceTestCase {
       throws Exception {
     givenScript("result: oneOptionalOneRequired('abc');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent(":abc"));
   }
 
@@ -21,7 +21,7 @@ public class MixedAssignmentTest extends AcceptanceTestCase {
       throws Exception {
     givenScript("result: twoStrings(stringA='abc', 'def');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc:def"));
   }
 }

@@ -11,7 +11,7 @@ public class CleanCommandTest extends AcceptanceTestCase {
   public void build_command_without_function_argument_prints_error() throws Exception {
     givenScript("result: 'abc';");
     whenSmoothClean("some arguments");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     Assert.assertEquals(unknownArguments(), output());
     thenEqual(output(), unknownArguments());
   }

@@ -14,7 +14,7 @@ public class PathTest extends AcceptanceTestCase {
     givenFile("file1.txt", "abc");
     givenScript("result: file('file1.txt') | path;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("file1.txt"));
   }
 }
