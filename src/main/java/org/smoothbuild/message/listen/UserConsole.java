@@ -1,12 +1,12 @@
 package org.smoothbuild.message.listen;
 
-import static com.google.common.io.ByteStreams.nullOutputStream;
-
 import java.io.PrintStream;
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.smoothbuild.message.base.Console;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageStats;
 import org.smoothbuild.message.base.MessageType;
@@ -24,17 +24,10 @@ public class UserConsole {
   private final PrintStream printStream;
   private final MessageStats messageStats;
 
-  public UserConsole() {
-    this(System.out);
-  }
-
-  public UserConsole(PrintStream printStream) {
+  @Inject
+  public UserConsole(@Console PrintStream printStream) {
     this.printStream = printStream;
     this.messageStats = new MessageStats();
-  }
-
-  public static UserConsole userConsole() {
-    return new UserConsole(new PrintStream(nullOutputStream()));
   }
 
   public void print(String header, Iterable<? extends Message> messages) {
