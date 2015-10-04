@@ -14,7 +14,7 @@ public class FilterTest extends AcceptanceTestCase {
   public void illegal_path_in_pattern() throws IOException {
     givenScript("result: [] | filter('/');");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString(
         "Parameter 'include' has illegal value. Pattern can't start with slash character '/'."));
   }
@@ -24,7 +24,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("file", "abc");
     givenScript("result: [file('file')] | filter('**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file", "abc"));
   }
 
@@ -33,7 +33,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: [file('file.txt')] | filter('**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file.txt", "abc"));
   }
 
@@ -42,7 +42,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
   }
 
@@ -51,7 +51,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/subdir/file.txt", "abc");
     givenScript("result: [file('dir/subdir/file.txt')] | filter('**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/subdir/file.txt", "abc"));
   }
 
@@ -60,7 +60,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('dir/**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
   }
 
@@ -69,7 +69,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('dir/**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
   }
 
@@ -78,7 +78,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/def/file.txt", "abc");
     givenScript("result: [file('dir/def/file.txt')] | filter('dir/**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/def/file.txt", "abc"));
   }
 
@@ -87,7 +87,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("different/file.txt", "abc");
     givenScript("result: [file('different/file.txt')] | filter('dir/**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith());
   }
 
@@ -97,7 +97,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir", "abc");
     givenScript("result: [file('dir')] | filter('dir/**');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith());
   }
 
@@ -106,7 +106,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: [file('file.txt')] | filter('**/file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file.txt", "abc"));
   }
 
@@ -115,7 +115,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('**/file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
   }
 
@@ -125,7 +125,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/subdir/file.txt", "abc");
     givenScript("result: [file('dir/subdir/file.txt')] | filter('**/file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/subdir/file.txt", "abc"));
   }
 
@@ -134,7 +134,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("file2.txt", "abc");
     givenScript("result: [file('file2.txt')] | filter('**/file1.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith());
   }
 
@@ -144,7 +144,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('**/dir/file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
   }
 
@@ -154,7 +154,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/subdir/file.txt", "abc");
     givenScript("result: [file('dir/subdir/file.txt')] | filter('**/subdir/file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/subdir/file.txt", "abc"));
   }
 
@@ -163,7 +163,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: [file('file.txt')] | filter('*');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file.txt", "abc"));
   }
 
@@ -172,7 +172,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('*');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith());
   }
 
@@ -181,7 +181,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('*/file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
   }
 
@@ -190,7 +190,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: [file('file.txt')] | filter('*/file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith());
   }
 
@@ -199,7 +199,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/subdir/file.txt", "abc");
     givenScript("result: [file('dir/subdir/file.txt')] | filter('*/subdir/file.txt');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/subdir/file.txt", "abc"));
   }
 
@@ -208,7 +208,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('dir/*');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
   }
 
@@ -217,7 +217,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: [file('file.txt')] | filter('dir/*');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith());
   }
 
@@ -226,7 +226,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('dir/file.txt')] | filter('*/*');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
   }
 
@@ -235,7 +235,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: [file('file.txt')] | filter('*/*');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith());
   }
 
@@ -244,7 +244,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("dir/subdir/file.txt", "abc");
     givenScript("result: [file('dir/subdir/file.txt')] | filter('*/*');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith());
   }
 
@@ -253,7 +253,7 @@ public class FilterTest extends AcceptanceTestCase {
     givenFile("src/com/comp/Main.java", "abc");
     givenScript("result: [file('src/com/comp/Main.java')] | filter('src/**/*.java');");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("src/com/comp/Main.java", "abc"));
   }
 }

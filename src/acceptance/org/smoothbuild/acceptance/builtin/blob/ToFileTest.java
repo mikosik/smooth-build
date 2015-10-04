@@ -14,7 +14,7 @@ public class ToFileTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: [toFile(path='newFile.txt', content=file('file.txt'))];");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("newFile.txt", "abc"));
   }
 }

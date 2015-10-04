@@ -14,7 +14,7 @@ public class CommentTest extends AcceptanceTestCase {
   public void full_line_comment() throws IOException {
     givenScript("# ((( full line comment '\n result : '';");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
   }
 
@@ -22,7 +22,7 @@ public class CommentTest extends AcceptanceTestCase {
   public void trailing_comment() throws IOException {
     givenScript("result : '' ;  # comment at the end of line");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
   }
 }

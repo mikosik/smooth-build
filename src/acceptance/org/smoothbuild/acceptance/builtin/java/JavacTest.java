@@ -19,7 +19,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public private class MyClass {}");
     givenScript("result: [file('MyClass.java')] | javac;");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("modifier private not allowed here"));
   }
 
@@ -27,7 +27,7 @@ public class JavacTest extends AcceptanceTestCase {
   public void zero_files_can_be_compiled() throws Exception {
     givenScript("result: [] | javac;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(output(), containsString("Param 'sources' is empty list."));
   }
 
@@ -37,7 +37,7 @@ public class JavacTest extends AcceptanceTestCase {
         + "public static String myMethod() {return \"test-string\";}}");
     givenScript("result: [file('MyClass.java')] | javac;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     thenEqual("test-string", invoke(new File(artifact("result"), "MyClass.class"), "myMethod"));
   }
 
@@ -65,7 +65,7 @@ public class JavacTest extends AcceptanceTestCase {
         + "result: files('src') | javac(libs=[libraryJar])"
         + " | concatenateFileArrays(with=javac(files('srclib')));");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
 
     File libraryClassFile = new File(artifact("result"), "library/LibraryClass.class");
     File classFile = new File(artifact("result"), "MyClass.class");
@@ -79,7 +79,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public class MyClass {}");
     givenScript("result: [file('MyClass.java'), file('MyClass.java')] | javac;");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("duplicate class: MyClass"));
   }
 
@@ -88,7 +88,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public class MyClass {}");
     givenScript("result: [file('MyClass.java')] | javac(source='0.9');");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("Parameter source has illegal value = '0.9'."));
   }
 
@@ -97,7 +97,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public class MyClass {}");
     givenScript("result: [file('MyClass.java')] | javac(target='0.9');");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("Parameter target has illegal value = '0.9'."));
   }
 
@@ -107,7 +107,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public enum MyClass { VALUE }");
     givenScript("result: [file('MyClass.java')] | javac(source='1.4', target='1.4');");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("enums are not supported in -source 1.4"));
   }
 

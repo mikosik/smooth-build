@@ -13,7 +13,7 @@ public class TempDirectoryTest extends AcceptanceTestCase {
   public void temp_directory_is_deleted_after_build_execution() throws Exception {
     givenScript("result: tempFilePath();");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     when(new File(artifactContent("result"))).exists();
     thenReturned(false);
   }

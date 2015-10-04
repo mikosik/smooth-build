@@ -12,7 +12,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
   public void default_value_for_string_is_empty_string() throws Exception {
     givenScript("result: stringIdentity();");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
   }
 
@@ -20,7 +20,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
   public void default_value_for_blob_is_empty_stream() throws Exception {
     givenScript("result: blobIdentity();");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
   }
 
@@ -28,7 +28,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
   public void default_value_for_file_has_empty_path() throws Exception {
     givenScript("result: fileIdentity() | path;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("."));
   }
 
@@ -36,7 +36,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
   public void default_value_for_file_has_empty_content() throws Exception {
     givenScript("result: fileIdentity() | content;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
   }
 
@@ -44,7 +44,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
   public void default_value_for_array_is_empty_array() throws Exception {
     givenScript("result: stringArrayIdentity();");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
   }
 }

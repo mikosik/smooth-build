@@ -5,6 +5,8 @@ import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.Files.createTempDir;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
@@ -131,7 +133,15 @@ public class AcceptanceTestCase {
     }).start();
   }
 
-  protected void thenReturnedCode(int expected) {
+  protected void thenFinishedWithSuccess() {
+    thenReturnedCode(EXIT_CODE_SUCCESS);
+  }
+
+  protected void thenFinishedWithError() {
+    thenReturnedCode(EXIT_CODE_ERROR);
+  }
+
+  private void thenReturnedCode(int expected) {
     if (expected != exitCode.intValue()) {
       fail("Expected return code " + expected + " but was " + exitCode.intValue()
           + ".\nconsole output:\n" + outputData);

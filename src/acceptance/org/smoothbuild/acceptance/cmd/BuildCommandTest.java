@@ -10,7 +10,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
   public void build_command_without_function_argument_prints_error() throws Exception {
     givenScript("result: 'abc';");
     whenSmoothBuild();
-    thenReturnedCode(2);
+    thenFinishedWithError();
     thenEqual(output(), noFunctionArgError());
   }
 
@@ -29,7 +29,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
   public void build_command_with_nonexistent_function_argument_prints_error() throws Exception {
     givenScript("result: 'abc';");
     whenSmoothBuild("nonexistentFunction");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     thenEqual(output(), nonexistentFunctionArgError());
   }
 

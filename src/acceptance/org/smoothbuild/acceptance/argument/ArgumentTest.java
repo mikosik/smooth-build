@@ -13,14 +13,14 @@ public class ArgumentTest extends AcceptanceTestCase {
   public void trailing_comma_in_argument_list() throws IOException {
     givenScript("result : toBlob(string='abc',) ;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
   }
 
   @Test
   public void arguments_can_be_passed_in_the_same_order_as_parameters() throws Exception {
     givenScript("result : twoStrings(stringA='abc', stringB='def') ;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc:def"));
   }
 
@@ -28,7 +28,7 @@ public class ArgumentTest extends AcceptanceTestCase {
   public void arguments_can_be_passed_in_reversed_order_of_parameters() throws Exception {
     givenScript("result : twoStrings(stringB='def', stringA='abc') ;");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc:def"));
   }
 }

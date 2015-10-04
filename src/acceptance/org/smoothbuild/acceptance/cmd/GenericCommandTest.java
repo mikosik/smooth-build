@@ -14,7 +14,7 @@ public class GenericCommandTest extends AcceptanceTestCase {
     whenSmoothHelp();
     given(helpOutput = output());
     whenSmooth();
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     thenEqual(output(), helpOutput);
   }
 
@@ -22,7 +22,7 @@ public class GenericCommandTest extends AcceptanceTestCase {
   public void unknown_command() throws Exception {
     whenSmoothHelp();
     whenSmooth("unknownCommand");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     thenEqual(output(), "smooth: 'unknownCommand' is not a smooth command. See 'smooth help'.\n");
   }
 }

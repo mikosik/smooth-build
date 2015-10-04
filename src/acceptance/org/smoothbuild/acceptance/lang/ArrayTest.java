@@ -15,7 +15,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void empty_array() throws Exception {
     givenScript("result : [];");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
   }
 
@@ -23,14 +23,14 @@ public class ArrayTest extends AcceptanceTestCase {
   public void empty_array_with_comma_is_forbidden() throws Exception {
     givenScript("result : [,];");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
   }
 
   @Test
   public void array_with_one_element() throws Exception {
     givenScript("result : ['abc'];");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc"));
   }
 
@@ -38,7 +38,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_with_trailing_comma() throws Exception {
     givenScript("result : ['abc',];");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc"));
   }
 
@@ -46,14 +46,14 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_with_two_trailing_commas_is_forbidden() throws Exception {
     givenScript("result : ['abc',,];");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
   }
 
   @Test
   public void array_with_elements_of_the_same_type() throws Exception {
     givenScript("result : ['abc', 'def'];");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
   }
 
@@ -63,7 +63,7 @@ public class ArrayTest extends AcceptanceTestCase {
     givenFile("file2.txt", "def");
     givenScript("result: [file('file1.txt'), content(file('file2.txt'))];");
     whenSmoothBuild("result");
-    thenReturnedCode(0);
+    thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
   }
 
@@ -72,7 +72,7 @@ public class ArrayTest extends AcceptanceTestCase {
     givenFile("file1.txt", "abc");
     givenScript("result: ['abc', content(file('file2.txt'))];");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("Array cannot contain elements of incompatible types."));
     then(output(), containsString(
         "First element has type 'String' while element at index 1 has type 'Blob'."));
@@ -82,7 +82,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void nesting_is_forbidden() throws IOException {
     givenScript("myArray : []; result : [ myArray ];");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("Array cannot contain element with type 'Nothing[]'."));
   }
 
@@ -90,7 +90,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void direct_nesting_is_forbidden() throws IOException {
     givenScript("result : [ [] ];");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("Array cannot contain element with type 'Nothing[]'."));
   }
 
@@ -98,7 +98,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void nested_arrays_error_message_contains_allowed_types() throws IOException {
     givenScript("result : [ [] ];");
     whenSmoothBuild("result");
-    thenReturnedCode(2);
+    thenFinishedWithError();
     then(output(), containsString("Only following types are allowed: ['String', 'Blob', 'File']"));
   }
 }
