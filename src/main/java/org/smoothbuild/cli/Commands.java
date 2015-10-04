@@ -1,6 +1,7 @@
 package org.smoothbuild.cli;
 
 import static com.google.inject.Guice.createInjector;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class Commands {
     if (commandSpec == null) {
       System.out.println("smooth: '" + commandName
           + "' is not a smooth command. See 'smooth help'.");
-      return 1;
+      return EXIT_CODE_ERROR;
     } else {
       return createInjector(new MainModule()).getInstance(commandSpec.commandClass()).run(args);
     }

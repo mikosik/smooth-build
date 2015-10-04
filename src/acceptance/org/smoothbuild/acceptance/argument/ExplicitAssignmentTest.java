@@ -14,7 +14,7 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
   public void fails_when_parameter_with_given_name_doesnt_exist() throws Exception {
     givenScript("result : stringIdentity(wrongName='abc');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Function 'stringIdentity' has no parameter named 'wrongName'."));
   }
 
@@ -22,7 +22,7 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
   public void fails_when_parameter_has_incompatible_type() throws Exception {
     givenScript("result : blobIdentity(blob='abc');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Type mismatch, cannot convert String to Blob"));
   }
 
@@ -55,7 +55,7 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
   public void fails_when_two_arguments_are_assigned_to_same_parameter() throws Exception {
     givenScript("result : stringIdentity(string='abc', string='def');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), Matchers.containsString("Duplicated argument name = string"));
   }
 }

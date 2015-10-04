@@ -70,7 +70,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenFile("file1.txt", "abc");
     givenScript("result: [file('file1.txt'), file('file1.txt')];");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString(""));
   }
 }

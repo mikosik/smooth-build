@@ -1,6 +1,8 @@
 package org.smoothbuild.cli;
 
 import static com.google.common.base.Strings.padEnd;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.cli.Commands.COMMANDS;
 
 import java.util.Map.Entry;
@@ -12,10 +14,10 @@ public class Help implements Command {
       CommandSpec commandSpec = COMMANDS.get(args[1]);
       if (commandSpec == null) {
         System.out.println("smooth: unknown '" + args[1] + "' command. See 'smooth help'.");
-        return 1;
+        return EXIT_CODE_ERROR;
       } else {
         System.out.println(commandSpec.longDescription());
-        return 0;
+        return EXIT_CODE_SUCCESS;
       }
     } else {
       return generalHelp();
@@ -35,6 +37,6 @@ public class Help implements Command {
     }
 
     System.out.print(builder.toString());
-    return 0;
+    return EXIT_CODE_SUCCESS;
   }
 }

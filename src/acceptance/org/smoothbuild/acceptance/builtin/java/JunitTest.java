@@ -27,7 +27,7 @@ public class JunitTest extends AcceptanceTestCase {
     givenScript("fakeJunit: files('junit') | javac | jar;\n"
         + "srcJar: files('src') | javac(libs=[fakeJunit]) | jar; result: junit(libs=[srcJar]);");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("test failed"));
   }
 
