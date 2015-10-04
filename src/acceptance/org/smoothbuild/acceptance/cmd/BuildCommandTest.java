@@ -56,4 +56,20 @@ public class BuildCommandTest extends AcceptanceTestCase {
     when(new File(artifactContent("result"))).exists();
     thenReturned(false);
   }
+
+  @Test
+  public void build_command_with_illegal_function_name_prints_error() throws Exception {
+    givenScript("result: 'abc';");
+    whenSmoothBuild("illegal^name");
+    thenFinishedWithError();
+    thenEqual(output(), "error: Illegal function name 'illegal^name' passed in command line.\n");
+  }
+
+  @Test
+  public void build_command_with_function_specified_twice_prints_error() throws Exception {
+    givenScript("result: 'abc';");
+    whenSmoothBuild("result", "result");
+    thenFinishedWithError();
+    thenEqual(output(), "error: Function 'result' has been specified more than once.\n");
+  }
 }

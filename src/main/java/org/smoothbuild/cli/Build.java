@@ -2,27 +2,32 @@ package org.smoothbuild.cli;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.lang.function.base.Name.isLegalName;
+import static org.smoothbuild.lang.function.base.Name.name;
 
+import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.work.build.CommandLineParserPhase;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
+import org.smoothbuild.message.base.Console;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.parse.ModuleParserPhase;
 import org.smoothbuild.task.exec.ExecutionData;
 import org.smoothbuild.task.exec.SmoothExecutorPhase;
+import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.ImmutableList;
 
 public class Build implements Command {
   @Inject
-  private UserConsole userConsole;
+  @Console
+  private PrintStream console;
   @Inject
-  private CommandLineParserPhase commandLineParserPhase;
+  private UserConsole userConsole;
   @Inject
   private ModuleParserPhase moduleParserPhase;
   @Inject
@@ -30,17 +35,39 @@ public class Build implements Command {
 
   @Override
   public int run(String... functions) {
-    List<String> functionList = ImmutableList.copyOf(functions).subList(1, functions.length);
-    Set<Name> args = commandLineParserPhase.execute(functionList);
+    List<String> argsWithoutFirst = ImmutableList.copyOf(functions).subList(1, functions.length);
+    Set<Name> functionNames = parseArguments(argsWithoutFirst);
+    if (functionNames == null) {
+      return EXIT_CODE_ERROR;
+    }
 
     if (!userConsole.isProblemReported()) {
-      Module module = moduleParserPhase.execute(args);
+      Module module = moduleParserPhase.execute(functionNames);
       if (!userConsole.isProblemReported()) {
-        smoothExecutorPhase.execute(new ExecutionData(args, module));
+        smoothExecutorPhase.execute(new ExecutionData(functionNames, module));
       }
     }
 
     userConsole.printFinalSummary();
     return userConsole.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+  }
+
+  public Set<Name> parseArguments(List<String> args) {
+    DuplicatesDetector<Name> duplicatesDetector = new DuplicatesDetector<>();
+    for (String argument : args) {
+      if (isLegalName(argument)) {
+        duplicatesDetector.addValue(name(argument));
+      } else {
+        console.println("error: Illegal function name '" + argument + "' passed in command line.");
+        return null;
+      }
+    }
+
+    for (Name name : duplicatesDetector.getDuplicateValues()) {
+      console.println("error: Function " + name + " has been specified more than once.");
+      return null;
+    }
+
+    return duplicatesDetector.getUniqueValues();
   }
 }

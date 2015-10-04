@@ -42,7 +42,7 @@ public class ModuleParser {
     this.definedFunctionsCreator = definedFunctionsCreator;
   }
 
-  public Module createModule(Set<Name> args) {
+  public Module createModule() {
     InputStream inputStream = scriptInputStream(DEFAULT_SCRIPT);
     return createModule(messages, inputStream, DEFAULT_SCRIPT);
   }
