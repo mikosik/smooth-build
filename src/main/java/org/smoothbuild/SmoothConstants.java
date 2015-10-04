@@ -9,6 +9,8 @@ import org.smoothbuild.io.fs.base.Path;
 import com.google.common.base.Charsets;
 
 public class SmoothConstants {
+  public static final int EXIT_CODE_SUCCESS = 0;
+  public static final int EXIT_CODE_ERROR = 2;
   public static final String SMOOTH_HOME_ENV_VARIABLE = "SMOOTH_HOME";
   public static final String SMOOTH_HOME_LIB_DIR = "lib";
 

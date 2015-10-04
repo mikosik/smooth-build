@@ -1,5 +1,7 @@
 package org.smoothbuild.cli;
 
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 
 import java.util.List;
@@ -40,6 +42,6 @@ public class Clean implements Command {
       userConsole.print("CLEAN", messages);
     }
     userConsole.printFinalSummary();
-    return userConsole.isProblemReported() ? 1 : 0;
+    return userConsole.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 }

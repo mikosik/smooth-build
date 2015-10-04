@@ -21,7 +21,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
   public void missing_closing_quote() throws Exception {
     givenScript("result : 'abc;");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
   }
 
   @Test

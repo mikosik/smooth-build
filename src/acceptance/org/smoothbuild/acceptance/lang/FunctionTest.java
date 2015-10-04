@@ -14,7 +14,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void illegal_function_name_is_forbidden() throws Exception {
     givenScript("function^name: 'abc';");
     whenSmoothBuild("function^name");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Illegal function name 'function^name'"));
   }
 
@@ -22,7 +22,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void duplicate_function_is_forbidden() throws Exception {
     givenScript("function1: 'abc'; function1: 'def';");
     whenSmoothBuild("function1");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Duplicate function 'function1'"));
   }
 
@@ -30,7 +30,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void overriding_core_function_is_forbidden() throws Exception {
     givenScript("file: 'abc';");
     whenSmoothBuild("file");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString(
         "Function 'file' cannot override builtin function with the same name."));
   }
@@ -39,7 +39,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void direct_function_recursion_is_forbidden() throws IOException {
     givenScript("function1: function1;");
     whenSmoothBuild("function1");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Function call graph contains cycle"));
   }
 
@@ -47,7 +47,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void indirect_function_recursion_with_two_steps_is_forbidden() throws IOException {
     givenScript("function1: function2; function2: function1;");
     whenSmoothBuild("function1");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Function call graph contains cycle"));
   }
 
@@ -55,7 +55,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void indirect_recursion_with_three_steps_is_forbidden() throws IOException {
     givenScript("function1: function2; function2: function3; function3: function1;");
     whenSmoothBuild("function1");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Function call graph contains cycle"));
   }
 

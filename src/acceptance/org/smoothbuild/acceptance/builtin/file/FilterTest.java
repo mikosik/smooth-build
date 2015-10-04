@@ -14,7 +14,7 @@ public class FilterTest extends AcceptanceTestCase {
   public void illegal_path_in_pattern() throws IOException {
     givenScript("result: [] | filter('/');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString(
         "Parameter 'include' has illegal value. Pattern can't start with slash character '/'."));
   }

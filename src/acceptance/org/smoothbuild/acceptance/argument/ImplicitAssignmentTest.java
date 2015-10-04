@@ -13,7 +13,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   public void fails_when_there_is_no_parameter_matching() throws Exception {
     givenScript("result: blobIdentity('abc');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Can't find parameter(s) of proper type in 'blobIdentity'"
         + " function for some nameless argument(s)"));
   }
@@ -39,7 +39,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   public void fails_when_one_parameter_matches_two_arguments() throws Exception {
     givenScript("result: stringIdentity('abc', 'def');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString(
         "Can't decide unambiguously to which parameters in 'stringIdentity'"
             + " function some nameless arguments should be assigned"));
@@ -49,7 +49,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   public void fails_when_two_parameters_match_argument() throws Exception {
     givenScript("result: twoStrings('abc');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Can't decide unambiguously to which parameters in 'twoStrings'"
         + " function some nameless arguments should be assigned"));
   }
@@ -58,7 +58,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   public void fails_when_two_parameters_match_two_arguments() throws Exception {
     givenScript("result: twoStrings('abc', 'def');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Can't decide unambiguously to which parameters in 'twoStrings'"
         + " function some nameless arguments should be assigned"));
   }
@@ -78,7 +78,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: twoBlobs(file('file.txt'));");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Can't decide unambiguously to which parameters in 'twoBlobs'"
         + " function some nameless arguments should be assigned"));
   }
@@ -88,7 +88,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: blobIdentity(file('file.txt'), file('file.txt'));");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Can't decide unambiguously to which parameters in 'blobIdentity'"
         + " function some nameless arguments should be assigned"));
   }
@@ -99,7 +99,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
     givenFile("file.txt", "abc");
     givenScript("result: fileAndBlob(file('file.txt'), file('file.txt'));");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Can't decide unambiguously to which parameters in 'fileAndBlob'"
         + " function some nameless arguments should be assigned"));
   }

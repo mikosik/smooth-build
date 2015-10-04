@@ -23,7 +23,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void empty_array_with_comma_is_forbidden() throws Exception {
     givenScript("result : [,];");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
   }
 
   @Test
@@ -46,7 +46,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_with_two_trailing_commas_is_forbidden() throws Exception {
     givenScript("result : ['abc',,];");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
   }
 
   @Test
@@ -72,7 +72,7 @@ public class ArrayTest extends AcceptanceTestCase {
     givenFile("file1.txt", "abc");
     givenScript("result: ['abc', content(file('file2.txt'))];");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Array cannot contain elements of incompatible types."));
     then(output(), containsString(
         "First element has type 'String' while element at index 1 has type 'Blob'."));
@@ -82,7 +82,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void nesting_is_forbidden() throws IOException {
     givenScript("myArray : []; result : [ myArray ];");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Array cannot contain element with type 'Nothing[]'."));
   }
 
@@ -90,7 +90,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void direct_nesting_is_forbidden() throws IOException {
     givenScript("result : [ [] ];");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Array cannot contain element with type 'Nothing[]'."));
   }
 
@@ -98,7 +98,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void nested_arrays_error_message_contains_allowed_types() throws IOException {
     givenScript("result : [ [] ];");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Only following types are allowed: ['String', 'Blob', 'File']"));
   }
 }

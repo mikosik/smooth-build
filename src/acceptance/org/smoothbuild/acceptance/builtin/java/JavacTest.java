@@ -19,7 +19,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public private class MyClass {}");
     givenScript("result: [file('MyClass.java')] | javac;");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("modifier private not allowed here"));
   }
 
@@ -79,7 +79,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public class MyClass {}");
     givenScript("result: [file('MyClass.java'), file('MyClass.java')] | javac;");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("duplicate class: MyClass"));
   }
 
@@ -88,7 +88,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public class MyClass {}");
     givenScript("result: [file('MyClass.java')] | javac(source='0.9');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Parameter source has illegal value = '0.9'."));
   }
 
@@ -97,7 +97,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public class MyClass {}");
     givenScript("result: [file('MyClass.java')] | javac(target='0.9');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("Parameter target has illegal value = '0.9'."));
   }
 
@@ -107,7 +107,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenFile("MyClass.java", "public enum MyClass { VALUE }");
     givenScript("result: [file('MyClass.java')] | javac(source='1.4', target='1.4');");
     whenSmoothBuild("result");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     then(output(), containsString("enums are not supported in -source 1.4"));
   }
 

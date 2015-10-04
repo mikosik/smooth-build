@@ -1,5 +1,8 @@
 package org.smoothbuild.cli;
 
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,6 +40,6 @@ public class Build implements Command {
     }
 
     userConsole.printFinalSummary();
-    return userConsole.isProblemReported() ? 1 : 0;
+    return userConsole.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 }

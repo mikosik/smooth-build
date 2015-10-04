@@ -22,7 +22,7 @@ public class GenericCommandTest extends AcceptanceTestCase {
   public void unknown_command() throws Exception {
     whenSmoothHelp();
     whenSmooth("unknownCommand");
-    thenReturnedCode(1);
+    thenReturnedCode(2);
     thenEqual(output(), "smooth: 'unknownCommand' is not a smooth command. See 'smooth help'.\n");
   }
 }
