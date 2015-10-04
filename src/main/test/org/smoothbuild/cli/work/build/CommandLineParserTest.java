@@ -17,14 +17,12 @@ import org.smoothbuild.message.listen.LoggedMessages;
 public class CommandLineParserTest {
   private final String functionName = "function1";
   private CommandLineParser parser;
-  private CommandLineArguments args;
   private LoggedMessages messages;
 
   @Test
   public void functions_to_run() {
     given(parser = new CommandLineParser(new LoggedMessages()));
-    given(args = parser.parse(asList(functionName)));
-    when(args.functionsToRun());
+    when(parser).parse(asList(functionName));
     thenReturned(contains(name(functionName)));
   }
 
