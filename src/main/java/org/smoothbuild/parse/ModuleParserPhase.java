@@ -21,6 +21,6 @@ public class ModuleParserPhase extends MessageCatchingExecutor<Set<Name>, Module
 
   @Override
   public Module executeImpl(Set<Name> arguments) {
-    return moduleParser.createModule(arguments);
+    return moduleParser.createModule();
   }
 }
