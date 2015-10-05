@@ -32,14 +32,17 @@ public class ModuleParser {
   private final ModuleParserMessages messages;
   private final Module builtinModule;
   private final DefinedFunctionsCreator definedFunctionsCreator;
+  private final ParsingMessages parsingMessages;
 
   @Inject
   public ModuleParser(@ProjectDir FileSystem fileSystem, ModuleParserMessages messages,
-      @Builtin Module builtinModule, DefinedFunctionsCreator definedFunctionsCreator) {
+      @Builtin Module builtinModule, DefinedFunctionsCreator definedFunctionsCreator,
+      ParsingMessages parsingMessages) {
     this.fileSystem = fileSystem;
     this.messages = messages;
     this.builtinModule = builtinModule;
     this.definedFunctionsCreator = definedFunctionsCreator;
+    this.parsingMessages = parsingMessages;
   }
 
   public Module createModule() {
@@ -57,7 +60,7 @@ public class ModuleParser {
 
   private Module createModule(LoggedMessages loggedMessages, InputStream inputStream,
       Path scriptFile) {
-    ModuleContext module = parseScript(loggedMessages, inputStream, scriptFile);
+    ModuleContext module = parseScript(parsingMessages, inputStream, scriptFile);
 
     Map<Name, FunctionContext> functions = collectFunctions(loggedMessages, builtinModule, module);
 
