@@ -2,17 +2,15 @@ package org.smoothbuild.acceptance.cmd;
 
 import static org.testory.Testory.thenEqual;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class CleanCommandTest extends AcceptanceTestCase {
   @Test
-  public void build_command_without_function_argument_prints_error() throws Exception {
+  public void clean_command_with_arguments_prints_error() throws Exception {
     givenScript("result: 'abc';");
     whenSmoothClean("some arguments");
     thenFinishedWithError();
-    Assert.assertEquals(unknownArguments(), output());
     thenEqual(output(), unknownArguments());
   }
 
