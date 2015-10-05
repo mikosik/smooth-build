@@ -1,6 +1,10 @@
 package org.smoothbuild.acceptance.cmd;
 
 import static org.testory.Testory.thenEqual;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
+
+import java.io.File;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -42,5 +46,14 @@ public class BuildCommandTest extends AcceptanceTestCase {
     builder.append(" + FAILED :(\n");
     builder.append("   + 1 error(s)\n");
     return builder.toString();
+  }
+
+  @Test
+  public void temp_directory_is_deleted_after_build_execution() throws Exception {
+    givenScript("result: tempFilePath();");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    when(new File(artifactContent("result"))).exists();
+    thenReturned(false);
   }
 }
