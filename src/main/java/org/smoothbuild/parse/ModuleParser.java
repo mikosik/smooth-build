@@ -64,7 +64,7 @@ public class ModuleParser {
 
     Map<Name, FunctionContext> functions = collectFunctions(loggedMessages, builtinModule, module);
 
-    Map<Name, Set<Dependency>> dependencies = collectDependencies(loggedMessages, module);
+    Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
     detectUndefinedFunctions(loggedMessages, builtinModule, dependencies);
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
