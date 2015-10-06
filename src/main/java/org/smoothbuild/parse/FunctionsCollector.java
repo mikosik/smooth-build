@@ -14,9 +14,6 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 
 import com.google.common.collect.Maps;
 
@@ -27,28 +24,25 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<Name, FunctionContext> collectFunctions(LoggedMessages messages,
-      ParsingMessages parsingMessages, Module builtinModule, ModuleContext module) {
-    Worker worker = new Worker(messages, parsingMessages, builtinModule);
+  public static Map<Name, FunctionContext> collectFunctions(ParsingMessages parsingMessages,
+      Module builtinModule, ModuleContext module) {
+    Worker worker = new Worker(parsingMessages, builtinModule);
     worker.visit(module);
     if (parsingMessages.hasErrors()) {
       throw new CommandFailedException();
     }
-    messages.failIfContainsProblems();
     return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final Module builtinModule;
-    private final LoggedMessages messages;
     private final ParsingMessages parsingMessages;
     private final Map<Name, FunctionContext> functions;
 
     @Inject
-    public Worker(LoggedMessages messages, ParsingMessages parsingMessages, Module builtinModule) {
+    public Worker(ParsingMessages parsingMessages, Module builtinModule) {
       this.parsingMessages = parsingMessages;
       this.builtinModule = builtinModule;
-      this.messages = messages;
       this.functions = Maps.newHashMap();
     }
 
@@ -61,8 +55,8 @@ public class FunctionsCollector {
         return null;
       }
       if (builtinModule.containsFunction(name)) {
-        CodeLocation location = locationOf(nameContext);
-        messages.log(new OverridenBuiltinFunctionError(location, name));
+        parsingMessages.error(locationOf(nameContext), "Function " + name
+            + " cannot override builtin function with the same name.");
         return null;
       }
 

@@ -61,10 +61,7 @@ public class ModuleParser {
   private Module createModule(LoggedMessages loggedMessages, InputStream inputStream,
       Path scriptFile) {
     ModuleContext module = parseScript(parsingMessages, inputStream, scriptFile);
-
-    Map<Name, FunctionContext> functions = collectFunctions(loggedMessages, parsingMessages,
-        builtinModule, module);
-
+    Map<Name, FunctionContext> functions = collectFunctions(parsingMessages, builtinModule, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
     detectUndefinedFunctions(loggedMessages, builtinModule, dependencies);
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
