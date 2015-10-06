@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
@@ -14,8 +13,6 @@ import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.IllegalFunctionNameError;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -25,54 +22,35 @@ import com.google.common.collect.ImmutableSet;
  * given function).
  */
 public class DependencyCollector {
-  public static Map<Name, Set<Dependency>> collectDependencies(LoggedMessages messages,
-      ModuleContext moduleContext) {
-    Worker worker = new Worker(messages);
+  public static Map<Name, Set<Dependency>> collectDependencies(ModuleContext moduleContext) {
+    Worker worker = new Worker();
     worker.visit(moduleContext);
     return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
-    private final LoggedMessages messages;
     private final ImmutableMap.Builder<Name, Set<Dependency>> dependencies;
     private ImmutableSet.Builder<Dependency> currentFunctionDependencies;
 
-    public Worker(LoggedMessages loggedMessages) {
-      this.messages = loggedMessages;
+    public Worker() {
       this.dependencies = ImmutableMap.builder();
     }
 
     @Override
     public Void visitFunction(FunctionContext function) {
       currentFunctionDependencies = ImmutableSet.builder();
-      String nameString = function.functionName().getText();
-
-      if (!isLegalName(nameString)) {
-        messages.log(new IllegalFunctionNameError(locationOf(function), nameString));
-        return null;
-      }
-
-      Name name = Name.name(nameString);
+      Name name = name(function.functionName().getText());
       visitChildren(function);
-
       dependencies.put(name, currentFunctionDependencies.build());
-
       return null;
     }
 
     @Override
     public Void visitCall(CallContext call) {
       FunctionNameContext functionName = call.functionName();
-      String nameString = functionName.getText();
-      if (!isLegalName(nameString)) {
-        messages.log(new IllegalFunctionNameError(locationOf(call), nameString));
-        return null;
-      }
-
-      Name name = name(nameString);
+      Name name = name(functionName.getText());
       CodeLocation location = locationOf(functionName);
       currentFunctionDependencies.add(new Dependency(location, name));
-
       return visitChildren(call);
     }
 

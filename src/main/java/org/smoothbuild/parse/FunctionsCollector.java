@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.util.Map;
@@ -16,7 +15,6 @@ import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.DuplicateFunctionError;
-import org.smoothbuild.parse.err.IllegalFunctionNameError;
 import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 
 import com.google.common.collect.Maps;
@@ -52,11 +50,6 @@ public class FunctionsCollector {
     public Void visitFunction(FunctionContext functionContext) {
       FunctionNameContext nameContext = functionContext.functionName();
       String nameString = nameContext.getText();
-
-      if (!isLegalName(nameString)) {
-        messages.log(new IllegalFunctionNameError(locationOf(nameContext), nameString));
-        return null;
-      }
 
       Name name = Name.name(nameString);
       if (functions.keySet().contains(name)) {
