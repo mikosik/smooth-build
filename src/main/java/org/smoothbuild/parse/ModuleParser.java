@@ -62,7 +62,8 @@ public class ModuleParser {
       Path scriptFile) {
     ModuleContext module = parseScript(parsingMessages, inputStream, scriptFile);
 
-    Map<Name, FunctionContext> functions = collectFunctions(loggedMessages, builtinModule, module);
+    Map<Name, FunctionContext> functions = collectFunctions(loggedMessages, parsingMessages,
+        builtinModule, module);
 
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
     detectUndefinedFunctions(loggedMessages, builtinModule, dependencies);

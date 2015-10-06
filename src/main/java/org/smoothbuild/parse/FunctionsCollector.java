@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.util.Map;
@@ -10,11 +11,11 @@ import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.DuplicateFunctionError;
 import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 
 import com.google.common.collect.Maps;
@@ -27,9 +28,12 @@ import com.google.common.collect.Maps;
 public class FunctionsCollector {
 
   public static Map<Name, FunctionContext> collectFunctions(LoggedMessages messages,
-      Module builtinModule, ModuleContext module) {
-    Worker worker = new Worker(messages, builtinModule);
+      ParsingMessages parsingMessages, Module builtinModule, ModuleContext module) {
+    Worker worker = new Worker(messages, parsingMessages, builtinModule);
     worker.visit(module);
+    if (parsingMessages.hasErrors()) {
+      throw new CommandFailedException();
+    }
     messages.failIfContainsProblems();
     return worker.result();
   }
@@ -37,10 +41,12 @@ public class FunctionsCollector {
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final Module builtinModule;
     private final LoggedMessages messages;
+    private final ParsingMessages parsingMessages;
     private final Map<Name, FunctionContext> functions;
 
     @Inject
-    public Worker(LoggedMessages messages, Module builtinModule) {
+    public Worker(LoggedMessages messages, ParsingMessages parsingMessages, Module builtinModule) {
+      this.parsingMessages = parsingMessages;
       this.builtinModule = builtinModule;
       this.messages = messages;
       this.functions = Maps.newHashMap();
@@ -49,11 +55,9 @@ public class FunctionsCollector {
     @Override
     public Void visitFunction(FunctionContext functionContext) {
       FunctionNameContext nameContext = functionContext.functionName();
-      String nameString = nameContext.getText();
-
-      Name name = Name.name(nameString);
+      Name name = name(nameContext.getText());
       if (functions.keySet().contains(name)) {
-        messages.log(new DuplicateFunctionError(locationOf(nameContext), name));
+        parsingMessages.error(locationOf(nameContext), "Function " + name + " is already defined.");
         return null;
       }
       if (builtinModule.containsFunction(name)) {
