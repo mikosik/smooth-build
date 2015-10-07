@@ -5,7 +5,6 @@ import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
-import static org.smoothbuild.parse.UnknownFunctionCallsDetector.detectUndefinedFunctions;
 
 import java.io.InputStream;
 import java.util.List;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -70,5 +70,21 @@ public class ModuleParser {
         loggedMessages, builtinModule, functions, sorted);
 
     return new ImmutableModule(definedFunctions);
+  }
+
+  public static void detectUndefinedFunctions(ParsingMessages parsingMessages, Module builtinModule,
+      Map<Name, Set<Dependency>> dependencies) {
+    Set<Name> declaredFunctions = dependencies.keySet();
+    for (Set<Dependency> functionDependecies : dependencies.values()) {
+      for (Dependency dependency : functionDependecies) {
+        Name name = dependency.functionName();
+        if (!builtinModule.containsFunction(name) && !declaredFunctions.contains(name)) {
+          parsingMessages.error(dependency.location(), "Call to unknown function " + name + ".");
+        }
+      }
+    }
+    if (parsingMessages.hasErrors()) {
+      throw new CommandFailedException();
+    }
   }
 }
