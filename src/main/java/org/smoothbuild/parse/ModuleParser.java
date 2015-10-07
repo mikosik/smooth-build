@@ -67,7 +67,7 @@ public class ModuleParser {
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        loggedMessages, builtinModule, functions, sorted);
+        loggedMessages, parsingMessages, builtinModule, functions, sorted);
 
     return new ImmutableModule(definedFunctions);
   }

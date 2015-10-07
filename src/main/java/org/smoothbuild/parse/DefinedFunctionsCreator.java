@@ -10,6 +10,7 @@ import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -31,6 +32,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
+import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -53,7 +55,6 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.ForbiddenArrayElemError;
 import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
@@ -73,11 +74,11 @@ public class DefinedFunctionsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function> createDefinedFunctions(LoggedMessages messages, Module builtinModule,
+  public Map<Name, Function> createDefinedFunctions(LoggedMessages messages,
+      ParsingMessages parsingMessages, Module builtinModule,
       Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    Worker worker =
-        new Worker(messages, builtinModule, functionContexts, sorted, objectsDb,
-            argumentExpressionCreator, implicitConverter);
+    Worker worker = new Worker(messages, parsingMessages, builtinModule, functionContexts, sorted,
+        objectsDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
     messages.failIfContainsProblems();
     return result;
@@ -85,6 +86,7 @@ public class DefinedFunctionsCreator {
 
   private static class Worker {
     private final LoggedMessages messages;
+    private final ParsingMessages parsingMessages;
     private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
@@ -94,10 +96,11 @@ public class DefinedFunctionsCreator {
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
-    public Worker(LoggedMessages messages, Module builtinModule,
+    public Worker(LoggedMessages messages, ParsingMessages parsingMessages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
         ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
       this.messages = messages;
+      this.parsingMessages = parsingMessages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
@@ -179,10 +182,12 @@ public class DefinedFunctionsCreator {
         List<Expression> expressions, CodeLocation location) {
       ArrayType arrayType = Types.arrayTypeContaining(elemType);
       if (arrayType == null) {
-        messages.log(new ForbiddenArrayElemError(location, elemType));
-        return new InvalidExpression(NIL, location);
+        parsingMessages.error(location, "Array cannot contain element with type " + elemType
+            + ". Only following types are allowed: " + basicTypes() + ".");
+        throw new CommandFailedException();
       }
-      return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions), location);
+      return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions),
+          location);
     }
 
     public <T extends Value> List<Expression> toConvertedExpressions(Type type,
@@ -246,8 +251,8 @@ public class DefinedFunctionsCreator {
       FunctionNameContext functionNameContext = callContext.functionName();
       Function function = getFunction(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
-      List<Expression> argumentExpressions =
-          argumentExpressionCreator.createArgExprs(codeLocation, messages, function, arguments);
+      List<Expression> argumentExpressions = argumentExpressionCreator.createArgExprs(codeLocation,
+          messages, function, arguments);
 
       if (argumentExpressions == null) {
         return new InvalidExpression(function.type(), codeLocation);
