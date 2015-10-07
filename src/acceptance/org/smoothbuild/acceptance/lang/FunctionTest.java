@@ -60,4 +60,11 @@ public class FunctionTest extends AcceptanceTestCase {
     then(output(), containsString("Function call graph contains cycle"));
   }
 
+  @Test
+  public void call_to_unknown_function_causes_error() throws IOException {
+    givenScript("function1: unknownFunction;");
+    whenSmoothBuild("function1");
+    thenFinishedWithError();
+    thenEqual(output(), "build.smooth:1: error: Call to unknown function 'unknownFunction'.\n");
+  }
 }
