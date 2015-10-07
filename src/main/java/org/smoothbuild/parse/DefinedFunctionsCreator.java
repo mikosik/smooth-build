@@ -55,7 +55,6 @@ import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -211,8 +210,10 @@ public class DefinedFunctionsCreator {
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
-          messages.log(new IncompatibleArrayElemsError(location, firstType, i, type));
-          return null;
+          parsingMessages.error(location, "Array cannot contain elements of incompatible types.\n"
+              + "First element has type " + firstType + " while element at index " + i
+              + " has type " + type + ".");
+          throw new CommandFailedException();
         }
       }
       return superType;
