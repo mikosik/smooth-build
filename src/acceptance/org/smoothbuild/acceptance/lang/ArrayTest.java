@@ -74,9 +74,9 @@ public class ArrayTest extends AcceptanceTestCase {
     givenScript("result: ['abc', content(file('file2.txt'))];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Array cannot contain elements of incompatible types."));
-    then(output(), containsString(
-        "First element has type 'String' while element at index 1 has type 'Blob'."));
+    thenEqual(output(), "build.smooth:1: error: "
+        + "Array cannot contain elements of incompatible types.\n"
+        + "First element has type 'String' while element at index 1 has type 'Blob'.\n");
   }
 
   @Test
