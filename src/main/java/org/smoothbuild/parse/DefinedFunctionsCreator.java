@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.basicTypes;
-import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
@@ -52,7 +51,6 @@ import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.util.Empty;
@@ -79,7 +77,9 @@ public class DefinedFunctionsCreator {
     Worker worker = new Worker(messages, parsingMessages, builtinModule, functionContexts, sorted,
         objectsDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
-    messages.failIfContainsProblems();
+    if (parsingMessages.hasErrors()) {
+      throw new CommandFailedException();
+    }
     return result;
   }
 
@@ -300,13 +300,13 @@ public class DefinedFunctionsCreator {
     private Expression toStringExpression(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
+      CodeLocation location = locationOf(stringToken.getSymbol());
       try {
         SString stringValue = objectsDb.string(unescaped(string));
-        return new ValueExpression(stringValue, locationOf(stringToken.getSymbol()));
+        return new ValueExpression(stringValue, location);
       } catch (UnescapingFailedException e) {
-        CodeLocation location = locationOf(stringToken.getSymbol());
-        messages.log(new CodeMessage(ERROR, location, e.getMessage()));
-        return new InvalidExpression(STRING, locationOf(stringToken.getSymbol()));
+        parsingMessages.error(location, e.getMessage());
+        return new InvalidExpression(STRING, location);
       }
     }
   }

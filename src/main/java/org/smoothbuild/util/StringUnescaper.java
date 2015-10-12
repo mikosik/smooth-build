@@ -15,7 +15,7 @@ public class StringUnescaper {
   /**
    * Unescapes Smooth string. Replaces all escaped characters according to
    * following rules:
-   * 
+   *
    * <pre>
    * \t is replaced with a tab
    * \b is replaced with a backspace
@@ -75,7 +75,7 @@ public class StringUnescaper {
         return BACKSLASH;
       default:
         throw new UnescapingFailedException(charIndex,
-            "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\");
+            "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
     }
   }
 }
