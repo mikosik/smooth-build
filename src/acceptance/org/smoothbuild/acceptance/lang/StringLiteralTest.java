@@ -2,6 +2,7 @@ package org.smoothbuild.acceptance.lang;
 
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
+import static org.testory.Testory.thenEqual;
 
 import java.io.IOException;
 
@@ -126,5 +127,14 @@ public class StringLiteralTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("\""));
+  }
+
+  @Test
+  public void with_illegal_escape_sequence() throws IOException {
+    givenScript("result : '\\A';");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenEqual(output(), "build.smooth:1: error: "
+        + "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.\n");
   }
 }
