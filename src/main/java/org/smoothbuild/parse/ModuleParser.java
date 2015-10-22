@@ -24,22 +24,18 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
 public class ModuleParser {
   private final FileSystem fileSystem;
-  private final ModuleParserMessages messages;
   private final Module builtinModule;
   private final DefinedFunctionsCreator definedFunctionsCreator;
   private final ParsingMessages parsingMessages;
 
   @Inject
-  public ModuleParser(@ProjectDir FileSystem fileSystem, ModuleParserMessages messages,
-      @Builtin Module builtinModule, DefinedFunctionsCreator definedFunctionsCreator,
-      ParsingMessages parsingMessages) {
+  public ModuleParser(@ProjectDir FileSystem fileSystem, @Builtin Module builtinModule,
+      DefinedFunctionsCreator definedFunctionsCreator, ParsingMessages parsingMessages) {
     this.fileSystem = fileSystem;
-    this.messages = messages;
     this.builtinModule = builtinModule;
     this.definedFunctionsCreator = definedFunctionsCreator;
     this.parsingMessages = parsingMessages;
@@ -47,7 +43,7 @@ public class ModuleParser {
 
   public Module createModule() {
     InputStream inputStream = scriptInputStream(DEFAULT_SCRIPT);
-    return createModule(messages, inputStream, DEFAULT_SCRIPT);
+    return createModule(inputStream, DEFAULT_SCRIPT);
   }
 
   private InputStream scriptInputStream(Path scriptFile) {
@@ -58,8 +54,7 @@ public class ModuleParser {
     }
   }
 
-  private Module createModule(LoggedMessages loggedMessages, InputStream inputStream,
-      Path scriptFile) {
+  private Module createModule(InputStream inputStream, Path scriptFile) {
     ModuleContext module = parseScript(parsingMessages, inputStream, scriptFile);
     Map<Name, FunctionContext> functions = collectFunctions(parsingMessages, builtinModule, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
@@ -67,7 +62,7 @@ public class ModuleParser {
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        loggedMessages, parsingMessages, builtinModule, functions, sorted);
+        parsingMessages, builtinModule, functions, sorted);
 
     return new ImmutableModule(definedFunctions);
   }

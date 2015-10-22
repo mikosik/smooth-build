@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
+import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.allTypes;
@@ -18,15 +19,10 @@ import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.expr.ValueExpression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.def.err.AmbiguousNamelessArgsError;
-import org.smoothbuild.lang.function.def.err.DuplicateArgNameError;
-import org.smoothbuild.lang.function.def.err.MissingRequiredArgsError;
-import org.smoothbuild.lang.function.def.err.TypeMismatchError;
-import org.smoothbuild.lang.function.def.err.UnknownParamNameError;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.LoggedMessages;
+import org.smoothbuild.parse.ParsingMessages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -42,29 +38,30 @@ public class ArgumentExpressionCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public List<Expression> createArgExprs(CodeLocation codeLocation, LoggedMessages messages,
-      Function function, Collection<Argument> arguments) {
+  public List<Expression> createArgExprs(CodeLocation codeLocation,
+      ParsingMessages messages, Function function, Collection<Argument> arguments) {
     ParametersPool parametersPool = new ParametersPool(function.parameters());
     ImmutableList<Argument> namedArguments = Argument.filterNamed(arguments);
 
     detectDuplicatedAndUnknownArgumentNames(function, messages, namedArguments);
-    if (messages.containsProblems()) {
+    if (messages.hasErrors()) {
       return null;
     }
 
     Map<Parameter, Argument> argumentMap = new HashMap<>();
     processNamedArguments(parametersPool, messages, argumentMap, namedArguments);
-    if (messages.containsProblems()) {
+    if (messages.hasErrors()) {
       return null;
     }
 
-    processNamelessArguments(function, arguments, parametersPool, messages, argumentMap);
-    if (messages.containsProblems()) {
+    processNamelessArguments(function, arguments, parametersPool, messages, argumentMap,
+        codeLocation);
+    if (messages.hasErrors()) {
       return null;
     }
     Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
     if (missingRequiredParameters.size() != 0) {
-      messages.log(new MissingRequiredArgsError(codeLocation, function, argumentMap,
+      messages.error(codeLocation, missingRequiredArgsMessage(function, argumentMap,
           missingRequiredParameters));
       return null;
     }
@@ -76,8 +73,18 @@ public class ArgumentExpressionCreator {
       argumentExpressions.put(parameter.name(), expression);
     }
 
-    messages.failIfContainsProblems();
     return sortAccordingToParametersOrder(argumentExpressions, function);
+  }
+
+  private static String missingRequiredArgsMessage(Function function,
+      Map<Parameter, Argument> argumentMap, Set<Parameter> missingRequiredParameters) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Not all parameters required by " + function.name()
+        + " function has been specified.\n" + "Missing required parameters:\n");
+    builder.append(parametersToString(missingRequiredParameters));
+    builder.append("All correct 'parameters <- arguments' assignments:\n");
+    builder.append(argumentMap.toString());
+    return builder.toString();
   }
 
   private List<Expression> sortAccordingToParametersOrder(
@@ -90,7 +97,7 @@ public class ArgumentExpressionCreator {
   }
 
   private static void detectDuplicatedAndUnknownArgumentNames(Function function,
-      LoggedMessages messages, Collection<Argument> namedArguments) {
+      ParsingMessages messages, Collection<Argument> namedArguments) {
     Set<String> unusedNames = Sets.newHashSet(parametersToNames(function.parameters()));
     Set<String> usedNames = Sets.newHashSet();
     for (Argument argument : namedArguments) {
@@ -100,15 +107,17 @@ public class ArgumentExpressionCreator {
           unusedNames.remove(name);
           usedNames.add(name);
         } else if (usedNames.contains(name)) {
-          messages.log(new DuplicateArgNameError(argument));
+          messages.error(argument.codeLocation(), "Argument '" + argument.name()
+              + "' assigned twice.");
         } else {
-          messages.log(new UnknownParamNameError(function.name(), argument));
+          messages.error(argument.codeLocation(), "Function " + function.name()
+              + " has no parameter '" + argument.name() + "'.");
         }
       }
     }
   }
 
-  private static void processNamedArguments(ParametersPool parametersPool, LoggedMessages messages,
+  private static void processNamedArguments(ParametersPool parametersPool, ParsingMessages messages,
       Map<Parameter, Argument> argumentMap, Collection<Argument> namedArguments) {
     for (Argument argument : namedArguments) {
       if (argument.hasName()) {
@@ -116,7 +125,9 @@ public class ArgumentExpressionCreator {
         Parameter parameter = parametersPool.take(name);
         Type paramType = parameter.type();
         if (!canConvert(argument.type(), paramType)) {
-          messages.log(new TypeMismatchError(argument, paramType));
+          messages.error(argument.codeLocation(), "Type mismatch, cannot convert argument '"
+              + argument.name() + "' of type '" + argument.type().name() + "' to '" + paramType
+                  .name() + "'.");
         } else {
           argumentMap.put(parameter, argument);
         }
@@ -125,8 +136,8 @@ public class ArgumentExpressionCreator {
   }
 
   private static void processNamelessArguments(Function function, Collection<Argument> arguments,
-      ParametersPool parametersPool, LoggedMessages messages,
-      Map<Parameter, Argument> argumentMap) {
+      ParametersPool parametersPool, ParsingMessages messages, Map<Parameter, Argument> argumentMap,
+      CodeLocation codeLocation) {
     ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
 
     for (Type type : allTypes()) {
@@ -141,13 +152,73 @@ public class ArgumentExpressionCreator {
           argumentMap.put(candidateParameter, onlyArgument);
           parametersPool.take(candidateParameter);
         } else {
-          AmbiguousNamelessArgsError error = new AmbiguousNamelessArgsError(function.name(),
-              argumentMap, availableArguments, availableTypedParams);
-          messages.log(error);
+          messages.error(codeLocation, ambiguousAssignmentErrorMessage(function, argumentMap,
+              availableArguments, availableTypedParams));
           return;
         }
       }
     }
+  }
+
+  private static String ambiguousAssignmentErrorMessage(Function function,
+      Map<Parameter, Argument> argumentMap, Collection<Argument> availableArguments,
+      TypedParametersPool availableTypedParams) {
+    String assignmentList = MapToString.toString(argumentMap);
+    if (availableTypedParams.isEmpty()) {
+      return "Can't find parameter(s) of proper type in "
+          + function.name()
+          + " function for some nameless argument(s):\n"
+          + "List of assignments that were successfully detected so far is following:\n"
+          + assignmentList
+          + "List of arguments for which no parameter could be found is following:\n"
+          + argsToList(availableArguments);
+    } else {
+      return "Can't decide unambiguously to which parameters in " + function.name()
+          + " function some nameless arguments should be assigned:\n"
+          + "List of assignments that were successfully detected is following:\n"
+          + assignmentList
+          + "List of nameless arguments that caused problems:\n"
+          + argsToList(availableArguments)
+          + "List of unassigned parameters of desired type is following:\n"
+          + availableTypedParams.toFormattedString();
+    }
+  }
+
+  private static String argsToList(Collection<Argument> availableArguments) {
+    List<Argument> arguments = Argument.NUMBER_ORDERING.sortedCopy(availableArguments);
+    int typeLength = longestArgType(arguments);
+    int nameLength = longestArgName(arguments);
+    int numberLength = longestArgNumber(arguments);
+
+    StringBuilder builder = new StringBuilder();
+    for (Argument argument : arguments) {
+      builder.append("  " + argument.toPaddedString(typeLength, nameLength, numberLength) + "\n");
+    }
+    return builder.toString();
+  }
+
+  private static int longestArgType(List<Argument> arguments) {
+    int result = 0;
+    for (Argument argument : arguments) {
+      result = Math.max(result, argument.type().name().length());
+    }
+    return result;
+  }
+
+  private static int longestArgName(List<Argument> arguments) {
+    int result = 0;
+    for (Argument argument : arguments) {
+      result = Math.max(result, argument.nameSanitized().length());
+    }
+    return result;
+  }
+
+  private static int longestArgNumber(List<Argument> arguments) {
+    int maxNumber = 0;
+    for (Argument argument : arguments) {
+      maxNumber = Math.max(maxNumber, argument.number());
+    }
+    return Integer.toString(maxNumber).length();
   }
 
   private Map<String, Expression> convert(Map<Parameter, Argument> paramToArgMap) {
