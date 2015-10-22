@@ -52,7 +52,6 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.LoggedMessages;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -71,10 +70,9 @@ public class DefinedFunctionsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function> createDefinedFunctions(LoggedMessages messages,
-      ParsingMessages parsingMessages, Module builtinModule,
-      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    Worker worker = new Worker(messages, parsingMessages, builtinModule, functionContexts, sorted,
+  public Map<Name, Function> createDefinedFunctions(ParsingMessages parsingMessages,
+      Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+    Worker worker = new Worker(parsingMessages, builtinModule, functionContexts, sorted,
         objectsDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
     if (parsingMessages.hasErrors()) {
@@ -84,7 +82,6 @@ public class DefinedFunctionsCreator {
   }
 
   private static class Worker {
-    private final LoggedMessages messages;
     private final ParsingMessages parsingMessages;
     private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
@@ -95,10 +92,9 @@ public class DefinedFunctionsCreator {
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
-    public Worker(LoggedMessages messages, ParsingMessages parsingMessages, Module builtinModule,
+    public Worker(ParsingMessages parsingMessages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
         ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
-      this.messages = messages;
       this.parsingMessages = parsingMessages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
@@ -253,7 +249,7 @@ public class DefinedFunctionsCreator {
       Function function = getFunction(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
       List<Expression> argumentExpressions = argumentExpressionCreator.createArgExprs(codeLocation,
-          messages, function, arguments);
+          parsingMessages, function, arguments);
 
       if (argumentExpressions == null) {
         return new InvalidExpression(function.type(), codeLocation);
