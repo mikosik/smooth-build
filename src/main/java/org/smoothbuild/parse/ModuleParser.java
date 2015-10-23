@@ -15,7 +15,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -78,7 +77,7 @@ public class ModuleParser {
       }
     }
     if (parsingMessages.hasErrors()) {
-      throw new CommandFailedException();
+      throw new ParsingException();
     }
   }
 }

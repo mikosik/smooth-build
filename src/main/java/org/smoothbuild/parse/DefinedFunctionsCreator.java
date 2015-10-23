@@ -31,7 +31,6 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
-import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -76,7 +75,7 @@ public class DefinedFunctionsCreator {
         objectsDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
     if (parsingMessages.hasErrors()) {
-      throw new CommandFailedException();
+      throw new ParsingException();
     }
     return result;
   }
@@ -177,9 +176,8 @@ public class DefinedFunctionsCreator {
         List<Expression> expressions, CodeLocation location) {
       ArrayType arrayType = Types.arrayTypeContaining(elemType);
       if (arrayType == null) {
-        parsingMessages.error(location, "Array cannot contain element with type " + elemType
+        throw new ParsingException(location, "Array cannot contain element with type " + elemType
             + ". Only following types are allowed: " + basicTypes() + ".");
-        throw new CommandFailedException();
       }
       return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions),
           location);
@@ -206,10 +204,10 @@ public class DefinedFunctionsCreator {
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
-          parsingMessages.error(location, "Array cannot contain elements of incompatible types.\n"
-              + "First element has type " + firstType + " while element at index " + i
-              + " has type " + type + ".");
-          throw new CommandFailedException();
+          throw new ParsingException(location,
+              "Array cannot contain elements of incompatible types.\n"
+                  + "First element has type " + firstType + " while element at index " + i
+                  + " has type " + type + ".");
         }
       }
       return superType;
