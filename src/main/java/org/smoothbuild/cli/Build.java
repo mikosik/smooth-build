@@ -16,6 +16,7 @@ import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.base.Console;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.parse.ModuleParserPhase;
+import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionData;
 import org.smoothbuild.task.exec.SmoothExecutorPhase;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -42,9 +43,17 @@ public class Build implements Command {
     }
 
     if (!userConsole.isProblemReported()) {
-      Module module = moduleParserPhase.execute(functionNames);
-      if (!userConsole.isProblemReported()) {
-        smoothExecutorPhase.execute(new ExecutionData(functionNames, module));
+      try {
+        Module module = moduleParserPhase.execute(functionNames);
+        if (!userConsole.isProblemReported()) {
+          smoothExecutorPhase.execute(new ExecutionData(functionNames, module));
+        }
+      } catch (ParsingException e) {
+        String message = e.getMessage();
+        if (message != null) {
+          console.println(message);
+        }
+        return EXIT_CODE_ERROR;
       }
     }
 
