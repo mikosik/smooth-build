@@ -10,6 +10,14 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class BuildCommandTest extends AcceptanceTestCase {
+
+  @Test
+  public void build_command_fails_when_script_file_is_missing() throws Exception {
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenEqual(output(), "error: Cannot find build script file 'build.smooth'.\n");
+  }
+
   @Test
   public void build_command_without_function_argument_prints_error() throws Exception {
     givenScript("result: 'abc';");
