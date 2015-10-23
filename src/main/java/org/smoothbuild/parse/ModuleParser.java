@@ -24,7 +24,6 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
 public class ModuleParser {
   private final FileSystem fileSystem;
@@ -50,7 +49,7 @@ public class ModuleParser {
     try {
       return fileSystem.openInputStream(scriptFile);
     } catch (NoSuchFileError e) {
-      throw new ScriptFileNotFoundError(scriptFile);
+      throw new ParsingException("error: Cannot find build script file " + scriptFile + ".");
     }
   }
 
