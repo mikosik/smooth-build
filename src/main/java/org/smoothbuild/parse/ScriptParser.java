@@ -24,7 +24,6 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.parse.err.CannotReadScriptError;
 
 public class ScriptParser {
   public static ModuleContext parseScript(ParsingMessages messages, InputStream inputStream,
@@ -35,7 +34,8 @@ public class ScriptParser {
     try {
       antlrInputStream = new ANTLRInputStream(inputStream);
     } catch (IOException e) {
-      throw new CannotReadScriptError(scriptFile, e);
+      throw new ParsingException(
+          "error: Cannot read build script " + scriptFile + "\n" + e.getMessage());
     }
 
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);
