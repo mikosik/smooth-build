@@ -18,10 +18,10 @@ import org.smoothbuild.message.base.CodeLocation;
 import com.google.common.collect.ImmutableSet;
 
 public class DependencyStackTest {
-  private Name name1 = name("function1");
-  private Name name2 = name("function2");
-  private Name name3 = name("function3");
-  private Name name4 = name("function4");
+  private final Name name1 = name("function1");
+  private final Name name2 = name("function2");
+  private final Name name3 = name("function3");
+  private final Name name4 = name("function4");
 
   private DependencyStack dependencyStack;
   private DependencyStackElem elem1;
@@ -136,8 +136,8 @@ public class DependencyStackTest {
     given(dependencyStack).push(elem(name2, name3, 2));
     given(dependencyStack).push(elem(name3, name4, 3));
     given(dependencyStack).push(elem(name4, name2, 4));
-    when(dependencyStack.createCycleError()).message();
-    thenReturned("Function call graph contains cycle:\n" //
+    when(dependencyStack.createCycleException()).getMessage();
+    thenReturned("build.smooth:2: error: Function call graph contains cycle:\n" //
         + name2.value() + codeLocation(2) + " -> " + name3.value() + "\n" //
         + name3.value() + codeLocation(3) + " -> " + name4.value() + "\n" //
         + name4.value() + codeLocation(4) + " -> " + name2.value() + "\n");
@@ -148,8 +148,8 @@ public class DependencyStackTest {
     given(dependencyStack = new DependencyStack());
     given(dependencyStack).push(elem(name1, name2, 1));
     given(dependencyStack).push(elem(name2, name2, 2));
-    when(dependencyStack.createCycleError()).message();
-    thenReturned("Function call graph contains cycle:\n" //
+    when(dependencyStack.createCycleException()).getMessage();
+    thenReturned("build.smooth:2: error: Function call graph contains cycle:\n" //
         + name2.value() + codeLocation(2) + " -> " + name2.value() + "\n");
   }
 

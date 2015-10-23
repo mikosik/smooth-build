@@ -5,9 +5,13 @@ import static org.hamcrest.Matchers.emptyIterable;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-import static org.smoothbuild.testing.message.ContainsOnlyMessageMatcher.containsOnlyMessage;
+import static org.smoothbuild.parse.DependencySorter.sortDependencies;
+import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,8 +22,8 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.CycleInCallGraphError;
 import org.smoothbuild.util.Empty;
+import org.testory.Closure;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -33,6 +37,7 @@ public class DependencySorterTest {
   private Name name6;
 
   LoggedMessages messages = new LoggedMessages();
+  private HashMap<Name, Set<Dependency>> map;
 
   @Before
   public void before() {
@@ -74,28 +79,34 @@ public class DependencySorterTest {
 
   @Test
   public void simple_recursion_is_logged_as_error() throws Exception {
-    Map<Name, Set<Dependency>> map = Maps.newHashMap();
-    map.put(name1, dependencies(name1));
-
-    sort(map);
-    assertThat(messages, containsOnlyMessage(CycleInCallGraphError.class));
+    given(map = new HashMap<>());
+    given(map).put(name1, dependencies(name1));
+    when($sortDependencies(map));
+    thenThrown(ParsingException.class);
   }
 
   @Test
   public void cycle_is_logged_as_error() throws Exception {
-    Map<Name, Set<Dependency>> map = Maps.newHashMap();
-    map.put(name1, dependencies(name2));
-    map.put(name2, dependencies(name3));
-    map.put(name3, dependencies(name1));
+    given(map = new HashMap<>());
+    given(map).put(name1, dependencies(name2));
+    given(map).put(name2, dependencies(name3));
+    given(map).put(name3, dependencies(name1));
+    when($sortDependencies(map));
+    thenThrown(ParsingException.class);
+  }
 
-    sort(map);
-    assertThat(messages, containsOnlyMessage(CycleInCallGraphError.class));
+  private Closure $sortDependencies(final HashMap<Name, Set<Dependency>> map) {
+    return new Closure() {
+      @Override
+      public Object invoke() throws Throwable {
+        return sortDependencies(new ImmutableModule(Empty.nameFunctionMap()), map);
+      }
+    };
   }
 
   private List<Name> sort(Map<Name, Set<Dependency>> map) {
     try {
-      ImmutableModule builtinModule = new ImmutableModule(Empty.nameFunctionMap());
-      return DependencySorter.sortDependencies(builtinModule, map);
+      return sortDependencies(new ImmutableModule(Empty.nameFunctionMap()), map);
     } catch (Message e) {
       messages.log(e);
       return null;
