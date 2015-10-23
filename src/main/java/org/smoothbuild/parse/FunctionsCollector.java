@@ -11,7 +11,6 @@ import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
 
@@ -29,7 +28,7 @@ public class FunctionsCollector {
     Worker worker = new Worker(parsingMessages, builtinModule);
     worker.visit(module);
     if (parsingMessages.hasErrors()) {
-      throw new CommandFailedException();
+      throw new ParsingException();
     }
     return worker.result();
   }

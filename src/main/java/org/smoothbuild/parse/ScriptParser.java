@@ -21,7 +21,6 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.CommandFailedException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
 
@@ -48,7 +47,7 @@ public class ScriptParser {
 
     ModuleContext result = parser.module();
     if (messages.hasErrors()) {
-      throw new CommandFailedException();
+      throw new ParsingException();
     }
     return result;
   }
