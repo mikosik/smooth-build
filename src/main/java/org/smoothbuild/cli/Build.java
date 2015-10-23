@@ -15,7 +15,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.message.base.Console;
 import org.smoothbuild.message.listen.UserConsole;
-import org.smoothbuild.parse.ModuleParserPhase;
+import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionData;
 import org.smoothbuild.task.exec.SmoothExecutorPhase;
@@ -30,7 +30,7 @@ public class Build implements Command {
   @Inject
   private UserConsole userConsole;
   @Inject
-  private ModuleParserPhase moduleParserPhase;
+  private ModuleParser moduleParser;
   @Inject
   private SmoothExecutorPhase smoothExecutorPhase;
 
@@ -44,10 +44,8 @@ public class Build implements Command {
 
     if (!userConsole.isProblemReported()) {
       try {
-        Module module = moduleParserPhase.execute(functionNames);
-        if (!userConsole.isProblemReported()) {
-          smoothExecutorPhase.execute(new ExecutionData(functionNames, module));
-        }
+        Module module = moduleParser.createModule();
+        smoothExecutorPhase.execute(new ExecutionData(functionNames, module));
       } catch (ParsingException e) {
         String message = e.getMessage();
         if (message != null) {
