@@ -14,13 +14,12 @@ import org.smoothbuild.io.util.TempDirectory;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.LoggedMessages;
 
 public class ContainerImpl implements Container {
   private final FileSystem projectFileSystem;
   private final ObjectsDb objectsDb;
   private final Provider<TempDirectory> tempDirectoryProvider;
-  private final LoggedMessages messages;
+  private final List<Message> messages;
   private final List<TempDirectory> tempDirectories;
 
   public ContainerImpl(FileSystem projectFileSystem, ObjectsDb objectsDb,
@@ -28,7 +27,7 @@ public class ContainerImpl implements Container {
     this.projectFileSystem = projectFileSystem;
     this.objectsDb = objectsDb;
     this.tempDirectoryProvider = tempDirectoryProvider;
-    this.messages = new LoggedMessages();
+    this.messages = new ArrayList<>();
     this.tempDirectories = new ArrayList<>();
   }
 
@@ -54,10 +53,10 @@ public class ContainerImpl implements Container {
 
   @Override
   public void log(Message message) {
-    messages.log(message);
+    messages.add(message);
   }
 
-  public LoggedMessages messages() {
+  public List<Message> messages() {
     return messages;
   }
 
