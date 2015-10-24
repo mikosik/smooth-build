@@ -263,7 +263,7 @@
     <!-- run src/testing/test -->
 
     <target name="run-testing.test" depends="compile-testing.test">
-        <junit haltonfailure="yes" reloading="false">
+        <junit haltonfailure="yes" reloading="false" tempdir="${dir.build}">
             <classpath>
                 <path refid="classpath.with.testing.test"/>
             </classpath>
@@ -277,7 +277,7 @@
     <!-- run src/main/test -->
 
     <target name="run-main.test" depends="compile-main.test" description="runs main.test">
-        <junit haltonfailure="yes" reloading="false">
+        <junit haltonfailure="yes" reloading="false" tempdir="${dir.build}">
             <classpath>
                 <path refid="classpath.with.main.test"/>
             </classpath>
@@ -291,7 +291,7 @@
     <!-- run src/func/test -->
 
     <target name="run-func.test" depends="compile-func.test">
-        <junit haltonfailure="yes" reloading="false">
+        <junit haltonfailure="yes" reloading="false" tempdir="${dir.build}">
             <classpath>
                 <path refid="classpath.with.func.test"/>
             </classpath>
@@ -357,7 +357,7 @@
             <zipfileset dir="${dir.build.class.acceptance}" includes="org/smoothbuild/acceptance/TestingFunctions**"/>
         </zip>
         <chmod file="${dir.build.acceptance}/${zipped.dir}/smooth" perm="u+x"/>
-        <junit haltonfailure="yes" reloading="false">
+        <junit haltonfailure="yes" reloading="false" tempdir="${dir.build}">
             <classpath>
                 <path refid="classpath.with.acceptance"/>
             </classpath>
