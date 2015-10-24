@@ -1,5 +1,6 @@
 package org.smoothbuild.message.listen;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +12,8 @@ import static org.smoothbuild.message.base.MessageType.WARNING;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.message.base.Message;
@@ -23,10 +26,7 @@ public class UserConsoleTest {
 
   @Test
   public void printing_messages_containing_error_message() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(ERROR, "message string"));
-
-    userConsole.print(name, loggedMessages);
+    userConsole.print(name, asList(new Message(ERROR, "message string")));
 
     StringBuilder builder = new StringBuilder();
     builder.append(" + GROUP NAME\n");
@@ -37,10 +37,7 @@ public class UserConsoleTest {
 
   @Test
   public void printing_messages_without_error_message() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(WARNING, "message string\nsecond line"));
-
-    userConsole.print(name, loggedMessages);
+    userConsole.print(name, asList(new Message(WARNING, "message string\nsecond line")));
 
     StringBuilder builder = new StringBuilder();
     builder.append(" + GROUP NAME\n");
@@ -53,48 +50,31 @@ public class UserConsoleTest {
 
   @Test
   public void isProblemReported_returns_false_when_only_info_was_logged() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(INFO, "message string"));
-
-    userConsole.print(name, loggedMessages);
+    userConsole.print(name, asList(new Message(INFO, "message string")));
     assertFalse(userConsole.isProblemReported());
   }
 
   @Test
   public void isProblemReported_returns_false_when_only_suggestion_was_logged() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(SUGGESTION, "message string"));
-
-    userConsole.print(name, loggedMessages);
+    userConsole.print(name, asList(new Message(SUGGESTION, "message string")));
     assertFalse(userConsole.isProblemReported());
   }
 
   @Test
   public void isProblemReported_returns_false_when_only_warning_was_logged() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(WARNING, "message string"));
-
-    userConsole.print(name, loggedMessages);
+    userConsole.print(name, asList(new Message(WARNING, "message string")));
     assertFalse(userConsole.isProblemReported());
   }
 
   @Test
   public void isProblemReported_returns_true_when_error_was_logged() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(ERROR, "message string"));
-
-    userConsole.print(name, loggedMessages);
-
+    userConsole.print(name, asList(new Message(ERROR, "message string")));
     assertTrue(userConsole.isProblemReported());
   }
 
   @Test
   public void isProblemReported_returns_true_when_fatal_was_logged() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(FATAL, "message string"));
-
-    userConsole.print(name, loggedMessages);
-
+    userConsole.print(name, asList(new Message(FATAL, "message string")));
     assertTrue(userConsole.isProblemReported());
   }
 
@@ -102,10 +82,7 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_is_success_when_only_warning_was_logged() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(WARNING, "message string"));
-
-    userConsole.print(name, loggedMessages);
+    userConsole.print(name, asList(new Message(WARNING, "message string")));
     userConsole.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();
@@ -119,10 +96,7 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_is_failed_when_error_was_logged() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(ERROR, "message string"));
-
-    userConsole.print(name, loggedMessages);
+    userConsole.print(name, asList(new Message(ERROR, "message string")));
     userConsole.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();
@@ -136,22 +110,22 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_contains_all_stats() throws Exception {
-    LoggedMessages loggedMessages = new LoggedMessages();
-    loggedMessages.log(new Message(INFO, "info string"));
+    List<Message> messages = new ArrayList<>();
+    messages.add(new Message(INFO, "info string"));
     for (int i = 0; i < 2; i++) {
-      loggedMessages.log(new Message(SUGGESTION, "suggestion string"));
+      messages.add(new Message(SUGGESTION, "suggestion string"));
     }
     for (int i = 0; i < 3; i++) {
-      loggedMessages.log(new Message(WARNING, "warning string"));
+      messages.add(new Message(WARNING, "warning string"));
     }
     for (int i = 0; i < 4; i++) {
-      loggedMessages.log(new Message(ERROR, "error string"));
+      messages.add(new Message(ERROR, "error string"));
     }
     for (int i = 0; i < 5; i++) {
-      loggedMessages.log(new Message(FATAL, "fatal string"));
+      messages.add(new Message(FATAL, "fatal string"));
     }
 
-    userConsole.print(name, loggedMessages);
+    userConsole.print(name, messages);
     userConsole.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();
