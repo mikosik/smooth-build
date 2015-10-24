@@ -19,7 +19,7 @@ import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionData;
 import org.smoothbuild.task.exec.ExecutionException;
-import org.smoothbuild.task.exec.SmoothExecutorPhase;
+import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.ImmutableList;
@@ -33,7 +33,7 @@ public class Build implements Command {
   @Inject
   private ModuleParser moduleParser;
   @Inject
-  private SmoothExecutorPhase smoothExecutorPhase;
+  private SmoothExecutor smoothExecutor;
 
   @Override
   public int run(String... functions) {
@@ -46,7 +46,7 @@ public class Build implements Command {
     if (!userConsole.isProblemReported()) {
       try {
         Module module = moduleParser.createModule();
-        smoothExecutorPhase.execute(new ExecutionData(functionNames, module));
+        smoothExecutor.execute(new ExecutionData(functionNames, module));
       } catch (ParsingException | ExecutionException e) {
         return printErrorAndReturnErrorCode(e);
       }
