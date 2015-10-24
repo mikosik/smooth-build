@@ -8,7 +8,6 @@ import static org.smoothbuild.message.base.MessageType.SUGGESTION;
 import static org.smoothbuild.message.base.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
@@ -116,45 +115,6 @@ public class LoggedMessagesTest {
     when(loggedMessages.containsProblems());
     thenReturned(true);
   }
-
-  // failIfContainsProblems()
-
-  @Test
-  public void failIfContainsProblems_throws_exception_when_info_was_logged() throws Exception {
-    given(loggedMessages).log(info);
-    when(loggedMessages).failIfContainsProblems();
-    thenReturned();
-  }
-
-  @Test
-  public void failIfContainsProblems_throws_exception_when_suggestion_was_logged() throws Exception {
-    given(loggedMessages).log(suggestion);
-    when(loggedMessages).failIfContainsProblems();
-    thenReturned();
-  }
-
-  @Test
-  public void failIfContainsProblems_does_nothing_when_only_warning_was_logged() throws Exception {
-    given(loggedMessages).log(warning);
-    when(loggedMessages).failIfContainsProblems();
-    thenReturned();
-  }
-
-  @Test
-  public void failIfContainsProblems_throws_exception_when_error_was_logged() throws Exception {
-    given(loggedMessages).log(error);
-    when(loggedMessages).failIfContainsProblems();
-    thenThrown(PhaseFailedException.class);
-  }
-
-  @Test
-  public void failIfContainsProblems_throws_exception_when_fatal_was_logged() throws Exception {
-    given(loggedMessages).log(fatal);
-    when(loggedMessages).failIfContainsProblems();
-    thenThrown(PhaseFailedException.class);
-  }
-
-  // toString()
 
   @Test
   public void test_toString() throws Exception {
