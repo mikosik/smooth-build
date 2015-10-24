@@ -25,18 +25,9 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result: 'abc';");
     whenSmoothBuild();
     thenFinishedWithError();
-    thenEqual(output(), noFunctionArgError());
-  }
-
-  private static String noFunctionArgError() {
-    StringBuilder builder = new StringBuilder();
-    builder.append(" + SMOOTH EXECUTOR\n");
-    builder.append("   + ERROR: No function passed to build command.\n");
-    builder.append("     Pass at least one from following available functions:\n");
-    builder.append("       'result'\n");
-    builder.append(" + FAILED :(\n");
-    builder.append("   + 1 error(s)\n");
-    return builder.toString();
+    thenEqual(output(), "error: No function passed to build command.\n"
+        + "  Pass at least one from following available functions:\n"
+        + "    'result'\n");
   }
 
   @Test
