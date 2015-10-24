@@ -18,6 +18,7 @@ import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionData;
+import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.task.exec.SmoothExecutorPhase;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -46,17 +47,21 @@ public class Build implements Command {
       try {
         Module module = moduleParser.createModule();
         smoothExecutorPhase.execute(new ExecutionData(functionNames, module));
-      } catch (ParsingException e) {
-        String message = e.getMessage();
-        if (message != null) {
-          console.println(message);
-        }
-        return EXIT_CODE_ERROR;
+      } catch (ParsingException | ExecutionException e) {
+        return printErrorAndReturnErrorCode(e);
       }
     }
 
     userConsole.printFinalSummary();
     return userConsole.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+  }
+
+  private int printErrorAndReturnErrorCode(Exception e) {
+    String message = e.getMessage();
+    if (message != null) {
+      console.println(message);
+    }
+    return EXIT_CODE_ERROR;
   }
 
   public Set<Name> parseArguments(List<String> args) {
