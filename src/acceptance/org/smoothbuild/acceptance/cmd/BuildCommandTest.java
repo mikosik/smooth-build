@@ -35,18 +35,9 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result: 'abc';");
     whenSmoothBuild("nonexistentFunction");
     thenFinishedWithError();
-    thenEqual(output(), nonexistentFunctionArgError());
-  }
-
-  private String nonexistentFunctionArgError() {
-    StringBuilder builder = new StringBuilder();
-    builder.append(" + SMOOTH EXECUTOR\n");
-    builder.append("   + ERROR: Unknown function 'nonexistentFunction' passed in command line.\n");
-    builder.append("     Only following function(s) are available:\n");
-    builder.append("       'result'\n");
-    builder.append(" + FAILED :(\n");
-    builder.append("   + 1 error(s)\n");
-    return builder.toString();
+    thenEqual(output(), "error: Unknown function 'nonexistentFunction' passed in command line.\n"
+        + "  Only following function(s) are available:\n"
+        + "    'result'\n");
   }
 
   @Test
