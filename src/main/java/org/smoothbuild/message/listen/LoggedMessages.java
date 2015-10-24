@@ -37,12 +37,6 @@ public class LoggedMessages implements Iterable<Message> {
     return stats.containsProblems();
   }
 
-  public void failIfContainsProblems() {
-    if (containsProblems()) {
-      throw new PhaseFailedException();
-    }
-  }
-
   public MessageStats stats() {
     return stats;
   }

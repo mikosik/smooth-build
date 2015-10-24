@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.io.IOException;
@@ -24,13 +23,9 @@ import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.base.CodeMessage;
-import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.CannotReadScriptError;
-import org.smoothbuild.parse.err.SyntaxError;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(LoggedMessages messages, InputStream inputStream,
+  public static ModuleContext parseScript(ParsingMessages messages, InputStream inputStream,
       Path scriptFile) {
     ErrorListener errorListener = new ErrorListener(messages);
 
@@ -38,7 +33,8 @@ public class ScriptParser {
     try {
       antlrInputStream = new ANTLRInputStream(inputStream);
     } catch (IOException e) {
-      throw new CannotReadScriptError(scriptFile, e);
+      throw new ParsingException(
+          "error: Cannot read build script " + scriptFile + "\n" + e.getMessage());
     }
 
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);
@@ -50,22 +46,24 @@ public class ScriptParser {
     parser.addErrorListener(errorListener);
 
     ModuleContext result = parser.module();
-    messages.failIfContainsProblems();
+    if (messages.hasErrors()) {
+      throw new ParsingException();
+    }
     return result;
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final LoggedMessages messages;
+    private final ParsingMessages messages;
 
-    public ErrorListener(LoggedMessages messages) {
+    public ErrorListener(ParsingMessages messages) {
       this.messages = messages;
     }
 
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol,
-        int line, int charPositionInLine, String msg, @Nullable RecognitionException e) {
+    public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
+        int charPositionInLine, String msg, @Nullable RecognitionException e) {
       CodeLocation location = createLocation(offendingSymbol, line);
-      messages.log(new SyntaxError(location, msg));
+      messages.error(location, msg);
     }
 
     private CodeLocation createLocation(Object offendingSymbol, int line) {
@@ -97,7 +95,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      messages.log(new CodeMessage(ERROR, locationOf(token), message));
+      messages.error(locationOf(token), message);
     }
   }
 }

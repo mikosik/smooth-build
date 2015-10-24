@@ -131,4 +131,17 @@ public class TestingFunctions {
       return container.create().string(osPath);
     }
   }
+
+  public static class AmbiguousArguments {
+    @SmoothFunction
+    public static SString ambiguousArguments(
+        Container container,
+        @Name("param1") SString param1,
+        @Name("param2") Array<SString> param2,
+        @Name("param3") SFile param3,
+        @Name("param4") Array<SFile> param4,
+        @Name("param5") Array<Blob> param5) {
+      return container.create().string("");
+    }
+  }
 }

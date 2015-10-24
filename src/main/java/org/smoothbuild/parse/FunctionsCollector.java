@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.function.base.Name.isLegalName;
+import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.util.Map;
@@ -13,11 +13,6 @@ import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.DuplicateFunctionError;
-import org.smoothbuild.parse.err.IllegalFunctionNameError;
-import org.smoothbuild.parse.err.OverridenBuiltinFunctionError;
 
 import com.google.common.collect.Maps;
 
@@ -28,44 +23,39 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<Name, FunctionContext> collectFunctions(LoggedMessages messages,
+  public static Map<Name, FunctionContext> collectFunctions(ParsingMessages parsingMessages,
       Module builtinModule, ModuleContext module) {
-    Worker worker = new Worker(messages, builtinModule);
+    Worker worker = new Worker(parsingMessages, builtinModule);
     worker.visit(module);
-    messages.failIfContainsProblems();
+    if (parsingMessages.hasErrors()) {
+      throw new ParsingException();
+    }
     return worker.result();
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final Module builtinModule;
-    private final LoggedMessages messages;
+    private final ParsingMessages parsingMessages;
     private final Map<Name, FunctionContext> functions;
 
     @Inject
-    public Worker(LoggedMessages messages, Module builtinModule) {
+    public Worker(ParsingMessages parsingMessages, Module builtinModule) {
+      this.parsingMessages = parsingMessages;
       this.builtinModule = builtinModule;
-      this.messages = messages;
       this.functions = Maps.newHashMap();
     }
 
     @Override
     public Void visitFunction(FunctionContext functionContext) {
       FunctionNameContext nameContext = functionContext.functionName();
-      String nameString = nameContext.getText();
-
-      if (!isLegalName(nameString)) {
-        messages.log(new IllegalFunctionNameError(locationOf(nameContext), nameString));
-        return null;
-      }
-
-      Name name = Name.name(nameString);
+      Name name = name(nameContext.getText());
       if (functions.keySet().contains(name)) {
-        messages.log(new DuplicateFunctionError(locationOf(nameContext), name));
+        parsingMessages.error(locationOf(nameContext), "Function " + name + " is already defined.");
         return null;
       }
       if (builtinModule.containsFunction(name)) {
-        CodeLocation location = locationOf(nameContext);
-        messages.log(new OverridenBuiltinFunctionError(location, name));
+        parsingMessages.error(locationOf(nameContext), "Function " + name
+            + " cannot override builtin function with the same name.");
         return null;
       }
 
