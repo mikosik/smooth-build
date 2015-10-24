@@ -43,13 +43,11 @@ public class Build implements Command {
       return EXIT_CODE_ERROR;
     }
 
-    if (!userConsole.isProblemReported()) {
-      try {
-        Module module = moduleParser.createModule();
-        smoothExecutor.execute(new ExecutionData(functionNames, module));
-      } catch (ParsingException | ExecutionException e) {
-        return printErrorAndReturnErrorCode(e);
-      }
+    try {
+      Module module = moduleParser.createModule();
+      smoothExecutor.execute(new ExecutionData(functionNames, module));
+    } catch (ParsingException | ExecutionException e) {
+      return printErrorAndReturnErrorCode(e);
     }
 
     userConsole.printFinalSummary();
