@@ -10,7 +10,7 @@ import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
@@ -50,11 +50,7 @@ import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.base.CodeMessage;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.ForbiddenArrayElemError;
-import org.smoothbuild.parse.err.IncompatibleArrayElemsError;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -73,18 +69,19 @@ public class DefinedFunctionsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function> createDefinedFunctions(LoggedMessages messages, Module builtinModule,
-      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    Worker worker =
-        new Worker(messages, builtinModule, functionContexts, sorted, objectsDb,
-            argumentExpressionCreator, implicitConverter);
+  public Map<Name, Function> createDefinedFunctions(ParsingMessages parsingMessages,
+      Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+    Worker worker = new Worker(parsingMessages, builtinModule, functionContexts, sorted,
+        objectsDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
-    messages.failIfContainsProblems();
+    if (parsingMessages.hasErrors()) {
+      throw new ParsingException();
+    }
     return result;
   }
 
   private static class Worker {
-    private final LoggedMessages messages;
+    private final ParsingMessages parsingMessages;
     private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
@@ -94,10 +91,10 @@ public class DefinedFunctionsCreator {
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
-    public Worker(LoggedMessages messages, Module builtinModule,
+    public Worker(ParsingMessages parsingMessages, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
         ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
-      this.messages = messages;
+      this.parsingMessages = parsingMessages;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
@@ -179,10 +176,11 @@ public class DefinedFunctionsCreator {
         List<Expression> expressions, CodeLocation location) {
       ArrayType arrayType = Types.arrayTypeContaining(elemType);
       if (arrayType == null) {
-        messages.log(new ForbiddenArrayElemError(location, elemType));
-        return new InvalidExpression(NIL, location);
+        throw new ParsingException(location, "Array cannot contain element with type " + elemType
+            + ". Only following types are allowed: " + basicTypes() + ".");
       }
-      return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions), location);
+      return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions),
+          location);
     }
 
     public <T extends Value> List<Expression> toConvertedExpressions(Type type,
@@ -206,8 +204,10 @@ public class DefinedFunctionsCreator {
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
-          messages.log(new IncompatibleArrayElemsError(location, firstType, i, type));
-          return null;
+          throw new ParsingException(location,
+              "Array cannot contain elements of incompatible types.\n"
+                  + "First element has type " + firstType + " while element at index " + i
+                  + " has type " + type + ".");
         }
       }
       return superType;
@@ -246,8 +246,8 @@ public class DefinedFunctionsCreator {
       FunctionNameContext functionNameContext = callContext.functionName();
       Function function = getFunction(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
-      List<Expression> argumentExpressions =
-          argumentExpressionCreator.createArgExprs(codeLocation, messages, function, arguments);
+      List<Expression> argumentExpressions = argumentExpressionCreator.createArgExprs(codeLocation,
+          parsingMessages, function, arguments);
 
       if (argumentExpressions == null) {
         return new InvalidExpression(function.type(), codeLocation);
@@ -294,13 +294,13 @@ public class DefinedFunctionsCreator {
     private Expression toStringExpression(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
+      CodeLocation location = locationOf(stringToken.getSymbol());
       try {
         SString stringValue = objectsDb.string(unescaped(string));
-        return new ValueExpression(stringValue, locationOf(stringToken.getSymbol()));
+        return new ValueExpression(stringValue, location);
       } catch (UnescapingFailedException e) {
-        CodeLocation location = locationOf(stringToken.getSymbol());
-        messages.log(new CodeMessage(ERROR, location, e.getMessage()));
-        return new InvalidExpression(STRING, locationOf(stringToken.getSymbol()));
+        parsingMessages.error(location, e.getMessage());
+        return new InvalidExpression(STRING, location);
       }
     }
   }

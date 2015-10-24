@@ -1,19 +1,21 @@
 package org.smoothbuild.task.exec;
 
-import org.smoothbuild.cli.work.build.CommandLineArguments;
+import java.util.Set;
+
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
 
 public class ExecutionData {
-  private final CommandLineArguments args;
+  private final Set<Name> functions;
   private final Module module;
 
-  public ExecutionData(CommandLineArguments args, Module module) {
-    this.args = args;
+  public ExecutionData(Set<Name> functions, Module module) {
+    this.functions = functions;
     this.module = module;
   }
 
-  public CommandLineArguments args() {
-    return args;
+  public Set<Name> functions() {
+    return functions;
   }
 
   public Module module() {

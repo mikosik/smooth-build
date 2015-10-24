@@ -5,7 +5,6 @@ import java.util.Deque;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.parse.err.CycleInCallGraphError;
 
 public class DependencyStack {
   private final Deque<DependencyStackElem> stack = new ArrayDeque<>();
@@ -26,7 +25,7 @@ public class DependencyStack {
     return stack.getLast();
   }
 
-  public CycleInCallGraphError createCycleError() {
+  public RuntimeException createCycleException() {
     Name lastMissing = peek().missing().functionName();
     int first = -1;
     DependencyStackElem[] array = stack.toArray(new DependencyStackElem[stack.size()]);
@@ -49,6 +48,7 @@ public class DependencyStack {
     CodeLocation location = array[first].missing().location();
     String message = builder.toString();
 
-    return new CycleInCallGraphError(location, message);
+    return new ParsingException(location, "Function call graph contains cycle:\n"
+        + message);
   }
 }

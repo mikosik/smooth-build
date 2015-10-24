@@ -61,7 +61,7 @@ public class DependencySorter {
           // DependencyCollector made sure that all dependency exists so the
           // only possibility at this point is that missing dependency is on
           // stack and we have cycle in call graph.
-          throw stack.createCycleError();
+          throw stack.createCycleException();
         } else {
           stack.push(new DependencyStackElem(missing.functionName(), next));
         }

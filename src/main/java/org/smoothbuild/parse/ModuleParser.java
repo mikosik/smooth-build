@@ -5,7 +5,6 @@ import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
-import static org.smoothbuild.parse.UnknownFunctionCallsDetector.detectUndefinedFunctions;
 
 import java.io.InputStream;
 import java.util.List;
@@ -16,7 +15,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.work.build.CommandLineArguments;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -25,50 +23,61 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.parse.err.ScriptFileNotFoundError;
 
 public class ModuleParser {
   private final FileSystem fileSystem;
-  private final ModuleParserMessages messages;
   private final Module builtinModule;
   private final DefinedFunctionsCreator definedFunctionsCreator;
+  private final ParsingMessages parsingMessages;
 
   @Inject
-  public ModuleParser(@ProjectDir FileSystem fileSystem, ModuleParserMessages messages,
-      @Builtin Module builtinModule, DefinedFunctionsCreator definedFunctionsCreator) {
+  public ModuleParser(@ProjectDir FileSystem fileSystem, @Builtin Module builtinModule,
+      DefinedFunctionsCreator definedFunctionsCreator, ParsingMessages parsingMessages) {
     this.fileSystem = fileSystem;
-    this.messages = messages;
     this.builtinModule = builtinModule;
     this.definedFunctionsCreator = definedFunctionsCreator;
+    this.parsingMessages = parsingMessages;
   }
 
-  public Module createModule(CommandLineArguments args) {
+  public Module createModule() {
     InputStream inputStream = scriptInputStream(DEFAULT_SCRIPT);
-    return createModule(messages, inputStream, DEFAULT_SCRIPT);
+    return createModule(inputStream, DEFAULT_SCRIPT);
   }
 
   private InputStream scriptInputStream(Path scriptFile) {
     try {
       return fileSystem.openInputStream(scriptFile);
     } catch (NoSuchFileError e) {
-      throw new ScriptFileNotFoundError(scriptFile);
+      throw new ParsingException("error: Cannot find build script file " + scriptFile + ".");
     }
   }
 
-  private Module createModule(LoggedMessages loggedMessages, InputStream inputStream,
-      Path scriptFile) {
-    ModuleContext module = parseScript(loggedMessages, inputStream, scriptFile);
-
-    Map<Name, FunctionContext> functions = collectFunctions(loggedMessages, builtinModule, module);
-
-    Map<Name, Set<Dependency>> dependencies = collectDependencies(loggedMessages, module);
-    detectUndefinedFunctions(loggedMessages, builtinModule, dependencies);
+  private Module createModule(InputStream inputStream, Path scriptFile) {
+    ModuleContext module = parseScript(parsingMessages, inputStream, scriptFile);
+    Map<Name, FunctionContext> functions = collectFunctions(parsingMessages, builtinModule, module);
+    Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
+    detectUndefinedFunctions(parsingMessages, builtinModule, dependencies);
     List<Name> sorted = sortDependencies(builtinModule, dependencies);
 
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        loggedMessages, builtinModule, functions, sorted);
+        parsingMessages, builtinModule, functions, sorted);
 
     return new ImmutableModule(definedFunctions);
+  }
+
+  public static void detectUndefinedFunctions(ParsingMessages parsingMessages, Module builtinModule,
+      Map<Name, Set<Dependency>> dependencies) {
+    Set<Name> declaredFunctions = dependencies.keySet();
+    for (Set<Dependency> functionDependecies : dependencies.values()) {
+      for (Dependency dependency : functionDependecies) {
+        Name name = dependency.functionName();
+        if (!builtinModule.containsFunction(name) && !declaredFunctions.contains(name)) {
+          parsingMessages.error(dependency.location(), "Call to unknown function " + name + ".");
+        }
+      }
+    }
+    if (parsingMessages.hasErrors()) {
+      throw new ParsingException();
+    }
   }
 }
