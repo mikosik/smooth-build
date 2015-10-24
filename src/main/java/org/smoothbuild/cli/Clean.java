@@ -4,16 +4,15 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 
+import java.io.PrintStream;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.base.MessageType;
-import org.smoothbuild.message.listen.LoggedMessages;
-import org.smoothbuild.message.listen.UserConsole;
+import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.message.base.Console;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -23,25 +22,22 @@ public class Clean implements Command {
   @ProjectDir
   private FileSystem fileSystem;
   @Inject
-  private UserConsole userConsole;
+  @Console
+  private PrintStream console;
 
   @Override
   public int run(String... args) {
     List<String> unknownArgs = ImmutableList.copyOf(args).subList(1, args.length);
     if (!unknownArgs.isEmpty()) {
-      LoggedMessages messages = new LoggedMessages();
-      String message = "Unknown arguments: " + Iterables.toString(unknownArgs);
-      messages.log(new Message(MessageType.ERROR, message));
-      userConsole.print("CLEAN", messages);
+      console.println("error: Unknown arguments: " + Iterables.toString(unknownArgs));
+      return EXIT_CODE_ERROR;
     }
     try {
       fileSystem.delete(SMOOTH_DIR);
-    } catch (Message e) {
-      LoggedMessages messages = new LoggedMessages();
-      messages.log(e);
-      userConsole.print("CLEAN", messages);
+    } catch (FileSystemError e) {
+      console.println("error: " + e.getMessage());
+      return EXIT_CODE_ERROR;
     }
-    userConsole.printFinalSummary();
-    return userConsole.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+    return EXIT_CODE_SUCCESS;
   }
 }
