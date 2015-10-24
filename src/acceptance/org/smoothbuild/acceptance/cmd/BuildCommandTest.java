@@ -1,5 +1,7 @@
 package org.smoothbuild.acceptance.cmd;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -79,5 +81,16 @@ public class BuildCommandTest extends AcceptanceTestCase {
     whenSmoothBuild("result", "result");
     thenFinishedWithError();
     thenEqual(output(), "error: Function 'result' has been specified more than once.\n");
+  }
+
+  @Test
+  public void storing_array_with_two_files_with_same_path_prints_error() throws Exception {
+    givenFile("file.txt", "abc");
+    givenScript("result: [file('file.txt'), file('file.txt')];");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString(
+        "Can't store result of 'result' as it contains files with duplicated paths:\n"
+            + "  'file.txt'\n"));
   }
 }

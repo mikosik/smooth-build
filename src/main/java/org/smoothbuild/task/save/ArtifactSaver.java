@@ -18,7 +18,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.exec.SmoothExecutorMessages;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -27,7 +26,7 @@ public class ArtifactSaver {
   private final ImmutableMap<Type, Saver<?>> saversMap;
 
   @Inject
-  public ArtifactSaver(@SmoothDir FileSystem smoothFileSystem, SmoothExecutorMessages messages) {
+  public ArtifactSaver(@SmoothDir FileSystem smoothFileSystem) {
     Builder<Type, Saver<?>> builder = ImmutableMap.builder();
 
     builder.put(STRING, new StringSaver(smoothFileSystem));
@@ -35,7 +34,7 @@ public class ArtifactSaver {
     builder.put(FILE, new FileSaver(smoothFileSystem));
     builder.put(STRING_ARRAY, new ArraySaver<SString>(smoothFileSystem));
     builder.put(BLOB_ARRAY, new ArraySaver<Blob>(smoothFileSystem));
-    builder.put(FILE_ARRAY, new FileArraySaver(smoothFileSystem, messages));
+    builder.put(FILE_ARRAY, new FileArraySaver(smoothFileSystem));
     builder.put(NIL, new ArraySaver<Nothing>(smoothFileSystem));
 
     this.saversMap = builder.build();
