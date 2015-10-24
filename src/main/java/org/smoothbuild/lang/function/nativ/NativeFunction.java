@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static org.smoothbuild.message.base.Messages.containsProblems;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -44,7 +46,7 @@ public class NativeFunction extends AbstractFunction {
   public Value invoke(ContainerImpl container, List<Value> arguments) {
     try {
       Value result = (Value) method.invoke(null, createArguments(container, arguments));
-      if (result == null && !container.messages().containsProblems()) {
+      if (result == null && !containsProblems(container.messages())) {
         container.log(new NullResultError(this));
       }
       return result;
