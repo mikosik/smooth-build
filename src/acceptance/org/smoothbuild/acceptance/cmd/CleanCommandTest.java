@@ -24,15 +24,6 @@ public class CleanCommandTest extends AcceptanceTestCase {
     givenScript("result: 'abc';");
     whenSmoothClean("some arguments");
     thenFinishedWithError();
-    thenEqual(output(), unknownArguments());
-  }
-
-  private static String unknownArguments() {
-    StringBuilder builder = new StringBuilder();
-    builder.append(" + CLEAN\n");
-    builder.append("   + ERROR: Unknown arguments: [some, arguments]\n");
-    builder.append(" + FAILED :(\n");
-    builder.append("   + 1 error(s)\n");
-    return builder.toString();
+    thenEqual(output(), "error: Unknown arguments: [some, arguments]\n");
   }
 }
