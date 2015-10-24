@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.task.exec.err.UnknownFunctionError;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Ordering;
@@ -32,7 +31,10 @@ public class SmoothExecutor {
     for (Name name : executionData.functions()) {
       Function function = module.getFunction(name);
       if (function == null) {
-        throw new UnknownFunctionError(name, module.availableNames());
+        throw new ExecutionException(
+            "error: Unknown function " + name + " passed in command line.\n"
+                + "  Only following function(s) are available:"
+                + indentedNameList(module));
       }
       artifactBuilder.addArtifact(function);
     }
