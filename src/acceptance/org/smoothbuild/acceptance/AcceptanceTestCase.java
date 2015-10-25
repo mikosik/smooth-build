@@ -10,20 +10,24 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.junit.After;
 import org.junit.Before;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.io.ByteStreams;
 
 public class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
@@ -32,6 +36,7 @@ public class AcceptanceTestCase {
   private File projectDir;
   private Integer exitCode;
   private String outputData;
+  private String errorData;
 
   @Before
   public void before() {
@@ -88,13 +93,20 @@ public class AcceptanceTestCase {
       ProcessBuilder processBuilder = new ProcessBuilder(processArgs(smoothCommandArgs));
       processBuilder.directory(projectDir());
       Process process = processBuilder.start();
-      drainDataFromErrorStream(process);
-      outputData = readOutputData(process);
+      ExecutorService executor = Executors.newFixedThreadPool(2);
+      Future<ByteArrayOutputStream> inputStream =
+          executor.submit(streamReadingCallable(process.getInputStream()));
+      Future<ByteArrayOutputStream> errorStream =
+          executor.submit(streamReadingCallable(process.getErrorStream()));
       exitCode = process.waitFor();
+      outputData = new String(inputStream.get().toByteArray());
+      errorData = new String(errorStream.get().toByteArray());
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(e);
     } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (ExecutionException e) {
       throw new RuntimeException(e);
     }
   }
@@ -115,22 +127,15 @@ public class AcceptanceTestCase {
     return smoothHome + "/smooth";
   }
 
-  private String readOutputData(Process process) throws IOException {
-    return inputStreamToString(process.getInputStream());
-  }
-
-  private void drainDataFromErrorStream(Process process) {
-    final InputStream errorStream = new BufferedInputStream(process.getErrorStream());
-    new Thread(new Runnable() {
+  private Callable<ByteArrayOutputStream> streamReadingCallable(final InputStream inputStream) {
+    return new Callable<ByteArrayOutputStream>() {
       @Override
-      public void run() {
-        try {
-          copy(errorStream, ByteStreams.nullOutputStream());
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+      public ByteArrayOutputStream call() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        copy(inputStream, outputStream);
+        return outputStream;
       }
-    }).start();
+    };
   }
 
   protected void thenFinishedWithSuccess() {
@@ -143,8 +148,9 @@ public class AcceptanceTestCase {
 
   private void thenReturnedCode(int expected) {
     if (expected != exitCode.intValue()) {
-      fail("Expected return code " + expected + " but was " + exitCode.intValue()
-          + ".\nconsole output:\n" + outputData);
+      fail("Expected return code " + expected + " but was " + exitCode.intValue() + ".\n"
+          + "standard out:\n" + outputData + "\n"
+          + "standard err:\n" + errorData + "\n");
     }
   }
 
