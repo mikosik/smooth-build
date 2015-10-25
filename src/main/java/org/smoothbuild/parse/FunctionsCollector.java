@@ -11,9 +11,9 @@ import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.collect.Maps;
 
@@ -24,7 +24,7 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<Name, FunctionContext> collectFunctions(UserConsole console,
+  public static Map<Name, FunctionContext> collectFunctions(Console console,
       Module builtinModule, ModuleContext module) {
     Worker worker = new Worker(console, builtinModule);
     worker.visit(module);
@@ -36,11 +36,11 @@ public class FunctionsCollector {
 
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final Module builtinModule;
-    private final UserConsole console;
+    private final Console console;
     private final Map<Name, FunctionContext> functions;
 
     @Inject
-    public Worker(UserConsole console, Module builtinModule) {
+    public Worker(Console console, Module builtinModule) {
       this.console = console;
       this.builtinModule = builtinModule;
       this.functions = Maps.newHashMap();

@@ -5,12 +5,12 @@ import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
 import java.util.Set;
 
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -18,9 +18,9 @@ import com.google.common.base.Joiner;
 
 public class FileArraySaver implements Saver<Array<SFile>> {
   private final FileSystem smoothFileSystem;
-  private final UserConsole console;
+  private final Console console;
 
-  public FileArraySaver(FileSystem smoothFileSystem, UserConsole console) {
+  public FileArraySaver(FileSystem smoothFileSystem, Console console) {
     this.smoothFileSystem = smoothFileSystem;
     this.console = console;
   }

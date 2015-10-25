@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -21,7 +21,7 @@ import com.google.common.collect.Sets;
  */
 public class DependencySorter {
   public static List<Name> sortDependencies(Module builtinModule,
-      Map<Name, Set<Dependency>> dependenciesOrig, UserConsole console) {
+      Map<Name, Set<Dependency>> dependenciesOrig, Console console) {
 
     Worker worker = new Worker(builtinModule, dependenciesOrig, console);
     worker.work();
@@ -33,10 +33,10 @@ public class DependencySorter {
     private final Set<Name> reachableNames;
     private final List<Name> sorted;
     private final DependencyStack stack;
-    private final UserConsole console;
+    private final Console console;
 
     public Worker(Module builtinModule, Map<Name, Set<Dependency>> dependenciesOrig,
-        UserConsole console) {
+        Console console) {
       this.console = console;
       this.notSorted = Maps.newHashMap(dependenciesOrig);
       this.reachableNames = Sets.newHashSet(builtinModule.availableNames());

@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionData;
@@ -24,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 
 public class Build implements Command {
   @Inject
-  private UserConsole console;
+  private Console console;
   @Inject
   private ModuleParser moduleParser;
   @Inject
