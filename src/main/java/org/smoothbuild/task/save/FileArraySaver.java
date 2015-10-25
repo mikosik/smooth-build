@@ -10,6 +10,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -17,9 +18,11 @@ import com.google.common.base.Joiner;
 
 public class FileArraySaver implements Saver<Array<SFile>> {
   private final FileSystem smoothFileSystem;
+  private final UserConsole console;
 
-  public FileArraySaver(FileSystem smoothFileSystem) {
+  public FileArraySaver(FileSystem smoothFileSystem, UserConsole console) {
     this.smoothFileSystem = smoothFileSystem;
+    this.console = console;
   }
 
   @Override
@@ -43,11 +46,12 @@ public class FileArraySaver implements Saver<Array<SFile>> {
 
     if (duplicatesDetector.hasDuplicates()) {
       Set<Path> duplicates = duplicatesDetector.getDuplicateValues();
-      throw new ExecutionException(message(name, duplicates));
+      console.error(duplicatedPathsMessage(name, duplicates));
+      throw new ExecutionException();
     }
   }
 
-  private String message(Name name, Set<Path> duplicates) {
+  private String duplicatedPathsMessage(Name name, Set<Path> duplicates) {
     String separator = "\n  ";
     String list = separator + Joiner.on(separator).join(duplicates);
     return "Can't store result of " + name + " as it contains files with duplicated paths:" + list;

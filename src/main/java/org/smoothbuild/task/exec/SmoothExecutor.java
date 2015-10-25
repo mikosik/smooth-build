@@ -8,16 +8,19 @@ import javax.inject.Inject;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
+import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Ordering;
 
 public class SmoothExecutor {
   private final ArtifactBuilder artifactBuilder;
+  private final UserConsole console;
 
   @Inject
-  public SmoothExecutor(ArtifactBuilder artifactBuilder) {
+  public SmoothExecutor(ArtifactBuilder artifactBuilder, UserConsole console) {
     this.artifactBuilder = artifactBuilder;
+    this.console = console;
   }
 
   public void execute(ExecutionData executionData) {
@@ -25,16 +28,17 @@ public class SmoothExecutor {
     Module module = executionData.module();
 
     if (functions.isEmpty()) {
-      throw new ExecutionException("error: No function passed to build command.\n"
+      console.error("No function passed to build command.\n"
           + "  Pass at least one from following available functions:" + indentedNameList(module));
+      throw new ExecutionException();
     }
     for (Name name : executionData.functions()) {
       Function function = module.getFunction(name);
       if (function == null) {
-        throw new ExecutionException(
-            "error: Unknown function " + name + " passed in command line.\n"
-                + "  Only following function(s) are available:"
-                + indentedNameList(module));
+        console.error("Unknown function " + name + " passed in command line.\n"
+            + "  Only following function(s) are available:"
+            + indentedNameList(module));
+        throw new ExecutionException();
       }
       artifactBuilder.addArtifact(function);
     }
