@@ -34,8 +34,8 @@ public class ScriptParser {
     try {
       antlrInputStream = new ANTLRInputStream(inputStream);
     } catch (IOException e) {
-      throw new ParsingException(
-          "error: Cannot read build script " + scriptFile + "\n" + e.getMessage());
+      console.error("error: Cannot read build script " + scriptFile + "\n" + e.getMessage());
+      throw new ParsingException();
     }
 
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);

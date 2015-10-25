@@ -49,7 +49,8 @@ public class ModuleParser {
     try {
       return fileSystem.openInputStream(scriptFile);
     } catch (NoSuchFileError e) {
-      throw new ParsingException("error: Cannot find build script file " + scriptFile + ".");
+      console.error("Cannot find build script file " + scriptFile + ".");
+      throw new ParsingException();
     }
   }
 
@@ -58,7 +59,7 @@ public class ModuleParser {
     Map<Name, FunctionContext> functions = collectFunctions(console, builtinModule, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
     detectUndefinedFunctions(console, builtinModule, dependencies);
-    List<Name> sorted = sortDependencies(builtinModule, dependencies);
+    List<Name> sorted = sortDependencies(builtinModule, dependencies, console);
 
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
         console, builtinModule, functions, sorted);

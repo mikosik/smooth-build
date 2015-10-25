@@ -177,8 +177,9 @@ public class DefinedFunctionsCreator {
         List<Expression> expressions, CodeLocation location) {
       ArrayType arrayType = Types.arrayTypeContaining(elemType);
       if (arrayType == null) {
-        throw new ParsingException(location, "Array cannot contain element with type " + elemType
+        console.error(location, "Array cannot contain element with type " + elemType
             + ". Only following types are allowed: " + basicTypes() + ".");
+        throw new ParsingException();
       }
       return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions),
           location);
@@ -205,10 +206,11 @@ public class DefinedFunctionsCreator {
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
-          throw new ParsingException(location,
+          console.error(location,
               "Array cannot contain elements of incompatible types.\n"
                   + "First element has type " + firstType + " while element at index " + i
                   + " has type " + type + ".");
+          throw new ParsingException();
         }
       }
       return superType;
