@@ -1,4 +1,6 @@
-package org.smoothbuild.message.listen;
+package org.smoothbuild.cli;
+
+import static org.smoothbuild.message.base.MessageType.ERROR;
 
 import java.io.PrintStream;
 import java.util.Iterator;
@@ -6,7 +8,7 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.message.base.Console;
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageStats;
 import org.smoothbuild.message.base.MessageType;
@@ -14,7 +16,7 @@ import org.smoothbuild.message.base.MessageType;
 import com.google.common.base.Splitter;
 
 @Singleton
-public class UserConsole {
+public class Console {
   public static final int MESSAGE_GROUP_NAME_HEADER_LENGTH = 73;
 
   private static final String GROUP_PREFIX = " + ";
@@ -25,9 +27,23 @@ public class UserConsole {
   private final MessageStats messageStats;
 
   @Inject
-  public UserConsole(@Console PrintStream printStream) {
+  public Console() {
+    this(System.out);
+  }
+
+  public Console(PrintStream printStream) {
     this.printStream = printStream;
     this.messageStats = new MessageStats();
+  }
+
+  public void error(CodeLocation location, String message) {
+    println("build.smooth:" + location.line() + ": error: " + message);
+    messageStats.incCount(ERROR);
+  }
+
+  public void error(String message) {
+    println("error: " + message);
+    messageStats.incCount(ERROR);
   }
 
   public void print(String header, Iterable<? extends Message> messages) {

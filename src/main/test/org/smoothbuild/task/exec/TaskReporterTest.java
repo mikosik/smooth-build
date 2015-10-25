@@ -13,9 +13,9 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
@@ -23,8 +23,8 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.util.Empty;
 
 public class TaskReporterTest {
-  UserConsole userConsole = mock(UserConsole.class);
-  TaskReporter taskReporter = new TaskReporter(userConsole);
+  Console console = mock(Console.class);
+  TaskReporter taskReporter = new TaskReporter(console);
   List<Message> messages;
   Task task;
 
@@ -34,14 +34,14 @@ public class TaskReporterTest {
     given(messages = asList(new Message(WARNING, "message")));
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
-    thenCalled(userConsole).print(header(task, false), messages);
+    thenCalled(console).print(header(task, false), messages);
   }
 
   @Test
   public void internal_task_without_message_is_not_printed() {
     given(task = createTask(true));
     when(taskReporter).report(task, false);
-    thenCalledTimes(0, onInstance(userConsole));
+    thenCalledTimes(0, onInstance(console));
   }
 
   @Test
@@ -50,7 +50,7 @@ public class TaskReporterTest {
     given(task = createTask(false));
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
-    thenCalled(userConsole).print(header(task, false), messages);
+    thenCalled(console).print(header(task, false), messages);
   }
 
   @Test
@@ -59,7 +59,7 @@ public class TaskReporterTest {
     given(messages = asList());
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
-    thenCalled(userConsole).print(header(task, false), messages);
+    thenCalled(console).print(header(task, false), messages);
   }
 
   private static Task createTask(boolean isInternal) {

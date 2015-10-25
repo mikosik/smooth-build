@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
@@ -22,7 +23,6 @@ import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.parse.ParsingMessages;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -39,29 +39,29 @@ public class ArgumentExpressionCreator {
   }
 
   public List<Expression> createArgExprs(CodeLocation codeLocation,
-      ParsingMessages messages, Function function, Collection<Argument> arguments) {
+      Console console, Function function, Collection<Argument> arguments) {
     ParametersPool parametersPool = new ParametersPool(function.parameters());
     ImmutableList<Argument> namedArguments = Argument.filterNamed(arguments);
 
-    detectDuplicatedAndUnknownArgumentNames(function, messages, namedArguments);
-    if (messages.hasErrors()) {
+    detectDuplicatedAndUnknownArgumentNames(function, console, namedArguments);
+    if (console.isProblemReported()) {
       return null;
     }
 
     Map<Parameter, Argument> argumentMap = new HashMap<>();
-    processNamedArguments(parametersPool, messages, argumentMap, namedArguments);
-    if (messages.hasErrors()) {
+    processNamedArguments(parametersPool, console, argumentMap, namedArguments);
+    if (console.isProblemReported()) {
       return null;
     }
 
-    processNamelessArguments(function, arguments, parametersPool, messages, argumentMap,
+    processNamelessArguments(function, arguments, parametersPool, console, argumentMap,
         codeLocation);
-    if (messages.hasErrors()) {
+    if (console.isProblemReported()) {
       return null;
     }
     Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
     if (missingRequiredParameters.size() != 0) {
-      messages.error(codeLocation, missingRequiredArgsMessage(function, argumentMap,
+      console.error(codeLocation, missingRequiredArgsMessage(function, argumentMap,
           missingRequiredParameters));
       return null;
     }
@@ -97,7 +97,7 @@ public class ArgumentExpressionCreator {
   }
 
   private static void detectDuplicatedAndUnknownArgumentNames(Function function,
-      ParsingMessages messages, Collection<Argument> namedArguments) {
+      Console console, Collection<Argument> namedArguments) {
     Set<String> unusedNames = Sets.newHashSet(parametersToNames(function.parameters()));
     Set<String> usedNames = Sets.newHashSet();
     for (Argument argument : namedArguments) {
@@ -107,17 +107,17 @@ public class ArgumentExpressionCreator {
           unusedNames.remove(name);
           usedNames.add(name);
         } else if (usedNames.contains(name)) {
-          messages.error(argument.codeLocation(), "Argument '" + argument.name()
+          console.error(argument.codeLocation(), "Argument '" + argument.name()
               + "' assigned twice.");
         } else {
-          messages.error(argument.codeLocation(), "Function " + function.name()
+          console.error(argument.codeLocation(), "Function " + function.name()
               + " has no parameter '" + argument.name() + "'.");
         }
       }
     }
   }
 
-  private static void processNamedArguments(ParametersPool parametersPool, ParsingMessages messages,
+  private static void processNamedArguments(ParametersPool parametersPool, Console console,
       Map<Parameter, Argument> argumentMap, Collection<Argument> namedArguments) {
     for (Argument argument : namedArguments) {
       if (argument.hasName()) {
@@ -125,7 +125,7 @@ public class ArgumentExpressionCreator {
         Parameter parameter = parametersPool.take(name);
         Type paramType = parameter.type();
         if (!canConvert(argument.type(), paramType)) {
-          messages.error(argument.codeLocation(), "Type mismatch, cannot convert argument '"
+          console.error(argument.codeLocation(), "Type mismatch, cannot convert argument '"
               + argument.name() + "' of type '" + argument.type().name() + "' to '" + paramType
                   .name() + "'.");
         } else {
@@ -136,7 +136,7 @@ public class ArgumentExpressionCreator {
   }
 
   private static void processNamelessArguments(Function function, Collection<Argument> arguments,
-      ParametersPool parametersPool, ParsingMessages messages, Map<Parameter, Argument> argumentMap,
+      ParametersPool parametersPool, Console console, Map<Parameter, Argument> argumentMap,
       CodeLocation codeLocation) {
     ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
 
@@ -152,7 +152,7 @@ public class ArgumentExpressionCreator {
           argumentMap.put(candidateParameter, onlyArgument);
           parametersPool.take(candidateParameter);
         } else {
-          messages.error(codeLocation, ambiguousAssignmentErrorMessage(function, argumentMap,
+          console.error(codeLocation, ambiguousAssignmentErrorMessage(function, argumentMap,
               availableArguments, availableTypedParams));
           return;
         }

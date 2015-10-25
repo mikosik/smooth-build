@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -28,15 +29,15 @@ public class ModuleParser {
   private final FileSystem fileSystem;
   private final Module builtinModule;
   private final DefinedFunctionsCreator definedFunctionsCreator;
-  private final ParsingMessages parsingMessages;
+  private final Console console;
 
   @Inject
   public ModuleParser(@ProjectDir FileSystem fileSystem, @Builtin Module builtinModule,
-      DefinedFunctionsCreator definedFunctionsCreator, ParsingMessages parsingMessages) {
+      DefinedFunctionsCreator definedFunctionsCreator, Console console) {
     this.fileSystem = fileSystem;
     this.builtinModule = builtinModule;
     this.definedFunctionsCreator = definedFunctionsCreator;
-    this.parsingMessages = parsingMessages;
+    this.console = console;
   }
 
   public Module createModule() {
@@ -48,35 +49,36 @@ public class ModuleParser {
     try {
       return fileSystem.openInputStream(scriptFile);
     } catch (NoSuchFileError e) {
-      throw new ParsingException("error: Cannot find build script file " + scriptFile + ".");
+      console.error("Cannot find build script file " + scriptFile + ".");
+      throw new ParsingException();
     }
   }
 
   private Module createModule(InputStream inputStream, Path scriptFile) {
-    ModuleContext module = parseScript(parsingMessages, inputStream, scriptFile);
-    Map<Name, FunctionContext> functions = collectFunctions(parsingMessages, builtinModule, module);
+    ModuleContext module = parseScript(console, inputStream, scriptFile);
+    Map<Name, FunctionContext> functions = collectFunctions(console, builtinModule, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
-    detectUndefinedFunctions(parsingMessages, builtinModule, dependencies);
-    List<Name> sorted = sortDependencies(builtinModule, dependencies);
+    detectUndefinedFunctions(console, builtinModule, dependencies);
+    List<Name> sorted = sortDependencies(builtinModule, dependencies, console);
 
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        parsingMessages, builtinModule, functions, sorted);
+        console, builtinModule, functions, sorted);
 
     return new ImmutableModule(definedFunctions);
   }
 
-  public static void detectUndefinedFunctions(ParsingMessages parsingMessages, Module builtinModule,
+  public static void detectUndefinedFunctions(Console console, Module builtinModule,
       Map<Name, Set<Dependency>> dependencies) {
     Set<Name> declaredFunctions = dependencies.keySet();
     for (Set<Dependency> functionDependecies : dependencies.values()) {
       for (Dependency dependency : functionDependecies) {
         Name name = dependency.functionName();
         if (!builtinModule.containsFunction(name) && !declaredFunctions.contains(name)) {
-          parsingMessages.error(dependency.location(), "Call to unknown function " + name + ".");
+          console.error(dependency.location(), "Call to unknown function " + name + ".");
         }
       }
     }
-    if (parsingMessages.hasErrors()) {
+    if (console.isProblemReported()) {
       throw new ParsingException();
     }
   }
