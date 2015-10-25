@@ -15,9 +15,9 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
-import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;
 
@@ -98,7 +98,7 @@ public class DependencySorterTest {
 
   private static List<Name> sortDependencies(final HashMap<Name, Set<Dependency>> map) {
     return DependencySorter.sortDependencies(new ImmutableModule(Empty.nameFunctionMap()), map,
-        mock(UserConsole.class));
+        mock(Console.class));
   }
 
   private static Set<Dependency> dependencies(Name... names) {

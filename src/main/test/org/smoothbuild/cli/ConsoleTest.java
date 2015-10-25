@@ -1,4 +1,4 @@
-package org.smoothbuild.message.listen;
+package org.smoothbuild.cli;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -22,15 +22,15 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.message.base.Message;
 
-public class UserConsoleTest {
+public class ConsoleTest {
   String name = "GROUP NAME";
   ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   PrintStream printStream = new PrintStream(outputStream);
-  UserConsole userConsole = new UserConsole(printStream);
+  Console console = new Console(printStream);
 
   @Test
   public void printing_messages_containing_error_message() throws Exception {
-    userConsole.print(name, asList(new Message(ERROR, "message string")));
+    console.print(name, asList(new Message(ERROR, "message string")));
 
     StringBuilder builder = new StringBuilder();
     builder.append(" + GROUP NAME\n");
@@ -41,7 +41,7 @@ public class UserConsoleTest {
 
   @Test
   public void printing_messages_without_error_message() throws Exception {
-    userConsole.print(name, asList(new Message(WARNING, "message string\nsecond line")));
+    console.print(name, asList(new Message(WARNING, "message string\nsecond line")));
 
     StringBuilder builder = new StringBuilder();
     builder.append(" + GROUP NAME\n");
@@ -54,40 +54,40 @@ public class UserConsoleTest {
 
   @Test
   public void isProblemReported_returns_false_when_only_info_was_logged() throws Exception {
-    userConsole.print(name, asList(new Message(INFO, "message string")));
-    assertFalse(userConsole.isProblemReported());
+    console.print(name, asList(new Message(INFO, "message string")));
+    assertFalse(console.isProblemReported());
   }
 
   @Test
   public void isProblemReported_returns_false_when_only_suggestion_was_logged() throws Exception {
-    userConsole.print(name, asList(new Message(SUGGESTION, "message string")));
-    assertFalse(userConsole.isProblemReported());
+    console.print(name, asList(new Message(SUGGESTION, "message string")));
+    assertFalse(console.isProblemReported());
   }
 
   @Test
   public void isProblemReported_returns_false_when_only_warning_was_logged() throws Exception {
-    userConsole.print(name, asList(new Message(WARNING, "message string")));
-    assertFalse(userConsole.isProblemReported());
+    console.print(name, asList(new Message(WARNING, "message string")));
+    assertFalse(console.isProblemReported());
   }
 
   @Test
   public void isProblemReported_returns_true_when_error_was_logged() throws Exception {
-    userConsole.print(name, asList(new Message(ERROR, "message string")));
-    assertTrue(userConsole.isProblemReported());
+    console.print(name, asList(new Message(ERROR, "message string")));
+    assertTrue(console.isProblemReported());
   }
 
   @Test
   public void isProblemReported_returns_true_when_fatal_was_logged() throws Exception {
-    userConsole.print(name, asList(new Message(FATAL, "message string")));
-    assertTrue(userConsole.isProblemReported());
+    console.print(name, asList(new Message(FATAL, "message string")));
+    assertTrue(console.isProblemReported());
   }
 
   // printFinalSummary()
 
   @Test
   public void final_summary_is_success_when_only_warning_was_logged() throws Exception {
-    userConsole.print(name, asList(new Message(WARNING, "message string")));
-    userConsole.printFinalSummary();
+    console.print(name, asList(new Message(WARNING, "message string")));
+    console.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();
     builder.append(" + GROUP NAME\n");
@@ -100,8 +100,8 @@ public class UserConsoleTest {
 
   @Test
   public void final_summary_is_failed_when_error_was_logged() throws Exception {
-    userConsole.print(name, asList(new Message(ERROR, "message string")));
-    userConsole.printFinalSummary();
+    console.print(name, asList(new Message(ERROR, "message string")));
+    console.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();
     builder.append(" + GROUP NAME\n");
@@ -115,9 +115,9 @@ public class UserConsoleTest {
   @Test
   public void final_summary_is_failed_when_code_error_was_printed() throws Exception {
     given(outputStream = new ByteArrayOutputStream());
-    given(userConsole = new UserConsole(new PrintStream(outputStream)));
-    given(userConsole).error(codeLocation(13), "some message");
-    when(userConsole).printFinalSummary();
+    given(console = new Console(new PrintStream(outputStream)));
+    given(console).error(codeLocation(13), "some message");
+    when(console).printFinalSummary();
     thenEqual(outputStream.toString(),
         "build.smooth:13: error: some message\n"
             + " + FAILED :(\n"
@@ -127,9 +127,9 @@ public class UserConsoleTest {
   @Test
   public void final_summary_is_failed_when_error_was_printed() throws Exception {
     given(outputStream = new ByteArrayOutputStream());
-    given(userConsole = new UserConsole(new PrintStream(outputStream)));
-    given(userConsole).error("some message");
-    when(userConsole).printFinalSummary();
+    given(console = new Console(new PrintStream(outputStream)));
+    given(console).error("some message");
+    when(console).printFinalSummary();
     thenEqual(outputStream.toString(),
         "error: some message\n"
             + " + FAILED :(\n"
@@ -153,8 +153,8 @@ public class UserConsoleTest {
       messages.add(new Message(FATAL, "fatal string"));
     }
 
-    userConsole.print(name, messages);
-    userConsole.printFinalSummary();
+    console.print(name, messages);
+    console.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();
     builder.append(" + GROUP NAME\n");

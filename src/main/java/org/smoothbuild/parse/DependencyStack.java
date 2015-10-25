@@ -3,9 +3,9 @@ package org.smoothbuild.parse;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.UserConsole;
 
 public class DependencyStack {
   private final Deque<DependencyStackElem> stack = new ArrayDeque<>();
@@ -26,7 +26,7 @@ public class DependencyStack {
     return stack.getLast();
   }
 
-  public void reportAndThrowCycleException(UserConsole console) {
+  public void reportAndThrowCycleException(Console console) {
     Name lastMissing = peek().missing().functionName();
     int first = -1;
     DependencyStackElem[] array = stack.toArray(new DependencyStackElem[stack.size()]);

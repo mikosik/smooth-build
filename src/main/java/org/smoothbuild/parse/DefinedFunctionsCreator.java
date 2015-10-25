@@ -31,6 +31,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -51,7 +52,6 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -70,7 +70,7 @@ public class DefinedFunctionsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function> createDefinedFunctions(UserConsole console, Module builtinModule,
+  public Map<Name, Function> createDefinedFunctions(Console console, Module builtinModule,
       Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker = new Worker(console, builtinModule, functionContexts, sorted,
         objectsDb, argumentExpressionCreator, implicitConverter);
@@ -82,7 +82,7 @@ public class DefinedFunctionsCreator {
   }
 
   private static class Worker {
-    private final UserConsole console;
+    private final Console console;
     private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
@@ -92,7 +92,7 @@ public class DefinedFunctionsCreator {
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
-    public Worker(UserConsole console, Module builtinModule,
+    public Worker(Console console, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
         ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
       this.console = console;

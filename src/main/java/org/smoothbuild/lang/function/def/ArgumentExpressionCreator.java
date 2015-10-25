@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
@@ -22,7 +23,6 @@ import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -39,7 +39,7 @@ public class ArgumentExpressionCreator {
   }
 
   public List<Expression> createArgExprs(CodeLocation codeLocation,
-      UserConsole console, Function function, Collection<Argument> arguments) {
+      Console console, Function function, Collection<Argument> arguments) {
     ParametersPool parametersPool = new ParametersPool(function.parameters());
     ImmutableList<Argument> namedArguments = Argument.filterNamed(arguments);
 
@@ -97,7 +97,7 @@ public class ArgumentExpressionCreator {
   }
 
   private static void detectDuplicatedAndUnknownArgumentNames(Function function,
-      UserConsole console, Collection<Argument> namedArguments) {
+      Console console, Collection<Argument> namedArguments) {
     Set<String> unusedNames = Sets.newHashSet(parametersToNames(function.parameters()));
     Set<String> usedNames = Sets.newHashSet();
     for (Argument argument : namedArguments) {
@@ -117,7 +117,7 @@ public class ArgumentExpressionCreator {
     }
   }
 
-  private static void processNamedArguments(ParametersPool parametersPool, UserConsole console,
+  private static void processNamedArguments(ParametersPool parametersPool, Console console,
       Map<Parameter, Argument> argumentMap, Collection<Argument> namedArguments) {
     for (Argument argument : namedArguments) {
       if (argument.hasName()) {
@@ -136,7 +136,7 @@ public class ArgumentExpressionCreator {
   }
 
   private static void processNamelessArguments(Function function, Collection<Argument> arguments,
-      ParametersPool parametersPool, UserConsole console, Map<Parameter, Argument> argumentMap,
+      ParametersPool parametersPool, Console console, Map<Parameter, Argument> argumentMap,
       CodeLocation codeLocation) {
     ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
 

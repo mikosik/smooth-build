@@ -14,9 +14,9 @@ import static org.testory.Testory.when;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -30,7 +30,7 @@ public class DependencyStackTest {
   private DependencyStackElem elem1;
   private DependencyStackElem elem2;
   private DependencyStackElem elem3;
-  private UserConsole console;
+  private Console console;
 
   @Test
   public void stack_is_empty_initially() {
@@ -140,7 +140,7 @@ public class DependencyStackTest {
     given(dependencyStack).push(elem(name2, name3, 2));
     given(dependencyStack).push(elem(name3, name4, 3));
     given(dependencyStack).push(elem(name4, name2, 4));
-    given(console = mock(UserConsole.class));
+    given(console = mock(Console.class));
     when(dependencyStack).reportAndThrowCycleException(console);
     thenThrown(ParsingException.class);
     thenCalled(console).error(codeLocation(2),
@@ -155,7 +155,7 @@ public class DependencyStackTest {
     given(dependencyStack = new DependencyStack());
     given(dependencyStack).push(elem(name1, name2, 1));
     given(dependencyStack).push(elem(name2, name2, 2));
-    given(console = mock(UserConsole.class));
+    given(console = mock(Console.class));
     when(dependencyStack).reportAndThrowCycleException(console);
     thenThrown(ParsingException.class);
     thenCalled(console).error(codeLocation(2),

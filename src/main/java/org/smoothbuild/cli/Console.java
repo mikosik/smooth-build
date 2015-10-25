@@ -1,4 +1,4 @@
-package org.smoothbuild.message.listen;
+package org.smoothbuild.cli;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 
@@ -16,7 +16,7 @@ import org.smoothbuild.message.base.MessageType;
 import com.google.common.base.Splitter;
 
 @Singleton
-public class UserConsole {
+public class Console {
   public static final int MESSAGE_GROUP_NAME_HEADER_LENGTH = 73;
 
   private static final String GROUP_PREFIX = " + ";
@@ -27,11 +27,11 @@ public class UserConsole {
   private final MessageStats messageStats;
 
   @Inject
-  public UserConsole() {
+  public Console() {
     this(System.out);
   }
 
-  public UserConsole(PrintStream printStream) {
+  public Console(PrintStream printStream) {
     this.printStream = printStream;
     this.messageStats = new MessageStats();
   }

@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -21,7 +20,7 @@ public class Clean implements Command {
   @ProjectDir
   private FileSystem fileSystem;
   @Inject
-  private UserConsole console;
+  private Console console;
 
   @Override
   public int run(String... args) {

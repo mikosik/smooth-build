@@ -5,20 +5,20 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Ordering;
 
 public class SmoothExecutor {
   private final ArtifactBuilder artifactBuilder;
-  private final UserConsole console;
+  private final Console console;
 
   @Inject
-  public SmoothExecutor(ArtifactBuilder artifactBuilder, UserConsole console) {
+  public SmoothExecutor(ArtifactBuilder artifactBuilder, Console console) {
     this.artifactBuilder = artifactBuilder;
     this.console = console;
   }

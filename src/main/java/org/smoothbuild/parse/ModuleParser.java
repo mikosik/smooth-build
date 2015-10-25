@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -23,17 +24,16 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.listen.UserConsole;
 
 public class ModuleParser {
   private final FileSystem fileSystem;
   private final Module builtinModule;
   private final DefinedFunctionsCreator definedFunctionsCreator;
-  private final UserConsole console;
+  private final Console console;
 
   @Inject
   public ModuleParser(@ProjectDir FileSystem fileSystem, @Builtin Module builtinModule,
-      DefinedFunctionsCreator definedFunctionsCreator, UserConsole console) {
+      DefinedFunctionsCreator definedFunctionsCreator, Console console) {
     this.fileSystem = fileSystem;
     this.builtinModule = builtinModule;
     this.definedFunctionsCreator = definedFunctionsCreator;
@@ -67,7 +67,7 @@ public class ModuleParser {
     return new ImmutableModule(definedFunctions);
   }
 
-  public static void detectUndefinedFunctions(UserConsole console, Module builtinModule,
+  public static void detectUndefinedFunctions(Console console, Module builtinModule,
       Map<Name, Set<Dependency>> dependencies) {
     Set<Name> declaredFunctions = dependencies.keySet();
     for (Set<Dependency> functionDependecies : dependencies.values()) {

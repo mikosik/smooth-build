@@ -21,12 +21,12 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.listen.UserConsole;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(UserConsole console, InputStream inputStream,
+  public static ModuleContext parseScript(Console console, InputStream inputStream,
       Path scriptFile) {
     ErrorListener errorListener = new ErrorListener(console);
 
@@ -54,9 +54,9 @@ public class ScriptParser {
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final UserConsole console;
+    private final Console console;
 
-    public ErrorListener(UserConsole console) {
+    public ErrorListener(Console console) {
       this.console = console;
     }
 
