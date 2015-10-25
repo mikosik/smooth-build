@@ -9,11 +9,13 @@ import static org.smoothbuild.testing.db.objects.ValueCreators.array;
 import static org.smoothbuild.testing.db.objects.ValueCreators.file;
 import static org.smoothbuild.testing.io.fs.base.FileSystems.fileContent;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.io.fs.base.SubFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -35,7 +37,7 @@ public class FileArraySaverTest {
   @Test
   public void duplicated_file_paths_causes_exception() throws Exception {
     given(file1 = file(objectsDb, path("abc")));
-    given(fileArraySaver = new FileArraySaver(fileSystem));
+    given(fileArraySaver = new FileArraySaver(fileSystem, mock(Console.class)));
     given(array = array(objectsDb, SFile.class, file1, file1));
     when(fileArraySaver).save(name, array);
     thenThrown(ExecutionException.class);
@@ -46,7 +48,7 @@ public class FileArraySaverTest {
     given(file1 = file(objectsDb, path("abc")));
     given(file2 = file(objectsDb, path("def")));
     given(array = array(objectsDb, SFile.class, file1, file2));
-    given(fileArraySaver = new FileArraySaver(fileSystem));
+    given(fileArraySaver = new FileArraySaver(fileSystem, mock(Console.class)));
     when(fileArraySaver).save(name, array);
     thenEqual(fileContent(fileSystem, artifactPath(name).append(path("abc"))), "abc");
     thenEqual(fileContent(fileSystem, artifactPath(name).append(path("def"))), "def");

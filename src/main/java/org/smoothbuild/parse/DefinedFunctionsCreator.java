@@ -31,6 +31,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.objects.ObjectsDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -69,19 +70,19 @@ public class DefinedFunctionsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function> createDefinedFunctions(ParsingMessages parsingMessages,
-      Module builtinModule, Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    Worker worker = new Worker(parsingMessages, builtinModule, functionContexts, sorted,
+  public Map<Name, Function> createDefinedFunctions(Console console, Module builtinModule,
+      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+    Worker worker = new Worker(console, builtinModule, functionContexts, sorted,
         objectsDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
-    if (parsingMessages.hasErrors()) {
+    if (console.isProblemReported()) {
       throw new ParsingException();
     }
     return result;
   }
 
   private static class Worker {
-    private final ParsingMessages parsingMessages;
+    private final Console console;
     private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
@@ -91,10 +92,10 @@ public class DefinedFunctionsCreator {
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
-    public Worker(ParsingMessages parsingMessages, Module builtinModule,
+    public Worker(Console console, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
         ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
-      this.parsingMessages = parsingMessages;
+      this.console = console;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
@@ -176,8 +177,9 @@ public class DefinedFunctionsCreator {
         List<Expression> expressions, CodeLocation location) {
       ArrayType arrayType = Types.arrayTypeContaining(elemType);
       if (arrayType == null) {
-        throw new ParsingException(location, "Array cannot contain element with type " + elemType
+        console.error(location, "Array cannot contain element with type " + elemType
             + ". Only following types are allowed: " + basicTypes() + ".");
+        throw new ParsingException();
       }
       return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions),
           location);
@@ -204,10 +206,11 @@ public class DefinedFunctionsCreator {
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
-          throw new ParsingException(location,
+          console.error(location,
               "Array cannot contain elements of incompatible types.\n"
                   + "First element has type " + firstType + " while element at index " + i
                   + " has type " + type + ".");
+          throw new ParsingException();
         }
       }
       return superType;
@@ -247,7 +250,7 @@ public class DefinedFunctionsCreator {
       Function function = getFunction(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
       List<Expression> argumentExpressions = argumentExpressionCreator.createArgExprs(codeLocation,
-          parsingMessages, function, arguments);
+          console, function, arguments);
 
       if (argumentExpressions == null) {
         return new InvalidExpression(function.type(), codeLocation);
@@ -299,7 +302,7 @@ public class DefinedFunctionsCreator {
         SString stringValue = objectsDb.string(unescaped(string));
         return new ValueExpression(stringValue, location);
       } catch (UnescapingFailedException e) {
-        parsingMessages.error(location, e.getMessage());
+        console.error(location, e.getMessage());
         return new InvalidExpression(STRING, location);
       }
     }
