@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
+import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -20,9 +21,9 @@ import com.google.common.collect.Sets;
  */
 public class DependencySorter {
   public static List<Name> sortDependencies(Module builtinModule,
-      Map<Name, Set<Dependency>> dependenciesOrig) {
+      Map<Name, Set<Dependency>> dependenciesOrig, UserConsole console) {
 
-    Worker worker = new Worker(builtinModule, dependenciesOrig);
+    Worker worker = new Worker(builtinModule, dependenciesOrig, console);
     worker.work();
     return worker.result();
   }
@@ -32,8 +33,11 @@ public class DependencySorter {
     private final Set<Name> reachableNames;
     private final List<Name> sorted;
     private final DependencyStack stack;
+    private final UserConsole console;
 
-    public Worker(Module builtinModule, Map<Name, Set<Dependency>> dependenciesOrig) {
+    public Worker(Module builtinModule, Map<Name, Set<Dependency>> dependenciesOrig,
+        UserConsole console) {
+      this.console = console;
       this.notSorted = Maps.newHashMap(dependenciesOrig);
       this.reachableNames = Sets.newHashSet(builtinModule.availableNames());
       this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
@@ -61,7 +65,7 @@ public class DependencySorter {
           // DependencyCollector made sure that all dependency exists so the
           // only possibility at this point is that missing dependency is on
           // stack and we have cycle in call graph.
-          throw stack.createCycleException();
+          stack.reportAndThrowCycleException(console);
         } else {
           stack.push(new DependencyStackElem(missing.functionName(), next));
         }
