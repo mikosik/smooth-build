@@ -37,11 +37,7 @@ public class ArtifactBuilder {
   }
 
   public void runBuild() {
-    try {
-      taskGraph.executeAll();
-    } catch (BuildInterruptedException e) {
-      return;
-    }
+    taskGraph.executeAll();
     for (Entry<Name, Task> artifact : artifacts.entrySet()) {
       Name name = artifact.getKey();
       Task task = artifact.getValue();

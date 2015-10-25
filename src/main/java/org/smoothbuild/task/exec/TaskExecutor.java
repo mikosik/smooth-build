@@ -56,7 +56,7 @@ public class TaskExecutor {
     }
     reporter.report(task, isAlreadyCached);
     if (containsProblems(task.output().messages())) {
-      throw new BuildInterruptedException();
+      throw new ExecutionException();
     }
   }
 
