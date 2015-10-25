@@ -13,6 +13,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
+import org.smoothbuild.message.listen.UserConsole;
 
 import com.google.common.collect.Maps;
 
@@ -23,11 +24,11 @@ import com.google.common.collect.Maps;
  */
 public class FunctionsCollector {
 
-  public static Map<Name, FunctionContext> collectFunctions(ParsingMessages parsingMessages,
+  public static Map<Name, FunctionContext> collectFunctions(UserConsole console,
       Module builtinModule, ModuleContext module) {
-    Worker worker = new Worker(parsingMessages, builtinModule);
+    Worker worker = new Worker(console, builtinModule);
     worker.visit(module);
-    if (parsingMessages.hasErrors()) {
+    if (console.isProblemReported()) {
       throw new ParsingException();
     }
     return worker.result();
@@ -35,12 +36,12 @@ public class FunctionsCollector {
 
   private static class Worker extends SmoothBaseVisitor<Void> {
     private final Module builtinModule;
-    private final ParsingMessages parsingMessages;
+    private final UserConsole console;
     private final Map<Name, FunctionContext> functions;
 
     @Inject
-    public Worker(ParsingMessages parsingMessages, Module builtinModule) {
-      this.parsingMessages = parsingMessages;
+    public Worker(UserConsole console, Module builtinModule) {
+      this.console = console;
       this.builtinModule = builtinModule;
       this.functions = Maps.newHashMap();
     }
@@ -50,11 +51,11 @@ public class FunctionsCollector {
       FunctionNameContext nameContext = functionContext.functionName();
       Name name = name(nameContext.getText());
       if (functions.keySet().contains(name)) {
-        parsingMessages.error(locationOf(nameContext), "Function " + name + " is already defined.");
+        console.error(locationOf(nameContext), "Function " + name + " is already defined.");
         return null;
       }
       if (builtinModule.containsFunction(name)) {
-        parsingMessages.error(locationOf(nameContext), "Function " + name
+        console.error(locationOf(nameContext), "Function " + name
             + " cannot override builtin function with the same name.");
         return null;
       }
