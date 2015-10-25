@@ -5,7 +5,6 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-import org.smoothbuild.message.base.Console;
 import org.smoothbuild.message.listen.UserConsole;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.parse.ParsingException;
@@ -26,10 +24,7 @@ import com.google.common.collect.ImmutableList;
 
 public class Build implements Command {
   @Inject
-  @Console
-  private PrintStream console;
-  @Inject
-  private UserConsole userConsole;
+  private UserConsole console;
   @Inject
   private ModuleParser moduleParser;
   @Inject
@@ -50,14 +45,14 @@ public class Build implements Command {
       return printErrorAndReturnErrorCode(e);
     }
 
-    userConsole.printFinalSummary();
-    return userConsole.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+    console.printFinalSummary();
+    return console.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
   private int printErrorAndReturnErrorCode(Exception e) {
     String message = e.getMessage();
     if (message != null) {
-      console.println(message);
+      console.error(message);
     }
     return EXIT_CODE_ERROR;
   }
@@ -68,13 +63,13 @@ public class Build implements Command {
       if (isLegalName(argument)) {
         duplicatesDetector.addValue(name(argument));
       } else {
-        console.println("error: Illegal function name '" + argument + "' passed in command line.");
+        console.error("Illegal function name '" + argument + "' passed in command line.");
         return null;
       }
     }
 
     for (Name name : duplicatesDetector.getDuplicateValues()) {
-      console.println("error: Function " + name + " has been specified more than once.");
+      console.error("Function " + name + " has been specified more than once.");
       return null;
     }
 
