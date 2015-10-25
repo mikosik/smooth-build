@@ -1,11 +1,14 @@
 package org.smoothbuild.message.listen;
 
+import static org.smoothbuild.message.base.MessageType.ERROR;
+
 import java.io.PrintStream;
 import java.util.Iterator;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.message.base.Console;
 import org.smoothbuild.message.base.Message;
 import org.smoothbuild.message.base.MessageStats;
@@ -28,6 +31,11 @@ public class UserConsole {
   public UserConsole(@Console PrintStream printStream) {
     this.printStream = printStream;
     this.messageStats = new MessageStats();
+  }
+
+  public void error(CodeLocation location, String message) {
+    println("build.smooth:" + location.line() + ": error: " + message);
+    messageStats.incCount(ERROR);
   }
 
   public void print(String header, Iterable<? extends Message> messages) {
