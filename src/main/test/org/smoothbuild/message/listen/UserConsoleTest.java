@@ -4,11 +4,15 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.message.base.MessageType.INFO;
 import static org.smoothbuild.message.base.MessageType.SUGGESTION;
 import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenEqual;
+import static org.testory.Testory.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -106,6 +110,18 @@ public class UserConsoleTest {
     builder.append("   + 1 error(s)\n");
 
     assertEquals(builder.toString(), outputStream.toString());
+  }
+
+  @Test
+  public void final_summary_is_failed_when_error_was_printed() throws Exception {
+    given(outputStream = new ByteArrayOutputStream());
+    given(userConsole = new UserConsole(new PrintStream(outputStream)));
+    given(userConsole).error(codeLocation(13), "some message");
+    when(userConsole).printFinalSummary();
+    thenEqual(outputStream.toString(),
+        "build.smooth:13: error: some message\n"
+            + " + FAILED :(\n"
+            + "   + 1 error(s)\n");
   }
 
   @Test
