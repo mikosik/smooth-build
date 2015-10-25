@@ -23,11 +23,12 @@ import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.message.listen.UserConsole;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(ParsingMessages messages, InputStream inputStream,
+  public static ModuleContext parseScript(UserConsole console, InputStream inputStream,
       Path scriptFile) {
-    ErrorListener errorListener = new ErrorListener(messages);
+    ErrorListener errorListener = new ErrorListener(console);
 
     ANTLRInputStream antlrInputStream;
     try {
@@ -46,24 +47,24 @@ public class ScriptParser {
     parser.addErrorListener(errorListener);
 
     ModuleContext result = parser.module();
-    if (messages.hasErrors()) {
+    if (console.isProblemReported()) {
       throw new ParsingException();
     }
     return result;
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final ParsingMessages messages;
+    private final UserConsole console;
 
-    public ErrorListener(ParsingMessages messages) {
-      this.messages = messages;
+    public ErrorListener(UserConsole console) {
+      this.console = console;
     }
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
         int charPositionInLine, String msg, @Nullable RecognitionException e) {
       CodeLocation location = createLocation(offendingSymbol, line);
-      messages.error(location, msg);
+      console.error(location, msg);
     }
 
     private CodeLocation createLocation(Object offendingSymbol, int line) {
@@ -95,7 +96,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      messages.error(locationOf(token), message);
+      console.error(locationOf(token), message);
     }
   }
 }
