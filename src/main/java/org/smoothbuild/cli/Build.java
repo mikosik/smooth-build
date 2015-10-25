@@ -41,19 +41,11 @@ public class Build implements Command {
       Module module = moduleParser.createModule();
       smoothExecutor.execute(new ExecutionData(functionNames, module));
     } catch (ParsingException | ExecutionException e) {
-      return printErrorAndReturnErrorCode(e);
+      return EXIT_CODE_ERROR;
     }
 
     console.printFinalSummary();
     return console.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
-  }
-
-  private int printErrorAndReturnErrorCode(Exception e) {
-    String message = e.getMessage();
-    if (message != null) {
-      console.error(message);
-    }
-    return EXIT_CODE_ERROR;
   }
 
   public Set<Name> parseArguments(List<String> args) {
