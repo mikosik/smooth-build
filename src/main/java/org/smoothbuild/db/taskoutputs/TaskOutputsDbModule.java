@@ -16,13 +16,7 @@ public class TaskOutputsDbModule extends AbstractModule {
 
   @TaskOutputs
   @Provides
-  private FileSystem provideTaskOutputsFileSystem(@SmoothDir FileSystem fileSystem) {
-    return new SubFileSystem(fileSystem, TASK_RESULTS_DIR);
-  }
-
-  @TaskOutputs
-  @Provides
-  public HashedDb provideTaksOutputsHashedDb(@TaskOutputs FileSystem fileSystem) {
-    return new HashedDb(fileSystem);
+  public HashedDb provideTaksOutputsHashedDb(@SmoothDir FileSystem fileSystem) {
+    return new HashedDb(new SubFileSystem(fileSystem, TASK_RESULTS_DIR));
   }
 }

@@ -16,13 +16,7 @@ public class ObjectsDbModule extends AbstractModule {
 
   @Objects
   @Provides
-  private FileSystem provideObjectsFileSystem(@SmoothDir FileSystem fileSystem) {
-    return new SubFileSystem(fileSystem, OBJECTS_DIR);
-  }
-
-  @Objects
-  @Provides
-  public HashedDb provideObjectsHashedDb(@Objects FileSystem fileSystem) {
-    return new HashedDb(fileSystem);
+  public HashedDb provideObjectsHashedDb(@SmoothDir FileSystem fileSystem) {
+    return new HashedDb(new SubFileSystem(fileSystem, OBJECTS_DIR));
   }
 }
