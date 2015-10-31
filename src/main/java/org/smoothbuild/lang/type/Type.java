@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type;
 
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.inject.TypeLiteral;
@@ -29,7 +29,7 @@ public abstract class Type {
     return jType;
   }
 
-  public abstract Value defaultValue(ObjectsDb objectsDb);
+  public abstract Value defaultValue(ValuesDb valuesDb);
 
   public abstract boolean isAllowedAsResult();
 

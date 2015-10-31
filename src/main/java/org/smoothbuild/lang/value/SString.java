@@ -3,7 +3,7 @@ package org.smoothbuild.lang.value;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.lang.type.Types.STRING;
 
-import org.smoothbuild.db.objects.marshal.StringMarshaller;
+import org.smoothbuild.db.values.marshal.StringMarshaller;
 
 import com.google.common.hash.HashCode;
 
