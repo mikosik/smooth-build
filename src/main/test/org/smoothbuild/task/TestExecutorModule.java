@@ -2,8 +2,8 @@ package org.smoothbuild.task;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.objects.ObjectsDbModule;
-import org.smoothbuild.db.taskoutputs.TaskOutputsDbModule;
+import org.smoothbuild.db.taskoutputs.OutputsDbModule;
+import org.smoothbuild.db.values.ValuesDbModule;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.SmoothDir;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -20,8 +20,8 @@ public class TestExecutorModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    install(new ObjectsDbModule());
-    install(new TaskOutputsDbModule());
+    install(new ValuesDbModule());
+    install(new OutputsDbModule());
   }
 
   @Provides

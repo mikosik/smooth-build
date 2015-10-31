@@ -1,7 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
+import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -15,7 +15,7 @@ import org.smoothbuild.db.hashed.err.CorruptedEnumValue;
 import org.smoothbuild.db.hashed.err.IllegalPathInObjectError;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValue;
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -24,7 +24,7 @@ import org.smoothbuild.lang.value.SString;
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
-  private final ObjectsDb objectsDb = objectsDb();
+  private final ValuesDb valuesDb = valuesDb();
   private final FileSystem fileSystem = new MemoryFileSystem();
   private final HashedDb hashedDb = new HashedDb(fileSystem);
   private SString hashed1;
@@ -46,8 +46,8 @@ public class UnmarshallerTest {
 
   @Test
   public void marshalled_hashed_list_can_be_unmarshalled() {
-    given(hashed1 = objectsDb.string("abc"));
-    given(hashed2 = objectsDb.string("def"));
+    given(hashed1 = valuesDb.string("abc"));
+    given(hashed2 = valuesDb.string("def"));
     given(marshaller = new Marshaller());
     given(marshaller).write(asList(hashed1, hashed2));
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));

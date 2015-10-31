@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.marshal;
+package org.smoothbuild.db.values.marshal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

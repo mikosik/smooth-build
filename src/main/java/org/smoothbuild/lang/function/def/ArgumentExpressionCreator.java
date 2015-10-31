@@ -14,7 +14,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.expr.ValueExpression;
@@ -29,12 +29,12 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Sets;
 
 public class ArgumentExpressionCreator {
-  private final ObjectsDb objectsDb;
+  private final ValuesDb valuesDb;
   private final ImplicitConverter implicitConverter;
 
   @Inject
-  public ArgumentExpressionCreator(ObjectsDb objectsDb, ImplicitConverter implicitConverter) {
-    this.objectsDb = objectsDb;
+  public ArgumentExpressionCreator(ValuesDb valuesDb, ImplicitConverter implicitConverter) {
+    this.valuesDb = valuesDb;
     this.implicitConverter = implicitConverter;
   }
 
@@ -68,7 +68,7 @@ public class ArgumentExpressionCreator {
 
     Map<String, Expression> argumentExpressions = convert(argumentMap);
     for (Parameter parameter : parametersPool.allOptional()) {
-      Value value = parameter.type().defaultValue(objectsDb);
+      Value value = parameter.type().defaultValue(valuesDb);
       Expression expression = new ValueExpression(value, codeLocation);
       argumentExpressions.put(parameter.name(), expression);
     }

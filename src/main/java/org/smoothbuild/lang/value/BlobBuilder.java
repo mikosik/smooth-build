@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.db.objects.marshal.BlobMarshaller;
+import org.smoothbuild.db.values.marshal.BlobMarshaller;
 
 public class BlobBuilder {
   private final BlobMarshaller marshaller;
