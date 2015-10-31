@@ -2,7 +2,7 @@ package org.smoothbuild.task;
 
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.taskoutputs.OutputsDbModule;
+import org.smoothbuild.db.outputs.OutputsDbModule;
 import org.smoothbuild.db.values.ValuesDbModule;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.SmoothDir;

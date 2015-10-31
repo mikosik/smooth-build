@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.taskoutputs.TaskOutputsDb;
+import org.smoothbuild.db.outputs.OutputsDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -21,18 +21,18 @@ import com.google.common.hash.Hasher;
 
 public class TaskExecutor {
   private final HashCode smoothJarHash;
-  private final TaskOutputsDb taskOutputsDb;
+  private final OutputsDb outputsDb;
   private final TaskReporter reporter;
   private final FileSystem projectFileSystem;
   private final ValuesDb valuesDb;
   private final Provider<TempDirectory> tempDirectoryProvider;
 
   @Inject
-  public TaskExecutor(@SmoothJar HashCode smoothJarHash, TaskOutputsDb taskOutputsDb,
+  public TaskExecutor(@SmoothJar HashCode smoothJarHash, OutputsDb outputsDb,
       TaskReporter reporter, @ProjectDir FileSystem projectFileSystem, ValuesDb valuesDb,
       Provider<TempDirectory> tempDirectoryProvider) {
     this.smoothJarHash = smoothJarHash;
-    this.taskOutputsDb = taskOutputsDb;
+    this.outputsDb = outputsDb;
     this.reporter = reporter;
     this.projectFileSystem = projectFileSystem;
     this.valuesDb = valuesDb;
@@ -41,9 +41,9 @@ public class TaskExecutor {
 
   public <T extends Value> void execute(Task task) {
     HashCode hash = taskHash(task);
-    boolean isAlreadyCached = taskOutputsDb.contains(hash);
+    boolean isAlreadyCached = outputsDb.contains(hash);
     if (isAlreadyCached) {
-      Output output = taskOutputsDb.read(hash, task.resultType());
+      Output output = outputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
       ContainerImpl container = new ContainerImpl(projectFileSystem, valuesDb,
@@ -51,7 +51,7 @@ public class TaskExecutor {
       task.execute(container);
       container.destroy();
       if (task.isCacheable()) {
-        taskOutputsDb.write(hash, task.output());
+        outputsDb.write(hash, task.output());
       }
     }
     reporter.report(task, isAlreadyCached);

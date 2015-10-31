@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskoutputs;
+package org.smoothbuild.db.outputs;
 
 import static org.smoothbuild.SmoothConstants.TASK_RESULTS_DIR;
 
