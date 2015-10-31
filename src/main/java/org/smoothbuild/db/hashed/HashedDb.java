@@ -15,21 +15,21 @@ import org.smoothbuild.io.fs.base.PathState;
 import com.google.common.hash.HashCode;
 
 public class HashedDb {
-  private final FileSystem dbFileSystem;
+  private final FileSystem fileSystem;
 
-  public HashedDb(FileSystem dbFileSystem) {
-    this.dbFileSystem = dbFileSystem;
+  public HashedDb(FileSystem fileSystem) {
+    this.fileSystem = fileSystem;
   }
 
   public boolean contains(HashCode hash) {
     Path path = toPath(hash);
-    return dbFileSystem.pathState(path) == PathState.FILE;
+    return fileSystem.pathState(path) == PathState.FILE;
   }
 
   public InputStream openInputStream(HashCode hash) {
     Path path = toPath(hash);
-    if (dbFileSystem.pathState(path) == PathState.FILE) {
-      return dbFileSystem.openInputStream(path);
+    if (fileSystem.pathState(path) == PathState.FILE) {
+      return fileSystem.openInputStream(path);
     } else {
       throw new NoObjectWithGivenHashError(hash);
     }
@@ -42,11 +42,11 @@ public class HashedDb {
   public HashCode write(HashCode hash, byte[] bytes) {
     Path path = toPath(hash);
 
-    if (dbFileSystem.pathState(path) == PathState.FILE) {
+    if (fileSystem.pathState(path) == PathState.FILE) {
       return hash;
     }
 
-    try (OutputStream outputStream = dbFileSystem.openOutputStream(path)) {
+    try (OutputStream outputStream = fileSystem.openOutputStream(path)) {
       outputStream.write(bytes);
     } catch (IOException e) {
       throw new WritingHashedObjectFailedError(hash, e);
