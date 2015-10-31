@@ -1,10 +1,10 @@
 package org.smoothbuild.builtin.java;
 
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
+import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
-import static org.smoothbuild.testing.db.objects.ValueCreators.file;
+import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -29,8 +29,8 @@ public class UnjarerTest {
 
   @Test
   public void unjars_two_files() throws Exception {
-    given(file1 = file(objectsDb(), path1));
-    given(file2 = file(objectsDb(), path2));
+    given(file1 = file(valuesDb(), path1));
+    given(file2 = file(valuesDb(), path2));
     given(blob = JarTester.jar(file1, file2));
     when(unjarer.unjar(blob));
     thenReturned(contains(file1, file2));
@@ -38,8 +38,8 @@ public class UnjarerTest {
 
   @Test
   public void unjars_files_that_match_filter() throws Exception {
-    given(file1 = file(objectsDb(), path1));
-    given(file2 = file(objectsDb(), path2));
+    given(file1 = file(valuesDb(), path1));
+    given(file2 = file(valuesDb(), path2));
     given(blob = JarTester.jar(file1, file2));
     when(unjarer.unjar(blob, Predicates.equalTo(path2.value())));
     thenReturned(contains(file2));

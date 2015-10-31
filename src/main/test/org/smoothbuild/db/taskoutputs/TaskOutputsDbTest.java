@@ -2,7 +2,7 @@ package org.smoothbuild.db.taskoutputs;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
+import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
@@ -11,7 +11,7 @@ import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.testing.db.objects.ValueCreators.file;
+import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Array;
@@ -40,9 +40,9 @@ import org.smoothbuild.util.Streams;
 import com.google.common.hash.HashCode;
 
 public class TaskOutputsDbTest {
-  private final ObjectsDb objectsDb = objectsDb();
+  private final ValuesDb valuesDb = valuesDb();
   private final HashedDb taskOutputsHashedDb = new HashedDb(new MemoryFileSystem());
-  private final TaskOutputsDb taskOutputsDb = new TaskOutputsDb(taskOutputsHashedDb, objectsDb);
+  private final TaskOutputsDb taskOutputsDb = new TaskOutputsDb(taskOutputsHashedDb, valuesDb);
   private final HashCode hash = Hash.string("abc");
 
   private final byte[] bytes = new byte[] {};
@@ -65,7 +65,7 @@ public class TaskOutputsDbTest {
 
   @Test
   public void result_cache_contains_written_result() {
-    given(taskOutputsDb).write(hash, new Output(objectsDb.string("result"), Empty.messageList()));
+    given(taskOutputsDb).write(hash, new Output(valuesDb.string("result"), Empty.messageList()));
     when(taskOutputsDb.contains(hash));
     thenReturned(true);
   }
@@ -78,7 +78,7 @@ public class TaskOutputsDbTest {
 
   @Test
   public void written_messages_can_be_read_back() throws Exception {
-    given(stringValue = objectsDb.string("abc"));
+    given(stringValue = valuesDb.string("abc"));
     given(message = new Message(ERROR, "message string"));
     given(taskOutputsDb).write(hash, new Output(stringValue, asList(message)));
     when(taskOutputsDb.read(hash, STRING).messages());
@@ -87,8 +87,8 @@ public class TaskOutputsDbTest {
 
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
-    given(file = file(objectsDb, path, bytes));
-    given(fileArray = objectsDb.arrayBuilder(SFile.class).add(file).build());
+    given(file = file(valuesDb, path, bytes));
+    given(fileArray = valuesDb.arrayBuilder(SFile.class).add(file).build());
     given(taskOutputsDb).write(hash, new Output(fileArray, Empty.messageList()));
     when(((Iterable<?>) taskOutputsDb.read(hash, FILE_ARRAY).result()).iterator().next());
     thenReturned(file);
@@ -96,8 +96,8 @@ public class TaskOutputsDbTest {
 
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
-    given(blob = writeBlob(objectsDb, bytes));
-    given(blobArray = objectsDb.arrayBuilder(Blob.class).add(blob).build());
+    given(blob = writeBlob(valuesDb, bytes));
+    given(blobArray = valuesDb.arrayBuilder(Blob.class).add(blob).build());
     given(taskOutputsDb).write(hash, new Output(blobArray, Empty.messageList()));
     when(((Iterable<?>) taskOutputsDb.read(hash, BLOB_ARRAY).result()).iterator().next());
     thenReturned(blob);
@@ -105,8 +105,8 @@ public class TaskOutputsDbTest {
 
   @Test
   public void written_string_array_can_be_read_back() throws Exception {
-    given(stringValue = objectsDb.string(string));
-    given(stringArray = objectsDb.arrayBuilder(SString.class).add(stringValue).build());
+    given(stringValue = valuesDb.string(string));
+    given(stringArray = valuesDb.arrayBuilder(SString.class).add(stringValue).build());
     given(taskOutputsDb).write(hash, new Output(stringArray, Empty.messageList()));
     when(((Iterable<?>) taskOutputsDb.read(hash, STRING_ARRAY).result()).iterator().next());
     thenReturned(stringValue);
@@ -114,7 +114,7 @@ public class TaskOutputsDbTest {
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
-    given(file = file(objectsDb, path, bytes));
+    given(file = file(valuesDb, path, bytes));
     given(taskOutputsDb).write(hash, new Output(file, Empty.messageList()));
     when(taskOutputsDb.read(hash, FILE).result());
     thenReturned(file);
@@ -122,7 +122,7 @@ public class TaskOutputsDbTest {
 
   @Test
   public void written_blob_can_be_read_back() throws Exception {
-    given(blob = writeBlob(objectsDb, bytes));
+    given(blob = writeBlob(valuesDb, bytes));
     given(taskOutputsDb).write(hash, new Output(blob, Empty.messageList()));
     when(taskOutputsDb.read(hash, BLOB).result());
     thenReturned(blob);
@@ -130,14 +130,14 @@ public class TaskOutputsDbTest {
 
   @Test
   public void writtend_string_can_be_read_back() throws Exception {
-    given(stringValue = objectsDb.string(string));
+    given(stringValue = valuesDb.string(string));
     given(taskOutputsDb).write(hash, new Output(stringValue, Empty.messageList()));
     when(((SString) taskOutputsDb.read(hash, STRING).result()).value());
     thenReturned(string);
   }
 
-  private static Blob writeBlob(ObjectsDb objectsDb, byte[] bytes) throws IOException {
-    BlobBuilder builder = objectsDb.blobBuilder();
+  private static Blob writeBlob(ValuesDb valuesDb, byte[] bytes) throws IOException {
+    BlobBuilder builder = valuesDb.blobBuilder();
     Streams.copy(new ByteArrayInputStream(bytes), builder.openOutputStream());
     return builder.build();
   }

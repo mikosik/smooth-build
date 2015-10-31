@@ -10,11 +10,11 @@ import org.smoothbuild.io.fs.base.SubFileSystem;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class TaskOutputsDbModule extends AbstractModule {
+public class OutputsDbModule extends AbstractModule {
   @Override
   protected void configure() {}
 
-  @TaskOutputs
+  @Outputs
   @Provides
   public HashedDb provideTaksOutputsHashedDb(@SmoothDir FileSystem fileSystem) {
     return new HashedDb(new SubFileSystem(fileSystem, TASK_RESULTS_DIR));

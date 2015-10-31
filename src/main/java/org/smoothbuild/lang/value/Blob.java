@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.type.Types.BLOB;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.smoothbuild.db.objects.marshal.BlobMarshaller;
+import org.smoothbuild.db.values.marshal.BlobMarshaller;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.hash.HashCode;

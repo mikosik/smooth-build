@@ -5,14 +5,14 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
-import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
+import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Value;
 
@@ -21,7 +21,7 @@ import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;
 
 public class MarshallerTest {
-  private final ObjectsDb objectsDb = objectsDb();
+  private final ValuesDb valuesDb = valuesDb();
   private Marshaller marshaller;
   private Value value1;
   private Value value2;
@@ -31,8 +31,8 @@ public class MarshallerTest {
 
   @Test
   public void marshalling_list_of_hashed_objects() throws Exception {
-    given(value1 = objectsDb.string("abc"));
-    given(value2 = objectsDb.string("def"));
+    given(value1 = valuesDb.string("abc"));
+    given(value2 = valuesDb.string("def"));
     given(marshaller = new Marshaller());
     given(marshaller).write(asList(value1, value2));
     when(marshaller).getBytes();

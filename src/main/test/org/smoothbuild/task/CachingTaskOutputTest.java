@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -44,7 +44,7 @@ import com.google.inject.Provides;
 public class CachingTaskOutputTest {
   private static final CodeLocation CL = codeLocation(2);
 
-  private ObjectsDb objectsDb;
+  private ValuesDb valuesDb;
   private TaskGraph taskGraph;
   private TaskGraph taskGraph2;
 
@@ -61,7 +61,7 @@ public class CachingTaskOutputTest {
   @Before
   public void before() {
     Injector injector = Guice.createInjector(new TestExecutorModule());
-    objectsDb = injector.getInstance(ObjectsDb.class);
+    valuesDb = injector.getInstance(ValuesDb.class);
     taskGraph = injector.getInstance(TaskGraph.class);
   }
 
@@ -110,7 +110,7 @@ public class CachingTaskOutputTest {
     given(injector = Guice.createInjector(module));
     given(taskGraph = injector.getInstance(TaskGraph.class));
     given(taskGraph2 = injector.getInstance(TaskGraph.class));
-    given(objectsDb = injector.getInstance(ObjectsDb.class));
+    given(valuesDb = injector.getInstance(ValuesDb.class));
     given(counter = new AtomicInteger());
     given(expression1 = new CountingExpression(counter, Empty.expressionList(), true));
     given(expression2 = new CountingExpression(counter, Empty.expressionList(), true));
@@ -118,8 +118,8 @@ public class CachingTaskOutputTest {
     given(task2 = taskGraph2.createTasks(expression2));
     given(taskGraph).executeAll();
     when(taskGraph2).executeAll();
-    thenEqual(task.output(), new Output(objectsDb.string("1")));
-    thenEqual(task2.output(), new Output(objectsDb.string("2")));
+    thenEqual(task.output(), new Output(valuesDb.string("1")));
+    thenEqual(task2.output(), new Output(valuesDb.string("2")));
   }
 
   private static class GrowingSmoothJarHashModule extends AbstractModule {
@@ -136,13 +136,13 @@ public class CachingTaskOutputTest {
   }
 
   private ValueExpression stringExpression(String string) {
-    return new ValueExpression(objectsDb.string(string), CL);
+    return new ValueExpression(valuesDb.string(string), CL);
   }
 
   private Array<SString> stringArray(String... strings) {
-    ArrayBuilder<SString> builder = objectsDb.arrayBuilder(SString.class);
+    ArrayBuilder<SString> builder = valuesDb.arrayBuilder(SString.class);
     for (String string : strings) {
-      builder.add(objectsDb.string(string));
+      builder.add(valuesDb.string(string));
     }
     return builder.build();
   }

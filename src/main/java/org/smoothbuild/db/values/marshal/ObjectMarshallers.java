@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects.marshal;
+package org.smoothbuild.db.values.marshal;
 
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
@@ -13,7 +13,7 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.Objects;
+import org.smoothbuild.db.values.Values;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Blob;
@@ -41,7 +41,7 @@ public class ObjectMarshallers {
   private final ImmutableMap<ArrayType, ArrayMarshaller<?>> arrayMarshallersMap;
 
   @Inject
-  public ObjectMarshallers(@Objects HashedDb hashedDb) {
+  public ObjectMarshallers(@Values HashedDb hashedDb) {
     this.stringMarshaller = new StringMarshaller(hashedDb);
     this.blobMarshaller = new BlobMarshaller(hashedDb);
     this.fileMarshaller = new FileMarshaller(hashedDb, blobMarshaller);

@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects;
+package org.smoothbuild.db.values;
 
 import static org.smoothbuild.lang.type.Types.arrayElementJTypes;
 import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
@@ -7,8 +7,8 @@ import static org.smoothbuild.lang.type.Types.jTypeToType;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
-import org.smoothbuild.db.objects.marshal.ObjectMarshallers;
+import org.smoothbuild.db.values.marshal.ArrayMarshaller;
+import org.smoothbuild.db.values.marshal.ObjectMarshallers;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -25,20 +25,20 @@ import org.smoothbuild.lang.value.ValueFactory;
 import com.google.common.hash.HashCode;
 import com.google.inject.TypeLiteral;
 
-public class ObjectsDb implements ValueFactory {
+public class ValuesDb implements ValueFactory {
   private final ObjectMarshallers objectMarshallers;
 
   @Inject
-  public ObjectsDb(ObjectMarshallers objectMarshallers) {
+  public ValuesDb(ObjectMarshallers objectMarshallers) {
     this.objectMarshallers = objectMarshallers;
   }
 
-  public static ObjectsDb objectsDb() {
-    return objectsDb(new MemoryFileSystem());
+  public static ValuesDb valuesDb() {
+    return valuesDb(new MemoryFileSystem());
   }
 
-  public static ObjectsDb objectsDb(FileSystem fileSystem) {
-    return new ObjectsDb(new ObjectMarshallers(new HashedDb(fileSystem)));
+  public static ValuesDb valuesDb(FileSystem fileSystem) {
+    return new ValuesDb(new ObjectMarshallers(new HashedDb(fileSystem)));
   }
 
   @Override

@@ -1,4 +1,4 @@
-package org.smoothbuild.db.objects;
+package org.smoothbuild.db.values;
 
 import javax.inject.Singleton;
 
@@ -9,10 +9,10 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class TestObjectsDbModule extends AbstractModule {
+public class TestValuesDbModule extends AbstractModule {
   @Override
   protected void configure() {
-    install(new ObjectsDbModule());
+    install(new ValuesDbModule());
   }
 
   @Provides

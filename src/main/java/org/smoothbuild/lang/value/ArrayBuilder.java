@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
+import org.smoothbuild.db.values.marshal.ArrayMarshaller;
 
 public class ArrayBuilder<T extends Value> {
   private final ArrayMarshaller<T> marshaller;

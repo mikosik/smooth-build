@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.SString;
@@ -23,12 +23,12 @@ import com.google.common.hash.HashCode;
 
 public class TaskOutputsDb {
   private final HashedDb hashedDb;
-  private final ObjectsDb objectsDb;
+  private final ValuesDb valuesDb;
 
   @Inject
-  public TaskOutputsDb(@TaskOutputs HashedDb hashedDb, ObjectsDb objectsDb) {
+  public TaskOutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb) {
     this.hashedDb = hashedDb;
-    this.objectsDb = objectsDb;
+    this.valuesDb = valuesDb;
   }
 
   public void write(HashCode taskHash, Output output) {
@@ -37,7 +37,7 @@ public class TaskOutputsDb {
     ImmutableList<Message> messages = output.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
-      SString messageString = objectsDb.string(message.message());
+      SString messageString = valuesDb.string(message.message());
 
       marshaller.write(AllMessageTypes.INSTANCE.valueToByte(message.type()));
       marshaller.write(messageString.hash());
@@ -61,7 +61,7 @@ public class TaskOutputsDb {
       for (int i = 0; i < size; i++) {
         MessageType messageType = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
         HashCode messageStringHash = unmarshaller.readHash();
-        SString messageSString = (SString) objectsDb.read(Types.STRING, messageStringHash);
+        SString messageSString = (SString) valuesDb.read(Types.STRING, messageStringHash);
         String messageString = messageSString.value();
         messages.add(new Message(messageType, messageString));
       }
@@ -70,7 +70,7 @@ public class TaskOutputsDb {
         return new Output(messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
-        Value value = objectsDb.read(type, resultObjectHash);
+        Value value = valuesDb.read(type, resultObjectHash);
         return new Output(value, messages);
       }
     }

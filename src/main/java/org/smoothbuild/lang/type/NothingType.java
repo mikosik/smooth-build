@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type;
 
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.Value;
 
@@ -10,7 +10,7 @@ public class NothingType extends Type {
   }
 
   @Override
-  public Value defaultValue(ObjectsDb objectsDb) {
+  public Value defaultValue(ValuesDb valuesDb) {
     throw new UnsupportedOperationException("Nothing type doesn't have default value.");
   }
 

@@ -2,11 +2,11 @@ package org.smoothbuild.builtin.compress;
 
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.hasSize;
-import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
+import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
-import static org.smoothbuild.testing.db.objects.ValueCreators.blob;
+import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.then;
@@ -79,6 +79,6 @@ public class UnzipperTest {
   private static Blob zipped(String... fileNames) throws IOException {
     FileSystem fileSystem = new MemoryFileSystem();
     Path path = ZipTester.zippedFiles(fileSystem, fileNames);
-    return blob(objectsDb(), inputStreamToBytes(fileSystem.openInputStream(path)));
+    return blob(valuesDb(), inputStreamToBytes(fileSystem.openInputStream(path)));
   }
 }
