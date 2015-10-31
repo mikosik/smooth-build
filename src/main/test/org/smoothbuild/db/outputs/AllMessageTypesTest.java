@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskoutputs;
+package org.smoothbuild.db.outputs;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
 import static org.smoothbuild.message.base.MessageType.FATAL;

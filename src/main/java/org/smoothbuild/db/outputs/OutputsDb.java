@@ -1,4 +1,4 @@
-package org.smoothbuild.db.taskoutputs;
+package org.smoothbuild.db.outputs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +21,12 @@ import org.smoothbuild.task.base.Output;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class TaskOutputsDb {
+public class OutputsDb {
   private final HashedDb hashedDb;
   private final ValuesDb valuesDb;
 
   @Inject
-  public TaskOutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb) {
+  public OutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb) {
     this.hashedDb = hashedDb;
     this.valuesDb = valuesDb;
   }

@@ -1,6 +1,6 @@
 package org.smoothbuild;
 
-import org.smoothbuild.db.taskoutputs.OutputsDbModule;
+import org.smoothbuild.db.outputs.OutputsDbModule;
 import org.smoothbuild.db.values.ValuesDbModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.io.util.ReleaseJarModule;
