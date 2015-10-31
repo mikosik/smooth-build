@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemError;
@@ -25,24 +25,24 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.Files;
 
 public class TempDirectory {
-  private final ObjectsDb objectsDb;
+  private final ValuesDb valuesDb;
   private final FileSystem fileSystem;
   private final java.nio.file.Path rootPath;
   private boolean isDestroyed;
 
   @Inject
-  public TempDirectory(ObjectsDb objectsDb) {
-    this(objectsDb, Paths.get(Files.createTempDir().getAbsolutePath()));
+  public TempDirectory(ValuesDb valuesDb) {
+    this(valuesDb, Paths.get(Files.createTempDir().getAbsolutePath()));
   }
 
   @VisibleForTesting
-  public TempDirectory(ObjectsDb objectsDb, java.nio.file.Path path) {
-    this(objectsDb, path, new DiskFileSystem(path));
+  public TempDirectory(ValuesDb valuesDb, java.nio.file.Path path) {
+    this(valuesDb, path, new DiskFileSystem(path));
   }
 
   @VisibleForTesting
-  public TempDirectory(ObjectsDb objectsDb, java.nio.file.Path rootPath, FileSystem fileSystem) {
-    this.objectsDb = objectsDb;
+  public TempDirectory(ValuesDb valuesDb, java.nio.file.Path rootPath, FileSystem fileSystem) {
+    this.valuesDb = valuesDb;
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
     this.isDestroyed = false;
@@ -106,10 +106,10 @@ public class TempDirectory {
   }
 
   private Array<SFile> readFilesImpl() throws IOException {
-    ArrayBuilder<SFile> arrayBuilder = objectsDb.arrayBuilder(SFile.class);
+    ArrayBuilder<SFile> arrayBuilder = valuesDb.arrayBuilder(SFile.class);
     for (Path path : fileSystem.filesFromRecursive(Path.rootPath())) {
       Blob content = readContentImpl(path);
-      SFile file = objectsDb.file(path, content);
+      SFile file = valuesDb.file(path, content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();
@@ -125,7 +125,7 @@ public class TempDirectory {
   }
 
   private Blob readContentImpl(Path path) throws IOException {
-    BlobBuilder blobBuilder = objectsDb.blobBuilder();
+    BlobBuilder blobBuilder = valuesDb.blobBuilder();
     Streams.copy(fileSystem.openInputStream(path), blobBuilder.openOutputStream());
     return blobBuilder.build();
   }

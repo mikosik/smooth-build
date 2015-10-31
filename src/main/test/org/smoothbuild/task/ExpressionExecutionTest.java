@@ -17,7 +17,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.InvalidExpression;
@@ -43,7 +43,7 @@ import com.google.inject.Injector;
 public class ExpressionExecutionTest {
   private final String string = "abc";
   private final CodeLocation location = CodeLocation.codeLocation(33);
-  private ObjectsDb objectsDb;
+  private ValuesDb valuesDb;
   private SString sstring;
   private Expression stringExpression;
   private Expression expression;
@@ -57,13 +57,13 @@ public class ExpressionExecutionTest {
   @Before
   public void before() {
     Injector injector = Guice.createInjector(new TestExecutorModule());
-    objectsDb = injector.getInstance(ObjectsDb.class);
+    valuesDb = injector.getInstance(ValuesDb.class);
     taskGraph = injector.getInstance(TaskGraph.class);
   }
 
   @Test
   public void executes_string_literal_expression() throws Exception {
-    given(sstring = objectsDb.string(string));
+    given(sstring = valuesDb.string(string));
     given(stringExpression = new ValueExpression(sstring, location));
     given(task = taskGraph.createTasks(stringExpression));
     when(taskGraph).executeAll();
@@ -72,7 +72,7 @@ public class ExpressionExecutionTest {
 
   @Test
   public void executes_invalid_expression() throws Exception {
-    given(sstring = objectsDb.string(string));
+    given(sstring = valuesDb.string(string));
     given(expression = new InvalidExpression(STRING, location));
     when(taskGraph).createTasks(expression);
     thenThrown(RuntimeException.class);
@@ -89,7 +89,7 @@ public class ExpressionExecutionTest {
 
   @Test
   public void executes_array_expression() throws Exception {
-    given(sstring = objectsDb.string(string));
+    given(sstring = valuesDb.string(string));
     given(stringExpression = new ValueExpression(sstring, location));
     given(arrayExpression = new ArrayExpression(STRING_ARRAY, asList(stringExpression), location));
     given(task = taskGraph.createTasks(arrayExpression));
@@ -99,7 +99,7 @@ public class ExpressionExecutionTest {
 
   @Test
   public void executes_call_expression_using_defined_function() throws Exception {
-    given(sstring = objectsDb.string(string));
+    given(sstring = valuesDb.string(string));
     given(stringExpression = new ValueExpression(sstring, location));
     given(signature = new Signature(STRING, name("name"), Empty.paramList()));
     given(function = new DefinedFunction(signature, stringExpression));
@@ -111,7 +111,7 @@ public class ExpressionExecutionTest {
 
   @Test
   public void executes_native_function_that_returns_its_argument() throws Exception {
-    given(sstring = objectsDb.string("abc"));
+    given(sstring = valuesDb.string("abc"));
     given(function = nativeFunction(SmoothModule.class.getMethods()[0], Hash.integer(33)));
     given(stringExpression = new ValueExpression(sstring, codeLocation(2)));
     given(callExpression = callExpression(function, false, location, asList(stringExpression)));
@@ -129,7 +129,7 @@ public class ExpressionExecutionTest {
 
   @Test
   public void execution_fails_when_native_function_throws_runtime_exception() throws Exception {
-    given(sstring = objectsDb.string("abc"));
+    given(sstring = valuesDb.string("abc"));
     given(function = nativeFunction(SmoothModule2.class.getMethods()[0], Hash.integer(33)));
     given(stringExpression = new ValueExpression(sstring, codeLocation(2)));
     given(callExpression = callExpression(function, false, location, asList(stringExpression)));
@@ -146,7 +146,7 @@ public class ExpressionExecutionTest {
   }
 
   private Array<SString> array(SString... sstrings) {
-    ArrayBuilder<SString> arrayBuilder = objectsDb.arrayBuilder(SString.class);
+    ArrayBuilder<SString> arrayBuilder = valuesDb.arrayBuilder(SString.class);
     for (SString sstring : sstrings) {
       arrayBuilder.add(sstring);
     }

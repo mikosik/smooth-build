@@ -2,7 +2,7 @@ package org.smoothbuild.lang.value;
 
 import java.util.Iterator;
 
-import org.smoothbuild.db.objects.marshal.ArrayMarshaller;
+import org.smoothbuild.db.values.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.type.ArrayType;
 
 import com.google.common.base.Joiner;

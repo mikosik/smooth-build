@@ -32,7 +32,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
@@ -58,14 +58,14 @@ import org.smoothbuild.util.UnescapingFailedException;
 import com.google.common.collect.Maps;
 
 public class DefinedFunctionsCreator {
-  private final ObjectsDb objectsDb;
+  private final ValuesDb valuesDb;
   private final ArgumentExpressionCreator argumentExpressionCreator;
   private final ImplicitConverter implicitConverter;
 
   @Inject
-  public DefinedFunctionsCreator(ObjectsDb objectsDb,
+  public DefinedFunctionsCreator(ValuesDb valuesDb,
       ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
-    this.objectsDb = objectsDb;
+    this.valuesDb = valuesDb;
     this.argumentExpressionCreator = argumentExpressionCreator;
     this.implicitConverter = implicitConverter;
   }
@@ -73,7 +73,7 @@ public class DefinedFunctionsCreator {
   public Map<Name, Function> createDefinedFunctions(Console console, Module builtinModule,
       Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
     Worker worker = new Worker(console, builtinModule, functionContexts, sorted,
-        objectsDb, argumentExpressionCreator, implicitConverter);
+        valuesDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
     if (console.isProblemReported()) {
       throw new ParsingException();
@@ -86,20 +86,20 @@ public class DefinedFunctionsCreator {
     private final Module builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
-    private final ObjectsDb objectsDb;
+    private final ValuesDb valuesDb;
     private final ArgumentExpressionCreator argumentExpressionCreator;
     private final ImplicitConverter implicitConverter;
 
     private final Map<Name, Function> functions = Maps.newHashMap();
 
     public Worker(Console console, Module builtinModule,
-        Map<Name, FunctionContext> functionContexts, List<Name> sorted, ObjectsDb objectsDb,
+        Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValuesDb valuesDb,
         ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
       this.console = console;
       this.builtinModule = builtinModule;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
-      this.objectsDb = objectsDb;
+      this.valuesDb = valuesDb;
       this.argumentExpressionCreator = argumentExpressionCreator;
       this.implicitConverter = implicitConverter;
     }
@@ -299,7 +299,7 @@ public class DefinedFunctionsCreator {
       String string = quotedString.substring(1, quotedString.length() - 1);
       CodeLocation location = locationOf(stringToken.getSymbol());
       try {
-        SString stringValue = objectsDb.string(unescaped(string));
+        SString stringValue = valuesDb.string(unescaped(string));
         return new ValueExpression(stringValue, location);
       } catch (UnescapingFailedException e) {
         console.error(location, e.getMessage());

@@ -1,13 +1,13 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.db.objects.ObjectsDb.objectsDb;
+import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Provider;
 
-import org.smoothbuild.db.objects.ObjectsDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
@@ -17,34 +17,34 @@ import org.smoothbuild.message.base.Message;
 
 public class ContainerImpl implements Container {
   private final FileSystem projectFileSystem;
-  private final ObjectsDb objectsDb;
+  private final ValuesDb valuesDb;
   private final Provider<TempDirectory> tempDirectoryProvider;
   private final List<Message> messages;
   private final List<TempDirectory> tempDirectories;
 
-  public ContainerImpl(FileSystem projectFileSystem, ObjectsDb objectsDb,
+  public ContainerImpl(FileSystem projectFileSystem, ValuesDb valuesDb,
       Provider<TempDirectory> tempDirectoryProvider) {
     this.projectFileSystem = projectFileSystem;
-    this.objectsDb = objectsDb;
+    this.valuesDb = valuesDb;
     this.tempDirectoryProvider = tempDirectoryProvider;
     this.messages = new ArrayList<>();
     this.tempDirectories = new ArrayList<>();
   }
 
   public static ContainerImpl containerImpl() {
-    final ObjectsDb objectsDb = objectsDb();
+    final ValuesDb valuesDb = valuesDb();
     Provider<TempDirectory> tempDirectoryProvider = new Provider<TempDirectory>() {
       @Override
       public TempDirectory get() {
-        return new TempDirectory(objectsDb);
+        return new TempDirectory(valuesDb);
       }
     };
-    return new ContainerImpl(new MemoryFileSystem(), objectsDb, tempDirectoryProvider);
+    return new ContainerImpl(new MemoryFileSystem(), valuesDb, tempDirectoryProvider);
   }
 
   @Override
   public ValueFactory create() {
-    return objectsDb;
+    return valuesDb;
   }
 
   public FileSystem projectFileSystem() {
