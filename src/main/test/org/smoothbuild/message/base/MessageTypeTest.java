@@ -1,7 +1,6 @@
 package org.smoothbuild.message.base;
 
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.message.base.MessageType.INFO;
 import static org.smoothbuild.message.base.MessageType.SUGGESTION;
 import static org.smoothbuild.message.base.MessageType.WARNING;
@@ -13,12 +12,6 @@ import org.junit.Test;
 public class MessageTypeTest {
 
   // isProblem()
-
-  @Test
-  public void fatal_is_a_problem() {
-    when(FATAL.isProblem());
-    thenReturned(true);
-  }
 
   @Test
   public void error_is_a_problem() {
@@ -45,12 +38,6 @@ public class MessageTypeTest {
   }
 
   // namePlural()
-
-  @Test
-  public void name_plural_of_fatal() {
-    when(FATAL.namePlural());
-    thenReturned("fatal(s)");
-  }
 
   @Test
   public void name_plural_of_error() {

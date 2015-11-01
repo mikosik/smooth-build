@@ -6,7 +6,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.message.base.MessageType.INFO;
 import static org.smoothbuild.message.base.MessageType.SUGGESTION;
 import static org.smoothbuild.message.base.MessageType.WARNING;
@@ -73,12 +72,6 @@ public class ConsoleTest {
   @Test
   public void isProblemReported_returns_true_when_error_was_logged() throws Exception {
     console.print(name, asList(new Message(ERROR, "message string")));
-    assertTrue(console.isProblemReported());
-  }
-
-  @Test
-  public void isProblemReported_returns_true_when_fatal_was_logged() throws Exception {
-    console.print(name, asList(new Message(FATAL, "message string")));
     assertTrue(console.isProblemReported());
   }
 
@@ -149,9 +142,6 @@ public class ConsoleTest {
     for (int i = 0; i < 4; i++) {
       messages.add(new Message(ERROR, "error string"));
     }
-    for (int i = 0; i < 5; i++) {
-      messages.add(new Message(FATAL, "fatal string"));
-    }
 
     console.print(name, messages);
     console.printFinalSummary();
@@ -168,12 +158,8 @@ public class ConsoleTest {
     for (int i = 0; i < 4; i++) {
       builder.append("   + ERROR: error string\n");
     }
-    for (int i = 0; i < 5; i++) {
-      builder.append("   + FATAL: fatal string\n");
-    }
 
     builder.append(" + FAILED :(\n");
-    builder.append("   + 5 fatal(s)\n");
     builder.append("   + 4 error(s)\n");
     builder.append("   + 3 warning(s)\n");
     builder.append("   + 2 suggestion(s)\n");
