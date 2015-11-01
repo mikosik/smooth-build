@@ -12,7 +12,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -209,6 +209,6 @@ public class SFileTest {
   @Test
   public void reading_not_stored_file_fails() throws Exception {
     when(valuesDb).read(FILE, HashCode.fromInt(33));
-    thenThrown(NoObjectWithGivenHashError.class);
+    thenThrown(NoObjectWithGivenHashException.class);
   }
 }

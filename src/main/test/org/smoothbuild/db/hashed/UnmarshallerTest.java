@@ -10,11 +10,11 @@ import static org.testory.Testory.when;
 
 import org.junit.After;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.CorruptedBoolError;
-import org.smoothbuild.db.hashed.err.CorruptedEnumValue;
-import org.smoothbuild.db.hashed.err.IllegalPathInObjectError;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
-import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValue;
+import org.smoothbuild.db.hashed.err.CorruptedBoolException;
+import org.smoothbuild.db.hashed.err.CorruptedEnumException;
+import org.smoothbuild.db.hashed.err.IllegalPathInObjectException;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
+import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -73,7 +73,7 @@ public class UnmarshallerTest {
     given(marshaller).write(0x12345678);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readPath();
-    thenThrown(TooFewBytesToUnmarshallValue.class);
+    thenThrown(TooFewBytesToUnmarshallValueException.class);
   }
 
   @Test
@@ -84,7 +84,7 @@ public class UnmarshallerTest {
     given(marshaller).write((byte) 1);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readPath();
-    thenThrown(TooFewBytesToUnmarshallValue.class);
+    thenThrown(TooFewBytesToUnmarshallValueException.class);
   }
 
   @Test
@@ -94,7 +94,7 @@ public class UnmarshallerTest {
     given(marshaller).write("/");
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readPath();
-    thenThrown(IllegalPathInObjectError.class);
+    thenThrown(IllegalPathInObjectException.class);
   }
 
   @Test
@@ -114,7 +114,7 @@ public class UnmarshallerTest {
     given(marshaller).write(0x12345678);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readHash();
-    thenThrown(TooFewBytesToUnmarshallValue.class);
+    thenThrown(TooFewBytesToUnmarshallValueException.class);
   }
 
   @Test
@@ -141,7 +141,7 @@ public class UnmarshallerTest {
     given(marshaller).write(33);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readBool();
-    thenThrown(CorruptedBoolError.class);
+    thenThrown(CorruptedBoolException.class);
   }
 
   @Test
@@ -171,7 +171,7 @@ public class UnmarshallerTest {
     given(marshaller).write((byte) 1);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readHash();
-    thenThrown(TooFewBytesToUnmarshallValue.class);
+    thenThrown(TooFewBytesToUnmarshallValueException.class);
   }
 
   @Test
@@ -192,7 +192,7 @@ public class UnmarshallerTest {
     given(marshaller).write((byte) 100);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readEnum(enumValues);
-    thenThrown(CorruptedEnumValue.class);
+    thenThrown(CorruptedEnumException.class);
   }
 
   @Test
@@ -218,7 +218,7 @@ public class UnmarshallerTest {
   }
 
   @SuppressWarnings("resource")
-  @Test(expected = NoObjectWithGivenHashError.class)
+  @Test(expected = NoObjectWithGivenHashException.class)
   public void unmarshallling_not_stored_value_fails() throws Exception {
     new Unmarshaller(hashedDb, Hash.string("abc"));
   }

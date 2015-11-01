@@ -11,7 +11,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 
@@ -162,6 +162,6 @@ public class BlobTest {
   public void reading_not_stored_blob_fails() throws Exception {
     given(blob = (Blob) valuesDb.read(BLOB, HashCode.fromInt(33)));
     when(blob).openInputStream();
-    thenThrown(NoObjectWithGivenHashError.class);
+    thenThrown(NoObjectWithGivenHashException.class);
   }
 }
