@@ -113,7 +113,7 @@ public class JavacFunction {
         try {
           fileManager.close();
         } catch (IOException e) {
-          container.log(new FileSystemError(e));
+          throw new FileSystemError(e);
         }
       }
     }
