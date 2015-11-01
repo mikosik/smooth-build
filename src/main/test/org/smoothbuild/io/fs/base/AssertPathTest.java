@@ -11,12 +11,12 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchPathError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirButFileException;
+import org.smoothbuild.io.fs.base.err.NoSuchDirException;
+import org.smoothbuild.io.fs.base.err.NoSuchFileButDirException;
+import org.smoothbuild.io.fs.base.err.NoSuchFileException;
+import org.smoothbuild.io.fs.base.err.NoSuchPathException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenException;
 import org.testory.Closure;
 
 public class AssertPathTest {
@@ -36,7 +36,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(FILE), fileSystem).pathState(path);
     when(assertPathIsDir(fileSystem, path));
-    thenThrown(NoSuchDirButFileError.class);
+    thenThrown(NoSuchDirButFileException.class);
   }
 
   @Test
@@ -44,7 +44,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(assertPathIsDir(fileSystem, path));
-    thenThrown(NoSuchDirError.class);
+    thenThrown(NoSuchDirException.class);
   }
 
   private Closure assertPathIsDir(final FileSystem fileSystem, final Path path) {
@@ -70,7 +70,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(DIR), fileSystem).pathState(path);
     when(assertPathIsFile(fileSystem, path));
-    thenThrown(NoSuchFileButDirError.class);
+    thenThrown(NoSuchFileButDirException.class);
   }
 
   @Test
@@ -78,7 +78,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(assertPathIsFile(fileSystem, path));
-    thenThrown(NoSuchFileError.class);
+    thenThrown(NoSuchFileException.class);
   }
 
   private Closure assertPathIsFile(final FileSystem fileSystem, final Path path) {
@@ -112,7 +112,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(assertPathExists(fileSystem, path));
-    thenThrown(NoSuchPathError.class);
+    thenThrown(NoSuchPathException.class);
   }
 
   private Closure assertPathExists(final FileSystem fileSystem, final Path path) {
@@ -130,7 +130,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(FILE), fileSystem).pathState(path);
     when(assertPathIsUnused(fileSystem, path));
-    thenThrown(PathIsAlreadyTakenError.class);
+    thenThrown(PathIsAlreadyTakenException.class);
   }
 
   @Test
@@ -138,7 +138,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(DIR), fileSystem).pathState(path);
     when(assertPathIsUnused(fileSystem, path));
-    thenThrown(PathIsAlreadyTakenError.class);
+    thenThrown(PathIsAlreadyTakenException.class);
   }
 
   @Test

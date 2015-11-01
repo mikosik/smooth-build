@@ -7,8 +7,8 @@ import static org.smoothbuild.message.base.MessageType.FATAL;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileButDirException;
+import org.smoothbuild.io.fs.base.err.NoSuchFileException;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
@@ -35,9 +35,9 @@ public class FileFunction {
         FileReader reader = new FileReader(container);
         return reader.createFile(path, path);
       case DIR:
-        throw new NoSuchFileButDirError(path);
+        throw new NoSuchFileButDirException(path);
       case NOTHING:
-        throw new NoSuchFileError(path);
+        throw new NoSuchFileException(path);
       default:
         throw new Message(FATAL, "Broken 'file' function implementation: unreachable case");
     }
