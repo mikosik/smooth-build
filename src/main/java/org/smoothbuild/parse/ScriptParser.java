@@ -47,7 +47,7 @@ public class ScriptParser {
     parser.addErrorListener(errorListener);
 
     ModuleContext result = parser.module();
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       throw new ParsingException();
     }
     return result;

@@ -1,9 +1,11 @@
 package org.smoothbuild.message.base;
 
+import static org.smoothbuild.message.base.MessageType.ERROR;
+
 public class Messages {
-  public static boolean containsProblems(Iterable<Message> messages) {
+  public static boolean containsErrors(Iterable<Message> messages) {
     for (Message message : messages) {
-      if (message.type().isProblem()) {
+      if (message.type() == ERROR) {
         return true;
       }
     }

@@ -20,7 +20,7 @@ public class MessageStats {
     return map.get(messageType).get();
   }
 
-  public boolean containsProblems() {
+  public boolean containsErrors() {
     return 0 < getCount(ERROR);
   }
 
