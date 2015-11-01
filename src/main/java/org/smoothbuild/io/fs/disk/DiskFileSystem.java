@@ -24,9 +24,9 @@ import java.util.Arrays;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileException;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -65,7 +65,7 @@ public class DiskFileSystem implements FileSystem {
       }
       return builder.build();
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -81,14 +81,14 @@ public class DiskFileSystem implements FileSystem {
     try {
       return new BufferedInputStream(Files.newInputStream(jdkPath(path)));
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
   @Override
   public OutputStream openOutputStream(Path path) {
     if (pathState(path) == DIR) {
-      throw new PathIsAlreadyTakenByDirError(path);
+      throw new PathIsAlreadyTakenByDirException(path);
     }
 
     createDir(path.parent());
@@ -96,7 +96,7 @@ public class DiskFileSystem implements FileSystem {
     try {
       return new BufferedOutputStream(java.nio.file.Files.newOutputStream(jdkPath(path)));
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -105,9 +105,9 @@ public class DiskFileSystem implements FileSystem {
     try {
       Files.createDirectories(jdkPath(path));
     } catch (FileAlreadyExistsException e) {
-      throw new PathIsAlreadyTakenByFileError(path);
+      throw new PathIsAlreadyTakenByFileException(path);
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -119,7 +119,7 @@ public class DiskFileSystem implements FileSystem {
     try {
       RecursiveDeleter.deleteRecursively(jdkPath(path));
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -135,7 +135,7 @@ public class DiskFileSystem implements FileSystem {
       java.nio.file.Path targetJdkPath = Paths.get(escape, target.value());
       Files.createSymbolicLink(jdkPath(link), targetJdkPath);
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 

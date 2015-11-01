@@ -19,7 +19,7 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileException;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
@@ -48,7 +48,7 @@ public class ModuleParser {
   private InputStream scriptInputStream(Path scriptFile) {
     try {
       return fileSystem.openInputStream(scriptFile);
-    } catch (NoSuchFileError e) {
+    } catch (NoSuchFileException e) {
       console.error("Cannot find build script file " + scriptFile + ".");
       throw new ParsingException();
     }
@@ -78,7 +78,7 @@ public class ModuleParser {
         }
       }
     }
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       throw new ParsingException();
     }
   }

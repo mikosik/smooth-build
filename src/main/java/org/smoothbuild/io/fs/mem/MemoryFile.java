@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 
 public class MemoryFile implements MemoryElement {
   private final MemoryDirectory parent;
@@ -62,7 +62,7 @@ public class MemoryFile implements MemoryElement {
   @Override
   public InputStream openInputStream() {
     if (data == null) {
-      throw new FileSystemError("File does not exist");
+      throw new FileSystemException("File does not exist");
     }
     return new ByteArrayInputStream(data);
   }

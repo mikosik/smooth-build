@@ -1,10 +1,6 @@
 package org.smoothbuild.io.fs.base;
 
-import static org.smoothbuild.message.base.MessageType.FATAL;
-
 import java.util.Iterator;
-
-import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableList;
 
@@ -20,8 +16,7 @@ public class RecursiveFilesIterable implements Iterable<Path> {
       case NOTHING:
         return ImmutableList.of();
       default:
-        throw new Message(FATAL, "Unknown PathState: " + fileSystem.pathState(directory) + " in "
-            + RecursiveFilesIterable.class.getSimpleName());
+        throw new RuntimeException("Unhandled case " + fileSystem.pathState(directory));
     }
   }
 

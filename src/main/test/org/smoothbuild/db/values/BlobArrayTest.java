@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 
@@ -37,6 +37,6 @@ public class BlobArrayTest {
   public void reading_elements_from_not_stored_blob_array_fails() throws Exception {
     given(array = (Array<Blob>) valuesDb.read(BLOB_ARRAY, HashCode.fromInt(33)));
     when(array).iterator();
-    thenThrown(NoObjectWithGivenHashError.class);
+    thenThrown(NoObjectWithGivenHashException.class);
   }
 }

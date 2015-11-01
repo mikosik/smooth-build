@@ -17,13 +17,13 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
-import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.io.fs.base.err.NoSuchDirButFileException;
+import org.smoothbuild.io.fs.base.err.NoSuchDirException;
+import org.smoothbuild.io.fs.base.err.NoSuchFileException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenException;
 
 public abstract class GenericFileSystemTestCase {
   protected FileSystem fileSystem;
@@ -81,13 +81,13 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
     when(fileSystem).filesFrom(path("abc"));
-    thenThrown(NoSuchDirError.class);
+    thenThrown(NoSuchDirException.class);
   }
 
   public void files_from_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).filesFrom(path);
-    thenThrown(NoSuchDirButFileError.class);
+    thenThrown(NoSuchDirButFileException.class);
   }
 
   @Test
@@ -102,7 +102,7 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_throws_exception_when_path_does_not_exist() throws Exception {
     when(fileSystem).filesFrom(path("abc"));
-    thenThrown(FileSystemError.class);
+    thenThrown(FileSystemException.class);
   }
 
   // filesFromRecursive()
@@ -110,13 +110,13 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_recursive_throws_exception_when_dir_does_not_exist() throws Exception {
     when(fileSystem).filesFromRecursive(path("abc"));
-    thenThrown(NoSuchDirError.class);
+    thenThrown(NoSuchDirException.class);
   }
 
   public void files_from_recursive_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).filesFromRecursive(path);
-    thenThrown(NoSuchDirButFileError.class);
+    thenThrown(NoSuchDirButFileException.class);
   }
 
   @Test
@@ -131,7 +131,7 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_recursive_throws_exception_when_path_does_not_exist() throws Exception {
     when(fileSystem).filesFromRecursive(path("abc"));
-    thenThrown(FileSystemError.class);
+    thenThrown(FileSystemException.class);
   }
 
   // openInputStream()
@@ -147,13 +147,13 @@ public abstract class GenericFileSystemTestCase {
   public void cannot_open_output_stream_when_path_is_directory() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).openOutputStream(path.parent());
-    thenThrown(PathIsAlreadyTakenByDirError.class);
+    thenThrown(PathIsAlreadyTakenByDirException.class);
   }
 
   @Test
   public void cannot_open_output_stream_when_path_is_root_directory() throws Exception {
     when(fileSystem).openOutputStream(Path.rootPath());
-    thenThrown(PathIsAlreadyTakenByDirError.class);
+    thenThrown(PathIsAlreadyTakenByDirException.class);
   }
 
   // openOutputStream()
@@ -178,19 +178,19 @@ public abstract class GenericFileSystemTestCase {
   public void open_output_stream_returns() throws Exception {
     given(this).createEmptyFile(dir.append(path));
     when(fileSystem).openOutputStream(dir);
-    thenThrown(FileSystemError.class);
+    thenThrown(FileSystemException.class);
   }
 
   public void create_input_stream_throws_exception_when_file_does_not_exist() throws Exception {
     when(fileSystem).openInputStream(path("dir/file"));
-    thenThrown(NoSuchFileError.class);
+    thenThrown(NoSuchFileException.class);
   }
 
   @Test
   public void cannot_open_input_stream_when_file_is_a_directory() throws Exception {
     given(this).createEmptyFile("abc/def/file.txt");
     when(fileSystem).openInputStream(path("abc/def"));
-    thenThrown(FileSystemError.class);
+    thenThrown(FileSystemException.class);
   }
 
   // delete()
@@ -279,7 +279,7 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile(path);
     given(this).createEmptyFile(linkPath);
     when(fileSystem).createLink(linkPath, path);
-    thenThrown(PathIsAlreadyTakenError.class);
+    thenThrown(PathIsAlreadyTakenException.class);
   }
 
   @Test
@@ -287,7 +287,7 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile(path);
     given(this).createEmptyFile(linkPath);
     when(fileSystem).createLink(linkPath.parent(), path);
-    thenThrown(PathIsAlreadyTakenError.class);
+    thenThrown(PathIsAlreadyTakenException.class);
   }
 
   // createDir()
@@ -310,7 +310,7 @@ public abstract class GenericFileSystemTestCase {
   public void cannot_create_dir_if_such_file_already_exists() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).createDir(path);
-    thenThrown(PathIsAlreadyTakenByFileError.class);
+    thenThrown(PathIsAlreadyTakenByFileException.class);
   }
 
   // helpers
