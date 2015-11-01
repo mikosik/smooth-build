@@ -9,11 +9,6 @@ public class Message extends RuntimeException {
   private final String message;
 
   public Message(MessageType type, String message) {
-    this(type, message, null);
-  }
-
-  public Message(MessageType type, String message, Throwable cause) {
-    super(cause);
     this.type = checkNotNull(type);
     this.message = checkNotNull(message);
   }
