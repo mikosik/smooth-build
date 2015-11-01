@@ -44,19 +44,19 @@ public class ArgumentExpressionCreator {
     ImmutableList<Argument> namedArguments = Argument.filterNamed(arguments);
 
     detectDuplicatedAndUnknownArgumentNames(function, console, namedArguments);
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       return null;
     }
 
     Map<Parameter, Argument> argumentMap = new HashMap<>();
     processNamedArguments(parametersPool, console, argumentMap, namedArguments);
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       return null;
     }
 
     processNamelessArguments(function, arguments, parametersPool, console, argumentMap,
         codeLocation);
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       return null;
     }
     Set<Parameter> missingRequiredParameters = parametersPool.allRequired();

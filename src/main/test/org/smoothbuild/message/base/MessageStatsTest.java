@@ -79,44 +79,44 @@ public class MessageStatsTest {
     thenReturned(1);
   }
 
-  // containsProblems()
+  // containsErrors()
 
   @Test
-  public void initially_contains_no_problems() throws Exception {
+  public void initially_contains_no_errors() throws Exception {
     given(messageStats = new MessageStats());
-    when(messageStats.containsProblems());
+    when(messageStats.containsErrors());
     thenReturned(false);
   }
 
   @Test
-  public void contains_no_problem_after_adding_info() throws Exception {
+  public void contains_no_error_after_adding_info() throws Exception {
     given(messageStats = new MessageStats());
     given(messageStats).incCount(INFO);
-    when(messageStats.containsProblems());
+    when(messageStats.containsErrors());
     thenReturned(false);
   }
 
   @Test
-  public void contains_no_problem_after_adding_suggestion() throws Exception {
+  public void contains_no_error_after_adding_suggestion() throws Exception {
     given(messageStats = new MessageStats());
     given(messageStats).incCount(SUGGESTION);
-    when(messageStats.containsProblems());
+    when(messageStats.containsErrors());
     thenReturned(false);
   }
 
   @Test
-  public void contains_no_problem_after_adding_warning() throws Exception {
+  public void contains_no_error_after_adding_warning() throws Exception {
     given(messageStats = new MessageStats());
     given(messageStats).incCount(WARNING);
-    when(messageStats.containsProblems());
+    when(messageStats.containsErrors());
     thenReturned(false);
   }
 
   @Test
-  public void contains_problem_after_adding_error() throws Exception {
+  public void contains_error_after_adding_error() throws Exception {
     given(messageStats = new MessageStats());
     given(messageStats).incCount(ERROR);
-    when(messageStats.containsProblems());
+    when(messageStats.containsErrors());
     thenReturned(true);
   }
 

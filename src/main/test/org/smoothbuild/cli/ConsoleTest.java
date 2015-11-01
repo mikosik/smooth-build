@@ -49,30 +49,30 @@ public class ConsoleTest {
     assertEquals(builder.toString(), outputStream.toString());
   }
 
-  // isProblemReported()
+  // isErrorReported()
 
   @Test
-  public void isProblemReported_returns_false_when_only_info_was_logged() throws Exception {
+  public void isErrorReported_returns_false_when_only_info_was_logged() throws Exception {
     console.print(name, asList(new Message(INFO, "message string")));
-    assertFalse(console.isProblemReported());
+    assertFalse(console.isErrorReported());
   }
 
   @Test
-  public void isProblemReported_returns_false_when_only_suggestion_was_logged() throws Exception {
+  public void isErrorReported_returns_false_when_only_suggestion_was_logged() throws Exception {
     console.print(name, asList(new Message(SUGGESTION, "message string")));
-    assertFalse(console.isProblemReported());
+    assertFalse(console.isErrorReported());
   }
 
   @Test
-  public void isProblemReported_returns_false_when_only_warning_was_logged() throws Exception {
+  public void isErrormReported_returns_false_when_only_warning_was_logged() throws Exception {
     console.print(name, asList(new Message(WARNING, "message string")));
-    assertFalse(console.isProblemReported());
+    assertFalse(console.isErrorReported());
   }
 
   @Test
-  public void isProblemReported_returns_true_when_error_was_logged() throws Exception {
+  public void isErrorReported_returns_true_when_error_was_logged() throws Exception {
     console.print(name, asList(new Message(ERROR, "message string")));
-    assertTrue(console.isProblemReported());
+    assertTrue(console.isErrorReported());
   }
 
   // printFinalSummary()

@@ -28,7 +28,7 @@ public class FunctionsCollector {
       Module builtinModule, ModuleContext module) {
     Worker worker = new Worker(console, builtinModule);
     worker.visit(module);
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       throw new ParsingException();
     }
     return worker.result();

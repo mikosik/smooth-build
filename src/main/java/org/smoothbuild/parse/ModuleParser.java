@@ -78,7 +78,7 @@ public class ModuleParser {
         }
       }
     }
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       throw new ParsingException();
     }
   }

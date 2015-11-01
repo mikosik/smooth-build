@@ -73,7 +73,7 @@ public class DefinedFunctionsCreator {
     Worker worker = new Worker(console, builtinModule, functionContexts, sorted,
         valuesDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       throw new ParsingException();
     }
     return result;
