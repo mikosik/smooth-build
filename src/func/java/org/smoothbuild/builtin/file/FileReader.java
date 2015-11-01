@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
@@ -35,7 +35,7 @@ public class FileReader {
     try {
       copy(source, destination);
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 }

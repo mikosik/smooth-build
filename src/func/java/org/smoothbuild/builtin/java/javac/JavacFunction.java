@@ -21,7 +21,7 @@ import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
 import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
 import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -113,7 +113,7 @@ public class JavacFunction {
         try {
           fileManager.close();
         } catch (IOException e) {
-          throw new FileSystemError(e);
+          throw new FileSystemException(e);
         }
       }
     }

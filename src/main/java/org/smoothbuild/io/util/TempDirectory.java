@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -67,7 +67,7 @@ public class TempDirectory {
     try {
       writeFilesImpl(files);
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -86,7 +86,7 @@ public class TempDirectory {
     try {
       writeFileImpl(path, content);
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -101,7 +101,7 @@ public class TempDirectory {
     try {
       return readFilesImpl();
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 
@@ -120,7 +120,7 @@ public class TempDirectory {
     try {
       return readContentImpl(path);
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 

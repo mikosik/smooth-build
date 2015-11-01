@@ -10,7 +10,7 @@ import java.util.jar.Manifest;
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.CannotAddDuplicatePathError;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -52,7 +52,7 @@ public class JarFunction {
           addEntry(jarOutputStream, file);
         }
       } catch (IOException e) {
-        throw new FileSystemError(e);
+        throw new FileSystemException(e);
       }
 
       return blobBuilder.build();

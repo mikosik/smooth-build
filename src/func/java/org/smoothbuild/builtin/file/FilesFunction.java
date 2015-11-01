@@ -8,8 +8,8 @@ import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirButFileException;
+import org.smoothbuild.io.fs.base.err.NoSuchDirException;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
@@ -42,9 +42,9 @@ public class FilesFunction {
       case DIR:
         return readFiles(container, fileSystem, path);
       case FILE:
-        throw new NoSuchDirButFileError(path);
+        throw new NoSuchDirButFileException(path);
       case NOTHING:
-        throw new NoSuchDirError(path);
+        throw new NoSuchDirException(path);
       default:
         throw new Message(FATAL, "Broken 'files' function implementation: unreachable case");
     }
