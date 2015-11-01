@@ -4,7 +4,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.valuesDb;
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.message.base.Message;
 import org.testory.Closure;
 
 public class OutputTest {

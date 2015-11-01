@@ -20,9 +20,9 @@ import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.expr.ValueExpression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;

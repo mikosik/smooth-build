@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
 

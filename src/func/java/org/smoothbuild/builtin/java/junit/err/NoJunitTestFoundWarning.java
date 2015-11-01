@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.java.junit.err;
 
-import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.smoothbuild.lang.message.MessageType.WARNING;
 
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class NoJunitTestFoundWarning extends Message {
   public NoJunitTestFoundWarning() {

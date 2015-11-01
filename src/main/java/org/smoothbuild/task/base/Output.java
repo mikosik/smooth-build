@@ -2,8 +2,8 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.message.base.Message;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;

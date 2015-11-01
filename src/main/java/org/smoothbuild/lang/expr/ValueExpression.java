@@ -3,8 +3,8 @@ package org.smoothbuild.lang.expr;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.task.base.Computer.valueComputer;
 
+import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.util.Empty;
 

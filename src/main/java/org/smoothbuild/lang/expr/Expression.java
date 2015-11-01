@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
+import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Computer;
 
 import com.google.common.collect.ImmutableList;

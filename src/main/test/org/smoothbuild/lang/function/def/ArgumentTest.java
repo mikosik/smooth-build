@@ -5,10 +5,10 @@ import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.function.def.Argument.namedArgument;
 import static org.smoothbuild.lang.function.def.Argument.namelessArgument;
 import static org.smoothbuild.lang.function.def.Argument.pipedArgument;
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -17,8 +17,8 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.message.base.CodeLocation;
 
 import com.google.common.collect.ImmutableMultimap;
 

@@ -1,8 +1,8 @@
-package org.smoothbuild.message.base;
+package org.smoothbuild.lang.message;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenEqual;

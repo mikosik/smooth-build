@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.lang.message.CodeLocation;
 
 public class ScriptParser {
   public static ModuleContext parseScript(Console console, InputStream inputStream,

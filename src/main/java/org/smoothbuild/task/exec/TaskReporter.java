@@ -3,7 +3,7 @@ package org.smoothbuild.task.exec;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.annotations.VisibleForTesting;

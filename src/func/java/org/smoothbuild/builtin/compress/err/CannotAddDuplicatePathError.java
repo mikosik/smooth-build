@@ -1,9 +1,9 @@
 package org.smoothbuild.builtin.compress.err;
 
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class CannotAddDuplicatePathError extends Message {
   public CannotAddDuplicatePathError(Path path) {

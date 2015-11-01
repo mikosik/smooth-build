@@ -4,11 +4,11 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.message.base.MessageType.INFO;
-import static org.smoothbuild.message.base.MessageType.SUGGESTION;
-import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.INFO;
+import static org.smoothbuild.lang.message.MessageType.SUGGESTION;
+import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.when;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class ConsoleTest {
   String name = "GROUP NAME";

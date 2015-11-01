@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.plugin;
 
 import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.ValueFactory;
-import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.CommandExecutor;
 
 public interface Container {

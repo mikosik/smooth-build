@@ -1,9 +1,9 @@
 package org.smoothbuild.builtin.java.err;
 
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class DuplicatePathInJarError extends Message {
   public DuplicatePathInJarError(Path path) {

@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.smoothbuild.lang.message.MessageType.WARNING;
 
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class NoJavaSourceFilesFoundWarning extends Message {
   public NoJavaSourceFilesFoundWarning() {

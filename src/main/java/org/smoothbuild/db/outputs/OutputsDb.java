@@ -9,13 +9,13 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessageType;
+import org.smoothbuild.lang.message.Messages;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.base.MessageType;
-import org.smoothbuild.message.base.Messages;
 import org.smoothbuild.task.base.Output;
 
 import com.google.common.collect.ImmutableList;

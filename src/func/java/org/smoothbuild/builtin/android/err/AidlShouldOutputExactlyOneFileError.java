@@ -1,11 +1,11 @@
 package org.smoothbuild.builtin.android.err;
 
 import static org.smoothbuild.builtin.android.AndroidSdk.AIDL_BINARY;
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.message.base.Message;
 
 public class AidlShouldOutputExactlyOneFileError extends Message {
   public AidlShouldOutputExactlyOneFileError(Array<SFile> outputFiles) {

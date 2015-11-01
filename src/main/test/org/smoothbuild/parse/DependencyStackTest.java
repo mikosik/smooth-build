@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.hamcrest.core.IsSame.sameInstance;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenCalled;
@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.lang.message.CodeLocation;
 
 import com.google.common.collect.ImmutableSet;
 
