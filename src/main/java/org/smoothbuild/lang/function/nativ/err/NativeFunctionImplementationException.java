@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.nativ.err;
 
 import java.lang.reflect.Method;
 
-public class NativeFunctionImplementationException extends Exception {
+public class NativeFunctionImplementationException extends RuntimeException {
 
   public NativeFunctionImplementationException(Method method, String message) {
     super(buildMessage(method, message));
