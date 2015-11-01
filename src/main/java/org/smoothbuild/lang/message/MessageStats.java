@@ -1,6 +1,6 @@
-package org.smoothbuild.message.base;
+package org.smoothbuild.lang.message;
 
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

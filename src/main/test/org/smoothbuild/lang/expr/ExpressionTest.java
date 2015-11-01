@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.util.Empty;
 import org.testory.Closure;

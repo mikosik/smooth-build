@@ -1,12 +1,12 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
-import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.lang.message.CodeLocation;
 
 public class LocationHelpers {
   public static CodeLocation locationOf(ArgContext arg) {

@@ -5,7 +5,7 @@ import java.util.Deque;
 
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.lang.message.CodeLocation;
 
 public class DependencyStack {
   private final Deque<DependencyStackElem> stack = new ArrayDeque<>();

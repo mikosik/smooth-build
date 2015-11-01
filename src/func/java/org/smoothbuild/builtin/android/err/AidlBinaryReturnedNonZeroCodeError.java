@@ -1,9 +1,9 @@
 package org.smoothbuild.builtin.android.err;
 
 import static org.smoothbuild.builtin.android.AndroidSdk.AIDL_BINARY;
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class AidlBinaryReturnedNonZeroCodeError extends Message {
   public AidlBinaryReturnedNonZeroCodeError(int exitValue) {

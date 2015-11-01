@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.mock;

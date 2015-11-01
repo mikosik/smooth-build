@@ -1,6 +1,6 @@
 package org.smoothbuild.cli;
 
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.PrintStream;
 import java.util.Iterator;
@@ -8,10 +8,10 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.base.MessageStats;
-import org.smoothbuild.message.base.MessageType;
+import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessageStats;
+import org.smoothbuild.lang.message.MessageType;
 
 import com.google.common.base.Splitter;
 

@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.file.err;
 
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class IllegalPathError extends Message {
   public IllegalPathError(String paramName, String message) {

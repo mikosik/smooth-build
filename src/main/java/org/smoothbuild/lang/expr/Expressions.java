@@ -7,7 +7,7 @@ import java.util.List;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.lang.message.CodeLocation;
 
 public class Expressions {
   public static Expression callExpression(Function function, boolean isGenerated,

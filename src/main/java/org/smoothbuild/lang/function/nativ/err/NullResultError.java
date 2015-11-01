@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.function.nativ.err;
 
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class NullResultError extends Message {
   public NullResultError(NativeFunction function) {

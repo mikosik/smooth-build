@@ -1,10 +1,10 @@
 package org.smoothbuild.builtin.file.err;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class IllegalReadFromSmoothDirError extends Message {
   public IllegalReadFromSmoothDirError(Path path) {

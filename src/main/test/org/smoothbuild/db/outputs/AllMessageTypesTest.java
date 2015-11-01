@@ -1,9 +1,9 @@
 package org.smoothbuild.db.outputs;
 
-import static org.smoothbuild.message.base.MessageType.ERROR;
-import static org.smoothbuild.message.base.MessageType.INFO;
-import static org.smoothbuild.message.base.MessageType.SUGGESTION;
-import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.INFO;
+import static org.smoothbuild.lang.message.MessageType.SUGGESTION;
+import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 

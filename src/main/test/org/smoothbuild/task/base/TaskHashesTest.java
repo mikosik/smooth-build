@@ -11,7 +11,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.message.base.CodeLocation;
+import org.smoothbuild.lang.message.CodeLocation;
 
 import com.google.common.collect.ImmutableList;
 

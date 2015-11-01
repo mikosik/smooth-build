@@ -1,6 +1,6 @@
-package org.smoothbuild.message.base;
+package org.smoothbuild.lang.message;
 
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 public class Messages {
   public static boolean containsErrors(Iterable<Message> messages) {

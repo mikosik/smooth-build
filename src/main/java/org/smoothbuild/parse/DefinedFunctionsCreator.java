@@ -43,13 +43,13 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.Argument;
 import org.smoothbuild.lang.function.def.ArgumentExpressionCreator;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 

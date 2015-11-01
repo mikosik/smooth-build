@@ -5,8 +5,8 @@ import static org.smoothbuild.builtin.util.Exceptions.stackTraceToString;
 import java.io.IOException;
 import java.util.List;
 
-import org.smoothbuild.message.base.Message;
-import org.smoothbuild.message.base.MessageType;
+import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessageType;
 
 public class RunningAidlBinaryFailedError extends Message {
   public RunningAidlBinaryFailedError(List<String> command, IOException e) {

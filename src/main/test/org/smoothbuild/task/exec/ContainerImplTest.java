@@ -2,7 +2,7 @@ package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.valuesDb;
-import static org.smoothbuild.message.base.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDirectory;
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.Message;
 
 public class ContainerImplTest {
   private final FileSystem fileSystem = new MemoryFileSystem();

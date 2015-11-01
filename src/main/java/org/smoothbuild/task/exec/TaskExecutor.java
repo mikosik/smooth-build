@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.message.base.Messages.containsErrors;
+import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

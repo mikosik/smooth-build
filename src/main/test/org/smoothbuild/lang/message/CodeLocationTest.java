@@ -1,7 +1,7 @@
-package org.smoothbuild.message.base;
+package org.smoothbuild.lang.message;
 
-import static org.smoothbuild.message.base.CodeLocation.codeLocation;
-import static org.smoothbuild.message.base.CodeLocation.commandLine;
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.CodeLocation.commandLine;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

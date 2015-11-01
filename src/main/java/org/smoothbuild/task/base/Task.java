@@ -3,8 +3,8 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.message.base.CodeLocation;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.collect.ImmutableList;

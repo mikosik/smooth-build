@@ -1,7 +1,7 @@
 package org.smoothbuild.task.exec;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.message.base.MessageType.WARNING;
+import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.smoothbuild.task.exec.TaskReporter.header;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.base.Message;
+import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
