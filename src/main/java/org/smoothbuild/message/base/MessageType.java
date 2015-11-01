@@ -3,7 +3,6 @@ package org.smoothbuild.message.base;
 import com.google.common.base.Ascii;
 
 public enum MessageType {
-  FATAL(true),
   ERROR(true),
   WARNING(false),
   SUGGESTION(false),
