@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.message;
 
-import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.given;
@@ -17,12 +16,10 @@ import com.google.common.testing.EqualsTester;
 public class MessageTest {
   private String messageString;
   private Message message;
-  private Throwable throwable;
 
   @Before
   public void before() {
     givenTest(this);
-    given(throwable = new Throwable());
   }
 
   @Test(expected = NullPointerException.class)
@@ -54,13 +51,6 @@ public class MessageTest {
     given(message = new Message(ERROR, messageString));
     when(message.toString());
     thenReturned(ERROR.name() + ": " + messageString);
-  }
-
-  @Test
-  public void to_string_with_cause() throws Exception {
-    given(message = new Message(ERROR, messageString, throwable));
-    when(message.toString());
-    thenReturned(ERROR.name() + ": " + messageString + "\n" + getStackTraceAsString(throwable));
   }
 
   @Test
