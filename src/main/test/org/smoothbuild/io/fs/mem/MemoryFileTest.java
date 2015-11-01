@@ -13,7 +13,7 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 
 public class MemoryFileTest {
   private final MemoryDirectory parent = mock(MemoryDirectory.class);
@@ -83,7 +83,7 @@ public class MemoryFileTest {
   public void opening_input_stream_for_non_existent_file_fails() throws Exception {
     given(file = new MemoryFile(parent, name));
     when(file).openInputStream();
-    thenThrown(FileSystemError.class);
+    thenThrown(FileSystemException.class);
   }
 
   @Test

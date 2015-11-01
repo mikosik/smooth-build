@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
@@ -117,6 +117,6 @@ public class SStringTest {
   public void reading_not_stored_sstring_fails() throws Exception {
     given(sstring = (SString) valuesDb.read(STRING, HashCode.fromInt(33)));
     when(sstring).value();
-    thenThrown(NoObjectWithGivenHashError.class);
+    thenThrown(NoObjectWithGivenHashException.class);
   }
 }

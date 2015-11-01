@@ -1,14 +1,13 @@
 package org.smoothbuild.builtin.java.junit;
 
 import static org.smoothbuild.builtin.util.Exceptions.stackTraceToString;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 
 import java.io.IOException;
 import java.util.Map;
 
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.message.base.Message;
 
 public class FileClassLoader extends ClassLoader {
   private final Map<String, SFile> binaryNameToFile;
@@ -32,7 +31,7 @@ public class FileClassLoader extends ClassLoader {
     try {
       return inputStreamToByteArray(file.content().openInputStream());
     } catch (IOException e) {
-      throw new Message(FATAL, "Error reading from " + file.path() + ". Java exception is:\n"
+      throw new FileSystemException("Error reading from " + file.path() + ". Java exception is:\n"
           + stackTraceToString(e));
     }
   }

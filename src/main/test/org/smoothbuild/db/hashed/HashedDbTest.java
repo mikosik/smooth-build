@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
@@ -87,6 +87,6 @@ public class HashedDbTest {
   @Test
   public void reading_not_written_value_fails() throws Exception {
     when(hashedDb).openInputStream(HashCode.fromInt(33));
-    thenThrown(NoObjectWithGivenHashError.class);
+    thenThrown(NoObjectWithGivenHashException.class);
   }
 }

@@ -58,12 +58,12 @@ public class Console {
     }
   }
 
-  public boolean isProblemReported() {
-    return messageStats.containsProblems();
+  public boolean isErrorReported() {
+    return messageStats.containsErrors();
   }
 
   public void printFinalSummary() {
-    String message = isProblemReported() ? "FAILED :(" : "SUCCESS :)";
+    String message = isErrorReported() ? "FAILED :(" : "SUCCESS :)";
     println(GROUP_PREFIX + message);
     printMessageStats();
   }

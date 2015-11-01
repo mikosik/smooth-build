@@ -45,7 +45,7 @@ public class Build implements Command {
     }
 
     console.printFinalSummary();
-    return console.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+    return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
   public Set<Name> parseArguments(List<String> args) {

@@ -23,7 +23,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -73,7 +73,7 @@ public class OutputsDbTest {
   @Test
   public void reading_not_written_value_fails() throws Exception {
     when(outputsDb).read(hash, STRING);
-    thenThrown(NoObjectWithGivenHashError.class);
+    thenThrown(NoObjectWithGivenHashException.class);
   }
 
   @Test

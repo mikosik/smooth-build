@@ -1,11 +1,11 @@
 package org.smoothbuild.io.fs.base;
 
-import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchPathError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirButFileException;
+import org.smoothbuild.io.fs.base.err.NoSuchDirException;
+import org.smoothbuild.io.fs.base.err.NoSuchFileButDirException;
+import org.smoothbuild.io.fs.base.err.NoSuchFileException;
+import org.smoothbuild.io.fs.base.err.NoSuchPathException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenException;
 
 public class AssertPath {
 
@@ -15,9 +15,9 @@ public class AssertPath {
       case DIR:
         return;
       case FILE:
-        throw new NoSuchDirButFileError(path);
+        throw new NoSuchDirButFileException(path);
       case NOTHING:
-        throw new NoSuchDirError(path);
+        throw new NoSuchDirException(path);
       default:
         throw newUnknownPathState(state);
     }
@@ -29,9 +29,9 @@ public class AssertPath {
       case FILE:
         return;
       case DIR:
-        throw new NoSuchFileButDirError(path);
+        throw new NoSuchFileButDirException(path);
       case NOTHING:
-        throw new NoSuchFileError(path);
+        throw new NoSuchFileException(path);
       default:
         throw newUnknownPathState(state);
     }
@@ -45,7 +45,7 @@ public class AssertPath {
       case DIR:
         return;
       case NOTHING:
-        throw new NoSuchPathError(path);
+        throw new NoSuchPathException(path);
       default:
         throw newUnknownPathState(state);
     }
@@ -55,9 +55,9 @@ public class AssertPath {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
-        throw new PathIsAlreadyTakenError(path);
+        throw new PathIsAlreadyTakenException(path);
       case DIR:
-        throw new PathIsAlreadyTakenError(path);
+        throw new PathIsAlreadyTakenException(path);
       case NOTHING:
         return;
       default:

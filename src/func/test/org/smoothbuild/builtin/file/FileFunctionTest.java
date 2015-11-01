@@ -16,8 +16,8 @@ import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.NoSuchFileButDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileError;
+import org.smoothbuild.io.fs.base.err.NoSuchFileButDirException;
+import org.smoothbuild.io.fs.base.err.NoSuchFileException;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
@@ -66,7 +66,7 @@ public class FileFunctionTest {
     try {
       execute("some/path/file.txt");
       fail("exception should be thrown");
-    } catch (NoSuchFileError e) {
+    } catch (NoSuchFileException e) {
       // expected
     }
   }
@@ -80,7 +80,7 @@ public class FileFunctionTest {
     try {
       execute(dir.value());
       fail("exception should be thrown");
-    } catch (NoSuchFileButDirError e) {
+    } catch (NoSuchFileButDirException e) {
       // expected
     }
   }

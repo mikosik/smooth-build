@@ -19,8 +19,8 @@ import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.NoSuchDirButFileError;
-import org.smoothbuild.io.fs.base.err.NoSuchDirError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirButFileException;
+import org.smoothbuild.io.fs.base.err.NoSuchDirException;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
@@ -63,7 +63,7 @@ public class FilesFunctionTest {
   @Test
   public void nonexistent_path_is_forbidden() throws Exception {
     when($files(container, params("some/path")));
-    thenThrown(NoSuchDirError.class);
+    thenThrown(NoSuchDirException.class);
   }
 
   @Test
@@ -71,7 +71,7 @@ public class FilesFunctionTest {
     given(path = path("some/path/file.txt"));
     given(createFile(container.projectFileSystem(), path, ""));
     when($files(container, params(path.value())));
-    thenThrown(NoSuchDirButFileError.class);
+    thenThrown(NoSuchDirButFileException.class);
   }
 
   @Test

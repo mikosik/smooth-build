@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.basicTypes;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -51,7 +50,6 @@ import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.message.base.CodeLocation;
-import org.smoothbuild.message.base.Message;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -75,7 +73,7 @@ public class DefinedFunctionsCreator {
     Worker worker = new Worker(console, builtinModule, functionContexts, sorted,
         valuesDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
-    if (console.isProblemReported()) {
+    if (console.isErrorReported()) {
       throw new ParsingException();
     }
     return result;
@@ -155,7 +153,7 @@ public class DefinedFunctionsCreator {
       if (expressionContext.STRING() != null) {
         return toStringExpression(expressionContext.STRING());
       }
-      throw new Message(FATAL, "Illegal parse tree: " + ExpressionContext.class.getSimpleName()
+      throw new RuntimeException("Illegal parse tree: " + ExpressionContext.class.getSimpleName()
           + " without children.");
     }
 

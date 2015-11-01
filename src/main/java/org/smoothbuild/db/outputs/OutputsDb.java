@@ -43,7 +43,7 @@ public class OutputsDb {
       marshaller.write(messageString.hash());
     }
 
-    if (!Messages.containsProblems(messages)) {
+    if (!Messages.containsErrors(messages)) {
       marshaller.write(output.result().hash());
     }
 
@@ -66,7 +66,7 @@ public class OutputsDb {
         messages.add(new Message(messageType, messageString));
       }
 
-      if (Messages.containsProblems(messages)) {
+      if (Messages.containsErrors(messages)) {
         return new Output(messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();

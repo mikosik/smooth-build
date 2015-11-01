@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashError;
-import org.smoothbuild.db.hashed.err.WritingHashedObjectFailedError;
+import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
+import org.smoothbuild.db.hashed.err.WritingHashedObjectFailedException;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
@@ -31,7 +31,7 @@ public class HashedDb {
     if (fileSystem.pathState(path) == PathState.FILE) {
       return fileSystem.openInputStream(path);
     } else {
-      throw new NoObjectWithGivenHashError(hash);
+      throw new NoObjectWithGivenHashException(hash);
     }
   }
 
@@ -49,7 +49,7 @@ public class HashedDb {
     try (OutputStream outputStream = fileSystem.openOutputStream(path)) {
       outputStream.write(bytes);
     } catch (IOException e) {
-      throw new WritingHashedObjectFailedError(hash, e);
+      throw new WritingHashedObjectFailedException(hash, e);
     }
 
     return hash;

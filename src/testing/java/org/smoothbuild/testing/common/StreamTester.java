@@ -1,7 +1,5 @@
 package org.smoothbuild.testing.common;
 
-import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.ByteArrayInputStream;
@@ -10,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-
-import org.smoothbuild.message.base.Message;
 
 import com.google.common.io.ByteStreams;
 
@@ -22,8 +18,7 @@ public class StreamTester {
     try {
       writeAndClose(stream, content);
     } catch (IOException e) {
-      throw new Message(FATAL, "IOException should never be thrown by ByteArrayOutputStream.\n"
-          + "Java stack trace is:\n" + getStackTraceAsString(e));
+      throw new RuntimeException("IOException should never be thrown by ByteArrayOutputStream.", e);
     }
     return new ByteArrayInputStream(stream.toByteArray());
   }

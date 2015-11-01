@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.smoothbuild.db.hashed.err.CorruptedBoolError;
-import org.smoothbuild.db.hashed.err.CorruptedEnumValue;
-import org.smoothbuild.db.hashed.err.IllegalPathInObjectError;
-import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedError;
-import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValue;
+import org.smoothbuild.db.hashed.err.CorruptedBoolException;
+import org.smoothbuild.db.hashed.err.CorruptedEnumException;
+import org.smoothbuild.db.hashed.err.IllegalPathInObjectException;
+import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedException;
+import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.collect.ImmutableList;
@@ -58,7 +58,7 @@ public class Unmarshaller implements Closeable {
     try {
       return path(value);
     } catch (IllegalArgumentException e) {
-      throw new IllegalPathInObjectError(hash, e.getMessage());
+      throw new IllegalPathInObjectException(hash, e.getMessage());
     }
   }
 
@@ -75,7 +75,7 @@ public class Unmarshaller implements Closeable {
       case TRUE_AS_BYTE:
         return true;
       default:
-        throw new CorruptedBoolError(byteValue);
+        throw new CorruptedBoolException(byteValue);
     }
   }
 
@@ -94,7 +94,7 @@ public class Unmarshaller implements Closeable {
     if (enumValues.isValidByte(byteValue)) {
       return enumValues.byteToValue(byteValue);
     } else {
-      throw new CorruptedEnumValue(enumValues, byteValue);
+      throw new CorruptedEnumException(enumValues, byteValue);
     }
   }
 
@@ -102,7 +102,7 @@ public class Unmarshaller implements Closeable {
     try {
       return readBytesImpl(size, valueName);
     } catch (IOException e) {
-      throw new ReadingHashedObjectFailedError(hash, e);
+      throw new ReadingHashedObjectFailedException(hash, e);
     }
   }
 
@@ -110,7 +110,7 @@ public class Unmarshaller implements Closeable {
     byte[] bytes = new byte[size];
     int read = inputStream.read(bytes);
     if (read < size) {
-      throw new TooFewBytesToUnmarshallValue(hash, valueName, size, read);
+      throw new TooFewBytesToUnmarshallValueException(hash, valueName, size, read);
     }
     return bytes;
   }
@@ -120,7 +120,7 @@ public class Unmarshaller implements Closeable {
     try {
       inputStream.close();
     } catch (IOException e) {
-      throw new ReadingHashedObjectFailedError(hash, e);
+      throw new ReadingHashedObjectFailedException(hash, e);
     }
   }
 }

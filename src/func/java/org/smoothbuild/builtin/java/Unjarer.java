@@ -18,7 +18,7 @@ import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.FileSystemError;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -63,7 +63,7 @@ public class Unjarer {
         }
       }
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
     return fileArrayBuilder.build();
   }
@@ -90,7 +90,7 @@ public class Unjarer {
       }
       return contentBuilder.build();
     } catch (IOException e) {
-      throw new FileSystemError(e);
+      throw new FileSystemException(e);
     }
   }
 }

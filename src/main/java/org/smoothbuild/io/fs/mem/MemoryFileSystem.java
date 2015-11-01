@@ -16,10 +16,10 @@ import java.util.List;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.base.err.NoSuchDirError;
-import org.smoothbuild.io.fs.base.err.NoSuchFileError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirError;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileError;
+import org.smoothbuild.io.fs.base.err.NoSuchDirException;
+import org.smoothbuild.io.fs.base.err.NoSuchFileException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirException;
+import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileException;
 
 /**
  * In memory implementation of FileSystem.
@@ -73,7 +73,7 @@ public class MemoryFileSystem implements FileSystem {
   @Override
   public OutputStream openOutputStream(Path path) {
     if (pathState(path) == DIR) {
-      throw new PathIsAlreadyTakenByDirError(path);
+      throw new PathIsAlreadyTakenByDirException(path);
     }
 
     MemoryDirectory dir = createDirImpl(path.parent());
@@ -114,7 +114,7 @@ public class MemoryFileSystem implements FileSystem {
         if (child.isDirectory()) {
           currentDir = (MemoryDirectory) child;
         } else {
-          throw new PathIsAlreadyTakenByFileError(directory);
+          throw new PathIsAlreadyTakenByFileException(directory);
         }
       } else {
         MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
@@ -130,7 +130,7 @@ public class MemoryFileSystem implements FileSystem {
     if (found != null && found.isFile()) {
       return found;
     } else {
-      throw new NoSuchFileError(path);
+      throw new NoSuchFileException(path);
     }
   }
 
@@ -139,7 +139,7 @@ public class MemoryFileSystem implements FileSystem {
     if (found != null && found.isDirectory()) {
       return found;
     } else {
-      throw new NoSuchDirError(path);
+      throw new NoSuchDirException(path);
     }
   }
 
