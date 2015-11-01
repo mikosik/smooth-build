@@ -1,11 +1,7 @@
 package org.smoothbuild.db.hashed.err;
 
-import static org.smoothbuild.message.base.MessageType.FATAL;
-
-import org.smoothbuild.message.base.Message;
-
-public class HashedDbError extends Message {
+public class HashedDbError extends RuntimeException {
   public HashedDbError(String message) {
-    super(FATAL, "Internal error in smooth hashed DB:\n" + message);
+    super("Internal error in smooth hashed DB:\n" + message);
   }
 }
