@@ -8,7 +8,6 @@ import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import javax.inject.Inject;
 
@@ -21,7 +20,6 @@ import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.message.base.Message;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -86,7 +84,7 @@ public class ObjectMarshallers {
   public <T extends Value> ArrayMarshaller<T> arrayMarshaller(ArrayType arrayType) {
     ArrayMarshaller<T> reader = (ArrayMarshaller<T>) arrayMarshallersMap.get(arrayType);
     if (reader == null) {
-      throw new Message(FATAL, "Unexpected value type: " + arrayType);
+      throw new RuntimeException("Unexpected value type: " + arrayType);
     }
     return reader;
   }
@@ -94,7 +92,7 @@ public class ObjectMarshallers {
   public <T extends Value> ObjectMarshaller<T> marshaller(Type type) {
     ObjectMarshaller<T> reader = (ObjectMarshaller<T>) marshallersMap.get(type);
     if (reader == null) {
-      throw new Message(FATAL, "Unexpected value type: " + type);
+      throw new RuntimeException("Unexpected value type: " + type);
     }
     return reader;
   }

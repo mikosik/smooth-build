@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.java.javac.err;
 
-import static org.smoothbuild.message.base.MessageType.FATAL;
-
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
@@ -26,7 +24,7 @@ public class JavaCompilerMessage extends Message {
       case OTHER:
         return MessageType.INFO;
       default:
-        throw new Message(FATAL, "Unknown diagnostic kind " + diagnostic.getKind());
+        throw new RuntimeException("Unknown diagnostic kind " + diagnostic.getKind());
     }
   }
 }
