@@ -32,7 +32,7 @@ public class ModuleParser {
   private final Console console;
 
   @Inject
-  public ModuleParser(@ProjectDir FileSystem fileSystem, @Builtin Module builtinModule,
+  public ModuleParser(@ProjectDir FileSystem fileSystem, Module builtinModule,
       DefinedFunctionsCreator definedFunctionsCreator, Console console) {
     this.fileSystem = fileSystem;
     this.builtinModule = builtinModule;

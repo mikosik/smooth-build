@@ -11,13 +11,12 @@ import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.type.Conversions;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.parse.Builtin;
 
 public class ImplicitConverter {
   private final Module builtinModule;
 
   @Inject
-  public ImplicitConverter(@Builtin Module builtinModule) {
+  public ImplicitConverter(Module builtinModule) {
     this.builtinModule = builtinModule;
   }
 
