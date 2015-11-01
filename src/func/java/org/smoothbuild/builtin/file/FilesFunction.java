@@ -2,12 +2,12 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import org.smoothbuild.builtin.file.err.CannotListRootDirError;
 import org.smoothbuild.builtin.file.err.IllegalReadFromSmoothDirError;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.io.fs.base.err.NoSuchDirButFileException;
 import org.smoothbuild.io.fs.base.err.NoSuchDirException;
 import org.smoothbuild.lang.plugin.Name;
@@ -18,7 +18,6 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.message.base.Message;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 public class FilesFunction {
@@ -46,7 +45,7 @@ public class FilesFunction {
       case NOTHING:
         throw new NoSuchDirException(path);
       default:
-        throw new Message(FATAL, "Broken 'files' function implementation: unreachable case");
+        throw new FileSystemException("Broken 'files' function implementation: unreachable case");
     }
   }
 

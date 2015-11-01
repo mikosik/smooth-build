@@ -2,12 +2,9 @@ package org.smoothbuild.io.fs.base;
 
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
-import static org.smoothbuild.message.base.MessageType.FATAL;
 
 import java.util.ArrayDeque;
 import java.util.Iterator;
-
-import org.smoothbuild.message.base.Message;
 
 public class RecursiveFilesIterator implements Iterator<Path> {
   private final FileSystem fileSystem;
@@ -55,12 +52,10 @@ public class RecursiveFilesIterator implements Iterator<Path> {
             directoryStack.push(file);
             break;
           case NOTHING:
-            throw new Message(FATAL, "Unexpected case " + NOTHING + " in "
+            throw new RuntimeException("Unexpected case " + NOTHING + " in "
                 + RecursiveFilesIterator.class.getSimpleName());
           default:
-            throw new Message(FATAL, "Unknown PathState: " + fileSystem.pathState(file) + " in "
-                + RecursiveFilesIterator.class.getSimpleName());
-
+            throw new RuntimeException("Unhandled case: " + fileSystem.pathState(file));
         }
       }
     }
