@@ -10,7 +10,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class FilesTest extends AcceptanceTestCase {
   @Test
   public void listing_files_from_project_root_causes_error() throws Exception {
-    givenScript("result: files('.');");
+    givenScript("result: files('/');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Listing files from project root is not allowed."));

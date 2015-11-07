@@ -91,7 +91,7 @@ public class UnmarshallerTest {
   public void illegal_path_causes_exception() throws Exception {
     given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
-    given(marshaller).write("/");
+    given(marshaller).write("..");
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readPath();
     thenThrown(IllegalPathInObjectException.class);
