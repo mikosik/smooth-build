@@ -52,10 +52,9 @@ public class RecursiveFilesIterator implements Iterator<Path> {
             directoryStack.push(file);
             break;
           case NOTHING:
-            throw new RuntimeException("Unexpected case " + NOTHING + " in "
-                + RecursiveFilesIterator.class.getSimpleName());
+            throw new RuntimeException("Unexpected case: " + NOTHING);
           default:
-            throw new RuntimeException("Unhandled case: " + fileSystem.pathState(file));
+            throw new RuntimeException("Unexpected case: " + fileSystem.pathState(file));
         }
       }
     }

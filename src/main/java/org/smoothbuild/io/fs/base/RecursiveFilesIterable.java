@@ -16,7 +16,7 @@ public class RecursiveFilesIterable implements Iterable<Path> {
       case NOTHING:
         return ImmutableList.of();
       default:
-        throw new RuntimeException("Unhandled case " + fileSystem.pathState(directory));
+        throw new RuntimeException("Unexpected case: " + fileSystem.pathState(directory));
     }
   }
 
