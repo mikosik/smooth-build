@@ -18,11 +18,10 @@ public class Path {
 
   public static Path path(String value) {
     checkIsValid(value);
-    String canonicalValue = toCanonical(value);
-    if (canonicalValue.equals(ROOT_STRING)) {
+    if (value.equals(ROOT_STRING)) {
       return ROOT_PATH;
     } else {
-      return new Path(canonicalValue);
+      return new Path(value);
     }
   }
 
@@ -54,19 +53,14 @@ public class Path {
     if (path.contains("//")) {
       return "Path cannot contain two slashes (//) in a row";
     }
-    if (path.contains("/./") || path.endsWith("/.")) {
-      return "Path can contain '.' element only at the beginning (for example './mypath').";
+    if (path.startsWith("./") || path.contains("/./") || path.endsWith("/.")) {
+      return "Path cannot contain '.' element.";
     }
     if (path.equals("..") || path.startsWith("../") || path.contains("/../")
         || path.endsWith("/..")) {
       return "Path cannot contain '..' element.";
     }
     return null;
-  }
-
-  private static String toCanonical(String path) {
-    // remove './' prefix
-    return path.startsWith("./") ? path.substring(2, path.length()) : path;
   }
 
   public String value() {
