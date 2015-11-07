@@ -49,7 +49,7 @@ public class PathTest {
     for (String path : PathTesting.listOfInvalidPaths()) {
       try {
         path(path);
-        fail("exception should be thrown");
+        fail("exception should be thrown for " + path);
       } catch (IllegalArgumentException e) {
         // expected
       }
@@ -62,13 +62,13 @@ public class PathTest {
   }
 
   @Test
-  public void dot_path_returns_root_path_instance() throws Exception {
-    assertSame(Path.rootPath(), Path.path("."));
+  public void slash_path_returns_root_path_instance() throws Exception {
+    assertSame(Path.rootPath(), Path.path("/"));
   }
 
   @Test
   public void value() {
-    assertValue(".", ".");
+    assertValue("/", "/");
 
     assertValue("abc", "abc");
     assertValue("abc/def", "abc/def");
@@ -91,11 +91,11 @@ public class PathTest {
 
   @Test
   public void test_parent() throws Exception {
-    assertParentOf("abc", ".");
+    assertParentOf("abc", "/");
     assertParentOf("abc/def", "abc");
     assertParentOf("abc/def/ghi", "abc/def");
 
-    assertParentOf(" ", ".");
+    assertParentOf(" ", "/");
   }
 
   private static void assertParentOf(String input, String expected) {
@@ -104,15 +104,15 @@ public class PathTest {
 
   @Test
   public void append() {
-    assertAppend(".", ".", ".");
+    assertAppend("/", "/", "/");
 
-    assertAppend("abc", ".", "abc");
-    assertAppend("abc/def", ".", "abc/def");
-    assertAppend("abc/def/ghi", ".", "abc/def/ghi");
+    assertAppend("abc", "/", "abc");
+    assertAppend("abc/def", "/", "abc/def");
+    assertAppend("abc/def/ghi", "/", "abc/def/ghi");
 
-    assertAppend(".", "abc", "abc");
-    assertAppend(".", "abc/def", "abc/def");
-    assertAppend(".", "abc/def/ghi", "abc/def/ghi");
+    assertAppend("/", "abc", "abc");
+    assertAppend("/", "abc/def", "abc/def");
+    assertAppend("/", "abc/def/ghi", "abc/def/ghi");
 
     assertAppend("abc", "xyz", "abc/xyz");
     assertAppend("abc", "xyz/uvw", "abc/xyz/uvw");
@@ -138,7 +138,7 @@ public class PathTest {
 
   @Test
   public void test_parts() throws Exception {
-    assertParts(".", Arrays.<String> asList());
+    assertParts("/", Arrays.<String> asList());
 
     assertParts("abc", asList("abc"));
     assertParts("abc/def", asList("abc", "def"));
@@ -225,7 +225,7 @@ public class PathTest {
   private static List<Path> listOfCorrectNonEqualPaths() {
     Builder<Path> builder = ImmutableList.builder();
 
-    builder.add(path("."));
+    builder.add(path("/"));
     builder.add(path("abc"));
     builder.add(path("abc/def"));
     builder.add(path("abc/def/ghi"));

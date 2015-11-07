@@ -11,7 +11,7 @@ import com.google.common.base.Splitter;
 public class Path {
   public static final char SEPARATOR_CHARACTER = '/';
   public static final String SEPARATOR = new String(new char[] { SEPARATOR_CHARACTER });
-  private static final String ROOT_STRING = ".";
+  private static final String ROOT_STRING = SEPARATOR;
   private static final Path ROOT_PATH = new Path(ROOT_STRING);
 
   private final String value;
@@ -44,16 +44,18 @@ public class Path {
     if (path.isEmpty()) {
       return "Empty path is not allowed";
     }
-    if (path.startsWith("/")) {
-      return "Path cannot start with slash character '/'.";
-    }
-    if (path.endsWith("/")) {
-      return "Path cannot end with slash character '/'.";
+    if (!path.equals(ROOT_STRING)) {
+      if (path.startsWith("/")) {
+        return "Path cannot start with slash character '/'.";
+      }
+      if (path.endsWith("/")) {
+        return "Path cannot end with slash character '/'.";
+      }
     }
     if (path.contains("//")) {
       return "Path cannot contain two slashes (//) in a row";
     }
-    if (path.startsWith("./") || path.contains("/./") || path.endsWith("/.")) {
+    if (path.equals(".") || path.startsWith("./") || path.contains("/./") || path.endsWith("/.")) {
       return "Path cannot contain '.' element.";
     }
     if (path.equals("..") || path.startsWith("../") || path.contains("/../")
@@ -107,7 +109,7 @@ public class Path {
 
   public Path firstPart() {
     if (this == ROOT_PATH) {
-      throw new IllegalArgumentException("Cannot return first part of root path '.'");
+      throw new IllegalArgumentException("Cannot return first part of root path '/'");
     }
     int index = value.indexOf(SEPARATOR_CHARACTER);
     if (index == -1) {
@@ -119,7 +121,7 @@ public class Path {
 
   public Path lastPart() {
     if (this == ROOT_PATH) {
-      throw new IllegalArgumentException("Cannot return last part of root path '.'");
+      throw new IllegalArgumentException("Cannot return last part of root path '/'");
     }
     int index = value.lastIndexOf(SEPARATOR_CHARACTER);
     if (index == -1) {
