@@ -73,10 +73,6 @@ public class PathTest {
     assertValue("abc", "abc");
     assertValue("abc/def", "abc/def");
     assertValue("abc/def/ghi", "abc/def/ghi");
-
-    assertValue("./abc", "abc");
-    assertValue("./abc/def", "abc/def");
-    assertValue("./abc/def/ghi", "abc/def/ghi");
   }
 
   private static void assertValue(String path, String expected) {
