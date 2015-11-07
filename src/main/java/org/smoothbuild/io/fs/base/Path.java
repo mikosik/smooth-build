@@ -11,22 +11,21 @@ import com.google.common.base.Splitter;
 public class Path {
   public static final char SEPARATOR_CHARACTER = '/';
   public static final String SEPARATOR = new String(new char[] { SEPARATOR_CHARACTER });
-  private static final String ROOT_STRING = SEPARATOR;
-  private static final Path ROOT_PATH = new Path(ROOT_STRING);
+  private static final String ROOT = SEPARATOR;
 
   private final String value;
 
   public static Path path(String value) {
     checkIsValid(value);
-    if (value.equals(ROOT_STRING)) {
-      return ROOT_PATH;
+    if (isRootString(value)) {
+      return root();
     } else {
       return new Path(value);
     }
   }
 
   public static Path root() {
-    return ROOT_PATH;
+    return new Path(ROOT);
   }
 
   private Path(String value) {
@@ -44,7 +43,7 @@ public class Path {
     if (path.isEmpty()) {
       return "Empty path is not allowed";
     }
-    if (!path.equals(ROOT_STRING)) {
+    if (!isRootString(path)) {
       if (path.startsWith("/")) {
         return "Path cannot start with slash character '/'.";
       }
@@ -70,25 +69,29 @@ public class Path {
   }
 
   public boolean isRoot() {
-    return this == ROOT_PATH;
+    return isRootString(value);
+  }
+
+  private static boolean isRootString(String path) {
+    return path.equals(ROOT);
   }
 
   public Path parent() {
-    if (this == ROOT_PATH) {
+    if (isRoot()) {
       throw new IllegalArgumentException("Cannot return parent of root path '.'");
     }
     int index = value.lastIndexOf(SEPARATOR_CHARACTER);
     if (index == -1) {
-      return ROOT_PATH;
+      return root();
     } else {
       return new Path(value.substring(0, index));
     }
   }
 
   public Path append(Path path) {
-    if (this == ROOT_PATH) {
+    if (isRoot()) {
       return path;
-    } else if (path == ROOT_PATH) {
+    } else if (path.isRoot()) {
       return this;
     } else {
       return new Path(this.value + SEPARATOR + path.value);
@@ -96,7 +99,7 @@ public class Path {
   }
 
   public List<Path> parts() {
-    if (this == ROOT_PATH) {
+    if (isRoot()) {
       return new ArrayList<>();
     } else {
       List<Path> result = new ArrayList<>();
@@ -108,7 +111,7 @@ public class Path {
   }
 
   public Path firstPart() {
-    if (this == ROOT_PATH) {
+    if (isRoot()) {
       throw new IllegalArgumentException("Cannot return first part of root path '/'");
     }
     int index = value.indexOf(SEPARATOR_CHARACTER);
@@ -120,7 +123,7 @@ public class Path {
   }
 
   public Path lastPart() {
-    if (this == ROOT_PATH) {
+    if (isRoot()) {
       throw new IllegalArgumentException("Cannot return last part of root path '/'");
     }
     int index = value.lastIndexOf(SEPARATOR_CHARACTER);
