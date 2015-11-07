@@ -9,8 +9,7 @@ import com.google.common.base.Splitter;
  * Path within a project.
  */
 public class Path {
-  public static final char SEPARATOR_CHARACTER = '/';
-  public static final String SEPARATOR = new String(new char[] { SEPARATOR_CHARACTER });
+  public static final String SEPARATOR = "/";
   private static final String ROOT = SEPARATOR;
 
   private final String value;
@@ -80,7 +79,7 @@ public class Path {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return parent of root path '.'");
     }
-    int index = value.lastIndexOf(SEPARATOR_CHARACTER);
+    int index = value.lastIndexOf(SEPARATOR);
     if (index == -1) {
       return root();
     } else {
@@ -103,7 +102,7 @@ public class Path {
       return new ArrayList<>();
     } else {
       List<Path> result = new ArrayList<>();
-      for (String string : Splitter.on(SEPARATOR_CHARACTER).split(value)) {
+      for (String string : Splitter.on(SEPARATOR).split(value)) {
         result.add(new Path(string));
       }
       return result;
@@ -114,7 +113,7 @@ public class Path {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return first part of root path '/'");
     }
-    int index = value.indexOf(SEPARATOR_CHARACTER);
+    int index = value.indexOf(SEPARATOR);
     if (index == -1) {
       return this;
     } else {
@@ -126,7 +125,7 @@ public class Path {
     if (isRoot()) {
       throw new IllegalArgumentException("Cannot return last part of root path '/'");
     }
-    int index = value.lastIndexOf(SEPARATOR_CHARACTER);
+    int index = value.lastIndexOf(SEPARATOR);
     if (index == -1) {
       return this;
     } else {

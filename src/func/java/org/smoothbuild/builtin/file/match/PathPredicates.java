@@ -14,7 +14,7 @@ public class PathPredicates {
   private static final class HasOnlyOnePart implements Predicate<Path> {
     @Override
     public boolean test(Path input) {
-      return input.isRoot() || input.value().indexOf(Path.SEPARATOR_CHARACTER) == -1;
+      return input.isRoot() || input.value().indexOf(Path.SEPARATOR) == -1;
     }
   }
 
