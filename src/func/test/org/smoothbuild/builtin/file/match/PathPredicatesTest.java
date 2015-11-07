@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.file.match;
 
 import static org.hamcrest.Matchers.sameInstance;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.Path.rootPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -43,7 +42,7 @@ public class PathPredicatesTest {
   @Test
   public void hasOnlyOnePart_returns_true_for_root_path() throws Exception {
     given(predicate = PathPredicates.hasOnlyOnePart());
-    when(predicate.test(rootPath()));
+    when(predicate.test(Path.root()));
     thenReturned(true);
   }
 

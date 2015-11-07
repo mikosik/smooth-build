@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.Path.rootPath;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,12 +57,12 @@ public class PathTest {
 
   @Test
   public void root_path_returns_the_same_instance_each_time() throws Exception {
-    assertSame(Path.rootPath(), Path.rootPath());
+    assertSame(Path.root(), Path.root());
   }
 
   @Test
   public void slash_path_returns_root_path_instance() throws Exception {
-    assertSame(Path.rootPath(), Path.path("/"));
+    assertSame(Path.root(), Path.path("/"));
   }
 
   @Test
@@ -82,7 +81,7 @@ public class PathTest {
   @Test
   public void parent_of_root_dir_throws_exception() throws Exception {
     try {
-      Path.rootPath().parent();
+      Path.root().parent();
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -160,7 +159,7 @@ public class PathTest {
   @Test
   public void last_part_of_root_dir_throws_exception() throws Exception {
     try {
-      rootPath().lastPart();
+      Path.root().lastPart();
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -184,7 +183,7 @@ public class PathTest {
   @Test
   public void first_part_of_root_dir_throws_exception() throws Exception {
     try {
-      rootPath().firstPart();
+      Path.root().firstPart();
       Assert.fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected

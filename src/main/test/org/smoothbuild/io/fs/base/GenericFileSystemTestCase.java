@@ -2,7 +2,6 @@ package org.smoothbuild.io.fs.base;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.Path.rootPath;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
@@ -38,7 +37,7 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void rooth_path_is_a_dir() throws Exception {
-    when(fileSystem.pathState(Path.rootPath()));
+    when(fileSystem.pathState(Path.root()));
     thenReturned(DIR);
   }
 
@@ -152,7 +151,7 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void cannot_open_output_stream_when_path_is_root_directory() throws Exception {
-    when(fileSystem).openOutputStream(Path.rootPath());
+    when(fileSystem).openOutputStream(Path.root());
     thenThrown(PathIsAlreadyTakenByDirException.class);
   }
 
@@ -220,7 +219,7 @@ public abstract class GenericFileSystemTestCase {
   public void deleting_root_path_removes_all_files() throws Exception {
     given(this).createEmptyFile(path);
     given(this).createEmptyFile(path2);
-    when(fileSystem).delete(rootPath());
+    when(fileSystem).delete(Path.root());
     thenEqual(fileSystem.pathState(path), NOTHING);
     thenEqual(fileSystem.pathState(path2), NOTHING);
   }

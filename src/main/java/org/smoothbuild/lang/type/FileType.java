@@ -13,7 +13,7 @@ public class FileType extends Type {
 
   @Override
   public Value defaultValue(ValuesDb valuesDb) {
-    return valuesDb.file(Path.rootPath(), (Blob) Types.BLOB.defaultValue(valuesDb));
+    return valuesDb.file(Path.root(), (Blob) Types.BLOB.defaultValue(valuesDb));
   }
 
   @Override
