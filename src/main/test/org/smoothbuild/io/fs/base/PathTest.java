@@ -2,9 +2,10 @@ package org.smoothbuild.io.fs.base;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 
@@ -56,13 +57,13 @@ public class PathTest {
   }
 
   @Test
-  public void root_path_returns_the_same_instance_each_time() throws Exception {
-    assertSame(Path.root(), Path.root());
+  public void slash_path_is_root() throws Exception {
+    assertTrue(path("/").isRoot());
   }
 
   @Test
-  public void slash_path_returns_root_path_instance() throws Exception {
-    assertSame(Path.root(), Path.path("/"));
+  public void simple_path_is_not_root() throws Exception {
+    assertFalse(path("file.txt").isRoot());
   }
 
   @Test
