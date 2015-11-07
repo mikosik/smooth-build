@@ -2,7 +2,7 @@
 
 Concatenates two String[].
 
- * String[] __strings_ - Array of Strings to be concatenated with array passed
+ * String[] __strings__ - Array of Strings to be concatenated with array passed
 via "with" parameter.
  * String[] __with__ - Array of Strings to be concatenated with array passed
 via "blobs" parameter.
