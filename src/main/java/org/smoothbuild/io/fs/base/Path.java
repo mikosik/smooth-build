@@ -25,7 +25,7 @@ public class Path {
     }
   }
 
-  public static Path rootPath() {
+  public static Path root() {
     return ROOT_PATH;
   }
 

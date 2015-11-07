@@ -25,7 +25,7 @@ import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileException;
  * In memory implementation of FileSystem.
  */
 public class MemoryFileSystem implements FileSystem {
-  private final MemoryDirectory root = new MemoryDirectory(null, Path.rootPath());
+  private final MemoryDirectory root = new MemoryDirectory(null, Path.root());
 
   @Override
   public PathState pathState(Path path) {

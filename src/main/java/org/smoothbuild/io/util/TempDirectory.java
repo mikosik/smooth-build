@@ -58,7 +58,7 @@ public class TempDirectory {
 
   public void destroy() {
     assertNotDestroyed();
-    fileSystem.delete(Path.rootPath());
+    fileSystem.delete(Path.root());
     isDestroyed = true;
   }
 
@@ -107,7 +107,7 @@ public class TempDirectory {
 
   private Array<SFile> readFilesImpl() throws IOException {
     ArrayBuilder<SFile> arrayBuilder = valuesDb.arrayBuilder(SFile.class);
-    for (Path path : fileSystem.filesFromRecursive(Path.rootPath())) {
+    for (Path path : fileSystem.filesFromRecursive(Path.root())) {
       Blob content = readContentImpl(path);
       SFile file = valuesDb.file(path, content);
       arrayBuilder.add(file);
