@@ -50,19 +50,19 @@ public class JavaNamingTest {
 
   @Test
   public void file_without_extension_is_not_class_file() throws Exception {
-    when(isClassFilePredicate()).test("file");
+    when(isClassFilePredicate().test("file"));
     thenReturned(false);
   }
 
   @Test
   public void file_with_java_extension_is_not_class_file() throws Exception {
-    when(isClassFilePredicate()).test("file.java");
+    when(isClassFilePredicate().test("file.java"));
     thenReturned(false);
   }
 
   @Test
   public void file_with_class_extension_is_class_file() throws Exception {
-    when(isClassFilePredicate()).test("file.class");
+    when(isClassFilePredicate().test("file.class"));
     thenReturned(true);
   }
 }
