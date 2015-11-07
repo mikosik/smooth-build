@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.file.match;
 
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR_CHAR;
 import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
-import static org.smoothbuild.builtin.file.match.PathPredicates.doubleStarPredicate;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
 
 public class PathMatcher implements Predicate<Path> {
+  private static final Predicate<Path> DOUBLE_STAR_PREDICATE = null;
   private final List<Predicate<Path>> patternParts;
 
   public static Predicate<Path> pathMatcher(String patternString) {
@@ -26,7 +26,7 @@ public class PathMatcher implements Predicate<Path> {
       return Predicates.alwaysTrue();
     }
     if (patternString.equals("*")) {
-      return PathPredicates.hasOnlyOnePart();
+      return hasOnlyOnePartPredicate();
     }
 
     return new PathMatcher(pathPattern);
@@ -47,7 +47,7 @@ public class PathMatcher implements Predicate<Path> {
 
     while (patternLeft < patternParts.size()) {
       Predicate<Path> patternPart = patternParts.get(patternLeft);
-      if (patternPart == doubleStarPredicate()) {
+      if (patternPart == DOUBLE_STAR_PREDICATE) {
         break;
       } else if (pathLeft == pathParts.size()) {
         return false;
@@ -74,7 +74,7 @@ public class PathMatcher implements Predicate<Path> {
 
     while (patternLeft < patternRight) {
       Predicate<Path> patternPart = patternParts.get(patternRight);
-      if (patternPart == doubleStarPredicate()) {
+      if (patternPart == DOUBLE_STAR_PREDICATE) {
         break;
       } else if (pathRight < pathLeft) {
         return false;
@@ -130,7 +130,7 @@ public class PathMatcher implements Predicate<Path> {
 
   private int patternPartsCountToNextDoubleStar(int index) {
     int result = 0;
-    while (patternParts.get(index) != doubleStarPredicate()) {
+    while (patternParts.get(index) != DOUBLE_STAR_PREDICATE) {
       result++;
       index++;
     }
@@ -141,7 +141,7 @@ public class PathMatcher implements Predicate<Path> {
     int result = 0;
     for (int i = fromIndex; i <= toIndex; i++) {
       Predicate<Path> part = patternParts.get(i);
-      if (part != doubleStarPredicate()) {
+      if (part != DOUBLE_STAR_PREDICATE) {
         result++;
       }
     }
@@ -158,7 +158,7 @@ public class PathMatcher implements Predicate<Path> {
 
     // If last part == "**" we have to add "*" at the end.
     // This way pattern "abc/**" won't match "abc" file.
-    if (last == doubleStarPredicate()) {
+    if (last == DOUBLE_STAR_PREDICATE) {
       result.add(Predicates.<Path> alwaysTrue());
     }
     return result;
@@ -170,12 +170,21 @@ public class PathMatcher implements Predicate<Path> {
     }
 
     if (namePattern.isDoubleStar()) {
-      return doubleStarPredicate();
+      return DOUBLE_STAR_PREDICATE;
     }
     if (namePattern.isSingleStar()) {
       return Predicates.alwaysTrue();
     }
 
     return new NameMatcher(namePattern);
+  }
+
+  public static Predicate<Path> hasOnlyOnePartPredicate() {
+    return new Predicate<Path>() {
+      @Override
+      public boolean test(Path path) {
+        return path.isRoot() || path.value().indexOf(Path.SEPARATOR) == -1;
+      }
+    };
   }
 }
