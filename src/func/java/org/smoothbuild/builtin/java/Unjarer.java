@@ -14,7 +14,6 @@ import java.util.jar.JarInputStream;
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
@@ -28,7 +27,7 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class Unjarer {
-  private static final Predicate<String> IS_DIRECTORY = new EndsWithPredicate(SEPARATOR);
+  private static final Predicate<String> IS_DIRECTORY = Predicates.endsWith(SEPARATOR);
 
   private final Container container;
   private final byte[] buffer;

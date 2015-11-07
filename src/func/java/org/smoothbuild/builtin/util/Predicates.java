@@ -40,4 +40,13 @@ public class Predicates {
       }
     };
   }
+
+  public static Predicate<String> endsWith(final String suffix) {
+    return new Predicate<String>() {
+      @Override
+      public boolean test(String string) {
+        return string.endsWith(suffix);
+      }
+    };
+  }
 }

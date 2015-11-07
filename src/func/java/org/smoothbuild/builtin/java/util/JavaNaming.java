@@ -2,14 +2,13 @@ package org.smoothbuild.builtin.java.util;
 
 import javax.tools.JavaFileObject.Kind;
 
-import org.smoothbuild.builtin.util.EndsWithPredicate;
 import org.smoothbuild.builtin.util.Predicate;
+import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
 
 public class JavaNaming {
   private static final String CLASS_FILE_EXTENSION = Kind.CLASS.extension;
-  private static final Predicate<String> IS_CLASS_FILE =
-      new EndsWithPredicate(CLASS_FILE_EXTENSION);
+  private static final Predicate<String> IS_CLASS_FILE = Predicates.endsWith(CLASS_FILE_EXTENSION);
 
   public static String toBinaryName(Path path) {
     String pathString = path.value();
