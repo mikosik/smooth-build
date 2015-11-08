@@ -1,9 +1,9 @@
 package org.smoothbuild.io.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 
 import javax.inject.Singleton;
 
@@ -28,13 +28,8 @@ public class ReleaseJarModule extends AbstractModule {
       throw new RuntimeException(
           "Too many jars in classpath of URLClassLoader. Expected exactly one.");
     }
-    File smoothJarFile = new File(urls[0].getPath());
-    return calculateHash(smoothJarFile);
-  }
-
-  private static HashCode calculateHash(File smoothJarFile) {
     try {
-      return Hash.file(smoothJarFile);
+      return Hash.file(Paths.get(urls[0].getPath()));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
