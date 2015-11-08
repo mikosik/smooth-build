@@ -68,7 +68,7 @@ public class HashTest {
     given(bytes = new byte[] { 1, 2, 3, 4, 5 });
     given(file = File.createTempFile("tmp", ".tmp"));
     Files.write(bytes, file);
-    when(Hash.file(file));
+    when(Hash.file(file.toPath()));
     thenReturned(Hash.bytes(bytes));
   }
 

@@ -2,7 +2,6 @@ package org.smoothbuild.db.hashed;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +32,7 @@ public class Hash {
   }
 
   public static HashCode file(Path path) throws IOException {
-    return file(path.toFile());
-  }
-
-  public static HashCode file(File file) throws IOException {
-    try (InputStream inputStream = new FileInputStream(file)) {
+    try (InputStream inputStream = new FileInputStream(path.toFile())) {
       return stream(inputStream);
     }
   }
