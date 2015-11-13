@@ -11,6 +11,7 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Streams;
 
@@ -32,9 +33,14 @@ public class ValueCreators {
     return file(valuesDb, path, content.getBytes(SmoothConstants.CHARSET));
   }
 
-  public static SFile file(ValuesDb valuesDb, Path path, byte[] bytes) {
-    Blob blob = blob(valuesDb, bytes);
-    return valuesDb.file(path, blob);
+  public static SFile file(ValuesDb valuesDb, Path path, byte[] content) {
+    SString string = string(valuesDb, path.value());
+    Blob blob = blob(valuesDb, content);
+    return valuesDb.file(string, blob);
+  }
+
+  public static SString string(ValuesDb valuesDb, String string) {
+    return valuesDb.string(string);
   }
 
   public static Blob blob(ValuesDb valuesDb, String content) {

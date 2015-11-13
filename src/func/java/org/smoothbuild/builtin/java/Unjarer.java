@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.java;
 
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,16 +11,16 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.builtin.compress.Constants;
-import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class Unjarer {
@@ -39,7 +39,7 @@ public class Unjarer {
   }
 
   public Array<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {
-    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
+    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     Predicate<String> filter = IS_DIR.negate().and(nameFilter);
     try {
@@ -49,9 +49,9 @@ public class Unjarer {
           String fileName = entry.getName();
           if (filter.test(fileName)) {
             SFile file = unjarEntry(jarInputStream, fileName);
-            Path path = file.path();
+            String path = file.path().value();
             if (duplicatesDetector.addValue(path)) {
-              throw new DuplicatePathInJarError(path);
+              throw new Message(ERROR, "Jar file contains two files with the same path = " + path);
             } else {
               fileArrayBuilder.add(file);
             }
@@ -70,7 +70,7 @@ public class Unjarer {
       throw new IllegalPathInJarError(fileName);
     }
 
-    Path path = path(fileName);
+    SString path = container.create().string(fileName);
     Blob content = unjarEntryContent(jarInputStream);
     return container.create().file(path, content);
   }

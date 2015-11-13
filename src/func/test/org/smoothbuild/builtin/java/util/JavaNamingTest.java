@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.java.util;
 import static org.smoothbuild.builtin.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
@@ -13,20 +12,20 @@ public class JavaNamingTest {
 
   @Test
   public void binary_name_of_class_in_default_package_is_class_name() throws Exception {
-    when(toBinaryName(path("MyClass.class")));
+    when(toBinaryName("MyClass.class"));
     thenReturned("MyClass");
   }
 
   @Test
   public void binary_name_of_class_in_package_is_package_plus_class_name() throws Exception {
-    when(toBinaryName(path("my/package/MyClass.class")));
+    when(toBinaryName("my/package/MyClass.class"));
     thenReturned("my.package.MyClass");
   }
 
   @Test
   public void binary_name_of_inner_class_is_package_plus_outer_class_name_plus_inner_class_name()
       throws Exception {
-    when(toBinaryName(path("my/package/MyClass$Inner.class")));
+    when(toBinaryName("my/package/MyClass$Inner.class"));
     thenReturned("my.package.MyClass$Inner");
   }
 

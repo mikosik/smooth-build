@@ -1,5 +1,6 @@
 package org.smoothbuild.task.save;
 
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
@@ -27,7 +28,7 @@ public class FileArraySaver implements Saver<Array<SFile>> {
 
   @Override
   public void save(Name name, Array<SFile> fileArray) {
-    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
+    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
 
     Path artifactPath = artifactPath(name);
     smoothFileSystem.delete(artifactPath);
@@ -37,21 +38,21 @@ public class FileArraySaver implements Saver<Array<SFile>> {
     smoothFileSystem.createDir(artifactPath);
 
     for (SFile file : fileArray) {
-      Path sourcePath = artifactPath.append(file.path());
-      if (!duplicatesDetector.addValue(file.path())) {
+      Path sourcePath = artifactPath.append(path(file.path().value()));
+      if (!duplicatesDetector.addValue(file.path().value())) {
         Path targetPath = targetPath(file.content());
         smoothFileSystem.createLink(sourcePath, targetPath);
       }
     }
 
     if (duplicatesDetector.hasDuplicates()) {
-      Set<Path> duplicates = duplicatesDetector.getDuplicateValues();
+      Set<String> duplicates = duplicatesDetector.getDuplicateValues();
       console.error(duplicatedPathsMessage(name, duplicates));
       throw new ExecutionException();
     }
   }
 
-  private String duplicatedPathsMessage(Name name, Set<Path> duplicates) {
+  private String duplicatedPathsMessage(Name name, Set<String> duplicates) {
     String separator = "\n  ";
     String list = separator + Joiner.on(separator).join(duplicates);
     return "Can't store result of " + name + " as it contains files with duplicated paths:" + list;

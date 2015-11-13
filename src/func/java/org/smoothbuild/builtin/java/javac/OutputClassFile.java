@@ -11,6 +11,7 @@ import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.ForwardingOutputStream;
 
 public class OutputClassFile extends SimpleJavaFileObject {
@@ -34,7 +35,8 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         outputStream.close();
-        SFile file = container.create().file(path, contentBuilder.build());
+        SString pathString = container.create().string(path.value());
+        SFile file = container.create().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
     };

@@ -1,5 +1,7 @@
 package org.smoothbuild.builtin.android;
 
+import static org.smoothbuild.io.fs.base.Path.path;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,7 +45,7 @@ public class AidlFunction {
     command.add(aidlBinary);
     command.add("-p" + frameworkAidl);
     command.add("-o" + outputFilesDir.rootOsPath());
-    command.add(inputFilesDir.asOsPath(interfaceFile.path()));
+    command.add(inputFilesDir.asOsPath(path(interfaceFile.path().value())));
 
     executeCommand(command);
     return onlyElement(outputFilesDir.readFiles());

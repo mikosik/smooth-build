@@ -1,6 +1,7 @@
 package org.smoothbuild.io.util;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
 import java.io.IOException;
@@ -74,12 +75,12 @@ public class TempDir {
 
   private void writeFilesImpl(Array<SFile> files) throws IOException {
     for (SFile file : files) {
-      writeFileImpl(file.path(), file.content());
+      writeFileImpl(path(file.path().value()), file.content());
     }
   }
 
   public void writeFile(SFile file) {
-    writeFile(file.path(), file.content());
+    writeFile(path(file.path().value()), file.content());
   }
 
   public void writeFile(Path path, Blob content) {
@@ -110,7 +111,7 @@ public class TempDir {
     ArrayBuilder<SFile> arrayBuilder = valuesDb.arrayBuilder(SFile.class);
     for (Path path : recursiveFilesIterable(fileSystem, Path.root())) {
       Blob content = readContentImpl(path);
-      SFile file = valuesDb.file(path, content);
+      SFile file = valuesDb.file(valuesDb.string(path.value()), content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();

@@ -6,14 +6,12 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
 import static org.smoothbuild.db.values.ValuesDb.valuesDb;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;
@@ -25,7 +23,6 @@ public class MarshallerTest {
   private Marshaller marshaller;
   private Value value1;
   private Value value2;
-  private final Path path = path("my/path");
   private String string;
   private HashCode hashCode;
 
@@ -37,14 +34,6 @@ public class MarshallerTest {
     given(marshaller).write(asList(value1, value2));
     when(marshaller).getBytes();
     thenReturned(Bytes.concat(toByteArray(2), value1.hash().asBytes(), value2.hash().asBytes()));
-  }
-
-  @Test
-  public void marshalling_single_path() {
-    given(marshaller = new Marshaller());
-    given(marshaller).write(path);
-    when(marshaller).getBytes();
-    thenReturned(pathToBytes(path));
   }
 
   @Test
@@ -95,10 +84,6 @@ public class MarshallerTest {
     given(marshaller).write(0x12345678);
     when(marshaller).getBytes();
     thenReturned(Ints.toByteArray(0x12345678));
-  }
-
-  private static byte[] pathToBytes(Path path) {
-    return stringToBytes(path.value());
   }
 
   private static byte[] stringToBytes(String string) {

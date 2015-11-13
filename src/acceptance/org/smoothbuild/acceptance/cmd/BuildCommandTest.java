@@ -73,6 +73,6 @@ public class BuildCommandTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString(
         "Can't store result of 'result' as it contains files with duplicated paths:\n"
-            + "  'file.txt'\n"));
+            + "  file.txt\n"));
   }
 }

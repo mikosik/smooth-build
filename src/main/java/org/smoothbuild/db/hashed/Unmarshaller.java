@@ -1,9 +1,7 @@
 package org.smoothbuild.db.hashed;
 
-import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
-import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -12,10 +10,8 @@ import java.util.List;
 
 import org.smoothbuild.db.hashed.err.CorruptedBoolException;
 import org.smoothbuild.db.hashed.err.CorruptedEnumException;
-import org.smoothbuild.db.hashed.err.IllegalPathInObjectException;
 import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedException;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
-import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -37,29 +33,6 @@ public class Unmarshaller implements Closeable {
       builder.add(readHash());
     }
     return builder.build();
-  }
-
-  public Path readPath() {
-    int size = readInt();
-    byte[] bytes = readBytes(size, "path");
-
-    /*
-     * This method always replaces malformed-input and unmappable-character
-     * sequences with this charset's default replacement string. The {@link
-     * java.nio.charset.CharsetDecoder} class should be used when more control
-     * over the decoding process is required.
-     */
-    String value = new String(bytes, CHARSET);
-
-    return toPathSafely(value);
-  }
-
-  private Path toPathSafely(String value) {
-    try {
-      return path(value);
-    } catch (IllegalArgumentException e) {
-      throw new IllegalPathInObjectException(hash, e.getMessage());
-    }
   }
 
   public HashCode readHash() {

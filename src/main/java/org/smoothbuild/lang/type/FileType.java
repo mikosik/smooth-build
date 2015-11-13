@@ -1,9 +1,12 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.STRING;
+
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 
 public class FileType extends Type {
@@ -13,7 +16,9 @@ public class FileType extends Type {
 
   @Override
   public Value defaultValue(ValuesDb valuesDb) {
-    return valuesDb.file(Path.root(), (Blob) Types.BLOB.defaultValue(valuesDb));
+    SString path = (SString) STRING.defaultValue(valuesDb);
+    Blob content = (Blob) BLOB.defaultValue(valuesDb);
+    return valuesDb.file(path, content);
   }
 
   @Override
