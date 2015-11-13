@@ -2,7 +2,6 @@ package org.smoothbuild.db.hashed;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.db.values.ValuesDb.valuesDb;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -12,12 +11,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.err.CorruptedBoolException;
 import org.smoothbuild.db.hashed.err.CorruptedEnumException;
-import org.smoothbuild.db.hashed.err.IllegalPathInObjectException;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.SString;
 
@@ -31,7 +28,6 @@ public class UnmarshallerTest {
   private SString hashed2;
   private Marshaller marshaller;
   private Unmarshaller unmarshaller;
-  private Path path;
   private HashCode hash;
   private byte myByte;
   private int myInt;
@@ -53,48 +49,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller.readHashList());
     thenReturned(asList(hashed1.hash(), hashed2.hash()));
-  }
-
-  @Test
-  public void marshalled_path_can_be_unmarshalled() {
-    given(path = path("my/path"));
-    given(marshaller = new Marshaller());
-    given(marshaller).write(path);
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readPath();
-    thenReturned(path);
-  }
-
-  @Test
-  public void too_short_path_in_db_causes_exception() throws Exception {
-    given(hash = Hash.integer(33));
-    given(marshaller = new Marshaller());
-    given(marshaller).write(10);
-    given(marshaller).write(0x12345678);
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readPath();
-    thenThrown(TooFewBytesToUnmarshallValueException.class);
-  }
-
-  @Test
-  public void halfed_size_of_path_in_db_causes_exception() throws Exception {
-    given(hash = Hash.integer(33));
-    given(marshaller = new Marshaller());
-    given(marshaller).write((byte) 1);
-    given(marshaller).write((byte) 1);
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readPath();
-    thenThrown(TooFewBytesToUnmarshallValueException.class);
-  }
-
-  @Test
-  public void illegal_path_causes_exception() throws Exception {
-    given(hash = Hash.integer(33));
-    given(marshaller = new Marshaller());
-    given(marshaller).write("..");
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readPath();
-    thenThrown(IllegalPathInObjectException.class);
   }
 
   @Test
@@ -199,20 +153,16 @@ public class UnmarshallerTest {
   public void marshalled_all_type_of_objects_can_be_unmarshalled() {
     given(myInt = 0x12345678);
     given(myByte = 123);
-    given(path = path("my/path"));
     given(hash = Hash.integer(33));
     given(marshaller = new Marshaller());
     given(marshaller).write(myInt);
     given(marshaller).write(myByte);
-    given(marshaller).write(path);
     given(marshaller).write(hash);
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readInt();
     thenReturned(myInt);
     when(unmarshaller).readByte();
     thenReturned(myByte);
-    when(unmarshaller).readPath();
-    thenReturned(path);
     when(unmarshaller).readHash();
     thenReturned(hash);
   }

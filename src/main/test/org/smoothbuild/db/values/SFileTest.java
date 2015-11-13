@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
@@ -13,7 +12,6 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
@@ -25,8 +23,8 @@ import com.google.inject.Injector;
 public class SFileTest {
   private final String string = "abc";
   private final String otherString = "def";
-  private final Path path = path("path");
-  private final Path otherPath = path("other/path");
+  private final String path = "path";
+  private final String otherPath = "other/path";
 
   private ValuesDb valuesDb;
   private SFile file;
@@ -46,7 +44,7 @@ public class SFileTest {
 
   @Test
   public void null_content_is_forbidden() throws Exception {
-    when(valuesDb).file(path, null);
+    when(valuesDb).file(valuesDb.string(path), null);
     thenThrown(NullPointerException.class);
   }
 
@@ -60,7 +58,7 @@ public class SFileTest {
   @Test
   public void path_contains_path_passed_to_builder() throws Exception {
     given(file = createFile(valuesDb, path, string));
-    when(file).path();
+    when(file.path()).value();
     thenReturned(path);
   }
 
@@ -196,8 +194,8 @@ public class SFileTest {
     thenReturned("File(" + path + " Blob(3 bytes))");
   }
 
-  private static SFile createFile(ValuesDb valuesDb, Path path, String content) throws Exception {
-    return valuesDb.file(path, createBlob(valuesDb, content));
+  private static SFile createFile(ValuesDb valuesDb, String path, String content) throws Exception {
+    return valuesDb.file(valuesDb.string(path), createBlob(valuesDb, content));
   }
 
   private static Blob createBlob(ValuesDb valuesDb, String content) throws Exception {

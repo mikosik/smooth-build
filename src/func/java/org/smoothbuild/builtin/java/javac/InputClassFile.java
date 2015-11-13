@@ -24,7 +24,7 @@ public class InputClassFile extends SimpleJavaFileObject {
     }
 
     this.file = file;
-    this.binaryName = toBinaryName(file.path());
+    this.binaryName = toBinaryName(file.path().value());
     this.aPackage = binaryNameToPackage(binaryName);
   }
 

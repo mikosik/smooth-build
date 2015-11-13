@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.util.function.Predicate;
@@ -27,7 +28,7 @@ public class FilterFunction {
     ArrayBuilder<SFile> builder = container.create().arrayBuilder(SFile.class);
 
     for (SFile file : files) {
-      if (filter.test(file.path())) {
+      if (filter.test(path(file.path().value()))) {
         builder.add(file);
       }
     }

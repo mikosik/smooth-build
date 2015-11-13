@@ -16,6 +16,7 @@ public class ToFileFunction {
       Container container,
       @Required @Name("path") SString path,
       @Required @Name("content") Blob content) {
-    return container.create().file(validatedPath("path", path), content);
+    validatedPath("path", path);
+    return container.create().file(path, content);
   }
 }

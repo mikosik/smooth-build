@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.compress;
 
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,23 +10,23 @@ import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.smoothbuild.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class Unzipper {
   private static final Predicate<String> IS_DIR = (string) -> string.endsWith(SEPARATOR);
   private final byte[] buffer;
   private final Container container;
-  private DuplicatesDetector<Path> duplicatesDetector;
+  private DuplicatesDetector<String> duplicatesDetector;
 
   public Unzipper(Container container) {
     this.container = container;
@@ -57,11 +57,11 @@ public class Unzipper {
     if (errorMessage != null) {
       throw new IllegalPathInZipError(fileName);
     }
-    Path path = path(fileName);
-    if (duplicatesDetector.addValue(path)) {
-      throw new DuplicatePathInZipError(path);
+    if (duplicatesDetector.addValue(fileName)) {
+      throw new Message(ERROR, "Zip file contains two files with the same path = " + fileName);
     }
 
+    SString path = container.create().string(fileName);
     Blob content = unzipEntryContent(zipInputStream);
     return container.create().file(path, content);
   }

@@ -11,6 +11,7 @@ import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 public class FileReader {
@@ -21,7 +22,11 @@ public class FileReader {
   }
 
   public SFile createFile(Path path, Path projectPath) {
-    return container.create().file(path, createContent(projectPath));
+    return container.create().file(createPath(path), createContent(projectPath));
+  }
+
+  private SString createPath(Path path) {
+    return container.create().string(path.value());
   }
 
   private Blob createContent(Path path) {

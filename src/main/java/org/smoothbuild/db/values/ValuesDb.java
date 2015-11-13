@@ -14,7 +14,6 @@ import org.smoothbuild.db.values.marshal.NothingMarshaller;
 import org.smoothbuild.db.values.marshal.StringMarshaller;
 import org.smoothbuild.db.values.marshal.ValueMarshaller;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
@@ -62,7 +61,7 @@ public class ValuesDb implements ValueFactory {
   }
 
   @Override
-  public SFile file(Path path, Blob content) {
+  public SFile file(SString path, Blob content) {
     return new FileMarshaller(hashedDb).write(path, content);
   }
 

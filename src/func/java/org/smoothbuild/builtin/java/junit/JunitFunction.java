@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java.junit;
 
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.util.Map;
@@ -36,7 +37,7 @@ public class JunitFunction {
     Predicate<Path> filter = createFilter(include);
     int testCount = 0;
     for (String binaryName : binaryNameToClassFile.keySet()) {
-      Path filePath = binaryNameToClassFile.get(binaryName).path();
+      Path filePath = path(binaryNameToClassFile.get(binaryName).path().value());
       if (filter.test(filePath)) {
         testCount++;
         Class<?> testClass = loadClass(classLoader, binaryName);

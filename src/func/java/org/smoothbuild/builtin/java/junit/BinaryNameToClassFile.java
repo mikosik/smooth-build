@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.smoothbuild.builtin.java.Unjarer;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
@@ -21,14 +20,14 @@ public class BinaryNameToClassFile {
   public static Map<String, SFile> binaryNameToClassFile(Container container,
       Iterable<Blob> libraryJars) {
     Unjarer unjarer = new Unjarer(container);
-    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
+    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, SFile> binaryNameToClassFile = new HashMap<>();
 
     for (Blob jarBlob : libraryJars) {
       Array<SFile> fileArray = unjarer.unjar(jarBlob, isClassFilePredicate());
 
       for (SFile classFile : fileArray) {
-        Path classFilePath = classFile.path();
+        String classFilePath = classFile.path().value();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {
           throw new Message(ERROR, "File " + classFilePath

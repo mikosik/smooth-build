@@ -9,7 +9,6 @@ import java.util.jar.Manifest;
 
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.CannotAddDuplicatePathError;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
@@ -36,7 +35,7 @@ public class JarFunction {
     private final Blob manifest;
 
     private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
-    private final DuplicatesDetector<Path> duplicatesDetector;
+    private final DuplicatesDetector<String> duplicatesDetector;
 
     public Worker(Container container, Array<SFile> files, Blob manifest) {
       this.container = container;
@@ -71,11 +70,11 @@ public class JarFunction {
     }
 
     private void addEntry(JarOutputStream jarOutputStream, SFile file) throws IOException {
-      Path path = file.path();
+      String path = file.path().value();
       if (duplicatesDetector.addValue(path)) {
         throw new CannotAddDuplicatePathError(path);
       }
-      JarEntry entry = new JarEntry(path.value());
+      JarEntry entry = new JarEntry(path);
       jarOutputStream.putNextEntry(entry);
 
       try (InputStream inputStream = file.content().openInputStream()) {
