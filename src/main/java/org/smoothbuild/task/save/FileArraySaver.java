@@ -32,7 +32,7 @@ public class FileArraySaver implements Saver<Array<SFile>> {
     Path artifactPath = artifactPath(name);
     smoothFileSystem.delete(artifactPath);
 
-    // Create directory explicitly. When fileArray is empty for loop below won't
+    // Create dir explicitly. When fileArray is empty for loop below won't
     // create empty dir for us.
     smoothFileSystem.createDir(artifactPath);
 

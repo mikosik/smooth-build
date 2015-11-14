@@ -13,7 +13,7 @@ public class AndroidSdkRootDoesNotExistError extends Message {
   private static String createMessage(EnvironmentVariable androidSdkVar) {
     StringBuilder builder = new StringBuilder();
     builder.append("Environment variable " + androidSdkVar.name()
-        + "should contain absolute path to android SDK directory.\n");
+        + "should contain absolute path to android SDK dir.\n");
     builder.append("It is set to '" + androidSdkVar.value() + "'\n");
     builder.append(" but such dir doesn't exist.\n");
     return builder.toString();

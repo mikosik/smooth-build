@@ -7,11 +7,11 @@ import java.util.List;
 import org.smoothbuild.io.fs.base.Path;
 
 public class MemoryLink implements MemoryElement {
-  private final MemoryDirectory parent;
+  private final MemoryDir parent;
   private final Path name;
   private final MemoryElement target;
 
-  public MemoryLink(MemoryDirectory parent, Path name, MemoryElement target) {
+  public MemoryLink(MemoryDir parent, Path name, MemoryElement target) {
     this.parent = parent;
     this.name = name;
     this.target = target;
@@ -23,7 +23,7 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public MemoryDirectory parent() {
+  public MemoryDir parent() {
     return parent;
   }
 
@@ -33,8 +33,8 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public boolean isDirectory() {
-    return target.isDirectory();
+  public boolean isDir() {
+    return target.isDir();
   }
 
   @Override

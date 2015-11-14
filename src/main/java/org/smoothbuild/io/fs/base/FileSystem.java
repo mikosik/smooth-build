@@ -11,7 +11,7 @@ import org.smoothbuild.io.fs.base.err.FileSystemException;
 public interface FileSystem {
   public PathState pathState(Path path);
 
-  public Iterable<Path> files(Path directory);
+  public Iterable<Path> files(Path dir);
 
   public void delete(Path path);
 

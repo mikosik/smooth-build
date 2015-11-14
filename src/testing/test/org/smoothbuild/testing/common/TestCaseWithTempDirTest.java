@@ -16,16 +16,16 @@ public class TestCaseWithTempDirTest {
   private File newSubDir;
 
   @Test
-  public void temporary_directory_exists() {
+  public void temporary_dir_exists() {
     given(testCase = new TestCaseWithTempDir());
-    when(testCase.getTempDirectory()).exists();
+    when(testCase.getTempDir()).exists();
     thenReturned(true);
   }
 
   @Test
-  public void temporary_directory_is_deleted_by_after_method() throws IOException {
+  public void temporary_dir_is_deleted_by_after_method() throws IOException {
     given(testCase = new TestCaseWithTempDir());
-    given(tempDir = testCase.getTempDirectory());
+    given(tempDir = testCase.getTempDir());
     when(testCase).after();
     then(!tempDir.exists());
   }
@@ -33,7 +33,7 @@ public class TestCaseWithTempDirTest {
   @Test
   public void created_content_is_deleted_by_after_method() throws IOException {
     given(testCase = new TestCaseWithTempDir());
-    given(tempDir = testCase.getTempDirectory());
+    given(tempDir = testCase.getTempDir());
     given(newSubDir = new File(tempDir, "newFile"));
     given(newSubDir).mkdirs();
     when(testCase).after();

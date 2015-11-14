@@ -12,21 +12,21 @@ import com.google.common.io.Files;
 /**
  * TestCaseWithTempDir provides easy way for creating temporary files in junit
  * tests. Just make your test class extend TestCaseWithTempDir - It will
- * automatically create temporary directory for you when you call
- * getTempDirectory() and delete its content at the end of test.
+ * automatically create temporary dir for you when you call getTempDir() and
+ * delete its content at the end of test.
  */
 public class TestCaseWithTempDir {
-  private File tempDirectory;
+  private File tempDir;
 
-  public File getTempDirectory() {
-    if (tempDirectory == null) {
-      tempDirectory = Files.createTempDir();
+  public File getTempDir() {
+    if (tempDir == null) {
+      tempDir = Files.createTempDir();
     }
-    return tempDirectory;
+    return tempDir;
   }
 
   @After
   public void after() throws IOException {
-    deleteRecursively(tempDirectory.toPath());
+    deleteRecursively(tempDir.toPath());
   }
 }

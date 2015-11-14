@@ -41,7 +41,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void temp_directory_is_deleted_after_build_execution() throws Exception {
+  public void temp_dir_is_deleted_after_build_execution() throws Exception {
     givenScript("result: tempFilePath();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();

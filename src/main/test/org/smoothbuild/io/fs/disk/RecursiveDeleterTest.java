@@ -43,13 +43,13 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_sigle_file_does_not_delete_its_directory() throws Exception {
-    File directory = createDir(root, "dir");
-    File file = createEmptyFile(directory, "file");
+  public void deleting_sigle_file_does_not_delete_its_dir() throws Exception {
+    File dir = createDir(root, "dir");
+    File file = createEmptyFile(dir, "file");
 
     RecursiveDeleter.deleteRecursively(file.toPath());
 
-    assertTrue(directory.exists());
+    assertTrue(dir.exists());
   }
 
   @Test
@@ -65,7 +65,7 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_symbolic_link_to_directory() throws Exception {
+  public void deleting_symbolic_link_to_dir() throws Exception {
     File dir = createDir(root, "dir");
     File file = createEmptyFile(dir, "file");
     File link = new File(root, "link");
@@ -79,7 +79,7 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_recursively_directory() throws Exception {
+  public void deleting_recursively_dir() throws Exception {
     // given
     File fileOutside = createEmptyFile(root, "fileOutsideMain");
 
@@ -112,7 +112,7 @@ public class RecursiveDeleterTest {
   }
 
   @Test
-  public void deleting_recursively_directory_with_symbolic_link_does_not_delete_link_target()
+  public void deleting_recursively_dir_with_symbolic_link_does_not_delete_link_target()
       throws Exception {
     File file = createEmptyFile(root, "file");
     File dir = createDir(root, "dir");

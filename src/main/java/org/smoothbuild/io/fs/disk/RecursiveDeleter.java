@@ -7,12 +7,12 @@ import java.nio.file.Path;
 
 public class RecursiveDeleter {
   /**
-   * Deletes file or directory recursively. Symbolic links are deleted but not
+   * Deletes file or dir recursively. Symbolic links are deleted but not
    * followed.
    */
   public static void deleteRecursively(Path path) throws IOException {
     if (Files.isDirectory(path) && !Files.isSymbolicLink(path)) {
-      deleteDirectoryContents(path);
+      deleteDirContents(path);
     }
 
     /*
@@ -22,8 +22,8 @@ public class RecursiveDeleter {
     Files.delete(path);
   }
 
-  private static void deleteDirectoryContents(Path directory) throws IOException {
-    try (DirectoryStream<Path> children = Files.newDirectoryStream(directory)) {
+  private static void deleteDirContents(Path dir) throws IOException {
+    try (DirectoryStream<Path> children = Files.newDirectoryStream(dir)) {
       for (Path child : children) {
         deleteRecursively(child);
       }

@@ -29,106 +29,106 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.testory.common.Matcher;
 
-public class TempDirectoryTest {
+public class TempDirTest {
   private final Path path = path("my/path");
   private final String content = "content";
   private final java.nio.file.Path rootPath = Paths.get("/fake/path");
 
   private ValuesDb valuesDb;
   private FileSystem fileSystem;
-  private TempDirectory tempDirectory;
+  private TempDir tempDir;
   private Array<SFile> array;
 
   @Before
   public void before() {
     valuesDb = valuesDb();
     fileSystem = new MemoryFileSystem();
-    tempDirectory = new TempDirectory(valuesDb, rootPath, fileSystem);
+    tempDir = new TempDir(valuesDb, rootPath, fileSystem);
   }
 
   @After
   public void after() {
     try {
-      tempDirectory.destroy();
+      tempDir.destroy();
     } catch (IllegalStateException e) {
-      // ignore exception as tempDirectory might have been already destroyed by
+      // ignore exception as tempDir might have been already destroyed by
       // test and destroying it second time causes exception
     }
   }
 
   @Test
   public void root_os_path() {
-    when(tempDirectory.rootOsPath());
+    when(tempDir.rootOsPath());
     thenReturned(rootPath.toString());
   }
 
   @Test
   public void file_is_written_to_file_system() throws Exception {
-    when(tempDirectory).writeFile(file(valuesDb, path, content));
+    when(tempDir).writeFile(file(valuesDb, path, content));
     then(inputStreamToString(fileSystem.openInputStream(path)).equals(content));
   }
 
   @Test
   public void writing_file_after_destroy_throws_exception() throws Exception {
-    given(tempDirectory).destroy();
-    when(tempDirectory).writeFile(file(valuesDb, path, content));
+    given(tempDir).destroy();
+    when(tempDir).writeFile(file(valuesDb, path, content));
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void path_and_content_are_written_to_file_system() throws Exception {
-    when(tempDirectory).writeFile(path, blob(valuesDb, content));
+    when(tempDir).writeFile(path, blob(valuesDb, content));
     then(inputStreamToString(fileSystem.openInputStream(path)).equals(content));
   }
 
   @Test
   public void writing_content_after_destroy_throws_exception() throws Exception {
-    given(tempDirectory).destroy();
-    when(tempDirectory).writeFile(path, blob(valuesDb, content));
+    given(tempDir).destroy();
+    when(tempDir).writeFile(path, blob(valuesDb, content));
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void files_are_written_to_file_system() throws Exception {
     given(array = array(valuesDb, SFile.class, file(valuesDb, path, content)));
-    when(tempDirectory).writeFiles(array);
+    when(tempDir).writeFiles(array);
     then(inputStreamToString(fileSystem.openInputStream(path)).equals(content));
   }
 
   @Test
   public void writing_files_after_destroy_throws_exception() throws Exception {
     given(array = array(valuesDb, SFile.class, file(valuesDb, path, content)));
-    given(tempDirectory).destroy();
-    when(tempDirectory).writeFiles(array);
+    given(tempDir).destroy();
+    when(tempDir).writeFiles(array);
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void files_are_read_from_file_system() throws Exception {
     given(createFile(fileSystem, path, content));
-    when(tempDirectory.readFiles());
+    when(tempDir.readFiles());
     thenReturned(contains(file(valuesDb, path, content)));
   }
 
   @Test
   public void reading_files_after_destroy_throws_exception() throws Exception {
-    given(tempDirectory).destroy();
-    when(tempDirectory).readFiles();
+    given(tempDir).destroy();
+    when(tempDir).readFiles();
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void content_is_read_from_file_system() throws Exception {
     given(createFile(fileSystem, path, content));
-    when(tempDirectory).readContent(path);
+    when(tempDir).readContent(path);
     thenReturned(blobContains(content));
   }
 
   @Test
   public void reading_content_after_destroy_throws_exception() throws Exception {
     given(createFile(fileSystem, path, content));
-    given(tempDirectory).destroy();
-    when(tempDirectory).readContent(path);
+    given(tempDir).destroy();
+    when(tempDir).readContent(path);
     thenThrown(IllegalStateException.class);
   }
 

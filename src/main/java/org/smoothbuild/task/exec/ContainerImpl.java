@@ -10,7 +10,7 @@ import javax.inject.Provider;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.ValueFactory;
@@ -18,28 +18,28 @@ import org.smoothbuild.lang.value.ValueFactory;
 public class ContainerImpl implements Container {
   private final FileSystem projectFileSystem;
   private final ValuesDb valuesDb;
-  private final Provider<TempDirectory> tempDirectoryProvider;
+  private final Provider<TempDir> tempDirProvider;
   private final List<Message> messages;
-  private final List<TempDirectory> tempDirectories;
+  private final List<TempDir> tempDirs;
 
   public ContainerImpl(FileSystem projectFileSystem, ValuesDb valuesDb,
-      Provider<TempDirectory> tempDirectoryProvider) {
+      Provider<TempDir> tempDirProvider) {
     this.projectFileSystem = projectFileSystem;
     this.valuesDb = valuesDb;
-    this.tempDirectoryProvider = tempDirectoryProvider;
+    this.tempDirProvider = tempDirProvider;
     this.messages = new ArrayList<>();
-    this.tempDirectories = new ArrayList<>();
+    this.tempDirs = new ArrayList<>();
   }
 
   public static ContainerImpl containerImpl() {
     final ValuesDb valuesDb = valuesDb();
-    Provider<TempDirectory> tempDirectoryProvider = new Provider<TempDirectory>() {
+    Provider<TempDir> tempDirProvider = new Provider<TempDir>() {
       @Override
-      public TempDirectory get() {
-        return new TempDirectory(valuesDb);
+      public TempDir get() {
+        return new TempDir(valuesDb);
       }
     };
-    return new ContainerImpl(new MemoryFileSystem(), valuesDb, tempDirectoryProvider);
+    return new ContainerImpl(new MemoryFileSystem(), valuesDb, tempDirProvider);
   }
 
   @Override
@@ -61,15 +61,15 @@ public class ContainerImpl implements Container {
   }
 
   @Override
-  public TempDirectory createTempDirectory() {
-    TempDirectory tempDirectory = tempDirectoryProvider.get();
-    tempDirectories.add(tempDirectory);
-    return tempDirectory;
+  public TempDir createTempDir() {
+    TempDir tempDir = tempDirProvider.get();
+    tempDirs.add(tempDir);
+    return tempDir;
   }
 
   public void destroy() {
-    for (TempDirectory tempDirectory : tempDirectories) {
-      tempDirectory.destroy();
+    for (TempDir tempDir : tempDirs) {
+      tempDir.destroy();
     }
   }
 }

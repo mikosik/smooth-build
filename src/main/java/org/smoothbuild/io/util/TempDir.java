@@ -25,24 +25,24 @@ import org.smoothbuild.util.Streams;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.Files;
 
-public class TempDirectory {
+public class TempDir {
   private final ValuesDb valuesDb;
   private final FileSystem fileSystem;
   private final java.nio.file.Path rootPath;
   private boolean isDestroyed;
 
   @Inject
-  public TempDirectory(ValuesDb valuesDb) {
+  public TempDir(ValuesDb valuesDb) {
     this(valuesDb, Paths.get(Files.createTempDir().getAbsolutePath()));
   }
 
   @VisibleForTesting
-  public TempDirectory(ValuesDb valuesDb, java.nio.file.Path path) {
+  public TempDir(ValuesDb valuesDb, java.nio.file.Path path) {
     this(valuesDb, path, new DiskFileSystem(path));
   }
 
   @VisibleForTesting
-  public TempDirectory(ValuesDb valuesDb, java.nio.file.Path rootPath, FileSystem fileSystem) {
+  public TempDir(ValuesDb valuesDb, java.nio.file.Path rootPath, FileSystem fileSystem) {
     this.valuesDb = valuesDb;
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
@@ -132,6 +132,6 @@ public class TempDirectory {
   }
 
   private void assertNotDestroyed() {
-    checkState(!isDestroyed, "This TempDirectory is destroyed.");
+    checkState(!isDestroyed, "This TempDir is destroyed.");
   }
 }

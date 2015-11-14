@@ -27,7 +27,7 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class Unjarer {
-  private static final Predicate<String> IS_DIRECTORY = Predicates.endsWith(SEPARATOR);
+  private static final Predicate<String> IS_DIR = Predicates.endsWith(SEPARATOR);
 
   private final Container container;
   private final byte[] buffer;
@@ -44,7 +44,7 @@ public class Unjarer {
   public Array<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
-    Predicate<String> filter = and(not(IS_DIRECTORY), nameFilter);
+    Predicate<String> filter = and(not(IS_DIR), nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream())) {
         JarEntry entry;

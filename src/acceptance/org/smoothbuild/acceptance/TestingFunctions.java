@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
 
-import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NotCacheable;
@@ -125,8 +125,8 @@ public class TestingFunctions {
   public static class TempFilePath {
     @SmoothFunction
     public static SString tempFilePath(Container container) {
-      TempDirectory tempDirectory = container.createTempDirectory();
-      String osPath = tempDirectory.asOsPath(path("file.txt"));
+      TempDir tempDir = container.createTempDir();
+      String osPath = tempDir.asOsPath(path("file.txt"));
       new File(osPath).mkdirs();
       return container.create().string(osPath);
     }

@@ -9,7 +9,7 @@ import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
 
 /**
- * Matches file/directory name against given pattern.
+ * Matches file/dir name against given pattern.
  *
  * <pre>
  * Each star '*' in pattern matches zero or more characters.

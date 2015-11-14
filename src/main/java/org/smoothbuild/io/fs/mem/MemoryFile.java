@@ -10,11 +10,11 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 
 public class MemoryFile implements MemoryElement {
-  private final MemoryDirectory parent;
+  private final MemoryDir parent;
   private final Path name;
   private byte data[];
 
-  public MemoryFile(MemoryDirectory parent, Path name) {
+  public MemoryFile(MemoryDir parent, Path name) {
     this.parent = parent;
     this.name = name;
   }
@@ -25,7 +25,7 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public MemoryDirectory parent() {
+  public MemoryDir parent() {
     return parent;
   }
 
@@ -35,7 +35,7 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public boolean isDirectory() {
+  public boolean isDir() {
     return false;
   }
 

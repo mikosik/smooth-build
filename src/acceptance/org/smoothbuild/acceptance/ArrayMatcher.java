@@ -24,8 +24,7 @@ public class ArrayMatcher extends TypeSafeMatcher<File> {
 
   @Override
   public void describeTo(Description description) {
-    description.appendText("is array directory with elements = "
-        + Arrays.toString(expectedElements));
+    description.appendText("is array dir with elements = " + Arrays.toString(expectedElements));
   }
 
   @Override

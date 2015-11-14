@@ -16,7 +16,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 
 public class MemoryFileTest {
-  private final MemoryDirectory parent = mock(MemoryDirectory.class);
+  private final MemoryDir parent = mock(MemoryDir.class);
   private final Path name = Path.path("some/path");
   private final Path otherName = Path.path("other/path");
   private final String line = "some string";
@@ -45,9 +45,9 @@ public class MemoryFileTest {
   }
 
   @Test
-  public void memory_file_is_not_directory() throws Exception {
+  public void memory_file_is_not_dir() throws Exception {
     given(file = new MemoryFile(parent, name));
-    when(file).isDirectory();
+    when(file).isDir();
     thenReturned(false);
   }
 
