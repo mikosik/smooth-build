@@ -10,5 +10,5 @@ Returns __Blob__ containing compressed files.
 
 Zips all files from "src" directory.
 ```
-files.zip: files("src") | zip ;
+files.zip: files("//src") | zip ;
 ```

@@ -14,7 +14,7 @@ Returns __Blob[]__ containing all Blob from first and second argument.
 Returns array of all Blobs each being a file from 'src/common' or 'src/main'
 directory.
 ```
-commonSource: files("src/common");
-mainSource: files("src/main");
+commonSource: files("//src/common");
+mainSource: files("//src/main");
 allSource: concatenateBlobArrays(blobs=commonSource, with=mainSource);
 ```

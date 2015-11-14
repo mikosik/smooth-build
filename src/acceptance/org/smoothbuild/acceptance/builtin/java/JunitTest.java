@@ -14,8 +14,8 @@ public class JunitTest extends AcceptanceTestCase {
   public void junit_function_succeeds_when_all_junit_tests_succeed() throws Exception {
     givenFile("junit/org/junit/Test.java", testAnnotationSourceCode());
     givenFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
-    givenScript("fakeJunit: files('junit') | javac | jar;\n"
-        + "srcJar: files('src') | javac(libs=[fakeJunit]) | jar; result: junit(libs=[srcJar]);");
+    givenScript("fakeJunit: files('//junit') | javac | jar;\n"
+        + "srcJar: files('//src') | javac(libs=[fakeJunit]) | jar; result: junit(libs=[srcJar]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }
@@ -24,8 +24,8 @@ public class JunitTest extends AcceptanceTestCase {
   public void junit_function_fails_when_junit_test_fails() throws Exception {
     givenFile("junit/org/junit/Test.java", testAnnotationSourceCode());
     givenFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
-    givenScript("fakeJunit: files('junit') | javac | jar;\n"
-        + "srcJar: files('src') | javac(libs=[fakeJunit]) | jar; result: junit(libs=[srcJar]);");
+    givenScript("fakeJunit: files('//junit') | javac | jar;\n"
+        + "srcJar: files('//src') | javac(libs=[fakeJunit]) | jar; result: junit(libs=[srcJar]);");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("test failed"));
@@ -35,8 +35,8 @@ public class JunitTest extends AcceptanceTestCase {
   public void waring_is_logged_when_no_test_is_found() throws Exception {
     givenFile("junit/org/junit/Test.java", testAnnotationSourceCode());
     givenDir("src");
-    givenScript("fakeJunit: files('junit') | javac | jar;\n"
-        + "srcJar: files('src') | javac(libs=[fakeJunit]) | jar; result: junit(libs=[srcJar]);");
+    givenScript("fakeJunit: files('//junit') | javac | jar;\n"
+        + "srcJar: files('//src') | javac(libs=[fakeJunit]) | jar; result: junit(libs=[srcJar]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(output(), containsString("No junit tests found."));
@@ -48,8 +48,8 @@ public class JunitTest extends AcceptanceTestCase {
     givenFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     givenFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
 
-    givenScript("fakeJunit: files('junit') | javac | jar;\n"
-        + "srcJar: files('src') | javac(libs=[fakeJunit]) | jar;\n"
+    givenScript("fakeJunit: files('//junit') | javac | jar;\n"
+        + "srcJar: files('//src') | javac(libs=[fakeJunit]) | jar;\n"
         + "result: junit(libs=[srcJar], include='" + SUCCESSFUL_TEST_CLASS + ".class');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();

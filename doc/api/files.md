@@ -14,5 +14,5 @@ via 'path' parameter.
 
 Returns all files located in 'src' directory or its subdirectories.
 ```
-sources: files("src") ;
+sources: files("//src") ;
 ```
