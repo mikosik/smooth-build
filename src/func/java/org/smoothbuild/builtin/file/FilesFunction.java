@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
+import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -50,7 +51,7 @@ public class FilesFunction {
   private static Array<SFile> readFiles(ContainerImpl container, FileSystem fileSystem, Path path) {
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     FileReader reader = new FileReader(container);
-    for (Path filePath : fileSystem.filesFromRecursive(path)) {
+    for (Path filePath : recursiveFilesIterable(fileSystem, path)) {
       fileArrayBuilder.add(reader.createFile(filePath, path.append(filePath)));
     }
     return fileArrayBuilder.build();

@@ -45,14 +45,6 @@ public class SubFileSystemTest {
   }
 
   @Test
-  public void files_from_recursive_is_forwarded() {
-    given(pathList = asList(path("some/path")));
-    given(willReturn(pathList), fileSystem).filesFromRecursive(absolutePath);
-    when(subFileSystem).filesFromRecursive(path);
-    thenReturned(sameInstance(pathList));
-  }
-
-  @Test
   public void delete_is_forwarded() {
     when(subFileSystem).delete(path);
     thenCalled(fileSystem).delete(absolutePath);

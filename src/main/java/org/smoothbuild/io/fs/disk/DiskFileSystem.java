@@ -8,7 +8,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
-import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -58,7 +57,8 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public Iterable<Path> filesFrom(Path directory) {
     assertPathIsDir(this, directory);
-    try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(directory))) {
+    try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(
+        directory))) {
       Builder<Path> builder = ImmutableList.builder();
       for (java.nio.file.Path path : stream) {
         builder.add(path(path.getFileName().toString()));
@@ -67,12 +67,6 @@ public class DiskFileSystem implements FileSystem {
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
-  }
-
-  @Override
-  public Iterable<Path> filesFromRecursive(Path directory) {
-    assertPathIsDir(this, directory);
-    return recursiveFilesIterable(this, directory);
   }
 
   @Override
