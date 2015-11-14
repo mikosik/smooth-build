@@ -1,7 +1,7 @@
 Smooth-Build
 ------------
 
-Smooth-build is a build tool.  
+Smooth-build is a build tool.
 
 Prerequisites
 -------------
@@ -44,7 +44,7 @@ Now let's take a look at build file we've just run from
 [example01](https://github.com/mikosik/smooth-build-examples/tree/master/example01).
 
 ```
-release.jar: files("src") | javac | jar ;
+release.jar: files("//src") | javac | jar ;
 ```
 
 If you happen to know how pipes work in Linux shells
@@ -95,7 +95,7 @@ it just takes result from cache.
 Let's see how it works by  changing one of java files in example01 project
 (for example src/KnightsWhoSayNi.java) by adding a few empty spaces
 at the end of one line.
-When you run build again you notice that javac task has to be reexecuted (as content of *.java files has changed) but because 
+When you run build again you notice that javac task has to be reexecuted (as content of *.java files has changed) but because
 only formatting of the file changed, compilation produced exactly the same *.class
 file as before.
 When smooth tries to jar that file it will realize it has result
@@ -127,12 +127,12 @@ Type system
 
 Each value that is returned by a function or passed to a function as a parameter
 can have one of types described below:
-**String** - Sequence of characters  
-**Blob** - Sequence of bytes  
-**File** - Single file - compound object that has a content (Blob) and path associated with it (String).  
-**String[]** - Array of Strings  
-**Blob[]** - Array of Blobs  
-**File[]** - Array of Files  
+**String** - Sequence of characters
+**Blob** - Sequence of bytes
+**File** - Single file - compound object that has a content (Blob) and path associated with it (String).
+**String[]** - Array of Strings
+**Blob[]** - Array of Blobs
+**File[]** - Array of Files
 
 There are obviously some important types (like Boolean) missing.
 They will be added before smooth-build reaches version 1.0.
@@ -148,7 +148,7 @@ Let's take a look at
 that declares the same process but without pipes.
 
 ```
-release.jar: jar(javac(files("src"))) ;
+release.jar: jar(javac(files("//src"))) ;
 ```
 
 Now it looks more friendly if you come from world of imperative languages.
@@ -176,7 +176,7 @@ unless one of two cases occurs:
 Let's look at [example03](https://github.com/mikosik/smooth-build-examples/tree/master/example03). It explicitly assigns arguments to parameters (although it is not necessary in that case as automatic assignment would work fine).
 
 ```
-release.jar: jar(files=javac(sources=files(dir="src"))) ;
+release.jar: jar(files=javac(sources=files(dir="//src"))) ;
 ```
 
 Note that explicitly assigning argument to parameter cannot be done for value that is passed through a pipe. This may be a nuisanance as you have to use nested function calls in such cases.
@@ -193,7 +193,7 @@ Note that this time our (user defined) function `zipped` calls other function
 defined by us `books`.
 
 ```
-books: [ file("books/LifeOfBrian.txt"), file("books/TheMeaningOfLife.txt") ] ;
+books: [ file("//books/LifeOfBrian.txt"), file("//books/TheMeaningOfLife.txt") ] ;
 zipped: books | zip ;
 ```
 
@@ -205,8 +205,8 @@ Take a look at
 [example05](https://github.com/mikosik/smooth-build-examples/tree/master/example05).
 
 ```
-library: files("src/lib") | javac | jar ;
-release.jar: files("src/main") | javac(libs=[library]) | jar ;
+library: files("//src/lib") | javac | jar ;
+release.jar: files("//src/main") | javac(libs=[library]) | jar ;
 ```
 
 First line defines `library` - function that takes java files from `src/lib` dir,

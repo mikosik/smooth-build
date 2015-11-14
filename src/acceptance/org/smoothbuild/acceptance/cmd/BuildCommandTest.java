@@ -68,7 +68,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
   @Test
   public void storing_array_with_two_files_with_same_path_prints_error() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result: [file('file.txt'), file('file.txt')];");
+    givenScript("result: [file('//file.txt'), file('//file.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(

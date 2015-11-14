@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
-import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
+import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -22,7 +22,7 @@ public class FileFunction {
   public static SFile file(
       ContainerImpl container,
       @Required @Name("path") SString pathString) {
-    Path path = validatedPath("path", pathString);
+    Path path = validatedProjectPath("path", pathString);
     if (!path.isRoot() && path.firstPart().equals(SMOOTH_DIR)) {
       throw new Message(ERROR, "Reading file from '.smooth' dir is not allowed.");
     }
