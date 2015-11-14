@@ -6,6 +6,7 @@ import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.io.fs.base.Path;
 
 public class DefaultValueTest extends AcceptanceTestCase {
   @Test
@@ -29,7 +30,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
     givenScript("result: fileIdentity() | path;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("/"));
+    then(artifact("result"), hasContent(Path.root().value()));
   }
 
   @Test
