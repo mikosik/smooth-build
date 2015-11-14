@@ -12,7 +12,7 @@ public class ToFileTest extends AcceptanceTestCase {
   @Test
   public void to_file_function() throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("result: [toFile(path='newFile.txt', content=file('file.txt'))];");
+    givenScript("result: [toFile(path='newFile.txt', content=file('//file.txt'))];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("newFile.txt", "abc"));

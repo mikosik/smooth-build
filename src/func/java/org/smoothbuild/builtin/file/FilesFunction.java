@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
-import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
+import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -24,7 +24,7 @@ public class FilesFunction {
   public static Array<SFile> files(
       ContainerImpl container,
       @Required @Name("dir") SString dir) {
-    Path path = validatedPath("dir", dir);
+    Path path = validatedProjectPath("dir", dir);
     FileSystem fileSystem = container.projectFileSystem();
 
     if (path.isRoot()) {

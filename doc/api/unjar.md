@@ -10,6 +10,6 @@ Returns __File[]__ - arrays of File uncompressed from given jar.
 Uncompresses all files from "jars/myJar.jar" file.
 
 ```
-files: file("jars/myJar.jar") | unjar ;
+files: file("//jars/myJar.jar") | unjar ;
 ```
 

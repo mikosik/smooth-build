@@ -38,7 +38,7 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void assigns_to_parameter_with_supertype() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result : blobIdentity(blob=file('file.txt'));");
+    givenScript("result : blobIdentity(blob=file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));

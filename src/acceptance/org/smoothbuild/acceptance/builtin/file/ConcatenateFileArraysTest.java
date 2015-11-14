@@ -12,7 +12,7 @@ public class ConcatenateFileArraysTest extends AcceptanceTestCase {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
     givenScript(
-        "result: concatenateFileArrays(files=[file('file1.txt')], with=[file('file2.txt')]);");
+        "result: concatenateFileArrays(files=[file('//file1.txt')], with=[file('//file2.txt')]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));

@@ -22,7 +22,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_blob_artifact() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result: file('file.txt') | content;");
+    givenScript("result: file('//file.txt') | content;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -31,7 +31,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_file_artifact() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result: file('file.txt');");
+    givenScript("result: file('//file.txt');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -49,7 +49,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   public void store_blob_array_artifact() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result: [content(file('file1.txt')), content(file('file2.txt'))];");
+    givenScript("result: [content(file('//file1.txt')), content(file('//file2.txt'))];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
@@ -59,7 +59,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   public void store_file_array_artifact() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result: [file('file1.txt'), file('file2.txt')];");
+    givenScript("result: [file('//file1.txt'), file('//file2.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
@@ -68,7 +68,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void cannot_store_file_array_with_duplicated_paths() throws Exception {
     givenFile("file1.txt", "abc");
-    givenScript("result: [file('file1.txt'), file('file1.txt')];");
+    givenScript("result: [file('//file1.txt'), file('//file1.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(""));
