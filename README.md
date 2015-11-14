@@ -193,7 +193,7 @@ Note that this time our (user defined) function `zipped` calls other function
 defined by us `books`.
 
 ```
-books: [ file("books/LifeOfBrian.txt"), file("books/TheMeaningOfLife.txt") ] ;
+books: [ file("//books/LifeOfBrian.txt"), file("//books/TheMeaningOfLife.txt") ] ;
 zipped: books | zip ;
 ```
 
