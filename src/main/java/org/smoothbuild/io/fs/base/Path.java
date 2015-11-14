@@ -82,6 +82,20 @@ public class Path {
     }
   }
 
+  public boolean startsWith(Path path) {
+    List<Path> thisParts = parts();
+    List<Path> thatParts = path.parts();
+    if (thisParts.size() < thatParts.size()) {
+      return false;
+    }
+    for (int i = 0; i < thatParts.size(); i++) {
+      if (!thisParts.get(i).equals(thatParts.get(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public Path append(Path path) {
     if (isRoot()) {
       return path;

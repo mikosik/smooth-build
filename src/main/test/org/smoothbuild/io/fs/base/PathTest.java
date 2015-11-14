@@ -206,6 +206,25 @@ public class PathTest {
   }
 
   @Test
+  public void test_starts_with() throws Exception {
+    assertTrue(Path.root().startsWith(Path.root()));
+    assertTrue(Path.path("abc").startsWith(Path.root()));
+    assertTrue(Path.path("abc/def").startsWith(Path.root()));
+    assertTrue(Path.path("abc/def/ghi").startsWith(Path.root()));
+
+    assertTrue(Path.path("abc/def/ghi").startsWith(Path.path("abc")));
+    assertTrue(Path.path("abc/def/ghi").startsWith(Path.path("abc/def")));
+    assertTrue(Path.path("abc/def/ghi").startsWith(Path.path("abc/def/ghi")));
+
+    assertFalse(Path.path("abc/def/ghi").startsWith(Path.path("ab")));
+    assertFalse(Path.path("abc/def/ghi").startsWith(Path.path("abc/d")));
+    assertFalse(Path.path("abc/def/ghi").startsWith(Path.path("def")));
+    assertFalse(Path.path("abc/def/ghi").startsWith(Path.path("ghi")));
+
+    assertFalse(Path.root().startsWith(Path.path("abc")));
+  }
+
+  @Test
   public void test_equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
 
