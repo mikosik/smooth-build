@@ -21,13 +21,13 @@ This will probably change in future so it would be easy to update junit
  library without updating smooth version.
 
 ```
-testJar: files("src") | javac | jar;
+testJar: files("//src") | javac | jar;
 test: [ testJar ]  | junit;
 ```
 
 Takes all files from "src" directory, compiles them and executes ony tests from classes which names end with 'Test'.
 
 ```
-testJar: files("src") | javac | jar;
+testJar: files("//src") | javac | jar;
 test: [ testJar ]  | junit(include="**/*Test.class");
 ```
