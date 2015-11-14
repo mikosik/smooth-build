@@ -1,20 +1,16 @@
 package org.smoothbuild.acceptance.builtin.file;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
+import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class FilesTest extends AcceptanceTestCase {
-  @Test
-  public void listing_files_from_project_root_causes_error() throws Exception {
-    givenScript("result: files('//');");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(output(), containsString("Listing files from project root is not allowed."));
-  }
+  private String script;
 
   @Test
   public void listing_files_from_smooth_dir_causes_error() throws Exception {
@@ -75,5 +71,16 @@ public class FilesTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file.txt", "abc", "subdir/file.txt", "def"));
+  }
+
+  @Test
+  public void files_from_project_root_are_returned_except_content_of_smooth_dir() throws Exception {
+    given(script = "result: files(\"//\");");
+    givenScript(script);
+    givenFile("dir/file.txt", "abc");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isFileArrayWith(DEFAULT_SCRIPT.value(), script, "dir/file.txt",
+        "abc"));
   }
 }

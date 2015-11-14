@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Name;
@@ -28,12 +29,8 @@ public class FilesFunction {
     Path path = validatedProjectPath("dir", dir);
     FileSystem fileSystem = container.projectFileSystem();
 
-    if (path.isRoot()) {
-      throw new Message(ERROR, "Listing files from project root is not allowed.");
-    }
-
-    if (path.firstPart().equals(SMOOTH_DIR)) {
-      throw new Message(ERROR, "Listing files from '.smooth' dir is not allowed.");
+    if (path.startsWith(SMOOTH_DIR)) {
+      throw new Message(ERROR, "Listing files from " + SMOOTH_DIR + " dir is not allowed.");
     }
 
     switch (fileSystem.pathState(path)) {
@@ -48,11 +45,32 @@ public class FilesFunction {
     }
   }
 
-  private static Array<SFile> readFiles(ContainerImpl container, FileSystem fileSystem, Path path) {
+  private static Array<SFile> readFiles(ContainerImpl container, FileSystem fileSystem, Path dir) {
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     FileReader reader = new FileReader(container);
-    for (Path filePath : recursiveFilesIterable(fileSystem, path)) {
-      fileArrayBuilder.add(reader.createFile(filePath, path.append(filePath)));
+    if (dir.isRoot()) {
+      for (Path path : fileSystem.files(Path.root())) {
+        if (!path.equals(SMOOTH_DIR)) {
+          PathState pathState = fileSystem.pathState(path);
+          switch (pathState) {
+            case DIR:
+              for (Path currentPath : recursiveFilesIterable(fileSystem, path)) {
+                Path projectPath = path.append(currentPath);
+                fileArrayBuilder.add(reader.createFile(projectPath, projectPath));
+              }
+              break;
+            case FILE:
+              fileArrayBuilder.add(reader.createFile(path, path));
+              break;
+            default:
+              throw new RuntimeException("Unexpected case: " + pathState);
+          }
+        }
+      }
+    } else {
+      for (Path path : recursiveFilesIterable(fileSystem, dir)) {
+        fileArrayBuilder.add(reader.createFile(path, dir.append(path)));
+      }
     }
     return fileArrayBuilder.build();
   }
