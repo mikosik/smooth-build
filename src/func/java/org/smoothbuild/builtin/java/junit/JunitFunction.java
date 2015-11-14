@@ -9,7 +9,6 @@ import java.util.Map;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.smoothbuild.builtin.file.err.IllegalPathPatternError;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
@@ -76,7 +75,7 @@ public class JunitFunction {
     try {
       return pathMatcher(includeExpression);
     } catch (IllegalPathPatternException e) {
-      throw new IllegalPathPatternError("include", e.getMessage());
+      throw new Message(ERROR, "Parameter 'include' has illegal value. " + e.getMessage());
     }
   }
 }
