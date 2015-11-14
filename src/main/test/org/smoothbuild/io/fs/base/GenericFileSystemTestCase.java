@@ -79,13 +79,13 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
-    when(fileSystem).filesFrom(path("abc"));
+    when(fileSystem).files(path("abc"));
     thenThrown(NoSuchDirException.class);
   }
 
   public void files_from_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
-    when(fileSystem).filesFrom(path);
+    when(fileSystem).files(path);
     thenThrown(NoSuchDirButFileException.class);
   }
 
@@ -94,13 +94,13 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile("abc/dir1/file1.txt");
     given(this).createEmptyFile("abc/dir2/file2.txt");
     given(this).createEmptyFile("abc/text.txt");
-    when(fileSystem).filesFrom(path("abc"));
+    when(fileSystem).files(path("abc"));
     thenReturned(containsInAnyOrder(path("dir1"), path("dir2"), path("text.txt")));
   }
 
   @Test
   public void files_from_throws_exception_when_path_does_not_exist() throws Exception {
-    when(fileSystem).filesFrom(path("abc"));
+    when(fileSystem).files(path("abc"));
     thenThrown(FileSystemException.class);
   }
 

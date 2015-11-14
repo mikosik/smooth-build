@@ -39,8 +39,8 @@ public class SubFileSystemTest {
   @Test
   public void files_from_is_forwarded() {
     given(strings = asList("abc"));
-    given(willReturn(strings), fileSystem).filesFrom(absolutePath);
-    when(subFileSystem).filesFrom(path);
+    given(willReturn(strings), fileSystem).files(absolutePath);
+    when(subFileSystem).files(path);
     thenReturned(sameInstance(strings));
   }
 

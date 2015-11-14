@@ -38,7 +38,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public List<Path> filesFrom(Path directory) {
+  public List<Path> files(Path directory) {
     return getDirectory(directory).childNames();
   }
 
