@@ -13,7 +13,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   @Test
   public void file_is_implicitly_converted_to_blob() throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("result: file('file.txt') | toString;");
+    givenScript("result: file('//file.txt') | toString;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -23,7 +23,8 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   public void file_array_is_implicitly_converted_to_blob_array() throws IOException {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result: concatenateBlobArrays([file('file1.txt')], with=[file('file2.txt')]);");
+    givenScript(
+        "result: concatenateBlobArrays([file('//file1.txt')], with=[file('//file2.txt')]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));

@@ -12,7 +12,7 @@ public class ToStringTest extends AcceptanceTestCase {
   @Test
   public void to_string_function() throws IOException {
     givenFile("file1.txt", "abc");
-    givenScript("result: file('file1.txt') | content | toString;");
+    givenScript("result: file('//file1.txt') | content | toString;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
