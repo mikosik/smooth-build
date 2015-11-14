@@ -8,8 +8,8 @@ import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.file.err.IllegalPathError;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 
 import com.google.common.collect.ImmutableList;
@@ -25,7 +25,7 @@ public class PathArgValidatorTest {
       try {
         validatedPath(name, valuesDb.string(path));
         fail("exception should be thrown");
-      } catch (IllegalPathError e) {
+      } catch (Message e) {
         // expected
       }
     }
@@ -45,7 +45,7 @@ public class PathArgValidatorTest {
       try {
         validatedProjectPath(name, valuesDb.string(path));
         fail("exception should be thrown for path = " + path);
-      } catch (IllegalPathError e) {
+      } catch (Message e) {
         // expected
       }
     }
