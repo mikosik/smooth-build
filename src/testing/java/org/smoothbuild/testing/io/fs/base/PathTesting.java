@@ -9,7 +9,7 @@ public class PathTesting {
   public static List<String> listOfCorrectPaths() {
     Builder<String> builder = ImmutableList.builder();
 
-    builder.add("/");
+    builder.add("");
 
     builder.add("abc");
     builder.add("abc/def");
@@ -29,7 +29,7 @@ public class PathTesting {
   public static ImmutableList<String> listOfInvalidPaths() {
     Builder<String> builder = ImmutableList.builder();
 
-    builder.add("");
+    builder.add("/");
     builder.add(".");
 
     builder.add("./");

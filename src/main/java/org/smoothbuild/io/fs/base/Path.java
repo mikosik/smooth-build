@@ -10,7 +10,7 @@ import com.google.common.base.Splitter;
  */
 public class Path {
   public static final String SEPARATOR = "/";
-  private static final String ROOT = SEPARATOR;
+  private static final String ROOT = "";
 
   private final String value;
 
@@ -39,16 +39,11 @@ public class Path {
   }
 
   public static String validationError(String path) {
-    if (path.isEmpty()) {
-      return "Empty path is not allowed";
+    if (path.startsWith("/")) {
+      return "Path cannot start with slash character '/'.";
     }
-    if (!isRootString(path)) {
-      if (path.startsWith("/")) {
-        return "Path cannot start with slash character '/'.";
-      }
-      if (path.endsWith("/")) {
-        return "Path cannot end with slash character '/'.";
-      }
+    if (path.endsWith("/")) {
+      return "Path cannot end with slash character '/'.";
     }
     if (path.contains("//")) {
       return "Path cannot contain two slashes (//) in a row";
@@ -77,7 +72,7 @@ public class Path {
 
   public Path parent() {
     if (isRoot()) {
-      throw new IllegalArgumentException("Cannot return parent of root path '.'");
+      throw new IllegalArgumentException("Cannot return parent of root path");
     }
     int index = value.lastIndexOf(SEPARATOR);
     if (index == -1) {
@@ -111,7 +106,7 @@ public class Path {
 
   public Path firstPart() {
     if (isRoot()) {
-      throw new IllegalArgumentException("Cannot return first part of root path '/'");
+      throw new IllegalArgumentException("Cannot return first part of root path.");
     }
     int index = value.indexOf(SEPARATOR);
     if (index == -1) {
@@ -123,7 +118,7 @@ public class Path {
 
   public Path lastPart() {
     if (isRoot()) {
-      throw new IllegalArgumentException("Cannot return last part of root path '/'");
+      throw new IllegalArgumentException("Cannot return last part of root path.");
     }
     int index = value.lastIndexOf(SEPARATOR);
     if (index == -1) {
