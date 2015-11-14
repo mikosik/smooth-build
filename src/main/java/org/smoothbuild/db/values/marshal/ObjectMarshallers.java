@@ -42,7 +42,7 @@ public class ObjectMarshallers {
   public ObjectMarshallers(@Values HashedDb hashedDb) {
     this.stringMarshaller = new StringMarshaller(hashedDb);
     this.blobMarshaller = new BlobMarshaller(hashedDb);
-    this.fileMarshaller = new FileMarshaller(hashedDb, blobMarshaller);
+    this.fileMarshaller = new FileMarshaller(hashedDb);
     this.nothingMarshaller = new NothingMarshaller();
 
     this.stringArrayMarshaller = new ArrayMarshaller<>(hashedDb, STRING_ARRAY, stringMarshaller);
