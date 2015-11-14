@@ -23,7 +23,7 @@ public class ArraySaver<T extends Value> implements Saver<Array<T>> {
 
     smoothFileSystem.delete(artifactPath);
 
-    // Create directory explicitly. When fileArray is empty for loop below won't
+    // Create dir explicitly. When fileArray is empty for loop below won't
     // create empty dir for us.
     smoothFileSystem.createDir(artifactPath);
 

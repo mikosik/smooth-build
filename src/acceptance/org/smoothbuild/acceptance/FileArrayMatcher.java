@@ -27,7 +27,7 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
 
   @Override
   public void describeTo(Description description) {
-    description.appendText("is array directory with = " + Arrays.toString(params));
+    description.appendText("is array dir with = " + Arrays.toString(params));
   }
 
   @Override

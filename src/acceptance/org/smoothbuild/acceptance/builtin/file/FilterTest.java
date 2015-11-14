@@ -38,7 +38,7 @@ public class FilterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void double_star_matches_file_inside_directory() throws Exception {
+  public void double_star_matches_file_inside_dir() throws Exception {
     givenFile("dir/file.txt", "abc");
     givenScript("result: [file('//dir/file.txt')] | filter('**');");
     whenSmoothBuild("result");
@@ -47,7 +47,7 @@ public class FilterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void double_star_matches_file_inside_directory_tree() throws Exception {
+  public void double_star_matches_file_inside_dir_tree() throws Exception {
     givenFile("dir/subdir/file.txt", "abc");
     givenScript("result: [file('//dir/subdir/file.txt')] | filter('**');");
     whenSmoothBuild("result");
@@ -120,7 +120,7 @@ public class FilterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void leading_double_star_with_file_matches_that_file_inside_directory_tree()
+  public void leading_double_star_with_file_matches_that_file_inside_dir_tree()
       throws Exception {
     givenFile("dir/subdir/file.txt", "abc");
     givenScript("result: [file('//dir/subdir/file.txt')] | filter('**/file.txt');");

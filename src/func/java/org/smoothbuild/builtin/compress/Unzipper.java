@@ -24,7 +24,7 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class Unzipper {
-  private static final Predicate<String> IS_DIRECTORY = Predicates.endsWith(SEPARATOR);
+  private static final Predicate<String> IS_DIR = Predicates.endsWith(SEPARATOR);
   private final byte[] buffer;
   private final Container container;
   private DuplicatesDetector<Path> duplicatesDetector;
@@ -41,7 +41,7 @@ public class Unzipper {
       try (ZipInputStream zipInputStream = new ZipInputStream(zipBlob.openInputStream())) {
         ZipEntry entry;
         while ((entry = zipInputStream.getNextEntry()) != null) {
-          if (!IS_DIRECTORY.test(entry.getName())) {
+          if (!IS_DIR.test(entry.getName())) {
             fileArrayBuilder.add(unzipEntry(zipInputStream, entry));
           }
         }

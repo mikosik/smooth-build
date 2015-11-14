@@ -9,11 +9,11 @@ import org.smoothbuild.io.fs.base.Path;
 public interface MemoryElement {
   public Path name();
 
-  public MemoryDirectory parent();
+  public MemoryDir parent();
 
   public boolean isFile();
 
-  public boolean isDirectory();
+  public boolean isDir();
 
   public boolean hasChild(Path name);
 

@@ -30,7 +30,7 @@ public class RecursiveFilesIterableTest {
   }
 
   @Test
-  public void iterate_only_sub_directory() throws Exception {
+  public void iterate_only_sub_dir() throws Exception {
     String[] names = new String[] { "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt",
         "ghi/6.txt" };
     String[] expectedNames = new String[] { "4.txt", "5.txt" };
@@ -39,7 +39,7 @@ public class RecursiveFilesIterableTest {
   }
 
   @Test
-  public void iterate_only_super_directory() throws Exception {
+  public void iterate_only_super_dir() throws Exception {
     String[] names = new String[] { "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt",
         "ghi/6.txt" };
     String[] expectedNames = new String[] { "xyz/prs/1.txt", "xyz/prs/2.txt", "xyz/prs/3.txt",
@@ -49,7 +49,7 @@ public class RecursiveFilesIterableTest {
   }
 
   @Test
-  public void is_empty_when_directory_doesnt_exist() throws Exception {
+  public void is_empty_when_dir_doesnt_exist() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
     Path path = path("my/file");
 
@@ -57,7 +57,7 @@ public class RecursiveFilesIterableTest {
   }
 
   @Test
-  public void throws_exception_when_directory_is_a_file() throws Exception {
+  public void throws_exception_when_dir_is_a_file() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
     Path path = path("my/file");
     createFile(fileSystem, path, "content");

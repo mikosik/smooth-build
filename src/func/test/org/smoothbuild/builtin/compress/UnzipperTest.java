@@ -31,7 +31,7 @@ import org.smoothbuild.testing.common.ZipTester;
 public class UnzipperTest {
   private String fileName1;
   private String fileName2;
-  private String directoryName;
+  private String dirName;
   private List<SFile> files;
   private Blob blob;
   private Unzipper unzipper;
@@ -41,7 +41,7 @@ public class UnzipperTest {
     givenTest(this);
     given(fileName1 = "file/path/file1.txt");
     given(fileName2 = "file/path/file2.txt");
-    given(directoryName = "my/directory/");
+    given(dirName = "my/dir/");
     given(unzipper = new Unzipper(containerImpl()));
   }
 
@@ -63,8 +63,8 @@ public class UnzipperTest {
   }
 
   @Test
-  public void directory_entries_are_ignored() throws Exception {
-    given(blob = zipped(directoryName));
+  public void dir_entries_are_ignored() throws Exception {
+    given(blob = zipped(dirName));
     when(unzipper.unzip(blob));
     thenReturned(emptyIterable());
   }

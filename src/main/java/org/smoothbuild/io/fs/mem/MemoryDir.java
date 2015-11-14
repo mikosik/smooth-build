@@ -10,12 +10,12 @@ import org.smoothbuild.io.fs.base.Path;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
-public class MemoryDirectory implements MemoryElement {
-  private final MemoryDirectory parent;
+public class MemoryDir implements MemoryElement {
+  private final MemoryDir parent;
   private final Path name;
   private final Map<Path, MemoryElement> map = Maps.newHashMap();
 
-  public MemoryDirectory(MemoryDirectory parent, Path name) {
+  public MemoryDir(MemoryDir parent, Path name) {
     this.parent = parent;
     this.name = name;
   }
@@ -26,7 +26,7 @@ public class MemoryDirectory implements MemoryElement {
   }
 
   @Override
-  public MemoryDirectory parent() {
+  public MemoryDir parent() {
     return parent;
   }
 
@@ -36,7 +36,7 @@ public class MemoryDirectory implements MemoryElement {
   }
 
   @Override
-  public boolean isDirectory() {
+  public boolean isDir() {
     return true;
   }
 
@@ -63,7 +63,7 @@ public class MemoryDirectory implements MemoryElement {
   public void addChild(MemoryElement element) {
     Path elementName = element.name();
     if (map.containsKey(elementName)) {
-      throw new IllegalStateException("Directory already contains child with name '" + elementName
+      throw new IllegalStateException("Dir already contains child with name '" + elementName
           + "'.");
     }
     map.put(elementName, element);

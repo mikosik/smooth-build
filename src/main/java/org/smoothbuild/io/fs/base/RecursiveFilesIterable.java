@@ -11,16 +11,16 @@ import com.google.common.collect.ImmutableList;
 public class RecursiveFilesIterable implements Iterable<Path> {
   private final FileSystem fileSystem;
 
-  public static Iterable<Path> recursiveFilesIterable(FileSystem fileSystem, Path directory) {
-    switch (fileSystem.pathState(directory)) {
+  public static Iterable<Path> recursiveFilesIterable(FileSystem fileSystem, Path dir) {
+    switch (fileSystem.pathState(dir)) {
       case FILE:
-        throw new IllegalArgumentException("Path " + directory + " is not a dir but a file.");
+        throw new IllegalArgumentException("Path " + dir + " is not a dir but a file.");
       case DIR:
-        return new RecursiveFilesIterable(new SubFileSystem(fileSystem, directory));
+        return new RecursiveFilesIterable(new SubFileSystem(fileSystem, dir));
       case NOTHING:
         return ImmutableList.of();
       default:
-        throw new RuntimeException("Unexpected case: " + fileSystem.pathState(directory));
+        throw new RuntimeException("Unexpected case: " + fileSystem.pathState(dir));
     }
   }
 
@@ -34,14 +34,14 @@ public class RecursiveFilesIterable implements Iterable<Path> {
   }
 
   private class RecursiveFilesIterator implements Iterator<Path> {
-    private final ArrayDeque<Path> directoryStack;
+    private final ArrayDeque<Path> dirStack;
     private final ArrayDeque<Path> fileStack;
     private Path nextFile;
 
     public RecursiveFilesIterator() {
-      this.directoryStack = new ArrayDeque<>();
+      this.dirStack = new ArrayDeque<>();
       this.fileStack = new ArrayDeque<>();
-      this.directoryStack.push(Path.root());
+      this.dirStack.push(Path.root());
 
       nextFile = fetchNextFile();
     }
@@ -61,9 +61,9 @@ public class RecursiveFilesIterable implements Iterable<Path> {
     }
 
     private Path fetchNextFile() {
-      while (!fileStack.isEmpty() || !directoryStack.isEmpty()) {
+      while (!fileStack.isEmpty() || !dirStack.isEmpty()) {
         if (fileStack.isEmpty()) {
-          Path dir = directoryStack.remove();
+          Path dir = dirStack.remove();
           for (Path name : fileSystem.files(dir)) {
             fileStack.push(dir.append(name));
           }
@@ -73,7 +73,7 @@ public class RecursiveFilesIterable implements Iterable<Path> {
             case FILE:
               return file;
             case DIR:
-              directoryStack.push(file);
+              dirStack.push(file);
               break;
             case NOTHING:
               throw new RuntimeException("Unexpected case: " + NOTHING);

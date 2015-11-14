@@ -8,7 +8,7 @@ import java.util.List;
 import org.smoothbuild.builtin.android.err.AidlBinaryReturnedNonZeroCodeError;
 import org.smoothbuild.builtin.android.err.AidlShouldOutputExactlyOneFileError;
 import org.smoothbuild.builtin.android.err.RunningAidlBinaryFailedError;
-import org.smoothbuild.io.util.TempDirectory;
+import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -34,10 +34,10 @@ public class AidlFunction {
     String aidlBinary = AndroidSdk.getAidlBinaryPath(buildToolsVersion).toString();
     String frameworkAidl = AndroidSdk.getFrameworkAidl(apiLevel).toString();
 
-    TempDirectory inputFilesDir = container.createTempDirectory();
+    TempDir inputFilesDir = container.createTempDir();
     inputFilesDir.writeFile(interfaceFile);
 
-    TempDirectory outputFilesDir = container.createTempDirectory();
+    TempDir outputFilesDir = container.createTempDir();
 
     List<String> command = new ArrayList<>();
     command.add(aidlBinary);

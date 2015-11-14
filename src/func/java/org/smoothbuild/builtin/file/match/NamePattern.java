@@ -10,12 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Pattern for matching directory/file name.
+ * Pattern for matching dir/file name.
  *
  * <ul>
  * <li>Each star '*' in pattern matches zero or more characters.</li>
  * <li>Double stars "**" are forbidden unless whole pattern equals to "**". Such
- * pattern matches one or more whole directory/file names</li>
+ * pattern matches one or more whole dir/file names</li>
  * </ul>
  */
 public class NamePattern {

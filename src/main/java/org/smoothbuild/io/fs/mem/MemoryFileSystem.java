@@ -23,7 +23,7 @@ import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileException;
  * In memory implementation of FileSystem.
  */
 public class MemoryFileSystem implements FileSystem {
-  private final MemoryDirectory root = new MemoryDirectory(null, Path.root());
+  private final MemoryDir root = new MemoryDir(null, Path.root());
 
   @Override
   public PathState pathState(Path path) {
@@ -31,15 +31,15 @@ public class MemoryFileSystem implements FileSystem {
     if (element == null) {
       return NOTHING;
     }
-    if (element.isDirectory()) {
+    if (element.isDir()) {
       return DIR;
     }
     return FILE;
   }
 
   @Override
-  public List<Path> files(Path directory) {
-    return getDirectory(directory).childNames();
+  public List<Path> files(Path dir) {
+    return getDir(dir).childNames();
   }
 
   @Override
@@ -68,7 +68,7 @@ public class MemoryFileSystem implements FileSystem {
       throw new PathIsAlreadyTakenByDirException(path);
     }
 
-    MemoryDirectory dir = createDirImpl(path.parent());
+    MemoryDir dir = createDirImpl(path.parent());
 
     Path name = path.lastPart();
     if (dir.hasChild(name)) {
@@ -86,7 +86,7 @@ public class MemoryFileSystem implements FileSystem {
     assertPathIsUnused(this, link);
 
     Path name = link.lastPart();
-    MemoryDirectory dir = createDirImpl(link.parent());
+    MemoryDir dir = createDirImpl(link.parent());
     MemoryElement targetElement = findElement(target);
     dir.addChild(new MemoryLink(dir, name, targetElement));
   }
@@ -96,20 +96,20 @@ public class MemoryFileSystem implements FileSystem {
     createDirImpl(path);
   }
 
-  private MemoryDirectory createDirImpl(Path directory) {
-    Iterator<Path> it = directory.parts().iterator();
-    MemoryDirectory currentDir = root;
+  private MemoryDir createDirImpl(Path dir) {
+    Iterator<Path> it = dir.parts().iterator();
+    MemoryDir currentDir = root;
     while (it.hasNext()) {
       Path name = it.next();
       if (currentDir.hasChild(name)) {
         MemoryElement child = currentDir.child(name);
-        if (child.isDirectory()) {
-          currentDir = (MemoryDirectory) child;
+        if (child.isDir()) {
+          currentDir = (MemoryDir) child;
         } else {
-          throw new PathIsAlreadyTakenByFileException(directory);
+          throw new PathIsAlreadyTakenByFileException(dir);
         }
       } else {
-        MemoryDirectory newDir = new MemoryDirectory(currentDir, name);
+        MemoryDir newDir = new MemoryDir(currentDir, name);
         currentDir.addChild(newDir);
         currentDir = newDir;
       }
@@ -126,9 +126,9 @@ public class MemoryFileSystem implements FileSystem {
     }
   }
 
-  private MemoryElement getDirectory(Path path) {
+  private MemoryElement getDir(Path path) {
     MemoryElement found = findElement(path);
-    if (found != null && found.isDirectory()) {
+    if (found != null && found.isDir()) {
       return found;
     } else {
       throw new NoSuchDirException(path);

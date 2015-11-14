@@ -114,14 +114,14 @@ public abstract class GenericFileSystemTestCase {
   }
 
   @Test
-  public void cannot_open_output_stream_when_path_is_directory() throws Exception {
+  public void cannot_open_output_stream_when_path_is_dir() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).openOutputStream(path.parent());
     thenThrown(PathIsAlreadyTakenByDirException.class);
   }
 
   @Test
-  public void cannot_open_output_stream_when_path_is_root_directory() throws Exception {
+  public void cannot_open_output_stream_when_path_is_root_dir() throws Exception {
     when(fileSystem).openOutputStream(Path.root());
     thenThrown(PathIsAlreadyTakenByDirException.class);
   }
@@ -157,7 +157,7 @@ public abstract class GenericFileSystemTestCase {
   }
 
   @Test
-  public void cannot_open_input_stream_when_file_is_a_directory() throws Exception {
+  public void cannot_open_input_stream_when_file_is_a_dir() throws Exception {
     given(this).createEmptyFile("abc/def/file.txt");
     when(fileSystem).openInputStream(path("abc/def"));
     thenThrown(FileSystemException.class);
@@ -166,7 +166,7 @@ public abstract class GenericFileSystemTestCase {
   // delete()
 
   @Test
-  public void deleting_directory_removes_its_files() throws Exception {
+  public void deleting_dir_removes_its_files() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).delete(path.parent());
     thenEqual(fileSystem.pathState(path), NOTHING);
@@ -205,7 +205,7 @@ public abstract class GenericFileSystemTestCase {
   }
 
   @Test
-  public void creating_links_creates_missing_directories() throws Exception {
+  public void creating_links_creates_missing_dirs() throws Exception {
     given(this).createFile(path, content);
     when(fileSystem).createLink(linkPath, path);
     thenEqual(fileSystem.pathState(linkPath), FILE);
@@ -228,7 +228,7 @@ public abstract class GenericFileSystemTestCase {
   }
 
   @Test
-  public void link_to_directory_can_be_used_to_access_its_file() throws Exception {
+  public void link_to_dir_can_be_used_to_access_its_file() throws Exception {
     given(this).createFile(path, content);
     when(fileSystem).createLink(linkPath, path.parent());
     thenEqual(inputStreamToString(fileSystem.openInputStream(linkPath.append(path.lastPart()))),
@@ -236,7 +236,7 @@ public abstract class GenericFileSystemTestCase {
   }
 
   @Test
-  public void deleting_link_to_directory_does_not_delete_target() throws Exception {
+  public void deleting_link_to_dir_does_not_delete_target() throws Exception {
     given(this).createEmptyFile(dir.append(path("ignore")));
     given(fileSystem).createLink(path, dir);
     when(fileSystem).delete(path);

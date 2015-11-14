@@ -55,10 +55,10 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<Path> files(Path directory) {
-    assertPathIsDir(this, directory);
+  public Iterable<Path> files(Path dir) {
+    assertPathIsDir(this, dir);
     try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(
-        directory))) {
+        dir))) {
       Builder<Path> builder = ImmutableList.builder();
       for (java.nio.file.Path path : stream) {
         builder.add(path(path.getFileName().toString()));

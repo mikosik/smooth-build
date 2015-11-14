@@ -18,13 +18,13 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<Path> files(Path directory) {
-    return fileSystem.files(absolutePath(directory));
+  public Iterable<Path> files(Path dir) {
+    return fileSystem.files(absolutePath(dir));
   }
 
   @Override
-  public void delete(Path directory) {
-    fileSystem.delete(absolutePath(directory));
+  public void delete(Path path) {
+    fileSystem.delete(absolutePath(path));
   }
 
   @Override

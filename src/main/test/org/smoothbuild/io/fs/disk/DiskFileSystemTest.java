@@ -19,17 +19,17 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.common.StreamTester;
 
 public class DiskFileSystemTest extends GenericFileSystemTestCase {
-  private File tempDirectory;
+  private File tempDir;
 
   @Before
   public void before() {
-    tempDirectory = com.google.common.io.Files.createTempDir();
-    fileSystem = new DiskFileSystem(tempDirectory.getAbsolutePath());
+    tempDir = com.google.common.io.Files.createTempDir();
+    fileSystem = new DiskFileSystem(tempDir.getAbsolutePath());
   }
 
   @After
   public void after() throws IOException {
-    java.nio.file.Path tempPath = tempDirectory.toPath();
+    java.nio.file.Path tempPath = tempDir.toPath();
     if (Files.isDirectory(tempPath)) {
       deleteRecursively(tempPath);
     }
@@ -64,6 +64,6 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   }
 
   private File stringPathToFile(String stringPath) {
-    return new File(tempDirectory.getAbsoluteFile() + "/" + stringPath);
+    return new File(tempDir.getAbsoluteFile() + "/" + stringPath);
   }
 }
