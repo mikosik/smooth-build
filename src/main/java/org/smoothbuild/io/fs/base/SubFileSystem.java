@@ -23,11 +23,6 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<Path> filesFromRecursive(Path directory) {
-    return fileSystem.filesFromRecursive(absolutePath(directory));
-  }
-
-  @Override
   public void delete(Path directory) {
     fileSystem.delete(absolutePath(directory));
   }

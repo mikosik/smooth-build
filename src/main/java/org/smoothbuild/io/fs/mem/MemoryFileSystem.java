@@ -1,12 +1,10 @@
 package org.smoothbuild.io.fs.mem;
 
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathExists;
-import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsUnused;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
-import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,12 +40,6 @@ public class MemoryFileSystem implements FileSystem {
   @Override
   public List<Path> filesFrom(Path directory) {
     return getDirectory(directory).childNames();
-  }
-
-  @Override
-  public Iterable<Path> filesFromRecursive(Path directory) {
-    assertPathIsDir(this, directory);
-    return recursiveFilesIterable(this, directory);
   }
 
   @Override
