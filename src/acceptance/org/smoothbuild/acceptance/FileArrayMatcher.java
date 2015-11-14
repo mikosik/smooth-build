@@ -33,11 +33,23 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
   @Override
   protected boolean matchesSafely(File item) {
     try {
-      return item.isDirectory() && containsExpectedElements(item) && item
-          .list().length == params.length / 2;
+      return item.isDirectory() && containsExpectedElements(item)
+          && filesCount(item) == params.length / 2;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private static int filesCount(File item) {
+    int count = 0;
+    for (File file : item.listFiles()) {
+      if (file.isDirectory()) {
+        count += filesCount(file);
+      } else {
+        count++;
+      }
+    }
+    return count;
   }
 
   private boolean containsExpectedElements(File dir) throws IOException {
