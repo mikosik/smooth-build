@@ -11,7 +11,7 @@ import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
-public class StringMarshaller implements ObjectMarshaller<SString> {
+public class StringMarshaller implements ValueMarshaller<SString> {
   private final HashedDb hashedDb;
 
   public StringMarshaller(HashedDb hashedDb) {

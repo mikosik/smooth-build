@@ -11,7 +11,7 @@ import org.smoothbuild.lang.value.SFile;
 
 import com.google.common.hash.HashCode;
 
-public class FileMarshaller implements ObjectMarshaller<SFile> {
+public class FileMarshaller implements ValueMarshaller<SFile> {
   private final HashedDb hashedDb;
   private final BlobMarshaller blobMarshaller;
 
