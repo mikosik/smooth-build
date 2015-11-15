@@ -45,7 +45,7 @@ public class ArrayMarshaller<T extends Value> implements ObjectMarshaller<Array<
     }
   }
 
-  public Array<T> write(List<T> elements) {
+  public Array<T> write(List<? extends Value> elements) {
     Marshaller marshaller = new Marshaller();
     marshaller.write(elements);
     byte[] bytes = marshaller.getBytes();
