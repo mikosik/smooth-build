@@ -16,7 +16,7 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.javac.err.DuplicateClassFileError;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -42,7 +42,7 @@ public class PackagedJavaFileObjectsTest {
     given(file1 = file(valuesDb(), path("my/package/MyKlass.class")));
     given(jar = jar(file1));
     when(javaFileObjects(asList(jar, jar)));
-    thenThrown(DuplicateClassFileError.class);
+    thenThrown(Message.class);
   }
 
   private Closure javaFileObjects(final List<Blob> libraryJars) {
