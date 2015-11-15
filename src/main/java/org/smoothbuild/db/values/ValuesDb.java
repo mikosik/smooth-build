@@ -1,9 +1,5 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.NOTHING;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.arrayElementJTypes;
 import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
 import static org.smoothbuild.lang.type.Types.jTypeToType;
@@ -15,13 +11,14 @@ import org.smoothbuild.db.values.marshal.ArrayMarshaller;
 import org.smoothbuild.db.values.marshal.BlobMarshaller;
 import org.smoothbuild.db.values.marshal.FileMarshaller;
 import org.smoothbuild.db.values.marshal.NothingMarshaller;
-import org.smoothbuild.db.values.marshal.ObjectMarshaller;
+import org.smoothbuild.db.values.marshal.ValueMarshaller;
 import org.smoothbuild.db.values.marshal.StringMarshaller;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -83,17 +80,17 @@ public class ValuesDb implements ValueFactory {
     return marshaller(type).read(hash);
   }
 
-  private ObjectMarshaller<?> marshaller(Type type) {
-    if (type == STRING) {
+  private ValueMarshaller<?> marshaller(Type type) {
+    if (type == Types.STRING) {
       return new StringMarshaller(hashedDb);
     }
-    if (type == BLOB) {
+    if (type == Types.BLOB) {
       return new BlobMarshaller(hashedDb);
     }
-    if (type == FILE) {
+    if (type == Types.FILE) {
       return new FileMarshaller(hashedDb);
     }
-    if (type == NOTHING) {
+    if (type == Types.NOTHING) {
       return new NothingMarshaller();
     }
     if (type instanceof ArrayType) {

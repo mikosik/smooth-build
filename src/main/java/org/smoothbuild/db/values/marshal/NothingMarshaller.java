@@ -4,7 +4,7 @@ import org.smoothbuild.lang.value.Nothing;
 
 import com.google.common.hash.HashCode;
 
-public class NothingMarshaller implements ObjectMarshaller<Nothing> {
+public class NothingMarshaller implements ValueMarshaller<Nothing> {
   public NothingMarshaller() {}
 
   @Override

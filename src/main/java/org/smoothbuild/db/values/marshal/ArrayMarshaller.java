@@ -14,13 +14,13 @@ import org.smoothbuild.lang.value.Value;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class ArrayMarshaller<T extends Value> implements ObjectMarshaller<Array<T>> {
+public class ArrayMarshaller<T extends Value> implements ValueMarshaller<Array<T>> {
   private final HashedDb hashedDb;
   private final ArrayType arrayType;
-  private final ObjectMarshaller<T> elementMarshaller;
+  private final ValueMarshaller<T> elementMarshaller;
 
   public ArrayMarshaller(HashedDb hashedDb, ArrayType arrayType,
-      ObjectMarshaller<T> elementMarshaller) {
+      ValueMarshaller<T> elementMarshaller) {
     this.hashedDb = checkNotNull(hashedDb);
     this.arrayType = checkNotNull(arrayType);
     this.elementMarshaller = checkNotNull(elementMarshaller);
