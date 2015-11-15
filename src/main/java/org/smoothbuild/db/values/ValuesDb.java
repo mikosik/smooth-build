@@ -1,5 +1,9 @@
 package org.smoothbuild.db.values;
 
+import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.NOTHING;
+import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.arrayElementJTypes;
 import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
 import static org.smoothbuild.lang.type.Types.jTypeToType;
@@ -8,7 +12,11 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.marshal.ArrayMarshaller;
-import org.smoothbuild.db.values.marshal.ObjectMarshallers;
+import org.smoothbuild.db.values.marshal.BlobMarshaller;
+import org.smoothbuild.db.values.marshal.FileMarshaller;
+import org.smoothbuild.db.values.marshal.NothingMarshaller;
+import org.smoothbuild.db.values.marshal.ObjectMarshaller;
+import org.smoothbuild.db.values.marshal.StringMarshaller;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -26,11 +34,11 @@ import com.google.common.hash.HashCode;
 import com.google.inject.TypeLiteral;
 
 public class ValuesDb implements ValueFactory {
-  private final ObjectMarshallers objectMarshallers;
+  private final HashedDb hashedDb;
 
   @Inject
-  public ValuesDb(ObjectMarshallers objectMarshallers) {
-    this.objectMarshallers = objectMarshallers;
+  public ValuesDb(@Values HashedDb hashedDb) {
+    this.hashedDb = hashedDb;
   }
 
   public static ValuesDb valuesDb() {
@@ -38,7 +46,7 @@ public class ValuesDb implements ValueFactory {
   }
 
   public static ValuesDb valuesDb(FileSystem fileSystem) {
-    return new ValuesDb(new ObjectMarshallers(new HashedDb(fileSystem)));
+    return new ValuesDb(new HashedDb(fileSystem));
   }
 
   @Override
@@ -52,26 +60,49 @@ public class ValuesDb implements ValueFactory {
 
   private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type,
       Class<?> elementClass) {
-    ArrayMarshaller<T> marshaller = objectMarshallers.arrayMarshaller(type);
-    return new ArrayBuilder<>(marshaller, elementClass);
+    ArrayMarshaller<T> marshaller = (ArrayMarshaller<T>) marshaller(type);
+    return new ArrayBuilder<T>(marshaller, elementClass);
   }
 
   @Override
   public SFile file(Path path, Blob content) {
-    return objectMarshallers.fileMarshaller().write(path, content);
+    return new FileMarshaller(hashedDb).write(path, content);
   }
 
   @Override
   public BlobBuilder blobBuilder() {
-    return new BlobBuilder(objectMarshallers.blobMarshaller());
+    return new BlobBuilder(new BlobMarshaller(hashedDb));
   }
 
   @Override
   public SString string(String string) {
-    return objectMarshallers.stringMarshaller().write(string);
+    return new StringMarshaller(hashedDb).write(string);
   }
 
   public Value read(Type type, HashCode hash) {
-    return objectMarshallers.marshaller(type).read(hash);
+    return marshaller(type).read(hash);
+  }
+
+  private ObjectMarshaller<?> marshaller(Type type) {
+    if (type == STRING) {
+      return new StringMarshaller(hashedDb);
+    }
+    if (type == BLOB) {
+      return new BlobMarshaller(hashedDb);
+    }
+    if (type == FILE) {
+      return new FileMarshaller(hashedDb);
+    }
+    if (type == NOTHING) {
+      return new NothingMarshaller();
+    }
+    if (type instanceof ArrayType) {
+      return arrayMarshaller((ArrayType) type);
+    }
+    throw new RuntimeException("Unexpected type: " + type);
+  }
+
+  private ArrayMarshaller<?> arrayMarshaller(ArrayType arrayType) {
+    return new ArrayMarshaller<>(hashedDb, arrayType, marshaller(arrayType.elemType()));
   }
 }
