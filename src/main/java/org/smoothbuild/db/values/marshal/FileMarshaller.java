@@ -11,13 +11,13 @@ import org.smoothbuild.lang.value.SFile;
 
 import com.google.common.hash.HashCode;
 
-public class FileMarshaller implements ObjectMarshaller<SFile> {
+public class FileMarshaller implements ValueMarshaller<SFile> {
   private final HashedDb hashedDb;
   private final BlobMarshaller blobMarshaller;
 
-  public FileMarshaller(HashedDb hashedDb, BlobMarshaller blobMarshaller) {
+  public FileMarshaller(HashedDb hashedDb) {
     this.hashedDb = checkNotNull(hashedDb);
-    this.blobMarshaller = checkNotNull(blobMarshaller);
+    this.blobMarshaller = new BlobMarshaller(hashedDb);
   }
 
   public SFile write(Path path, Blob content) {

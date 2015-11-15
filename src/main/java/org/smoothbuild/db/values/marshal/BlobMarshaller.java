@@ -7,7 +7,7 @@ import org.smoothbuild.lang.value.Blob;
 
 import com.google.common.hash.HashCode;
 
-public class BlobMarshaller implements ObjectMarshaller<Blob> {
+public class BlobMarshaller implements ValueMarshaller<Blob> {
   private final HashedDb hashedDb;
 
   public BlobMarshaller(HashedDb hashedDb) {
