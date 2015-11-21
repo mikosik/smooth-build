@@ -19,7 +19,6 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.util.Empty;
-import org.testory.Closure;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -46,7 +45,7 @@ public class DependencySorterTest {
     given(map).put(name1, dependencies(name2));
     given(map).put(name4, dependencies());
     given(map).put(name2, dependencies(name3));
-    when($sortDependencies(map));
+    when(() -> sortDependencies(map));
     thenReturned(ImmutableList.of(name4, name3, name2, name1));
   }
 
@@ -73,7 +72,7 @@ public class DependencySorterTest {
   public void simple_recursion_is_logged_as_error() throws Exception {
     given(map = new HashMap<>());
     given(map).put(name1, dependencies(name1));
-    when($sortDependencies(map));
+    when(() -> sortDependencies(map));
     thenThrown(ParsingException.class);
   }
 
@@ -83,17 +82,8 @@ public class DependencySorterTest {
     given(map).put(name1, dependencies(name2));
     given(map).put(name2, dependencies(name3));
     given(map).put(name3, dependencies(name1));
-    when($sortDependencies(map));
+    when(() -> sortDependencies(map));
     thenThrown(ParsingException.class);
-  }
-
-  private Closure $sortDependencies(final HashMap<Name, Set<Dependency>> map) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return sortDependencies(map);
-      }
-    };
   }
 
   private static List<Name> sortDependencies(final HashMap<Name, Set<Dependency>> map) {

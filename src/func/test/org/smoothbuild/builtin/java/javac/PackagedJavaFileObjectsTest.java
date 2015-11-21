@@ -13,14 +13,11 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
-import org.testory.Closure;
 
 public class PackagedJavaFileObjectsTest {
   private final Container container = containerImpl();
@@ -41,16 +38,7 @@ public class PackagedJavaFileObjectsTest {
   public void duplicateClassFileException() throws Exception {
     given(file1 = file(valuesDb(), path("my/package/MyKlass.class")));
     given(jar = jar(file1));
-    when(javaFileObjects(asList(jar, jar)));
+    when(() -> classesFromJars(container, asList(jar, jar)));
     thenThrown(Message.class);
-  }
-
-  private Closure javaFileObjects(final List<Blob> libraryJars) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return classesFromJars(container, libraryJars);
-      }
-    };
   }
 }

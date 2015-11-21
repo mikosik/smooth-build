@@ -9,11 +9,11 @@ import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenException;
 
 public class AssertPath {
 
-  public static void assertPathIsDir(FileSystem fileSystem, Path path) {
+  public static Void assertPathIsDir(FileSystem fileSystem, Path path) {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case DIR:
-        return;
+        return null;
       case FILE:
         throw new NoSuchDirButFileException(path);
       case NOTHING:
@@ -23,11 +23,11 @@ public class AssertPath {
     }
   }
 
-  public static void assertPathIsFile(FileSystem fileSystem, Path path) {
+  public static Void assertPathIsFile(FileSystem fileSystem, Path path) {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
-        return;
+        return null;
       case DIR:
         throw new NoSuchFileButDirException(path);
       case NOTHING:
@@ -37,13 +37,13 @@ public class AssertPath {
     }
   }
 
-  public static void assertPathExists(FileSystem fileSystem, Path path) {
+  public static Void assertPathExists(FileSystem fileSystem, Path path) {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
-        return;
+        return null;
       case DIR:
-        return;
+        return null;
       case NOTHING:
         throw new NoSuchPathException(path);
       default:
@@ -51,7 +51,7 @@ public class AssertPath {
     }
   }
 
-  public static void assertPathIsUnused(FileSystem fileSystem, Path path) {
+  public static Void assertPathIsUnused(FileSystem fileSystem, Path path) {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
@@ -59,7 +59,7 @@ public class AssertPath {
       case DIR:
         throw new PathIsAlreadyTakenException(path);
       case NOTHING:
-        return;
+        return null;
       default:
         throw newUnknownPathState(state);
     }

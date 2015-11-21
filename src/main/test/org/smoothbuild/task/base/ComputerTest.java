@@ -8,9 +8,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.message.CodeLocation;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.ContainerImpl;
-import org.testory.Closure;
 
 public class ComputerTest {
   private final String name = "name";
@@ -20,13 +18,13 @@ public class ComputerTest {
 
   @Test
   public void null_name_is_forbidden() {
-    when($myTask(null, true, codeLocation));
+    when(() -> new MyComputer(null, true, codeLocation));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_code_location_is_forbidden() {
-    when($myTask(name, true, null));
+    when(() -> new MyComputer(name, true, null));
     thenThrown(NullPointerException.class);
   }
 
@@ -56,16 +54,6 @@ public class ComputerTest {
     given(computer = new MyComputer(name, false, codeLocation));
     when(computer.codeLocation());
     thenReturned(codeLocation);
-  }
-
-  private static <T extends Value> Closure $myTask(final String name, final boolean isInternal,
-      final CodeLocation codeLocation) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return new MyComputer(name, isInternal, codeLocation);
-      }
-    };
   }
 
   public static class MyComputer extends Computer {

@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.function.nativ.TestingUtils.$nativeFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -21,6 +21,8 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.ContainerImpl;
 
+import com.google.common.hash.HashCode;
+
 public class NativeFunctionParameterTest {
   private NativeFunction function;
 
@@ -40,7 +42,8 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void parameter_with_name_equal_empty_string_causes_exception() throws Exception {
-    when($nativeFunctions(MethodWithParameterWithNameEqualEmptyString.class));
+    when(() -> nativeFunctions(MethodWithParameterWithNameEqualEmptyString.class, HashCode.fromInt(
+        13)));
     thenThrown(IllegalParameterNameException.class);
   }
 
@@ -53,7 +56,7 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void parameter_with_illegal_name_causes_exception() throws Exception {
-    when($nativeFunctions(MethodWithParameterWithIllegalName.class));
+    when(() -> nativeFunctions(MethodWithParameterWithIllegalName.class, HashCode.fromInt(13)));
     thenThrown(IllegalParameterNameException.class);
   }
 
@@ -66,7 +69,7 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void parameter_without_name_annotation_causes_exception() throws Exception {
-    when($nativeFunctions(MethodWithParameterWithoutName.class));
+    when(() -> nativeFunctions(MethodWithParameterWithoutName.class, HashCode.fromInt(13)));
     thenThrown(MissingNameAnnotationException.class);
   }
 
@@ -79,7 +82,7 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void two_parameters_with_the_same_name_causes_exception() throws Exception {
-    when($nativeFunctions(MethodWithTwoParametersWithSameName.class));
+    when(() -> nativeFunctions(MethodWithTwoParametersWithSameName.class, HashCode.fromInt(13)));
     thenThrown(DuplicatedParameterException.class);
   }
 
@@ -93,7 +96,7 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void method_without_native_api_parameter_causes_exception() throws Exception {
-    when($nativeFunctions(MethodWithoutContainerParameter.class));
+    when(() -> nativeFunctions(MethodWithoutContainerParameter.class, HashCode.fromInt(13)));
     thenThrown(MissingContainerParameterException.class);
   }
 
@@ -107,7 +110,7 @@ public class NativeFunctionParameterTest {
   @Test
   public void method_with_first_parameter_that_is_not_native_api_causes_exception()
       throws Exception {
-    when($nativeFunctions(MethodWithNonContainerAsFirstParameter.class));
+    when(() -> nativeFunctions(MethodWithNonContainerAsFirstParameter.class, HashCode.fromInt(13)));
     thenThrown(MissingContainerParameterException.class);
   }
 
@@ -120,7 +123,7 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void method_with_first_parameter_that_is_native_api_impl_is_accepted() throws Exception {
-    when($nativeFunctions(MethodWithContainerImplAsFirstParameter.class));
+    when(nativeFunctions(MethodWithContainerImplAsFirstParameter.class, HashCode.fromInt(13)));
     thenReturned();
   }
 
@@ -133,7 +136,7 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void method_with_illegal_parameter_type_causes_exception() throws Exception {
-    when($nativeFunctions(MethodWithParameterWithIllegalType.class));
+    when(() -> nativeFunctions(MethodWithParameterWithIllegalType.class, HashCode.fromInt(13)));
     thenThrown(IllegalParameterTypeException.class);
   }
 
@@ -146,7 +149,7 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void method_with_parameter_with_value_type_causes_exception() throws Exception {
-    when($nativeFunctions(MethodWithParameterWithValueType.class));
+    when(() -> nativeFunctions(MethodWithParameterWithValueType.class, HashCode.fromInt(13)));
     thenThrown(IllegalParameterTypeException.class);
   }
 

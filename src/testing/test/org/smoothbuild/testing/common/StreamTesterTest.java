@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
-import org.testory.Closure;
 
 public class StreamTesterTest {
   private String content;
@@ -31,7 +30,7 @@ public class StreamTesterTest {
   public void input_stream_containing_string() throws Exception {
     given(content = "content");
     given(inputStream = inputStreamContaining(content));
-    when($inputStreamToString(inputStream));
+    when(inputStreamToString(inputStream));
     thenReturned(content);
   }
 
@@ -39,7 +38,7 @@ public class StreamTesterTest {
   public void input_stream_containing_empty_string() throws Exception {
     given(content = "");
     given(inputStream = inputStreamContaining(content));
-    when($inputStreamToString(inputStream));
+    when(inputStreamToString(inputStream));
     thenReturned(content);
   }
 
@@ -47,7 +46,7 @@ public class StreamTesterTest {
   public void write_and_close() throws IOException {
     given(content = "content");
     given(outputStream = new ByteArrayOutputStream());
-    when($writeAndClose(outputStream, content));
+    when(writeAndClose(outputStream, content));
     thenEqual(outputStream.toString(), content);
   }
 
@@ -55,7 +54,7 @@ public class StreamTesterTest {
   public void write_and_close_empty() throws IOException {
     given(content = "");
     given(outputStream = new ByteArrayOutputStream());
-    when($writeAndClose(outputStream, content));
+    when(writeAndClose(outputStream, content));
     thenEqual(outputStream.toString(), content);
   }
 
@@ -106,26 +105,5 @@ public class StreamTesterTest {
 
     inputStreamToBytes(inputStream);
     thenCalled(inputStream).close();
-  }
-
-  private static Closure $inputStreamToString(final InputStream inputStream) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return inputStreamToString(inputStream);
-      }
-    };
-
-  }
-
-  private static Closure $writeAndClose(final ByteArrayOutputStream outputStream,
-      final String content) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        writeAndClose(outputStream, content);
-        return null;
-      }
-    };
   }
 }

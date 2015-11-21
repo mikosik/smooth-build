@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.testory.Closure;
 
 public class MatchingNamesGeneratorTest {
 
@@ -36,13 +35,10 @@ public class MatchingNamesGeneratorTest {
 
     String[] expectedNames = expected.toArray(new String[expected.size()]);
 
-    when(new Closure() {
-      @Override
-      public List<String> invoke() throws Throwable {
-        CollectingConsumer collectingConsumer = new CollectingConsumer();
-        generateNames("x*z", collectingConsumer);
-        return collectingConsumer.generatedNames;
-      }
+    when(() -> {
+      CollectingConsumer collectingConsumer = new CollectingConsumer();
+      generateNames("x*z", collectingConsumer);
+      return collectingConsumer.generatedNames;
     });
     thenReturned(contains(expectedNames));
   }

@@ -8,7 +8,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.testory.Closure;
 
 public class NameMatcherTest {
   NameMatcher nameMatcher;
@@ -17,7 +16,7 @@ public class NameMatcherTest {
   @Test()
   public void double_star_pattern_is_forbidden() {
     given(pattern = namePattern("**"));
-    when($nameMatcher(pattern));
+    when(() -> new NameMatcher(pattern));
     thenThrown(IllegalArgumentException.class);
   }
 
@@ -264,15 +263,6 @@ public class NameMatcherTest {
     given(nameMatcher = nameMatcher("abc*def*ghi*jkl"));
     when(nameMatcher.test(path("abcdefghjkl")));
     thenReturned(false);
-  }
-
-  private static Closure $nameMatcher(final NamePattern pattern) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return new NameMatcher(pattern);
-      }
-    };
   }
 
   private static NameMatcher nameMatcher(final String pattern) {
