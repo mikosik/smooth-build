@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.nativ.TestingUtils.$nativeFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -13,10 +13,12 @@ import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
+import com.google.common.hash.HashCode;
+
 public class NativeFunctionNameTest {
   @Test
   public void method_with_name_that_is_illegal_smooth_name_causes_exception() throws Exception {
-    when($nativeFunctions(IllegalFunctionName.class));
+    when(() -> nativeFunctions(IllegalFunctionName.class, HashCode.fromInt(13)));
     thenThrown(IllegalFunctionNameException.class);
   }
 

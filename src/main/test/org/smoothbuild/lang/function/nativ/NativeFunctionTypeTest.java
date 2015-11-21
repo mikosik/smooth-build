@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.function.nativ.TestingUtils.$nativeFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
@@ -18,6 +18,8 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
+
+import com.google.common.hash.HashCode;
 
 public class NativeFunctionTypeTest {
   private NativeFunction function;
@@ -53,7 +55,7 @@ public class NativeFunctionTypeTest {
 
   @Test
   public void method_with_illegal_return_type_causes_exception() throws Exception {
-    when($nativeFunctions(IllegalReturnType.class));
+    when(() -> nativeFunctions(IllegalReturnType.class, HashCode.fromInt(13)));
     thenThrown(IllegalResultTypeException.class);
   }
 
@@ -66,7 +68,7 @@ public class NativeFunctionTypeTest {
 
   @Test
   public void method_with_value_as_return_type_causes_exception() throws Exception {
-    when($nativeFunctions(ValueAsReturnType.class));
+    when(() -> nativeFunctions(ValueAsReturnType.class, HashCode.fromInt(13)));
     thenThrown(IllegalResultTypeException.class);
   }
 
@@ -79,7 +81,7 @@ public class NativeFunctionTypeTest {
 
   @Test
   public void method_with_void_return_type_causes_exception() throws Exception {
-    when($nativeFunctions(VoidReturnType.class));
+    when(() -> nativeFunctions(VoidReturnType.class, HashCode.fromInt(13)));
     thenThrown(IllegalResultTypeException.class);
   }
 

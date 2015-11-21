@@ -17,8 +17,6 @@ import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
-import org.testory.Closure;
 
 public class OutputTest {
   private final ValuesDb valuesDb = valuesDb();
@@ -30,7 +28,7 @@ public class OutputTest {
   @Test
   public void null_messages_are_forbidden() {
     given(sstring = valuesDb.string("abc"));
-    when(newOutput(sstring, null));
+    when(() -> new Output(sstring, null));
     thenThrown(NullPointerException.class);
   }
 
@@ -136,14 +134,5 @@ public class OutputTest {
     given(output = new Output(sstring, messages));
     when(output).hashCode();
     thenReturned(new Output(sstring, messages).hashCode());
-  }
-
-  private Closure newOutput(final Value result, final List<Message> messages) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return new Output(result, messages);
-      }
-    };
   }
 }

@@ -1,10 +1,10 @@
 package org.smoothbuild.builtin.file.match.testing;
 
+import static org.smoothbuild.builtin.file.match.testing.HelpTester.endsWithThreeLetters;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.testory.Closure;
 
 public class HelpTesterTest {
 
@@ -36,14 +36,5 @@ public class HelpTesterTest {
   public void long_word_with_digit_at_the_end_does_not_end_with_three_letters() {
     when(endsWithThreeLetters("abcdefghi1"));
     thenReturned(false);
-  }
-
-  private Closure endsWithThreeLetters(final String string) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return HelpTester.endsWithThreeLetters(string);
-      }
-    };
   }
 }

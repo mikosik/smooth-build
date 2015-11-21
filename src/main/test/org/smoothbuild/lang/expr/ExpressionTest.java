@@ -13,7 +13,6 @@ import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.util.Empty;
-import org.testory.Closure;
 
 public class ExpressionTest {
   private final Type type = STRING;
@@ -28,13 +27,13 @@ public class ExpressionTest {
 
   @Test
   public void null_type_is_forbidden() {
-    when($myExpression(null, codeLocation));
+    when(() -> new MyExpression(null, codeLocation));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_code_location_is_forbidden() {
-    when($myExpression(type, null));
+    when(() -> new MyExpression(type, null));
     thenThrown(NullPointerException.class);
   }
 
@@ -50,15 +49,6 @@ public class ExpressionTest {
     given(expression = new MyExpression(type, codeLocation));
     when(expression.codeLocation());
     thenReturned(codeLocation);
-  }
-
-  private static Closure $myExpression(final Type type, final CodeLocation codeLocation) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return new MyExpression(type, codeLocation);
-      }
-    };
   }
 
   public static class MyExpression extends Expression {

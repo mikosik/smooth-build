@@ -23,10 +23,11 @@ public class StreamTester {
     return new ByteArrayInputStream(stream.toByteArray());
   }
 
-  public static void writeAndClose(OutputStream outputStream, String content) throws IOException {
+  public static Void writeAndClose(OutputStream outputStream, String content) throws IOException {
     try (OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
       writer.write(content);
     }
+    return null;
   }
 
   public static void assertContent(InputStream inputStream, String content) throws IOException,

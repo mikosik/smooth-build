@@ -20,7 +20,6 @@ import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.Classes;
-import org.testory.Closure;
 
 import com.google.common.io.ByteStreams;
 
@@ -58,7 +57,7 @@ public class NativeModuleFactoryTest {
   }
 
   public void two_functions_with_same_name_are_forbidden() throws Exception {
-    when($createNativeModule(ModuleAWithFuncA.class, ModuleBWithFuncA.class));
+    when(() -> createNativeModule(ModuleAWithFuncA.class, ModuleBWithFuncA.class));
     thenThrown(IllegalArgumentException.class);
   }
 
@@ -74,15 +73,6 @@ public class NativeModuleFactoryTest {
     public static SString funcA(Container container) {
       return null;
     }
-  }
-
-  public static Closure $createNativeModule(final Class<?>... classes) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return createNativeModule(classes);
-      }
-    };
   }
 
   public static Module createNativeModule(Class<?>... classes) throws Exception {

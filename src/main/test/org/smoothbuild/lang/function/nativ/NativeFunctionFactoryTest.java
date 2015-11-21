@@ -2,7 +2,6 @@ package org.smoothbuild.lang.function.nativ;
 
 import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
-import static org.smoothbuild.lang.function.nativ.TestingUtils.$nativeFunctions;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -13,6 +12,8 @@ import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
+
+import com.google.common.hash.HashCode;
 
 public class NativeFunctionFactoryTest {
   @Test
@@ -29,7 +30,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void non_static_method_with_annotation_causes_exception() throws Exception {
-    when($nativeFunctions(NonStaticMethod.class));
+    when(() -> nativeFunctions(NonStaticMethod.class, HashCode.fromInt(13)));
     thenThrown(NonStaticSmoothFunctionException.class);
   }
 
@@ -42,7 +43,7 @@ public class NativeFunctionFactoryTest {
 
   @Test
   public void non_public_method_with_annotation_causes_exception() throws Exception {
-    when($nativeFunctions(NonPublicMethod.class));
+    when(() -> nativeFunctions(NonPublicMethod.class, HashCode.fromInt(13)));
     thenThrown(NonPublicSmoothFunctionException.class);
   }
 

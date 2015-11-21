@@ -9,50 +9,49 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.testory.Closure;
 
 public class NamePatternTest {
   private NamePattern pattern;
 
   @Test
   public void null_pattern_is_forbidden() {
-    when(namePatternClosure(null));
+    when(() -> namePattern(null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void slash_in_pattern_is_forbidden() {
-    when(namePatternClosure("abc/def"));
+    when(() -> namePattern("abc/def"));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void empty_pattern_is_forbidden() throws Exception {
-    when(namePatternClosure(""));
+    when(() -> namePattern(""));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void double_star_pattern_is_allowed() throws Exception {
-    when(namePatternClosure(DOUBLE_STAR));
+    when(namePattern(DOUBLE_STAR));
     thenReturned();
   }
 
   @Test
   public void double_star_with_suffix_is_not_allowed() throws Exception {
-    when(namePatternClosure(DOUBLE_STAR + "a"));
+    when(() -> namePattern(DOUBLE_STAR + "a"));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void double_star_with_prefix_is_not_allowed() throws Exception {
-    when(namePatternClosure("a" + DOUBLE_STAR));
+    when(() -> namePattern("a" + DOUBLE_STAR));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void three_star_pattern_is_not_allowed() throws Exception {
-    when(namePatternClosure("***"));
+    when(() -> namePattern("***"));
     thenThrown(IllegalArgumentException.class);
   }
 
@@ -154,14 +153,5 @@ public class NamePatternTest {
     given(pattern = namePattern("**"));
     when(pattern.parts());
     thenReturned(asList("**"));
-  }
-
-  private Closure namePatternClosure(final String value) {
-    return new Closure() {
-      @Override
-      public Object invoke() throws Throwable {
-        return namePattern(value);
-      }
-    };
   }
 }
