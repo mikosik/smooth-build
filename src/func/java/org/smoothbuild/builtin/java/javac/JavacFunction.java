@@ -2,11 +2,12 @@ package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
-import static org.smoothbuild.builtin.util.Utils.unmodifiableSet;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -156,5 +157,11 @@ public class JavacFunction {
       }
       return result;
     }
+  }
+
+  public static <T> Set<T> unmodifiableSet(T... elements) {
+    Set<T> set = new HashSet<>(elements.length);
+    Collections.addAll(set, elements);
+    return Collections.unmodifiableSet(set);
   }
 }

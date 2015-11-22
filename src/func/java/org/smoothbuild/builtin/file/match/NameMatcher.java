@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.file.match;
 
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
-import static org.smoothbuild.builtin.util.Utils.checkArgument;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -20,7 +19,9 @@ public class NameMatcher implements Predicate<Path> {
   private final List<String> patternParts;
 
   public NameMatcher(NamePattern pattern) {
-    checkArgument(!pattern.isDoubleStar());
+    if (!!pattern.isDoubleStar()) {
+      throw new IllegalArgumentException();
+    }
     this.patternParts = pattern.parts();
   }
 
