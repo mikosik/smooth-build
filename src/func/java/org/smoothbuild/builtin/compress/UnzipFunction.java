@@ -10,8 +10,8 @@ import org.smoothbuild.lang.value.SFile;
 
 public class UnzipFunction {
   @SmoothFunction
-  public static Array<SFile> unzip( //
-      Container container, //
+  public static Array<SFile> unzip(
+      Container container,
       @Required @Name("blob") Blob blob) {
     return new Unzipper(container).unzip(blob);
   }

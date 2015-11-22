@@ -10,9 +10,9 @@ import org.smoothbuild.lang.value.SString;
 
 public class ConcatenateStringArraysFunction {
   @SmoothFunction
-  public static Array<SString> concatenateStringArrays( //
-      Container container, //
-      @Required @Name("strings") Array<SString> strings, //
+  public static Array<SString> concatenateStringArrays(
+      Container container,
+      @Required @Name("strings") Array<SString> strings,
       @Required @Name("with") Array<SString> with) {
     ArrayBuilder<SString> builder = container.create().arrayBuilder(SString.class);
 

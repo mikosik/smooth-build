@@ -10,8 +10,8 @@ import org.smoothbuild.lang.value.SString;
 
 public class NilToStringArrayFunction {
   @SmoothFunction
-  public static Array<SString> nilToStringArray( //
-      Container container, //
+  public static Array<SString> nilToStringArray(
+      Container container,
       @Required @Name("input") Array<Nothing> input) {
     return container.create().arrayBuilder(SString.class).build();
   }

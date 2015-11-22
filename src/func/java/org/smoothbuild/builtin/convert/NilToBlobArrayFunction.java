@@ -10,8 +10,8 @@ import org.smoothbuild.lang.value.Nothing;
 
 public class NilToBlobArrayFunction {
   @SmoothFunction
-  public static Array<Blob> nilToBlobArray( //
-      Container container, //
+  public static Array<Blob> nilToBlobArray(
+      Container container,
       @Required @Name("input") Array<Nothing> input) {
     return container.create().arrayBuilder(Blob.class).build();
   }

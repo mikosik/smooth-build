@@ -9,8 +9,8 @@ import org.smoothbuild.lang.value.SString;
 
 public class PathFunction {
   @SmoothFunction
-  public static SString path( //
-      Container container, //
+  public static SString path(
+      Container container,
       @Required @Name("file") SFile file) {
     return container.create().string(file.path().value());
   }

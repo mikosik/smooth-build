@@ -23,8 +23,8 @@ public class ZipFunction {
   // add missing parameters: level, comment, method
 
   @SmoothFunction
-  public static Blob zip( //
-      Container container, //
+  public static Blob zip(
+      Container container,
       @Required @Name("file") Array<SFile> files) {
     return new Worker(container, files).execute();
   }

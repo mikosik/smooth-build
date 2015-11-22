@@ -10,8 +10,8 @@ import org.smoothbuild.lang.value.SFile;
 
 public class UnjarFunction {
   @SmoothFunction
-  public static Array<SFile> unjar( //
-      Container container, //
+  public static Array<SFile> unjar(
+      Container container,
       @Required @Name("blob") Blob blob) {
     return new Unjarer(container).unjar(blob);
   }

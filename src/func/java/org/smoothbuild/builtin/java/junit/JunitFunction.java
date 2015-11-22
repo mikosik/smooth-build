@@ -25,9 +25,9 @@ import org.smoothbuild.lang.value.SString;
 
 public class JunitFunction {
   @SmoothFunction
-  public static SString junit( //
-      Container container, //
-      @Name("libs") Array<Blob> libs, //
+  public static SString junit(
+      Container container,
+      @Name("libs") Array<Blob> libs,
       @Name("include") SString include) {
     Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(container, libs);
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);

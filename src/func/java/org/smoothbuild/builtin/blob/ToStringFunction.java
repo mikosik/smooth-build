@@ -13,7 +13,9 @@ import org.smoothbuild.util.Streams;
 
 public class ToStringFunction {
   @SmoothFunction
-  public static SString toString(Container container, @Required @Name("blob") Blob blob) {
+  public static SString toString(
+      Container container,
+      @Required @Name("blob") Blob blob) {
     try {
       String string = Streams.inputStreamToString(blob.openInputStream());
       return container.create().string(string);
