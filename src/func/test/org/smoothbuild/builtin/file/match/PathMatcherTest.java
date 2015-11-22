@@ -4,8 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.io.fs.base.Path.path;
 
+import java.util.function.Predicate;
+
 import org.junit.Test;
-import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
 
 public class PathMatcherTest {

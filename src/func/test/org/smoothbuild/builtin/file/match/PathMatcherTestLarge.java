@@ -5,10 +5,11 @@ import static org.smoothbuild.builtin.file.match.testing.MatchingPathsGenerator.
 import static org.smoothbuild.builtin.file.match.testing.PathPatternGenerator.generatePatterns;
 import static org.smoothbuild.io.fs.base.Path.path;
 
+import java.util.function.Predicate;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.smoothbuild.builtin.file.match.testing.Consumer;
-import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
 
 /**

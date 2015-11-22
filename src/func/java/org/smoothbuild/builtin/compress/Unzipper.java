@@ -6,13 +6,12 @@ import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.builtin.compress.err.DuplicatePathInZipError;
 import org.smoothbuild.builtin.compress.err.IllegalPathInZipError;
-import org.smoothbuild.builtin.util.Predicate;
-import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.plugin.Container;
@@ -24,7 +23,7 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class Unzipper {
-  private static final Predicate<String> IS_DIR = Predicates.endsWith(SEPARATOR);
+  private static final Predicate<String> IS_DIR = (string) -> string.endsWith(SEPARATOR);
   private final byte[] buffer;
   private final Container container;
   private DuplicatesDetector<Path> duplicatesDetector;

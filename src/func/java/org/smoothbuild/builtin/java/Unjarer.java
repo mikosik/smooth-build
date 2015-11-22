@@ -1,21 +1,18 @@
 package org.smoothbuild.builtin.java;
 
-import static org.smoothbuild.builtin.util.Predicates.and;
-import static org.smoothbuild.builtin.util.Predicates.not;
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.builtin.java.err.DuplicatePathInJarError;
 import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
-import org.smoothbuild.builtin.util.Predicate;
-import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.plugin.Container;
@@ -27,7 +24,7 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class Unjarer {
-  private static final Predicate<String> IS_DIR = Predicates.endsWith(SEPARATOR);
+  private static final Predicate<String> IS_DIR = (string) -> string.endsWith(SEPARATOR);
 
   private final Container container;
   private final byte[] buffer;
@@ -38,13 +35,13 @@ public class Unjarer {
   }
 
   public Array<SFile> unjar(Blob jarBlob) {
-    return unjar(jarBlob, Predicates.<String> alwaysTrue());
+    return unjar(jarBlob, (value) -> true);
   }
 
   public Array<SFile> unjar(Blob jarBlob, Predicate<String> nameFilter) {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
-    Predicate<String> filter = and(not(IS_DIR), nameFilter);
+    Predicate<String> filter = IS_DIR.negate().and(nameFilter);
     try {
       try (JarInputStream jarInputStream = new JarInputStream(jarBlob.openInputStream())) {
         JarEntry entry;

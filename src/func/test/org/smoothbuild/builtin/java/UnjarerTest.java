@@ -9,8 +9,9 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import java.util.function.Predicate;
+
 import org.junit.Test;
-import org.smoothbuild.builtin.util.Predicates;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Blob;
@@ -41,7 +42,7 @@ public class UnjarerTest {
     given(file1 = file(valuesDb(), path1));
     given(file2 = file(valuesDb(), path2));
     given(blob = JarTester.jar(file1, file2));
-    when(unjarer.unjar(blob, Predicates.equalTo(path2.value())));
+    when(unjarer.unjar(blob, Predicate.isEqual(path2.value())));
     thenReturned(contains(file2));
   }
 }

@@ -5,6 +5,7 @@ import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNam
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -12,7 +13,6 @@ import org.junit.runner.notification.Failure;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
 import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
-import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
