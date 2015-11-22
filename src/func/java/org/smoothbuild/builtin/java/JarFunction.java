@@ -23,9 +23,9 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
   @SmoothFunction
-  public static Blob jar( //
-      Container container, //
-      @Required @Name("files") Array<SFile> files, //
+  public static Blob jar(
+      Container container,
+      @Required @Name("files") Array<SFile> files,
       @Name("manifest") Blob manifest) {
     return new Worker(container, files, manifest).execute();
   }

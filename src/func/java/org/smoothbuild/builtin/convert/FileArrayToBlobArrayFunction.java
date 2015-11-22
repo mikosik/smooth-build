@@ -11,8 +11,8 @@ import org.smoothbuild.lang.value.SFile;
 
 public class FileArrayToBlobArrayFunction {
   @SmoothFunction
-  public static Array<Blob> fileArrayToBlobArray( //
-      Container container, //
+  public static Array<Blob> fileArrayToBlobArray(
+      Container container,
       @Required @Name("input") Array<SFile> input) {
     ArrayBuilder<Blob> builder = container.create().arrayBuilder(Blob.class);
     for (SFile file : input) {

@@ -34,11 +34,11 @@ import org.smoothbuild.lang.value.SString;
 
 public class JavacFunction {
   @SmoothFunction
-  public static Array<SFile> javac( //
-      Container container, //
-      @Required @Name("sources") Array<SFile> sources, //
-      @Name("libs") Array<Blob> libs, //
-      @Name("source") SString source, //
+  public static Array<SFile> javac(
+      Container container,
+      @Required @Name("sources") Array<SFile> sources,
+      @Name("libs") Array<Blob> libs,
+      @Name("source") SString source,
       @Name("target") SString target) {
     return new Worker(container, sources, libs, source, target).execute();
   }

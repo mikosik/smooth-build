@@ -9,8 +9,8 @@ import org.smoothbuild.lang.value.SFile;
 
 public class FileToBlobFunction {
   @SmoothFunction
-  public static Blob fileToBlob( //
-      Container container, //
+  public static Blob fileToBlob(
+      Container container,
       @Required @Name("input") SFile input) {
     return input.content();
   }

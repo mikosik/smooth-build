@@ -16,8 +16,8 @@ import org.smoothbuild.lang.value.SString;
 
 public class ToBlobFunction {
   @SmoothFunction
-  public static Blob toBlob( //
-      Container container, //
+  public static Blob toBlob(
+      Container container,
       @Required @Name("string") SString string) {
     return stringToBlob(container, string);
   }

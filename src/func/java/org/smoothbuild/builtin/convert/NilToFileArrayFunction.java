@@ -10,8 +10,8 @@ import org.smoothbuild.lang.value.SFile;
 
 public class NilToFileArrayFunction {
   @SmoothFunction
-  public static Array<SFile> nilToFileArray( //
-      Container container, //
+  public static Array<SFile> nilToFileArray(
+      Container container,
       @Required @Name("input") Array<Nothing> input) {
     return container.create().arrayBuilder(SFile.class).build();
   }

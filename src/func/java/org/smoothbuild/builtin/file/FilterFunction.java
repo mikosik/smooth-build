@@ -19,9 +19,9 @@ import org.smoothbuild.lang.value.SString;
 
 public class FilterFunction {
   @SmoothFunction
-  public static Array<SFile> filter( //
-      Container container, //
-      @Required @Name("files") Array<SFile> files, //
+  public static Array<SFile> filter(
+      Container container,
+      @Required @Name("files") Array<SFile> files,
       @Required @Name("include") SString include) {
     Predicate<Path> filter = createFilter(include.value());
     ArrayBuilder<SFile> builder = container.create().arrayBuilder(SFile.class);

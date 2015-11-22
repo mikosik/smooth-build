@@ -11,9 +11,9 @@ import org.smoothbuild.lang.value.Blob;
 public class ConcatenateBlobArraysFunction {
 
   @SmoothFunction
-  public static Array<Blob> concatenateBlobArrays( //
-      Container container, //
-      @Required @Name("blobs") Array<Blob> blobs, //
+  public static Array<Blob> concatenateBlobArrays(
+      Container container,
+      @Required @Name("blobs") Array<Blob> blobs,
       @Required @Name("with") Array<Blob> with) {
     ArrayBuilder<Blob> builder = container.create().arrayBuilder(Blob.class);
 

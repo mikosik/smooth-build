@@ -22,7 +22,7 @@ public class AidlFunction {
 
   @SmoothFunction
   public static SFile aidl(
-      Container container, //
+      Container container,
       @Required @Name("apiLevel") SString apiLevel,
       @Required @Name("buildToolsVersion") SString buildToolsVersion,
       @Required @Name("interfaceFile") SFile interfaceFile) throws InterruptedException {
