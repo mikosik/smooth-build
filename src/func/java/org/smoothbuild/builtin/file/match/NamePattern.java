@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.file.match;
 import static org.smoothbuild.builtin.file.match.Constants.DOUBLE_STAR;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR_CHAR;
-import static org.smoothbuild.builtin.util.Utils.checkArgument;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,9 +25,15 @@ public class NamePattern {
   }
 
   private NamePattern(String value) {
-    checkArgument(value.indexOf('/') == -1, "NamePattern cannot contain slash.");
-    checkArgument(0 < value.length(), "Pattern length can't be zero.");
-    checkArgument(!value.contains(DOUBLE_STAR) || value.length() == DOUBLE_STAR.length());
+    if (!(value.indexOf('/') == -1)) {
+      throw new IllegalArgumentException("NamePattern cannot contain slash.");
+    }
+    if (!(0 < value.length())) {
+      throw new IllegalArgumentException("Pattern length can't be zero.");
+    }
+    if (!(!value.contains(DOUBLE_STAR) || value.length() == DOUBLE_STAR.length())) {
+      throw new IllegalArgumentException();
+    }
     this.value = value;
   }
 

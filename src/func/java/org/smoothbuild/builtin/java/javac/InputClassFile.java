@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.builtin.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
-import static org.smoothbuild.builtin.util.Utils.checkArgument;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +19,9 @@ public class InputClassFile extends SimpleJavaFileObject {
   public InputClassFile(SFile file) {
     super(URI.create("jar:///" + ":" + file.path().value()), Kind.CLASS);
 
-    checkArgument(file.path().value().endsWith(Kind.CLASS.extension));
+    if (!file.path().value().endsWith(Kind.CLASS.extension)) {
+      throw new IllegalArgumentException();
+    }
 
     this.file = file;
     this.binaryName = toBinaryName(file.path());

@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.android;
 
-import static org.smoothbuild.builtin.util.Utils.checkNotNull;
-
 public class EnvironmentVariable {
   private final String name;
   private final String value;
@@ -12,7 +10,7 @@ public class EnvironmentVariable {
   }
 
   protected EnvironmentVariable(String name, String value) {
-    this.name = checkNotNull(name);
+    this.name = name;
     this.value = value;
     this.isSet = value != null;
   }
