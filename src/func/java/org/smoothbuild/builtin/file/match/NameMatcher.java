@@ -4,8 +4,8 @@ import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.util.Utils.checkArgument;
 
 import java.util.List;
+import java.util.function.Predicate;
 
-import org.smoothbuild.builtin.util.Predicate;
 import org.smoothbuild.io.fs.base.Path;
 
 /**
