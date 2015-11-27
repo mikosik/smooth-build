@@ -19,7 +19,7 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Value defaultValue(ValuesDb valuesDb) {
+  public Array<? extends Value> defaultValue(ValuesDb valuesDb) {
     Class<? extends Value> rawType = (Class<? extends Value>) elemType.jType().getRawType();
     return valuesDb.arrayBuilder(rawType).build();
   }

@@ -7,7 +7,6 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
 
 public class FileType extends Type {
   protected FileType() {
@@ -15,7 +14,7 @@ public class FileType extends Type {
   }
 
   @Override
-  public Value defaultValue(ValuesDb valuesDb) {
+  public SFile defaultValue(ValuesDb valuesDb) {
     SString path = (SString) STRING.defaultValue(valuesDb);
     Blob content = (Blob) BLOB.defaultValue(valuesDb);
     return valuesDb.file(path, content);

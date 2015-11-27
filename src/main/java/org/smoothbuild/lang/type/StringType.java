@@ -2,7 +2,6 @@ package org.smoothbuild.lang.type;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
 
 public class StringType extends Type {
   protected StringType() {
@@ -10,7 +9,7 @@ public class StringType extends Type {
   }
 
   @Override
-  public Value defaultValue(ValuesDb valuesDb) {
+  public SString defaultValue(ValuesDb valuesDb) {
     return valuesDb.string("");
   }
 
