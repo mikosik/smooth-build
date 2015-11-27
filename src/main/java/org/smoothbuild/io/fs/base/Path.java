@@ -16,11 +16,7 @@ public class Path {
 
   public static Path path(String value) {
     checkIsValid(value);
-    if (isRootString(value)) {
-      return root();
-    } else {
-      return new Path(value);
-    }
+    return new Path(value);
   }
 
   public static Path root() {
