@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -17,12 +18,9 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
-import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
-import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
-import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
-import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
 import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -71,7 +69,8 @@ public class JavacFunction {
 
     public Array<SFile> execute() {
       if (compiler == null) {
-        throw new NoCompilerAvailableError();
+        throw new Message(ERROR, "Couldn't find JavaCompiler implementation. "
+            + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
       }
       return compile(sources);
     }
@@ -103,7 +102,8 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          container.log(new CompilerFailedWithoutDiagnosticsError());
+          container.log(new Message(ERROR,
+              "Internal error: Compilation failed but JavaCompiler reported no error message."));
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
@@ -125,7 +125,9 @@ public class JavacFunction {
       if (!source.value().isEmpty()) {
         String sourceArg = source.value();
         if (!SOURCE_VALUES.contains(sourceArg)) {
-          throw new IllegalSourceParamError(sourceArg, SOURCE_VALUES);
+          throw new Message(ERROR,
+              "Parameter source has illegal value = '" + sourceArg + "'.\n"
+                  + "Only following values are allowed " + SOURCE_VALUES + "\n");
         }
         result.add("-source");
         result.add(sourceArg);
@@ -134,7 +136,8 @@ public class JavacFunction {
       if (!target.value().isEmpty()) {
         String targetArg = target.value();
         if (!TARGET_VALUES.contains(targetArg)) {
-          throw new IllegalTargetParamError(targetArg, TARGET_VALUES);
+          throw new Message(ERROR, "Parameter target has illegal value = '" + targetArg + "'.\n"
+              + "Only following values are allowed " + TARGET_VALUES);
         }
         result.add("-target");
         result.add(targetArg);
