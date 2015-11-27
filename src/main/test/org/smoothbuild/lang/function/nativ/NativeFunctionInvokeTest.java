@@ -2,7 +2,6 @@ package org.smoothbuild.lang.function.nativ;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.isA;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.smoothbuild.lang.message.MessageType.WARNING;
@@ -16,8 +15,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.nativ.err.JavaInvocationError;
-import org.smoothbuild.lang.function.nativ.err.NullResultError;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
@@ -71,7 +68,7 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(ErrorReporting.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(isA(MyError.class)));
+    then(container.messages(), contains(instanceOf(MyError.class)));
   }
 
   public static class ErrorReporting {
@@ -94,7 +91,7 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(NullReturning.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(isA(NullResultError.class)));
+    then(container.messages(), contains(instanceOf(Message.class)));
   }
 
   public static class NullReturning {
@@ -110,8 +107,7 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(WarningReporting.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(MyWarning.class), instanceOf(
-        NullResultError.class)));
+    then(container.messages(), contains(instanceOf(MyWarning.class), instanceOf(Message.class)));
   }
 
   public static class WarningReporting {
@@ -135,7 +131,7 @@ public class NativeFunctionInvokeTest {
     given(method = PrivateMethod.class.getDeclaredMethods()[0]);
     given(function = new NativeFunction(method, function.signature(), true, HashCode.fromInt(13)));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(JavaInvocationError.class)));
+    then(container.messages(), contains(instanceOf(Message.class)));
   }
 
   public static class NormalFunction {
@@ -157,7 +153,7 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(ThrowRuntimeExceptiton.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(JavaInvocationError.class)));
+    then(container.messages(), contains(instanceOf(Message.class)));
   }
 
   public static class ThrowRuntimeExceptiton {

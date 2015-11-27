@@ -11,7 +11,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.builtin.compress.Constants;
-import org.smoothbuild.builtin.java.err.IllegalPathInJarError;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
@@ -67,7 +66,7 @@ public class Unjarer {
   private SFile unjarEntry(JarInputStream jarInputStream, String fileName) {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new IllegalPathInJarError(fileName);
+      throw new Message(ERROR, "File in a jar file has illegal name = '" + fileName + "'");
     }
 
     SString path = container.create().string(fileName);

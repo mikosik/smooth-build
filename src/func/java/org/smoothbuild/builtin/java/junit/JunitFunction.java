@@ -4,6 +4,7 @@ import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
+import static org.smoothbuild.lang.message.MessageType.WARNING;
 
 import java.util.Map;
 import java.util.function.Predicate;
@@ -12,8 +13,6 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
-import org.smoothbuild.builtin.java.junit.err.JunitTestFailedError;
-import org.smoothbuild.builtin.java.junit.err.NoJunitTestFoundWarning;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
@@ -44,14 +43,15 @@ public class JunitFunction {
         Result result = jUnitCore.run(testClass);
         if (!result.wasSuccessful()) {
           for (Failure failure : result.getFailures()) {
-            container.log(new JunitTestFailedError(failure));
+            container.log(new Message(ERROR, "test failed: " + failure.toString() + "\n" + failure
+                .getTrace()));
           }
           return container.create().string("FAILURE");
         }
       }
     }
     if (testCount == 0) {
-      container.log(new NoJunitTestFoundWarning());
+      container.log(new Message(WARNING, "No junit tests found."));
     }
     return container.create().string("SUCCESS");
   }

@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
-import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -36,7 +37,8 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     this.resultClassFiles = container.create().arrayBuilder(SFile.class);
   }
 
-  private static Map<String, Set<JavaFileObject>> groupIntoPackages(Iterable<InputClassFile> objects) {
+  private static Map<String, Set<JavaFileObject>> groupIntoPackages(
+      Iterable<InputClassFile> objects) {
     HashMap<String, Set<JavaFileObject>> result = new HashMap<>();
     for (InputClassFile object : objects) {
       String packageName = object.aPackage();
@@ -63,7 +65,8 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       if (message == null) {
         return new OutputClassFile(resultClassFiles, path(classFilePath), container);
       } else {
-        throw new IncorrectClassNameGivenByJavaCompilerError(className);
+        throw new Message(ERROR, "Internal Error: JavaCompiler passed illegal class name = '"
+            + className + "' to JavaFileManager.");
       }
     } else {
       return super.getJavaFileForOutput(location, className, kind, sibling);

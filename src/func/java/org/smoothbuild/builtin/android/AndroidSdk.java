@@ -3,13 +3,12 @@ package org.smoothbuild.builtin.android;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isRegularFile;
 import static org.smoothbuild.builtin.android.EnvironmentVariable.environmentVariable;
+import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.smoothbuild.builtin.android.err.AndroidSdkLacksFileError;
-import org.smoothbuild.builtin.android.err.AndroidSdkRootDoesNotExistError;
-import org.smoothbuild.builtin.android.err.AndroidSdkVariableNotSetError;
+import org.smoothbuild.lang.message.Message;
 
 public class AndroidSdk {
   private static final EnvironmentVariable ANDROID_SDK_ROOT = environmentVariable("ANDROID_SDK");
@@ -32,18 +31,32 @@ public class AndroidSdk {
   private static Path getFullPath(Path fileSubPath) {
     Path fullPath = getSdkDir().resolve(fileSubPath);
     if (!isRegularFile(fullPath)) {
-      throw new AndroidSdkLacksFileError(ANDROID_SDK_ROOT, fileSubPath);
+      throw new Message(ERROR, fileNotFoundMessage(ANDROID_SDK_ROOT, fileSubPath));
     }
     return fullPath;
   }
 
+  private static String fileNotFoundMessage(EnvironmentVariable androidSdkVar,
+      Path requiredSdkFile) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Can't find " + requiredSdkFile + " file in android sdk.\n");
+    builder.append("Path to Android SDK was set by the following environment variable:\n");
+    builder.append(androidSdkVar.toString() + "\n");
+    return builder.toString();
+  }
+
   public static Path getSdkDir() {
     if (!ANDROID_SDK_ROOT.isSet()) {
-      throw new AndroidSdkVariableNotSetError(ANDROID_SDK_ROOT);
+      throw new Message(ERROR, "Environment variable " + ANDROID_SDK_ROOT.name() + " is not set.\n"
+          + "It should contain absolute path to android SDK.");
     }
     Path sdkRoot = Paths.get(ANDROID_SDK_ROOT.value());
     if (!isDirectory(sdkRoot)) {
-      throw new AndroidSdkRootDoesNotExistError(ANDROID_SDK_ROOT);
+      throw new Message(ERROR,
+          "Environment variable " + ANDROID_SDK_ROOT.name()
+              + "should contain absolute path to android SDK dir.\n"
+              + "It is set to '" + ANDROID_SDK_ROOT.value() + "'\n"
+              + "but such dir doesn't exist.\n");
     }
     return sdkRoot;
   }
