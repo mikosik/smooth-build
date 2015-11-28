@@ -55,7 +55,7 @@ public class FileTest extends AcceptanceTestCase {
   @Test
   public void path_not_prefixed_with_double_slash_causes_error() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result: file('dir');");
+    givenScript("result: file('file.txt');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Param 'path' has illegal value. "
