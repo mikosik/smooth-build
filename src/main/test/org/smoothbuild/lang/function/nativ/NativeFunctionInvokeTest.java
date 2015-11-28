@@ -3,8 +3,6 @@ package org.smoothbuild.lang.function.nativ;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
-import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
@@ -15,7 +13,9 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -79,9 +79,9 @@ public class NativeFunctionInvokeTest {
     }
   }
 
-  public static class MyError extends Message {
+  public static class MyError extends ErrorMessage {
     public MyError() {
-      super(ERROR, "");
+      super("");
     }
   }
 
@@ -118,9 +118,9 @@ public class NativeFunctionInvokeTest {
     }
   }
 
-  public static class MyWarning extends Message {
+  public static class MyWarning extends WarningMessage {
     public MyWarning() {
-      super(WARNING, "");
+      super("");
     }
   }
 
@@ -168,19 +168,13 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(ThrowMessage.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(MyMessage.class)));
+    then(container.messages(), contains(instanceOf(MyError.class)));
   }
 
   public static class ThrowMessage {
     @SmoothFunction
     public static SString throwMessage(Container container) {
-      throw new MyMessage();
-    }
-  }
-
-  public static class MyMessage extends Message {
-    public MyMessage() {
-      super(ERROR, "");
+      throw new MyError();
     }
   }
 }
