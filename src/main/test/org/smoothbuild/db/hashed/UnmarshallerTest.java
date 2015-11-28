@@ -10,7 +10,6 @@ import static org.testory.Testory.when;
 import org.junit.After;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.err.CorruptedBoolException;
-import org.smoothbuild.db.hashed.err.CorruptedEnumException;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 import org.smoothbuild.db.values.ValuesDb;
@@ -31,7 +30,6 @@ public class UnmarshallerTest {
   private HashCode hash;
   private byte myByte;
   private int myInt;
-  private EnumValues<String> enumValues;
 
   @After
   public void after() {
@@ -126,27 +124,6 @@ public class UnmarshallerTest {
     given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
     when(unmarshaller).readHash();
     thenThrown(TooFewBytesToUnmarshallValueException.class);
-  }
-
-  @Test
-  public void marshalled_enum_can_be_unmarshalled() throws Exception {
-    given(enumValues = new EnumValues<>("abc", "def", "ghi"));
-    given(marshaller = new Marshaller());
-    given(marshaller).write(enumValues.valueToByte("def"));
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readEnum(enumValues);
-    thenReturned("def");
-  }
-
-  @Test
-  public void unmarshalling_enum_throws_corrupted_enum_exception_when_db_is_corrupted()
-      throws Exception {
-    given(enumValues = new EnumValues<>("abc", "def", "ghi"));
-    given(marshaller = new Marshaller());
-    given(marshaller).write((byte) 100);
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readEnum(enumValues);
-    thenThrown(CorruptedEnumException.class);
   }
 
   @Test

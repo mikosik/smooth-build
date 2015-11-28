@@ -1,7 +1,6 @@
 package org.smoothbuild.task.exec;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.smoothbuild.task.exec.TaskReporter.header;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -16,6 +15,7 @@ import org.junit.Test;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
@@ -31,7 +31,7 @@ public class TaskReporterTest {
   @Test
   public void internal_task_with_message_is_printed() {
     given(task = createTask(true));
-    given(messages = asList(new Message(WARNING, "message")));
+    given(messages = asList(new WarningMessage("message")));
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
     thenCalled(console).print(header(task, false), messages);
@@ -46,7 +46,7 @@ public class TaskReporterTest {
 
   @Test
   public void non_internal_task_with_message_is_printed() {
-    given(messages = asList(new Message(WARNING, "message")));
+    given(messages = asList(new WarningMessage("message")));
     given(task = createTask(false));
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);

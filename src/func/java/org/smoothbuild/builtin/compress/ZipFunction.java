@@ -1,14 +1,12 @@
 package org.smoothbuild.builtin.compress;
 
-import static org.smoothbuild.lang.message.MessageType.ERROR;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.io.fs.base.err.FileSystemException;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -60,7 +58,7 @@ public class ZipFunction {
     private void addEntry(ZipOutputStream zipOutputStream, SFile file) throws IOException {
       String path = file.path().value();
       if (duplicatesDetector.addValue(path)) {
-        throw new Message(ERROR, "Cannot zip two files with the same path = " + path);
+        throw new ErrorMessage("Cannot zip two files with the same path = " + path);
       }
       ZipEntry entry = new ZipEntry(path);
       zipOutputStream.putNextEntry(entry);

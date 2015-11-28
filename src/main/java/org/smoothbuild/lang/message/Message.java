@@ -8,7 +8,7 @@ public class Message extends RuntimeException {
   private final MessageType type;
   private final String message;
 
-  public Message(MessageType type, String message) {
+  protected Message(MessageType type, String message) {
     this.type = checkNotNull(type);
     this.message = checkNotNull(message);
   }

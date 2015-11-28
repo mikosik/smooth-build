@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
@@ -27,6 +26,7 @@ import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -79,7 +79,7 @@ public class OutputsDbTest {
   @Test
   public void written_messages_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string("abc"));
-    given(message = new Message(ERROR, "message string"));
+    given(message = new ErrorMessage("message string"));
     given(outputsDb).write(hash, new Output(stringValue, asList(message)));
     when(outputsDb.read(hash, STRING).messages());
     thenReturned(contains(message));

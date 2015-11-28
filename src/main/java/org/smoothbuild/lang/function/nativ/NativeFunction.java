@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,6 +10,7 @@ import java.util.List;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Value;
@@ -47,7 +47,7 @@ public class NativeFunction extends AbstractFunction {
     try {
       Value result = (Value) method.invoke(null, createArguments(container, arguments));
       if (result == null && !containsErrors(container.messages())) {
-        container.log(new Message(ERROR, "Native function " + name()
+        container.log(new ErrorMessage("Native function " + name()
             + " has faulty implementation: it returned 'null' but logged no error."));
       }
       return result;
@@ -66,7 +66,7 @@ public class NativeFunction extends AbstractFunction {
   }
 
   private Message invocationError(Exception e) {
-    return new Message(ERROR,
+    return new ErrorMessage(
         "Invoking function " + name() + " caused internal exception:\n" + getStackTraceAsString(e));
   }
 

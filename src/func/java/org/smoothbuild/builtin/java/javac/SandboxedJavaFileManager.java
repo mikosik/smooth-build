@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.Path.validationError;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -65,7 +64,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       if (message == null) {
         return new OutputClassFile(resultClassFiles, path(classFilePath), container);
       } else {
-        throw new Message(ERROR, "Internal Error: JavaCompiler passed illegal class name = '"
+        throw new ErrorMessage("Internal Error: JavaCompiler passed illegal class name = '"
             + className + "' to JavaFileManager.");
       }
     } else {

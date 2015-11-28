@@ -3,8 +3,6 @@ package org.smoothbuild.builtin.java.junit;
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
-import static org.smoothbuild.lang.message.MessageType.WARNING;
 
 import java.util.Map;
 import java.util.function.Predicate;
@@ -14,7 +12,8 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
+import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -43,7 +42,7 @@ public class JunitFunction {
         Result result = jUnitCore.run(testClass);
         if (!result.wasSuccessful()) {
           for (Failure failure : result.getFailures()) {
-            container.log(new Message(ERROR, "test failed: " + failure.toString() + "\n" + failure
+            container.log(new ErrorMessage("test failed: " + failure.toString() + "\n" + failure
                 .getTrace()));
           }
           return container.create().string("FAILURE");
@@ -51,7 +50,7 @@ public class JunitFunction {
       }
     }
     if (testCount == 0) {
-      container.log(new Message(WARNING, "No junit tests found."));
+      container.log(new WarningMessage("No junit tests found."));
     }
     return container.create().string("SUCCESS");
   }
@@ -60,7 +59,7 @@ public class JunitFunction {
     try {
       return classLoader.loadClass(binaryName);
     } catch (ClassNotFoundException e) {
-      throw new Message(ERROR, "Couldn't find class for binaryName = " + binaryName);
+      throw new ErrorMessage("Couldn't find class for binaryName = " + binaryName);
     }
   }
 
@@ -76,7 +75,7 @@ public class JunitFunction {
     try {
       return pathMatcher(includeExpression);
     } catch (IllegalPathPatternException e) {
-      throw new Message(ERROR, "Parameter 'include' has illegal value. " + e.getMessage());
+      throw new ErrorMessage("Parameter 'include' has illegal value. " + e.getMessage());
     }
   }
 }
