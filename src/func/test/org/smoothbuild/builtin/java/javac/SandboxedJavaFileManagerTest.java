@@ -15,7 +15,7 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 
 import org.junit.Test;
-import org.smoothbuild.builtin.java.javac.err.IncorrectClassNameGivenByJavaCompilerError;
+import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 
 public class SandboxedJavaFileManagerTest {
@@ -37,7 +37,7 @@ public class SandboxedJavaFileManagerTest {
   public void getJavaFileOutput_logs_error_when_class_name_is_illegal() throws Exception {
     given(manager = new SandboxedJavaFileManager(sfm, container, packagedJavaFileObjects));
     when(manager).getJavaFileForOutput(CLASS_OUTPUT, ".illegal.MyClass", Kind.CLASS, null);
-    thenThrown(IncorrectClassNameGivenByJavaCompilerError.class);
+    thenThrown(Message.class);
     thenCalledTimes(0, onInstance(sfm));
   }
 }

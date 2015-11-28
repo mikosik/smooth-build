@@ -1,43 +1,41 @@
 package org.smoothbuild.lang.message;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Throwables;
 
 public class Message extends RuntimeException {
-  private final MessageType type;
-  private final String message;
-
-  public Message(MessageType type, String message) {
-    this.type = checkNotNull(type);
-    this.message = checkNotNull(message);
-  }
-
-  public MessageType type() {
-    return type;
-  }
-
-  public String message() {
-    return message;
+  protected Message(String message) {
+    super(message);
   }
 
   @Override
   public final boolean equals(Object object) {
     if (object instanceof Message) {
       Message that = (Message) object;
-      return this.type == that.type && this.message.equals(that.message);
+      return this.getClass().equals(that.getClass()) && getMessage().equals(that.getMessage());
     }
     return false;
   }
 
   @Override
   public final int hashCode() {
-    return this.type.hashCode() + 17 * message.hashCode();
+    return getClass().hashCode() + 17 * getMessage().hashCode();
   }
 
   @Override
   public String toString() {
-    return type.toString() + ": " + message + stackTrace();
+    return name() + ": " + getMessage() + stackTrace();
+  }
+
+  private String name() {
+    if (this instanceof ErrorMessage) {
+      return "ERROR";
+    } else if (this instanceof WarningMessage) {
+      return "WARNING";
+    } else if (this instanceof InfoMessage) {
+      return "INFO";
+    } else {
+      throw new RuntimeException("Unknown message type: " + getClass().getCanonicalName());
+    }
   }
 
   private String stackTrace() {

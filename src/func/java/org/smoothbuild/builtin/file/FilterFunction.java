@@ -2,13 +2,12 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.util.function.Predicate;
 
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -40,7 +39,7 @@ public class FilterFunction {
     try {
       return pathMatcher(pattern);
     } catch (IllegalPathPatternException e) {
-      throw new Message(ERROR, "Parameter 'include' has illegal value. " + e.getMessage());
+      throw new ErrorMessage("Parameter 'include' has illegal value. " + e.getMessage());
     }
   }
 }

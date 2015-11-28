@@ -16,13 +16,9 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
-import org.smoothbuild.builtin.java.javac.err.CompilerFailedWithoutDiagnosticsError;
-import org.smoothbuild.builtin.java.javac.err.IllegalSourceParamError;
-import org.smoothbuild.builtin.java.javac.err.IllegalTargetParamError;
-import org.smoothbuild.builtin.java.javac.err.NoCompilerAvailableError;
-import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.lang.message.ErrorMessage;
+import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -71,7 +67,8 @@ public class JavacFunction {
 
     public Array<SFile> execute() {
       if (compiler == null) {
-        throw new NoCompilerAvailableError();
+        throw new ErrorMessage("Couldn't find JavaCompiler implementation. "
+            + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
       }
       return compile(sources);
     }
@@ -91,7 +88,7 @@ public class JavacFunction {
          * Java compiler fails miserably when there's no java files.
          */
         if (!inputSourceFiles.iterator().hasNext()) {
-          container.log(new NoJavaSourceFilesFoundWarning());
+          container.log(new WarningMessage("Param 'sources' is empty list."));
           return container.create().arrayBuilder(SFile.class).build();
         }
 
@@ -103,11 +100,12 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          container.log(new CompilerFailedWithoutDiagnosticsError());
+          container.log(new ErrorMessage(
+              "Internal error: Compilation failed but JavaCompiler reported no error message."));
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
-          container.log(new AdditionalCompilerInfo(additionalInfo));
+          container.log(new WarningMessage(additionalInfo));
         }
         return fileManager.resultClassfiles();
       } finally {
@@ -125,7 +123,9 @@ public class JavacFunction {
       if (!source.value().isEmpty()) {
         String sourceArg = source.value();
         if (!SOURCE_VALUES.contains(sourceArg)) {
-          throw new IllegalSourceParamError(sourceArg, SOURCE_VALUES);
+          throw new ErrorMessage(
+              "Parameter source has illegal value = '" + sourceArg + "'.\n"
+                  + "Only following values are allowed " + SOURCE_VALUES + "\n");
         }
         result.add("-source");
         result.add(sourceArg);
@@ -134,7 +134,8 @@ public class JavacFunction {
       if (!target.value().isEmpty()) {
         String targetArg = target.value();
         if (!TARGET_VALUES.contains(targetArg)) {
-          throw new IllegalTargetParamError(targetArg, TARGET_VALUES);
+          throw new ErrorMessage("Parameter target has illegal value = '" + targetArg + "'.\n"
+              + "Only following values are allowed " + TARGET_VALUES);
         }
         result.add("-target");
         result.add(targetArg);

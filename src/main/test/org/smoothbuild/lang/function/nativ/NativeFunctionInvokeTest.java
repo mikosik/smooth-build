@@ -2,10 +2,7 @@ package org.smoothbuild.lang.function.nativ;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.isA;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
-import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
@@ -16,9 +13,9 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.nativ.err.JavaInvocationError;
-import org.smoothbuild.lang.function.nativ.err.NullResultError;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -71,7 +68,7 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(ErrorReporting.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(isA(MyError.class)));
+    then(container.messages(), contains(instanceOf(MyError.class)));
   }
 
   public static class ErrorReporting {
@@ -82,9 +79,9 @@ public class NativeFunctionInvokeTest {
     }
   }
 
-  public static class MyError extends Message {
+  public static class MyError extends ErrorMessage {
     public MyError() {
-      super(ERROR, "");
+      super("");
     }
   }
 
@@ -94,7 +91,7 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(NullReturning.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(isA(NullResultError.class)));
+    then(container.messages(), contains(instanceOf(Message.class)));
   }
 
   public static class NullReturning {
@@ -110,8 +107,7 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(WarningReporting.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(MyWarning.class), instanceOf(
-        NullResultError.class)));
+    then(container.messages(), contains(instanceOf(MyWarning.class), instanceOf(Message.class)));
   }
 
   public static class WarningReporting {
@@ -122,9 +118,9 @@ public class NativeFunctionInvokeTest {
     }
   }
 
-  public static class MyWarning extends Message {
+  public static class MyWarning extends WarningMessage {
     public MyWarning() {
-      super(WARNING, "");
+      super("");
     }
   }
 
@@ -135,7 +131,7 @@ public class NativeFunctionInvokeTest {
     given(method = PrivateMethod.class.getDeclaredMethods()[0]);
     given(function = new NativeFunction(method, function.signature(), true, HashCode.fromInt(13)));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(JavaInvocationError.class)));
+    then(container.messages(), contains(instanceOf(Message.class)));
   }
 
   public static class NormalFunction {
@@ -157,7 +153,7 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(ThrowRuntimeExceptiton.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(JavaInvocationError.class)));
+    then(container.messages(), contains(instanceOf(Message.class)));
   }
 
   public static class ThrowRuntimeExceptiton {
@@ -172,19 +168,13 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(ThrowMessage.class));
     when(function).invoke(container, Empty.valueList());
-    then(container.messages(), contains(instanceOf(MyMessage.class)));
+    then(container.messages(), contains(instanceOf(MyError.class)));
   }
 
   public static class ThrowMessage {
     @SmoothFunction
     public static SString throwMessage(Container container) {
-      throw new MyMessage();
-    }
-  }
-
-  public static class MyMessage extends Message {
-    public MyMessage() {
-      super(ERROR, "");
+      throw new MyError();
     }
   }
 }

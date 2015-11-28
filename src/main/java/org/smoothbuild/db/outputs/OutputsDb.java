@@ -9,9 +9,11 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.message.ErrorMessage;
+import org.smoothbuild.lang.message.InfoMessage;
 import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.message.MessageType;
 import org.smoothbuild.lang.message.Messages;
+import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.SString;
@@ -37,9 +39,9 @@ public class OutputsDb {
     ImmutableList<Message> messages = output.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
-      SString messageString = valuesDb.string(message.message());
+      SString messageString = valuesDb.string(message.getMessage());
 
-      marshaller.write(AllMessageTypes.INSTANCE.valueToByte(message.type()));
+      marshaller.write(messageTypeToInt(message));
       marshaller.write(messageString.hash());
     }
 
@@ -59,11 +61,11 @@ public class OutputsDb {
       int size = unmarshaller.readInt();
       List<Message> messages = new ArrayList<>();
       for (int i = 0; i < size; i++) {
-        MessageType messageType = unmarshaller.readEnum(AllMessageTypes.INSTANCE);
+        int messageType = unmarshaller.readInt();
         HashCode messageStringHash = unmarshaller.readHash();
         SString messageSString = (SString) valuesDb.read(Types.STRING, messageStringHash);
         String messageString = messageSString.value();
-        messages.add(new Message(messageType, messageString));
+        messages.add(newMessage(messageType, messageString));
       }
 
       if (Messages.containsErrors(messages)) {
@@ -74,5 +76,32 @@ public class OutputsDb {
         return new Output(value, messages);
       }
     }
+  }
+
+  private static int messageTypeToInt(Message message) {
+    if (message instanceof ErrorMessage) {
+      return 0;
+    }
+    if (message instanceof WarningMessage) {
+      return 1;
+    }
+    if (message instanceof InfoMessage) {
+      return 2;
+    }
+    throw new RuntimeException("Unsupported Message type: " + message.getClass()
+        .getCanonicalName());
+  }
+
+  private static Message newMessage(int type, String message) {
+    if (type == 0) {
+      return new ErrorMessage(message);
+    }
+    if (type == 1) {
+      return new WarningMessage(message);
+    }
+    if (type == 2) {
+      return new InfoMessage(message);
+    }
+    throw new RuntimeException("Illegal message type. Outputs DB corrupted?");
   }
 }

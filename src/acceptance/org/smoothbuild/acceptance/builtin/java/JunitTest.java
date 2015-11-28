@@ -32,7 +32,7 @@ public class JunitTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void waring_is_logged_when_no_test_is_found() throws Exception {
+  public void warning_is_logged_when_no_test_is_found() throws Exception {
     givenFile("junit/org/junit/Test.java", testAnnotationSourceCode());
     givenDir("src");
     givenScript("fakeJunit: files('//junit') | javac | jar;\n"
