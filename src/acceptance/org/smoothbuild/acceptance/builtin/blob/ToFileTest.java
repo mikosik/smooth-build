@@ -1,5 +1,6 @@
 package org.smoothbuild.acceptance.builtin.blob;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.testory.Testory.then;
 
@@ -16,5 +17,14 @@ public class ToFileTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("newFile.txt", "abc"));
+  }
+
+  @Test
+  public void illegal_path_causes_error() throws Exception {
+    givenScript("result: toFile('/filename', toBlob('abc'));");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString(
+        "Param 'path' has illegal value. Path cannot start with slash character '/'."));
   }
 }
