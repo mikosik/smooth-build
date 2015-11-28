@@ -20,15 +20,10 @@ public class MessageTest {
     givenTest(this);
   }
 
-  @Test(expected = NullPointerException.class)
-  public void null_message_is_forbidden() throws Exception {
-    new Message(null);
-  }
-
   @Test
   public void test_error() {
     when(message = new ErrorMessage(messageString));
-    thenEqual(message.message(), messageString);
+    thenEqual(message.getMessage(), messageString);
   }
 
   @Test

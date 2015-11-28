@@ -39,7 +39,7 @@ public class OutputsDb {
     ImmutableList<Message> messages = output.messages();
     marshaller.write(messages.size());
     for (Message message : messages) {
-      SString messageString = valuesDb.string(message.message());
+      SString messageString = valuesDb.string(message.getMessage());
 
       marshaller.write(messageTypeToInt(message));
       marshaller.write(messageString.hash());

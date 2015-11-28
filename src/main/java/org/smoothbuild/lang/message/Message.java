@@ -1,37 +1,29 @@
 package org.smoothbuild.lang.message;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.google.common.base.Throwables;
 
 public class Message extends RuntimeException {
-  private final String message;
-
   protected Message(String message) {
-    this.message = checkNotNull(message);
-  }
-
-  public String message() {
-    return message;
+    super(message);
   }
 
   @Override
   public final boolean equals(Object object) {
     if (object instanceof Message) {
       Message that = (Message) object;
-      return this.getClass().equals(that.getClass()) && this.message.equals(that.message);
+      return this.getClass().equals(that.getClass()) && getMessage().equals(that.getMessage());
     }
     return false;
   }
 
   @Override
   public final int hashCode() {
-    return getClass().hashCode() + 17 * message.hashCode();
+    return getClass().hashCode() + 17 * getMessage().hashCode();
   }
 
   @Override
   public String toString() {
-    return name() + ": " + message + stackTrace();
+    return name() + ": " + getMessage() + stackTrace();
   }
 
   private String name() {
