@@ -1,7 +1,5 @@
 package org.smoothbuild.cli;
 
-import static org.smoothbuild.lang.message.MessageType.ERROR;
-
 import java.io.PrintStream;
 import java.util.Iterator;
 
@@ -9,9 +7,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.ErrorMessage;
+import org.smoothbuild.lang.message.InfoMessage;
 import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.message.MessageStats;
-import org.smoothbuild.lang.message.MessageType;
+import org.smoothbuild.lang.message.WarningMessage;
 
 import com.google.common.base.Splitter;
 
@@ -24,7 +23,9 @@ public class Console {
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
 
   private final PrintStream printStream;
-  private final MessageStats messageStats;
+  private int errorCount;
+  private int warningCount;
+  private int infoCount;
 
   @Inject
   public Console() {
@@ -33,17 +34,16 @@ public class Console {
 
   public Console(PrintStream printStream) {
     this.printStream = printStream;
-    this.messageStats = new MessageStats();
   }
 
   public void error(CodeLocation location, String message) {
     println("build.smooth:" + location.line() + ": error: " + message);
-    messageStats.incCount(ERROR);
+    errorCount++;
   }
 
   public void error(String message) {
     println("error: " + message);
-    messageStats.incCount(ERROR);
+    errorCount++;
   }
 
   public void print(String header, Iterable<? extends Message> messages) {
@@ -54,12 +54,24 @@ public class Console {
   private void print(Iterable<? extends Message> messages) {
     for (Message message : messages) {
       print(message);
-      messageStats.incCount(message.type());
+      incrementCount(message);
+    }
+  }
+
+  private void incrementCount(Message message) {
+    if (message instanceof ErrorMessage) {
+      errorCount++;
+    } else if (message instanceof WarningMessage) {
+      warningCount++;
+    } else if (message instanceof InfoMessage) {
+      infoCount++;
+    } else {
+      throw new RuntimeException("Unknown message type: " + message.getClass().getCanonicalName());
     }
   }
 
   public boolean isErrorReported() {
-    return messageStats.containsErrors();
+    return errorCount != 0;
   }
 
   public void printFinalSummary() {
@@ -69,11 +81,14 @@ public class Console {
   }
 
   private void printMessageStats() {
-    for (MessageType messageType : MessageType.values()) {
-      int count = messageStats.getCount(messageType);
-      if (0 < count) {
-        println(MESSAGE_FIRST_LINE_PREFIX + count + " " + messageType.namePlural());
-      }
+    printStat(errorCount, "error(s)");
+    printStat(warningCount, "warning(s)");
+    printStat(infoCount, "info(s)");
+  }
+
+  private void printStat(int count, String messageType) {
+    if (count != 0) {
+      println(MESSAGE_FIRST_LINE_PREFIX + count + " " + messageType);
     }
   }
 

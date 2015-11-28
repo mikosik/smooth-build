@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.valuesDb;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -15,13 +14,14 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.SString;
 
 public class OutputTest {
   private final ValuesDb valuesDb = valuesDb();
   private Output output;
-  private final List<Message> messages = asList(new Message(ERROR, ""));
+  private final List<Message> messages = asList(new ErrorMessage(""));
   private SString sstring;
   private SString otherSstring;
 

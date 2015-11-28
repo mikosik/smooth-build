@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
@@ -9,8 +10,7 @@ import java.util.List;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.function.nativ.err.JavaInvocationError;
-import org.smoothbuild.lang.function.nativ.err.NullResultError;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Value;
@@ -47,21 +47,27 @@ public class NativeFunction extends AbstractFunction {
     try {
       Value result = (Value) method.invoke(null, createArguments(container, arguments));
       if (result == null && !containsErrors(container.messages())) {
-        container.log(new NullResultError(this));
+        container.log(new ErrorMessage("Native function " + name()
+            + " has faulty implementation: it returned 'null' but logged no error."));
       }
       return result;
     } catch (IllegalAccessException e) {
-      container.log(new JavaInvocationError(this, e));
+      container.log(invocationError(e));
       return null;
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Message) {
         container.log((Message) cause);
       } else {
-        container.log(new JavaInvocationError(this, e));
+        container.log(invocationError(e));
       }
       return null;
     }
+  }
+
+  private Message invocationError(Exception e) {
+    return new ErrorMessage(
+        "Invoking function " + name() + " caused internal exception:\n" + getStackTraceAsString(e));
   }
 
   private static Object[] createArguments(Container container, List<Value> arguments) {
