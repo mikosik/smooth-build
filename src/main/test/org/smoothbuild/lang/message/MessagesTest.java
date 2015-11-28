@@ -1,9 +1,6 @@
 package org.smoothbuild.lang.message;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
-import static org.smoothbuild.lang.message.MessageType.INFO;
-import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -22,21 +19,21 @@ public class MessagesTest {
 
   @Test
   public void list_with_info_messsage_contains_no_errors() {
-    given(messages = asList(new Message(INFO, "")));
+    given(messages = asList(new InfoMessage("")));
     when(Messages.containsErrors(messages));
     thenReturned(false);
   }
 
   @Test
   public void list_with_warning_messsage_contains_no_errors() {
-    given(messages = asList(new Message(WARNING, "")));
+    given(messages = asList(new WarningMessage("")));
     when(Messages.containsErrors(messages));
     thenReturned(false);
   }
 
   @Test
   public void list_with_error_messsage_contains_errors() {
-    given(messages = asList(new Message(ERROR, "")));
+    given(messages = asList(new ErrorMessage("")));
     when(Messages.containsErrors(messages));
     thenReturned(true);
   }

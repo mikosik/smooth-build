@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.message;
 
-import static org.smoothbuild.lang.message.MessageType.ERROR;
-import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenEqual;
@@ -24,47 +22,30 @@ public class MessageTest {
 
   @Test(expected = NullPointerException.class)
   public void null_message_is_forbidden() throws Exception {
-    new Message(WARNING, null);
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void null_type_is_forbidden() throws Exception {
-    new Message(null, messageString);
+    new Message(null);
   }
 
   @Test
   public void test_error() {
-    when(message = new Message(ERROR, messageString));
-    thenEqual(message.type(), ERROR);
-    thenEqual(message.message(), messageString);
-  }
-
-  @Test
-  public void test_warning() {
-    when(message = new Message(WARNING, messageString));
-    thenEqual(message.type(), WARNING);
+    when(message = new ErrorMessage(messageString));
     thenEqual(message.message(), messageString);
   }
 
   @Test
   public void to_string() throws Exception {
-    given(message = new Message(ERROR, messageString));
+    given(message = new ErrorMessage("my-message"));
     when(message.toString());
-    thenReturned(ERROR.name() + ": " + messageString);
+    thenReturned("ERROR: my-message");
   }
 
   @Test
   public void equals_and_hash_code() throws Exception {
     EqualsTester tester = new EqualsTester();
-
-    tester.addEqualityGroup(new Message(WARNING, "equal"), new Message(WARNING, "equal"));
-    for (MessageType type : MessageType.values()) {
-      tester.addEqualityGroup(new Message(type, "message A"));
-    }
-    for (MessageType type : MessageType.values()) {
-      tester.addEqualityGroup(new Message(type, "message B"));
-    }
-
+    tester.addEqualityGroup(new WarningMessage("equal"), new WarningMessage("equal"));
+    tester.addEqualityGroup(new ErrorMessage("equal"));
+    tester.addEqualityGroup(new ErrorMessage("not equal"));
+    tester.addEqualityGroup(new InfoMessage("equal"));
+    tester.addEqualityGroup(new InfoMessage("not equal"));
     tester.testEquals();
   }
 }
