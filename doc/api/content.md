@@ -6,7 +6,7 @@ conversion between File and Blob happens automatically.
 However there are cases when you want to force conversion to forbid automatic
 parameter assignment.
 
- * File[] __file__ - File which content is returned.
+ * File __file__ - File which content is returned.
 
 Returns __Blob__ with content of given File.
 
