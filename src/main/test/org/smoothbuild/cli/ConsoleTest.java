@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.smoothbuild.lang.message.MessageType.INFO;
-import static org.smoothbuild.lang.message.MessageType.SUGGESTION;
 import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -54,12 +53,6 @@ public class ConsoleTest {
   @Test
   public void isErrorReported_returns_false_when_only_info_was_logged() throws Exception {
     console.print(name, asList(new Message(INFO, "message string")));
-    assertFalse(console.isErrorReported());
-  }
-
-  @Test
-  public void isErrorReported_returns_false_when_only_suggestion_was_logged() throws Exception {
-    console.print(name, asList(new Message(SUGGESTION, "message string")));
     assertFalse(console.isErrorReported());
   }
 
@@ -134,12 +127,9 @@ public class ConsoleTest {
     List<Message> messages = new ArrayList<>();
     messages.add(new Message(INFO, "info string"));
     for (int i = 0; i < 2; i++) {
-      messages.add(new Message(SUGGESTION, "suggestion string"));
-    }
-    for (int i = 0; i < 3; i++) {
       messages.add(new Message(WARNING, "warning string"));
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
       messages.add(new Message(ERROR, "error string"));
     }
 
@@ -150,19 +140,15 @@ public class ConsoleTest {
     builder.append(" + GROUP NAME\n");
     builder.append("   + INFO: info string\n");
     for (int i = 0; i < 2; i++) {
-      builder.append("   + SUGGESTION: suggestion string\n");
-    }
-    for (int i = 0; i < 3; i++) {
       builder.append("   + WARNING: warning string\n");
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
       builder.append("   + ERROR: error string\n");
     }
 
     builder.append(" + FAILED :(\n");
-    builder.append("   + 4 error(s)\n");
-    builder.append("   + 3 warning(s)\n");
-    builder.append("   + 2 suggestion(s)\n");
+    builder.append("   + 3 error(s)\n");
+    builder.append("   + 2 warning(s)\n");
     builder.append("   + 1 info(s)\n");
 
     assertEquals(builder.toString(), outputStream.toString());
