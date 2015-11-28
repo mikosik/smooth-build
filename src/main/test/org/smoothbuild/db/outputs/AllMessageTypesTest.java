@@ -2,7 +2,6 @@ package org.smoothbuild.db.outputs;
 
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.smoothbuild.lang.message.MessageType.INFO;
-import static org.smoothbuild.lang.message.MessageType.SUGGESTION;
 import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -24,14 +23,8 @@ public class AllMessageTypesTest {
   }
 
   @Test
-  public void byte_value_for_suggestion_is_two() {
-    when(AllMessageTypes.INSTANCE.valueToByte(SUGGESTION));
-    thenReturned((byte) 2);
-  }
-
-  @Test
-  public void byte_value_for_info_is_three() {
+  public void byte_value_for_info_is_two() {
     when(AllMessageTypes.INSTANCE.valueToByte(INFO));
-    thenReturned((byte) 3);
+    thenReturned((byte) 2);
   }
 }

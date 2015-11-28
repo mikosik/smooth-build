@@ -2,7 +2,6 @@ package org.smoothbuild.lang.message;
 
 import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.smoothbuild.lang.message.MessageType.INFO;
-import static org.smoothbuild.lang.message.MessageType.SUGGESTION;
 import static org.smoothbuild.lang.message.MessageType.WARNING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -32,13 +31,6 @@ public class MessageStatsTest {
   }
 
   @Test
-  public void initially_suggestion_count_is_zero() {
-    given(messageStats = new MessageStats());
-    when(messageStats.getCount(SUGGESTION));
-    thenReturned(0);
-  }
-
-  @Test
   public void initially_info_count_is_zero() {
     given(messageStats = new MessageStats());
     when(messageStats.getCount(INFO));
@@ -64,14 +56,6 @@ public class MessageStatsTest {
   }
 
   @Test
-  public void suggestion_count_is_one_after_incrementing_it() throws Exception {
-    given(messageStats = new MessageStats());
-    given(messageStats).incCount(SUGGESTION);
-    when(messageStats.getCount(SUGGESTION));
-    thenReturned(1);
-  }
-
-  @Test
   public void info_count_is_one_after_incrementing_it() throws Exception {
     given(messageStats = new MessageStats());
     given(messageStats).incCount(INFO);
@@ -92,14 +76,6 @@ public class MessageStatsTest {
   public void contains_no_error_after_adding_info() throws Exception {
     given(messageStats = new MessageStats());
     given(messageStats).incCount(INFO);
-    when(messageStats.containsErrors());
-    thenReturned(false);
-  }
-
-  @Test
-  public void contains_no_error_after_adding_suggestion() throws Exception {
-    given(messageStats = new MessageStats());
-    given(messageStats).incCount(SUGGESTION);
     when(messageStats.containsErrors());
     thenReturned(false);
   }
@@ -133,7 +109,6 @@ public class MessageStatsTest {
 
     thenEqual(messageStats.getCount(ERROR), 2);
     thenEqual(messageStats.getCount(WARNING), 0);
-    thenEqual(messageStats.getCount(SUGGESTION), 0);
     thenEqual(messageStats.getCount(INFO), 0);
   }
 
@@ -148,22 +123,6 @@ public class MessageStatsTest {
 
     thenEqual(messageStats.getCount(ERROR), 0);
     thenEqual(messageStats.getCount(WARNING), 2);
-    thenEqual(messageStats.getCount(SUGGESTION), 0);
-    thenEqual(messageStats.getCount(INFO), 0);
-  }
-
-  @Test
-  public void suggestions_are_added_when_message_stats_are_added() throws Exception {
-    given(messageStats = new MessageStats());
-    given(messageStats2 = new MessageStats());
-    given(messageStats).incCount(SUGGESTION);
-    given(messageStats2).incCount(SUGGESTION);
-
-    when(messageStats).add(messageStats2);
-
-    thenEqual(messageStats.getCount(ERROR), 0);
-    thenEqual(messageStats.getCount(WARNING), 0);
-    thenEqual(messageStats.getCount(SUGGESTION), 2);
     thenEqual(messageStats.getCount(INFO), 0);
   }
 
@@ -178,7 +137,6 @@ public class MessageStatsTest {
 
     thenEqual(messageStats.getCount(ERROR), 0);
     thenEqual(messageStats.getCount(WARNING), 0);
-    thenEqual(messageStats.getCount(SUGGESTION), 0);
     thenEqual(messageStats.getCount(INFO), 2);
   }
 }
