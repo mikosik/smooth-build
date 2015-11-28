@@ -2,13 +2,12 @@ package org.smoothbuild.builtin.java.junit;
 
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.smoothbuild.builtin.java.Unjarer;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -30,7 +29,7 @@ public class BinaryNameToClassFile {
         String classFilePath = classFile.path().value();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {
-          throw new Message(ERROR, "File " + classFilePath
+          throw new ErrorMessage("File " + classFilePath
               + " is contained by two different library jar files.");
         } else {
           binaryNameToClassFile.put(binaryName, classFile);

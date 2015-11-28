@@ -14,7 +14,7 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.builtin.java.javac.err.JavaCompilerMessage;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 
@@ -33,7 +33,7 @@ public class LoggingDiagnosticListenerTest {
   public void diagnostic_is_reported_as_error() {
     given(listener = new LoggingDiagnosticListener(container));
     when(listener).report(diagnostic);
-    thenCalled(container).log(any(Message.class, instanceOf(JavaCompilerMessage.class)));
+    thenCalled(container).log(any(Message.class, instanceOf(ErrorMessage.class)));
   }
 
   @Test

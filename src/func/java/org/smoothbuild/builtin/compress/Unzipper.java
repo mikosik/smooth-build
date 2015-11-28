@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.compress;
 
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.validationError;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,7 +10,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.smoothbuild.io.fs.base.err.FileSystemException;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -54,10 +53,10 @@ public class Unzipper {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new Message(ERROR, "File in a zip file has illegal name = '" + fileName + "'");
+      throw new ErrorMessage("File in a zip file has illegal name = '" + fileName + "'");
     }
     if (duplicatesDetector.addValue(fileName)) {
-      throw new Message(ERROR, "Zip file contains two files with the same path = " + fileName);
+      throw new ErrorMessage("Zip file contains two files with the same path = " + fileName);
     }
 
     SString path = container.create().string(fileName);

@@ -2,7 +2,6 @@ package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.valuesDb;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
@@ -18,6 +17,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 
 public class ContainerImplTest {
@@ -41,7 +41,7 @@ public class ContainerImplTest {
 
   @Test
   public void messages_are_logged() throws Exception {
-    given(message = new Message(ERROR, "message"));
+    given(message = new ErrorMessage("message"));
     when(containerImpl).log(message);
     then(containerImpl.messages(), contains(message));
   }

@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.android;
 import static org.smoothbuild.builtin.android.AndroidSdk.AIDL_BINARY;
 import static org.smoothbuild.builtin.util.Exceptions.stackTraceToString;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.io.util.TempDir;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -55,7 +54,7 @@ public class AidlFunction {
   private static SFile onlyElement(Array<SFile> outputFiles) {
     Iterator<SFile> iterator = outputFiles.iterator();
     if (!iterator.hasNext()) {
-      throw new Message(ERROR, AIDL_BINARY
+      throw new ErrorMessage(AIDL_BINARY
           + " binary should return exactly one file but returned zero.");
     }
     SFile result = iterator.next();
@@ -67,7 +66,7 @@ public class AidlFunction {
         builder.append(file.path().value());
         builder.append("\n");
       }
-      throw new Message(ERROR, builder.toString());
+      throw new ErrorMessage(builder.toString());
     }
     return result;
   }
@@ -76,11 +75,11 @@ public class AidlFunction {
     try {
       int exitValue = CommandExecutor.execute(command);
       if (exitValue != 0) {
-        throw new Message(ERROR, AIDL_BINARY + " binary returned non zero exit value = "
+        throw new ErrorMessage(AIDL_BINARY + " binary returned non zero exit value = "
             + exitValue);
       }
     } catch (IOException e) {
-      throw new Message(ERROR, binaryFailedMessage(command, e));
+      throw new ErrorMessage(binaryFailedMessage(command, e));
     }
   }
 

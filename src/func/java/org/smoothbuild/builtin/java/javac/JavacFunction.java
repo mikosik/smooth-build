@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -17,10 +16,9 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.builtin.java.javac.err.AdditionalCompilerInfo;
-import org.smoothbuild.builtin.java.javac.err.NoJavaSourceFilesFoundWarning;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
+import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
@@ -69,7 +67,7 @@ public class JavacFunction {
 
     public Array<SFile> execute() {
       if (compiler == null) {
-        throw new Message(ERROR, "Couldn't find JavaCompiler implementation. "
+        throw new ErrorMessage("Couldn't find JavaCompiler implementation. "
             + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
       }
       return compile(sources);
@@ -90,7 +88,7 @@ public class JavacFunction {
          * Java compiler fails miserably when there's no java files.
          */
         if (!inputSourceFiles.iterator().hasNext()) {
-          container.log(new NoJavaSourceFilesFoundWarning());
+          container.log(new WarningMessage("Param 'sources' is empty list."));
           return container.create().arrayBuilder(SFile.class).build();
         }
 
@@ -102,12 +100,12 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          container.log(new Message(ERROR,
+          container.log(new ErrorMessage(
               "Internal error: Compilation failed but JavaCompiler reported no error message."));
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
-          container.log(new AdditionalCompilerInfo(additionalInfo));
+          container.log(new WarningMessage(additionalInfo));
         }
         return fileManager.resultClassfiles();
       } finally {
@@ -125,7 +123,7 @@ public class JavacFunction {
       if (!source.value().isEmpty()) {
         String sourceArg = source.value();
         if (!SOURCE_VALUES.contains(sourceArg)) {
-          throw new Message(ERROR,
+          throw new ErrorMessage(
               "Parameter source has illegal value = '" + sourceArg + "'.\n"
                   + "Only following values are allowed " + SOURCE_VALUES + "\n");
         }
@@ -136,7 +134,7 @@ public class JavacFunction {
       if (!target.value().isEmpty()) {
         String targetArg = target.value();
         if (!TARGET_VALUES.contains(targetArg)) {
-          throw new Message(ERROR, "Parameter target has illegal value = '" + targetArg + "'.\n"
+          throw new ErrorMessage("Parameter target has illegal value = '" + targetArg + "'.\n"
               + "Only following values are allowed " + TARGET_VALUES);
         }
         result.add("-target");

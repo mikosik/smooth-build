@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.java;
 
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.validationError;
-import static org.smoothbuild.lang.message.MessageType.ERROR;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,7 +11,7 @@ import java.util.jar.JarInputStream;
 
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -50,7 +49,7 @@ public class Unjarer {
             SFile file = unjarEntry(jarInputStream, fileName);
             String path = file.path().value();
             if (duplicatesDetector.addValue(path)) {
-              throw new Message(ERROR, "Jar file contains two files with the same path = " + path);
+              throw new ErrorMessage("Jar file contains two files with the same path = " + path);
             } else {
               fileArrayBuilder.add(file);
             }
@@ -66,7 +65,7 @@ public class Unjarer {
   private SFile unjarEntry(JarInputStream jarInputStream, String fileName) {
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new Message(ERROR, "File in a jar file has illegal name = '" + fileName + "'");
+      throw new ErrorMessage("File in a jar file has illegal name = '" + fileName + "'");
     }
 
     SString path = container.create().string(fileName);
