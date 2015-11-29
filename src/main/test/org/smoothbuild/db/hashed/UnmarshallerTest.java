@@ -1,8 +1,6 @@
 package org.smoothbuild.db.hashed;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.db.hashed.HashedDb.memoryHashedDb;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -13,16 +11,11 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.err.CorruptedBoolException;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
-import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
-  private final ValuesDb valuesDb = memoryValuesDb();
   private final HashedDb hashedDb = memoryHashedDb();
-  private SString hashed1;
-  private SString hashed2;
   private Marshaller marshaller;
   private Unmarshaller unmarshaller;
   private HashCode hash;
@@ -34,17 +27,6 @@ public class UnmarshallerTest {
     if (unmarshaller != null) {
       unmarshaller.close();
     }
-  }
-
-  @Test
-  public void marshalled_hashed_list_can_be_unmarshalled() {
-    given(hashed1 = valuesDb.string("abc"));
-    given(hashed2 = valuesDb.string("def"));
-    given(marshaller = new Marshaller());
-    given(marshaller).write(asList(hashed1, hashed2));
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller.readHashList());
-    thenReturned(asList(hashed1.hash(), hashed2.hash()));
   }
 
   @Test
