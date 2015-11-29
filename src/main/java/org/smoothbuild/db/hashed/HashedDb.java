@@ -11,6 +11,7 @@ import org.smoothbuild.db.hashed.err.WritingHashedObjectFailedException;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
 import com.google.common.hash.HashCode;
 
@@ -19,6 +20,10 @@ public class HashedDb {
 
   public HashedDb(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
+  }
+
+  public static HashedDb memoryHashedDb() {
+    return new HashedDb(new MemoryFileSystem());
   }
 
   public boolean contains(HashCode hash) {

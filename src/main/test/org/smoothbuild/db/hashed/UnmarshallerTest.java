@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.db.hashed.HashedDb.memoryHashedDb;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -13,16 +14,13 @@ import org.smoothbuild.db.hashed.err.CorruptedBoolException;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
   private final ValuesDb valuesDb = memoryValuesDb();
-  private final FileSystem fileSystem = new MemoryFileSystem();
-  private final HashedDb hashedDb = new HashedDb(fileSystem);
+  private final HashedDb hashedDb = memoryHashedDb();
   private SString hashed1;
   private SString hashed2;
   private Marshaller marshaller;

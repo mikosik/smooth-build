@@ -1,5 +1,6 @@
 package org.smoothbuild.db.values;
 
+import static org.smoothbuild.db.hashed.HashedDb.memoryHashedDb;
 import static org.smoothbuild.lang.type.Types.arrayElementJTypes;
 import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
 import static org.smoothbuild.lang.type.Types.jTypeToType;
@@ -14,7 +15,6 @@ import org.smoothbuild.db.values.marshal.NothingMarshaller;
 import org.smoothbuild.db.values.marshal.StringMarshaller;
 import org.smoothbuild.db.values.marshal.ValueMarshaller;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -38,7 +38,7 @@ public class ValuesDb implements ValueFactory {
   }
 
   public static ValuesDb memoryValuesDb() {
-    return valuesDb(new MemoryFileSystem());
+    return new ValuesDb(memoryHashedDb());
   }
 
   public static ValuesDb valuesDb(FileSystem fileSystem) {
