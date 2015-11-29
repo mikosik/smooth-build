@@ -32,24 +32,23 @@ public class ArrayMarshaller<T extends Value> implements ValueMarshaller<Array<T
   }
 
   public ImmutableList<T> readElements(HashCode hash) {
-    ImmutableList.Builder<T> builder = ImmutableList.builder();
-    for (HashCode elementHash : readElementHashes(hash)) {
-      builder.add(elementMarshaller.read(elementHash));
-    }
-    return builder.build();
-  }
-
-  private List<HashCode> readElementHashes(HashCode hash) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
-      return unmarshaller.readHashList();
+      ImmutableList.Builder<T> builder = ImmutableList.builder();
+      int size = unmarshaller.readInt();
+      for (int i = 0; i < size; i++) {
+        builder.add(elementMarshaller.read(unmarshaller.readHash()));
+      }
+      return builder.build();
     }
   }
 
   public Array<T> write(List<? extends Value> elements) {
     Marshaller marshaller = new Marshaller();
-    marshaller.write(elements);
+    marshaller.write(elements.size());
+    for (Value element : elements) {
+      marshaller.write(element.hash());
+    }
     byte[] bytes = marshaller.getBytes();
-
     HashCode hash = hashedDb.write(bytes);
     return new Array<>(hash, arrayType, this);
   }

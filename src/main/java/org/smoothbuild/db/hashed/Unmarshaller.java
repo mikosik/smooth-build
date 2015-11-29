@@ -6,13 +6,11 @@ import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.smoothbuild.db.hashed.err.CorruptedBoolException;
 import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedException;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Ints;
 
@@ -23,15 +21,6 @@ public class Unmarshaller implements Closeable {
   public Unmarshaller(HashedDb hashedDb, HashCode hash) {
     this.hash = hash;
     this.inputStream = hashedDb.openInputStream(hash);
-  }
-
-  public List<HashCode> readHashList() {
-    ImmutableList.Builder<HashCode> builder = ImmutableList.builder();
-    int size = readInt();
-    for (int i = 0; i < size; i++) {
-      builder.add(readHash());
-    }
-    return builder.build();
   }
 
   public HashCode readHash() {
