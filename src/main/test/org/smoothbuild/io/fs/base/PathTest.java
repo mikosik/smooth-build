@@ -1,227 +1,291 @@
 package org.smoothbuild.io.fs.base;
 
+import static java.text.MessageFormat.format;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.quackery.Suite.suite;
+import static org.quackery.report.AssertException.assertEquals;
+import static org.quackery.report.AssertException.assertTrue;
+import static org.quackery.report.AssertException.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.quackery.Case;
+import org.quackery.Quackery;
+import org.quackery.Suite;
+import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.testing.io.fs.base.PathTesting;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.testing.EqualsTester;
 
+@RunWith(QuackeryRunner.class)
 public class PathTest {
-
-  @Test
-  public void validation_error_returns_null_for_correct_path() throws Exception {
-    for (String path : PathTesting.listOfCorrectPaths()) {
-      assertNull(Path.validationError(path));
-    }
+  @Quackery
+  public static Suite path_value_is_validated() {
+    return suite("path value is validated")
+        .add(suite("validation error returns null for correct path")
+            .addAll(PathTesting.listOfCorrectPaths().stream()
+                .map(PathTest::validationErrorReturnsNullForCorrectPath)
+                .collect(Collectors.toList())))
+        .add(suite("path can be created for valid name")
+            .addAll(PathTesting.listOfCorrectPaths().stream()
+                .map(PathTest::pathCanBeCreatedForValidName)
+                .collect(Collectors.toList())))
+        .add(suite("validation error returns message for invalid path")
+            .addAll(PathTesting.listOfInvalidPaths().stream()
+                .map(PathTest::validationErrorReturnsMessageForInvalidPath)
+                .collect(Collectors.toList())))
+        .add(suite("cannot create path with invalid value")
+            .addAll(PathTesting.listOfInvalidPaths().stream()
+                .map(PathTest::cannotCreatePathWithInvalidValue)
+                .collect(Collectors.toList())));
   }
 
-  @Test
-  public void path_can_be_created_for_valid_value() throws Exception {
-    for (String path : PathTesting.listOfCorrectPaths()) {
-      path(path);
-    }
-  }
-
-  @Test
-  public void validation_error_returns_message_for_invalid_path() {
-    for (String path : PathTesting.listOfInvalidPaths()) {
-      assertNotNull(Path.validationError(path));
-    }
-  }
-
-  @Test
-  public void cannot_create_path_with_invalid_value() {
-    for (String path : PathTesting.listOfInvalidPaths()) {
-      try {
-        path(path);
-        fail("exception should be thrown for " + path);
-      } catch (IllegalArgumentException e) {
-        // expected
+  private static Case validationErrorReturnsNullForCorrectPath(String path) {
+    return new Case(format("path [{0}]", path)) {
+      @Override
+      public void run() {
+        assertTrue(Path.validationError(path) == null);
       }
-    }
+    };
+  }
+
+  private static Case pathCanBeCreatedForValidName(String path) {
+    return new Case(format("path [{0}]", path)) {
+      @Override
+      public void run() {
+        path(path);
+      }
+    };
+  }
+
+  private static Case validationErrorReturnsMessageForInvalidPath(String path) {
+    return new Case(format("path [{0}]", path)) {
+      @Override
+      public void run() {
+        assertTrue(Path.validationError(path) != null);
+      }
+    };
+  }
+
+  private static Case cannotCreatePathWithInvalidValue(String path) {
+    return new Case(format("path [{0}]", path)) {
+      @Override
+      public void run() {
+        try {
+          path(path);
+          fail();
+        } catch (IllegalArgumentException e) {}
+      }
+    };
   }
 
   @Test
-  public void empty_string_path_is_root() throws Exception {
-    assertTrue(path("").isRoot());
+  public void empty_string_path_is_root() {
+    when(path("").isRoot());
+    thenReturned(true);
   }
 
   @Test
-  public void simple_path_is_not_root() throws Exception {
-    assertFalse(path("file.txt").isRoot());
+  public void simple_path_is_not_root() {
+    when(path("file.txt").isRoot());
+    thenReturned(false);
+  }
+
+  @Quackery
+  public static Suite implements_value() {
+    return suite("implements value")
+        .add(testValue("", ""))
+        .add(testValue("abc", "abc"))
+        .add(testValue("abc/def", "abc/def"))
+        .add(testValue("abc/def/ghi", "abc/def/ghi"));
+  }
+
+  private static Case testValue(String path, String value) {
+    return new Case(format("path [{0}] has value [{1}]", path, value)) {
+      @Override
+      public void run() {
+        assertEquals(path(path).value(), value);
+      }
+    };
   }
 
   @Test
-  public void value() {
-    assertValue("", "");
-
-    assertValue("abc", "abc");
-    assertValue("abc/def", "abc/def");
-    assertValue("abc/def/ghi", "abc/def/ghi");
+  public void parent_of_root_dir_throws_exception() {
+    when(Path.root()).parent();
+    thenThrown(IllegalArgumentException.class);
   }
 
-  private static void assertValue(String path, String expected) {
-    assertEquals(expected, path(path).value());
+  @Quackery
+  public static Suite implements_parent() {
+    return suite("implements parent")
+        .add(testParent("abc", ""))
+        .add(testParent("abc/def", "abc"))
+        .add(testParent("abc/def/ghi", "abc/def"))
+        .add(testParent(" ", ""));
   }
 
-  @Test
-  public void parent_of_root_dir_throws_exception() throws Exception {
-    try {
-      Path.root().parent();
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+  private static Case testParent(String path, String parent) {
+    return new Case(format("parent of [{0}] is [{1}]", path, parent)) {
+      @Override
+      public void run() throws Throwable {
+        assertEquals(path(path).parent(), path(parent));
+      }
+    };
   }
 
-  @Test
-  public void test_parent() throws Exception {
-    assertParentOf("abc", "");
-    assertParentOf("abc/def", "abc");
-    assertParentOf("abc/def/ghi", "abc/def");
-
-    assertParentOf(" ", "");
+  @Quackery
+  public static Suite implements_appending() {
+    return suite("implements appending")
+        .add(testAppending("", "", ""))
+        .add(testAppending("abc", "", "abc"))
+        .add(testAppending("abc/def", "", "abc/def"))
+        .add(testAppending("abc/def/ghi", "", "abc/def/ghi"))
+        .add(testAppending("", "abc", "abc"))
+        .add(testAppending("", "abc/def", "abc/def"))
+        .add(testAppending("", "abc/def/ghi", "abc/def/ghi"))
+        .add(testAppending("abc", "xyz", "abc/xyz"))
+        .add(testAppending("abc", "xyz/uvw", "abc/xyz/uvw"))
+        .add(testAppending("abc", "xyz/uvw/rst", "abc/xyz/uvw/rst"))
+        .add(testAppending("abc/def", "xyz", "abc/def/xyz"))
+        .add(testAppending("abc/def", "xyz/uvw", "abc/def/xyz/uvw"))
+        .add(testAppending("abc/def", "xyz/uvw/rst", "abc/def/xyz/uvw/rst"))
+        .add(testAppending("abc/def/ghi", "xyz", "abc/def/ghi/xyz"))
+        .add(testAppending("abc/def/ghi", "xyz/uvw", "abc/def/ghi/xyz/uvw"))
+        .add(testAppending("abc/def/ghi", "xyz/uvw/rst", "abc/def/ghi/xyz/uvw/rst"))
+        .add(testAppending(" ", " ", " / "))
+        .add(testAppending(" ", " / ", " / / "))
+        .add(testAppending(" / ", " ", " / / "))
+        .add(testAppending(" / ", " / ", " / / / "));
   }
 
-  private static void assertParentOf(String input, String expected) {
-    assertEquals(path(expected), path(input).parent());
+  private static Case testAppending(String first, String second, String expected) {
+    return new Case(format("appending [{0}] to [{1}] returns [{2}]", first, second, expected)) {
+      @Override
+      public void run() {
+        String actual = path(first).append(path(second)).value();
+        assertEquals(actual, expected);
+      }
+    };
   }
 
-  @Test
-  public void append() {
-    assertAppend("", "", "");
-
-    assertAppend("abc", "", "abc");
-    assertAppend("abc/def", "", "abc/def");
-    assertAppend("abc/def/ghi", "", "abc/def/ghi");
-
-    assertAppend("", "abc", "abc");
-    assertAppend("", "abc/def", "abc/def");
-    assertAppend("", "abc/def/ghi", "abc/def/ghi");
-
-    assertAppend("abc", "xyz", "abc/xyz");
-    assertAppend("abc", "xyz/uvw", "abc/xyz/uvw");
-    assertAppend("abc", "xyz/uvw/rst", "abc/xyz/uvw/rst");
-
-    assertAppend("abc/def", "xyz", "abc/def/xyz");
-    assertAppend("abc/def", "xyz/uvw", "abc/def/xyz/uvw");
-    assertAppend("abc/def", "xyz/uvw/rst", "abc/def/xyz/uvw/rst");
-
-    assertAppend("abc/def/ghi", "xyz", "abc/def/ghi/xyz");
-    assertAppend("abc/def/ghi", "xyz/uvw", "abc/def/ghi/xyz/uvw");
-    assertAppend("abc/def/ghi", "xyz/uvw/rst", "abc/def/ghi/xyz/uvw/rst");
-
-    assertAppend(" ", " ", " / ");
-    assertAppend(" ", " / ", " / / ");
-    assertAppend(" / ", " ", " / / ");
-    assertAppend(" / ", " / ", " / / / ");
+  @Quackery
+  public static Suite implements_parts() {
+    return suite("implements parts")
+        .add(testParts("", asList()))
+        .add(testParts("abc", asList("abc")))
+        .add(testParts("abc/def", asList("abc", "def")))
+        .add(testParts("abc/def/ghi", asList("abc", "def", "ghi")))
+        .add(testParts(" ", asList(" ")))
+        .add(testParts(" / ", asList(" ", " ")))
+        .add(testParts(" / / ", asList(" ", " ", " ")));
   }
 
-  private static void assertAppend(String path1, String path2, String expected) {
-    assertEquals(expected, path(path1).append(path(path2)).value());
-  }
-
-  @Test
-  public void test_parts() throws Exception {
-    assertParts("", Arrays.<String> asList());
-
-    assertParts("abc", asList("abc"));
-    assertParts("abc/def", asList("abc", "def"));
-    assertParts("abc/def/ghi", asList("abc", "def", "ghi"));
-
-    assertParts(" ", asList(" "));
-    assertParts(" / ", asList(" ", " "));
-    assertParts(" / / ", asList(" ", " ", " "));
-  }
-
-  private static void assertParts(String input, List<String> expected) {
-    List<String> list = new ArrayList<>();
-    for (Path path : path(input).parts()) {
-      list.add(path.value());
-    }
-    assertEquals(expected, list);
+  private static Case testParts(String path, List<String> parts) {
+    return new Case(format("[{0}] has parts: {1}", path, parts)) {
+      @Override
+      public void run() {
+        List<String> actualParts = path(path)
+            .parts()
+            .stream()
+            .map(Path::value)
+            .collect(Collectors.toList());
+        assertEquals(actualParts, parts);
+      }
+    };
   }
 
   @Test
-  public void last_part_of_root_dir_throws_exception() throws Exception {
-    try {
-      Path.root().lastPart();
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+  public void last_part_of_root_dir_throws_exception() {
+    when(Path.root()).lastPart();
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Quackery
+  public static Suite implements_last_part() {
+    return suite("implements lastPart")
+        .add(testLastPart(" ", " "))
+        .add(testLastPart(" / ", " "))
+        .add(testLastPart("abc", "abc"))
+        .add(testLastPart("abc/def", "def"))
+        .add(testLastPart("abc/def/ghi", "ghi"));
+  }
+
+  private static Case testLastPart(String path, String lastPart) {
+    return new Case(format("last part of [{0}] is [{1}]", path, lastPart)) {
+      @Override
+      public void run() {
+        assertEquals(path(path).lastPart(), path(lastPart));
+      }
+    };
   }
 
   @Test
-  public void test_last_part() throws Exception {
-    assertLastPart(" ", " ");
-    assertLastPart(" / ", " ");
-
-    assertLastPart("abc", "abc");
-    assertLastPart("abc/def", "def");
-    assertLastPart("abc/def/ghi", "ghi");
+  public void first_part_of_root_dir_throws_exception() {
+    when(Path.root()).firstPart();
+    thenThrown(IllegalArgumentException.class);
   }
 
-  private static void assertLastPart(String input, String expected) {
-    assertEquals(path(expected), path(input).lastPart());
+  @Quackery
+  public static Suite implements_first_part() {
+    return suite("implements firstPart")
+        .add(testFirstPart(" ", " "))
+        .add(testFirstPart(" / ", " "))
+        .add(testFirstPart("abc", "abc"))
+        .add(testFirstPart("abc/def", "abc"))
+        .add(testFirstPart("abc/def/ghi", "abc"));
   }
 
-  @Test
-  public void first_part_of_root_dir_throws_exception() throws Exception {
-    try {
-      Path.root().firstPart();
-      Assert.fail("exception should be thrown");
-    } catch (IllegalArgumentException e) {
-      // expected
-    }
+  private static Case testFirstPart(String path, String firstPart) {
+    return new Case(format("first part of [{0}] is [{1}]", path, firstPart)) {
+      @Override
+      public void run() {
+        assertEquals(path(path).firstPart(), path(firstPart));
+      }
+    };
   }
 
-  @Test
-  public void test_first_part() throws Exception {
-    assertFirstPart(" ", " ");
-    assertFirstPart(" / ", " ");
-
-    assertFirstPart("abc", "abc");
-    assertFirstPart("abc/def", "abc");
-    assertFirstPart("abc/def/ghi", "abc");
+  @Quackery
+  public static Suite implements_start_with() {
+    return suite("implements startsWith")
+        .add(testStartsWith(Path.root(), Path.root()))
+        .add(testStartsWith(Path.path("abc"), Path.root()))
+        .add(testStartsWith(Path.path("abc/def"), Path.root()))
+        .add(testStartsWith(Path.path("abc/def/ghi"), Path.root()))
+        .add(testStartsWith(Path.path("abc/def/ghi"), Path.path("abc")))
+        .add(testStartsWith(Path.path("abc/def/ghi"), Path.path("abc/def")))
+        .add(testStartsWith(Path.path("abc/def/ghi"), Path.path("abc/def/ghi")))
+        .add(testNotStartsWith(Path.path("abc/def/ghi"), Path.path("ab")))
+        .add(testNotStartsWith(Path.path("abc/def/ghi"), Path.path("abc/d")))
+        .add(testNotStartsWith(Path.path("abc/def/ghi"), Path.path("def")))
+        .add(testNotStartsWith(Path.path("abc/def/ghi"), Path.path("ghi")))
+        .add(testNotStartsWith(Path.root(), Path.path("abc")));
   }
 
-  private static void assertFirstPart(String input, String expected) {
-    assertEquals(path(expected), path(input).firstPart());
+  private static Case testStartsWith(Path path, Path head) {
+    return new Case(format("{0} starts with {1}", path, head)) {
+      @Override
+      public void run() {
+        assertTrue(path.startsWith(head));
+      }
+    };
   }
 
-  @Test
-  public void test_starts_with() throws Exception {
-    assertTrue(Path.root().startsWith(Path.root()));
-    assertTrue(Path.path("abc").startsWith(Path.root()));
-    assertTrue(Path.path("abc/def").startsWith(Path.root()));
-    assertTrue(Path.path("abc/def/ghi").startsWith(Path.root()));
-
-    assertTrue(Path.path("abc/def/ghi").startsWith(Path.path("abc")));
-    assertTrue(Path.path("abc/def/ghi").startsWith(Path.path("abc/def")));
-    assertTrue(Path.path("abc/def/ghi").startsWith(Path.path("abc/def/ghi")));
-
-    assertFalse(Path.path("abc/def/ghi").startsWith(Path.path("ab")));
-    assertFalse(Path.path("abc/def/ghi").startsWith(Path.path("abc/d")));
-    assertFalse(Path.path("abc/def/ghi").startsWith(Path.path("def")));
-    assertFalse(Path.path("abc/def/ghi").startsWith(Path.path("ghi")));
-
-    assertFalse(Path.root().startsWith(Path.path("abc")));
+  private static Case testNotStartsWith(Path path, Path notHead) {
+    return new Case(format("{0} not starts with {1}", path, notHead)) {
+      @Override
+      public void run() {
+        assertTrue(!path.startsWith(notHead));
+      }
+    };
   }
 
   @Test
@@ -238,7 +302,8 @@ public class PathTest {
 
   @Test
   public void test_to_string() {
-    assertEquals("'abc/def'", path("abc/def").toString());
+    when(path("abc/def").toString());
+    thenReturned("'abc/def'");
   }
 
   private static List<Path> listOfCorrectNonEqualPaths() {
