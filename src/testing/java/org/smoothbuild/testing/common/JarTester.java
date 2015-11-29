@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 
@@ -22,7 +22,7 @@ public class JarTester {
       }
     }
 
-    return blob(valuesDb(), outputStream.toByteArray());
+    return blob(memoryValuesDb(), outputStream.toByteArray());
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, SFile file) throws IOException {

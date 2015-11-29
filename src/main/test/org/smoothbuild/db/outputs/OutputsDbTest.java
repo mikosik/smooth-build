@@ -2,7 +2,7 @@ package org.smoothbuild.db.outputs;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
@@ -40,7 +40,7 @@ import org.smoothbuild.util.Streams;
 import com.google.common.hash.HashCode;
 
 public class OutputsDbTest {
-  private final ValuesDb valuesDb = valuesDb();
+  private final ValuesDb valuesDb = memoryValuesDb();
   private final HashedDb taskOutputsHashedDb = new HashedDb(new MemoryFileSystem());
   private final OutputsDb outputsDb = new OutputsDb(taskOutputsHashedDb, valuesDb);
   private final HashCode hash = Hash.string("abc");

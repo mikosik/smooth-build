@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -31,7 +31,7 @@ public class OutputClassFileTest {
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, container));
     StreamTester.writeAndClose(outputClassFile.openOutputStream(), content);
     when(fileArrayBuilder).build();
-    thenReturned(contains(file(valuesDb(), path, content)));
+    thenReturned(contains(file(memoryValuesDb(), path, content)));
   }
 
   @Test

@@ -1,7 +1,7 @@
 package org.smoothbuild.io.util;
 
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.array;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
@@ -41,7 +41,7 @@ public class TempDirTest {
 
   @Before
   public void before() {
-    valuesDb = valuesDb();
+    valuesDb = memoryValuesDb();
     fileSystem = new MemoryFileSystem();
     tempDir = new TempDir(valuesDb, rootPath, fileSystem);
   }

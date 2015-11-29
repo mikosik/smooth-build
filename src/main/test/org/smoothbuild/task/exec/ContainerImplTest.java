@@ -1,7 +1,7 @@
 package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
@@ -30,7 +30,7 @@ public class ContainerImplTest {
 
   @Before
   public void before() {
-    given(containerImpl = new ContainerImpl(fileSystem, valuesDb(), tempDirProvider));
+    given(containerImpl = new ContainerImpl(fileSystem, memoryValuesDb(), tempDirProvider));
   }
 
   @Test

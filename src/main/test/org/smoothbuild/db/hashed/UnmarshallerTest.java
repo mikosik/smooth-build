@@ -1,7 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -20,7 +20,7 @@ import org.smoothbuild.lang.value.SString;
 import com.google.common.hash.HashCode;
 
 public class UnmarshallerTest {
-  private final ValuesDb valuesDb = valuesDb();
+  private final ValuesDb valuesDb = memoryValuesDb();
   private final FileSystem fileSystem = new MemoryFileSystem();
   private final HashedDb hashedDb = new HashedDb(fileSystem);
   private SString hashed1;

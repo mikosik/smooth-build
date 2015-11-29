@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.file;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedPath;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class PathArgValidatorTest {
-  private final ValuesDb valuesDb = valuesDb();
+  private final ValuesDb valuesDb = memoryValuesDb();
 
   @Test
   public void illegal_paths_are_reported() {

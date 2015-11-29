@@ -1,7 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.task.base.Computer.valueComputer;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 
 public class TaskHashesTest {
   private static final CodeLocation CL = CodeLocation.codeLocation(2);
-  private final ValuesDb valuesDb = valuesDb();
+  private final ValuesDb valuesDb = memoryValuesDb();
 
   private Task dep;
   private Task dep2;
