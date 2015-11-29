@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ContainerImpl implements Container {
   }
 
   public static ContainerImpl containerImpl() {
-    final ValuesDb valuesDb = valuesDb();
+    final ValuesDb valuesDb = memoryValuesDb();
     Provider<TempDir> tempDirProvider = new Provider<TempDir>() {
       @Override
       public TempDir get() {

@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.db.values;
 
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
@@ -18,7 +18,7 @@ import org.smoothbuild.lang.value.Blob;
 public class ValueCreatorsTest {
   private final String content = "my string";
   private final String path = "my/file";
-  private final ValuesDb valuesDb = valuesDb();
+  private final ValuesDb valuesDb = memoryValuesDb();
   private Blob blob;
   private final byte[] bytes = new byte[] { 1, 2, 3 };
 

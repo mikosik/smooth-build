@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -15,7 +15,7 @@ public class NothingTypeTest {
   @Test
   public void nothing_type_does_not_have_default_value() {
     given(type = Types.NOTHING);
-    given(valuesDb = valuesDb());
+    given(valuesDb = memoryValuesDb());
     when(type).defaultValue(valuesDb);
     thenThrown(UnsupportedOperationException.class);
   }

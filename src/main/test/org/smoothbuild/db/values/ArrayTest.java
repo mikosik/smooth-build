@@ -3,7 +3,7 @@ package org.smoothbuild.db.values;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 import static org.testory.Testory.given;
@@ -54,7 +54,7 @@ public class ArrayTest {
   @Test
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
     given(rawArrayBuilder = valuesDb.arrayBuilder(SString.class));
-    given(blob = blob(valuesDb(), "content"));
+    given(blob = blob(memoryValuesDb(), "content"));
     when(rawArrayBuilder).add(blob);
     thenThrown(IllegalArgumentException.class);
   }

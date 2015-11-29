@@ -37,7 +37,7 @@ public class ValuesDb implements ValueFactory {
     this.hashedDb = hashedDb;
   }
 
-  public static ValuesDb valuesDb() {
+  public static ValuesDb memoryValuesDb() {
     return valuesDb(new MemoryFileSystem());
   }
 

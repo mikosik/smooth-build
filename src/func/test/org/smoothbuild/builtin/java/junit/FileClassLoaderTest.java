@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.java.junit;
 
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
@@ -20,7 +20,7 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.Classes;
 
 public class FileClassLoaderTest {
-  private final ValuesDb valuesDb = valuesDb();
+  private final ValuesDb valuesDb = memoryValuesDb();
   private FileClassLoader fileClassLoader;
   private SFile file;
   private Class<MyClass> klass;

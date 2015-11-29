@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -19,7 +19,7 @@ import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;
 
 public class MarshallerTest {
-  private final ValuesDb valuesDb = valuesDb();
+  private final ValuesDb valuesDb = memoryValuesDb();
   private Marshaller marshaller;
   private Value value1;
   private Value value2;

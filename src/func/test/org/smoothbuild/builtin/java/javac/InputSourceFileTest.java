@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.smoothbuild.db.values.ValuesDb.valuesDb;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -15,7 +15,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.SFile;
 
 public class InputSourceFileTest {
-  private final ValuesDb valuesDb = valuesDb();
+  private final ValuesDb valuesDb = memoryValuesDb();
   private Path path;
   private String content;
   private SFile file;
