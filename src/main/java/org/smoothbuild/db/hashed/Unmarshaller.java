@@ -20,21 +20,36 @@ public class Unmarshaller implements Closeable {
   }
 
   public HashCode readHash() {
-    byte[] bytes = readBytes(Hash.size(), "hash");
+    return readHash(false);
+  }
+
+  public HashCode tryReadHash() {
+    return readHash(true);
+  }
+
+  private HashCode readHash(boolean allowNull) {
+    byte[] bytes = readBytes(Hash.size(), "hash", allowNull);
+    if (bytes == null && allowNull) {
+      return null;
+    }
     return HashCode.fromBytes(bytes);
   }
 
   public int readInt() {
-    byte[] bytes = readBytes(4, "int");
+    byte[] bytes = readBytes(4, "int", false);
     return Ints.fromByteArray(bytes);
   }
 
-  private byte[] readBytes(int size, String valueName) {
+  private byte[] readBytes(int size, String valueName, boolean allowNull) {
     try {
       byte[] bytes = new byte[size];
       int read = inputStream.read(bytes);
       if (read < size) {
-        throw new TooFewBytesToUnmarshallValueException(hash, valueName, size, read);
+        if (read == -1 && allowNull) {
+          return null;
+        } else {
+          throw new TooFewBytesToUnmarshallValueException(hash, valueName, size, read);
+        }
       }
       return bytes;
     } catch (IOException e) {
