@@ -1,6 +1,5 @@
 package org.smoothbuild.db.hashed;
 
-import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
 import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
 import static org.testory.Testory.given;
@@ -10,22 +9,11 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 
 import com.google.common.hash.HashCode;
-import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Ints;
 
 public class MarshallerTest {
   private Marshaller marshaller;
-  private String string;
   private HashCode hashCode;
-
-  @Test
-  public void marshalling_single_string() {
-    given(marshaller = new Marshaller());
-    given(string = "some string");
-    given(marshaller).write(string);
-    when(marshaller).getBytes();
-    thenReturned(stringToBytes(string));
-  }
 
   @Test
   public void marshalling_single_hash() {
@@ -66,11 +54,5 @@ public class MarshallerTest {
     given(marshaller).write(0x12345678);
     when(marshaller).getBytes();
     thenReturned(Ints.toByteArray(0x12345678));
-  }
-
-  private static byte[] stringToBytes(String string) {
-    byte[] sizeBytes = Ints.toByteArray(string.length());
-    byte[] charBytes = string.getBytes(CHARSET);
-    return Bytes.concat(sizeBytes, charBytes);
   }
 }
