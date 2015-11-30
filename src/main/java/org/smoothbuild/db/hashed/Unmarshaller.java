@@ -1,13 +1,9 @@
 package org.smoothbuild.db.hashed;
 
-import static org.smoothbuild.db.hashed.Constants.FALSE_AS_BYTE;
-import static org.smoothbuild.db.hashed.Constants.TRUE_AS_BYTE;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.smoothbuild.db.hashed.err.CorruptedBoolException;
 import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedException;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 
@@ -26,23 +22,6 @@ public class Unmarshaller implements Closeable {
   public HashCode readHash() {
     byte[] bytes = readBytes(Hash.size(), "hash");
     return HashCode.fromBytes(bytes);
-  }
-
-  public boolean readBool() {
-    byte byteValue = readBytes(1, "bool")[0];
-    switch (byteValue) {
-      case FALSE_AS_BYTE:
-        return false;
-      case TRUE_AS_BYTE:
-        return true;
-      default:
-        throw new CorruptedBoolException(byteValue);
-    }
-  }
-
-  public byte readByte() {
-    byte[] bytes = readBytes(1, "byte");
-    return bytes[0];
   }
 
   public int readInt() {
