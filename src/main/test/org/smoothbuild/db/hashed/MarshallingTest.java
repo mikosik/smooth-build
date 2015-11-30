@@ -8,7 +8,6 @@ import static org.testory.Testory.when;
 
 import org.junit.After;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.CorruptedBoolException;
 import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 
@@ -55,46 +54,6 @@ public class MarshallingTest {
   }
 
   @Test
-  public void marshalling_byte() throws Exception {
-    given(hashedDb = memoryHashedDb());
-    given(marshaller = new Marshaller());
-    given(marshaller).write((byte) 123);
-    given(hash = hashedDb.write(marshaller.getBytes()));
-    when(new Unmarshaller(hashedDb, hash).readByte());
-    thenReturned((byte) 123);
-  }
-
-  @Test
-  public void marshalling_true_boolean() throws Exception {
-    given(hashedDb = memoryHashedDb());
-    given(marshaller = new Marshaller());
-    given(marshaller).write(true);
-    given(hash = hashedDb.write(marshaller.getBytes()));
-    when(new Unmarshaller(hashedDb, hash).readBool());
-    thenReturned(true);
-  }
-
-  @Test
-  public void marshalling_false_boolean() throws Exception {
-    given(hashedDb = memoryHashedDb());
-    given(marshaller = new Marshaller());
-    given(marshaller).write(false);
-    given(hash = hashedDb.write(marshaller.getBytes()));
-    when(new Unmarshaller(hashedDb, hash).readBool());
-    thenReturned(false);
-  }
-
-  @Test
-  public void unmarshalling_corrupted_bool_throws_exception() {
-    given(hashedDb = memoryHashedDb());
-    given(marshaller = new Marshaller());
-    given(marshaller).write(33);
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readBool();
-    thenThrown(CorruptedBoolException.class);
-  }
-
-  @Test
   public void marshalling_ints() throws Exception {
     given(hashedDb = memoryHashedDb());
     given(marshaller = new Marshaller());
@@ -107,11 +66,8 @@ public class MarshallingTest {
   @Test
   public void too_short_int_in_db_causes_exception() throws Exception {
     given(hashedDb = memoryHashedDb());
-    given(hash = Hash.integer(33));
-    given(marshaller = new Marshaller());
-    given(marshaller).write((byte) 1);
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readHash();
+    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(new byte[1])));
+    when(unmarshaller).readInt();
     thenThrown(TooFewBytesToUnmarshallValueException.class);
   }
 
