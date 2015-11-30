@@ -13,13 +13,9 @@ import com.google.common.hash.HashCode;
 
 public class FileMarshaller implements ValueMarshaller<SFile> {
   private final HashedDb hashedDb;
-  private final StringMarshaller stringMarshaller;
-  private final BlobMarshaller blobMarshaller;
 
   public FileMarshaller(HashedDb hashedDb) {
     this.hashedDb = checkNotNull(hashedDb);
-    this.stringMarshaller = new StringMarshaller(hashedDb);
-    this.blobMarshaller = new BlobMarshaller(hashedDb);
   }
 
   public SFile write(SString path, Blob content) {
@@ -35,8 +31,8 @@ public class FileMarshaller implements ValueMarshaller<SFile> {
   @Override
   public SFile read(HashCode hash) {
     try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
-      SString path = stringMarshaller.read(unmarshaller.readHash());
-      Blob blob = blobMarshaller.read(unmarshaller.readHash());
+      SString path = new StringMarshaller(hashedDb).read(unmarshaller.readHash());
+      Blob blob = new BlobMarshaller(hashedDb).read(unmarshaller.readHash());
       return new SFile(hash, path, blob);
     }
   }
