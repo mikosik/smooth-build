@@ -31,19 +31,15 @@ public class Unmarshaller implements Closeable {
 
   private byte[] readBytes(int size, String valueName) {
     try {
-      return readBytesImpl(size, valueName);
+      byte[] bytes = new byte[size];
+      int read = inputStream.read(bytes);
+      if (read < size) {
+        throw new TooFewBytesToUnmarshallValueException(hash, valueName, size, read);
+      }
+      return bytes;
     } catch (IOException e) {
       throw new ReadingHashedObjectFailedException(hash, e);
     }
-  }
-
-  private byte[] readBytesImpl(int size, String valueName) throws IOException {
-    byte[] bytes = new byte[size];
-    int read = inputStream.read(bytes);
-    if (read < size) {
-      throw new TooFewBytesToUnmarshallValueException(hash, valueName, size, read);
-    }
-    return bytes;
   }
 
   @Override
