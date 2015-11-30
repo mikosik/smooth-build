@@ -31,22 +31,11 @@ public class MarshallingTest {
   public void marshalling_hash() {
     given(hashedDb = memoryHashedDb());
     given(hashCode = hashOfProperSize());
-    given(marshaller = new Marshaller());
+    given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(hashCode);
-    given(hash = hashedDb.write(marshaller.getBytes()));
+    given(hash = marshaller.close());
     when(new Unmarshaller(hashedDb, hash).readHash());
     thenReturned(hashCode);
-  }
-
-  @Test
-  public void too_short_hash_in_db_causes_exception() {
-    given(hashedDb = memoryHashedDb());
-    given(hash = Hash.integer(33));
-    given(marshaller = new Marshaller());
-    given(marshaller).write(0x12345678);
-    given(unmarshaller = new Unmarshaller(hashedDb, hashedDb.write(marshaller.getBytes())));
-    when(unmarshaller).readHash();
-    thenThrown(TooFewBytesToUnmarshallValueException.class);
   }
 
   private static HashCode hashOfProperSize() {
@@ -54,11 +43,22 @@ public class MarshallingTest {
   }
 
   @Test
-  public void marshalling_ints() throws Exception {
+  public void too_short_hash_in_db_causes_exception() {
     given(hashedDb = memoryHashedDb());
-    given(marshaller = new Marshaller());
+    given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(0x12345678);
-    given(hash = hashedDb.write(marshaller.getBytes()));
+    given(hash = marshaller.close());
+    given(unmarshaller = new Unmarshaller(hashedDb, hash));
+    when(unmarshaller).readHash();
+    thenThrown(TooFewBytesToUnmarshallValueException.class);
+  }
+
+  @Test
+  public void marshalling_int() throws Exception {
+    given(hashedDb = memoryHashedDb());
+    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller).write(0x12345678);
+    given(hash = marshaller.close());
     when(new Unmarshaller(hashedDb, hash).readInt());
     thenReturned(0x12345678);
   }
