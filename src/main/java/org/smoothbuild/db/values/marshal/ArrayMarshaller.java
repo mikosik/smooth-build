@@ -43,13 +43,12 @@ public class ArrayMarshaller<T extends Value> implements ValueMarshaller<Array<T
   }
 
   public Array<T> write(List<? extends Value> elements) {
-    Marshaller marshaller = new Marshaller();
+    Marshaller marshaller = new Marshaller(hashedDb);
     marshaller.write(elements.size());
     for (Value element : elements) {
       marshaller.write(element.hash());
     }
-    byte[] bytes = marshaller.getBytes();
-    HashCode hash = hashedDb.write(bytes);
+    HashCode hash = marshaller.close();
     return new Array<>(hash, arrayType, this);
   }
 }

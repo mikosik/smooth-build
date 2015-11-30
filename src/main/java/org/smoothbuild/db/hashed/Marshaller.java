@@ -5,9 +5,11 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 public class Marshaller {
+  private final HashedDb hashedDb;
   private final ByteArrayDataOutput dataOutput;
 
-  public Marshaller() {
+  public Marshaller(HashedDb hashedDb) {
+    this.hashedDb = hashedDb;
     this.dataOutput = ByteStreams.newDataOutput(256);
   }
 
@@ -19,7 +21,11 @@ public class Marshaller {
     dataOutput.writeInt(intValue);
   }
 
-  public byte[] getBytes() {
-    return dataOutput.toByteArray();
+  public HashCode close() {
+    return hashedDb.write(dataOutput.toByteArray());
+  }
+
+  public HashCode close(HashCode taskHash) {
+    return hashedDb.write(taskHash, dataOutput.toByteArray());
   }
 }

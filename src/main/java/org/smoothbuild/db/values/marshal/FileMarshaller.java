@@ -19,12 +19,10 @@ public class FileMarshaller implements ValueMarshaller<SFile> {
   }
 
   public SFile write(SString path, Blob content) {
-    Marshaller marshaller = new Marshaller();
+    Marshaller marshaller = new Marshaller(hashedDb);
     marshaller.write(path.hash());
     marshaller.write(content.hash());
-    byte[] bytes = marshaller.getBytes();
-
-    HashCode hash = hashedDb.write(bytes);
+    HashCode hash = marshaller.close();
     return new SFile(hash, path, content);
   }
 
