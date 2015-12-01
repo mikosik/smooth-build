@@ -44,7 +44,7 @@
     <property name="lib.javax.inject" value="${dir.lib}/javax.inject.jar"/>
     <property name="lib.junit" value="${dir.lib}/junit-4.12.jar"/>
     <property name="lib.junit.license" value="${dir.lib}/junit.LICENSE"/>
-    <property name="lib.quackery" value="${dir.lib}/quackery-0.12.0.jar"/>
+    <property name="lib.quackery" value="${dir.lib}/quackery-0.13.0.jar"/>
     <property name="lib.testory" value="${dir.lib}/testory-1.0.0.jar"/>
 
     <target name="init">
