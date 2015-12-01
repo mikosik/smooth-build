@@ -86,6 +86,9 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
       String content = params[i + 1];
       i += 2;
       File file = new File(dir, path);
+      if (!(file.exists() && file.isFile())) {
+        return false;
+      }
       if (!content.equals(inputStreamToString(new FileInputStream(file)))) {
         return false;
       }
