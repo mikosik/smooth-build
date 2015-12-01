@@ -2,6 +2,7 @@ package org.smoothbuild.io.fs.base;
 
 import static java.text.MessageFormat.format;
 import static java.util.Arrays.asList;
+import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.quackery.report.AssertException.assertEquals;
 import static org.quackery.report.AssertException.assertTrue;
@@ -12,6 +13,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
@@ -32,60 +34,44 @@ public class PathTest {
   public static Suite path_value_is_validated() {
     return suite("path value is validated")
         .add(suite("validation error returns null for correct path")
-            .addAll(PathTesting.listOfCorrectPaths().stream()
-                .map(PathTest::validationErrorReturnsNullForCorrectPath)
-                .collect(Collectors.toList())))
+            .addAll(map(PathTesting.listOfCorrectPaths(),
+                PathTest::validationErrorReturnsNullForCorrectPath)))
         .add(suite("path can be created for valid name")
-            .addAll(PathTesting.listOfCorrectPaths().stream()
-                .map(PathTest::pathCanBeCreatedForValidName)
-                .collect(Collectors.toList())))
+            .addAll(map(PathTesting.listOfCorrectPaths(),
+                PathTest::pathCanBeCreatedForValidName)))
         .add(suite("validation error returns message for invalid path")
-            .addAll(PathTesting.listOfInvalidPaths().stream()
-                .map(PathTest::validationErrorReturnsMessageForInvalidPath)
-                .collect(Collectors.toList())))
+            .addAll(map(PathTesting.listOfInvalidPaths(),
+                PathTest::validationErrorReturnsMessageForInvalidPath)))
         .add(suite("cannot create path with invalid value")
-            .addAll(PathTesting.listOfInvalidPaths().stream()
-                .map(PathTest::cannotCreatePathWithInvalidValue)
-                .collect(Collectors.toList())));
+            .addAll(map(PathTesting.listOfInvalidPaths(),
+                PathTest::cannotCreatePathWithInvalidValue)));
+  }
+
+  private static <A, B> List<B> map(List<A> elements, Function<? super A, B> mapper) {
+    return elements.stream().map(mapper).collect(Collectors.toList());
   }
 
   private static Case validationErrorReturnsNullForCorrectPath(String path) {
-    return new Case(format("path [{0}]", path)) {
-      @Override
-      public void run() {
-        assertTrue(Path.validationError(path) == null);
-      }
-    };
+    return newCase(format("path [{0}]", path),
+        () -> assertTrue(Path.validationError(path) == null));
   }
 
   private static Case pathCanBeCreatedForValidName(String path) {
-    return new Case(format("path [{0}]", path)) {
-      @Override
-      public void run() {
-        path(path);
-      }
-    };
+    return newCase(format("path [{0}]", path), () -> path(path));
   }
 
   private static Case validationErrorReturnsMessageForInvalidPath(String path) {
-    return new Case(format("path [{0}]", path)) {
-      @Override
-      public void run() {
-        assertTrue(Path.validationError(path) != null);
-      }
-    };
+    return newCase(format("path [{0}]", path),
+        () -> assertTrue(Path.validationError(path) != null));
   }
 
   private static Case cannotCreatePathWithInvalidValue(String path) {
-    return new Case(format("path [{0}]", path)) {
-      @Override
-      public void run() {
-        try {
-          path(path);
-          fail();
-        } catch (IllegalArgumentException e) {}
-      }
-    };
+    return newCase(format("path [{0}]", path), () -> {
+      try {
+        path(path);
+        fail();
+      } catch (IllegalArgumentException e) {}
+    });
   }
 
   @Test
@@ -110,12 +96,8 @@ public class PathTest {
   }
 
   private static Case testValue(String path, String value) {
-    return new Case(format("path [{0}] has value [{1}]", path, value)) {
-      @Override
-      public void run() {
-        assertEquals(path(path).value(), value);
-      }
-    };
+    return newCase(format("path [{0}] has value [{1}]", path, value),
+        () -> assertEquals(path(path).value(), value));
   }
 
   @Test
@@ -134,12 +116,8 @@ public class PathTest {
   }
 
   private static Case testParent(String path, String parent) {
-    return new Case(format("parent of [{0}] is [{1}]", path, parent)) {
-      @Override
-      public void run() throws Throwable {
-        assertEquals(path(path).parent(), path(parent));
-      }
-    };
+    return newCase(format("parent of [{0}] is [{1}]", path, parent),
+        () -> assertEquals(path(path).parent(), path(parent)));
   }
 
   @Quackery
@@ -168,13 +146,11 @@ public class PathTest {
   }
 
   private static Case testAppending(String first, String second, String expected) {
-    return new Case(format("appending [{0}] to [{1}] returns [{2}]", first, second, expected)) {
-      @Override
-      public void run() {
-        String actual = path(first).append(path(second)).value();
-        assertEquals(actual, expected);
-      }
-    };
+    return newCase(format("appending [{0}] to [{1}] returns [{2}]", first, second, expected),
+        () -> {
+          String actual = path(first).append(path(second)).value();
+          assertEquals(actual, expected);
+        });
   }
 
   @Quackery
@@ -220,12 +196,8 @@ public class PathTest {
   }
 
   private static Case testLastPart(String path, String lastPart) {
-    return new Case(format("last part of [{0}] is [{1}]", path, lastPart)) {
-      @Override
-      public void run() {
-        assertEquals(path(path).lastPart(), path(lastPart));
-      }
-    };
+    return newCase(format("last part of [{0}] is [{1}]", path, lastPart),
+        () -> assertEquals(path(path).lastPart(), path(lastPart)));
   }
 
   @Test
@@ -245,12 +217,8 @@ public class PathTest {
   }
 
   private static Case testFirstPart(String path, String firstPart) {
-    return new Case(format("first part of [{0}] is [{1}]", path, firstPart)) {
-      @Override
-      public void run() {
-        assertEquals(path(path).firstPart(), path(firstPart));
-      }
-    };
+    return newCase(format("first part of [{0}] is [{1}]", path, firstPart),
+        () -> assertEquals(path(path).firstPart(), path(firstPart)));
   }
 
   @Quackery
@@ -271,21 +239,13 @@ public class PathTest {
   }
 
   private static Case testStartsWith(Path path, Path head) {
-    return new Case(format("{0} starts with {1}", path, head)) {
-      @Override
-      public void run() {
-        assertTrue(path.startsWith(head));
-      }
-    };
+    return newCase(format("{0} starts with {1}", path, head),
+        () -> assertTrue(path.startsWith(head)));
   }
 
   private static Case testNotStartsWith(Path path, Path notHead) {
-    return new Case(format("{0} not starts with {1}", path, notHead)) {
-      @Override
-      public void run() {
-        assertTrue(!path.startsWith(notHead));
-      }
-    };
+    return newCase(format("{0} not starts with {1}", path, notHead),
+        () -> assertTrue(!path.startsWith(notHead)));
   }
 
   @Test
