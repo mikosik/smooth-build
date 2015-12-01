@@ -5,11 +5,15 @@ import static org.smoothbuild.util.Streams.inputStreamToString;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+
+import com.google.common.base.Joiner;
 
 public class FileArrayMatcher extends TypeSafeMatcher<File> {
   private final String[] params;
@@ -38,6 +42,29 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  protected void describeMismatchSafely(File dir, Description mismatchDescription) {
+    try {
+      List<String> actualFiles = actualFiles(dir, dir.getPath().length() + 1);
+      mismatchDescription.appendText("actual: [" + Joiner.on(", ").join(actualFiles) + "]");
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static List<String> actualFiles(File dir, int rootPathLength) throws IOException {
+    ArrayList<String> result = new ArrayList<>();
+    for (File file : dir.listFiles()) {
+      if (file.isDirectory()) {
+        result.addAll(actualFiles(dir, rootPathLength));
+      } else {
+        result.add(file.getPath().substring(rootPathLength));
+        result.add(inputStreamToString(new FileInputStream(file)));
+      }
+    }
+    return result;
   }
 
   private static int filesCount(File item) {
