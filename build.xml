@@ -265,12 +265,12 @@
     <!-- run src/testing/test -->
 
     <target name="run-testing.test" depends="compile-testing.test">
-        <junit haltonfailure="yes" reloading="false" tempdir="${dir.build}">
+        <junit haltonfailure="yes" reloading="false" fork="true" forkmode="perBatch" tempdir="${dir.build}">
             <classpath>
                 <path refid="classpath.with.testing.test"/>
             </classpath>
             <formatter type="brief" usefile="false"/>
-            <batchtest fork="no" todir="${dir.build}">
+            <batchtest todir="${dir.build}">
                 <fileset dir="${dir.build.class.testing.test}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
@@ -279,12 +279,12 @@
     <!-- run src/main/test -->
 
     <target name="run-main.test" depends="compile-main.test" description="runs main.test">
-        <junit haltonfailure="yes" reloading="false" tempdir="${dir.build}">
+        <junit haltonfailure="yes" reloading="false" fork="true" forkmode="perBatch" tempdir="${dir.build}">
             <classpath>
                 <path refid="classpath.with.main.test"/>
             </classpath>
             <formatter type="brief" usefile="false"/>
-            <batchtest fork="no" todir="${dir.build}">
+            <batchtest todir="${dir.build}">
                 <fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
@@ -293,12 +293,12 @@
     <!-- run src/func/test -->
 
     <target name="run-func.test" depends="compile-func.test">
-        <junit haltonfailure="yes" reloading="false" tempdir="${dir.build}">
+        <junit haltonfailure="yes" reloading="false" fork="true" forkmode="perBatch" tempdir="${dir.build}">
             <classpath>
                 <path refid="classpath.with.func.test"/>
             </classpath>
             <formatter type="brief" usefile="false"/>
-            <batchtest fork="no" todir="${dir.build}">
+            <batchtest todir="${dir.build}">
                 <fileset dir="${dir.build.class.func.test}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
@@ -359,13 +359,13 @@
             <zipfileset dir="${dir.build.class.acceptance}" includes="org/smoothbuild/acceptance/TestingFunctions**"/>
         </zip>
         <chmod file="${dir.build.acceptance}/${zipped.dir}/smooth" perm="u+x"/>
-        <junit haltonfailure="yes" reloading="false" tempdir="${dir.build}">
+        <junit haltonfailure="yes" reloading="false" fork="yes" forkmode="perBatch" tempdir="${dir.build}">
             <classpath>
                 <path refid="classpath.with.acceptance"/>
             </classpath>
             <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
             <formatter type="brief" usefile="false"/>
-            <batchtest fork="yes" todir="${dir.build}">
+            <batchtest todir="${dir.build}">
                 <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
