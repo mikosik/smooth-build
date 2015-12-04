@@ -10,7 +10,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -21,8 +20,8 @@ public class FilterFunction {
   @SmoothFunction
   public static Array<SFile> filter(
       Container container,
-      @Required @Name("files") Array<SFile> files,
-      @Required @Name("include") SString include) {
+      @Name("files") Array<SFile> files,
+      @Name("include") SString include) {
     Predicate<Path> filter = createFilter(include.value());
     ArrayBuilder<SFile> builder = container.create().arrayBuilder(SFile.class);
 

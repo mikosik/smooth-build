@@ -13,7 +13,6 @@ import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
@@ -25,9 +24,9 @@ public class AidlFunction {
   @SmoothFunction
   public static SFile aidl(
       Container container,
-      @Required @Name("apiLevel") SString apiLevel,
-      @Required @Name("buildToolsVersion") SString buildToolsVersion,
-      @Required @Name("interfaceFile") SFile interfaceFile) throws InterruptedException {
+      @Name("apiLevel") SString apiLevel,
+      @Name("buildToolsVersion") SString buildToolsVersion,
+      @Name("interfaceFile") SFile interfaceFile) throws InterruptedException {
     return execute(container, buildToolsVersion.value(), apiLevel.value(), interfaceFile);
   }
 

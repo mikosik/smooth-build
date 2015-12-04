@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -18,7 +17,7 @@ public class ToBlobFunction {
   @SmoothFunction
   public static Blob toBlob(
       Container container,
-      @Required @Name("string") SString string) {
+      @Name("string") SString string) {
     return stringToBlob(container, string);
   }
 

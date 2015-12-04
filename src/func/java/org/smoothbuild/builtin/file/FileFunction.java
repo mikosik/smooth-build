@@ -9,7 +9,6 @@ import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NotCacheable;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
@@ -20,7 +19,7 @@ public class FileFunction {
   @NotCacheable
   public static SFile file(
       ContainerImpl container,
-      @Required @Name("path") SString pathString) {
+      @Name("path") SString pathString) {
     Path path = validatedProjectPath("path", pathString);
     if (!path.isRoot() && path.firstPart().equals(SMOOTH_DIR)) {
       throw new ErrorMessage("Reading file from '.smooth' dir is not allowed.");

@@ -12,7 +12,6 @@ import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -24,7 +23,7 @@ public class JarFunction {
   @SmoothFunction
   public static Blob jar(
       Container container,
-      @Required @Name("files") Array<SFile> files,
+      @Name("files") Array<SFile> files,
       @Name("manifest") Blob manifest) {
     return new Worker(container, files, manifest).execute();
   }
