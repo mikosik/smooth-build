@@ -29,23 +29,19 @@ public class ConsoleTest {
   @Test
   public void printing_messages_containing_error_message() throws Exception {
     console.print(name, asList(new ErrorMessage("message string")));
-
-    StringBuilder builder = new StringBuilder();
-    builder.append(" + GROUP NAME\n");
-    builder.append("   + ERROR: message string\n");
-
-    assertEquals(builder.toString(), outputStream.toString());
+    String expected = " + GROUP NAME\n"
+        + "   + ERROR: message string\n";
+    assertEquals(expected, outputStream.toString());
   }
 
   @Test
   public void printing_messages_without_error_message() throws Exception {
     console.print(name, asList(new WarningMessage("message string\nsecond line")));
 
-    StringBuilder builder = new StringBuilder();
-    builder.append(" + GROUP NAME\n");
-    builder.append("   + WARNING: message string\n");
-    builder.append("     second line\n");
-    assertEquals(builder.toString(), outputStream.toString());
+    String expected = " + GROUP NAME\n"
+        + "   + WARNING: message string\n"
+        + "     second line\n";
+    assertEquals(expected, outputStream.toString());
   }
 
   // isErrorReported()
@@ -75,13 +71,11 @@ public class ConsoleTest {
     console.print(name, asList(new WarningMessage("message string")));
     console.printFinalSummary();
 
-    StringBuilder builder = new StringBuilder();
-    builder.append(" + GROUP NAME\n");
-    builder.append("   + WARNING: message string\n");
-    builder.append(" + SUCCESS :)\n");
-    builder.append("   + 1 warning(s)\n");
-
-    assertEquals(builder.toString(), outputStream.toString());
+    String expected = " + GROUP NAME\n"
+        + "   + WARNING: message string\n"
+        + " + SUCCESS :)\n"
+        + "   + 1 warning(s)\n";
+    assertEquals(expected, outputStream.toString());
   }
 
   @Test
@@ -89,13 +83,11 @@ public class ConsoleTest {
     console.print(name, asList(new ErrorMessage("message string")));
     console.printFinalSummary();
 
-    StringBuilder builder = new StringBuilder();
-    builder.append(" + GROUP NAME\n");
-    builder.append("   + ERROR: message string\n");
-    builder.append(" + FAILED :(\n");
-    builder.append("   + 1 error(s)\n");
-
-    assertEquals(builder.toString(), outputStream.toString());
+    String expected = " + GROUP NAME\n"
+        + "   + ERROR: message string\n"
+        + " + FAILED :(\n"
+        + "   + 1 error(s)\n";
+    assertEquals(expected, outputStream.toString());
   }
 
   @Test

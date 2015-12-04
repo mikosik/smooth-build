@@ -8,14 +8,12 @@ public class HelpSpec implements CommandSpec {
 
   @Override
   public String longDescription() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("usage: smooth help <command>\n");
-    builder.append("\n");
-    builder.append(shortDescription() + "\n");
-    builder.append("\n");
-    builder.append("arguments:\n");
-    builder.append("  <command>  command for which help is printed");
-    return builder.toString();
+    return "usage: smooth help <command>\n"
+        + "\n"
+        + shortDescription() + "\n"
+        + "\n"
+        + "arguments:\n"
+        + "  <command>  command for which help is printed";
   }
 
   @Override
