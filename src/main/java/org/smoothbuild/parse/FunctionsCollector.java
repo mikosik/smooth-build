@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -14,8 +15,6 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
-
-import com.google.common.collect.Maps;
 
 /**
  * Transforms script ParseTree into map that maps function name to its
@@ -43,7 +42,7 @@ public class FunctionsCollector {
     public Worker(Console console, Module builtinModule) {
       this.console = console;
       this.builtinModule = builtinModule;
-      this.functions = Maps.newHashMap();
+      this.functions = new HashMap<>();
     }
 
     @Override

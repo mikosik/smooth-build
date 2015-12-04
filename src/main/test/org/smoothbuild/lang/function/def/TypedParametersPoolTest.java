@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.def;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.sameInstance;
@@ -41,11 +41,11 @@ public class TypedParametersPoolTest {
 
   @Test
   public void parameters_getter() {
-    given(optional = newHashSet(string));
-    given(required = newHashSet(stringRequired));
+    given(optional = new HashSet<>(asList(string)));
+    given(required = new HashSet<>(asList(stringRequired)));
     when(pool = new TypedParametersPool(optional, required));
-    thenEqual(pool.optionalParameters(), newHashSet(string));
-    thenEqual(pool.requiredParameters(), newHashSet(stringRequired));
+    thenEqual(pool.optionalParameters(), new HashSet<>(asList(string)));
+    thenEqual(pool.requiredParameters(), new HashSet<>(asList(stringRequired)));
   }
 
   @Test
@@ -58,7 +58,7 @@ public class TypedParametersPoolTest {
   @Test
   public void has_candidate_when_pool_has_one_required_parameter() {
     given(optional = noParameters);
-    given(required = newHashSet(stringRequired));
+    given(required = new HashSet<>(asList(stringRequired)));
     when(pool = new TypedParametersPool(optional, required));
     then(pool.hasCandidate());
     then(pool.candidate(), sameInstance(stringRequired));
@@ -66,7 +66,7 @@ public class TypedParametersPoolTest {
 
   @Test
   public void has_candidate_when_pool_has_one_optional_parameter() {
-    given(optional = newHashSet(string));
+    given(optional = new HashSet<>(asList(string)));
     given(required = noParameters);
     when(pool = new TypedParametersPool(optional, required));
     then(pool.hasCandidate());
@@ -75,8 +75,8 @@ public class TypedParametersPoolTest {
 
   @Test
   public void has_candidate_when_pool_has_one_optional_and_one_required_parameter() {
-    given(optional = newHashSet(string));
-    given(required = newHashSet(stringRequired));
+    given(optional = new HashSet<>(asList(string)));
+    given(required = new HashSet<>(asList(stringRequired)));
     when(pool = new TypedParametersPool(optional, required));
     then(pool.hasCandidate());
     then(pool.candidate(), sameInstance(stringRequired));
@@ -91,7 +91,7 @@ public class TypedParametersPoolTest {
 
   @Test
   public void has_no_candidate_when_pool_has_two_optional_parameters() {
-    given(optional = newHashSet(string, blob));
+    given(optional = new HashSet<>(asList(string, blob)));
     given(required = noParameters);
     given(pool = new TypedParametersPool(optional, required));
     when(pool.hasCandidate());
@@ -101,7 +101,7 @@ public class TypedParametersPoolTest {
   @Test
   public void has_no_candidate_when_pool_has_two_required_parameters() {
     given(optional = noParameters);
-    given(required = newHashSet(stringRequired, stringRequired2));
+    given(required = new HashSet<>(asList(stringRequired, stringRequired2)));
     given(pool = new TypedParametersPool(optional, required));
     when(pool.hasCandidate());
     thenReturned(false);
@@ -109,8 +109,8 @@ public class TypedParametersPoolTest {
 
   @Test
   public void has_no_candidate_when_pool_has_two_required_and_one_optional_parameter() {
-    given(optional = newHashSet(string));
-    given(required = newHashSet(stringRequired, stringRequired2));
+    given(optional = new HashSet<>(asList(string)));
+    given(required = new HashSet<>(asList(stringRequired, stringRequired2)));
     given(pool = new TypedParametersPool(optional, required));
     when(pool.hasCandidate());
     thenReturned(false);
@@ -118,8 +118,8 @@ public class TypedParametersPoolTest {
 
   @Test
   public void has_candidate_when_pool_has_one_required_and_two_optional_parameters() {
-    given(optional = newHashSet(string, blob));
-    given(required = newHashSet(stringRequired));
+    given(optional = new HashSet<>(asList(string, blob)));
+    given(required = new HashSet<>(asList(stringRequired)));
     when(pool = new TypedParametersPool(optional, required));
     then(pool.hasCandidate());
     then(pool.candidate(), sameInstance(stringRequired));
@@ -136,7 +136,7 @@ public class TypedParametersPoolTest {
 
   @Test
   public void pool_with_optional_parameter_is_not_empty() throws Exception {
-    given(optional = newHashSet(string));
+    given(optional = new HashSet<>(asList(string)));
     given(required = noParameters);
     given(pool = new TypedParametersPool(optional, required));
     when(pool.isEmpty());
@@ -146,7 +146,7 @@ public class TypedParametersPoolTest {
   @Test
   public void pool_with_required_parameter_is_not_empty() throws Exception {
     given(optional = noParameters);
-    given(required = newHashSet(stringRequired));
+    given(required = new HashSet<>(asList(stringRequired)));
     given(pool = new TypedParametersPool(optional, required));
     when(pool.isEmpty());
     thenReturned(false);

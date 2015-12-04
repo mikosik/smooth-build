@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.type.Types.allTypes;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +27,6 @@ import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Sets;
 
 public class ArgumentExpressionCreator {
   private final ValuesDb valuesDb;
@@ -98,8 +98,8 @@ public class ArgumentExpressionCreator {
 
   private static void detectDuplicatedAndUnknownArgumentNames(Function function,
       Console console, Collection<Argument> namedArguments) {
-    Set<String> unusedNames = Sets.newHashSet(parametersToNames(function.parameters()));
-    Set<String> usedNames = Sets.newHashSet();
+    Set<String> unusedNames = new HashSet<>(parametersToNames(function.parameters()));
+    Set<String> usedNames = new HashSet<>();
     for (Argument argument : namedArguments) {
       if (argument.hasName()) {
         String name = argument.name();

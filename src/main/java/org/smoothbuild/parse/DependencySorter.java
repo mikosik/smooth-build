@@ -1,5 +1,8 @@
 package org.smoothbuild.parse;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +14,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * Sorts functions so all dependencies of each function are placed before that
@@ -38,9 +38,9 @@ public class DependencySorter {
     public Worker(Module builtinModule, Map<Name, Set<Dependency>> dependenciesOrig,
         Console console) {
       this.console = console;
-      this.notSorted = Maps.newHashMap(dependenciesOrig);
-      this.reachableNames = Sets.newHashSet(builtinModule.availableNames());
-      this.sorted = Lists.newArrayListWithCapacity(dependenciesOrig.size());
+      this.notSorted = new HashMap<>(dependenciesOrig);
+      this.reachableNames = new HashSet<>(builtinModule.availableNames());
+      this.sorted = new ArrayList<>(dependenciesOrig.size());
       this.stack = new DependencyStack();
     }
 
