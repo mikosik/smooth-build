@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.message.ErrorMessage;
@@ -90,14 +91,7 @@ public class AidlFunction {
   }
 
   private static String join(List<String> command) {
-    StringBuilder result = new StringBuilder();
-    String delimiter = "";
-    for (String string : command) {
-      result.append(delimiter);
-      result.append(string);
-      delimiter = " ";
-    }
-    return result.toString();
+    return command.stream().collect(Collectors.joining(" "));
   }
 
   // Documentation copy/pasted from aidl command line tool:

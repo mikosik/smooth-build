@@ -1,5 +1,7 @@
 package org.smoothbuild.parse;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
@@ -10,7 +12,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -90,10 +91,6 @@ public class DependencySorterTest {
   }
 
   private static Set<Dependency> dependencies(Name... names) {
-    Set<Dependency> result = new HashSet<>();
-    for (Name name : names) {
-      result.add(new Dependency(codeLocation(1), name));
-    }
-    return result;
+    return stream(names).map((name) -> new Dependency(codeLocation(1), name)).collect(toSet());
   }
 }

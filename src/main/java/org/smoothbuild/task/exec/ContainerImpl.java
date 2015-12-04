@@ -62,8 +62,6 @@ public class ContainerImpl implements Container {
   }
 
   public void destroy() {
-    for (TempDir tempDir : tempDirs) {
-      tempDir.destroy();
-    }
+    tempDirs.stream().forEach(TempDir::destroy);
   }
 }
