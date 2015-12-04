@@ -10,6 +10,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,6 @@ import org.smoothbuild.lang.module.ImmutableModule;
 import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 
 public class DependencySorterTest {
   private Name name1;
@@ -92,7 +92,7 @@ public class DependencySorterTest {
   }
 
   private static Set<Dependency> dependencies(Name... names) {
-    Set<Dependency> result = Sets.newHashSet();
+    Set<Dependency> result = new HashSet<>();
     for (Name name : names) {
       result.add(new Dependency(codeLocation(1), name));
     }

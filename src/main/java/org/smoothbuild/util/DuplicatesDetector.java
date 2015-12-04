@@ -1,11 +1,11 @@
 package org.smoothbuild.util;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multiset;
-import com.google.common.collect.Sets;
 
 public class DuplicatesDetector<T> {
   private final Multiset<T> set = HashMultiset.create();
@@ -23,7 +23,7 @@ public class DuplicatesDetector<T> {
   }
 
   public Set<T> getDuplicateValues() {
-    Set<T> result = Sets.newHashSet();
+    Set<T> result = new HashSet<>();
     for (Multiset.Entry<T> entry : set.entrySet()) {
       if (1 < entry.getCount()) {
         result.add(entry.getElement());

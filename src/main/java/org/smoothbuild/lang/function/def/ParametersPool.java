@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.function.base.Parameters.parametersToMap;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.allTypes;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 public class ParametersPool {
@@ -60,7 +60,7 @@ public class ParametersPool {
   }
 
   public Set<Parameter> allRequired() {
-    Set<Parameter> result = Sets.newHashSet();
+    Set<Parameter> result = new HashSet<>();
     for (TypedParametersPool typedParamPool : typePools.values()) {
       Iterables.addAll(result, typedParamPool.requiredParameters());
     }
@@ -68,7 +68,7 @@ public class ParametersPool {
   }
 
   public Set<Parameter> allOptional() {
-    Set<Parameter> result = Sets.newHashSet();
+    Set<Parameter> result = new HashSet<>();
     for (TypedParametersPool typedParamPool : typePools.values()) {
       Iterables.addAll(result, typedParamPool.optionalParameters());
     }
@@ -100,10 +100,11 @@ public class ParametersPool {
     return parameters;
   }
 
-  private static Map<Type, Set<Parameter>> createParametersMap(ImmutableList<Parameter> parameters) {
-    Map<Type, Set<Parameter>> map = Maps.newHashMap();
+  private static Map<Type, Set<Parameter>> createParametersMap(
+      ImmutableList<Parameter> parameters) {
+    Map<Type, Set<Parameter>> map = new HashMap<>();
     for (Type type : allTypes()) {
-      HashSet<Parameter> set = Sets.newHashSet();
+      HashSet<Parameter> set = new HashSet<>();
       for (Parameter parameter : parameters) {
         if (parameter.type() == type) {
           set.add(parameter);

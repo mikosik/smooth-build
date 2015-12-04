@@ -15,6 +15,7 @@ import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,8 +54,6 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
-import com.google.common.collect.Maps;
-
 public class DefinedFunctionsCreator {
   private final ValuesDb valuesDb;
   private final ArgumentExpressionCreator argumentExpressionCreator;
@@ -87,8 +86,7 @@ public class DefinedFunctionsCreator {
     private final ValuesDb valuesDb;
     private final ArgumentExpressionCreator argumentExpressionCreator;
     private final ImplicitConverter implicitConverter;
-
-    private final Map<Name, Function> functions = Maps.newHashMap();
+    private final Map<Name, Function> functions = new HashMap<>();
 
     public Worker(Console console, Module builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValuesDb valuesDb,

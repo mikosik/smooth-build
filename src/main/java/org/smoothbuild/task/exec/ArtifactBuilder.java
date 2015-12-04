@@ -2,6 +2,7 @@ package org.smoothbuild.task.exec;
 
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,8 +17,6 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
 import org.smoothbuild.util.Empty;
 
-import com.google.common.collect.Maps;
-
 public class ArtifactBuilder {
   private final ArtifactSaver artifactSaver;
   private final TaskGraph taskGraph;
@@ -27,7 +26,7 @@ public class ArtifactBuilder {
   public ArtifactBuilder(ArtifactSaver artifactSaver, TaskGraph taskGraph) {
     this.artifactSaver = artifactSaver;
     this.taskGraph = taskGraph;
-    this.artifacts = Maps.newHashMap();
+    this.artifacts = new HashMap<>();
   }
 
   public void addArtifact(Function function) {

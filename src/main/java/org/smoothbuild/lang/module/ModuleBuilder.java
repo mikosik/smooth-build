@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.module;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -7,14 +8,12 @@ import javax.inject.Inject;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
-import com.google.common.collect.Maps;
-
 public class ModuleBuilder {
   private final Map<Name, Function> functions;
 
   @Inject
   public ModuleBuilder() {
-    this.functions = Maps.newHashMap();
+    this.functions = new HashMap<>();
   }
 
   public void addFunction(Function function) {

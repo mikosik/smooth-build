@@ -18,11 +18,11 @@ import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
 
-import com.google.common.collect.Sets;
 import com.google.common.testing.EqualsTester;
 
 public class TypesTest {
@@ -70,7 +70,7 @@ public class TypesTest {
 
   @Test
   public void all_types_returns_list_sorted_by_super_type_dependency() {
-    Set<Type> visited = Sets.newHashSet();
+    Set<Type> visited = new HashSet<>();
     for (Type type : allTypes()) {
       for (Type visitedType : visited) {
         assertFalse(canConvert(visitedType, type));

@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.function.base;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
 
 public class Parameters {
 
@@ -52,8 +52,7 @@ public class Parameters {
    * @return Parameters ordered lexicographically by their names.
    */
   public static ImmutableList<Parameter> sortedParameters(Iterable<Parameter> params) {
-    Set<String> names = Sets.newHashSet();
-
+    Set<String> names = new HashSet<>();
     ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
     for (Parameter parameter : ParameterOrdering.PARAMETER_ORDERING.sortedCopy(params)) {
       String name = parameter.name();

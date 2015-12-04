@@ -1,12 +1,14 @@
 package org.smoothbuild.util;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
+
+import java.util.HashSet;
 
 import org.junit.Test;
 
@@ -101,7 +103,7 @@ public class DuplicatesDetectorTest {
     given(duplicatesDetector = new DuplicatesDetector<>());
     given(duplicatesDetector).addValue(string1);
     when(duplicatesDetector).addValue(string1);
-    thenEqual(duplicatesDetector.getDuplicateValues(), newHashSet(string1));
+    thenEqual(duplicatesDetector.getDuplicateValues(), new HashSet<>(asList(string1)));
   }
 
   @Test
@@ -115,7 +117,7 @@ public class DuplicatesDetectorTest {
     given(duplicatesDetector).addValue(string3);
     given(duplicatesDetector).addValue(string4);
 
-    thenEqual(duplicatesDetector.getDuplicateValues(), newHashSet(string1, string3));
+    thenEqual(duplicatesDetector.getDuplicateValues(), new HashSet<>(asList(string1, string3)));
   }
 
   // getUniqueValues()
@@ -131,7 +133,7 @@ public class DuplicatesDetectorTest {
   public void get_unique_values_returns_element_that_has_been_added() throws Exception {
     given(duplicatesDetector = new DuplicatesDetector<>());
     when(duplicatesDetector).addValue(string1);
-    thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1));
+    thenEqual(duplicatesDetector.getUniqueValues(), new HashSet<>(asList(string1)));
   }
 
   @Test
@@ -139,7 +141,7 @@ public class DuplicatesDetectorTest {
     given(duplicatesDetector = new DuplicatesDetector<>());
     given(duplicatesDetector).addValue(string1);
     when(duplicatesDetector).addValue(string2);
-    thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1, string2));
+    thenEqual(duplicatesDetector.getUniqueValues(), new HashSet<>(asList(string1, string2)));
   }
 
   @Test
@@ -147,7 +149,7 @@ public class DuplicatesDetectorTest {
     given(duplicatesDetector = new DuplicatesDetector<>());
     given(duplicatesDetector).addValue(string1);
     when(duplicatesDetector).addValue(string1);
-    thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1));
+    thenEqual(duplicatesDetector.getUniqueValues(), new HashSet<>(asList(string1)));
   }
 
   @Test
@@ -160,7 +162,7 @@ public class DuplicatesDetectorTest {
     given(duplicatesDetector).addValue(string3);
     given(duplicatesDetector).addValue(string3);
     given(duplicatesDetector).addValue(string4);
-
-    thenEqual(duplicatesDetector.getUniqueValues(), newHashSet(string1, string2, string3, string4));
+    thenEqual(duplicatesDetector.getUniqueValues(), new HashSet<>(asList(string1, string2, string3,
+        string4)));
   }
 }
