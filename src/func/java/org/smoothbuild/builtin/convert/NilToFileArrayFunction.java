@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.convert;
 
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Nothing;
@@ -12,7 +11,7 @@ public class NilToFileArrayFunction {
   @SmoothFunction
   public static Array<SFile> nilToFileArray(
       Container container,
-      @Required @Name("input") Array<Nothing> input) {
+      @Name("input") Array<Nothing> input) {
     return container.create().arrayBuilder(SFile.class).build();
   }
 }

@@ -13,7 +13,6 @@ import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -29,7 +28,7 @@ public class UnzipFunction {
   @SmoothFunction
   public static Array<SFile> unzip(
       Container container,
-      @Required @Name("blob") Blob blob) {
+      @Name("blob") Blob blob) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     try {

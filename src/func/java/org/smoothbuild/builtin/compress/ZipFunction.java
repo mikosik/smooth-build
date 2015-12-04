@@ -9,7 +9,6 @@ import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Name;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -24,7 +23,7 @@ public class ZipFunction {
   @SmoothFunction
   public static Blob zip(
       Container container,
-      @Required @Name("file") Array<SFile> files) {
+      @Name("file") Array<SFile> files) {
     return new Worker(container, files).execute();
   }
 
