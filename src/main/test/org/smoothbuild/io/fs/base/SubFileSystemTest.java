@@ -18,16 +18,17 @@ import java.util.List;
 import org.junit.Test;
 
 public class SubFileSystemTest {
-  FileSystem fileSystem = mock(FileSystem.class);
-  Path root = path("my/root");
-  Path path = path("my/path");
-  Path absolutePath = root.append(path);
-  List<String> strings;
-  List<Path> pathList;
-  InputStream inputStream;
+  private final FileSystem fileSystem = mock(FileSystem.class);
+  private final Path root = path("my/root");
+  private Path path = path("my/path");
+  private Path absolutePath = root.append(path);
+  private List<String> strings;
+  private InputStream inputStream;
 
-  OutputStream outputStream;
-  SubFileSystem subFileSystem = new SubFileSystem(fileSystem, root);
+  private OutputStream outputStream;
+  private final SubFileSystem subFileSystem = new SubFileSystem(fileSystem, root);
+  private Path link;
+  private Path absoluteLink;
 
   @Test
   public void path_state_is_forwarded() throws Exception {
@@ -68,18 +69,16 @@ public class SubFileSystemTest {
 
   @Test
   public void create_link_is_forwarded() {
-    Path link = path("my/link");
-    Path absoluteLink = root.append(link);
-
+    given(link = path("my/link"));
+    given(absoluteLink = root.append(link));
     when(subFileSystem).createLink(link, path);
     thenCalled(fileSystem).createLink(absoluteLink, absolutePath);
   }
 
   @Test
   public void create_dir_is_forwarded() {
-    Path path = path("my/dir");
-    Path absolutePath = root.append(path);
-
+    given(path = path("my/dir"));
+    given(absolutePath = root.append(path));
     when(subFileSystem).createDir(path);
     thenCalled(fileSystem).createDir(absolutePath);
   }
