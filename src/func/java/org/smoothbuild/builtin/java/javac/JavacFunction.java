@@ -52,10 +52,10 @@ public class JavacFunction {
     private final SString source;
     private final SString target;
 
-    public Worker(Container container, //
-        Array<SFile> sources, //
-        Array<Blob> libs, //
-        SString source, //
+    public Worker(Container container,
+        Array<SFile> sources,
+        Array<Blob> libs,
+        SString source,
         SString target) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.container = container;
