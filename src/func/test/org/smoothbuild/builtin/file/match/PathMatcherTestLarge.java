@@ -39,11 +39,6 @@ public class PathMatcherTestLarge {
 
   private static Consumer<String> assertThatPathMatchesPatternConsumer(String pattern) {
     final Predicate<Path> matcher = pathMatcher(pattern);
-    return new Consumer<String>() {
-      @Override
-      public void consume(String path) {
-        matcher.test(path(path));
-      }
-    };
+    return (path) -> matcher.test(path(path));
   }
 }

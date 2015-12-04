@@ -11,25 +11,17 @@ import org.smoothbuild.builtin.file.match.testing.NamePatternGenerator;
 
 public class NameMatcherMediumTest {
 
-  @Test 
+  @Test
   public void test_generated_patterns() throws Exception {
     NamePatternGenerator.generatePatterns(5, doTestPatternConsumer());
   }
 
   private static Consumer<String> doTestPatternConsumer() {
-    return new Consumer<String>() {
-      public void consume(String pattern) {
-        generateNames(pattern, assertThatNameMatchesPatternConsumer(pattern));
-      }
-    };
+    return (pattern) -> generateNames(pattern, assertThatNameMatchesPatternConsumer(pattern));
   }
 
   private static Consumer<String> assertThatNameMatchesPatternConsumer(String pattern) {
     final NameMatcher matcher = new NameMatcher(namePattern(pattern));
-    return new Consumer<String>() {
-      public void consume(String name) {
-        assertTrue(matcher.test(path(name)));
-      }
-    };
+    return (name) -> assertTrue(matcher.test(path(name)));
   }
 }

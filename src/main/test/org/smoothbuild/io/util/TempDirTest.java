@@ -133,14 +133,11 @@ public class TempDirTest {
   }
 
   private static Matcher blobContains(final String expected) {
-    return new Matcher() {
-      @Override
-      public boolean matches(Object object) {
-        try {
-          return inputStreamToString(((Blob) object).openInputStream()).equals(expected);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+    return (object) -> {
+      try {
+        return inputStreamToString(((Blob) object).openInputStream()).equals(expected);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
       }
     };
   }

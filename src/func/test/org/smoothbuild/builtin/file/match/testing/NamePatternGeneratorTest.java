@@ -14,13 +14,7 @@ public class NamePatternGeneratorTest {
   @Test
   public void all_possible_patterns_are_generated() {
     final List<String> generatedPatterns = new ArrayList<>();
-    Consumer<String> collectingConsumer = new Consumer<String>() {
-      public void consume(String pattern) {
-        generatedPatterns.add(pattern);
-      }
-    };
-
-    generatePatternsImpl(3, collectingConsumer);
+    generatePatternsImpl(3, (pattern) -> generatedPatterns.add(pattern));
     then(generatedPatterns, containsInAnyOrder("aaa", "aab", "aa*", "aba", "abb", "abc", "ab*",
         "a*a", "a*b", "*aa", "*ab", "*a*"));
   }
