@@ -14,7 +14,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.parse.ParsingException;
-import org.smoothbuild.task.exec.ExecutionData;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -39,7 +38,7 @@ public class Build implements Command {
 
     try {
       Module module = moduleParser.createModule();
-      smoothExecutor.execute(new ExecutionData(functionNames, module));
+      smoothExecutor.execute(functionNames, module);
     } catch (ParsingException | ExecutionException e) {
       return EXIT_CODE_ERROR;
     }

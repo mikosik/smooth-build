@@ -23,16 +23,13 @@ public class SmoothExecutor {
     this.console = console;
   }
 
-  public void execute(ExecutionData executionData) {
-    Set<Name> functions = executionData.functions();
-    Module module = executionData.module();
-
+  public void execute(Set<Name> functions, Module module) {
     if (functions.isEmpty()) {
       console.error("No function passed to build command.\n"
           + "  Pass at least one from following available functions:" + indentedNameList(module));
       throw new ExecutionException();
     }
-    for (Name name : executionData.functions()) {
+    for (Name name : functions) {
       Function function = module.getFunction(name);
       if (function == null) {
         console.error("Unknown function " + name + " passed in command line.\n"
