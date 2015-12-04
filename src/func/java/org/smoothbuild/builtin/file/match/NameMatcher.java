@@ -19,7 +19,7 @@ public class NameMatcher implements Predicate<Path> {
   private final List<String> patternParts;
 
   public NameMatcher(NamePattern pattern) {
-    if (!!pattern.isDoubleStar()) {
+    if (pattern.isDoubleStar()) {
       throw new IllegalArgumentException();
     }
     this.patternParts = pattern.parts();
