@@ -8,11 +8,9 @@ public class CleanSpec implements CommandSpec {
 
   @Override
   public String longDescription() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("usage: smooth clean\n");
-    builder.append("\n");
-    builder.append(shortDescription());
-    return builder.toString();
+    return "usage: smooth clean\n"
+        + "\n"
+        + shortDescription();
   }
 
   @Override

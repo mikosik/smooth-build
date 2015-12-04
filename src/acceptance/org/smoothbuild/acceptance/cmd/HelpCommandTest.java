@@ -15,15 +15,12 @@ public class HelpCommandTest extends AcceptanceTestCase {
   }
 
   private static String generalHelp() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("usage: smooth <command> <arg>...\n");
-    builder.append("\n");
-    builder.append("All available commands are:\n");
-    builder.append("  build   Build artifact(s) by running specified function(s)\n");
-    builder.append(
-        "  clean   Remove all cached values and artifacts calculated during previous builds\n");
-    builder.append("  help    Print help about given command\n");
-    return builder.toString();
+    return "usage: smooth <command> <arg>...\n"
+        + "\n"
+        + "All available commands are:\n"
+        + "  build   Build artifact(s) by running specified function(s)\n"
+        + "  clean   Remove all cached values and artifacts calculated during previous builds\n"
+        + "  help    Print help about given command\n";
   }
 
   @Test
@@ -34,13 +31,11 @@ public class HelpCommandTest extends AcceptanceTestCase {
   }
 
   private static String buildHelp() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("usage: smooth build <function>...\n");
-    builder.append("\n");
-    builder.append("Build artifact(s) by running specified function(s)\n");
-    builder.append("\n");
-    builder.append("  <function>  function which execution result is saved as artifact\n");
-    return builder.toString();
+    return "usage: smooth build <function>...\n"
+        + "\n"
+        + "Build artifact(s) by running specified function(s)\n"
+        + "\n"
+        + "  <function>  function which execution result is saved as artifact\n";
   }
 
   @Test
@@ -51,10 +46,8 @@ public class HelpCommandTest extends AcceptanceTestCase {
   }
 
   private static String buildClean() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("usage: smooth clean\n");
-    builder.append("\n");
-    builder.append("Remove all cached values and artifacts calculated during previous builds\n");
-    return builder.toString();
+    return "usage: smooth clean\n"
+        + "\n"
+        + "Remove all cached values and artifacts calculated during previous builds\n";
   }
 }

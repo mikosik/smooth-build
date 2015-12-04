@@ -8,13 +8,11 @@ public class BuildSpec implements CommandSpec {
 
   @Override
   public String longDescription() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("usage: smooth build <function>...\n");
-    builder.append("\n");
-    builder.append(shortDescription() + "\n");
-    builder.append("\n");
-    builder.append("  <function>  function which execution result is saved as artifact");
-    return builder.toString();
+    return "usage: smooth build <function>...\n"
+        + "\n"
+        + shortDescription() + "\n"
+        + "\n"
+        + "  <function>  function which execution result is saved as artifact";
   }
 
   @Override

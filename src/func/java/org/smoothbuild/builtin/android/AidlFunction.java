@@ -83,12 +83,10 @@ public class AidlFunction {
   }
 
   private static String binaryFailedMessage(List<String> command, IOException e) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Following command line failed:\n");
-    builder.append(join(command) + "\n");
-    builder.append("stack trace is:\n");
-    builder.append(stackTraceToString(e));
-    return builder.toString();
+    return "Following command line failed:\n"
+        + join(command) + "\n"
+        + "stack trace is:\n"
+        + stackTraceToString(e);
   }
 
   private static String join(List<String> command) {

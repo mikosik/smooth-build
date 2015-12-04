@@ -78,13 +78,11 @@ public class ArgumentExpressionCreator {
 
   private static String missingRequiredArgsMessage(Function function,
       Map<Parameter, Argument> argumentMap, Set<Parameter> missingRequiredParameters) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Not all parameters required by " + function.name()
-        + " function has been specified.\n" + "Missing required parameters:\n");
-    builder.append(parametersToString(missingRequiredParameters));
-    builder.append("All correct 'parameters <- arguments' assignments:\n");
-    builder.append(argumentMap.toString());
-    return builder.toString();
+    return "Not all parameters required by " + function.name() + " function has been specified.\n"
+        + "Missing required parameters:\n"
+        + parametersToString(missingRequiredParameters)
+        + "All correct 'parameters <- arguments' assignments:\n"
+        + argumentMap.toString();
   }
 
   private List<Expression> sortAccordingToParametersOrder(
