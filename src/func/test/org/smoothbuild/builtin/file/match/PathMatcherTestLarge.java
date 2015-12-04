@@ -5,11 +5,11 @@ import static org.smoothbuild.builtin.file.match.testing.MatchingPathsGenerator.
 import static org.smoothbuild.builtin.file.match.testing.PathPatternGenerator.generatePatterns;
 import static org.smoothbuild.io.fs.base.Path.path;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.smoothbuild.builtin.file.match.testing.Consumer;
 import org.smoothbuild.io.fs.base.Path;
 
 /**
@@ -29,7 +29,7 @@ public class PathMatcherTestLarge {
       private int count = 0;
 
       @Override
-      public void consume(String pattern) {
+      public void accept(String pattern) {
         count++;
         System.out.println(count + ": " + pattern);
         generatePaths(pattern, assertThatPathMatchesPatternConsumer(pattern));

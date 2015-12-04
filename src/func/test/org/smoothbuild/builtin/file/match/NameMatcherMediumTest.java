@@ -5,8 +5,9 @@ import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
 import static org.smoothbuild.builtin.file.match.testing.MatchingNamesGenerator.generateNames;
 import static org.smoothbuild.io.fs.base.Path.path;
 
+import java.util.function.Consumer;
+
 import org.junit.Test;
-import org.smoothbuild.builtin.file.match.testing.Consumer;
 import org.smoothbuild.builtin.file.match.testing.NamePatternGenerator;
 
 public class NameMatcherMediumTest {
