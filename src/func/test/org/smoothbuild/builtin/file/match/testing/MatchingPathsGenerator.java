@@ -10,6 +10,7 @@ import static org.smoothbuild.builtin.file.match.testing.HelpTester.ALL_WITH_EMP
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MatchingPathsGenerator {
 
@@ -21,7 +22,7 @@ public class MatchingPathsGenerator {
   private static void generatePaths(String path, List<List<String>> template, int index,
       Consumer<String> consumer) {
     if (index == template.size()) {
-      consumer.consume(path);
+      consumer.accept(path);
     } else {
       for (String suffix : template.get(index)) {
         if (!(suffix.equals("/") && (path.endsWith("/") || path.isEmpty()))) {

@@ -3,6 +3,8 @@ package org.smoothbuild.builtin.file.match.testing;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.endsWithThreeLetters;
 
+import java.util.function.Consumer;
+
 public class PathPatternGenerator {
 
   /**
@@ -21,7 +23,7 @@ public class PathPatternGenerator {
 
   private static void generatePatterns(String pattern, int size, Consumer<String> consumer) {
     if (size == 0) {
-      consumer.consume(pattern);
+      consumer.accept(pattern);
     } else {
       if (!endsWithThreeLetters(pattern)) {
         generatePatterns(pattern + "a", size - 1, consumer);

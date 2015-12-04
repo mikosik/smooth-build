@@ -7,6 +7,7 @@ import static org.testory.Testory.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.junit.Test;
 
@@ -47,7 +48,7 @@ public class MatchingNamesGeneratorTest {
     private final List<String> generatedNames = new ArrayList<>();
 
     @Override
-    public void consume(String name) {
+    public void accept(String name) {
       generatedNames.add(name);
     }
   }

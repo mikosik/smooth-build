@@ -6,6 +6,7 @@ import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MatchingNamesGenerator {
   public static void generateNames(String pattern, Consumer<String> consumer) {
@@ -16,7 +17,7 @@ public class MatchingNamesGenerator {
   private static void generateNames(String name, List<List<String>> template, int index,
       Consumer<String> consumer) {
     if (index == template.size()) {
-      consumer.consume(name);
+      consumer.accept(name);
     } else {
       for (String elem : template.get(index)) {
         generateNames(name + elem, template, index + 1, consumer);
