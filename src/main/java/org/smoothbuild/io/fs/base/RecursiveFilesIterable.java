@@ -42,8 +42,7 @@ public class RecursiveFilesIterable implements Iterable<Path> {
       this.dirStack = new ArrayDeque<>();
       this.fileStack = new ArrayDeque<>();
       this.dirStack.push(Path.root());
-
-      nextFile = fetchNextFile();
+      this.nextFile = fetchNextFile();
     }
 
     @Override
@@ -54,7 +53,6 @@ public class RecursiveFilesIterable implements Iterable<Path> {
     @Override
     public Path next() {
       checkState(hasNext());
-
       Path result = nextFile;
       nextFile = fetchNextFile();
       return result;
