@@ -1,11 +1,13 @@
 package org.smoothbuild.lang.value;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.StreamSupport.stream;
+
 import java.util.Iterator;
 
 import org.smoothbuild.db.values.marshal.ArrayMarshaller;
 import org.smoothbuild.lang.type.ArrayType;
 
-import com.google.common.base.Joiner;
 import com.google.common.hash.HashCode;
 
 /**
@@ -26,6 +28,7 @@ public class Array<T extends Value> extends Value implements Iterable<T> {
 
   @Override
   public String toString() {
-    return "[" + Joiner.on(", ").join(this) + "]";
+    return "[" + stream(this.spliterator(), false).map(Object::toString).collect(joining(", "))
+        + "]";
   }
 }
