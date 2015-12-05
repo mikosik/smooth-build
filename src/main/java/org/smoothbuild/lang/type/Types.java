@@ -34,12 +34,12 @@ public class Types {
    * that type.
    */
   private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
-  private static final ImmutableSet<ArrayType> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY,
+  public static final ImmutableSet<ArrayType> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY,
       BLOB_ARRAY, FILE_ARRAY, NIL);
 
   private static final ImmutableSet<Type> ARRAY_ELEMENT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING);
-  private static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING,
+  public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
 
   /*

@@ -1,110 +1,64 @@
 package org.smoothbuild.lang.type;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static java.text.MessageFormat.format;
+import static org.quackery.Case.newCase;
+import static org.quackery.Suite.suite;
+import static org.quackery.report.AssertException.assertEquals;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Conversions.convertFunctionName;
+import static org.smoothbuild.lang.type.Types.ALL_TYPES;
+import static org.smoothbuild.lang.type.Types.ARRAY_TYPES;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.NIL;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
-import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.quackery.Case;
+import org.quackery.Quackery;
+import org.quackery.Suite;
+import org.quackery.junit.QuackeryRunner;
 
+@RunWith(QuackeryRunner.class)
 public class ConversionsTest {
-
-  @Test
-  public void can_convert() throws Exception {
-    assertTrue(canConvert(STRING, STRING));
-    assertFalse(canConvert(STRING, STRING_ARRAY));
-    assertFalse(canConvert(STRING, BLOB));
-    assertFalse(canConvert(STRING, BLOB_ARRAY));
-    assertFalse(canConvert(STRING, FILE));
-    assertFalse(canConvert(STRING, FILE_ARRAY));
-    assertFalse(canConvert(STRING, NIL));
-
-    assertFalse(canConvert(BLOB, STRING));
-    assertTrue(canConvert(BLOB, BLOB));
-    assertFalse(canConvert(BLOB, FILE));
-    assertFalse(canConvert(BLOB, STRING_ARRAY));
-    assertFalse(canConvert(BLOB, BLOB_ARRAY));
-    assertFalse(canConvert(BLOB, FILE_ARRAY));
-    assertFalse(canConvert(BLOB, NIL));
-
-    assertFalse(canConvert(FILE, STRING));
-    assertTrue(canConvert(FILE, BLOB));
-    assertTrue(canConvert(FILE, FILE));
-    assertFalse(canConvert(FILE, STRING_ARRAY));
-    assertFalse(canConvert(FILE, BLOB_ARRAY));
-    assertFalse(canConvert(FILE, FILE_ARRAY));
-    assertFalse(canConvert(FILE, NIL));
-
-    assertFalse(canConvert(STRING_ARRAY, STRING));
-    assertFalse(canConvert(STRING_ARRAY, BLOB));
-    assertFalse(canConvert(STRING_ARRAY, FILE));
-    assertTrue(canConvert(STRING_ARRAY, STRING_ARRAY));
-    assertFalse(canConvert(STRING_ARRAY, BLOB_ARRAY));
-    assertFalse(canConvert(STRING_ARRAY, FILE_ARRAY));
-    assertFalse(canConvert(STRING_ARRAY, NIL));
-
-    assertFalse(canConvert(BLOB_ARRAY, STRING));
-    assertFalse(canConvert(BLOB_ARRAY, BLOB));
-    assertFalse(canConvert(BLOB_ARRAY, FILE));
-    assertFalse(canConvert(BLOB_ARRAY, STRING_ARRAY));
-    assertTrue(canConvert(BLOB_ARRAY, BLOB_ARRAY));
-    assertFalse(canConvert(BLOB_ARRAY, FILE_ARRAY));
-    assertFalse(canConvert(BLOB_ARRAY, NIL));
-
-    assertFalse(canConvert(FILE_ARRAY, STRING));
-    assertFalse(canConvert(FILE_ARRAY, BLOB));
-    assertFalse(canConvert(FILE_ARRAY, FILE));
-    assertFalse(canConvert(FILE_ARRAY, STRING_ARRAY));
-    assertTrue(canConvert(FILE_ARRAY, BLOB_ARRAY));
-    assertTrue(canConvert(FILE_ARRAY, FILE_ARRAY));
-    assertFalse(canConvert(FILE_ARRAY, NIL));
-
-    assertFalse(canConvert(NIL, STRING));
-    assertFalse(canConvert(NIL, BLOB));
-    assertFalse(canConvert(NIL, FILE));
-    assertTrue(canConvert(NIL, STRING_ARRAY));
-    assertTrue(canConvert(NIL, BLOB_ARRAY));
-    assertTrue(canConvert(NIL, FILE_ARRAY));
-    assertTrue(canConvert(NIL, NIL));
+  @Quackery
+  public static Suite can_convert() {
+    Suite suite = suite("test canConvert");
+    for (Type from : ALL_TYPES) {
+      for (Type to : ALL_TYPES) {
+        suite = suite.add(testConversion(from, to));
+      }
+    }
+    return suite;
   }
 
-  @Test
-  public void convert_function_name_for_file_to_blob_conversion() throws Exception {
-    when(convertFunctionName(FILE, BLOB));
-    thenReturned(name("fileToBlob"));
+  private static Case testConversion(Type from, Type to) {
+    boolean canConvert = from == to ||
+        from == FILE && to == BLOB ||
+        from == FILE_ARRAY && to == BLOB_ARRAY ||
+        from == NIL && ARRAY_TYPES.contains(to);
+    String canOrCannot = canConvert ? "can" : "cannot";
+    return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to), () -> {
+      assertEquals(canConvert(from, to), canConvert);
+    });
   }
 
-  @Test
-  public void convert_function_name_for_file_array_to_blob_array_conversion() throws Exception {
-    when(convertFunctionName(FILE_ARRAY, BLOB_ARRAY));
-    thenReturned(name("fileArrayToBlobArray"));
+  @Quackery
+  public static Suite test_convert_function_name() {
+    return suite("test convert function name")
+        .add(testConvertFunctionName(FILE, BLOB, "fileToBlob"))
+        .add(testConvertFunctionName(FILE_ARRAY, BLOB_ARRAY, "fileArrayToBlobArray"))
+        .add(testConvertFunctionName(NIL, STRING_ARRAY, "nilToStringArray"))
+        .add(testConvertFunctionName(NIL, BLOB_ARRAY, "nilToBlobArray"))
+        .add(testConvertFunctionName(NIL, FILE_ARRAY, "nilToFileArray"));
   }
 
-  @Test
-  public void convert_function_name_for_nil_to_string_array_conversion() throws Exception {
-    when(convertFunctionName(NIL, STRING_ARRAY));
-    thenReturned(name("nilToStringArray"));
-  }
-
-  @Test
-  public void convert_function_name_for_nil_to_blob_array_conversion() throws Exception {
-    when(convertFunctionName(NIL, BLOB_ARRAY));
-    thenReturned(name("nilToBlobArray"));
-  }
-
-  @Test
-  public void convert_function_name_for_nil_to_file_array_conversion() throws Exception {
-    when(convertFunctionName(NIL, FILE_ARRAY));
-    thenReturned(name("nilToFileArray"));
+  private static Case testConvertFunctionName(Type from, Type to, String functionName) {
+    return newCase(format("{0} to {1} is named {2}", from, to, functionName), () -> {
+      assertEquals(convertFunctionName(from, to), name(functionName));
+    });
   }
 }
