@@ -13,7 +13,6 @@ import static org.testory.Testory.willReturn;
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.util.Empty;
 
 public class InputTest {
   private Task depTask1;
@@ -83,7 +82,7 @@ public class InputTest {
     given(sstring1 = valuesDb.string("abc"));
     given(willReturn(new Output(sstring1)), depTask1).output();
     given(input = Input.fromResults(asList(depTask1)));
-    given(input2 = Input.fromResults(Empty.taskList()));
+    given(input2 = Input.fromResults(asList()));
     when(input).hash();
     thenReturned(not(input2.hash()));
   }

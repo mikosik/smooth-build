@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
@@ -22,7 +23,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.ContainerImpl;
-import org.smoothbuild.util.Empty;
 
 import com.google.common.hash.HashCode;
 
@@ -36,7 +36,7 @@ public class NativeFunctionInvokeTest {
   public void invoke_returns_result_from_invokation_of_native_java_method() throws Exception {
     given(container = containerImpl());
     given(function = function(StringFunction.class));
-    when(function).invoke(container, Empty.valueList());
+    when(function).invoke(container, asList());
     thenReturned(container.create().string("abc"));
   }
 
@@ -67,7 +67,7 @@ public class NativeFunctionInvokeTest {
   public void error_reported_by_java_method_is_logged() throws Exception {
     given(container = containerImpl());
     given(function = function(ErrorReporting.class));
-    when(function).invoke(container, Empty.valueList());
+    when(function).invoke(container, asList());
     then(container.messages(), contains(instanceOf(MyError.class)));
   }
 
@@ -90,7 +90,7 @@ public class NativeFunctionInvokeTest {
       throws Exception {
     given(container = containerImpl());
     given(function = function(NullReturning.class));
-    when(function).invoke(container, Empty.valueList());
+    when(function).invoke(container, asList());
     then(container.messages(), contains(instanceOf(Message.class)));
   }
 
@@ -106,7 +106,7 @@ public class NativeFunctionInvokeTest {
       throws Exception {
     given(container = containerImpl());
     given(function = function(WarningReporting.class));
-    when(function).invoke(container, Empty.valueList());
+    when(function).invoke(container, asList());
     then(container.messages(), contains(instanceOf(MyWarning.class), instanceOf(Message.class)));
   }
 
@@ -130,7 +130,7 @@ public class NativeFunctionInvokeTest {
     given(function = function(NormalFunction.class));
     given(method = PrivateMethod.class.getDeclaredMethods()[0]);
     given(function = new NativeFunction(method, function.signature(), true, HashCode.fromInt(13)));
-    when(function).invoke(container, Empty.valueList());
+    when(function).invoke(container, asList());
     then(container.messages(), contains(instanceOf(Message.class)));
   }
 
@@ -152,7 +152,7 @@ public class NativeFunctionInvokeTest {
   public void invoke_wraps_normal_java_exception_into_java_invocation_error() throws Exception {
     given(container = containerImpl());
     given(function = function(ThrowRuntimeExceptiton.class));
-    when(function).invoke(container, Empty.valueList());
+    when(function).invoke(container, asList());
     then(container.messages(), contains(instanceOf(Message.class)));
   }
 
@@ -167,7 +167,7 @@ public class NativeFunctionInvokeTest {
   public void invoke_adds_thrown_messages_to_logged_messages() throws Exception {
     given(container = containerImpl());
     given(function = function(ThrowMessage.class));
-    when(function).invoke(container, Empty.valueList());
+    when(function).invoke(container, asList());
     then(container.messages(), contains(instanceOf(MyError.class)));
   }
 
