@@ -20,7 +20,8 @@ import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
-import org.smoothbuild.util.Empty;
+
+import com.google.common.collect.ImmutableList;
 
 public class TaskReporterTest {
   Console console = mock(Console.class);
@@ -63,7 +64,7 @@ public class TaskReporterTest {
   }
 
   private static Task createTask(boolean isInternal) {
-    return new Task(new MyComputer(isInternal), Empty.taskList());
+    return new Task(new MyComputer(isInternal), ImmutableList.of());
   }
 
   private static final class MyComputer extends Computer {

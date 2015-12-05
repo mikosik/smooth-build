@@ -11,7 +11,6 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.util.Empty;
 
 public class AbstractFunctionTest {
   Name name;
@@ -26,7 +25,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void type_returns_signature_type() {
-    given(signature = new Signature(STRING, name("name"), Empty.paramList()));
+    given(signature = new Signature(STRING, name("name"), asList()));
     given(function = new MyAbstractFunction(signature));
     when(function).type();
     thenReturned(STRING);
@@ -35,7 +34,7 @@ public class AbstractFunctionTest {
   @Test
   public void name_returns_signature_name() {
     given(name = name("name"));
-    given(signature = new Signature(STRING, name, Empty.paramList()));
+    given(signature = new Signature(STRING, name, asList()));
     given(function = new MyAbstractFunction(signature));
     when(function).type();
     thenReturned(STRING);

@@ -18,8 +18,8 @@ import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.util.Empty;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class ParametersPoolTest {
@@ -38,7 +38,7 @@ public class ParametersPoolTest {
 
   @Test
   public void taking_unknown_param_throws_exception() {
-    given(parametersPool = new ParametersPool(Empty.paramList()));
+    given(parametersPool = new ParametersPool(ImmutableList.of()));
     when(parametersPool).take(optionalParameter(STRING, "unknownName"));
     thenThrown(IllegalArgumentException.class);
   }
@@ -64,7 +64,7 @@ public class ParametersPoolTest {
 
   @Test
   public void taking_unknown_param_by_name_throws_exception() {
-    given(parametersPool = new ParametersPool(Empty.paramList()));
+    given(parametersPool = new ParametersPool(ImmutableList.of()));
     when(parametersPool).take("unknownName");
     thenThrown(IllegalArgumentException.class);
   }
@@ -235,7 +235,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_blob_array_param_is_available_in_optional_set_of_nil_pool() throws Exception {
+  public void optional_blob_array_param_is_available_in_optional_set_of_nil_pool()
+      throws Exception {
     given(parameter = optionalParameter(BLOB_ARRAY, "NAME"));
     given(parametersPool = new ParametersPool(asList(parameter)));
     when(parametersPool.assignableFrom(NIL)).optionalParameters();
@@ -243,7 +244,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_blob_array_param_is_available_in_required_set_of_nil_pool() throws Exception {
+  public void required_blob_array_param_is_available_in_required_set_of_nil_pool()
+      throws Exception {
     given(parameter = requiredParameter(BLOB_ARRAY, "NAME"));
     given(parametersPool = new ParametersPool(asList(parameter)));
     when(parametersPool.assignableFrom(NIL)).requiredParameters();
@@ -251,7 +253,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void optional_file_array_param_is_available_in_optional_set_of_nil_pool() throws Exception {
+  public void optional_file_array_param_is_available_in_optional_set_of_nil_pool()
+      throws Exception {
     given(parameter = optionalParameter(FILE_ARRAY, "NAME"));
     given(parametersPool = new ParametersPool(asList(parameter)));
     when(parametersPool.assignableFrom(NIL)).optionalParameters();
@@ -259,7 +262,8 @@ public class ParametersPoolTest {
   }
 
   @Test
-  public void required_file_array_param_is_available_in_required_set_of_nil_pool() throws Exception {
+  public void required_file_array_param_is_available_in_required_set_of_nil_pool()
+      throws Exception {
     given(parameter = requiredParameter(FILE_ARRAY, "NAME"));
     given(parametersPool = new ParametersPool(asList(parameter)));
     when(parametersPool.assignableFrom(NIL)).requiredParameters();

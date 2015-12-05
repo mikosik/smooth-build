@@ -6,10 +6,11 @@ import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -24,7 +25,7 @@ public class ImmutableModuleTest {
 
   @Test
   public void empty_immutable_module_does_not_contain_function() throws Exception {
-    given(module = new ImmutableModule(Empty.nameFunctionMap()));
+    given(module = new ImmutableModule(new HashMap<>()));
     when(module.containsFunction(name1));
     thenReturned(false);
   }

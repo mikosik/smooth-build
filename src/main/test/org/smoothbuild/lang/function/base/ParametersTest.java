@@ -11,7 +11,6 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.util.Empty;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -25,9 +24,9 @@ public class ParametersTest {
 
   @Test
   public void filter_required_params_converts_empty_list_to_empty_list() throws Exception {
-    given(parameters = Empty.paramList());
+    given(parameters = asList());
     when(Parameters.filterRequiredParameters(parameters));
-    thenReturned(Empty.paramList());
+    thenReturned(asList());
   }
 
   @Test
@@ -35,7 +34,7 @@ public class ParametersTest {
     given(parameter1 = optionalParameter(STRING, "name"));
     given(parameters = asList(parameter1));
     when(Parameters.filterRequiredParameters(parameters));
-    thenReturned(Empty.paramList());
+    thenReturned(asList());
   }
 
   @Test
@@ -60,9 +59,9 @@ public class ParametersTest {
 
   @Test
   public void filter_optional_params_converts_empty_list_to_empty_list() throws Exception {
-    given(parameters = Empty.paramList());
+    given(parameters = asList());
     when(Parameters.filterOptionalParameters(parameters));
-    thenReturned(Empty.paramList());
+    thenReturned(asList());
   }
 
   @Test
@@ -70,7 +69,7 @@ public class ParametersTest {
     given(parameter1 = requiredParameter(STRING, "name"));
     given(parameters = asList(parameter1));
     when(Parameters.filterOptionalParameters(parameters));
-    thenReturned(Empty.paramList());
+    thenReturned(asList());
   }
 
   @Test
@@ -120,9 +119,9 @@ public class ParametersTest {
 
   @Test
   public void sorted_params_for_empty_list_returns_empty_list() throws Exception {
-    given(parameters = Empty.paramList());
+    given(parameters = asList());
     when(Parameters.sortedParameters(parameters));
-    thenReturned(Empty.paramList());
+    thenReturned(asList());
   }
 
   @Test

@@ -14,12 +14,11 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.util.Empty;
 
 public class SignatureTest {
   private final Type type = STRING;
   private final Name name = name("name");
-  private final List<Parameter> parameters = Empty.paramList();
+  private final List<Parameter> parameters = asList();
   private Parameter parameter;
   private Parameter parameter2;
 

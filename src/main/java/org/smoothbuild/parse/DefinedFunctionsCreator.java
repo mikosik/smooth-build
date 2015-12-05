@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.Argument.namedArgument;
@@ -51,7 +52,6 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.UnescapingFailedException;
 
 public class DefinedFunctionsCreator {
@@ -115,7 +115,7 @@ public class DefinedFunctionsCreator {
     private DefinedFunction toFunction(FunctionContext functionContext) {
       Expression expression = toExpression(functionContext.pipe());
       Name name = name(functionContext.functionName().getText());
-      Signature signature = new Signature(expression.type(), name, Empty.paramList());
+      Signature signature = new Signature(expression.type(), name, asList());
       return new DefinedFunction(signature, expression);
     }
 

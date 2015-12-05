@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.expr;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
@@ -12,7 +13,6 @@ import org.junit.Test;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Computer;
-import org.smoothbuild.util.Empty;
 
 public class ExpressionTest {
   private final Type type = STRING;
@@ -53,7 +53,7 @@ public class ExpressionTest {
 
   public static class MyExpression extends Expression {
     public MyExpression(Type type, CodeLocation codeLocation) {
-      super(type, Empty.expressionList(), codeLocation);
+      super(type, asList(), codeLocation);
     }
 
     @Override

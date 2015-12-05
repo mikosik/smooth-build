@@ -34,7 +34,6 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.base.Output;
-import org.smoothbuild.util.Empty;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.hash.HashCode;
@@ -65,7 +64,7 @@ public class OutputsDbTest {
 
   @Test
   public void result_cache_contains_written_result() {
-    given(outputsDb).write(hash, new Output(valuesDb.string("result"), Empty.messageList()));
+    given(outputsDb).write(hash, new Output(valuesDb.string("result"), asList()));
     when(outputsDb.contains(hash));
     thenReturned(true);
   }
@@ -89,7 +88,7 @@ public class OutputsDbTest {
   public void written_file_array_can_be_read_back() throws Exception {
     given(file = file(valuesDb, path, bytes));
     given(fileArray = valuesDb.arrayBuilder(SFile.class).add(file).build());
-    given(outputsDb).write(hash, new Output(fileArray, Empty.messageList()));
+    given(outputsDb).write(hash, new Output(fileArray, asList()));
     when(((Iterable<?>) outputsDb.read(hash, FILE_ARRAY).result()).iterator().next());
     thenReturned(file);
   }
@@ -98,7 +97,7 @@ public class OutputsDbTest {
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(valuesDb, bytes));
     given(blobArray = valuesDb.arrayBuilder(Blob.class).add(blob).build());
-    given(outputsDb).write(hash, new Output(blobArray, Empty.messageList()));
+    given(outputsDb).write(hash, new Output(blobArray, asList()));
     when(((Iterable<?>) outputsDb.read(hash, BLOB_ARRAY).result()).iterator().next());
     thenReturned(blob);
   }
@@ -107,7 +106,7 @@ public class OutputsDbTest {
   public void written_string_array_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string(string));
     given(stringArray = valuesDb.arrayBuilder(SString.class).add(stringValue).build());
-    given(outputsDb).write(hash, new Output(stringArray, Empty.messageList()));
+    given(outputsDb).write(hash, new Output(stringArray, asList()));
     when(((Iterable<?>) outputsDb.read(hash, STRING_ARRAY).result()).iterator().next());
     thenReturned(stringValue);
   }
@@ -115,7 +114,7 @@ public class OutputsDbTest {
   @Test
   public void written_file_can_be_read_back() throws Exception {
     given(file = file(valuesDb, path, bytes));
-    given(outputsDb).write(hash, new Output(file, Empty.messageList()));
+    given(outputsDb).write(hash, new Output(file, asList()));
     when(outputsDb.read(hash, FILE).result());
     thenReturned(file);
   }
@@ -123,7 +122,7 @@ public class OutputsDbTest {
   @Test
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = writeBlob(valuesDb, bytes));
-    given(outputsDb).write(hash, new Output(blob, Empty.messageList()));
+    given(outputsDb).write(hash, new Output(blob, asList()));
     when(outputsDb.read(hash, BLOB).result());
     thenReturned(blob);
   }
@@ -131,7 +130,7 @@ public class OutputsDbTest {
   @Test
   public void writtend_string_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string(string));
-    given(outputsDb).write(hash, new Output(stringValue, Empty.messageList()));
+    given(outputsDb).write(hash, new Output(stringValue, asList()));
     when(((SString) outputsDb.read(hash, STRING).result()).value());
     thenReturned(string);
   }

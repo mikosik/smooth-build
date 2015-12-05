@@ -1,5 +1,6 @@
 package org.smoothbuild.task.exec;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
 
 import java.util.HashMap;
@@ -15,7 +16,6 @@ import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
-import org.smoothbuild.util.Empty;
 
 public class ArtifactBuilder {
   private final ArtifactSaver artifactSaver;
@@ -31,7 +31,7 @@ public class ArtifactBuilder {
 
   public void addArtifact(Function function) {
     Expression expression =
-        callExpression(function, false, CodeLocation.commandLine(), Empty.expressionList());
+        callExpression(function, false, CodeLocation.commandLine(), asList());
     artifacts.put(function.name(), taskGraph.createTasks(expression));
   }
 
