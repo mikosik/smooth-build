@@ -12,12 +12,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class Types {
-
   public static final Type STRING = new StringType();
   public static final Type BLOB = new BlobType();
   public static final Type FILE = new FileType();
   public static final Type NOTHING = new NothingType();
-
   public static final ArrayType STRING_ARRAY = new ArrayType(STRING,
       new TypeLiteral<Array<SString>>() {});
   public static final ArrayType BLOB_ARRAY = new ArrayType(BLOB, new TypeLiteral<Array<Blob>>() {});
@@ -87,34 +85,26 @@ public class Types {
 
   private static ImmutableSet<TypeLiteral<?>> toJTypes(Iterable<Type> types) {
     ImmutableSet.Builder<TypeLiteral<?>> builder = ImmutableSet.builder();
-
     for (Type type : types) {
       builder.add(type.jType());
     }
-
     return builder.build();
   }
 
   private static ImmutableMap<TypeLiteral<?>, Type> createToTypeMap(Iterable<Type> types) {
     ImmutableMap.Builder<TypeLiteral<?>, Type> builder = ImmutableMap.builder();
-
     for (Type type : types) {
       builder.put(type.jType(), type);
     }
-
     return builder.build();
   }
 
   private static ImmutableMap<Type, ArrayType> createElemTypeToArrayTypeMap(
       ImmutableSet<ArrayType> arrayTypes) {
-
     ImmutableMap.Builder<Type, ArrayType> builder = ImmutableMap.builder();
-
     for (ArrayType type : arrayTypes) {
       builder.put(type.elemType(), type);
     }
-
     return builder.build();
   }
-
 }
