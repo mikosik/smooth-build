@@ -1,5 +1,6 @@
 package org.smoothbuild.acceptance;
 
+import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.File;
@@ -12,8 +13,6 @@ import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-
-import com.google.common.base.Joiner;
 
 public class FileArrayMatcher extends TypeSafeMatcher<File> {
   private final String[] params;
@@ -47,8 +46,8 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
   @Override
   protected void describeMismatchSafely(File dir, Description mismatchDescription) {
     try {
-      List<String> actualFiles = actualFiles(dir, dir.getPath().length() + 1);
-      mismatchDescription.appendText("actual: [" + Joiner.on(", ").join(actualFiles) + "]");
+      mismatchDescription.appendText("actual: [" + actualFiles(dir, dir.getPath().length() + 1)
+          .stream().collect(joining(", ")) + "]");
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

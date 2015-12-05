@@ -1,6 +1,7 @@
 package org.smoothbuild.task.exec;
 
-import java.util.List;
+import static java.util.stream.Collectors.joining;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -10,7 +11,6 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Ordering;
 
 public class SmoothExecutor {
@@ -45,8 +45,7 @@ public class SmoothExecutor {
 
   private String indentedNameList(Map<Name, Function> module) {
     String prefix = "\n    ";
-    List<Name> sortedNames = Ordering.usingToString().sortedCopy(module
-        .keySet());
-    return prefix + Joiner.on(prefix).join(sortedNames);
+    return prefix + Ordering.usingToString().sortedCopy(module
+        .keySet()).stream().map(Name::toString).collect(joining(prefix));
   }
 }
