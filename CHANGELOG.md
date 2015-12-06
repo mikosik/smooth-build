@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+Version 0.11.0 (2015.12.06)
+---------------------------
+
  * added java 1.8 as a run-time requirement
  * changed format of 'path' argument to 'file' and 'files' functions
  * renamed 'concatenateStrings' to 'concatenateStringArrays'
