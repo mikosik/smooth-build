@@ -1,6 +1,6 @@
 package org.smoothbuild.db.outputs;
 
-import static org.smoothbuild.SmoothConstants.TASK_RESULTS_DIR;
+import static org.smoothbuild.SmoothConstants.OUTPUTS_DIR;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.SmoothDir;
@@ -16,7 +16,7 @@ public class OutputsDbModule extends AbstractModule {
 
   @Outputs
   @Provides
-  public HashedDb provideTaksOutputsHashedDb(@SmoothDir FileSystem fileSystem) {
-    return new HashedDb(new SubFileSystem(fileSystem, TASK_RESULTS_DIR));
+  public HashedDb provideOutputsHashedDb(@SmoothDir FileSystem fileSystem) {
+    return new HashedDb(new SubFileSystem(fileSystem, OUTPUTS_DIR));
   }
 }
