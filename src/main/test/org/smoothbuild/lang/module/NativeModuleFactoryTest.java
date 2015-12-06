@@ -11,11 +11,14 @@ import static org.testory.Testory.when;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
@@ -24,12 +27,12 @@ import org.smoothbuild.util.Classes;
 import com.google.common.io.ByteStreams;
 
 public class NativeModuleFactoryTest {
-  private Module module;
+  private Map<Name, Function> module;
 
   @Test
   public void module_with_zero_functions_is_allowed() throws Exception {
     given(module = createNativeModule(ModuleWithNoFunctions.class));
-    when(module).availableNames();
+    when(module.keySet());
     thenReturned(Matchers.emptyIterable());
   }
 
@@ -38,7 +41,7 @@ public class NativeModuleFactoryTest {
   @Test
   public void available_names_contains_all_function_names() throws Exception {
     given(module = createNativeModule(ModuleWithTwoFunctions.class));
-    when(module.availableNames());
+    when(module.keySet());
     thenReturned(contains(name("func1"), name("func2")));
   }
 
@@ -75,7 +78,7 @@ public class NativeModuleFactoryTest {
     }
   }
 
-  public static Module createNativeModule(Class<?>... classes) throws Exception {
+  public static Map<Name, Function> createNativeModule(Class<?>... classes) throws Exception {
     File tempJarFile = File.createTempFile("tmp", ".jar");
     try (JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(tempJarFile))) {
       for (Class<?> clazz : classes) {

@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.smoothbuild.cli.Console;
+import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.module.Module;
 
 import com.google.common.collect.ImmutableList;
 
@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
  * function in returned list. Detects cycles in dependency graph.
  */
 public class DependencySorter {
-  public static List<Name> sortDependencies(Module builtinModule,
+  public static List<Name> sortDependencies(Map<Name, Function> builtinModule,
       Map<Name, Set<Dependency>> dependenciesOrig, Console console) {
 
     Worker worker = new Worker(builtinModule, dependenciesOrig, console);
@@ -35,11 +35,11 @@ public class DependencySorter {
     private final DependencyStack stack;
     private final Console console;
 
-    public Worker(Module builtinModule, Map<Name, Set<Dependency>> dependenciesOrig,
+    public Worker(Map<Name, Function> builtinModule, Map<Name, Set<Dependency>> dependenciesOrig,
         Console console) {
       this.console = console;
       this.notSorted = new HashMap<>(dependenciesOrig);
-      this.reachableNames = new HashSet<>(builtinModule.availableNames());
+      this.reachableNames = new HashSet<>(builtinModule.keySet());
       this.sorted = new ArrayList<>(dependenciesOrig.size());
       this.stack = new DependencyStack();
     }

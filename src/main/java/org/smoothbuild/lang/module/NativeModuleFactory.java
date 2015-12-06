@@ -8,16 +8,22 @@ import static org.smoothbuild.util.Classes.binaryPathToBinaryName;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.io.util.JarFile;
+import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.util.ClassLoaders;
 
+import com.google.common.collect.ImmutableMap;
+
 public class NativeModuleFactory {
-  public static Module createNativeModule(Path jarPath)
+  public static ImmutableMap<Name, Function> createNativeModule(Path jarPath)
       throws NativeFunctionImplementationException {
     try {
       return createNativeModuleImpl(jarFile(jarPath));
@@ -26,9 +32,10 @@ public class NativeModuleFactory {
     }
   }
 
-  private static Module createNativeModuleImpl(JarFile jar) throws IOException,
+  private static ImmutableMap<Name, Function> createNativeModuleImpl(JarFile jar)
+      throws IOException,
       NativeFunctionImplementationException {
-    ModuleBuilder builder = new ModuleBuilder();
+    Map<Name, Function> result = new HashMap<>();
     ClassLoader classLoader = classLoader(jar);
     try (JarInputStream jarInputStream = newJarInputStream(jar)) {
       JarEntry entry;
@@ -37,12 +44,18 @@ public class NativeModuleFactory {
         if (fileName.endsWith(CLASS_FILE_EXTENSION)) {
           Class<?> clazz = load(classLoader, binaryPathToBinaryName(fileName));
           for (NativeFunction function : nativeFunctions(clazz, jar.hash())) {
-            builder.addFunction(function);
+            Name name = function.name();
+            if (result.containsKey(name)) {
+              throw new IllegalArgumentException("Function " + name
+                  + " has been already added to this module.");
+            } else {
+              result.put(name, function);
+            }
           }
         }
       }
     }
-    return builder.build();
+    return ImmutableMap.copyOf(result);
   }
 
   private static ClassLoader classLoader(JarFile jar) {

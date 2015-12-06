@@ -6,9 +6,12 @@ import static org.smoothbuild.lang.module.NativeModuleFactory.createNativeModule
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import javax.inject.Singleton;
 
+import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 
 import com.google.inject.AbstractModule;
@@ -21,7 +24,7 @@ public class ModuleModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public Module provideBuiltinModule() throws NativeFunctionImplementationException {
+  public Map<Name, Function> provideBuiltinModule() throws NativeFunctionImplementationException {
     Path funcsJarPath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, "funcs.jar");
     return createNativeModule(funcsJarPath);
   }
