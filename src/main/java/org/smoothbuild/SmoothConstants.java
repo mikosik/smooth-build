@@ -18,7 +18,7 @@ public class SmoothConstants {
   public static final Charset CHARSET = Charsets.UTF_8;
 
   public static final Path SMOOTH_DIR = path(".smooth");
-  public static final Path OBJECTS_DIR = path("objects");
+  public static final Path VALUES_DIR = path("values");
   public static final Path TASK_RESULTS_DIR = path("taskoutputs");
   public static final Path ARTIFACTS_DIR = path("artifacts");
 }

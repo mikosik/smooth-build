@@ -1,6 +1,6 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.SmoothConstants.OBJECTS_DIR;
+import static org.smoothbuild.SmoothConstants.VALUES_DIR;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.SmoothDir;
@@ -16,7 +16,7 @@ public class ValuesDbModule extends AbstractModule {
 
   @Values
   @Provides
-  public HashedDb provideObjectsHashedDb(@SmoothDir FileSystem fileSystem) {
-    return new HashedDb(new SubFileSystem(fileSystem, OBJECTS_DIR));
+  public HashedDb provideValuesHashedDb(@SmoothDir FileSystem fileSystem) {
+    return new HashedDb(new SubFileSystem(fileSystem, VALUES_DIR));
   }
 }
