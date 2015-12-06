@@ -1,6 +1,6 @@
 package org.smoothbuild.task.save;
 
-import static org.smoothbuild.SmoothConstants.OBJECTS_DIR;
+import static org.smoothbuild.SmoothConstants.VALUES_DIR;
 import static org.smoothbuild.db.values.ValuesDb.valuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.function.base.Name.name;
@@ -27,7 +27,7 @@ import org.smoothbuild.task.exec.ExecutionException;
 public class FileArraySaverTest {
   private final Name name = name("name");
   private final MemoryFileSystem fileSystem = new MemoryFileSystem();
-  private final ValuesDb valuesDb = valuesDb(new SubFileSystem(fileSystem, OBJECTS_DIR));
+  private final ValuesDb valuesDb = valuesDb(new SubFileSystem(fileSystem, VALUES_DIR));
 
   private FileArraySaver fileArraySaver;
   private Array<SFile> array;
