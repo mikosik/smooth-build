@@ -52,9 +52,6 @@ Each type is assignable to itself.
 File can be assigned to Blob.
 File[] can be assigned to Blob[].
 
-There are obviously some important types (like Boolean) missing.
-They will be added before smooth-build reaches version 1.0.
-
 
 ### Functions
 
