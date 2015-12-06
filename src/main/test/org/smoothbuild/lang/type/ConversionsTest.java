@@ -41,9 +41,8 @@ public class ConversionsTest {
         from == FILE_ARRAY && to == BLOB_ARRAY ||
         from == NIL && ARRAY_TYPES.contains(to);
     String canOrCannot = canConvert ? "can" : "cannot";
-    return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to), () -> {
-      assertEquals(canConvert(from, to), canConvert);
-    });
+    return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to), () -> assertEquals(
+        canConvert(from, to), canConvert));
   }
 
   @Quackery
@@ -57,8 +56,7 @@ public class ConversionsTest {
   }
 
   private static Case testConvertFunctionName(Type from, Type to, String functionName) {
-    return newCase(format("{0} to {1} is named {2}", from, to, functionName), () -> {
-      assertEquals(convertFunctionName(from, to), name(functionName));
-    });
+    return newCase(format("{0} to {1} is named {2}", from, to, functionName), () -> assertEquals(
+        convertFunctionName(from, to), name(functionName)));
   }
 }
