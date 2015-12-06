@@ -13,8 +13,8 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.Console;
+import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.module.Module;
 
 /**
  * Transforms script ParseTree into map that maps function name to its
@@ -24,7 +24,7 @@ import org.smoothbuild.lang.module.Module;
 public class FunctionsCollector {
 
   public static Map<Name, FunctionContext> collectFunctions(Console console,
-      Module builtinModule, ModuleContext module) {
+      Map<Name, Function> builtinModule, ModuleContext module) {
     Worker worker = new Worker(console, builtinModule);
     worker.visit(module);
     if (console.isErrorReported()) {
@@ -34,12 +34,12 @@ public class FunctionsCollector {
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
-    private final Module builtinModule;
+    private final Map<Name, Function> builtinModule;
     private final Console console;
     private final Map<Name, FunctionContext> functions;
 
     @Inject
-    public Worker(Console console, Module builtinModule) {
+    public Worker(Console console, Map<Name, Function> builtinModule) {
       this.console = console;
       this.builtinModule = builtinModule;
       this.functions = new HashMap<>();
@@ -53,7 +53,7 @@ public class FunctionsCollector {
         console.error(locationOf(nameContext), "Function " + name + " is already defined.");
         return null;
       }
-      if (builtinModule.containsFunction(name)) {
+      if (builtinModule.containsKey(name)) {
         console.error(locationOf(nameContext), "Function " + name
             + " cannot override builtin function with the same name.");
         return null;

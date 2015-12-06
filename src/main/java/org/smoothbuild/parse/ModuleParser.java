@@ -22,17 +22,15 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.err.NoSuchFileException;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.module.ImmutableModule;
-import org.smoothbuild.lang.module.Module;
 
 public class ModuleParser {
   private final FileSystem fileSystem;
-  private final Module builtinModule;
+  private final Map<Name, Function> builtinModule;
   private final DefinedFunctionsCreator definedFunctionsCreator;
   private final Console console;
 
   @Inject
-  public ModuleParser(@ProjectDir FileSystem fileSystem, Module builtinModule,
+  public ModuleParser(@ProjectDir FileSystem fileSystem, Map<Name, Function> builtinModule,
       DefinedFunctionsCreator definedFunctionsCreator, Console console) {
     this.fileSystem = fileSystem;
     this.builtinModule = builtinModule;
@@ -40,7 +38,7 @@ public class ModuleParser {
     this.console = console;
   }
 
-  public Module createModule() {
+  public Map<Name, Function> createModule() {
     InputStream inputStream = scriptInputStream(DEFAULT_SCRIPT);
     return createModule(inputStream, DEFAULT_SCRIPT);
   }
@@ -54,7 +52,7 @@ public class ModuleParser {
     }
   }
 
-  private Module createModule(InputStream inputStream, Path scriptFile) {
+  private Map<Name, Function> createModule(InputStream inputStream, Path scriptFile) {
     ModuleContext module = parseScript(console, inputStream, scriptFile);
     Map<Name, FunctionContext> functions = collectFunctions(console, builtinModule, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
@@ -64,16 +62,16 @@ public class ModuleParser {
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
         console, builtinModule, functions, sorted);
 
-    return new ImmutableModule(definedFunctions);
+    return definedFunctions;
   }
 
-  public static void detectUndefinedFunctions(Console console, Module builtinModule,
+  public static void detectUndefinedFunctions(Console console, Map<Name, Function> builtinModule,
       Map<Name, Set<Dependency>> dependencies) {
     Set<Name> declaredFunctions = dependencies.keySet();
     for (Set<Dependency> functionDependecies : dependencies.values()) {
       for (Dependency dependency : functionDependecies) {
         Name name = dependency.functionName();
-        if (!builtinModule.containsFunction(name) && !declaredFunctions.contains(name)) {
+        if (!builtinModule.containsKey(name) && !declaredFunctions.contains(name)) {
           console.error(dependency.location(), "Call to unknown function " + name + ".");
         }
       }

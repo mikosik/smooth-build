@@ -1,6 +1,7 @@
 package org.smoothbuild.task.exec;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -8,7 +9,6 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.module.Module;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Ordering;
@@ -23,14 +23,14 @@ public class SmoothExecutor {
     this.console = console;
   }
 
-  public void execute(Set<Name> functions, Module module) {
+  public void execute(Set<Name> functions, Map<Name, Function> module) {
     if (functions.isEmpty()) {
       console.error("No function passed to build command.\n"
           + "  Pass at least one from following available functions:" + indentedNameList(module));
       throw new ExecutionException();
     }
     for (Name name : functions) {
-      Function function = module.getFunction(name);
+      Function function = module.get(name);
       if (function == null) {
         console.error("Unknown function " + name + " passed in command line.\n"
             + "  Only following function(s) are available:"
@@ -43,10 +43,10 @@ public class SmoothExecutor {
     artifactBuilder.runBuild();
   }
 
-  private String indentedNameList(Module module) {
+  private String indentedNameList(Map<Name, Function> module) {
     String prefix = "\n    ";
     List<Name> sortedNames = Ordering.usingToString().sortedCopy(module
-        .availableNames());
+        .keySet());
     return prefix + Joiner.on(prefix).join(sortedNames);
   }
 }

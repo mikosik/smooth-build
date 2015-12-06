@@ -46,7 +46,6 @@ import org.smoothbuild.lang.function.def.Argument;
 import org.smoothbuild.lang.function.def.ArgumentExpressionCreator;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.CodeLocation;
-import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -67,8 +66,9 @@ public class DefinedFunctionsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function> createDefinedFunctions(Console console, Module builtinModule,
-      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+  public Map<Name, Function> createDefinedFunctions(Console console,
+      Map<Name, Function> builtinModule, Map<Name, FunctionContext> functionContexts,
+      List<Name> sorted) {
     Worker worker = new Worker(console, builtinModule, functionContexts, sorted,
         valuesDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
@@ -80,7 +80,7 @@ public class DefinedFunctionsCreator {
 
   private static class Worker {
     private final Console console;
-    private final Module builtinModule;
+    private final Map<Name, Function> builtinModule;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
     private final ValuesDb valuesDb;
@@ -88,7 +88,7 @@ public class DefinedFunctionsCreator {
     private final ImplicitConverter implicitConverter;
     private final Map<Name, Function> functions = new HashMap<>();
 
-    public Worker(Console console, Module builtinModule,
+    public Worker(Console console, Map<Name, Function> builtinModule,
         Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValuesDb valuesDb,
         ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
       this.console = console;
@@ -259,7 +259,7 @@ public class DefinedFunctionsCreator {
       // UndefinedFunctionDetector has been run already so we can be sure at
       // this point that function with given name exists either among imported
       // functions or among already handled defined functions.
-      Function function = builtinModule.getFunction(name);
+      Function function = builtinModule.get(name);
       if (function == null) {
         return functions.get(name);
       } else {

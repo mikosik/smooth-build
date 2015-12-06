@@ -6,12 +6,13 @@ import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.module.Module;
 import org.smoothbuild.parse.ModuleParser;
 import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionException;
@@ -37,7 +38,7 @@ public class Build implements Command {
     }
 
     try {
-      Module module = moduleParser.createModule();
+      Map<Name, Function> module = moduleParser.createModule();
       smoothExecutor.execute(functionNames, module);
     } catch (ParsingException | ExecutionException e) {
       return EXIT_CODE_ERROR;
