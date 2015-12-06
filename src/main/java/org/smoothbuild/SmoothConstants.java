@@ -19,6 +19,6 @@ public class SmoothConstants {
 
   public static final Path SMOOTH_DIR = path(".smooth");
   public static final Path VALUES_DIR = path("values");
-  public static final Path TASK_RESULTS_DIR = path("taskoutputs");
+  public static final Path OUTPUTS_DIR = path("outputs");
   public static final Path ARTIFACTS_DIR = path("artifacts");
 }
