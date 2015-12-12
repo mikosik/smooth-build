@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -10,7 +11,6 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
@@ -86,7 +86,8 @@ public class HashedDbTest {
 
   @Test
   public void reading_not_written_value_fails() throws Exception {
-    when(hashedDb).openInputStream(HashCode.fromInt(33));
-    thenThrown(NoObjectWithGivenHashException.class);
+    given(hash = HashCode.fromInt(33));
+    when(hashedDb).openInputStream(hash);
+    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

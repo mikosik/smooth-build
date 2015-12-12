@@ -2,6 +2,7 @@ package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -9,7 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
@@ -115,8 +116,9 @@ public class SStringTest {
 
   @Test
   public void reading_not_stored_sstring_fails() throws Exception {
-    given(sstring = (SString) valuesDb.read(STRING, HashCode.fromInt(33)));
+    given(hash = HashCode.fromInt(33));
+    given(sstring = (SString) valuesDb.read(STRING, hash));
     when(sstring).value();
-    thenThrown(NoObjectWithGivenHashException.class);
+    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

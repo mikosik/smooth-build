@@ -1,6 +1,7 @@
 package org.smoothbuild.db.hashed;
 
 import static org.smoothbuild.db.hashed.HashedDb.memoryHashedDb;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -8,8 +9,6 @@ import static org.testory.Testory.when;
 
 import org.junit.After;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
-import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
 
 import com.google.common.hash.HashCode;
 
@@ -44,7 +43,7 @@ public class MarshallingTest {
     given(hash = hashedDb.write(new byte[1]));
     given(unmarshaller = new Unmarshaller(hashedDb, hash));
     when(unmarshaller).readHash();
-    thenThrown(TooFewBytesToUnmarshallValueException.class);
+    thenThrown(exception(new HashedDbException(corruptedMessage("hash", hash, 20, 1))));
   }
 
   @Test
@@ -53,7 +52,7 @@ public class MarshallingTest {
     given(hash = hashedDb.write(new byte[0]));
     given(unmarshaller = new Unmarshaller(hashedDb, hash));
     when(unmarshaller).readHash();
-    thenThrown(TooFewBytesToUnmarshallValueException.class);
+    thenThrown(exception(new HashedDbException(corruptedMessage("hash", hash, 20, 0))));
   }
 
   @Test
@@ -71,7 +70,7 @@ public class MarshallingTest {
     given(hash = hashedDb.write(new byte[1]));
     given(unmarshaller = new Unmarshaller(hashedDb, hash));
     when(unmarshaller).tryReadHash();
-    thenThrown(TooFewBytesToUnmarshallValueException.class);
+    thenThrown(exception(new HashedDbException(corruptedMessage("hash", hash, 20, 1))));
   }
 
   @Test
@@ -102,17 +101,24 @@ public class MarshallingTest {
     given(hash = hashedDb.write(new byte[0]));
     given(unmarshaller = new Unmarshaller(hashedDb, hash));
     when(unmarshaller).readInt();
-    thenThrown(TooFewBytesToUnmarshallValueException.class);
+    thenThrown(exception(new HashedDbException(corruptedMessage("int", hash, 4, 0))));
   }
 
   @Test()
   public void unmarshallling_not_stored_value_fails() throws Exception {
     given(hashedDb = memoryHashedDb());
-    when(() -> new Unmarshaller(hashedDb, Hash.string("abc")));
-    thenThrown(NoObjectWithGivenHashException.class);
+    given(hash = Hash.string("abc"));
+    when(() -> new Unmarshaller(hashedDb, hash));
+    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 
   private static HashCode hashOfProperSize() {
     return HashCode.fromBytes(new byte[Hash.size()]);
+  }
+
+  private static String corruptedMessage(String valueName, HashCode hash, int expected,
+      int available) {
+    return "Corrupted " + hash + " object. Value " + valueName + " has expected size = " + expected
+        + " but only " + available + " is available.";
   }
 }

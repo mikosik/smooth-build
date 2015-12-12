@@ -1,7 +1,7 @@
-package org.smoothbuild.db.hashed.err;
+package org.smoothbuild.db.hashed;
 
 public class HashedDbException extends RuntimeException {
   public HashedDbException(String message) {
-    super("Internal error in smooth hashed DB:\n" + message);
+    super(message);
   }
 }

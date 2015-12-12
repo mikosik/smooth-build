@@ -4,9 +4,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedException;
-import org.smoothbuild.db.hashed.err.TooFewBytesToUnmarshallValueException;
-
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Ints;
 
@@ -48,12 +45,14 @@ public class Unmarshaller implements Closeable {
         if (read == -1 && allowNull) {
           return null;
         } else {
-          throw new TooFewBytesToUnmarshallValueException(hash, valueName, size, read);
+          read = Math.max(0, read);
+          throw new HashedDbException("Corrupted " + hash + " object. Value " + valueName
+              + " has expected size = " + size + " but only " + read + " is available.");
         }
       }
       return bytes;
     } catch (IOException e) {
-      throw new ReadingHashedObjectFailedException(hash, e);
+      throw new HashedDbException("IO error occurred while reading " + hash + " object.");
     }
   }
 
@@ -62,7 +61,7 @@ public class Unmarshaller implements Closeable {
     try {
       inputStream.close();
     } catch (IOException e) {
-      throw new ReadingHashedObjectFailedException(hash, e);
+      throw new HashedDbException("IO error occurred while reading " + hash + " object.");
     }
   }
 }
