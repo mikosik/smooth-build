@@ -117,6 +117,7 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
+            <compilerarg value="-parameters"/>
             <src path="${dir.src.func.java}"/>
             <classpath>
                 <path refid="classpath.for.func.java"/>
@@ -170,6 +171,7 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
+            <compilerarg value="-parameters"/>
             <src path="${dir.src.main.test}"/>
             <classpath>
                 <path refid="classpath.for.main.test"/>
@@ -250,6 +252,7 @@
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
+            <compilerarg value="-parameters"/>
             <src path="${dir.src.acceptance}"/>
             <classpath>
                 <path refid="classpath.for.acceptance"/>

@@ -18,7 +18,6 @@ import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
@@ -58,7 +57,7 @@ public class NativeFunctionInvokeTest {
 
   public static class StringIdentity {
     @SmoothFunction
-    public static SString stringIdentity(Container container, @Name("string") SString string) {
+    public static SString stringIdentity(Container container, SString string) {
       return string;
     }
   }

@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.blob;
 
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -10,10 +9,8 @@ import org.smoothbuild.lang.value.Blob;
 public class ConcatenateBlobArraysFunction {
 
   @SmoothFunction
-  public static Array<Blob> concatenateBlobArrays(
-      Container container,
-      @Name("blobs") Array<Blob> blobs,
-      @Name("with") Array<Blob> with) {
+  public static Array<Blob> concatenateBlobArrays(Container container, Array<Blob> blobs,
+      Array<Blob> with) {
     ArrayBuilder<Blob> builder = container.create().arrayBuilder(Blob.class);
 
     for (Blob blob : blobs) {

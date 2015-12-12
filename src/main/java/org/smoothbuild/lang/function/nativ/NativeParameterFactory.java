@@ -5,14 +5,10 @@ import static org.smoothbuild.lang.type.Types.jTypeToType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collection;
 
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.nativ.err.DuplicatedAnnotationException;
-import org.smoothbuild.lang.function.nativ.err.IllegalParameterNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParameterTypeException;
-import org.smoothbuild.lang.function.nativ.err.MissingNameAnnotationException;
 import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.type.Type;
@@ -23,12 +19,12 @@ import com.google.inject.TypeLiteral;
 
 public class NativeParameterFactory {
 
-  public static Parameter createParameter(Method method, java.lang.reflect.Type reflectType,
+  public static Parameter createParameter(Method method, java.lang.reflect.Parameter jParameter,
       Annotation[] annotations) throws NativeFunctionImplementationException {
     Multimap<Class<?>, Annotation> annotationMap = annotationsMap(annotations);
-    Type type = type(method, reflectType);
+    Type type = type(method, jParameter.getParameterizedType());
+    String name = jParameter.getName();
     boolean isRequired = isRequired(method, annotationMap);
-    String name = name(method, annotationMap);
     return parameter(type, name, isRequired);
   }
 
@@ -39,24 +35,6 @@ public class NativeParameterFactory {
       throw new IllegalParameterTypeException(method, reflectType);
     }
     return type;
-  }
-
-  private static String name(Method method, Multimap<Class<?>, Annotation> annotations)
-      throws NativeFunctionImplementationException {
-    Collection<Annotation> names = annotations.get(org.smoothbuild.lang.plugin.Name.class);
-    switch (names.size()) {
-      case 0:
-        throw new MissingNameAnnotationException(method);
-      case 1:
-        String name = ((org.smoothbuild.lang.plugin.Name) names.iterator().next()).value();
-        if (Name.isLegalName(name)) {
-          return name;
-        } else {
-          throw new IllegalParameterNameException(method, name);
-        }
-      default:
-        throw new DuplicatedAnnotationException(method, org.smoothbuild.lang.plugin.Name.class);
-    }
   }
 
   private static boolean isRequired(Method method, Multimap<Class<?>, Annotation> annotations)
