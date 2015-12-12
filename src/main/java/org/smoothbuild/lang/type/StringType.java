@@ -12,14 +12,4 @@ public class StringType extends Type {
   public SString defaultValue(ValuesDb valuesDb) {
     return valuesDb.string("");
   }
-
-  @Override
-  public boolean isAllowedAsResult() {
-    return true;
-  }
-
-  @Override
-  public boolean isAllowedAsParameter() {
-    return true;
-  }
 }

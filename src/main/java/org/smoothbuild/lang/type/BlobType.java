@@ -12,14 +12,4 @@ public class BlobType extends Type {
   public Blob defaultValue(ValuesDb valuesDb) {
     return valuesDb.blobBuilder().build();
   }
-
-  @Override
-  public boolean isAllowedAsResult() {
-    return true;
-  }
-
-  @Override
-  public boolean isAllowedAsParameter() {
-    return true;
-  }
 }

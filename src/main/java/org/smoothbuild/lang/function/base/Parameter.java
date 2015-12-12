@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.base;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 
@@ -28,16 +27,10 @@ public class Parameter {
   }
 
   protected Parameter(Type type, String name, boolean isRequired) {
-    this.type = checkAllowedType(type);
+    this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.isRequired = isRequired;
     this.nameHash = Hash.string(name);
-  }
-
-  private Type checkAllowedType(Type type) {
-    checkNotNull(type);
-    checkArgument(type.isAllowedAsParameter());
-    return type;
   }
 
   public Type type() {

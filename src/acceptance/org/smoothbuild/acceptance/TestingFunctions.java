@@ -15,6 +15,7 @@ import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 
@@ -62,6 +63,21 @@ public class TestingFunctions {
     public static Array<SString> stringArrayIdentity(Container container,
         Array<SString> stringArray) {
       return stringArray;
+    }
+  }
+
+  public static class NothingIdentity {
+    @SmoothFunction
+    public static Nothing nothingIdentity(Container container, Nothing nothing) {
+      return nothing;
+    }
+  }
+
+  public static class NothingArrayIdentity {
+    @SmoothFunction
+    public static Array<Nothing> nothingArrayIdentity(Container container,
+        Array<Nothing> nothingArray) {
+      return nothingArray;
     }
   }
 

@@ -31,10 +31,6 @@ public abstract class Type {
 
   public abstract Value defaultValue(ValuesDb valuesDb);
 
-  public abstract boolean isAllowedAsResult();
-
-  public abstract boolean isAllowedAsParameter();
-
   @Override
   public final boolean equals(Object object) {
     return this == object;

@@ -23,14 +23,4 @@ public class ArrayType extends Type {
     Class<? extends Value> rawType = (Class<? extends Value>) elemType.jType().getRawType();
     return valuesDb.arrayBuilder(rawType).build();
   }
-
-  @Override
-  public boolean isAllowedAsResult() {
-    return true;
-  }
-
-  @Override
-  public boolean isAllowedAsParameter() {
-    return true;
-  }
 }

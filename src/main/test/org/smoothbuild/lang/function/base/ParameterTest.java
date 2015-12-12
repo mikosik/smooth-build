@@ -72,18 +72,13 @@ public class ParameterTest {
   @Test
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
-
     tester.addEqualityGroup(parameter(STRING, "equal", false), parameter(STRING, "equal", false));
-
     for (Type type : Types.allTypes()) {
-      if (type.isAllowedAsParameter()) {
-        tester.addEqualityGroup(parameter(type, "name", false));
-        tester.addEqualityGroup(parameter(type, "name", true));
-        tester.addEqualityGroup(parameter(type, "name2", false));
-        tester.addEqualityGroup(parameter(type, "name2", true));
-      }
+      tester.addEqualityGroup(parameter(type, "name", false));
+      tester.addEqualityGroup(parameter(type, "name", true));
+      tester.addEqualityGroup(parameter(type, "name2", false));
+      tester.addEqualityGroup(parameter(type, "name2", true));
     }
-
     tester.testEquals();
   }
 

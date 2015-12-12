@@ -28,7 +28,7 @@ public class NativeParameterFactory {
   private static Type type(Method method, java.lang.reflect.Type reflectType)
       throws NativeFunctionImplementationException {
     Type type = jTypeToType(TypeLiteral.get(reflectType));
-    if (type == null || !type.isAllowedAsParameter()) {
+    if (type == null) {
       throw new NativeFunctionImplementationException(method,
           "It has parameter with illegal java type '" + reflectType.getTypeName() + "'.");
     }

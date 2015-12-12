@@ -93,7 +93,7 @@ public class NativeFunctionFactory {
       throws NativeFunctionImplementationException {
     TypeLiteral<?> jType = methodJType(functionMethod);
     Type type = jTypeToType(jType);
-    if (type == null || !type.isAllowedAsResult()) {
+    if (type == null) {
       throw new NativeFunctionImplementationException(functionMethod,
           "It has is illegal result type '" + jType + "'.");
     }

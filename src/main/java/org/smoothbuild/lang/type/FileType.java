@@ -19,14 +19,4 @@ public class FileType extends Type {
     Blob content = (Blob) BLOB.defaultValue(valuesDb);
     return valuesDb.file(path, content);
   }
-
-  @Override
-  public boolean isAllowedAsResult() {
-    return true;
-  }
-
-  @Override
-  public boolean isAllowedAsParameter() {
-    return true;
-  }
 }
