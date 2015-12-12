@@ -22,12 +22,16 @@ import org.smoothbuild.util.DuplicatesDetector;
 import com.google.common.collect.ImmutableList;
 
 public class Build implements Command {
+  private final Console console;
+  private final ModuleParser moduleParser;
+  private final SmoothExecutor smoothExecutor;
+
   @Inject
-  private Console console;
-  @Inject
-  private ModuleParser moduleParser;
-  @Inject
-  private SmoothExecutor smoothExecutor;
+  public Build(Console console, ModuleParser moduleParser, SmoothExecutor smoothExecutor) {
+    this.console = console;
+    this.moduleParser = moduleParser;
+    this.smoothExecutor = smoothExecutor;
+  }
 
   @Override
   public int run(String... functions) {
