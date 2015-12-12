@@ -4,26 +4,51 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.function.Function;
 
-import org.smoothbuild.db.values.marshal.ArrayMarshaller;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.lang.type.ArrayType;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 /**
  * Array value in smooth language.
  */
 public class Array<T extends Value> extends Value implements Iterable<T> {
-  private final ArrayMarshaller<T> marshaller;
+  private final Function<HashCode, T> valueConstructor;
+  private final HashedDb hashedDb;
 
-  public Array(HashCode hash, ArrayType arrayType, ArrayMarshaller<T> marshaller) {
+  public Array(HashCode hash, ArrayType arrayType, Function<HashCode, T> valueConstructor,
+      HashedDb hashedDb) {
     super(arrayType, hash);
-    this.marshaller = marshaller;
+    this.valueConstructor = valueConstructor;
+    this.hashedDb = hashedDb;
+  }
+
+  public static <T extends Value> Array<T> storeArrayInDb(List<? extends Value> elements,
+      ArrayType arrayType, Function<HashCode, T> valueConstructor, HashedDb hashedDb) {
+    Marshaller marshaller = new Marshaller(hashedDb);
+    for (Value element : elements) {
+      marshaller.write(element.hash());
+    }
+    HashCode hash = marshaller.close();
+    return new Array<T>(hash, arrayType, valueConstructor, hashedDb);
   }
 
   @Override
   public Iterator<T> iterator() {
-    return marshaller.readElements(hash()).iterator();
+    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash())) {
+      ImmutableList.Builder<T> builder = ImmutableList.builder();
+      HashCode elementHash = null;
+      while ((elementHash = unmarshaller.tryReadHash()) != null) {
+        builder.add(valueConstructor.apply(elementHash));
+      }
+      return builder.build().iterator();
+    }
   }
 
   @Override

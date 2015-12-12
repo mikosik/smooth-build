@@ -5,15 +5,15 @@ import static com.google.common.base.Preconditions.checkState;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.db.values.marshal.BlobMarshaller;
+import org.smoothbuild.db.hashed.HashedDb;
 
 public class BlobBuilder {
-  private final BlobMarshaller marshaller;
+  private final HashedDb hashedDb;
   private ByteArrayOutputStream outputStream;
   private boolean closed;
 
-  public BlobBuilder(BlobMarshaller marshaller) {
-    this.marshaller = marshaller;
+  public BlobBuilder(HashedDb hashedDb) {
+    this.hashedDb = hashedDb;
     this.closed = false;
   }
 
@@ -26,7 +26,7 @@ public class BlobBuilder {
 
   public Blob build() {
     closed = true;
-    return marshaller.write(getBytes());
+    return Blob.storeBlobInDb(getBytes(), hashedDb);
   }
 
   private byte[] getBytes() {

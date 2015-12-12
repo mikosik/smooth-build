@@ -1,34 +1,39 @@
 package org.smoothbuild.lang.value;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.lang.value.Array.storeArrayInDb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-import org.smoothbuild.db.values.marshal.ArrayMarshaller;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.type.ArrayType;
+
+import com.google.common.hash.HashCode;
 
 public class ArrayBuilder<T extends Value> {
-  private final ArrayMarshaller<T> marshaller;
-  private final Class<?> elementClass;
-  private final List<T> result;
+  private final ArrayType type;
+  private final Function<HashCode, T> elementMarshaller;
+  private final HashedDb hashedDb;
+  private final List<T> elements;
 
-  public ArrayBuilder(ArrayMarshaller<T> arrayMarshaller, Class<?> elementClass) {
-    this.marshaller = arrayMarshaller;
-    this.elementClass = elementClass;
-    this.result = new ArrayList<>();
+  public ArrayBuilder(ArrayType type, Function<HashCode, T> elementMarshaller, HashedDb hashedDb) {
+    this.type = type;
+    this.elementMarshaller = elementMarshaller;
+    this.hashedDb = hashedDb;
+    this.elements = new ArrayList<>();
   }
 
   public ArrayBuilder<T> add(T elem) {
-    checkNotNull(elem);
-    if (!elementClass.isAssignableFrom(elem.getClass())) {
-      throw new IllegalArgumentException("Element must be of type "
-          + elementClass.getCanonicalName());
+    Class<?> required = type.elemType().jType().getRawType();
+    if (!required.isAssignableFrom(elem.getClass())) {
+      throw new IllegalArgumentException("Element must be of type " + required.getCanonicalName());
     }
-    result.add(elem);
+    elements.add(elem);
     return this;
   }
 
   public Array<T> build() {
-    return marshaller.write(result);
+    return storeArrayInDb(elements, type, elementMarshaller, hashedDb);
   }
 }

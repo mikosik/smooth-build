@@ -4,20 +4,19 @@ import static org.smoothbuild.db.hashed.HashedDb.memoryHashedDb;
 import static org.smoothbuild.lang.type.Types.arrayElementJTypes;
 import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
 import static org.smoothbuild.lang.type.Types.jTypeToType;
+import static org.smoothbuild.lang.value.SFile.storeFileInDb;
+import static org.smoothbuild.lang.value.SString.storeStringInDb;
+
+import java.util.function.Function;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.values.marshal.ArrayMarshaller;
-import org.smoothbuild.db.values.marshal.BlobMarshaller;
-import org.smoothbuild.db.values.marshal.FileMarshaller;
-import org.smoothbuild.db.values.marshal.NothingMarshaller;
-import org.smoothbuild.db.values.marshal.StringMarshaller;
-import org.smoothbuild.db.values.marshal.ValueMarshaller;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
+import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -56,49 +55,53 @@ public class ValuesDb implements ValueFactory {
 
   private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type,
       Class<?> elementClass) {
-    ArrayMarshaller<T> marshaller = (ArrayMarshaller<T>) marshaller(type);
-    return new ArrayBuilder<T>(marshaller, elementClass);
+    return new ArrayBuilder<T>(type, (Function<HashCode, T>) valueConstructor(type.elemType()),
+        hashedDb);
   }
 
   @Override
   public SFile file(SString path, Blob content) {
-    return new FileMarshaller(hashedDb).write(path, content);
+    return storeFileInDb(path, content, hashedDb);
   }
 
   @Override
   public BlobBuilder blobBuilder() {
-    return new BlobBuilder(new BlobMarshaller(hashedDb));
+    return new BlobBuilder(hashedDb);
   }
 
   @Override
   public SString string(String string) {
-    return new StringMarshaller(hashedDb).write(string);
+    return storeStringInDb(string, hashedDb);
   }
 
   public Value read(Type type, HashCode hash) {
-    return marshaller(type).read(hash);
+    return valueConstructor(type).apply(hash);
   }
 
-  private ValueMarshaller<?> marshaller(Type type) {
+  private Function<HashCode, ? extends Value> valueConstructor(Type type) {
     if (type == Types.STRING) {
-      return new StringMarshaller(hashedDb);
+      return (hash) -> new SString(hash, hashedDb);
     }
     if (type == Types.BLOB) {
-      return new BlobMarshaller(hashedDb);
+      return (hash) -> new Blob(hash, hashedDb);
     }
     if (type == Types.FILE) {
-      return new FileMarshaller(hashedDb);
+      return (hash) -> new SFile(hash, hashedDb);
     }
     if (type == Types.NOTHING) {
-      return new NothingMarshaller();
+      return (hash) -> {
+        throw new UnsupportedOperationException("Nothing cannot be constructed.");
+      };
     }
     if (type instanceof ArrayType) {
-      return arrayMarshaller((ArrayType) type);
+      ArrayType arrayType = (ArrayType) type;
+      return (hash) -> arrayMarshaller(arrayType, valueConstructor(arrayType.elemType()), hash);
     }
     throw new RuntimeException("Unexpected type: " + type);
   }
 
-  private ArrayMarshaller<?> arrayMarshaller(ArrayType arrayType) {
-    return new ArrayMarshaller<>(hashedDb, arrayType, marshaller(arrayType.elemType()));
+  private <T extends Value> Array<T> arrayMarshaller(ArrayType type,
+      Function<HashCode, T> valueConstructor, HashCode hash) {
+    return new Array<T>(hash, type, valueConstructor, hashedDb);
   }
 }
