@@ -5,7 +5,8 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
+
+import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.hash.Funnels;
 import com.google.common.hash.HashCode;
@@ -31,7 +32,7 @@ public class Hash {
     return function().hashBytes(bytes);
   }
 
-  public static HashCode file(Path path) throws IOException {
+  public static HashCode file(java.nio.file.Path path) throws IOException {
     try (InputStream inputStream = new FileInputStream(path.toFile())) {
       return stream(inputStream);
     }
@@ -45,6 +46,10 @@ public class Hash {
 
   public static int size() {
     return function().bits() / 8;
+  }
+
+  public static Path toPath(HashCode hash) {
+    return Path.path(hash.toString());
   }
 
   private static HashFunction function() {

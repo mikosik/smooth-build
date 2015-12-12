@@ -9,7 +9,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.Path;
 
+import com.google.common.hash.HashCode;
 import com.google.common.io.Files;
 
 public class HashTest {
@@ -18,8 +20,7 @@ public class HashTest {
   private byte[] bytes;
   private ByteArrayInputStream inputStream;
   private File file;
-
-  // Hash.string()
+  private HashCode hash;
 
   @Test
   public void hash_of_given_string_is_always_the_same() {
@@ -33,8 +34,6 @@ public class HashTest {
     thenReturned(not(Hash.string(string2)));
   }
 
-  // Hash.integer()
-
   @Test
   public void hash_of_given_integer_is_always_the_same() {
     when(Hash.integer(33));
@@ -46,8 +45,6 @@ public class HashTest {
     when(Hash.integer(33));
     thenReturned(not(Hash.integer(34)));
   }
-
-  // Hash.bytes()
 
   @Test
   public void hash_of_given_bytes_is_always_the_same() {
@@ -61,8 +58,6 @@ public class HashTest {
     thenReturned(not(Hash.bytes(string2.getBytes())));
   }
 
-  // Hash.file()
-
   @Test
   public void hash_of_file_is_equal_to_hash_of_its_bytes() throws Exception {
     given(bytes = new byte[] { 1, 2, 3, 4, 5 });
@@ -71,8 +66,6 @@ public class HashTest {
     when(Hash.file(file.toPath()));
     thenReturned(Hash.bytes(bytes));
   }
-
-  // Hash.stream()
 
   @Test
   public void hash_of_input_stream_is_equal_to_hash_of_its_bytes() throws Exception {
@@ -88,5 +81,12 @@ public class HashTest {
     given(inputStream = new ByteArrayInputStream(bytes));
     when(Hash.stream(inputStream));
     thenReturned(Hash.bytes(bytes));
+  }
+
+  @Test
+  public void toPath() {
+    given(hash = HashCode.fromInt(0xAB));
+    when(Hash.toPath(hash));
+    thenReturned(Path.path("ab000000"));
   }
 }
