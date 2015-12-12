@@ -16,58 +16,36 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
-
-  // add missing parameters: level, comment, method
-
   @SmoothFunction
   public static Blob zip(Container container, Array<SFile> files) {
-    return new Worker(container, files).execute();
+    byte[] buffer = new byte[Constants.BUFFER_SIZE];
+    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
+    BlobBuilder blobBuilder = container.create().blobBuilder();
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.openOutputStream())) {
+      for (SFile file : files) {
+        String path = file.path().value();
+        if (duplicatesDetector.addValue(path)) {
+          throw new ErrorMessage("Cannot zip two files with the same path = " + path);
+        }
+        zipFile(file, zipOutputStream, buffer);
+      }
+    } catch (IOException e) {
+      throw new FileSystemException(e);
+    }
+    return blobBuilder.build();
   }
 
-  private static class Worker {
-    private final Container container;
-    private final Array<SFile> files;
-
-    private final byte[] buffer = new byte[Constants.BUFFER_SIZE];
-    private final DuplicatesDetector<String> duplicatesDetector;
-
-    public Worker(Container container, Array<SFile> files) {
-      this.container = container;
-      this.files = files;
-      this.duplicatesDetector = new DuplicatesDetector<>();
-    }
-
-    public Blob execute() {
-      BlobBuilder blobBuilder = container.create().blobBuilder();
-
-      try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.openOutputStream())) {
-        for (SFile file : files) {
-          addEntry(zipOutputStream, file);
-        }
-      } catch (IOException e) {
-        throw new FileSystemException(e);
+  private static void zipFile(SFile file, ZipOutputStream zipOutputStream, byte[] buffer)
+      throws IOException {
+    ZipEntry entry = new ZipEntry(file.path().value());
+    zipOutputStream.putNextEntry(entry);
+    try (InputStream inputStream = file.content().openInputStream()) {
+      int readCount = inputStream.read(buffer);
+      while (readCount > 0) {
+        zipOutputStream.write(buffer, 0, readCount);
+        readCount = inputStream.read(buffer);
       }
-
-      return blobBuilder.build();
     }
-
-    private void addEntry(ZipOutputStream zipOutputStream, SFile file) throws IOException {
-      String path = file.path().value();
-      if (duplicatesDetector.addValue(path)) {
-        throw new ErrorMessage("Cannot zip two files with the same path = " + path);
-      }
-      ZipEntry entry = new ZipEntry(path);
-      zipOutputStream.putNextEntry(entry);
-
-      try (InputStream inputStream = file.content().openInputStream()) {
-        int readCount = inputStream.read(buffer);
-        while (readCount > 0) {
-          zipOutputStream.write(buffer, 0, readCount);
-          readCount = inputStream.read(buffer);
-        }
-      }
-
-      zipOutputStream.closeEntry();
-    }
+    zipOutputStream.closeEntry();
   }
 }
