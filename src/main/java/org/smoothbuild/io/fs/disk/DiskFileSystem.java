@@ -22,11 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.base.err.FileSystemException;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirException;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -82,7 +80,7 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public OutputStream openOutputStream(Path path) {
     if (pathState(path) == DIR) {
-      throw new PathIsAlreadyTakenByDirException(path);
+      throw new FileSystemException("Cannot use " + path + " path. It is already taken by dir.");
     }
 
     createDir(path.parent());
@@ -99,7 +97,7 @@ public class DiskFileSystem implements FileSystem {
     try {
       Files.createDirectories(jdkPath(path));
     } catch (FileAlreadyExistsException e) {
-      throw new PathIsAlreadyTakenByFileException(path);
+      throw new FileSystemException("Cannot use " + path + " path. It is already taken by file.");
     } catch (IOException e) {
       throw new FileSystemException(e);
     }

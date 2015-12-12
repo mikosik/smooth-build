@@ -5,6 +5,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
@@ -16,13 +17,6 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.io.fs.base.err.FileSystemException;
-import org.smoothbuild.io.fs.base.err.NoSuchDirButFileException;
-import org.smoothbuild.io.fs.base.err.NoSuchDirException;
-import org.smoothbuild.io.fs.base.err.NoSuchFileException;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirException;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileException;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenException;
 
 public abstract class GenericFileSystemTestCase {
   protected FileSystem fileSystem;
@@ -80,13 +74,13 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
     when(fileSystem).files(path("abc"));
-    thenThrown(NoSuchDirException.class);
+    thenThrown(exception(new FileSystemException("Dir " + path("abc") + " doesn't exists.")));
   }
 
   public void files_from_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).files(path);
-    thenThrown(NoSuchDirButFileException.class);
+    thenThrown(exception(new FileSystemException("Dir " + path + " doesn't exist. It is a file.")));
   }
 
   @Test
@@ -117,13 +111,15 @@ public abstract class GenericFileSystemTestCase {
   public void cannot_open_output_stream_when_path_is_dir() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).openOutputStream(path.parent());
-    thenThrown(PathIsAlreadyTakenByDirException.class);
+    thenThrown(exception(new FileSystemException("Cannot use " + path.parent()
+        + " path. It is already taken by dir.")));
   }
 
   @Test
   public void cannot_open_output_stream_when_path_is_root_dir() throws Exception {
     when(fileSystem).openOutputStream(Path.root());
-    thenThrown(PathIsAlreadyTakenByDirException.class);
+    thenThrown(exception(new FileSystemException("Cannot use " + Path.root()
+        + " path. It is already taken by dir.")));
   }
 
   // openOutputStream()
@@ -153,7 +149,7 @@ public abstract class GenericFileSystemTestCase {
 
   public void create_input_stream_throws_exception_when_file_does_not_exist() throws Exception {
     when(fileSystem).openInputStream(path("dir/file"));
-    thenThrown(NoSuchFileException.class);
+    thenThrown(exception(new FileSystemException("File " + path("dir/file") + " doesn't exist.")));
   }
 
   @Test
@@ -249,7 +245,8 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile(path);
     given(this).createEmptyFile(linkPath);
     when(fileSystem).createLink(linkPath, path);
-    thenThrown(PathIsAlreadyTakenException.class);
+    thenThrown(exception(new FileSystemException("Cannot use " + linkPath
+        + " path. It is already taken.")));
   }
 
   @Test
@@ -257,7 +254,8 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile(path);
     given(this).createEmptyFile(linkPath);
     when(fileSystem).createLink(linkPath.parent(), path);
-    thenThrown(PathIsAlreadyTakenException.class);
+    thenThrown(exception(new FileSystemException("Cannot use " + linkPath.parent()
+        + " path. It is already taken.")));
   }
 
   // createDir()
@@ -280,7 +278,8 @@ public abstract class GenericFileSystemTestCase {
   public void cannot_create_dir_if_such_file_already_exists() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).createDir(path);
-    thenThrown(PathIsAlreadyTakenByFileException.class);
+    thenThrown(exception(new FileSystemException("Cannot use " + path
+        + " path. It is already taken by file.")));
   }
 
   // helpers

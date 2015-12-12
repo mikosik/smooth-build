@@ -8,7 +8,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.smoothbuild.builtin.compress.Constants;
-import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
