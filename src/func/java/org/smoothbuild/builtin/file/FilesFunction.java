@@ -9,7 +9,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -21,9 +20,7 @@ import org.smoothbuild.task.exec.ContainerImpl;
 public class FilesFunction {
   @SmoothFunction
   @NotCacheable
-  public static Array<SFile> files(
-      ContainerImpl container,
-      @Name("dir") SString dir) {
+  public static Array<SFile> files(ContainerImpl container, SString dir) {
     Path path = validatedProjectPath("dir", dir);
     FileSystem fileSystem = container.projectFileSystem();
 

@@ -15,7 +15,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.err.DuplicatedParameterException;
 import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalResultTypeException;
 import org.smoothbuild.lang.function.nativ.err.MissingContainerParameterException;
@@ -76,17 +75,11 @@ public class NativeFunctionFactory {
       throw new MissingContainerParameterException(method);
     }
 
-    java.lang.reflect.Type[] parameterTypes = method.getGenericParameterTypes();
+    java.lang.reflect.Parameter[] parameters = method.getParameters();
     Annotation[][] annotations = method.getParameterAnnotations();
     Builder<Parameter> builder = ImmutableList.builder();
-    HashSet<String> names = new HashSet<String>();
-    for (int i = 1; i < parameterTypes.length; i++) {
-      Parameter parameter = createParameter(method, parameterTypes[i], annotations[i]);
-      String name = parameter.name();
-      if (names.contains(name)) {
-        throw new DuplicatedParameterException(method, name);
-      }
-      names.add(name);
+    for (int i = 1; i < parameters.length; i++) {
+      Parameter parameter = createParameter(method, parameters[i], annotations[i]);
       builder.add(parameter);
     }
     return builder.build();

@@ -15,7 +15,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -24,10 +23,7 @@ import org.smoothbuild.lang.value.SString;
 
 public class JunitFunction {
   @SmoothFunction
-  public static SString junit(
-      Container container,
-      @Name("libs") Array<Blob> libs,
-      @Name("include") SString include) {
+  public static SString junit(Container container, Array<Blob> libs, SString include) {
     Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(container, libs);
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
     JUnitCore jUnitCore = new JUnitCore();

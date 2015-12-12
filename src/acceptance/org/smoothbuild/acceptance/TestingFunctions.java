@@ -10,7 +10,6 @@ import java.util.Random;
 
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -25,37 +24,35 @@ public class TestingFunctions {
 
   public static class StringIdentity {
     @SmoothFunction
-    public static SString stringIdentity(Container container, @Name("string") SString string) {
+    public static SString stringIdentity(Container container, SString string) {
       return string;
     }
   }
 
   public static class TwoStrings {
     @SmoothFunction
-    public static SString twoStrings(Container container, @Name("stringA") SString stringA,
-        @Name("stringB") SString stringB) {
+    public static SString twoStrings(Container container, SString stringA, SString stringB) {
       return container.create().string(stringA.value() + ":" + stringB.value());
     }
   }
 
   public static class BlobIdentity {
     @SmoothFunction
-    public static Blob blobIdentity(Container container, @Name("blob") Blob blob) {
+    public static Blob blobIdentity(Container container, Blob blob) {
       return blob;
     }
   }
 
   public static class TwoBlobs {
     @SmoothFunction
-    public static Blob twoBlobs(Container container, @Name("blob1") Blob blob1,
-        @Name("blob2") Blob blob2) {
+    public static Blob twoBlobs(Container container, Blob blob1, Blob blob2) {
       return blob1;
     }
   }
 
   public static class FileIdentity {
     @SmoothFunction
-    public static SFile fileIdentity(Container container, @Name("file") SFile file) {
+    public static SFile fileIdentity(Container container, SFile file) {
       return file;
     }
   }
@@ -63,15 +60,15 @@ public class TestingFunctions {
   public static class StringArrayIdentity {
     @SmoothFunction
     public static Array<SString> stringArrayIdentity(Container container,
-        @Name("stringArray") Array<SString> stringArray) {
+        Array<SString> stringArray) {
       return stringArray;
     }
   }
 
   public static class FileAndBlob {
     @SmoothFunction
-    public static SString fileAndBlob(Container container, @Name("file") SFile file,
-        @Name("blob") Blob blob) throws IOException {
+    public static SString fileAndBlob(Container container, SFile file, Blob blob)
+        throws IOException {
       InputStream fileStream = file.content().openInputStream();
       InputStream blobStream = blob.openInputStream();
       String fileString = CharStreams.toString(new InputStreamReader(fileStream));
@@ -83,24 +80,23 @@ public class TestingFunctions {
 
   public static class OneRequired {
     @SmoothFunction
-    public static SString oneRequired(Container container,
-        @Required @Name("string") SString stringA) {
-      return stringA;
+    public static SString oneRequired(Container container, @Required SString string) {
+      return string;
     }
   }
 
   public static class TwoRequired {
     @SmoothFunction
-    public static SString twoRequired(Container container,
-        @Required @Name("stringA") SString stringA, @Required @Name("stringB") SString stringB) {
+    public static SString twoRequired(Container container, @Required SString stringA,
+        @Required SString stringB) {
       return container.create().string(stringA.value() + ":" + stringB.value());
     }
   }
 
   public static class OneOptionalOneRequired {
     @SmoothFunction
-    public static SString oneOptionalOneRequired(Container container,
-        @Name("stringA") SString stringA, @Required @Name("stringB") SString stringB) {
+    public static SString oneOptionalOneRequired(Container container, SString stringA,
+        @Required SString stringB) {
       return container.create().string(stringA.value() + ":" + stringB.value());
     }
   }
@@ -134,13 +130,8 @@ public class TestingFunctions {
 
   public static class AmbiguousArguments {
     @SmoothFunction
-    public static SString ambiguousArguments(
-        Container container,
-        @Name("param1") SString param1,
-        @Name("param2") Array<SString> param2,
-        @Name("param3") SFile param3,
-        @Name("param4") Array<SFile> param4,
-        @Name("param5") Array<Blob> param5) {
+    public static SString ambiguousArguments(Container container, SString param1,
+        Array<SString> param2, SFile param3, Array<SFile> param4, Array<Blob> param5) {
       return container.create().string("");
     }
   }
