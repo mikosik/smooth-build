@@ -1,6 +1,7 @@
 package org.smoothbuild.db.values;
 
 import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -8,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
 
@@ -19,6 +20,7 @@ import com.google.inject.Injector;
 public class FileArrayTest {
   private ValuesDb valuesDb;
   private Array<?> array;
+  private HashCode hash;
 
   @Before
   public void before() {
@@ -35,8 +37,9 @@ public class FileArrayTest {
 
   @Test
   public void reading_elements_from_not_stored_file_array_fails() throws Exception {
-    given(array = (Array<SFile>) valuesDb.read(FILE_ARRAY, HashCode.fromInt(33)));
+    given(hash = HashCode.fromInt(33));
+    given(array = (Array<SFile>) valuesDb.read(FILE_ARRAY, hash));
     when(array).iterator();
-    thenThrown(NoObjectWithGivenHashException.class);
+    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

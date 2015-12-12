@@ -2,6 +2,7 @@ package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
@@ -11,7 +12,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
@@ -29,6 +30,7 @@ public class SFileTest {
   private ValuesDb valuesDb;
   private SFile file;
   private SFile file2;
+  private HashCode hash;
 
   @Before
   public void before() {
@@ -206,7 +208,8 @@ public class SFileTest {
 
   @Test
   public void reading_not_stored_file_fails() throws Exception {
-    when(valuesDb).read(FILE, HashCode.fromInt(33));
-    thenThrown(NoObjectWithGivenHashException.class);
+    given(hash = HashCode.fromInt(33));
+    when(valuesDb).read(FILE, hash);
+    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

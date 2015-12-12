@@ -11,6 +11,7 @@ import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -23,7 +24,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.err.NoObjectWithGivenHashException;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.ErrorMessage;
@@ -72,7 +73,7 @@ public class OutputsDbTest {
   @Test
   public void reading_not_written_value_fails() throws Exception {
     when(outputsDb).read(hash, STRING);
-    thenThrown(NoObjectWithGivenHashException.class);
+    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 
   @Test

@@ -6,7 +6,7 @@ import static org.smoothbuild.util.Streams.inputStreamToString;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.err.ReadingHashedObjectFailedException;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
@@ -33,7 +33,7 @@ public class StringMarshaller implements ValueMarshaller<SString> {
     try {
       return inputStreamToString(hashedDb.openInputStream(hash));
     } catch (IOException e) {
-      throw new ReadingHashedObjectFailedException(hash, e);
+      throw new HashedDbException("IO error occurred while reading " + hash + " object.");
     }
   }
 }
