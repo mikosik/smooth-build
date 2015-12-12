@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.type.Types.BLOB;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.smoothbuild.db.values.marshal.BlobMarshaller;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.hash.HashCode;
@@ -17,15 +17,20 @@ import com.google.common.io.CountingInputStream;
  * Blob value in smooth language.
  */
 public class Blob extends Value {
-  private final BlobMarshaller marshaller;
+  private final HashedDb hashedDB;
 
-  public Blob(HashCode hash, BlobMarshaller marshaller) {
+  public Blob(HashCode hash, HashedDb hashedDb) {
     super(BLOB, hash);
-    this.marshaller = checkNotNull(marshaller);
+    this.hashedDB = checkNotNull(hashedDb);
+  }
+
+  public static Blob storeBlobInDb(byte[] objectBytes, HashedDb hashedDb) {
+    HashCode hash = hashedDb.write(objectBytes);
+    return new Blob(hash, hashedDb);
   }
 
   public InputStream openInputStream() {
-    return marshaller.openInputStream(hash());
+    return hashedDB.openInputStream(hash());
   }
 
   @Override
