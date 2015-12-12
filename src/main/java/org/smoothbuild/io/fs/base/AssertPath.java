@@ -1,12 +1,5 @@
 package org.smoothbuild.io.fs.base;
 
-import org.smoothbuild.io.fs.base.err.NoSuchDirButFileException;
-import org.smoothbuild.io.fs.base.err.NoSuchDirException;
-import org.smoothbuild.io.fs.base.err.NoSuchFileButDirException;
-import org.smoothbuild.io.fs.base.err.NoSuchFileException;
-import org.smoothbuild.io.fs.base.err.NoSuchPathException;
-import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenException;
-
 public class AssertPath {
 
   public static Void assertPathIsDir(FileSystem fileSystem, Path path) {
@@ -15,9 +8,9 @@ public class AssertPath {
       case DIR:
         return null;
       case FILE:
-        throw new NoSuchDirButFileException(path);
+        throw new FileSystemException("Dir " + path + " doesn't exist. It is a file.");
       case NOTHING:
-        throw new NoSuchDirException(path);
+        throw new FileSystemException("Dir " + path + " doesn't exists.");
       default:
         throw newUnknownPathState(state);
     }
@@ -29,9 +22,9 @@ public class AssertPath {
       case FILE:
         return null;
       case DIR:
-        throw new NoSuchFileButDirException(path);
+        throw new FileSystemException("File " + path + " doesn't exist. It is a dir.");
       case NOTHING:
-        throw new NoSuchFileException(path);
+        throw new FileSystemException("File " + path + " doesn't exist.");
       default:
         throw newUnknownPathState(state);
     }
@@ -45,7 +38,7 @@ public class AssertPath {
       case DIR:
         return null;
       case NOTHING:
-        throw new NoSuchPathException(path);
+        throw new FileSystemException("Path " + path + " doesn't exists.");
       default:
         throw newUnknownPathState(state);
     }
@@ -55,9 +48,8 @@ public class AssertPath {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
-        throw new PathIsAlreadyTakenException(path);
       case DIR:
-        throw new PathIsAlreadyTakenException(path);
+        throw new FileSystemException("Cannot use " + path + " path. It is already taken.");
       case NOTHING:
         return null;
       default:

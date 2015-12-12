@@ -18,8 +18,8 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.NoSuchFileException;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
@@ -46,8 +46,8 @@ public class ModuleParser {
   private InputStream scriptInputStream(Path scriptFile) {
     try {
       return fileSystem.openInputStream(scriptFile);
-    } catch (NoSuchFileException e) {
-      console.error("Cannot find build script file " + scriptFile + ".");
+    } catch (FileSystemException e) {
+      console.error("Cannot read build script file " + scriptFile + ". " + e.getMessage());
       throw new ParsingException();
     }
   }

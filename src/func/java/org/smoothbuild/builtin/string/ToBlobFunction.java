@@ -5,7 +5,7 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Blob;

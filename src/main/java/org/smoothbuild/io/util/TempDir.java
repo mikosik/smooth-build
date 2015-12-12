@@ -13,8 +13,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;

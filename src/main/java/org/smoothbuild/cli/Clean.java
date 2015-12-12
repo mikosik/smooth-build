@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.err.FileSystemException;
+import org.smoothbuild.io.fs.base.FileSystemException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;

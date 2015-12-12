@@ -12,8 +12,8 @@ import static org.testory.Testory.when;
 import java.io.OutputStreamWriter;
 
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.base.err.FileSystemException;
 
 public class MemoryFileTest {
   private final MemoryDir parent = mock(MemoryDir.class);
