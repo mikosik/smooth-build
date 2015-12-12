@@ -5,8 +5,6 @@ import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFu
 
 import java.util.Set;
 
-import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
-
 import com.google.common.hash.HashCode;
 
 public class TestingUtils {

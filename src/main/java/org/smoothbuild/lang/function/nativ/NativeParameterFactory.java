@@ -7,9 +7,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.nativ.err.DuplicatedAnnotationException;
-import org.smoothbuild.lang.function.nativ.err.IllegalParameterTypeException;
-import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.type.Type;
 
@@ -29,23 +26,25 @@ public class NativeParameterFactory {
   }
 
   private static Type type(Method method, java.lang.reflect.Type reflectType)
-      throws IllegalParameterTypeException {
+      throws NativeFunctionImplementationException {
     Type type = jTypeToType(TypeLiteral.get(reflectType));
     if (type == null || !type.isAllowedAsParameter()) {
-      throw new IllegalParameterTypeException(method, reflectType);
+      throw new NativeFunctionImplementationException(method,
+          "It has parameter with illegal java type '" + reflectType.getTypeName() + "'.");
     }
     return type;
   }
 
   private static boolean isRequired(Method method, Multimap<Class<?>, Annotation> annotations)
-      throws DuplicatedAnnotationException {
+      throws NativeFunctionImplementationException {
     switch (annotations.get(Required.class).size()) {
       case 0:
         return false;
       case 1:
         return true;
       default:
-        throw new DuplicatedAnnotationException(method, Required.class);
+        throw new NativeFunctionImplementationException(method,
+            "One of its parameters is annotated twice as " + Required.class.getName());
     }
   }
 
