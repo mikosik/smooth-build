@@ -1,7 +1,5 @@
 package org.smoothbuild.db.hashed;
 
-import static org.smoothbuild.db.hashed.HashCodes.toPath;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,12 +23,12 @@ public class HashedDb {
   }
 
   public boolean contains(HashCode hash) {
-    Path path = toPath(hash);
+    Path path = Hash.toPath(hash);
     return fileSystem.pathState(path) == PathState.FILE;
   }
 
   public InputStream openInputStream(HashCode hash) {
-    Path path = toPath(hash);
+    Path path = Hash.toPath(hash);
     if (fileSystem.pathState(path) == PathState.FILE) {
       return fileSystem.openInputStream(path);
     } else {
@@ -43,7 +41,7 @@ public class HashedDb {
   }
 
   public HashCode write(HashCode hash, byte[] bytes) {
-    Path path = toPath(hash);
+    Path path = Hash.toPath(hash);
 
     if (fileSystem.pathState(path) == PathState.FILE) {
       return hash;
