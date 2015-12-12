@@ -16,11 +16,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 public class Clean implements Command {
+  private final FileSystem fileSystem;
+  private final Console console;
+
   @Inject
-  @ProjectDir
-  private FileSystem fileSystem;
-  @Inject
-  private Console console;
+  public Clean(@ProjectDir FileSystem fileSystem, Console console) {
+    this.fileSystem = fileSystem;
+    this.console = console;
+  }
 
   @Override
   public int run(String... args) {
