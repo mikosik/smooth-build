@@ -12,7 +12,6 @@ import java.util.zip.ZipInputStream;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -26,9 +25,7 @@ public class UnzipFunction {
   private static final Predicate<String> IS_DIR = (string) -> string.endsWith(SEPARATOR);
 
   @SmoothFunction
-  public static Array<SFile> unzip(
-      Container container,
-      @Name("blob") Blob blob) {
+  public static Array<SFile> unzip(Container container, Blob blob) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     try {

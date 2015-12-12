@@ -1,5 +1,7 @@
 package org.smoothbuild.io.fs.disk;
 
+import static java.util.Collections.nCopies;
+import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathExists;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsFile;
@@ -18,7 +20,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -27,7 +28,6 @@ import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByDirException;
 import org.smoothbuild.io.fs.base.err.PathIsAlreadyTakenByFileException;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -125,7 +125,7 @@ public class DiskFileSystem implements FileSystem {
     createDir(link.parent());
 
     try {
-      String escape = escapeString(link.parts().size());
+      String escape = escapeString(link.parts().size() - 1);
       java.nio.file.Path targetJdkPath = Paths.get(escape, target.value());
       Files.createSymbolicLink(jdkPath(link), targetJdkPath);
     } catch (IOException e) {
@@ -134,9 +134,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   private static String escapeString(int length) {
-    String[] escapeElements = new String[length - 1];
-    Arrays.fill(escapeElements, "..");
-    return Joiner.on('/').join(escapeElements);
+    return nCopies(length, "..").stream().collect(joining("/"));
   }
 
   private java.nio.file.Path jdkPath(Path path) {

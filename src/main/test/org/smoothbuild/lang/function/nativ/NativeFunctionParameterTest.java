@@ -8,13 +8,9 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.nativ.err.DuplicatedParameterException;
-import org.smoothbuild.lang.function.nativ.err.IllegalParameterNameException;
 import org.smoothbuild.lang.function.nativ.err.IllegalParameterTypeException;
 import org.smoothbuild.lang.function.nativ.err.MissingContainerParameterException;
-import org.smoothbuild.lang.function.nativ.err.MissingNameAnnotationException;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
@@ -30,66 +26,12 @@ public class NativeFunctionParameterTest {
   public void parameter_name_is_taken_from_annotation() throws Exception {
     given(function = function(ParameterWithName.class));
     when(function.parameters().get(0).name());
-    thenReturned("paramName");
+    thenReturned("parameter");
   }
 
   public static class ParameterWithName {
     @SmoothFunction
-    public static SString function(Container container, @Name("paramName") SString parameter) {
-      return null;
-    }
-  }
-
-  @Test
-  public void parameter_with_name_equal_empty_string_causes_exception() throws Exception {
-    when(() -> nativeFunctions(MethodWithParameterWithNameEqualEmptyString.class, HashCode.fromInt(
-        13)));
-    thenThrown(IllegalParameterNameException.class);
-  }
-
-  public static class MethodWithParameterWithNameEqualEmptyString {
-    @SmoothFunction
-    public static SString function(Container container, @Name("") SString parameter) {
-      return null;
-    }
-  }
-
-  @Test
-  public void parameter_with_illegal_name_causes_exception() throws Exception {
-    when(() -> nativeFunctions(MethodWithParameterWithIllegalName.class, HashCode.fromInt(13)));
-    thenThrown(IllegalParameterNameException.class);
-  }
-
-  public static class MethodWithParameterWithIllegalName {
-    @SmoothFunction
-    public static SString function(Container container, @Name("abc#def") SString parameter) {
-      return null;
-    }
-  }
-
-  @Test
-  public void parameter_without_name_annotation_causes_exception() throws Exception {
-    when(() -> nativeFunctions(MethodWithParameterWithoutName.class, HashCode.fromInt(13)));
-    thenThrown(MissingNameAnnotationException.class);
-  }
-
-  public static class MethodWithParameterWithoutName {
-    @SmoothFunction
     public static SString function(Container container, SString parameter) {
-      return null;
-    }
-  }
-
-  @Test
-  public void two_parameters_with_the_same_name_causes_exception() throws Exception {
-    when(() -> nativeFunctions(MethodWithTwoParametersWithSameName.class, HashCode.fromInt(13)));
-    thenThrown(DuplicatedParameterException.class);
-  }
-
-  public static class MethodWithTwoParametersWithSameName {
-    @SmoothFunction
-    public static SString function(Container container, @Name("nameA") SString parameterA,
-        @Name("nameA") SString parameterB) {
       return null;
     }
   }
@@ -169,7 +111,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithNotRequiredParameter {
     @SmoothFunction
-    public static SString function(Container container, @Name("name") SString parameter) {
+    public static SString function(Container container, SString parameter) {
       return null;
     }
   }
@@ -183,7 +125,7 @@ public class NativeFunctionParameterTest {
 
   public static class MethodWithRequiredParameter {
     @SmoothFunction
-    public static SString function(Container container, @Required @Name("name") SString parameter) {
+    public static SString function(Container container, @Required SString parameter) {
       return null;
     }
   }
