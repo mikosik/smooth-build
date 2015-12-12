@@ -1,6 +1,8 @@
 Change Log
 ==========
 
+* nothing is allowed type for parameter and function result
+
 Version 0.11.0 (2015.12.06)
 ---------------------------
 

@@ -2,7 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.given;
-import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
@@ -17,6 +17,6 @@ public class NothingTypeTest {
     given(type = Types.NOTHING);
     given(valuesDb = memoryValuesDb());
     when(type).defaultValue(valuesDb);
-    thenThrown(UnsupportedOperationException.class);
+    thenReturned(null);
   }
 }
