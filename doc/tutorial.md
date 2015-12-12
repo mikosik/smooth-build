@@ -11,10 +11,12 @@ release.jar: files("//src") | javac | jar;
 
 This script defines `release.jar` function that performs following tasks:
 
- * invokes `files` function that takes all files (recursively)
- from `src` directory located at project's root
- * passes them to `javac` function (Java compiler) that compiles those files
- * passes compiled files to `jar` function that packs them into jar file
+ * Invokes `files` function that takes all files (recursively)
+ from `src` directory located at project's root. Double slashes `//` denote
+ root directory of your project (directory in which given build.smooth file
+ is located).
+ * Passes them to `javac` function (Java compiler) that compiles those files.
+ * Passes compiled files to `jar` function that packs them into jar file.
 
 Note that there's no need to explicitly create temporary directory for *.class
 files as they are passed as parameter to `jar` function straight from `javac`
@@ -78,6 +80,7 @@ release.jar: jar(classes);
 However smooth doesn't support specifying parameters yet
 when declaring function in smooth language.
 
+
 ### Literals
 
 As you noticed Smooth contains String literals which are specified
@@ -97,7 +100,9 @@ docs.zip: zip(fileArrayValue);
 ### Function parameters
 
 Most functions can accept more than one argument.
-One example is [javac](https://github.com/mikosik/smooth-build/blob/master/doc/api/javac.md) which has four parameters.
+One example is
+[javac](https://github.com/mikosik/smooth-build/blob/master/doc/api/javac.md)
+which has four parameters.
 Despite that we kept passing only one argument in all above examples.
 It didn't cause any error as smooth was capable to infer parameter
 this argument should be assigned to by comparing its type with parameter types.
@@ -107,8 +112,8 @@ However if there's ambiguity (smooth is not able to deduce which arguments
 should be assigned to which parameters) then it fails with error.
 In such cases disambiguity can be solved by specifying assignment between argument
 and parameter explicitly.
-In the following example we need to explicitly name `source` parameter as
-without it smooth wouldnt' be able to guess whether `1.8` String value should
+In the following example we need to explicitly name `source` parameter, as
+without it, smooth wouldnt' be able to guess whether `1.8` String value should
 be assigned to `source` or `target` parameter, both of which are of type String.
 ```
 release.jar: files("//src") | javac(source="1.8") | jar;
@@ -119,7 +124,7 @@ Matching arguments to parameters works according to following algorithm
 smooth code when you understand this algorithm from brute force perspective):
  1. All arguments that have explicit assignment specified are assigned to
  those parameters.
- If some parameter is assigned more than once then algorithm fails.
+ If some parameter is assigned explicitly more than once then algorithm fails.
  2. For arguments without explicit assignment algorithm generates
  all possible set of assignments that met following criteria:
     * each argument is assigned exactly once
@@ -170,6 +175,3 @@ Such solution gives you access to any build result you have ever executed.
 You just need to checkout relevant code version from your repository
 and run build command that will provide results instantly.
 
-
-[core functions API](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
-| [development blog](http://smooth-build.blogspot.com/)
