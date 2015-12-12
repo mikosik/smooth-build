@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.convert;
 
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -10,9 +9,7 @@ import org.smoothbuild.lang.value.SFile;
 
 public class FileArrayToBlobArrayFunction {
   @SmoothFunction
-  public static Array<Blob> fileArrayToBlobArray(
-      Container container,
-      @Name("input") Array<SFile> input) {
+  public static Array<Blob> fileArrayToBlobArray(Container container, Array<SFile> input) {
     ArrayBuilder<Blob> builder = container.create().arrayBuilder(Blob.class);
     for (SFile file : input) {
       builder.add(file.content());

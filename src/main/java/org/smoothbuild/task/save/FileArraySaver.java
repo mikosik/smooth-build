@@ -1,5 +1,6 @@
 package org.smoothbuild.task.save;
 
+import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
@@ -14,8 +15,6 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.util.DuplicatesDetector;
-
-import com.google.common.base.Joiner;
 
 public class FileArraySaver implements Saver<Array<SFile>> {
   private final FileSystem smoothFileSystem;
@@ -54,7 +53,7 @@ public class FileArraySaver implements Saver<Array<SFile>> {
 
   private String duplicatedPathsMessage(Name name, Set<String> duplicates) {
     String separator = "\n  ";
-    String list = separator + Joiner.on(separator).join(duplicates);
+    String list = separator + duplicates.stream().collect(joining(separator));
     return "Can't store result of " + name + " as it contains files with duplicated paths:" + list;
   }
 }

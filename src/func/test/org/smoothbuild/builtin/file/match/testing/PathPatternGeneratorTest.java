@@ -14,13 +14,7 @@ public class PathPatternGeneratorTest {
   @Test
   public void all_possible_patterns_are_generated() {
     final List<String> generatedPatterns = new ArrayList<>();
-    Consumer<String> collectingConsumer = new Consumer<String>() {
-      public void consume(String pattern) {
-        generatedPatterns.add(pattern);
-      }
-    };
-
-    generatePatterns(2, collectingConsumer);
+    generatePatterns(2, (pattern) -> generatedPatterns.add(pattern));
     then(generatedPatterns, containsInAnyOrder("a", "*", "**", "aa", "ab", "a*", "a/a", "a/b",
         "a/*", "a/**", "*a", "*/a", "*/*", "*/**", "**/a", "**/*"));
   }

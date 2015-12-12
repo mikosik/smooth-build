@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
@@ -22,11 +22,8 @@ import org.smoothbuild.util.CommandExecutor;
 public class AidlFunction {
 
   @SmoothFunction
-  public static SFile aidl(
-      Container container,
-      @Name("apiLevel") SString apiLevel,
-      @Name("buildToolsVersion") SString buildToolsVersion,
-      @Name("interfaceFile") SFile interfaceFile) throws InterruptedException {
+  public static SFile aidl(Container container, SString apiLevel, SString buildToolsVersion,
+      SFile interfaceFile) throws InterruptedException {
     return execute(container, buildToolsVersion.value(), apiLevel.value(), interfaceFile);
   }
 
@@ -90,14 +87,7 @@ public class AidlFunction {
   }
 
   private static String join(List<String> command) {
-    StringBuilder result = new StringBuilder();
-    String delimiter = "";
-    for (String string : command) {
-      result.append(delimiter);
-      result.append(string);
-      delimiter = " ";
-    }
-    return result.toString();
+    return command.stream().collect(Collectors.joining(" "));
   }
 
   // Documentation copy/pasted from aidl command line tool:

@@ -11,7 +11,6 @@ import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.io.fs.base.err.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Name;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -21,10 +20,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
   @SmoothFunction
-  public static Blob jar(
-      Container container,
-      @Name("files") Array<SFile> files,
-      @Name("manifest") Blob manifest) {
+  public static Blob jar(Container container, Array<SFile> files, Blob manifest) {
     return new Worker(container, files, manifest).execute();
   }
 

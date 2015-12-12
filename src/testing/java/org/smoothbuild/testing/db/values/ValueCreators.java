@@ -1,5 +1,7 @@
 package org.smoothbuild.testing.db.values;
 
+import static java.util.Arrays.stream;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -19,9 +21,7 @@ public class ValueCreators {
   public static <T extends Value> Array<T> array(ValuesDb valuesDb, Class<T> elementType,
       T... elements) {
     ArrayBuilder<T> arrayBuilder = valuesDb.arrayBuilder(elementType);
-    for (T elem : elements) {
-      arrayBuilder.add(elem);
-    }
+    stream(elements).forEach(arrayBuilder::add);
     return arrayBuilder.build();
   }
 

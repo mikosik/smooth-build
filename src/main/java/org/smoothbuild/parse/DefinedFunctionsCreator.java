@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.Argument.namedArgument;
@@ -134,11 +135,7 @@ public class DefinedFunctionsCreator {
     }
 
     private List<Expression> toExpression(List<ExpressionContext> expressionContexts) {
-      List<Expression> result = new ArrayList<>();
-      for (ExpressionContext expressionContext : expressionContexts) {
-        result.add(toExpression(expressionContext));
-      }
-      return result;
+      return expressionContexts.stream().map(this::toExpression).collect(toList());
     }
 
     private Expression toExpression(ExpressionContext expressionContext) {
@@ -182,12 +179,9 @@ public class DefinedFunctionsCreator {
     }
 
     public <T extends Value> List<Expression> toConvertedExpressions(Type type,
-        Iterable<Expression> expressions) {
-      List<Expression> result = new ArrayList<>();
-      for (Expression expression : expressions) {
-        result.add(implicitConverter.apply(type, expression));
-      }
-      return result;
+        List<Expression> expressions) {
+      return expressions.stream().map((expression) -> implicitConverter.apply(type, expression))
+          .collect(toList());
     }
 
     private Type commonSuperType(List<Expression> expressions, CodeLocation location) {

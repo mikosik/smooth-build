@@ -33,13 +33,7 @@ public class ContainerImpl implements Container {
 
   public static ContainerImpl containerImpl() {
     final ValuesDb valuesDb = memoryValuesDb();
-    Provider<TempDir> tempDirProvider = new Provider<TempDir>() {
-      @Override
-      public TempDir get() {
-        return new TempDir(valuesDb);
-      }
-    };
-    return new ContainerImpl(new MemoryFileSystem(), valuesDb, tempDirProvider);
+    return new ContainerImpl(new MemoryFileSystem(), valuesDb, () -> new TempDir(valuesDb));
   }
 
   @Override
@@ -68,8 +62,6 @@ public class ContainerImpl implements Container {
   }
 
   public void destroy() {
-    for (TempDir tempDir : tempDirs) {
-      tempDir.destroy();
-    }
+    tempDirs.stream().forEach(TempDir::destroy);
   }
 }

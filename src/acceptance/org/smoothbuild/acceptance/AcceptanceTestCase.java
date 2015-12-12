@@ -128,13 +128,10 @@ public class AcceptanceTestCase {
   }
 
   private Callable<ByteArrayOutputStream> streamReadingCallable(final InputStream inputStream) {
-    return new Callable<ByteArrayOutputStream>() {
-      @Override
-      public ByteArrayOutputStream call() throws Exception {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        copy(inputStream, outputStream);
-        return outputStream;
-      }
+    return () -> {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      copy(inputStream, outputStream);
+      return outputStream;
     };
   }
 

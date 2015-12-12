@@ -166,17 +166,15 @@ public class PathTest {
   }
 
   private static Case testParts(String path, List<String> parts) {
-    return new Case(format("[{0}] has parts: {1}", path, parts)) {
-      @Override
-      public void run() {
-        List<String> actualParts = path(path)
-            .parts()
-            .stream()
-            .map(Path::value)
-            .collect(Collectors.toList());
-        assertEquals(actualParts, parts);
-      }
-    };
+    return newCase(format("[{0}] has parts: {1}", path, parts),
+        () -> {
+          List<String> actualParts = path(path)
+              .parts()
+              .stream()
+              .map(Path::value)
+              .collect(Collectors.toList());
+          assertEquals(actualParts, parts);
+        });
   }
 
   @Test
