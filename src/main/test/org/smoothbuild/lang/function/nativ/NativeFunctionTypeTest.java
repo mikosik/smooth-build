@@ -5,13 +5,13 @@ import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.nativ.err.IllegalResultTypeException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -56,7 +56,9 @@ public class NativeFunctionTypeTest {
   @Test
   public void method_with_illegal_return_type_causes_exception() throws Exception {
     when(() -> nativeFunctions(IllegalReturnType.class, HashCode.fromInt(13)));
-    thenThrown(IllegalResultTypeException.class);
+    thenThrown(exception(new NativeFunctionImplementationException(IllegalReturnType.class
+        .getMethod("function", Container.class),
+        "It has is illegal result type 'java.lang.Object'.")));
   }
 
   public static class IllegalReturnType {
@@ -69,7 +71,9 @@ public class NativeFunctionTypeTest {
   @Test
   public void method_with_value_as_return_type_causes_exception() throws Exception {
     when(() -> nativeFunctions(ValueAsReturnType.class, HashCode.fromInt(13)));
-    thenThrown(IllegalResultTypeException.class);
+    thenThrown(exception(new NativeFunctionImplementationException(ValueAsReturnType.class
+        .getMethod("function", Container.class),
+        "It has is illegal result type 'org.smoothbuild.lang.value.Value'.")));
   }
 
   public static class ValueAsReturnType {
@@ -82,7 +86,9 @@ public class NativeFunctionTypeTest {
   @Test
   public void method_with_void_return_type_causes_exception() throws Exception {
     when(() -> nativeFunctions(VoidReturnType.class, HashCode.fromInt(13)));
-    thenThrown(IllegalResultTypeException.class);
+    thenThrown(exception(new NativeFunctionImplementationException(VoidReturnType.class
+        .getMethod("function", Container.class),
+        "It has is illegal result type 'void'.")));
   }
 
   public static class VoidReturnType {

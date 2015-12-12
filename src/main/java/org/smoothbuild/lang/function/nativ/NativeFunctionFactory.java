@@ -15,12 +15,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.err.IllegalFunctionNameException;
-import org.smoothbuild.lang.function.nativ.err.IllegalResultTypeException;
-import org.smoothbuild.lang.function.nativ.err.MissingContainerParameterException;
-import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
-import org.smoothbuild.lang.function.nativ.err.NonPublicSmoothFunctionException;
-import org.smoothbuild.lang.function.nativ.err.NonStaticSmoothFunctionException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -49,10 +43,10 @@ public class NativeFunctionFactory {
   public static NativeFunction nativeFunction(Method method, HashCode jarHash)
       throws NativeFunctionImplementationException {
     if (!isStatic(method)) {
-      throw new NonStaticSmoothFunctionException(method);
+      throw new NativeFunctionImplementationException(method, "It should be static.");
     }
     if (!isPublic(method)) {
-      throw new NonPublicSmoothFunctionException(method);
+      throw new NativeFunctionImplementationException(method, "It should be public.");
     }
 
     Signature signature = createSignature(method);
@@ -72,7 +66,8 @@ public class NativeFunctionFactory {
       throws NativeFunctionImplementationException {
     Class<?>[] types = method.getParameterTypes();
     if (types.length == 0 || (types[0] != Container.class && types[0] != ContainerImpl.class)) {
-      throw new MissingContainerParameterException(method);
+      throw new NativeFunctionImplementationException(method, "Its first parameter should have '"
+          + Container.class.getCanonicalName() + "' type.");
     }
 
     java.lang.reflect.Parameter[] parameters = method.getParameters();
@@ -85,12 +80,12 @@ public class NativeFunctionFactory {
     return builder.build();
   }
 
-  private static Name createName(Method method) throws IllegalFunctionNameException {
+  private static Name createName(Method method) throws NativeFunctionImplementationException {
     String name = method.getName();
     if (Name.isLegalName(name)) {
       return Name.name(name);
     } else {
-      throw new IllegalFunctionNameException(method, name);
+      throw new NativeFunctionImplementationException(method, "Its name " + name + " is illegal.");
     }
   }
 
@@ -99,7 +94,8 @@ public class NativeFunctionFactory {
     TypeLiteral<?> jType = methodJType(functionMethod);
     Type type = jTypeToType(jType);
     if (type == null || !type.isAllowedAsResult()) {
-      throw new IllegalResultTypeException(functionMethod, jType);
+      throw new NativeFunctionImplementationException(functionMethod,
+          "It has is illegal result type '" + jType + "'.");
     }
     return type;
   }

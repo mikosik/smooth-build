@@ -17,7 +17,7 @@ import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
+import org.smoothbuild.lang.function.nativ.NativeFunctionImplementationException;
 import org.smoothbuild.util.ClassLoaders;
 
 import com.google.common.collect.ImmutableMap;

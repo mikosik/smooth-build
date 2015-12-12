@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.nativ.err;
+package org.smoothbuild.lang.function.nativ;
 
 import java.lang.reflect.Method;
 
@@ -14,6 +14,6 @@ public class NativeFunctionImplementationException extends RuntimeException {
 
   private static String buildMessage(Method method, String message) {
     return "Java method '" + method.getDeclaringClass().getCanonicalName() + "." + method.getName()
-        + "' in not a correct Smooth function implementation:\n" + message;
+        + "' is not a correct Smooth function implementation:\n" + message;
   }
 }

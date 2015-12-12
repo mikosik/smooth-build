@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.nativ.err.NativeFunctionImplementationException;
+import org.smoothbuild.lang.function.nativ.NativeFunctionImplementationException;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
