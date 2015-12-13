@@ -2,10 +2,11 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.Objects;
+
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.Value;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
 public class Output {
@@ -44,12 +45,12 @@ public class Output {
       return false;
     }
     Output that = (Output) object;
-    return Objects.equal(this.result, that.result) && this.messages.equals(that.messages);
+    return Objects.equals(this.result, that.result) && this.messages.equals(that.messages);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(result, messages);
+    return Objects.hash(result, messages);
   }
 
   @Override
