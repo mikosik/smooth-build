@@ -1,10 +1,10 @@
 package org.smoothbuild.testing.common;
 
+import java.util.Objects;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-
-import com.google.common.base.Objects;
 
 public class ExceptionMatcher extends TypeSafeMatcher<Throwable> {
   private final Throwable throwable;
@@ -26,7 +26,7 @@ public class ExceptionMatcher extends TypeSafeMatcher<Throwable> {
 
   @Override
   protected boolean matchesSafely(Throwable item) {
-    return throwable.getClass().isInstance(item) && Objects.equal(item.getMessage(), throwable
-        .getMessage());
+    return throwable.getClass().isInstance(item)
+        && Objects.equals(item.getMessage(), throwable.getMessage());
   }
 }
