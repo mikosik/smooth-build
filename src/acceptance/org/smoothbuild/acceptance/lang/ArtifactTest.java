@@ -67,10 +67,12 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void cannot_store_file_array_with_duplicated_paths() throws Exception {
-    givenFile("file1.txt", "abc");
-    givenScript("result: [file('//file1.txt'), file('//file1.txt')];");
+    givenFile("file.txt", "abc");
+    givenScript("result: [file('//file.txt'), file('//file.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(""));
+    then(output(), containsString(
+        "Can't store result of 'result' as it contains files with duplicated paths:\n"
+            + "  file.txt\n"));
   }
 }
