@@ -36,6 +36,14 @@ public class RecursiveDeleterTest {
   }
 
   @Test
+  public void deleting_non_existent_file_succeeds() throws Exception {
+    File dir = createDir(root, "dir");
+    File file = new File(dir, "file");
+    RecursiveDeleter.deleteRecursively(file.toPath());
+    assertFalse(file.exists());
+  }
+
+  @Test
   public void deleting_sigle_file() throws Exception {
     File file = createEmptyFile(root, "file");
     RecursiveDeleter.deleteRecursively(file.toPath());
