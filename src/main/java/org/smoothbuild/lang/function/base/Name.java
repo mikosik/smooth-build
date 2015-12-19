@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Name {
@@ -28,11 +29,11 @@ public class Name {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof Name)) {
-      return false;
-    }
-    Name that = (Name) object;
-    return this.value.equals(that.value);
+    return object instanceof Name && this.value.equals(((Name) object).value);
+  }
+
+  public boolean equals(Name name) {
+    return Objects.equals(value, name.value);
   }
 
   @Override
