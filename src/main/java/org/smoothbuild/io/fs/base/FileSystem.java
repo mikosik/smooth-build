@@ -11,6 +11,8 @@ public interface FileSystem {
 
   public Iterable<Path> files(Path dir);
 
+  public void move(Path source, Path target);
+
   public void delete(Path path);
 
   public InputStream openInputStream(Path path);
