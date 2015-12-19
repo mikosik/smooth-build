@@ -1,7 +1,6 @@
 package org.smoothbuild.io.util;
 
-import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
-import static org.smoothbuild.SmoothConstants.TEMPORARY_DIR;
+import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
@@ -16,7 +15,6 @@ import org.smoothbuild.io.fs.disk.RecursiveDeleter;
 
 @Singleton
 public class TempManager {
-  private static final Path TEMP_ROOT = SMOOTH_DIR.append(TEMPORARY_DIR);
   private final ValuesDb valuesDb;
   private int id = 0;
 
@@ -27,7 +25,7 @@ public class TempManager {
 
   public void removeTemps() {
     try {
-      RecursiveDeleter.deleteRecursively(TEMP_ROOT.toJPath());
+      RecursiveDeleter.deleteRecursively(TEMPORARY_PATH.toJPath());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -35,7 +33,7 @@ public class TempManager {
 
   public Path tempPath() {
     id++;
-    return TEMP_ROOT.append(path(Integer.toString(id)));
+    return TEMPORARY_PATH.append(path(Integer.toString(id)));
   }
 
   public TempDir tempDir() {
