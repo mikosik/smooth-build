@@ -33,12 +33,12 @@ import com.google.common.collect.ImmutableList.Builder;
 public class DiskFileSystem implements FileSystem {
   private final java.nio.file.Path rootDir;
 
-  public DiskFileSystem(String rootDir) {
-    this(Paths.get(rootDir));
+  public DiskFileSystem(Path path) {
+    this.rootDir = path.toJPath();
   }
 
-  public DiskFileSystem(java.nio.file.Path rootDir) {
-    this.rootDir = rootDir;
+  DiskFileSystem(java.nio.file.Path path) {
+    this.rootDir = path;
   }
 
   @Override

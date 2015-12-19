@@ -27,7 +27,7 @@ public class TempManager {
 
   public void removeTemps() {
     try {
-      RecursiveDeleter.deleteRecursively(toJPath(TEMP_ROOT));
+      RecursiveDeleter.deleteRecursively(TEMP_ROOT.toJPath());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -40,16 +40,11 @@ public class TempManager {
 
   public TempDir tempDir() {
     Path path = tempPath();
-    java.nio.file.Path jPath = toJPath(path);
     try {
-      Files.createDirectories(jPath);
+      Files.createDirectories(path.toJPath());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    return new TempDir(valuesDb, jPath);
-  }
-
-  private static java.nio.file.Path toJPath(Path path) {
-    return java.nio.file.Paths.get(path.value());
+    return new TempDir(valuesDb, path);
   }
 }

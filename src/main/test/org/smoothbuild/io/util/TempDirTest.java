@@ -15,7 +15,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,7 +31,7 @@ import org.testory.common.Matcher;
 public class TempDirTest {
   private final Path path = path("my/path");
   private final String content = "content";
-  private final java.nio.file.Path rootPath = Paths.get("/fake/path");
+  private final Path rootPath = path("fake/path");
 
   private ValuesDb valuesDb;
   private FileSystem fileSystem;
@@ -59,7 +58,7 @@ public class TempDirTest {
   @Test
   public void root_os_path() {
     when(tempDir.rootOsPath());
-    thenReturned(rootPath.toString());
+    thenReturned(rootPath.value());
   }
 
   @Test
