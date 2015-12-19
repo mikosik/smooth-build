@@ -1,6 +1,8 @@
 package org.smoothbuild.acceptance.cmd;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
@@ -75,5 +77,13 @@ public class BuildCommandTest extends AcceptanceTestCase {
     then(output(), containsString(
         "Can't store result of 'result' as it contains files with duplicated paths:\n"
             + "  file.txt\n"));
+  }
+
+  public void build_command_clears_temporary_dir() throws Exception {
+    givenFile(TEMPORARY_PATH.append(path("file")).value(), "content");
+    givenScript("result: 'abc';");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(!file(TEMPORARY_PATH.append(path("file")).value()).exists());
   }
 }

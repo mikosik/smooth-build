@@ -7,9 +7,6 @@ import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIt
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Paths;
-
-import javax.inject.Inject;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -24,7 +21,6 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.Streams;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.io.Files;
 
 public class TempDir {
   private final ValuesDb valuesDb;
@@ -32,12 +28,6 @@ public class TempDir {
   private final java.nio.file.Path rootPath;
   private boolean isDestroyed;
 
-  @Inject
-  public TempDir(ValuesDb valuesDb) {
-    this(valuesDb, Paths.get(Files.createTempDir().getAbsolutePath()));
-  }
-
-  @VisibleForTesting
   public TempDir(ValuesDb valuesDb, java.nio.file.Path path) {
     this(valuesDb, path, new DiskFileSystem(path));
   }
