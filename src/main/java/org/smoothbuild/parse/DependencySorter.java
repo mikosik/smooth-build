@@ -21,9 +21,8 @@ import com.google.common.collect.ImmutableList;
  */
 public class DependencySorter {
   public static List<Name> sortDependencies(Map<Name, Function> builtinModule,
-      Map<Name, Set<Dependency>> dependenciesOrig, Console console) {
-
-    Worker worker = new Worker(builtinModule, dependenciesOrig, console);
+      Map<Name, Set<Dependency>> dependencies, Console console) {
+    Worker worker = new Worker(builtinModule, dependencies, console);
     worker.work();
     return worker.result();
   }
@@ -35,12 +34,12 @@ public class DependencySorter {
     private final DependencyStack stack;
     private final Console console;
 
-    public Worker(Map<Name, Function> builtinModule, Map<Name, Set<Dependency>> dependenciesOrig,
+    public Worker(Map<Name, Function> builtinModule, Map<Name, Set<Dependency>> dependencies,
         Console console) {
       this.console = console;
-      this.notSorted = new HashMap<>(dependenciesOrig);
+      this.notSorted = new HashMap<>(dependencies);
       this.reachableNames = new HashSet<>(builtinModule.keySet());
-      this.sorted = new ArrayList<>(dependenciesOrig.size());
+      this.sorted = new ArrayList<>(dependencies.size());
       this.stack = new DependencyStack();
     }
 
