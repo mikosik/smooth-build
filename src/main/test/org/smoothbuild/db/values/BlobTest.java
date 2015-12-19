@@ -1,6 +1,7 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
@@ -17,8 +18,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 
 import com.google.common.hash.HashCode;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 public class BlobTest {
   private final String string = "abc";
@@ -31,8 +30,7 @@ public class BlobTest {
 
   @Before
   public void before() {
-    Injector injector = Guice.createInjector(new TestValuesDbModule());
-    valuesDb = injector.getInstance(ValuesDb.class);
+    valuesDb = memoryValuesDb();
   }
 
   @Test

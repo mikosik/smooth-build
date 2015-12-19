@@ -1,6 +1,7 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
@@ -14,8 +15,6 @@ import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 public class SStringTest {
   private ValuesDb valuesDb;
@@ -26,8 +25,7 @@ public class SStringTest {
 
   @Before
   public void before() {
-    Injector injector = Guice.createInjector(new TestValuesDbModule());
-    valuesDb = injector.getInstance(ValuesDb.class);
+    valuesDb = memoryValuesDb();
   }
 
   @Test

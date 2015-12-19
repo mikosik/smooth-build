@@ -18,9 +18,6 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 public class ArrayTest {
   private ValuesDb valuesDb;
   private Blob blob;
@@ -34,8 +31,7 @@ public class ArrayTest {
 
   @Before
   public void before() {
-    Injector injector = Guice.createInjector(new TestValuesDbModule());
-    valuesDb = injector.getInstance(ValuesDb.class);
+    valuesDb = memoryValuesDb();
   }
 
   @Test

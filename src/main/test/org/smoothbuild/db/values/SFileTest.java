@@ -1,6 +1,7 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
@@ -18,8 +19,6 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 
 import com.google.common.hash.HashCode;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 public class SFileTest {
   private final String string = "abc";
@@ -34,8 +33,7 @@ public class SFileTest {
 
   @Before
   public void before() {
-    Injector injector = Guice.createInjector(new TestValuesDbModule());
-    valuesDb = injector.getInstance(ValuesDb.class);
+    valuesDb = memoryValuesDb();
   }
 
   @Test
