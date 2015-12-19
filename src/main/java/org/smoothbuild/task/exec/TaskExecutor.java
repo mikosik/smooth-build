@@ -3,7 +3,6 @@ package org.smoothbuild.task.exec;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.outputs.OutputsDb;
@@ -11,7 +10,7 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.SmoothJar;
-import org.smoothbuild.io.util.TempDir;
+import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
@@ -25,18 +24,18 @@ public class TaskExecutor {
   private final TaskReporter reporter;
   private final FileSystem projectFileSystem;
   private final ValuesDb valuesDb;
-  private final Provider<TempDir> tempDirProvider;
+  private final TempManager tempManager;
 
   @Inject
   public TaskExecutor(@SmoothJar HashCode smoothJarHash, OutputsDb outputsDb,
       TaskReporter reporter, @ProjectDir FileSystem projectFileSystem, ValuesDb valuesDb,
-      Provider<TempDir> tempDirProvider) {
+      TempManager tempManager) {
     this.smoothJarHash = smoothJarHash;
     this.outputsDb = outputsDb;
     this.reporter = reporter;
     this.projectFileSystem = projectFileSystem;
     this.valuesDb = valuesDb;
-    this.tempDirProvider = tempDirProvider;
+    this.tempManager = tempManager;
   }
 
   public <T extends Value> void execute(Task task) {
@@ -46,8 +45,7 @@ public class TaskExecutor {
       Output output = outputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
-      ContainerImpl container = new ContainerImpl(projectFileSystem, valuesDb,
-          tempDirProvider);
+      ContainerImpl container = new ContainerImpl(projectFileSystem, valuesDb, tempManager);
       task.execute(container);
       container.destroy();
       if (task.isCacheable()) {

@@ -5,12 +5,11 @@ import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Provider;
-
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
+import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.ValueFactory;
@@ -18,22 +17,21 @@ import org.smoothbuild.lang.value.ValueFactory;
 public class ContainerImpl implements Container {
   private final FileSystem projectFileSystem;
   private final ValuesDb valuesDb;
-  private final Provider<TempDir> tempDirProvider;
+  private final TempManager tmepManager;
   private final List<Message> messages;
   private final List<TempDir> tempDirs;
 
-  public ContainerImpl(FileSystem projectFileSystem, ValuesDb valuesDb,
-      Provider<TempDir> tempDirProvider) {
+  public ContainerImpl(FileSystem projectFileSystem, ValuesDb valuesDb, TempManager tempManager) {
     this.projectFileSystem = projectFileSystem;
     this.valuesDb = valuesDb;
-    this.tempDirProvider = tempDirProvider;
+    this.tmepManager = tempManager;
     this.messages = new ArrayList<>();
     this.tempDirs = new ArrayList<>();
   }
 
   public static ContainerImpl containerImpl() {
     final ValuesDb valuesDb = memoryValuesDb();
-    return new ContainerImpl(new MemoryFileSystem(), valuesDb, () -> new TempDir(valuesDb));
+    return new ContainerImpl(new MemoryFileSystem(), valuesDb, new TempManager(valuesDb));
   }
 
   @Override
@@ -56,7 +54,7 @@ public class ContainerImpl implements Container {
 
   @Override
   public TempDir createTempDir() {
-    TempDir tempDir = tempDirProvider.get();
+    TempDir tempDir = tmepManager.tempDir();
     tempDirs.add(tempDir);
     return tempDir;
   }
