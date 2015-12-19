@@ -1,6 +1,7 @@
 package org.smoothbuild.io.fs.base;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.io.fs.base.Path.root;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
 import java.util.ArrayDeque;
@@ -10,13 +11,14 @@ import com.google.common.collect.ImmutableList;
 
 public class RecursiveFilesIterable implements Iterable<Path> {
   private final FileSystem fileSystem;
+  private final Path rootDir;
 
   public static Iterable<Path> recursiveFilesIterable(FileSystem fileSystem, Path dir) {
     switch (fileSystem.pathState(dir)) {
       case FILE:
         throw new IllegalArgumentException("Path " + dir + " is not a dir but a file.");
       case DIR:
-        return new RecursiveFilesIterable(new SubFileSystem(fileSystem, dir));
+        return new RecursiveFilesIterable(fileSystem, dir);
       case NOTHING:
         return ImmutableList.of();
       default:
@@ -24,8 +26,9 @@ public class RecursiveFilesIterable implements Iterable<Path> {
     }
   }
 
-  private RecursiveFilesIterable(FileSystem fileSystem) {
+  private RecursiveFilesIterable(FileSystem fileSystem, Path rootDir) {
     this.fileSystem = fileSystem;
+    this.rootDir = rootDir;
   }
 
   @Override
@@ -41,7 +44,7 @@ public class RecursiveFilesIterable implements Iterable<Path> {
     public RecursiveFilesIterator() {
       this.dirStack = new ArrayDeque<>();
       this.fileStack = new ArrayDeque<>();
-      this.dirStack.push(Path.root());
+      this.dirStack.push(root());
       this.nextFile = fetchNextFile();
     }
 
@@ -62,12 +65,12 @@ public class RecursiveFilesIterable implements Iterable<Path> {
       while (!fileStack.isEmpty() || !dirStack.isEmpty()) {
         if (fileStack.isEmpty()) {
           Path dir = dirStack.remove();
-          for (Path name : fileSystem.files(dir)) {
+          for (Path name : fileSystem.files(rootDir.append(dir))) {
             fileStack.push(dir.append(name));
           }
         } else {
           Path file = fileStack.remove();
-          switch (fileSystem.pathState(file)) {
+          switch (fileSystem.pathState(rootDir.append(file))) {
             case FILE:
               return file;
             case DIR:
@@ -76,7 +79,8 @@ public class RecursiveFilesIterable implements Iterable<Path> {
             case NOTHING:
               throw new RuntimeException("Unexpected case: " + NOTHING);
             default:
-              throw new RuntimeException("Unexpected case: " + fileSystem.pathState(file));
+              throw new RuntimeException(
+                  "Unexpected case: " + fileSystem.pathState(rootDir.append(file)));
           }
         }
       }
