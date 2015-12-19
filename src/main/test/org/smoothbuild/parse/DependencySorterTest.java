@@ -4,7 +4,6 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
-import static org.testory.Testory.givenTest;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
@@ -23,19 +21,13 @@ import org.smoothbuild.lang.function.base.Name;
 import com.google.common.collect.ImmutableList;
 
 public class DependencySorterTest {
-  private Name name1;
-  private Name name2;
-  private Name name3;
-  private Name name4;
-  private Name name5;
-  private Name name6;
-
+  private final Name name1 = Name.name("name1");
+  private final Name name2 = Name.name("name2");
+  private final Name name3 = Name.name("name3");
+  private final Name name4 = Name.name("name4");
+  private final Name name5 = Name.name("name5");
+  private final Name name6 = Name.name("name6");
   private HashMap<Name, Set<Dependency>> map;
-
-  @Before
-  public void before() {
-    givenTest(this);
-  }
 
   @Test
   public void linear_dependency() {
@@ -85,9 +77,8 @@ public class DependencySorterTest {
     thenThrown(ParsingException.class);
   }
 
-  private static List<Name> sortDependencies(final HashMap<Name, Set<Dependency>> map) {
-    return DependencySorter.sortDependencies(new HashMap<>(), map,
-        mock(Console.class));
+  private static List<Name> sortDependencies(HashMap<Name, Set<Dependency>> map) {
+    return DependencySorter.sortDependencies(new HashMap<>(), map, mock(Console.class));
   }
 
   private static Set<Dependency> dependencies(Name... names) {

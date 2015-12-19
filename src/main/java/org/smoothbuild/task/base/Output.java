@@ -41,11 +41,12 @@ public class Output {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof Output)) {
-      return false;
-    }
-    Output that = (Output) object;
-    return Objects.equals(this.result, that.result) && this.messages.equals(that.messages);
+    return object instanceof Output && equals((Output) object);
+  }
+
+  public boolean equals(Output output) {
+    return Objects.equals(result, output.result)
+        && Objects.equals(messages, output.messages);
   }
 
   @Override

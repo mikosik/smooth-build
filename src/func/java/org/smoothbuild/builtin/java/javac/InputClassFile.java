@@ -6,6 +6,7 @@ import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Objects;
 
 import javax.tools.SimpleJavaFileObject;
 
@@ -43,11 +44,11 @@ public class InputClassFile extends SimpleJavaFileObject {
 
   @Override
   public boolean equals(Object object) {
-    if (object instanceof InputClassFile) {
-      InputClassFile that = (InputClassFile) object;
-      return this.file.path().equals(that.file.path());
-    }
-    return false;
+    return object instanceof InputClassFile && equals((InputClassFile) object);
+  }
+
+  public boolean equals(InputClassFile inputClassFile) {
+    return Objects.equals(file.path(), inputClassFile.file.path());
   }
 
   @Override

@@ -2,6 +2,8 @@ package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Objects;
+
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
@@ -27,16 +29,16 @@ public class Value {
   }
 
   @Override
-  public int hashCode() {
-    return hash.hashCode();
+  public boolean equals(Object object) {
+    return object instanceof Value && equals((Value) object);
+  }
+
+  public boolean equals(Value value) {
+    return Objects.equals(hash, value.hash());
   }
 
   @Override
-  public boolean equals(Object object) {
-    if (object instanceof Value) {
-      Value that = (Value) object;
-      return this.hash.equals(that.hash());
-    }
-    return false;
+  public int hashCode() {
+    return hash.hashCode();
   }
 }

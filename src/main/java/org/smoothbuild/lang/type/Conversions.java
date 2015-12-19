@@ -8,6 +8,8 @@ import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 
+import java.util.Objects;
+
 import org.smoothbuild.lang.function.base.Name;
 
 import com.google.common.collect.ImmutableMap;
@@ -46,17 +48,17 @@ public class Conversions {
 
     @Override
     public boolean equals(Object object) {
-      if (!(object instanceof TypeConversion)) {
-        return false;
-      }
+      return object instanceof TypeConversion && equals((TypeConversion) object);
+    }
 
-      TypeConversion that = (TypeConversion) object;
-      return this.from == that.from && this.to == that.to;
+    public boolean equals(TypeConversion typeConversion) {
+      return Objects.equals(from, typeConversion.from)
+          && Objects.equals(to, typeConversion.to);
     }
 
     @Override
     public int hashCode() {
-      return 31 * from.hashCode() + to.hashCode();
+      return Objects.hash(from, to);
     }
   }
 }
