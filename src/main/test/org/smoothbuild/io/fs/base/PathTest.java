@@ -12,6 +12,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -98,6 +99,20 @@ public class PathTest {
   private static Case testValue(String path, String value) {
     return newCase(format("path [{0}] has value [{1}]", path, value),
         () -> assertEquals(path(path).value(), value));
+  }
+
+  @Quackery
+  public static Suite implements_toJPath() {
+    return suite("implements toJPath")
+        .add(testToJPath("", Paths.get(".")))
+        .add(testToJPath("abc", Paths.get("abc")))
+        .add(testToJPath("abc/def", Paths.get("abc/def")))
+        .add(testToJPath("abc/def/ghi", Paths.get("abc/def/ghi")));
+  }
+
+  private static Case testToJPath(String path, java.nio.file.Path jPath) {
+    return newCase(format("path [{0}] converted to JPath equals [{1}]", path, jPath),
+        () -> assertEquals(path(path).toJPath(), jPath));
   }
 
   @Test
