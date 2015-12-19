@@ -8,9 +8,6 @@ import org.smoothbuild.db.hashed.Unmarshaller;
 
 import com.google.common.hash.HashCode;
 
-/**
- * File value in smooth language.
- */
 public class SFile extends Value {
   private final SString path;
   private final Blob content;

@@ -13,9 +13,6 @@ import com.google.common.hash.HashCode;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingInputStream;
 
-/**
- * Blob value in smooth language.
- */
 public class Blob extends Value {
   private final HashedDb hashedDB;
 
