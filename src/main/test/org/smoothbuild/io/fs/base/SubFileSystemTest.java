@@ -21,7 +21,9 @@ public class SubFileSystemTest {
   private final FileSystem fileSystem = mock(FileSystem.class);
   private final Path root = path("my/root");
   private Path path = path("my/path");
+  private final Path path2 = path("my/path2");
   private Path absolutePath = root.append(path);
+  private final Path absolutePath2 = root.append(path2);
   private List<String> strings;
   private InputStream inputStream;
 
@@ -43,6 +45,12 @@ public class SubFileSystemTest {
     given(willReturn(strings), fileSystem).files(absolutePath);
     when(subFileSystem).files(path);
     thenReturned(sameInstance(strings));
+  }
+
+  @Test
+  public void move_is_forwarded() {
+    when(subFileSystem).move(path, path2);
+    thenCalled(fileSystem).move(absolutePath, absolutePath2);
   }
 
   @Test

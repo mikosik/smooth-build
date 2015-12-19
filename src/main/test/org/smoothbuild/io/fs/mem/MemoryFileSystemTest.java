@@ -11,7 +11,6 @@ import org.smoothbuild.io.fs.base.GenericFileSystemTestCase;
 import org.smoothbuild.io.fs.base.Path;
 
 public class MemoryFileSystemTest extends GenericFileSystemTestCase {
-
   @Before
   public void before() {
     fileSystem = new MemoryFileSystem();

@@ -159,6 +159,58 @@ public abstract class GenericFileSystemTestCase {
     thenThrown(FileSystemException.class);
   }
 
+  // move()
+
+  @Test
+  public void moving_nonexistent_file_fails() throws Exception {
+    when(fileSystem).move(path("source"), path("target"));
+    thenThrown(exception(new FileSystemException(
+        "Cannot move " + path("source") + ". It doesn't exist.")));
+  }
+
+  @Test
+  public void moving_directory_fails() throws Exception {
+    given(this).createEmptyFile(path("source/file"));
+    when(fileSystem).move(path("source"), path("target"));
+    thenThrown(exception(new FileSystemException(
+        "Cannot move " + path("source") + ". It is directory.")));
+  }
+
+  @Test
+  public void moving_to_directory_fails() throws Exception {
+    given(this).createEmptyFile(path("source"));
+    given(this).createEmptyFile(path("target/file"));
+    when(fileSystem).move(path("source"), path("target"));
+    thenThrown(exception(new FileSystemException(
+        "Cannot move to " + path("target") + ". It is directory.")));
+  }
+
+  @Test
+  public void moved_file_is_deleted_from_source() throws Exception {
+    given(this).createEmptyFile(path("source"));
+    when(fileSystem).move(path("source"), path("target"));
+    thenEqual(fileSystem.pathState(path("source")), NOTHING);
+  }
+
+  @Test
+  public void moved_file_is_copied_to_target() throws Exception {
+    given(this).createFile(path("source"), "content");
+    when(fileSystem).move(path("source"), path("target"));
+    thenEqual(fileSystem.pathState(path("source")), NOTHING);
+    when(inputStreamToString(fileSystem.openInputStream(path("target"))));
+    thenReturned("content");
+  }
+
+  @Test
+  public void moved_file_overwrites_target_file() throws Exception {
+    given(this).createFile(path("source"), "content");
+    given(this).createEmptyFile(path("target"));
+    when(fileSystem).move(path("source"), path("target"));
+    thenEqual(fileSystem.pathState(path("source")), NOTHING);
+    when(inputStreamToString(fileSystem.openInputStream(path("target"))));
+    thenReturned("content");
+  }
+
   // delete()
 
   @Test

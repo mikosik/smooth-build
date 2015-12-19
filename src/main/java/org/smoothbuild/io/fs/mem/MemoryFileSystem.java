@@ -6,6 +6,7 @@ import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
@@ -15,6 +16,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.util.Streams;
 
 /**
  * In memory implementation of FileSystem.
@@ -37,6 +39,25 @@ public class MemoryFileSystem implements FileSystem {
   @Override
   public List<Path> files(Path dir) {
     return getDir(dir).childNames();
+  }
+
+  @Override
+  public void move(Path source, Path target) {
+    if (pathState(source) == NOTHING) {
+      throw new FileSystemException("Cannot move " + source + ". It doesn't exist.");
+    }
+    if (pathState(source) == DIR) {
+      throw new FileSystemException("Cannot move " + source + ". It is directory.");
+    }
+    if (pathState(target) == DIR) {
+      throw new FileSystemException("Cannot move to " + target + ". It is directory.");
+    }
+    try {
+      Streams.copy(openInputStream(source), openOutputStream(target));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    delete(source);
   }
 
   @Override

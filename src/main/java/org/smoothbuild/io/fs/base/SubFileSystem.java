@@ -23,6 +23,11 @@ public class SubFileSystem implements FileSystem {
   }
 
   @Override
+  public void move(Path source, Path target) {
+    fileSystem.move(absolutePath(source), absolutePath(target));
+  }
+
+  @Override
   public void delete(Path path) {
     fileSystem.delete(absolutePath(path));
   }

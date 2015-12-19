@@ -1,5 +1,6 @@
 package org.smoothbuild.io.fs.disk;
 
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathExists;
@@ -62,6 +63,24 @@ public class DiskFileSystem implements FileSystem {
         builder.add(path(path.getFileName().toString()));
       }
       return builder.build();
+    } catch (IOException e) {
+      throw new FileSystemException(e);
+    }
+  }
+
+  @Override
+  public void move(Path source, Path target) {
+    if (pathState(source) == NOTHING) {
+      throw new FileSystemException("Cannot move " + source + ". It doesn't exist.");
+    }
+    if (pathState(source) == DIR) {
+      throw new FileSystemException("Cannot move " + source + ". It is directory.");
+    }
+    if (pathState(target) == DIR) {
+      throw new FileSystemException("Cannot move to " + target + ". It is directory.");
+    }
+    try {
+      Files.move(jdkPath(source), jdkPath(target), ATOMIC_MOVE);
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
