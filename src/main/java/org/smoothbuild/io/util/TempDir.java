@@ -25,15 +25,15 @@ import com.google.common.annotations.VisibleForTesting;
 public class TempDir {
   private final ValuesDb valuesDb;
   private final FileSystem fileSystem;
-  private final java.nio.file.Path rootPath;
+  private final Path rootPath;
   private boolean isDestroyed;
 
-  public TempDir(ValuesDb valuesDb, java.nio.file.Path path) {
+  public TempDir(ValuesDb valuesDb, Path path) {
     this(valuesDb, path, new DiskFileSystem(path));
   }
 
   @VisibleForTesting
-  public TempDir(ValuesDb valuesDb, java.nio.file.Path rootPath, FileSystem fileSystem) {
+  public TempDir(ValuesDb valuesDb, Path rootPath, FileSystem fileSystem) {
     this.valuesDb = valuesDb;
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
@@ -41,11 +41,11 @@ public class TempDir {
   }
 
   public String rootOsPath() {
-    return rootPath.toString();
+    return rootPath.toJPath().toString();
   }
 
   public String asOsPath(Path path) {
-    return rootPath.resolve(path.value()).toString();
+    return rootPath.append(path).toJPath().toString();
   }
 
   public void destroy() {

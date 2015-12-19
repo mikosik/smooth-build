@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Before;
@@ -24,7 +25,7 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   @Before
   public void before() {
     tempDir = com.google.common.io.Files.createTempDir();
-    fileSystem = new DiskFileSystem(tempDir.getAbsolutePath());
+    fileSystem = new DiskFileSystem(Paths.get(tempDir.getAbsolutePath()));
   }
 
   @After
