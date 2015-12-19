@@ -1,5 +1,6 @@
 package org.smoothbuild.io.fs.base;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,5 +159,13 @@ public class Path {
   @Override
   public String toString() {
     return "'" + value + "'";
+  }
+
+  public java.nio.file.Path toJPath() {
+    if (isRoot()) {
+      return Paths.get(".");
+    } else {
+      return Paths.get(value);
+    }
   }
 }
