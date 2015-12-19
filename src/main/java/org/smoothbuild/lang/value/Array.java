@@ -15,9 +15,6 @@ import org.smoothbuild.lang.type.ArrayType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-/**
- * Array value in smooth language.
- */
 public class Array<T extends Value> extends Value implements Iterable<T> {
   private final Function<HashCode, T> valueConstructor;
   private final HashedDb hashedDb;

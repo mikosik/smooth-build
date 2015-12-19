@@ -12,9 +12,6 @@ import org.smoothbuild.db.hashed.HashedDbException;
 
 import com.google.common.hash.HashCode;
 
-/**
- * String value in smooth language.
- */
 public class SString extends Value {
   private final HashedDb hashedDb;
 

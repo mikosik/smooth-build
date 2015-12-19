@@ -8,9 +8,6 @@ import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
 
-/**
- * Value in smooth language.
- */
 public class Value {
   private final Type type;
   private final HashCode hash;
