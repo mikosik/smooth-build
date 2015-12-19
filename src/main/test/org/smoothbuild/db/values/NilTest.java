@@ -1,6 +1,7 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.emptyIterable;
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -11,17 +12,13 @@ import org.junit.Test;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Nothing;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 public class NilTest {
   private ValuesDb valuesDb;
   private Array<?> array;
 
   @Before
   public void before() {
-    Injector injector = Guice.createInjector(new TestValuesDbModule());
-    valuesDb = injector.getInstance(ValuesDb.class);
+    valuesDb = memoryValuesDb();
   }
 
   @Test

@@ -1,5 +1,6 @@
 package org.smoothbuild.db.values;
 
+import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
@@ -14,8 +15,6 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 
 import com.google.common.hash.HashCode;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 public class BlobArrayTest {
   private ValuesDb valuesDb;
@@ -24,8 +23,7 @@ public class BlobArrayTest {
 
   @Before
   public void before() {
-    Injector injector = Guice.createInjector(new TestValuesDbModule());
-    valuesDb = injector.getInstance(ValuesDb.class);
+    valuesDb = memoryValuesDb();
   }
 
   @Test
