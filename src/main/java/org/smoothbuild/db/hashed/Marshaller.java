@@ -19,15 +19,15 @@ public class Marshaller {
     this.hash = hash;
   }
 
-  public void write(HashCode hash) {
+  public void writeHash(HashCode hash) {
     dataOutput.write(hash.asBytes());
   }
 
-  public void write(int intValue) {
+  public void writeInt(int intValue) {
     dataOutput.writeInt(intValue);
   }
 
-  public HashCode close() {
+  public HashCode closeMarshaller() {
     if (hash == null) {
       return hashedDb.write(dataOutput.toByteArray());
     } else {

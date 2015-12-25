@@ -30,9 +30,9 @@ public class Array<T extends Value> extends Value implements Iterable<T> {
       ArrayType arrayType, Function<HashCode, T> valueConstructor, HashedDb hashedDb) {
     Marshaller marshaller = new Marshaller(hashedDb);
     for (Value element : elements) {
-      marshaller.write(element.hash());
+      marshaller.writeHash(element.hash());
     }
-    HashCode hash = marshaller.close();
+    HashCode hash = marshaller.closeMarshaller();
     return new Array<T>(hash, arrayType, valueConstructor, hashedDb);
   }
 

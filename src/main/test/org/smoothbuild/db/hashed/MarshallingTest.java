@@ -33,8 +33,8 @@ public class MarshallingTest {
     given(hashedDb = memoryHashedDb());
     given(hashCode = hashOfProperSize());
     given(marshaller = new Marshaller(hashedDb));
-    given(marshaller).write(hashCode);
-    given(hash = marshaller.close());
+    given(marshaller).writeHash(hashCode);
+    given(hash = marshaller.closeMarshaller());
     when(new Unmarshaller(hashedDb, hash).readHash());
     thenReturned(hashCode);
   }
@@ -45,8 +45,8 @@ public class MarshallingTest {
     given(hashCode = hashOfProperSize());
     given(hashId = Hash.integer(33));
     given(marshaller = new Marshaller(hashedDb, hashId));
-    given(marshaller).write(hashCode);
-    when(marshaller.close());
+    given(marshaller).writeHash(hashCode);
+    when(marshaller.closeMarshaller());
     thenReturned(hashId);
     thenEqual(new Unmarshaller(hashedDb, hashId).readHash(), hashCode);
   }
@@ -91,8 +91,8 @@ public class MarshallingTest {
   public void trying_to_read_hash_twice_when_only_one_is_stored_returns_null_second_time() {
     given(hashedDb = memoryHashedDb());
     given(marshaller = new Marshaller(hashedDb));
-    given(marshaller).write(hashOfProperSize());
-    given(hash = marshaller.close());
+    given(marshaller).writeHash(hashOfProperSize());
+    given(hash = marshaller.closeMarshaller());
     given(unmarshaller = new Unmarshaller(hashedDb, hash));
     given(unmarshaller).tryReadHash();
     when(unmarshaller).tryReadHash();
@@ -103,8 +103,8 @@ public class MarshallingTest {
   public void marshalling_int() throws Exception {
     given(hashedDb = memoryHashedDb());
     given(marshaller = new Marshaller(hashedDb));
-    given(marshaller).write(0x12345678);
-    given(hash = marshaller.close());
+    given(marshaller).writeInt(0x12345678);
+    given(hash = marshaller.closeMarshaller());
     when(new Unmarshaller(hashedDb, hash).readInt());
     thenReturned(0x12345678);
   }
