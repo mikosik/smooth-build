@@ -138,7 +138,7 @@ public class OutputsDbTest {
 
   private static Blob writeBlob(ValuesDb valuesDb, byte[] bytes) throws IOException {
     BlobBuilder builder = valuesDb.blobBuilder();
-    Streams.copy(new ByteArrayInputStream(bytes), builder.openOutputStream());
+    Streams.copy(new ByteArrayInputStream(bytes), builder);
     return builder.build();
   }
 }

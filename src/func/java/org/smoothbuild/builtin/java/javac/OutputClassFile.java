@@ -30,7 +30,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
 
   @Override
   public OutputStream openOutputStream() throws IOException {
-    final OutputStream outputStream = contentBuilder.openOutputStream();
+    final OutputStream outputStream = contentBuilder;
     return new ForwardingOutputStream(outputStream) {
       @Override
       public void close() throws IOException {

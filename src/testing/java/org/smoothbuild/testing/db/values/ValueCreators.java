@@ -50,7 +50,7 @@ public class ValueCreators {
   public static Blob blob(ValuesDb valuesDb, byte[] bytes) {
     BlobBuilder builder = valuesDb.blobBuilder();
     try {
-      Streams.copy(new ByteArrayInputStream(bytes), builder.openOutputStream());
+      Streams.copy(new ByteArrayInputStream(bytes), builder);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
