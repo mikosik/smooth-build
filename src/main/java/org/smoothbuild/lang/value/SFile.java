@@ -22,9 +22,9 @@ public class SFile extends Value {
 
   public static SFile storeFileInDb(SString path, Blob content, HashedDb hashedDb) {
     Marshaller marshaller = new Marshaller(hashedDb);
-    marshaller.write(path.hash());
-    marshaller.write(content.hash());
-    HashCode hash = marshaller.close();
+    marshaller.writeHash(path.hash());
+    marshaller.writeHash(content.hash());
+    HashCode hash = marshaller.closeMarshaller();
     return new SFile(hash, hashedDb);
   }
 

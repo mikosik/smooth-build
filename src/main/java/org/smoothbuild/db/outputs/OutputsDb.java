@@ -37,18 +37,18 @@ public class OutputsDb {
     Marshaller marshaller = new Marshaller(hashedDb, taskHash);
 
     ImmutableList<Message> messages = output.messages();
-    marshaller.write(messages.size());
+    marshaller.writeInt(messages.size());
     for (Message message : messages) {
       SString messageString = valuesDb.string(message.getMessage());
 
-      marshaller.write(messageTypeToInt(message));
-      marshaller.write(messageString.hash());
+      marshaller.writeInt(messageTypeToInt(message));
+      marshaller.writeHash(messageString.hash());
     }
 
     if (!Messages.containsErrors(messages)) {
-      marshaller.write(output.result().hash());
+      marshaller.writeHash(output.result().hash());
     }
-    marshaller.close();
+    marshaller.closeMarshaller();
   }
 
   public boolean contains(HashCode taskHash) {
