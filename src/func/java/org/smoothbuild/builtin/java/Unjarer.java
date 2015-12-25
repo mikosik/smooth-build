@@ -76,7 +76,7 @@ public class Unjarer {
   private Blob unjarEntryContent(JarInputStream jarInputStream) {
     BlobBuilder contentBuilder = container.create().blobBuilder();
     try {
-      try (OutputStream outputStream = contentBuilder.openOutputStream()) {
+      try (OutputStream outputStream = contentBuilder) {
         int len;
         while ((len = jarInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);

@@ -67,7 +67,7 @@ public class UnzipFunction {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     try {
       BlobBuilder contentBuilder = container.create().blobBuilder();
-      try (OutputStream outputStream = contentBuilder.openOutputStream()) {
+      try (OutputStream outputStream = contentBuilder) {
         int len;
         while ((len = zipInputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);

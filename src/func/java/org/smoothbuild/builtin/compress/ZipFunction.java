@@ -21,7 +21,7 @@ public class ZipFunction {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = container.create().blobBuilder();
-    try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.openOutputStream())) {
+    try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder)) {
       for (SFile file : files) {
         String path = file.path().value();
         if (duplicatesDetector.addValue(path)) {

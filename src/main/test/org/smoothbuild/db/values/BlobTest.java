@@ -42,22 +42,6 @@ public class BlobTest {
   }
 
   @Test
-  public void opening_output_stream_twice_is_forbidden() throws Exception {
-    given(blobBuilder = valuesDb.blobBuilder());
-    when(blobBuilder.openOutputStream()).close();
-    when(blobBuilder).openOutputStream();
-    thenThrown(IllegalStateException.class);
-  }
-
-  @Test
-  public void opening_output_stream_after_calling_build_is_forbidden() throws Exception {
-    given(blobBuilder = valuesDb.blobBuilder());
-    given(blobBuilder).build();
-    when(blobBuilder).openOutputStream();
-    thenThrown(RuntimeException.class);
-  }
-
-  @Test
   public void type_of_blob_is_blob() throws Exception {
     given(blob = createBlob(valuesDb, string));
     when(blob).type();
@@ -67,7 +51,7 @@ public class BlobTest {
   @Test
   public void empty_blob_is_empty() throws Exception {
     given(blobBuilder = valuesDb.blobBuilder());
-    given(blobBuilder.openOutputStream()).close();
+    given(blobBuilder).close();
     given(blob = blobBuilder.build());
     when(inputStreamToString(blob.openInputStream()));
     thenReturned("");
@@ -78,6 +62,33 @@ public class BlobTest {
     given(blob = createBlob(valuesDb, string));
     when(inputStreamToString(blob.openInputStream()));
     thenReturned(string);
+  }
+
+  @Test
+  public void blob_has_content_passed_to_write_byte_method() throws Exception {
+    given(blobBuilder = valuesDb.blobBuilder());
+    given(blobBuilder).write(0x17);
+    given(blob = blobBuilder.build());
+    when(blob.openInputStream().read());
+    thenReturned(0x17);
+  }
+
+  @Test
+  public void blob_has_content_passed_to_write_byte_array_method() throws Exception {
+    given(blobBuilder = valuesDb.blobBuilder());
+    given(blobBuilder).write("abc".getBytes());
+    given(blob = blobBuilder.build());
+    when(inputStreamToString(blob.openInputStream()));
+    thenReturned("abc");
+  }
+
+  @Test
+  public void blob_has_content_passed_to_write_byte_array_with_range_method() throws Exception {
+    given(blobBuilder = valuesDb.blobBuilder());
+    given(blobBuilder).write("-abc-".getBytes(), 1, 3);
+    given(blob = blobBuilder.build());
+    when(inputStreamToString(blob.openInputStream()));
+    thenReturned("abc");
   }
 
   @Test
@@ -153,7 +164,7 @@ public class BlobTest {
 
   private static Blob createBlob(ValuesDb valuesDb, String content) throws Exception {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
-    writeAndClose(blobBuilder.openOutputStream(), content);
+    writeAndClose(blobBuilder, content);
     return blobBuilder.build();
   }
 

@@ -200,7 +200,7 @@ public class SFileTest {
 
   private static Blob createBlob(ValuesDb valuesDb, String content) throws Exception {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
-    writeAndClose(blobBuilder.openOutputStream(), content);
+    writeAndClose(blobBuilder, content);
     return blobBuilder.build();
   }
 
