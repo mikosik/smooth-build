@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.Type;
@@ -27,17 +26,15 @@ public class ArtifactSaver {
   private final ImmutableMap<Type, Saver<?>> saversMap;
 
   @Inject
-  public ArtifactSaver(@ProjectDir FileSystem smoothFileSystem, Console console) {
+  public ArtifactSaver(FileSystem fileSystem, Console console) {
     Builder<Type, Saver<?>> builder = ImmutableMap.builder();
-
-    builder.put(STRING, new StringSaver(smoothFileSystem));
-    builder.put(BLOB, new BlobSaver(smoothFileSystem));
-    builder.put(FILE, new FileSaver(smoothFileSystem));
-    builder.put(STRING_ARRAY, new ArraySaver<SString>(smoothFileSystem));
-    builder.put(BLOB_ARRAY, new ArraySaver<Blob>(smoothFileSystem));
-    builder.put(FILE_ARRAY, new FileArraySaver(smoothFileSystem, console));
-    builder.put(NIL, new ArraySaver<Nothing>(smoothFileSystem));
-
+    builder.put(STRING, new StringSaver(fileSystem));
+    builder.put(BLOB, new BlobSaver(fileSystem));
+    builder.put(FILE, new FileSaver(fileSystem));
+    builder.put(STRING_ARRAY, new ArraySaver<SString>(fileSystem));
+    builder.put(BLOB_ARRAY, new ArraySaver<Blob>(fileSystem));
+    builder.put(FILE_ARRAY, new FileArraySaver(fileSystem, console));
+    builder.put(NIL, new ArraySaver<Nothing>(fileSystem));
     this.saversMap = builder.build();
   }
 

@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 
@@ -20,7 +19,7 @@ public class Clean implements Command {
   private final Console console;
 
   @Inject
-  public Clean(@ProjectDir FileSystem fileSystem, Console console) {
+  public Clean(FileSystem fileSystem, Console console) {
     this.fileSystem = fileSystem;
     this.console = console;
   }
