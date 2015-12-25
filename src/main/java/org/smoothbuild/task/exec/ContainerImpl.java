@@ -17,14 +17,14 @@ import org.smoothbuild.lang.value.ValueFactory;
 public class ContainerImpl implements Container {
   private final FileSystem projectFileSystem;
   private final ValuesDb valuesDb;
-  private final TempManager tmepManager;
+  private final TempManager tempManager;
   private final List<Message> messages;
   private final List<TempDir> tempDirs;
 
   public ContainerImpl(FileSystem projectFileSystem, ValuesDb valuesDb, TempManager tempManager) {
     this.projectFileSystem = projectFileSystem;
     this.valuesDb = valuesDb;
-    this.tmepManager = tempManager;
+    this.tempManager = tempManager;
     this.messages = new ArrayList<>();
     this.tempDirs = new ArrayList<>();
   }
@@ -54,7 +54,7 @@ public class ContainerImpl implements Container {
 
   @Override
   public TempDir createTempDir() {
-    TempDir tempDir = tmepManager.tempDir();
+    TempDir tempDir = tempManager.tempDir();
     tempDirs.add(tempDir);
     return tempDir;
   }
