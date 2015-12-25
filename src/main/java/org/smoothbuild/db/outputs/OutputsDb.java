@@ -34,7 +34,7 @@ public class OutputsDb {
   }
 
   public void write(HashCode taskHash, Output output) {
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = new Marshaller(hashedDb, taskHash);
 
     ImmutableList<Message> messages = output.messages();
     marshaller.write(messages.size());
@@ -48,7 +48,7 @@ public class OutputsDb {
     if (!Messages.containsErrors(messages)) {
       marshaller.write(output.result().hash());
     }
-    marshaller.close(taskHash);
+    marshaller.close();
   }
 
   public boolean contains(HashCode taskHash) {
