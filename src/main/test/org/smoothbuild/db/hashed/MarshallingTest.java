@@ -2,6 +2,7 @@ package org.smoothbuild.db.hashed;
 
 import static org.smoothbuild.db.hashed.HashedDb.memoryHashedDb;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
+import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
@@ -49,6 +50,36 @@ public class MarshallingTest {
     when(marshaller.closeMarshaller());
     thenReturned(hashId);
     thenEqual(new Unmarshaller(hashedDb, hashId).readHash(), hashCode);
+  }
+
+  @Test
+  public void marshalling_via_write_byte_method() throws Exception {
+    given(hashedDb = memoryHashedDb());
+    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller).write(0x17);
+    given(hashId = marshaller.closeMarshaller());
+    when(new Unmarshaller(hashedDb, hashId).read());
+    thenReturned(0x17);
+  }
+
+  @Test
+  public void marshalling_via_write_byte_array_method() throws Exception {
+    given(hashedDb = memoryHashedDb());
+    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller).write("abc".getBytes());
+    given(hashId = marshaller.closeMarshaller());
+    when(inputStreamToString(new Unmarshaller(hashedDb, hashId)));
+    thenReturned("abc");
+  }
+
+  @Test
+  public void marshalling_via_write_byte_array_with_range_method() throws Exception {
+    given(hashedDb = memoryHashedDb());
+    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller).write("-abc-".getBytes(), 1, 3);
+    given(hashId = marshaller.closeMarshaller());
+    when(inputStreamToString(new Unmarshaller(hashedDb, hashId)));
+    thenReturned("abc");
   }
 
   @Test
