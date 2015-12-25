@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.io.fs.ProjectDir;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
@@ -30,7 +29,7 @@ public class ModuleParser {
   private final Console console;
 
   @Inject
-  public ModuleParser(@ProjectDir FileSystem fileSystem, Map<Name, Function> builtinModule,
+  public ModuleParser(FileSystem fileSystem, Map<Name, Function> builtinModule,
       DefinedFunctionsCreator definedFunctionsCreator, Console console) {
     this.fileSystem = fileSystem;
     this.builtinModule = builtinModule;
