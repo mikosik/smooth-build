@@ -21,11 +21,6 @@ public class Blob extends Value {
     this.hashedDB = checkNotNull(hashedDb);
   }
 
-  public static Blob storeBlobInDb(byte[] objectBytes, HashedDb hashedDb) {
-    HashCode hash = hashedDb.write(objectBytes);
-    return new Blob(hash, hashedDb);
-  }
-
   public InputStream openInputStream() {
     return hashedDB.openInputStream(hash());
   }

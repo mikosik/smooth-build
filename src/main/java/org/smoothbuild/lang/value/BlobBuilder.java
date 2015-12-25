@@ -1,18 +1,18 @@
 package org.smoothbuild.lang.value;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.Marshaller;
 
 public class BlobBuilder extends OutputStream {
   private final HashedDb hashedDb;
-  private final ByteArrayOutputStream outputStream;
+  private final Marshaller outputStream;
 
   public BlobBuilder(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
-    this.outputStream = new ByteArrayOutputStream();
+    this.outputStream = new Marshaller(hashedDb);
   }
 
   @Override
@@ -31,6 +31,6 @@ public class BlobBuilder extends OutputStream {
   }
 
   public Blob build() {
-    return Blob.storeBlobInDb(outputStream.toByteArray(), hashedDb);
+    return new Blob(outputStream.closeMarshaller(), hashedDb);
   }
 }
