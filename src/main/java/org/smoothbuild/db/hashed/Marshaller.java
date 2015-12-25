@@ -7,10 +7,16 @@ import com.google.common.io.ByteStreams;
 public class Marshaller {
   private final HashedDb hashedDb;
   private final ByteArrayDataOutput dataOutput;
+  private final HashCode hash;
 
   public Marshaller(HashedDb hashedDb) {
+    this(hashedDb, null);
+  }
+
+  public Marshaller(HashedDb hashedDb, HashCode hash) {
     this.hashedDb = hashedDb;
     this.dataOutput = ByteStreams.newDataOutput(256);
+    this.hash = hash;
   }
 
   public void write(HashCode hash) {
@@ -22,10 +28,10 @@ public class Marshaller {
   }
 
   public HashCode close() {
-    return hashedDb.write(dataOutput.toByteArray());
-  }
-
-  public HashCode close(HashCode taskHash) {
-    return hashedDb.write(taskHash, dataOutput.toByteArray());
+    if (hash == null) {
+      return hashedDb.write(dataOutput.toByteArray());
+    } else {
+      return hashedDb.write(hash, dataOutput.toByteArray());
+    }
   }
 }

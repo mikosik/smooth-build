@@ -3,6 +3,7 @@ package org.smoothbuild.db.hashed;
 import static org.smoothbuild.db.hashed.HashedDb.memoryHashedDb;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
+import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -18,6 +19,7 @@ public class MarshallingTest {
   private HashCode hashCode;
   private HashCode hash;
   private Unmarshaller unmarshaller;
+  private HashCode hashId;
 
   @After
   public void after() {
@@ -35,6 +37,18 @@ public class MarshallingTest {
     given(hash = marshaller.close());
     when(new Unmarshaller(hashedDb, hash).readHash());
     thenReturned(hashCode);
+  }
+
+  @Test
+  public void marshalling_hash_and_storing_at_given_hash() throws Exception {
+    given(hashedDb = memoryHashedDb());
+    given(hashCode = hashOfProperSize());
+    given(hashId = Hash.integer(33));
+    given(marshaller = new Marshaller(hashedDb, hashId));
+    given(marshaller).write(hashCode);
+    when(marshaller.close());
+    thenReturned(hashId);
+    thenEqual(new Unmarshaller(hashedDb, hashId).readHash(), hashCode);
   }
 
   @Test
