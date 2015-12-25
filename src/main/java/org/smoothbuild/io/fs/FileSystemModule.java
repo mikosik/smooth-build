@@ -1,7 +1,5 @@
 package org.smoothbuild.io.fs;
 
-import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
-
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
@@ -17,11 +15,5 @@ public class FileSystemModule extends AbstractModule {
   @ProjectDir
   public FileSystem provideProjectFileSystem() {
     return new DiskFileSystem(Path.root());
-  }
-
-  @Provides
-  @SmoothDir
-  public FileSystem provideSmoothFileSystem() {
-    return new DiskFileSystem(SMOOTH_DIR);
   }
 }
