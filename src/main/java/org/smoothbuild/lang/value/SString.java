@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.hashed.Marshaller;
 
 import com.google.common.hash.HashCode;
 
@@ -21,9 +22,15 @@ public class SString extends Value {
   }
 
   public static SString storeStringInDb(String string, HashedDb hashedDb) {
+    Marshaller marshaller = new Marshaller(hashedDb);
     byte[] bytes = string.getBytes(CHARSET);
-    HashCode hash = hashedDb.write(bytes);
-    return new SString(hash, hashedDb);
+    try {
+      marshaller.write(bytes);
+      HashCode hash = marshaller.closeMarshaller();
+      return new SString(hash, hashedDb);
+    } catch (IOException e) {
+      throw new HashedDbException("IO error occurred while writing 'String' value.");
+    }
   }
 
   public String value() {
