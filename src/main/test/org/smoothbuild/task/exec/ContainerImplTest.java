@@ -2,6 +2,7 @@ package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
+import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
@@ -12,6 +13,7 @@ import static org.testory.common.Matchers.same;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
@@ -48,7 +50,7 @@ public class ContainerImplTest {
   @Test
   public void create_temp_dir_call_is_forwarded_to_temp_dir_manager() throws Exception {
     given(tempDir = mock(TempDir.class));
-    given(willReturn(tempDir), tempDirProvider).tempDir();
+    given(willReturn(tempDir), tempDirProvider).tempDir(any(ValuesDb.class));
     when(containerImpl).createTempDir();
     thenReturned(tempDir);
   }

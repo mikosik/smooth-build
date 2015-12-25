@@ -31,7 +31,7 @@ public class ContainerImpl implements Container {
 
   public static ContainerImpl containerImpl() {
     final ValuesDb valuesDb = memoryValuesDb();
-    return new ContainerImpl(new MemoryFileSystem(), valuesDb, new TempManager(valuesDb));
+    return new ContainerImpl(new MemoryFileSystem(), valuesDb, new TempManager());
   }
 
   @Override
@@ -54,7 +54,7 @@ public class ContainerImpl implements Container {
 
   @Override
   public TempDir createTempDir() {
-    TempDir tempDir = tempManager.tempDir();
+    TempDir tempDir = tempManager.tempDir(valuesDb);
     tempDirs.add(tempDir);
     return tempDir;
   }

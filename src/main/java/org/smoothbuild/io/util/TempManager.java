@@ -6,7 +6,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.values.ValuesDb;
@@ -15,13 +14,7 @@ import org.smoothbuild.io.fs.disk.RecursiveDeleter;
 
 @Singleton
 public class TempManager {
-  private final ValuesDb valuesDb;
   private int id = 0;
-
-  @Inject
-  public TempManager(ValuesDb valuesDb) {
-    this.valuesDb = valuesDb;
-  }
 
   public void removeTemps() {
     try {
@@ -36,7 +29,7 @@ public class TempManager {
     return TEMPORARY_PATH.append(path(Integer.toString(id)));
   }
 
-  public TempDir tempDir() {
+  public TempDir tempDir(ValuesDb valuesDb) {
     Path path = tempPath();
     try {
       Files.createDirectories(path.toJPath());
