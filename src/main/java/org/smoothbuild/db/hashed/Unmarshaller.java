@@ -1,13 +1,12 @@
 package org.smoothbuild.db.hashed;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
 import com.google.common.hash.HashCode;
 import com.google.common.primitives.Ints;
 
-public class Unmarshaller implements Closeable {
+public class Unmarshaller extends InputStream {
   private final HashCode hash;
   private final InputStream inputStream;
 
@@ -22,6 +21,21 @@ public class Unmarshaller implements Closeable {
 
   public HashCode tryReadHash() {
     return readHash(true);
+  }
+
+  @Override
+  public int read() throws IOException {
+    return inputStream.read();
+  }
+
+  @Override
+  public int read(byte b[], int off, int len) throws IOException {
+    return inputStream.read(b, off, len);
+  }
+
+  @Override
+  public int read(byte b[]) throws IOException {
+    return inputStream.read(b);
   }
 
   private HashCode readHash(boolean allowNull) {

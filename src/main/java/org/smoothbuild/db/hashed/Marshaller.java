@@ -1,10 +1,13 @@
 package org.smoothbuild.db.hashed;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
-public class Marshaller {
+public class Marshaller extends OutputStream {
   private final HashedDb hashedDb;
   private final ByteArrayDataOutput dataOutput;
   private final HashCode hash;
@@ -25,6 +28,21 @@ public class Marshaller {
 
   public void writeInt(int intValue) {
     dataOutput.writeInt(intValue);
+  }
+
+  @Override
+  public void write(int b) throws IOException {
+    dataOutput.write(b);
+  }
+
+  @Override
+  public void write(byte b[]) throws IOException {
+    dataOutput.write(b, 0, b.length);
+  }
+
+  @Override
+  public void write(byte b[], int off, int len) {
+    dataOutput.write(b, off, len);
   }
 
   public HashCode closeMarshaller() {
