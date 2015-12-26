@@ -13,11 +13,13 @@ import com.google.common.io.ByteStreams;
 
 public class Marshaller extends OutputStream {
   private final FileSystem fileSystem;
+  private final Path rootPath;
   private final HashCode hash;
   private final ByteArrayDataOutput dataOutput;
 
-  public Marshaller(FileSystem fileSystem, HashCode hash) {
+  public Marshaller(FileSystem fileSystem, Path rootPath, HashCode hash) {
     this.fileSystem = fileSystem;
+    this.rootPath = rootPath;
     this.hash = hash;
     this.dataOutput = ByteStreams.newDataOutput(256);
   }
@@ -55,7 +57,7 @@ public class Marshaller extends OutputStream {
   }
 
   public HashCode write(HashCode hash, byte[] bytes) {
-    Path path = Hash.toPath(hash);
+    Path path = rootPath.append(Hash.toPath(hash));
     if (fileSystem.pathState(path) == PathState.FILE) {
       return hash;
     }

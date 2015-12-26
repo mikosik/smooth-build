@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
 import com.google.common.hash.HashCode;
@@ -27,12 +28,12 @@ public class HashedDbTest {
 
   @Before
   public void before() {
-    hashedDb = new HashedDb(new MemoryFileSystem());
+    hashedDb = new HashedDb(new MemoryFileSystem(), Path.root());
   }
 
   @Test
   public void db_doesnt_contain_not_stored_data() throws Exception {
-    given(hashedDb = new HashedDb(new MemoryFileSystem()));
+    given(hashedDb = new HashedDb(new MemoryFileSystem(), Path.root()));
     when(hashedDb.contains(HashCode.fromInt(33)));
     thenReturned(false);
   }
