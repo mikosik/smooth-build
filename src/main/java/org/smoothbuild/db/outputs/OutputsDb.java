@@ -34,7 +34,7 @@ public class OutputsDb {
   }
 
   public void write(HashCode taskHash, Output output) {
-    Marshaller marshaller = new Marshaller(hashedDb, taskHash);
+    Marshaller marshaller = hashedDb.newMarshaller(taskHash);
 
     ImmutableList<Message> messages = output.messages();
     marshaller.writeInt(messages.size());

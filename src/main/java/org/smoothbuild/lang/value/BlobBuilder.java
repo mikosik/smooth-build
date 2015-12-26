@@ -12,7 +12,7 @@ public class BlobBuilder extends OutputStream {
 
   public BlobBuilder(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
-    this.outputStream = new Marshaller(hashedDb);
+    this.outputStream = hashedDb.newMarshaller();
   }
 
   @Override

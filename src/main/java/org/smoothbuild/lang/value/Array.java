@@ -28,7 +28,7 @@ public class Array<T extends Value> extends Value implements Iterable<T> {
 
   public static <T extends Value> Array<T> storeArrayInDb(List<? extends Value> elements,
       ArrayType arrayType, Function<HashCode, T> valueConstructor, HashedDb hashedDb) {
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = hashedDb.newMarshaller();
     for (Value element : elements) {
       marshaller.writeHash(element.hash());
     }

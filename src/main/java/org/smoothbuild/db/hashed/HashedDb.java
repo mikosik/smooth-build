@@ -1,8 +1,5 @@
 package org.smoothbuild.db.hashed;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
@@ -35,23 +32,11 @@ public class HashedDb {
     }
   }
 
-  public HashCode write(byte[] bytes) {
-    return write(Hash.bytes(bytes), bytes);
+  public Marshaller newMarshaller() {
+    return newMarshaller(null);
   }
 
-  public HashCode write(HashCode hash, byte[] bytes) {
-    Path path = Hash.toPath(hash);
-
-    if (fileSystem.pathState(path) == PathState.FILE) {
-      return hash;
-    }
-
-    try (OutputStream outputStream = fileSystem.openOutputStream(path)) {
-      outputStream.write(bytes);
-    } catch (IOException e) {
-      throw new HashedDbException("IO error occurred while writing " + hash + " object.");
-    }
-
-    return hash;
+  public Marshaller newMarshaller(HashCode hash) {
+    return new Marshaller(fileSystem, hash);
   }
 }

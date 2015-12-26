@@ -39,14 +39,14 @@ public class HashedDbTest {
 
   @Test
   public void db_contains_added_data() throws Exception {
-    given(hashId = new Marshaller(hashedDb).closeMarshaller());
+    given(hashId = hashedDb.newMarshaller().closeMarshaller());
     when(hashedDb.contains(hashId));
     thenReturned(true);
   }
 
   @Test
   public void written_single_byte_can_be_read_back() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(17);
     given(hashId = marshaller.closeMarshaller());
     when(hashedDb.newUnmarshaller(hashId).read());
@@ -55,7 +55,7 @@ public class HashedDbTest {
 
   @Test
   public void written_byte_array_can_be_read_back() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(bytes1);
     given(hashId = marshaller.closeMarshaller());
     when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
@@ -64,7 +64,7 @@ public class HashedDbTest {
 
   @Test
   public void written_byte_array_with_range_can_be_read_back() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(new byte[] { 1, 2, 3, 4, 5 }, 1, 3);
     given(hashId = marshaller.closeMarshaller());
     when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
@@ -73,7 +73,7 @@ public class HashedDbTest {
 
   @Test
   public void written_empty_byte_array_can_be_read_back() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(hashId = marshaller.closeMarshaller());
     when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
     thenReturned(new byte[] {});
@@ -82,7 +82,7 @@ public class HashedDbTest {
   @Test
   public void written_hash_can_be_read_back() {
     given(hash = Hash.integer(17));
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).writeHash(hash);
     given(hashId = marshaller.closeMarshaller());
     when(hashedDb.newUnmarshaller(hashId).readHash());
@@ -91,7 +91,7 @@ public class HashedDbTest {
 
   @Test
   public void written_int_can_be_read_back() throws Exception {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).writeInt(0x12345678);
     given(hashId = marshaller.closeMarshaller());
     when(hashedDb.newUnmarshaller(hashId).readInt());
@@ -100,7 +100,7 @@ public class HashedDbTest {
 
   @Test
   public void reading_int_when_db_has_too_few_bytes_causes_exception() throws Exception {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(new byte[1]);
     given(hashId = marshaller.closeMarshaller());
     given(unmarshaller = hashedDb.newUnmarshaller(hashId));
@@ -111,7 +111,7 @@ public class HashedDbTest {
   @Test
   public void written_byte_array_at_given_hash_can_be_read_back() throws IOException {
     given(hashId = Hash.integer(33));
-    given(marshaller = new Marshaller(hashedDb, hashId));
+    given(marshaller = hashedDb.newMarshaller(hashId));
     given(marshaller).write(bytes1);
     given(marshaller.closeMarshaller());
     when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
@@ -120,10 +120,10 @@ public class HashedDbTest {
 
   @Test
   public void bytes_written_twice_can_be_read_back() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(bytes1);
     given(marshaller.closeMarshaller());
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(bytes1);
     given(hashId = marshaller.closeMarshaller());
     when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
@@ -132,10 +132,10 @@ public class HashedDbTest {
 
   @Test
   public void storing_bytes_at_already_used_hash_is_ignored() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(bytes1);
     given(hashId = marshaller.closeMarshaller());
-    given(marshaller = new Marshaller(hashedDb, hashId));
+    given(marshaller = hashedDb.newMarshaller(hashId));
     given(marshaller).write(bytes2);
     given(marshaller.closeMarshaller());
     when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
@@ -144,10 +144,10 @@ public class HashedDbTest {
 
   @Test
   public void hases_for_different_data_are_different() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(bytes1);
     given(hashId = marshaller.closeMarshaller());
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(bytes2);
     when(marshaller.closeMarshaller());
     thenReturned(not(hashId));
@@ -162,7 +162,7 @@ public class HashedDbTest {
 
   @Test
   public void reading_hash_when_db_has_too_few_bytes_causes_exception() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(new byte[1]);
     given(hashId = marshaller.closeMarshaller());
     when(hashedDb.newUnmarshaller(hashId)).readHash();
@@ -171,7 +171,7 @@ public class HashedDbTest {
 
   @Test
   public void reading_hash_when_db_has_zero_bytes_causes_exception() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(new byte[0]);
     given(hashId = marshaller.closeMarshaller());
     when(hashedDb.newUnmarshaller(hashId)).readHash();
@@ -180,7 +180,7 @@ public class HashedDbTest {
 
   @Test
   public void trying_to_read_hash_when_db_has_zero_bytes_returns_null() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(new byte[0]);
     given(hashId = marshaller.closeMarshaller());
     when(hashedDb.newUnmarshaller(hashId)).tryReadHash();
@@ -189,9 +189,9 @@ public class HashedDbTest {
 
   @Test
   public void trying_to_read_hash_when_db_has_too_few_bytes_causes_exception() throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(new byte[1]);
-    given(hashId = hashedDb.write(new byte[1]));
+    given(hashId = marshaller.closeMarshaller());
     when(hashedDb.newUnmarshaller(hashId)).tryReadHash();
     thenThrown(exception(new HashedDbException(corruptedMessage("hash", hashId, 20, 1))));
   }
@@ -199,7 +199,7 @@ public class HashedDbTest {
   @Test
   public void trying_to_read_hash_twice_when_only_one_is_stored_returns_null_second_time()
       throws IOException {
-    given(marshaller = new Marshaller(hashedDb));
+    given(marshaller = hashedDb.newMarshaller());
     given(marshaller).writeHash(Hash.integer(17));
     given(hashId = marshaller.closeMarshaller());
     given(unmarshaller = hashedDb.newUnmarshaller(hashId));
