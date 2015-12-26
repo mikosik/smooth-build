@@ -2,7 +2,6 @@ package org.smoothbuild.db.outputs;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.hashed.HashedDb.memoryHashedDb;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.type.Types.BLOB;
@@ -27,6 +26,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.Array;
@@ -41,7 +41,7 @@ import com.google.common.hash.HashCode;
 
 public class OutputsDbTest {
   private final ValuesDb valuesDb = memoryValuesDb();
-  private final HashedDb taskOutputsHashedDb = memoryHashedDb();
+  private final HashedDb taskOutputsHashedDb = new HashedDb(new MemoryFileSystem(), Path.root());
   private final OutputsDb outputsDb = new OutputsDb(taskOutputsHashedDb, valuesDb);
   private final HashCode hash = Hash.string("abc");
 
