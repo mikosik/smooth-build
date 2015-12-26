@@ -79,6 +79,10 @@ public class DiskFileSystem implements FileSystem {
     if (pathState(target) == DIR) {
       throw new FileSystemException("Cannot move to " + target + ". It is directory.");
     }
+    Path targetParent = target.parent();
+    if (pathState(targetParent) == NOTHING) {
+      createDir(targetParent);
+    }
     try {
       Files.move(jdkPath(source), jdkPath(target), ATOMIC_MOVE);
     } catch (IOException e) {
