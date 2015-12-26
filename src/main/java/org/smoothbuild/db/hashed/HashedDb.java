@@ -1,7 +1,6 @@
 package org.smoothbuild.db.hashed;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -27,10 +26,10 @@ public class HashedDb {
     return fileSystem.pathState(path) == PathState.FILE;
   }
 
-  public InputStream openInputStream(HashCode hash) {
+  public Unmarshaller newUnmarshaller(HashCode hash) {
     Path path = Hash.toPath(hash);
     if (fileSystem.pathState(path) == PathState.FILE) {
-      return fileSystem.openInputStream(path);
+      return new Unmarshaller(hash, fileSystem.openInputStream(path));
     } else {
       throw new HashedDbException("Could not find " + hash + " object.");
     }

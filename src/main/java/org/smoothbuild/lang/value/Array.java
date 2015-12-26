@@ -38,7 +38,7 @@ public class Array<T extends Value> extends Value implements Iterable<T> {
 
   @Override
   public Iterator<T> iterator() {
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash())) {
+    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash())) {
       ImmutableList.Builder<T> builder = ImmutableList.builder();
       HashCode elementHash = null;
       while ((elementHash = unmarshaller.tryReadHash()) != null) {

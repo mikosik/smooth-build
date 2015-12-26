@@ -10,9 +10,9 @@ public class Unmarshaller extends InputStream {
   private final HashCode hash;
   private final InputStream inputStream;
 
-  public Unmarshaller(HashedDb hashedDb, HashCode hash) {
+  public Unmarshaller(HashCode hash, InputStream inputStream) {
     this.hash = hash;
-    this.inputStream = hashedDb.openInputStream(hash);
+    this.inputStream = inputStream;
   }
 
   public HashCode readHash() {

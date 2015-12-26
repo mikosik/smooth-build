@@ -56,7 +56,7 @@ public class OutputsDb {
   }
 
   public Output read(HashCode taskHash, Type type) {
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, taskHash)) {
+    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(taskHash)) {
       int size = unmarshaller.readInt();
       List<Message> messages = new ArrayList<>();
       for (int i = 0; i < size; i++) {

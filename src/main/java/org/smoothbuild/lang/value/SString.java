@@ -35,7 +35,7 @@ public class SString extends Value {
 
   public String value() {
     try {
-      return inputStreamToString(hashedDb.openInputStream(hash()));
+      return inputStreamToString(hashedDb.newUnmarshaller(hash()));
     } catch (IOException e) {
       throw new HashedDbException("IO error occurred while reading " + hash() + " value.");
     }
