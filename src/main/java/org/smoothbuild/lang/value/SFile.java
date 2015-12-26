@@ -21,7 +21,7 @@ public class SFile extends Value {
   }
 
   public static SFile storeFileInDb(SString path, Blob content, HashedDb hashedDb) {
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = hashedDb.newMarshaller();
     marshaller.writeHash(path.hash());
     marshaller.writeHash(content.hash());
     HashCode hash = marshaller.closeMarshaller();

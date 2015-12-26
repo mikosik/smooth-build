@@ -22,7 +22,7 @@ public class SString extends Value {
   }
 
   public static SString storeStringInDb(String string, HashedDb hashedDb) {
-    Marshaller marshaller = new Marshaller(hashedDb);
+    Marshaller marshaller = hashedDb.newMarshaller();
     byte[] bytes = string.getBytes(CHARSET);
     try {
       marshaller.write(bytes);
