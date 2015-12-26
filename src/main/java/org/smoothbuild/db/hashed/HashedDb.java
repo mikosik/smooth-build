@@ -9,22 +9,24 @@ import com.google.common.hash.HashCode;
 
 public class HashedDb {
   private final FileSystem fileSystem;
+  private final Path rootPath;
 
-  public HashedDb(FileSystem fileSystem) {
+  public HashedDb(FileSystem fileSystem, Path rootPath) {
     this.fileSystem = fileSystem;
+    this.rootPath = rootPath;
   }
 
   public static HashedDb memoryHashedDb() {
-    return new HashedDb(new MemoryFileSystem());
+    return new HashedDb(new MemoryFileSystem(), Path.root());
   }
 
   public boolean contains(HashCode hash) {
-    Path path = Hash.toPath(hash);
+    Path path = toPath(hash);
     return fileSystem.pathState(path) == PathState.FILE;
   }
 
   public Unmarshaller newUnmarshaller(HashCode hash) {
-    Path path = Hash.toPath(hash);
+    Path path = toPath(hash);
     if (fileSystem.pathState(path) == PathState.FILE) {
       return new Unmarshaller(hash, fileSystem.openInputStream(path));
     } else {
@@ -37,6 +39,10 @@ public class HashedDb {
   }
 
   public Marshaller newMarshaller(HashCode hash) {
-    return new Marshaller(fileSystem, hash);
+    return new Marshaller(fileSystem, rootPath, hash);
+  }
+
+  private Path toPath(HashCode hash) {
+    return rootPath.append(Hash.toPath(hash));
   }
 }
