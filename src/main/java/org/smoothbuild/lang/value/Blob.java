@@ -22,7 +22,7 @@ public class Blob extends Value {
   }
 
   public InputStream openInputStream() {
-    return hashedDB.openInputStream(hash());
+    return hashedDB.newUnmarshaller(hash());
   }
 
   @Override

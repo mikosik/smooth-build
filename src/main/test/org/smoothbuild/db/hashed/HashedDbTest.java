@@ -49,7 +49,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(17);
     given(hashId = marshaller.closeMarshaller());
-    when(new Unmarshaller(hashedDb, hashId).read());
+    when(hashedDb.newUnmarshaller(hashId).read());
     thenReturned(17);
   }
 
@@ -58,7 +58,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(bytes1);
     given(hashId = marshaller.closeMarshaller());
-    when(inputStreamToBytes(new Unmarshaller(hashedDb, hashId)));
+    when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
     thenReturned(bytes1);
   }
 
@@ -67,7 +67,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(new byte[] { 1, 2, 3, 4, 5 }, 1, 3);
     given(hashId = marshaller.closeMarshaller());
-    when(inputStreamToBytes(new Unmarshaller(hashedDb, hashId)));
+    when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
     thenReturned(new byte[] { 2, 3, 4 });
   }
 
@@ -75,7 +75,7 @@ public class HashedDbTest {
   public void written_empty_byte_array_can_be_read_back() throws IOException {
     given(marshaller = new Marshaller(hashedDb));
     given(hashId = marshaller.closeMarshaller());
-    when(inputStreamToBytes(new Unmarshaller(hashedDb, hashId)));
+    when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
     thenReturned(new byte[] {});
   }
 
@@ -85,7 +85,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).writeHash(hash);
     given(hashId = marshaller.closeMarshaller());
-    when(new Unmarshaller(hashedDb, hashId).readHash());
+    when(hashedDb.newUnmarshaller(hashId).readHash());
     thenReturned(hash);
   }
 
@@ -94,7 +94,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).writeInt(0x12345678);
     given(hashId = marshaller.closeMarshaller());
-    when(new Unmarshaller(hashedDb, hashId).readInt());
+    when(hashedDb.newUnmarshaller(hashId).readInt());
     thenReturned(0x12345678);
   }
 
@@ -103,7 +103,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(new byte[1]);
     given(hashId = marshaller.closeMarshaller());
-    given(unmarshaller = new Unmarshaller(hashedDb, hashId));
+    given(unmarshaller = hashedDb.newUnmarshaller(hashId));
     when(unmarshaller).readInt();
     thenThrown(exception(new HashedDbException(corruptedMessage("int", hashId, 4, 1))));
   }
@@ -114,7 +114,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb, hashId));
     given(marshaller).write(bytes1);
     given(marshaller.closeMarshaller());
-    when(inputStreamToBytes(new Unmarshaller(hashedDb, hashId)));
+    when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
     thenReturned(bytes1);
   }
 
@@ -126,7 +126,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(bytes1);
     given(hashId = marshaller.closeMarshaller());
-    when(inputStreamToBytes(new Unmarshaller(hashedDb, hashId)));
+    when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
     thenReturned(bytes1);
   }
 
@@ -138,7 +138,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb, hashId));
     given(marshaller).write(bytes2);
     given(marshaller.closeMarshaller());
-    when(inputStreamToBytes(new Unmarshaller(hashedDb, hashId)));
+    when(inputStreamToBytes(hashedDb.newUnmarshaller(hashId)));
     thenReturned(bytes1);
   }
 
@@ -156,7 +156,7 @@ public class HashedDbTest {
   @Test
   public void reading_not_stored_value_fails() throws Exception {
     given(hashId = HashCode.fromInt(33));
-    when(hashedDb).openInputStream(hashId);
+    when(hashedDb).newUnmarshaller(hashId);
     thenThrown(exception(new HashedDbException("Could not find " + hashId + " object.")));
   }
 
@@ -165,7 +165,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(new byte[1]);
     given(hashId = marshaller.closeMarshaller());
-    when(new Unmarshaller(hashedDb, hashId)).readHash();
+    when(hashedDb.newUnmarshaller(hashId)).readHash();
     thenThrown(exception(new HashedDbException(corruptedMessage("hash", hashId, 20, 1))));
   }
 
@@ -174,7 +174,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(new byte[0]);
     given(hashId = marshaller.closeMarshaller());
-    when(new Unmarshaller(hashedDb, hashId)).readHash();
+    when(hashedDb.newUnmarshaller(hashId)).readHash();
     thenThrown(exception(new HashedDbException(corruptedMessage("hash", hashId, 20, 0))));
   }
 
@@ -183,7 +183,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(new byte[0]);
     given(hashId = marshaller.closeMarshaller());
-    when(new Unmarshaller(hashedDb, hashId)).tryReadHash();
+    when(hashedDb.newUnmarshaller(hashId)).tryReadHash();
     thenReturned(null);
   }
 
@@ -192,7 +192,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).write(new byte[1]);
     given(hashId = hashedDb.write(new byte[1]));
-    when(new Unmarshaller(hashedDb, hashId)).tryReadHash();
+    when(hashedDb.newUnmarshaller(hashId)).tryReadHash();
     thenThrown(exception(new HashedDbException(corruptedMessage("hash", hashId, 20, 1))));
   }
 
@@ -202,7 +202,7 @@ public class HashedDbTest {
     given(marshaller = new Marshaller(hashedDb));
     given(marshaller).writeHash(Hash.integer(17));
     given(hashId = marshaller.closeMarshaller());
-    given(unmarshaller = new Unmarshaller(hashedDb, hashId));
+    given(unmarshaller = hashedDb.newUnmarshaller(hashId));
     given(unmarshaller).tryReadHash();
     when(unmarshaller).tryReadHash();
     thenReturned(null);

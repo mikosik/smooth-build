@@ -14,7 +14,7 @@ public class SFile extends Value {
 
   public SFile(HashCode hash, HashedDb hashedDb) {
     super(FILE, hash);
-    try (Unmarshaller unmarshaller = new Unmarshaller(hashedDb, hash)) {
+    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
       this.path = new SString(unmarshaller.readHash(), hashedDb);
       this.content = new Blob(unmarshaller.readHash(), hashedDb);
     }
