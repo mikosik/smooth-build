@@ -211,6 +211,14 @@ public abstract class GenericFileSystemTestCase {
     thenReturned("content");
   }
 
+  @Test
+  public void moving_creates_missing_parent_directories_in_target_path() throws Exception {
+    given(this).createFile(path("source"), "content");
+    when(fileSystem).move(path("source"), path("dir/target"));
+    when(inputStreamToString(fileSystem.openInputStream(path("dir/target"))));
+    thenReturned("content");
+  }
+
   // delete()
 
   @Test
