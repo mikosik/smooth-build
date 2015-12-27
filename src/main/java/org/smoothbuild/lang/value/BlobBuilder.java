@@ -31,6 +31,7 @@ public class BlobBuilder extends OutputStream {
   }
 
   public Blob build() {
-    return new Blob(outputStream.closeMarshaller(), hashedDb);
+    outputStream.close();
+    return new Blob(outputStream.hash(), hashedDb);
   }
 }

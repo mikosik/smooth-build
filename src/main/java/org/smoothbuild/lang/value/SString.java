@@ -23,10 +23,9 @@ public class SString extends Value {
 
   public static SString storeStringInDb(String string, HashedDb hashedDb) {
     Marshaller marshaller = hashedDb.newMarshaller();
-    byte[] bytes = string.getBytes(CHARSET);
-    marshaller.write(bytes);
-    HashCode hash = marshaller.closeMarshaller();
-    return new SString(hash, hashedDb);
+    marshaller.write(string.getBytes(CHARSET));
+    marshaller.close();
+    return new SString(marshaller.hash(), hashedDb);
   }
 
   public String value() {

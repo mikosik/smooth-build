@@ -32,8 +32,8 @@ public class Array<T extends Value> extends Value implements Iterable<T> {
     for (Value element : elements) {
       marshaller.writeHash(element.hash());
     }
-    HashCode hash = marshaller.closeMarshaller();
-    return new Array<T>(hash, arrayType, valueConstructor, hashedDb);
+    marshaller.close();
+    return new Array<T>(marshaller.hash(), arrayType, valueConstructor, hashedDb);
   }
 
   @Override
