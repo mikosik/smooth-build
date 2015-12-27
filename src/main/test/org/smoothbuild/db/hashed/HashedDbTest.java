@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
+import org.smoothbuild.io.util.TempManager;
 
 import com.google.common.hash.HashCode;
 
@@ -28,12 +29,12 @@ public class HashedDbTest {
 
   @Before
   public void before() {
-    hashedDb = new HashedDb(new MemoryFileSystem(), Path.root());
+    hashedDb = new HashedDb(new MemoryFileSystem(), Path.root(), new TempManager());
   }
 
   @Test
   public void db_doesnt_contain_not_stored_data() throws Exception {
-    given(hashedDb = new HashedDb(new MemoryFileSystem(), Path.root()));
+    given(hashedDb = new HashedDb(new MemoryFileSystem(), Path.root(), new TempManager()));
     when(hashedDb.contains(HashCode.fromInt(33)));
     thenReturned(false);
   }
@@ -157,6 +158,15 @@ public class HashedDbTest {
   @Test
   public void reading_not_stored_value_fails() throws Exception {
     given(hashId = HashCode.fromInt(33));
+    when(hashedDb).newUnmarshaller(hashId);
+    thenThrown(exception(new HashedDbException("Could not find " + hashId + " object.")));
+  }
+
+  @Test
+  public void written_data_is_not_visible_until_close_is_invoked() throws Exception {
+    given(hashId = Hash.integer(17));
+    given(marshaller = hashedDb.newMarshaller(hashId));
+    given(marshaller).write(new byte[1024 * 1024]);
     when(hashedDb).newUnmarshaller(hashId);
     thenThrown(exception(new HashedDbException("Could not find " + hashId + " object.")));
   }

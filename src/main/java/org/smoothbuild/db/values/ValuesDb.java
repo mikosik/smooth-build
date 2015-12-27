@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
+import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -37,7 +38,7 @@ public class ValuesDb implements ValueFactory {
   }
 
   public static ValuesDb memoryValuesDb() {
-    return new ValuesDb(new HashedDb(new MemoryFileSystem(), Path.root()));
+    return new ValuesDb(new HashedDb(new MemoryFileSystem(), Path.root(), new TempManager()));
   }
 
   @Override
