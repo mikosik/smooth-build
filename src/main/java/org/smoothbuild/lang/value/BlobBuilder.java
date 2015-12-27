@@ -8,30 +8,30 @@ import org.smoothbuild.db.hashed.Marshaller;
 
 public class BlobBuilder extends OutputStream {
   private final HashedDb hashedDb;
-  private final Marshaller outputStream;
+  private final Marshaller marshaller;
 
   public BlobBuilder(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
-    this.outputStream = hashedDb.newMarshaller();
+    this.marshaller = hashedDb.newMarshaller();
   }
 
   @Override
   public void write(int b) throws IOException {
-    outputStream.write(b);
+    marshaller.write(b);
   }
 
   @Override
   public void write(byte b[]) throws IOException {
-    outputStream.write(b, 0, b.length);
+    marshaller.write(b, 0, b.length);
   }
 
   @Override
   public void write(byte b[], int off, int len) {
-    outputStream.write(b, off, len);
+    marshaller.write(b, off, len);
   }
 
   public Blob build() {
-    outputStream.close();
-    return new Blob(outputStream.hash(), hashedDb);
+    marshaller.close();
+    return new Blob(marshaller.hash(), hashedDb);
   }
 }
