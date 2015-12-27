@@ -24,8 +24,8 @@ public class SFile extends Value {
     Marshaller marshaller = hashedDb.newMarshaller();
     marshaller.writeHash(path.hash());
     marshaller.writeHash(content.hash());
-    HashCode hash = marshaller.closeMarshaller();
-    return new SFile(hash, hashedDb);
+    marshaller.close();
+    return new SFile(marshaller.hash(), hashedDb);
   }
 
   public SString path() {

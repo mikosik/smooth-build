@@ -58,7 +58,8 @@ public class Marshaller extends OutputStream {
     }
   }
 
-  public HashCode closeMarshaller() {
+  @Override
+  public void close() {
     if (hash == null) {
       hash = hasher.hash();
     }
@@ -71,6 +72,9 @@ public class Marshaller extends OutputStream {
     if (fileSystem.pathState(path) == NOTHING) {
       fileSystem.move(tempPath, path);
     }
+  }
+
+  public HashCode hash() {
     return hash;
   }
 

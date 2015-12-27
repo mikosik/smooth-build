@@ -48,7 +48,7 @@ public class OutputsDb {
     if (!Messages.containsErrors(messages)) {
       marshaller.writeHash(output.result().hash());
     }
-    marshaller.closeMarshaller();
+    marshaller.close();
   }
 
   public boolean contains(HashCode taskHash) {
