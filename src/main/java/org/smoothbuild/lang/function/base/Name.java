@@ -29,10 +29,10 @@ public class Name {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof Name && this.value.equals(((Name) object).value);
+    return object instanceof Name && equals((Name) object);
   }
 
-  public boolean equals(Name name) {
+  private boolean equals(Name name) {
     return Objects.equals(value, name.value);
   }
 

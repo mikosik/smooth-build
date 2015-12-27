@@ -51,7 +51,7 @@ public class Conversions {
       return object instanceof TypeConversion && equals((TypeConversion) object);
     }
 
-    public boolean equals(TypeConversion typeConversion) {
+    private boolean equals(TypeConversion typeConversion) {
       return Objects.equals(from, typeConversion.from)
           && Objects.equals(to, typeConversion.to);
     }
