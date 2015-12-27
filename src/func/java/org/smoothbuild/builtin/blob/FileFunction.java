@@ -8,9 +8,9 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 
-public class ToFileFunction {
+public class FileFunction {
   @SmoothFunction
-  public static SFile toFile(Container container, SString path, Blob content) {
+  public static SFile File(Container container, SString path, Blob content) {
     validatedPath("path", path);
     return container.create().file(path, content);
   }
