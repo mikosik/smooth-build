@@ -44,7 +44,7 @@ public class Output {
     return object instanceof Output && equals((Output) object);
   }
 
-  public boolean equals(Output output) {
+  private boolean equals(Output output) {
     return Objects.equals(result, output.result)
         && Objects.equals(messages, output.messages);
   }

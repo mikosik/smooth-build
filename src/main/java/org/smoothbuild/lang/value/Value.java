@@ -30,7 +30,7 @@ public class Value {
     return object instanceof Value && equals((Value) object);
   }
 
-  public boolean equals(Value value) {
+  private boolean equals(Value value) {
     return Objects.equals(hash, value.hash());
   }
 
