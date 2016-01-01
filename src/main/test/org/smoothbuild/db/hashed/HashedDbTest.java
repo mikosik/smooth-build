@@ -26,15 +26,16 @@ public class HashedDbTest {
   private Marshaller marshaller;
   private HashCode hashId;
   private Unmarshaller unmarshaller;
+  private MemoryFileSystem fileSystem;
 
   @Before
   public void before() {
-    hashedDb = new HashedDb(new MemoryFileSystem(), Path.root(), new TempManager());
+    given(fileSystem = new MemoryFileSystem());
+    given(hashedDb = new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem)));
   }
 
   @Test
   public void db_doesnt_contain_not_stored_data() throws Exception {
-    given(hashedDb = new HashedDb(new MemoryFileSystem(), Path.root(), new TempManager()));
     when(hashedDb.contains(HashCode.fromInt(33)));
     thenReturned(false);
   }

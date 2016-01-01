@@ -38,7 +38,8 @@ public class ValuesDb implements ValueFactory {
   }
 
   public static ValuesDb memoryValuesDb() {
-    return new ValuesDb(new HashedDb(new MemoryFileSystem(), Path.root(), new TempManager()));
+    MemoryFileSystem fileSystem = new MemoryFileSystem();
+    return new ValuesDb(new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem)));
   }
 
   @Override

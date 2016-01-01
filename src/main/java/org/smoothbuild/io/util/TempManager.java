@@ -3,25 +3,25 @@ package org.smoothbuild.io.util;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.base.Path.path;
 
-import java.io.IOException;
-import java.nio.file.Files;
-
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.disk.RecursiveDeleter;
 
 @Singleton
 public class TempManager {
+  private final FileSystem fileSystem;
   private int id = 0;
 
+  @Inject
+  public TempManager(FileSystem fileSystem) {
+    this.fileSystem = fileSystem;
+  }
+
   public void removeTemps() {
-    try {
-      RecursiveDeleter.deleteRecursively(TEMPORARY_PATH.toJPath());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    fileSystem.delete(TEMPORARY_PATH);
   }
 
   public Path tempPath() {
@@ -31,11 +31,7 @@ public class TempManager {
 
   public TempDir tempDir(ValuesDb valuesDb) {
     Path path = tempPath();
-    try {
-      Files.createDirectories(path.toJPath());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    return new TempDir(valuesDb, path);
+    fileSystem.createDir(path);
+    return new TempDir(valuesDb, fileSystem, path);
   }
 }

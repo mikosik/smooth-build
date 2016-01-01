@@ -12,7 +12,6 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.disk.DiskFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -20,20 +19,13 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.Streams;
 
-import com.google.common.annotations.VisibleForTesting;
-
 public class TempDir {
   private final ValuesDb valuesDb;
   private final FileSystem fileSystem;
   private final Path rootPath;
   private boolean isDestroyed;
 
-  public TempDir(ValuesDb valuesDb, Path path) {
-    this(valuesDb, path, new DiskFileSystem(path));
-  }
-
-  @VisibleForTesting
-  public TempDir(ValuesDb valuesDb, Path rootPath, FileSystem fileSystem) {
+  public TempDir(ValuesDb valuesDb, FileSystem fileSystem, Path rootPath) {
     this.valuesDb = valuesDb;
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
@@ -50,7 +42,7 @@ public class TempDir {
 
   public void destroy() {
     assertNotDestroyed();
-    fileSystem.delete(Path.root());
+    fileSystem.delete(rootPath);
     isDestroyed = true;
   }
 
@@ -84,7 +76,7 @@ public class TempDir {
 
   private void writeFileImpl(Path path, Blob content) throws IOException {
     InputStream inputStream = content.openInputStream();
-    OutputStream outputStream = fileSystem.openOutputStream(path);
+    OutputStream outputStream = fileSystem.openOutputStream(rootPath.append(path));
     Streams.copy(inputStream, outputStream);
   }
 
@@ -99,7 +91,7 @@ public class TempDir {
 
   private Array<SFile> readFilesImpl() throws IOException {
     ArrayBuilder<SFile> arrayBuilder = valuesDb.arrayBuilder(SFile.class);
-    for (Path path : recursiveFilesIterable(fileSystem, Path.root())) {
+    for (Path path : recursiveFilesIterable(fileSystem, rootPath)) {
       Blob content = readContentImpl(path);
       SFile file = valuesDb.file(valuesDb.string(path.value()), content);
       arrayBuilder.add(file);
@@ -118,7 +110,7 @@ public class TempDir {
 
   private Blob readContentImpl(Path path) throws IOException {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
-    Streams.copy(fileSystem.openInputStream(path), blobBuilder);
+    Streams.copy(fileSystem.openInputStream(rootPath.append(path)), blobBuilder);
     return blobBuilder.build();
   }
 

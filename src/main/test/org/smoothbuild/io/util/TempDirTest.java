@@ -16,7 +16,6 @@ import static org.testory.Testory.when;
 
 import java.io.IOException;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
@@ -42,17 +41,7 @@ public class TempDirTest {
   public void before() {
     valuesDb = memoryValuesDb();
     fileSystem = new MemoryFileSystem();
-    tempDir = new TempDir(valuesDb, rootPath, fileSystem);
-  }
-
-  @After
-  public void after() {
-    try {
-      tempDir.destroy();
-    } catch (IllegalStateException e) {
-      // ignore exception as tempDir might have been already destroyed by
-      // test and destroying it second time causes exception
-    }
+    tempDir = new TempDir(valuesDb, fileSystem, rootPath);
   }
 
   @Test
@@ -64,7 +53,7 @@ public class TempDirTest {
   @Test
   public void file_is_written_to_file_system() throws Exception {
     when(tempDir).writeFile(file(valuesDb, path, content));
-    then(inputStreamToString(fileSystem.openInputStream(path)).equals(content));
+    then(inputStreamToString(fileSystem.openInputStream(rootPath.append(path))).equals(content));
   }
 
   @Test
@@ -77,7 +66,7 @@ public class TempDirTest {
   @Test
   public void path_and_content_are_written_to_file_system() throws Exception {
     when(tempDir).writeFile(path, blob(valuesDb, content));
-    then(inputStreamToString(fileSystem.openInputStream(path)).equals(content));
+    then(inputStreamToString(fileSystem.openInputStream(rootPath.append(path))).equals(content));
   }
 
   @Test
@@ -91,7 +80,7 @@ public class TempDirTest {
   public void files_are_written_to_file_system() throws Exception {
     given(array = array(valuesDb, SFile.class, file(valuesDb, path, content)));
     when(tempDir).writeFiles(array);
-    then(inputStreamToString(fileSystem.openInputStream(path)).equals(content));
+    then(inputStreamToString(fileSystem.openInputStream(rootPath.append(path))).equals(content));
   }
 
   @Test
@@ -104,7 +93,7 @@ public class TempDirTest {
 
   @Test
   public void files_are_read_from_file_system() throws Exception {
-    given(createFile(fileSystem, path, content));
+    given(createFile(fileSystem, rootPath.append(path), content));
     when(tempDir.readFiles());
     thenReturned(contains(file(valuesDb, path, content)));
   }
@@ -118,7 +107,7 @@ public class TempDirTest {
 
   @Test
   public void content_is_read_from_file_system() throws Exception {
-    given(createFile(fileSystem, path, content));
+    given(createFile(fileSystem, rootPath.append(path), content));
     when(tempDir).readContent(path);
     thenReturned(blobContains(content));
   }

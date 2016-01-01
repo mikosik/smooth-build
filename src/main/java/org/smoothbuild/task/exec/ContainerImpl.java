@@ -30,7 +30,8 @@ public class ContainerImpl implements Container {
   }
 
   public static ContainerImpl containerImpl() {
-    return new ContainerImpl(new MemoryFileSystem(), memoryValuesDb(), new TempManager());
+    MemoryFileSystem fileSystem = new MemoryFileSystem();
+    return new ContainerImpl(fileSystem, memoryValuesDb(), new TempManager(fileSystem));
   }
 
   @Override
