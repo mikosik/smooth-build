@@ -45,6 +45,13 @@ public class TempDirTest {
   }
 
   @Test
+  public void destroying_twice_is_allowed() throws Exception {
+    given(tempDir).destroy();
+    when(tempDir).destroy();
+    thenReturned();
+  }
+
+  @Test
   public void root_os_path() {
     when(tempDir.rootOsPath());
     thenReturned(rootPath.value());
