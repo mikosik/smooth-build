@@ -25,6 +25,6 @@ public class ZipUnzipTest extends AcceptanceTestCase {
     givenScript("result: toBlob('random junk') | unzip;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Cannot unzip archive. Corrupted data?"));
+    then(output(), containsString("Cannot read archive. Corrupted data?"));
   }
 }

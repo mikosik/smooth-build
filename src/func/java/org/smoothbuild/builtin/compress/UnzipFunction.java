@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.compress;
 
 import static java.io.File.createTempFile;
-import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.validationError;
 import static org.smoothbuild.util.Streams.copy;
 
@@ -31,10 +30,12 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {
-  private static final Predicate<String> IS_DIR = (string) -> string.endsWith(SEPARATOR);
-
   @SmoothFunction
   public static Array<SFile> unzip(Container container, Blob blob) {
+    return unzip(container, blob, x -> true);
+  }
+
+  public static Array<SFile> unzip(Container container, Blob blob, Predicate<String> filter) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     try {
@@ -43,12 +44,12 @@ public class UnzipFunction {
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
         while (entries.hasMoreElements()) {
           ZipEntry entry = entries.nextElement();
-          if (!IS_DIR.test(entry.getName())) {
+          String name = entry.getName();
+          if (!name.endsWith("/") && filter.test(name)) {
             SFile unzippedEntry = unzipEntry(container, zipFile.getInputStream(entry), entry);
             String fileName = unzippedEntry.path().value();
             if (duplicatesDetector.addValue(fileName)) {
-              throw new ErrorMessage("Zip file contains two files with the same path = "
-                  + fileName);
+              throw new ErrorMessage("archive contains two files with the same path = " + fileName);
             }
 
             fileArrayBuilder.add(unzippedEntry);
@@ -57,7 +58,7 @@ public class UnzipFunction {
       }
       return fileArrayBuilder.build();
     } catch (ZipException e) {
-      throw new ErrorMessage("Cannot unzip archive. Corrupted data?");
+      throw new ErrorMessage("Cannot read archive. Corrupted data?");
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
@@ -73,7 +74,7 @@ public class UnzipFunction {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
-      throw new ErrorMessage("File in a zip file has illegal name = '" + fileName + "'");
+      throw new ErrorMessage("File in archive has illegal name = '" + fileName + "'");
     }
 
     SString path = container.create().string(fileName);
