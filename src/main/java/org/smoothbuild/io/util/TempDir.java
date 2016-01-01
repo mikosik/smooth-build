@@ -41,7 +41,6 @@ public class TempDir {
   }
 
   public void destroy() {
-    assertNotDestroyed();
     fileSystem.delete(rootPath);
     isDestroyed = true;
   }
