@@ -5,6 +5,8 @@ import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -21,6 +23,7 @@ public class ContainerImpl implements Container {
   private final List<Message> messages;
   private final List<TempDir> tempDirs;
 
+  @Inject
   public ContainerImpl(FileSystem fileSystem, ValuesDb valuesDb, TempManager tempManager) {
     this.fileSystem = fileSystem;
     this.valuesDb = valuesDb;
