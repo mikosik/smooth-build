@@ -44,8 +44,14 @@ public class TaskExecutor {
       task.setOutput(output);
     } else {
       ContainerImpl container = new ContainerImpl(fileSystem, valuesDb, tempManager);
-      task.execute(container);
-      container.destroy();
+      try {
+        task.execute(container);
+      } catch (RuntimeException e) {
+        reporter.reportCrash(e);
+        throw new ExecutionException();
+      } finally {
+        container.destroy();
+      }
       if (task.isCacheable()) {
         outputsDb.write(hash, task.output());
       }

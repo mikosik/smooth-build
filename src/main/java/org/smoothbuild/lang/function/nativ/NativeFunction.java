@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,22 +51,16 @@ public class NativeFunction extends AbstractFunction {
       }
       return result;
     } catch (IllegalAccessException e) {
-      container.log(invocationError(e));
-      return null;
+      throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof Message) {
         container.log((Message) cause);
       } else {
-        container.log(invocationError(e));
+        throw new RuntimeException(e);
       }
       return null;
     }
-  }
-
-  private Message invocationError(Exception e) {
-    return new ErrorMessage(
-        "Invoking function " + name() + " caused internal exception:\n" + getStackTraceAsString(e));
   }
 
   private static Object[] createArguments(Container container, List<Value> arguments) {

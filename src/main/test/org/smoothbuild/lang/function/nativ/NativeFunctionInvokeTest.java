@@ -8,6 +8,7 @@ import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.lang.reflect.Method;
@@ -124,13 +125,14 @@ public class NativeFunctionInvokeTest {
   }
 
   @Test
-  public void invoke_wraps_illegal_access_exception_into_java_invocation_error() throws Exception {
+  public void invoke_rethrows_illegal_access_exception_wrapped_inside_runtimeException()
+      throws Exception {
     given(container = containerImpl());
     given(function = function(NormalFunction.class));
     given(method = PrivateMethod.class.getDeclaredMethods()[0]);
     given(function = new NativeFunction(method, function.signature(), true, HashCode.fromInt(13)));
     when(function).invoke(container, asList());
-    then(container.messages(), contains(instanceOf(Message.class)));
+    thenThrown(RuntimeException.class);
   }
 
   public static class NormalFunction {
@@ -148,11 +150,27 @@ public class NativeFunctionInvokeTest {
   }
 
   @Test
-  public void invoke_wraps_normal_java_exception_into_java_invocation_error() throws Exception {
+  public void invoke_rethrows_normal_exception_wrapped_inside_runtime_exception() throws Exception {
+    given(container = containerImpl());
+    given(function = function(ThrowNormalExceptiton.class));
+    when(function).invoke(container, asList());
+    thenThrown(RuntimeException.class);
+  }
+
+  public static class ThrowNormalExceptiton {
+    @SmoothFunction
+    public static SString throwNormalException(Container container) throws Exception {
+      throw new Exception();
+    }
+  }
+
+  @Test
+  public void invoke_rethrows_runtime_exception_as_wrapped_inside_runtime_exception()
+      throws Exception {
     given(container = containerImpl());
     given(function = function(ThrowRuntimeExceptiton.class));
     when(function).invoke(container, asList());
-    then(container.messages(), contains(instanceOf(Message.class)));
+    thenThrown(RuntimeException.class);
   }
 
   public static class ThrowRuntimeExceptiton {

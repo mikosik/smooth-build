@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
 
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.NotCacheable;
@@ -149,6 +150,22 @@ public class TestingFunctions {
     public static SString ambiguousArguments(Container container, SString param1,
         Array<SString> param2, SFile param3, Array<SFile> param4, Array<Blob> param5) {
       return container.create().string("");
+    }
+  }
+
+  public static class ThrowFileSystemException {
+    @SmoothFunction
+    public static SString throwFileSystemException(Container container, SString string) {
+      long randomLong = new Random().nextLong();
+      throw new FileSystemException(string.toString() + randomLong + " ");
+    }
+  }
+
+  public static class ThrowRuntimeException {
+    @SmoothFunction
+    public static SString throwRuntimeException(Container container, SString string) {
+      long randomLong = new Random().nextLong();
+      throw new RuntimeException(string.toString() + randomLong + " ");
     }
   }
 }
