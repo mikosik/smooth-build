@@ -27,10 +27,9 @@ public class Streams {
     }
   }
 
-  public static Void copy(InputStream from, OutputStream to) throws IOException {
+  public static void copy(InputStream from, OutputStream to) throws IOException {
     try (InputStream input = from; OutputStream output = to) {
       ByteStreams.copy(input, output);
     }
-    return null;
   }
 }
