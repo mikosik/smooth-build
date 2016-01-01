@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.compress;
 
+import static java.io.File.createTempFile;
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.validationError;
 import static org.smoothbuild.util.Streams.copy;
@@ -14,6 +15,7 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
@@ -54,13 +56,15 @@ public class UnzipFunction {
         }
       }
       return fileArrayBuilder.build();
+    } catch (ZipException e) {
+      throw new ErrorMessage("Cannot unzip archive. Corrupted data?");
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
   }
 
   private static File copyToTempFile(Blob blob) throws IOException, FileNotFoundException {
-    File tempFile = File.createTempFile("", "");
+    File tempFile = createTempFile("unzip", null);
     copy(blob.openInputStream(), new BufferedOutputStream(new FileOutputStream(tempFile)));
     return tempFile;
   }
