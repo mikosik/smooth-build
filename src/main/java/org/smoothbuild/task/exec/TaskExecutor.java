@@ -3,13 +3,11 @@ package org.smoothbuild.task.exec;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.outputs.OutputsDb;
-import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.SmoothJar;
-import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
@@ -21,19 +19,15 @@ public class TaskExecutor {
   private final HashCode smoothJarHash;
   private final OutputsDb outputsDb;
   private final TaskReporter reporter;
-  private final FileSystem fileSystem;
-  private final ValuesDb valuesDb;
-  private final TempManager tempManager;
+  private final Provider<ContainerImpl> containerProvider;
 
   @Inject
   public TaskExecutor(@SmoothJar HashCode smoothJarHash, OutputsDb outputsDb, TaskReporter reporter,
-      FileSystem fileSystem, ValuesDb valuesDb, TempManager tempManager) {
+      Provider<ContainerImpl> containerProvider) {
     this.smoothJarHash = smoothJarHash;
     this.outputsDb = outputsDb;
     this.reporter = reporter;
-    this.fileSystem = fileSystem;
-    this.valuesDb = valuesDb;
-    this.tempManager = tempManager;
+    this.containerProvider = containerProvider;
   }
 
   public <T extends Value> void execute(Task task) {
@@ -43,7 +37,7 @@ public class TaskExecutor {
       Output output = outputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
-      ContainerImpl container = new ContainerImpl(fileSystem, valuesDb, tempManager);
+      ContainerImpl container = containerProvider.get();
       try {
         task.execute(container);
       } catch (RuntimeException e) {
