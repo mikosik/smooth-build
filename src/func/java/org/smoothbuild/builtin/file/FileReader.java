@@ -30,7 +30,7 @@ public class FileReader {
   }
 
   private Blob createContent(Path path) {
-    InputStream inputStream = container.projectFileSystem().openInputStream(path);
+    InputStream inputStream = container.fileSystem().openInputStream(path);
     BlobBuilder contentBuilder = container.create().blobBuilder();
     doCopy(inputStream, contentBuilder);
     return contentBuilder.build();

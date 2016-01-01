@@ -22,7 +22,7 @@ public class FileFunction {
       throw new ErrorMessage("Reading file from '.smooth' dir is not allowed.");
     }
 
-    FileSystem fileSystem = container.projectFileSystem();
+    FileSystem fileSystem = container.fileSystem();
     switch (fileSystem.pathState(validatedPath)) {
       case FILE:
         FileReader reader = new FileReader(container);
