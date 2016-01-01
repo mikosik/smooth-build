@@ -1,5 +1,6 @@
 package org.smoothbuild.acceptance.builtin.java;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.testory.Testory.then;
 
@@ -17,5 +18,13 @@ public class JarUnjarTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file1.txt", "abc", "file2.txt", "def"));
+  }
+
+  @Test
+  public void corrupted_archive_causes_error() throws IOException {
+    givenScript("result: toBlob('random junk') | unjar;");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString("Cannot read archive. Corrupted data?"));
   }
 }

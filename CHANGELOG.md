@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * fixed 'unzip' and 'unjar' functions to correctly report corrupted archives
  * renamed 'toFile' to 'File'
  * nothing is allowed type for parameter and function result
 
