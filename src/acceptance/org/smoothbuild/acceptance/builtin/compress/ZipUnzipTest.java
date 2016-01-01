@@ -1,5 +1,6 @@
 package org.smoothbuild.acceptance.builtin.compress;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.testory.Testory.then;
 
@@ -17,5 +18,13 @@ public class ZipUnzipTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file1.txt", "abc", "file2.txt", "def"));
+  }
+
+  @Test
+  public void corrupted_archive_causes_error() throws IOException {
+    givenScript("result: toBlob('random junk') | unzip;");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString("Cannot unzip archive. Corrupted data?"));
   }
 }
