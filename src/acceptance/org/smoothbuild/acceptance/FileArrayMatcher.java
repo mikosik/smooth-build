@@ -57,7 +57,7 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
     ArrayList<String> result = new ArrayList<>();
     for (File file : dir.listFiles()) {
       if (file.isDirectory()) {
-        result.addAll(actualFiles(dir, rootPathLength));
+        result.addAll(actualFiles(file, rootPathLength));
       } else {
         result.add(file.getPath().substring(rootPathLength));
         result.add(inputStreamToString(new FileInputStream(file)));
