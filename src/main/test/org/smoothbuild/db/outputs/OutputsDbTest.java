@@ -25,6 +25,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
@@ -42,8 +43,9 @@ import com.google.common.hash.HashCode;
 
 public class OutputsDbTest {
   private final ValuesDb valuesDb = memoryValuesDb();
-  private final HashedDb hashedDb = new HashedDb(new MemoryFileSystem(), Path.root(),
-      new TempManager());
+  private final FileSystem fileSystem = new MemoryFileSystem();
+  private final HashedDb hashedDb = new HashedDb(fileSystem, Path.root(), new TempManager(
+      fileSystem));
   private final OutputsDb outputsDb = new OutputsDb(hashedDb, valuesDb);
   private final HashCode hash = Hash.string("abc");
 
