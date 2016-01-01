@@ -30,8 +30,7 @@ public class ContainerImpl implements Container {
   }
 
   public static ContainerImpl containerImpl() {
-    final ValuesDb valuesDb = memoryValuesDb();
-    return new ContainerImpl(new MemoryFileSystem(), valuesDb, new TempManager());
+    return new ContainerImpl(new MemoryFileSystem(), memoryValuesDb(), new TempManager());
   }
 
   @Override
