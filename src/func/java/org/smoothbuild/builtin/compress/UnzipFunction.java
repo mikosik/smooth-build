@@ -2,12 +2,19 @@ package org.smoothbuild.builtin.compress;
 
 import static org.smoothbuild.io.fs.base.Path.SEPARATOR;
 import static org.smoothbuild.io.fs.base.Path.validationError;
+import static org.smoothbuild.util.Streams.copy;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
@@ -29,11 +36,13 @@ public class UnzipFunction {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
     try {
-      try (ZipInputStream zipInputStream = new ZipInputStream(blob.openInputStream())) {
-        ZipEntry entry;
-        while ((entry = zipInputStream.getNextEntry()) != null) {
+      File tempFile = copyToTempFile(blob);
+      try (ZipFile zipFile = new ZipFile(tempFile)) {
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+          ZipEntry entry = entries.nextElement();
           if (!IS_DIR.test(entry.getName())) {
-            SFile unzippedEntry = unzipEntry(container, zipInputStream, entry);
+            SFile unzippedEntry = unzipEntry(container, zipFile.getInputStream(entry), entry);
             String fileName = unzippedEntry.path().value();
             if (duplicatesDetector.addValue(fileName)) {
               throw new ErrorMessage("Zip file contains two files with the same path = "
@@ -50,8 +59,13 @@ public class UnzipFunction {
     }
   }
 
-  private static SFile unzipEntry(Container container, ZipInputStream zipInputStream,
-      ZipEntry entry) {
+  private static File copyToTempFile(Blob blob) throws IOException, FileNotFoundException {
+    File tempFile = File.createTempFile("", "");
+    copy(blob.openInputStream(), new BufferedOutputStream(new FileOutputStream(tempFile)));
+    return tempFile;
+  }
+
+  private static SFile unzipEntry(Container container, InputStream inputStream, ZipEntry entry) {
     String fileName = entry.getName();
     String errorMessage = validationError(fileName);
     if (errorMessage != null) {
@@ -59,17 +73,17 @@ public class UnzipFunction {
     }
 
     SString path = container.create().string(fileName);
-    Blob content = unzipEntryContent(container, zipInputStream);
+    Blob content = unzipEntryContent(container, inputStream);
     return container.create().file(path, content);
   }
 
-  private static Blob unzipEntryContent(Container container, ZipInputStream zipInputStream) {
+  private static Blob unzipEntryContent(Container container, InputStream inputStream) {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     try {
       BlobBuilder contentBuilder = container.create().blobBuilder();
       try (OutputStream outputStream = contentBuilder) {
         int len;
-        while ((len = zipInputStream.read(buffer)) > 0) {
+        while ((len = inputStream.read(buffer)) > 0) {
           outputStream.write(buffer, 0, len);
         }
       }
