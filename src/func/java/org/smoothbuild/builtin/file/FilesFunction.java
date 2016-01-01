@@ -22,7 +22,7 @@ public class FilesFunction {
   @NotCacheable
   public static Array<SFile> files(ContainerImpl container, SString dir) {
     Path path = validatedProjectPath("dir", dir);
-    FileSystem fileSystem = container.projectFileSystem();
+    FileSystem fileSystem = container.fileSystem();
 
     if (path.startsWith(SMOOTH_DIR)) {
       throw new ErrorMessage("Listing files from " + SMOOTH_DIR + " dir is not allowed.");

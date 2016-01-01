@@ -12,7 +12,7 @@ public class FileSystemModule extends AbstractModule {
   protected void configure() {}
 
   @Provides
-  public FileSystem provideProjectFileSystem() {
+  public FileSystem provideFileSystem() {
     return new DiskFileSystem(Path.root());
   }
 }
