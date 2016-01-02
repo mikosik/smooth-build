@@ -43,7 +43,7 @@ public class ErrorTest extends AcceptanceTestCase {
 
   private String getMessageNumber(String output) {
     String outputPart = output.substring(output.indexOf(MY_MESSAGE) + MY_MESSAGE.length());
-    Matcher matcher = Pattern.compile("(\\-?[0-9]*).*", DOTALL).matcher(outputPart);
+    Matcher matcher = Pattern.compile("(\\-?[0-9]+).*", DOTALL).matcher(outputPart);
     matcher.matches();
     return matcher.group(1);
   }
