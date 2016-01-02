@@ -32,6 +32,7 @@ import com.google.common.collect.ImmutableList.Builder;
 public class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
   private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
+  private static String SMOOTH_BINARY_PATH;
 
   private File projectDir;
   private Integer exitCode;
@@ -118,16 +119,45 @@ public class AcceptanceTestCase {
     return builder.build();
   }
 
-  private static String smoothBinaryPath() {
-    String smoothHome = System.getenv("smooth_home_dir");
-    if (smoothHome == null) {
-      throw new RuntimeException(
-          "smooth_home_dir env variable not set, you should run tests via ant");
+  private synchronized static String smoothBinaryPath() {
+    if (SMOOTH_BINARY_PATH == null) {
+      String smoothHome = System.getenv("smooth_home_dir");
+      if (smoothHome == null) {
+        try {
+          File repoDir = new File(".").getCanonicalFile();
+          ProcessBuilder processBuilder = new ProcessBuilder("ant", "install-smooth");
+          processBuilder.directory(repoDir);
+          Process process = processBuilder.start();
+          ExecutorService executor = Executors.newFixedThreadPool(2);
+          Future<ByteArrayOutputStream> inputStream =
+              executor.submit(streamReadingCallable(process.getInputStream()));
+          Future<ByteArrayOutputStream> errorStream =
+              executor.submit(streamReadingCallable(process.getErrorStream()));
+          int exitCode = process.waitFor();
+          String outputData = new String(inputStream.get().toByteArray());
+          String errorData = new String(errorStream.get().toByteArray());
+          if (exitCode != 0) {
+            throw new RuntimeException(
+                "Running 'ant install-smooth' failed with following output\n"
+                    + "STANDARD OUTPUT\n" + outputData + "\n"
+                    + "STANDARD ERROR\n" + errorData + "\n");
+          }
+          smoothHome = repoDir.getAbsolutePath() + "/build/acceptance/smooth";
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          throw new RuntimeException(e);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+          throw new RuntimeException(e);
+        }
+      }
+      SMOOTH_BINARY_PATH = smoothHome + "/smooth";
     }
-    return smoothHome + "/smooth";
+    return SMOOTH_BINARY_PATH;
   }
 
-  private Callable<ByteArrayOutputStream> streamReadingCallable(final InputStream inputStream) {
+  private static Callable<ByteArrayOutputStream> streamReadingCallable(InputStream inputStream) {
     return () -> {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       copy(inputStream, outputStream);
