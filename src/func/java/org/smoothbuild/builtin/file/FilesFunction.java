@@ -5,7 +5,6 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.lang.message.ErrorMessage;
@@ -36,7 +35,7 @@ public class FilesFunction {
       case NOTHING:
         throw new ErrorMessage("Dir " + path + " doesn't exist.");
       default:
-        throw new FileSystemException("Broken 'files' function implementation: unreachable case");
+        throw new RuntimeException("Broken 'files' function implementation: unreachable case");
     }
   }
 

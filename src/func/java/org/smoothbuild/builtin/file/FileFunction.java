@@ -4,7 +4,6 @@ import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.NotCacheable;
@@ -32,7 +31,7 @@ public class FileFunction {
       case NOTHING:
         throw new ErrorMessage("File " + validatedPath + " doesn't exist.");
       default:
-        throw new FileSystemException("Broken 'file' function implementation: unreachable case");
+        throw new RuntimeException("Broken 'file' function implementation: unreachable case");
     }
   }
 }
