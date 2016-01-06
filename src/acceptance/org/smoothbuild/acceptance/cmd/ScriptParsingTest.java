@@ -9,7 +9,7 @@ public class ScriptParsingTest extends AcceptanceTestCase {
   @Test
   public void syntax_error_is_reported() throws Exception {
     givenScript("result: ");
-    whenSmoothBuild();
+    whenSmoothBuild("result");
     thenFinishedWithError();
     thenEqual(output(), "build.smooth:1: error: no viable alternative at input '<EOF>'\n");
   }

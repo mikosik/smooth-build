@@ -39,13 +39,10 @@ public class Build implements Command {
 
   @Override
   public int run(String... functions) {
-    List<String> argsWithoutFirst = ImmutableList.copyOf(functions).subList(1, functions.length);
-    Set<Name> functionNames = parseArguments(argsWithoutFirst);
-    if (functionNames == null) {
-      return EXIT_CODE_ERROR;
-    }
-    tempManager.removeTemps();
     try {
+      List<String> argsWithoutFirst = ImmutableList.copyOf(functions).subList(1, functions.length);
+      Set<Name> functionNames = parseArguments(argsWithoutFirst);
+      tempManager.removeTemps();
       Map<Name, Function> module = moduleParser.createModule();
       smoothExecutor.execute(functionNames, module);
     } catch (ParsingException | ExecutionException e) {
@@ -63,15 +60,19 @@ public class Build implements Command {
         duplicatesDetector.addValue(name(argument));
       } else {
         console.error("Illegal function name '" + argument + "' passed in command line.");
-        return null;
+        throw new ExecutionException();
       }
     }
 
     for (Name name : duplicatesDetector.getDuplicateValues()) {
       console.error("Function " + name + " has been specified more than once.");
-      return null;
+      throw new ExecutionException();
     }
-
-    return duplicatesDetector.getUniqueValues();
+    Set<Name> result = duplicatesDetector.getUniqueValues();
+    if (result.isEmpty()) {
+      console.error("Specify at least one function to be executed.");
+      throw new ExecutionException();
+    }
+    return result;
   }
 }
