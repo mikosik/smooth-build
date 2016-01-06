@@ -2,6 +2,8 @@ package org.smoothbuild.lang.module;
 
 import static java.nio.file.Files.list;
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
+import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
 import static org.smoothbuild.io.util.JarFile.jarFile;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 import static org.smoothbuild.util.Classes.CLASS_FILE_EXTENSION;
@@ -10,6 +12,7 @@ import static org.smoothbuild.util.Classes.binaryPathToBinaryName;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.io.util.JarFile;
+import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
@@ -25,6 +29,22 @@ import org.smoothbuild.lang.function.nativ.NativeFunctionImplementationException
 import org.smoothbuild.util.ClassLoaders;
 
 public class NativeModuleFactory {
+  public static void loadBuiltinFunctions(Functions functions) {
+    Path libsPath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR);
+    for (Function function : loadNativeModulesFromDir(libsPath)) {
+      functions.add(function);
+    }
+  }
+
+  private static String smoothHomeDir() {
+    String smoothHomeDir = System.getenv(SMOOTH_HOME_ENV_VARIABLE);
+    if (smoothHomeDir == null) {
+      throw new RuntimeException("Environment variable '" + SMOOTH_HOME_ENV_VARIABLE
+          + "' not set.");
+    }
+    return smoothHomeDir;
+  }
+
   public static Collection<Function> loadNativeModulesFromDir(Path libsPath) {
     return loadNativeModules(listJars(libsPath));
   }

@@ -4,7 +4,6 @@ import org.smoothbuild.db.outputs.OutputsDbModule;
 import org.smoothbuild.db.values.ValuesDbModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.io.util.ReleaseJarModule;
-import org.smoothbuild.lang.module.ModuleModule;
 
 import com.google.inject.AbstractModule;
 
@@ -14,7 +13,6 @@ public class MainModule extends AbstractModule {
     install(new OutputsDbModule());
     install(new ValuesDbModule());
     install(new FileSystemModule());
-    install(new ModuleModule());
     install(new ReleaseJarModule());
   }
 }
