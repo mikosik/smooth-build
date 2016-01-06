@@ -23,19 +23,19 @@ public class SmoothExecutor {
     this.console = console;
   }
 
-  public void execute(Set<Name> functions, Map<Name, Function> module) {
-    if (functions.isEmpty()) {
+  public void execute(Set<Name> names, Map<Name, Function> functions) {
+    if (names.isEmpty()) {
       console.error("No function passed to build command.\n"
-          + "  Pass at least one from following available functions:" + indentedNameList(module));
+          + "  Pass at least one from following available functions:"
+          + indentedNameList(functions));
       throw new ExecutionException();
     }
 
-    for (Name name : functions) {
-      Function function = module.get(name);
+    for (Name name : names) {
+      Function function = functions.get(name);
       if (function == null) {
         console.error("Unknown function " + name + " passed in command line.\n"
-            + "  Only following function(s) are available:"
-            + indentedNameList(module));
+            + "  Only following function(s) are available:" + indentedNameList(functions));
         throw new ExecutionException();
       }
       artifactBuilder.addArtifact(function);
