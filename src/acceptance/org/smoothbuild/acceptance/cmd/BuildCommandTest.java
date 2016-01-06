@@ -2,10 +2,9 @@ package org.smoothbuild.acceptance.cmd;
 
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import java.io.File;
 
@@ -13,6 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class BuildCommandTest extends AcceptanceTestCase {
+  private String path;
 
   @Test
   public void build_command_fails_when_script_file_is_missing() throws Exception {
@@ -43,12 +43,21 @@ public class BuildCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void temp_dir_is_deleted_after_build_execution() throws Exception {
+  public void temp_file_is_deleted_after_build_execution() throws Exception {
     givenScript("result: tempFilePath();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    when(new File(artifactContent("result"))).exists();
-    thenReturned(false);
+    thenEqual(new File(artifactContent("result")).exists(), false);
+  }
+
+  @Test
+  public void smooth_temp_dir_is_deleted_before_build_starts() throws Exception {
+    given(path = TEMPORARY_PATH.value() + "/file.txt");
+    givenFile(path, "");
+    givenScript("syntactically incorrect script");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenEqual(file(path).exists(), false);
   }
 
   @Test

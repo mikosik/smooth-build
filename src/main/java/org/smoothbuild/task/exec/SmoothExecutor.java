@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
@@ -17,13 +16,11 @@ import com.google.common.collect.Ordering;
 public class SmoothExecutor {
   private final ArtifactBuilder artifactBuilder;
   private final Console console;
-  private final TempManager tempManager;
 
   @Inject
-  public SmoothExecutor(ArtifactBuilder artifactBuilder, Console console, TempManager tempManager) {
+  public SmoothExecutor(ArtifactBuilder artifactBuilder, Console console) {
     this.artifactBuilder = artifactBuilder;
     this.console = console;
-    this.tempManager = tempManager;
   }
 
   public void execute(Set<Name> functions, Map<Name, Function> module) {
@@ -32,7 +29,7 @@ public class SmoothExecutor {
           + "  Pass at least one from following available functions:" + indentedNameList(module));
       throw new ExecutionException();
     }
-    tempManager.removeTemps();
+
     for (Name name : functions) {
       Function function = module.get(name);
       if (function == null) {

@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.ModuleParser;
@@ -23,12 +24,15 @@ import com.google.common.collect.ImmutableList;
 
 public class Build implements Command {
   private final Console console;
+  private final TempManager tempManager;
   private final ModuleParser moduleParser;
   private final SmoothExecutor smoothExecutor;
 
   @Inject
-  public Build(Console console, ModuleParser moduleParser, SmoothExecutor smoothExecutor) {
+  public Build(Console console, TempManager tempManager, ModuleParser moduleParser,
+      SmoothExecutor smoothExecutor) {
     this.console = console;
+    this.tempManager = tempManager;
     this.moduleParser = moduleParser;
     this.smoothExecutor = smoothExecutor;
   }
@@ -40,7 +44,7 @@ public class Build implements Command {
     if (functionNames == null) {
       return EXIT_CODE_ERROR;
     }
-
+    tempManager.removeTemps();
     try {
       Map<Name, Function> module = moduleParser.createModule();
       smoothExecutor.execute(functionNames, module);
