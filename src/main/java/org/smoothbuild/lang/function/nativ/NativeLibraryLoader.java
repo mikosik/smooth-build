@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.module;
+package org.smoothbuild.lang.function.nativ;
 
 import static java.nio.file.Files.list;
 import static java.util.stream.Collectors.toList;
@@ -24,11 +24,9 @@ import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.function.nativ.NativeFunctionImplementationException;
 import org.smoothbuild.util.ClassLoaders;
 
-public class NativeModuleFactory {
+public class NativeLibraryLoader {
   public static void loadBuiltinFunctions(Functions functions) {
     Path libsPath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR);
     for (Function function : loadNativeModulesFromDir(libsPath)) {
@@ -107,7 +105,7 @@ public class NativeModuleFactory {
   }
 
   private static ClassLoader classLoader(JarFile jar) {
-    ClassLoader parentClassLoader = NativeModuleFactory.class.getClassLoader();
+    ClassLoader parentClassLoader = NativeLibraryLoader.class.getClassLoader();
     return ClassLoaders.jarClassLoader(parentClassLoader, jar.path());
   }
 

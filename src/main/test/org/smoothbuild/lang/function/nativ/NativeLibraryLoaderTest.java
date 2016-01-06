@@ -1,10 +1,10 @@
-package org.smoothbuild.lang.module;
+package org.smoothbuild.lang.function.nativ;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.module.NativeModuleFactory.loadNativeModules;
+import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadNativeModules;
 import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -32,7 +32,7 @@ import org.smoothbuild.util.Classes;
 
 import com.google.common.io.ByteStreams;
 
-public class NativeModuleFactoryTest {
+public class NativeLibraryLoaderTest {
   @Test
   public void module_with_zero_functions_is_allowed() throws Exception {
     when(loadNativeModules(asList(module(ModuleWithNoFunctions.class))));
