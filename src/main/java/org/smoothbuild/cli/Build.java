@@ -4,7 +4,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.module.NativeModuleFactory.loadBuiltinFunctions;
+import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
 
 import java.util.List;
 import java.util.Map;
