@@ -27,9 +27,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result: 'abc';");
     whenSmoothBuild();
     thenFinishedWithError();
-    thenEqual(output(), "error: No function passed to build command.\n"
-        + "  Pass at least one from following available functions:\n"
-        + "    'result'\n");
+    thenEqual(output(), "error: Specify at least one function to be executed.\n");
   }
 
   @Test

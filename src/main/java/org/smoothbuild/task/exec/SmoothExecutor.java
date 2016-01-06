@@ -24,13 +24,6 @@ public class SmoothExecutor {
   }
 
   public void execute(Set<Name> names, Map<Name, Function> functions) {
-    if (names.isEmpty()) {
-      console.error("No function passed to build command.\n"
-          + "  Pass at least one from following available functions:"
-          + indentedNameList(functions));
-      throw new ExecutionException();
-    }
-
     for (Name name : names) {
       Function function = functions.get(name);
       if (function == null) {
