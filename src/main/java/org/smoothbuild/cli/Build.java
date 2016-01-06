@@ -4,6 +4,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.lang.module.NativeModuleFactory.loadBuiltinFunctions;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.io.util.TempManager;
+import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.ModuleParser;
@@ -27,21 +29,24 @@ public class Build implements Command {
   private final TempManager tempManager;
   private final ModuleParser moduleParser;
   private final SmoothExecutor smoothExecutor;
+  private final Functions functions;
 
   @Inject
   public Build(Console console, TempManager tempManager, ModuleParser moduleParser,
-      SmoothExecutor smoothExecutor) {
+      SmoothExecutor smoothExecutor, Functions functions) {
     this.console = console;
     this.tempManager = tempManager;
     this.moduleParser = moduleParser;
     this.smoothExecutor = smoothExecutor;
+    this.functions = functions;
   }
 
   @Override
-  public int run(String... functions) {
+  public int run(String... names) {
     try {
-      List<String> argsWithoutFirst = ImmutableList.copyOf(functions).subList(1, functions.length);
+      List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
       Set<Name> functionNames = parseArguments(argsWithoutFirst);
+      loadBuiltinFunctions(functions);
       tempManager.removeTemps();
       Map<Name, Function> module = moduleParser.createModule();
       smoothExecutor.execute(functionNames, module);
