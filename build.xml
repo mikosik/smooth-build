@@ -356,7 +356,7 @@
     <!-- run src/acceptance -->
     <target name="install-smooth" depends="compile-acceptance-tests, release">
         <unzip src="${dir.build.release.file}" dest="${dir.build.acceptance}"/>
-        <zip destfile="${dir.build.acceptance}/${zipped.dir}/lib/funcs.jar" update="true">
+        <zip destfile="${dir.build.acceptance}/${zipped.dir}/lib/testing-funcs.jar">
             <zipfileset dir="${dir.build.class.acceptance}" includes="org/smoothbuild/acceptance/TestingFunctions**"/>
         </zip>
         <chmod file="${dir.build.acceptance}/${zipped.dir}/smooth" perm="u+x"/>
