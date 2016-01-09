@@ -1,7 +1,9 @@
 package org.smoothbuild.lang.module;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.lang.module.NativeModuleFactory.loadNativeModules;
 import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -9,8 +11,11 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
@@ -31,7 +36,7 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void module_with_zero_functions_is_allowed() throws Exception {
-    given(module = createNativeModule(ModuleWithNoFunctions.class));
+    given(module = loadNativeModules(asList(module(ModuleWithNoFunctions.class))));
     when(module.keySet());
     thenReturned(Matchers.emptyIterable());
   }
@@ -40,12 +45,12 @@ public class NativeModuleFactoryTest {
 
   @Test
   public void available_names_contains_all_function_names() throws Exception {
-    given(module = createNativeModule(ModuleWithTwoFunctions.class));
+    given(module = loadNativeModules(asList(module(TwoFunctions.class))));
     when(module.keySet());
     thenReturned(contains(name("func1"), name("func2")));
   }
 
-  public static class ModuleWithTwoFunctions {
+  public static class TwoFunctions {
     public interface Parameters {}
 
     @SmoothFunction
@@ -59,26 +64,34 @@ public class NativeModuleFactoryTest {
     }
   }
 
-  public void two_functions_with_same_name_are_forbidden() throws Exception {
-    when(() -> createNativeModule(ModuleAWithFuncA.class, ModuleBWithFuncA.class));
+  @Test
+  public void loading_module_with_two_functions_with_the_same_name_fails() throws Exception {
+    when(() -> loadNativeModules(asList(module(FunctionA.class, FunctionA2.class))));
     thenThrown(IllegalArgumentException.class);
   }
 
-  public static class ModuleAWithFuncA {
+  @Test
+  public void loading_two_modules_having_function_with_the_same_name_fails() throws Exception {
+    when(() -> loadNativeModules(asList(module(FunctionA.class), module(FunctionA2.class))));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  public static class FunctionA {
     @SmoothFunction
     public static SString funcA(Container container) {
       return null;
     }
   }
 
-  public static class ModuleBWithFuncA {
+  public static class FunctionA2 {
     @SmoothFunction
     public static SString funcA(Container container) {
       return null;
     }
   }
 
-  public static Map<Name, Function> createNativeModule(Class<?>... classes) throws Exception {
+  private static Path module(Class<?>... classes) throws IOException,
+      FileNotFoundException {
     File tempJarFile = File.createTempFile("tmp", ".jar");
     try (JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(tempJarFile))) {
       for (Class<?> clazz : classes) {
@@ -88,7 +101,6 @@ public class NativeModuleFactoryTest {
         }
       }
     }
-
-    return NativeModuleFactory.createNativeModule(tempJarFile.toPath());
+    return tempJarFile.toPath();
   }
 }

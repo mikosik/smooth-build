@@ -2,9 +2,8 @@ package org.smoothbuild.lang.module;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
-import static org.smoothbuild.lang.module.NativeModuleFactory.createNativeModule;
+import static org.smoothbuild.lang.module.NativeModuleFactory.loadNativeModulesFromDir;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
@@ -18,15 +17,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 public class ModuleModule extends AbstractModule {
-
   @Override
   protected void configure() {}
 
   @Provides
   @Singleton
   public Map<Name, Function> provideBuiltinModule() throws NativeFunctionImplementationException {
-    Path funcsJarPath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, "funcs.jar");
-    return createNativeModule(funcsJarPath);
+    return loadNativeModulesFromDir(Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR));
   }
 
   private static String smoothHomeDir() {

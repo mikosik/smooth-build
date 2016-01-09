@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.module;
 
+import static java.nio.file.Files.list;
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.io.util.JarFile.jarFile;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 import static org.smoothbuild.util.Classes.CLASS_FILE_EXTENSION;
@@ -9,7 +11,9 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -23,7 +27,34 @@ import org.smoothbuild.util.ClassLoaders;
 import com.google.common.collect.ImmutableMap;
 
 public class NativeModuleFactory {
-  public static ImmutableMap<Name, Function> createNativeModule(Path jarPath)
+  public static ImmutableMap<Name, Function> loadNativeModulesFromDir(Path libsPath) {
+    return loadNativeModules(listJars(libsPath));
+  }
+
+  private static List<Path> listJars(Path libsPath) {
+    try {
+      return list(libsPath).filter(path -> path.toFile().isFile()).collect(toList());
+    } catch (IOException e) {
+      throw new RuntimeException("IO error reading while reading from " + libsPath, e);
+    }
+  }
+
+  static ImmutableMap<Name, Function> loadNativeModules(List<Path> jars) {
+    Map<Name, Function> result = new HashMap<>();
+    for (Path path : jars) {
+      ImmutableMap<Name, Function> functions = loadNativeModule(path);
+      for (Entry<Name, Function> entry : functions.entrySet()) {
+        Name name = entry.getKey();
+        if (result.containsKey(name)) {
+          throw new IllegalArgumentException("Duplicate function " + name);
+        }
+        result.put(entry.getKey(), entry.getValue());
+      }
+    }
+    return ImmutableMap.copyOf(result);
+  }
+
+  public static ImmutableMap<Name, Function> loadNativeModule(Path jarPath)
       throws NativeFunctionImplementationException {
     try {
       return createNativeModuleImpl(jarFile(jarPath));
@@ -46,8 +77,7 @@ public class NativeModuleFactory {
           for (NativeFunction function : nativeFunctions(clazz, jar.hash())) {
             Name name = function.name();
             if (result.containsKey(name)) {
-              throw new IllegalArgumentException("Function " + name
-                  + " has been already added to this module.");
+              throw new IllegalArgumentException("Duplicate function " + name);
             } else {
               result.put(name, function);
             }
