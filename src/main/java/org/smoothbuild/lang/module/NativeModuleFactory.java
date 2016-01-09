@@ -10,10 +10,10 @@ import static org.smoothbuild.util.Classes.binaryPathToBinaryName;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -24,10 +24,8 @@ import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunctionImplementationException;
 import org.smoothbuild.util.ClassLoaders;
 
-import com.google.common.collect.ImmutableMap;
-
 public class NativeModuleFactory {
-  public static ImmutableMap<Name, Function> loadNativeModulesFromDir(Path libsPath) {
+  public static Collection<Function> loadNativeModulesFromDir(Path libsPath) {
     return loadNativeModules(listJars(libsPath));
   }
 
@@ -39,22 +37,22 @@ public class NativeModuleFactory {
     }
   }
 
-  static ImmutableMap<Name, Function> loadNativeModules(List<Path> jars) {
+  static Collection<Function> loadNativeModules(List<Path> jars) {
     Map<Name, Function> result = new HashMap<>();
     for (Path path : jars) {
-      ImmutableMap<Name, Function> functions = loadNativeModule(path);
-      for (Entry<Name, Function> entry : functions.entrySet()) {
-        Name name = entry.getKey();
+      Collection<Function> functions = loadNativeModule(path);
+      for (Function function : functions) {
+        Name name = function.name();
         if (result.containsKey(name)) {
           throw new IllegalArgumentException("Duplicate function " + name);
         }
-        result.put(entry.getKey(), entry.getValue());
+        result.put(function.name(), function);
       }
     }
-    return ImmutableMap.copyOf(result);
+    return result.values();
   }
 
-  public static ImmutableMap<Name, Function> loadNativeModule(Path jarPath)
+  public static Collection<Function> loadNativeModule(Path jarPath)
       throws NativeFunctionImplementationException {
     try {
       return createNativeModuleImpl(jarFile(jarPath));
@@ -63,7 +61,7 @@ public class NativeModuleFactory {
     }
   }
 
-  private static ImmutableMap<Name, Function> createNativeModuleImpl(JarFile jar)
+  private static Collection<Function> createNativeModuleImpl(JarFile jar)
       throws IOException,
       NativeFunctionImplementationException {
     Map<Name, Function> result = new HashMap<>();
@@ -85,7 +83,7 @@ public class NativeModuleFactory {
         }
       }
     }
-    return ImmutableMap.copyOf(result);
+    return result.values();
   }
 
   private static ClassLoader classLoader(JarFile jar) {

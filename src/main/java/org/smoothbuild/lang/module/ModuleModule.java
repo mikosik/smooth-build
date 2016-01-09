@@ -5,12 +5,12 @@ import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
 import static org.smoothbuild.lang.module.NativeModuleFactory.loadNativeModulesFromDir;
 
 import java.nio.file.Paths;
-import java.util.Map;
+import java.util.Collection;
 
 import javax.inject.Singleton;
 
+import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.NativeFunctionImplementationException;
 
 import com.google.inject.AbstractModule;
@@ -22,8 +22,14 @@ public class ModuleModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public Map<Name, Function> provideBuiltinModule() throws NativeFunctionImplementationException {
-    return loadNativeModulesFromDir(Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR));
+  public Functions provideBuiltinPackage() throws NativeFunctionImplementationException {
+    Collection<Function> module = loadNativeModulesFromDir(Paths.get(smoothHomeDir(),
+        SMOOTH_HOME_LIB_DIR));
+    Functions functions = new Functions();
+    for (Function function : module) {
+      functions.add(function);
+    }
+    return functions;
   }
 
   private static String smoothHomeDir() {

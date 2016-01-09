@@ -13,7 +13,7 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 
 /**
@@ -23,9 +23,9 @@ import org.smoothbuild.lang.function.base.Name;
  */
 public class FunctionsCollector {
 
-  public static Map<Name, FunctionContext> collectFunctions(Console console,
-      Map<Name, Function> builtinModule, ModuleContext module) {
-    Worker worker = new Worker(console, builtinModule);
+  public static Map<Name, FunctionContext> collectFunctions(Console console, Functions functions,
+      ModuleContext module) {
+    Worker worker = new Worker(console, functions);
     worker.visit(module);
     if (console.isErrorReported()) {
       throw new ParsingException();
@@ -34,37 +34,37 @@ public class FunctionsCollector {
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
-    private final Map<Name, Function> builtinModule;
+    private final Functions functions;
     private final Console console;
-    private final Map<Name, FunctionContext> functions;
+    private final Map<Name, FunctionContext> functionContexts;
 
     @Inject
-    public Worker(Console console, Map<Name, Function> builtinModule) {
+    public Worker(Console console, Functions functions) {
       this.console = console;
-      this.builtinModule = builtinModule;
-      this.functions = new HashMap<>();
+      this.functions = functions;
+      this.functionContexts = new HashMap<>();
     }
 
     @Override
     public Void visitFunction(FunctionContext functionContext) {
       FunctionNameContext nameContext = functionContext.functionName();
       Name name = name(nameContext.getText());
-      if (functions.keySet().contains(name)) {
+      if (functionContexts.keySet().contains(name)) {
         console.error(locationOf(nameContext), "Function " + name + " is already defined.");
         return null;
       }
-      if (builtinModule.containsKey(name)) {
+      if (functions.contains(name)) {
         console.error(locationOf(nameContext), "Function " + name
             + " cannot override builtin function with the same name.");
         return null;
       }
 
-      functions.put(name, functionContext);
+      functionContexts.put(name, functionContext);
       return null;
     }
 
     public Map<Name, FunctionContext> result() {
-      return functions;
+      return functionContexts;
     }
   }
 }

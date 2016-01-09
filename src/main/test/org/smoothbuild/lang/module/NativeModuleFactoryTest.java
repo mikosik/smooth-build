@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.module;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.module.NativeModuleFactory.loadNativeModules;
 import static org.smoothbuild.util.Classes.binaryPath;
-import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -16,7 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.Map;
+import java.util.Collection;
+import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
@@ -32,21 +33,17 @@ import org.smoothbuild.util.Classes;
 import com.google.common.io.ByteStreams;
 
 public class NativeModuleFactoryTest {
-  private Map<Name, Function> module;
-
   @Test
   public void module_with_zero_functions_is_allowed() throws Exception {
-    given(module = loadNativeModules(asList(module(ModuleWithNoFunctions.class))));
-    when(module.keySet());
+    when(loadNativeModules(asList(module(ModuleWithNoFunctions.class))));
     thenReturned(Matchers.emptyIterable());
   }
 
   public static class ModuleWithNoFunctions {}
 
   @Test
-  public void available_names_contains_all_function_names() throws Exception {
-    given(module = loadNativeModules(asList(module(TwoFunctions.class))));
-    when(module.keySet());
+  public void all_functions_are_loaded() throws Exception {
+    when(toNames(loadNativeModules(asList(module(TwoFunctions.class)))));
     thenReturned(contains(name("func1"), name("func2")));
   }
 
@@ -102,5 +99,9 @@ public class NativeModuleFactoryTest {
       }
     }
     return tempJarFile.toPath();
+  }
+
+  private static List<Name> toNames(Collection<Function> functions) {
+    return functions.stream().map(Function::name).collect(toList());
   }
 }
