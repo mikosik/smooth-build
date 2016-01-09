@@ -40,6 +40,7 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.expr.InvalidExpression;
 import org.smoothbuild.lang.expr.ValueExpression;
+import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Signature;
@@ -67,10 +68,9 @@ public class DefinedFunctionsCreator {
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function> createDefinedFunctions(Console console,
-      Map<Name, Function> builtinModule, Map<Name, FunctionContext> functionContexts,
-      List<Name> sorted) {
-    Worker worker = new Worker(console, builtinModule, functionContexts, sorted,
+  public Map<Name, Function> createDefinedFunctions(Console console, Functions functions,
+      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+    Worker worker = new Worker(console, functions, functionContexts, sorted,
         valuesDb, argumentExpressionCreator, implicitConverter);
     Map<Name, Function> result = worker.run();
     if (console.isErrorReported()) {
@@ -81,19 +81,19 @@ public class DefinedFunctionsCreator {
 
   private static class Worker {
     private final Console console;
-    private final Map<Name, Function> builtinModule;
+    private final Functions functions;
     private final Map<Name, FunctionContext> functionContexts;
     private final List<Name> sorted;
     private final ValuesDb valuesDb;
     private final ArgumentExpressionCreator argumentExpressionCreator;
     private final ImplicitConverter implicitConverter;
-    private final Map<Name, Function> functions = new HashMap<>();
+    private final Map<Name, Function> result = new HashMap<>();
 
-    public Worker(Console console, Map<Name, Function> builtinModule,
-        Map<Name, FunctionContext> functionContexts, List<Name> sorted, ValuesDb valuesDb,
-        ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
+    public Worker(Console console, Functions functions, Map<Name, FunctionContext> functionContexts,
+        List<Name> sorted, ValuesDb valuesDb, ArgumentExpressionCreator argumentExpressionCreator,
+        ImplicitConverter implicitConverter) {
       this.console = console;
-      this.builtinModule = builtinModule;
+      this.functions = functions;
       this.functionContexts = functionContexts;
       this.sorted = sorted;
       this.valuesDb = valuesDb;
@@ -104,9 +104,9 @@ public class DefinedFunctionsCreator {
     public Map<Name, Function> run() {
       for (Name name : sorted) {
         DefinedFunction definedFunction = build(functionContexts.get(name));
-        functions.put(name, definedFunction);
+        result.put(name, definedFunction);
       }
-      return functions;
+      return result;
     }
 
     public DefinedFunction build(FunctionContext functionContext) {
@@ -253,9 +253,9 @@ public class DefinedFunctionsCreator {
       // UndefinedFunctionDetector has been run already so we can be sure at
       // this point that function with given name exists either among imported
       // functions or among already handled defined functions.
-      Function function = builtinModule.get(name);
+      Function function = functions.get(name);
       if (function == null) {
-        return functions.get(name);
+        return result.get(name);
       } else {
         return function;
       }

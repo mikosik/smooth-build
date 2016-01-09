@@ -19,20 +19,21 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
 public class ModuleParser {
   private final FileSystem fileSystem;
-  private final Map<Name, Function> builtinModule;
+  private final Functions functions;
   private final DefinedFunctionsCreator definedFunctionsCreator;
   private final Console console;
 
   @Inject
-  public ModuleParser(FileSystem fileSystem, Map<Name, Function> builtinModule,
+  public ModuleParser(FileSystem fileSystem, Functions functions,
       DefinedFunctionsCreator definedFunctionsCreator, Console console) {
     this.fileSystem = fileSystem;
-    this.builtinModule = builtinModule;
+    this.functions = functions;
     this.definedFunctionsCreator = definedFunctionsCreator;
     this.console = console;
   }
@@ -53,24 +54,24 @@ public class ModuleParser {
 
   private Map<Name, Function> createModule(InputStream inputStream, Path scriptFile) {
     ModuleContext module = parseScript(console, inputStream, scriptFile);
-    Map<Name, FunctionContext> functions = collectFunctions(console, builtinModule, module);
+    Map<Name, FunctionContext> functionContexts = collectFunctions(console, functions, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
-    detectUndefinedFunctions(console, builtinModule, dependencies);
-    List<Name> sorted = sortDependencies(builtinModule, dependencies, console);
+    detectUndefinedFunctions(console, functions, dependencies);
+    List<Name> sorted = sortDependencies(functions, dependencies, console);
 
     Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        console, builtinModule, functions, sorted);
+        console, functions, functionContexts, sorted);
 
     return definedFunctions;
   }
 
-  public static void detectUndefinedFunctions(Console console, Map<Name, Function> builtinModule,
+  public static void detectUndefinedFunctions(Console console, Functions functions,
       Map<Name, Set<Dependency>> dependencies) {
     Set<Name> declaredFunctions = dependencies.keySet();
     for (Set<Dependency> functionDependecies : dependencies.values()) {
       for (Dependency dependency : functionDependecies) {
         Name name = dependency.functionName();
-        if (!builtinModule.containsKey(name) && !declaredFunctions.contains(name)) {
+        if (!functions.contains(name) && !declaredFunctions.contains(name)) {
           console.error(dependency.location(), "Call to unknown function " + name + ".");
         }
       }

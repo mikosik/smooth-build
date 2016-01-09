@@ -3,10 +3,9 @@ package org.smoothbuild.lang.expr;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.expr.Expressions.callExpression;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.Conversions;
@@ -14,11 +13,11 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 
 public class ImplicitConverter {
-  private final Map<Name, Function> builtinModule;
+  private final Functions functions;
 
   @Inject
-  public ImplicitConverter(Map<Name, Function> builtinModule) {
-    this.builtinModule = builtinModule;
+  public ImplicitConverter(Functions functions) {
+    this.functions = functions;
   }
 
   public <T extends Value> Expression apply(Type destinationType, Expression source) {
@@ -28,7 +27,7 @@ public class ImplicitConverter {
     }
 
     Name functionName = Conversions.convertFunctionName(sourceType, destinationType);
-    Function function = builtinModule.get(functionName);
+    Function function = functions.get(functionName);
 
     return callExpression(function, true, source.codeLocation(), asList(source));
   }
