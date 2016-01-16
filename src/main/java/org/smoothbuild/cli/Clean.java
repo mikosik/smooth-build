@@ -14,7 +14,7 @@ import org.smoothbuild.io.fs.base.FileSystemException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
-public class Clean implements Command {
+public class Clean {
   private final FileSystem fileSystem;
   private final Console console;
 
@@ -24,7 +24,6 @@ public class Clean implements Command {
     this.console = console;
   }
 
-  @Override
   public int run(String... args) {
     List<String> unknownArgs = ImmutableList.copyOf(args).subList(1, args.length);
     if (!unknownArgs.isEmpty()) {

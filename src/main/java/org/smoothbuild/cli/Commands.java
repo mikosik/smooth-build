@@ -12,15 +12,15 @@ public class Commands {
 
   public static int execute(String[] args) {
     if (args.length == 0) {
-      return runCommand(Help.class, new String[] { HELP });
+      return create(Help.class).run(new String[] { HELP });
     }
     switch (args[0]) {
       case BUILD:
-        return runCommand(Build.class, args);
+        return create(Build.class).run(args);
       case CLEAN:
-        return runCommand(Clean.class, args);
+        return create(Clean.class).run(args);
       case HELP:
-        return runCommand(Help.class, args);
+        return create(Help.class).run(args);
       default:
         System.out.println("smooth: '" + args[0]
             + "' is not a smooth command. See 'smooth help'.");
@@ -28,7 +28,7 @@ public class Commands {
     }
   }
 
-  private static int runCommand(Class<? extends Command> commandClass, String[] args) {
-    return createInjector(new MainModule()).getInstance(commandClass).run(args);
+  private static <T> T create(Class<? extends T> clazz) {
+    return createInjector(new MainModule()).getInstance(clazz);
   }
 }
