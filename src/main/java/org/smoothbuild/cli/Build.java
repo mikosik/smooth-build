@@ -23,7 +23,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.ImmutableList;
 
-public class Build implements Command {
+public class Build {
   private final Console console;
   private final TempManager tempManager;
   private final ModuleLoader moduleLoader;
@@ -40,7 +40,6 @@ public class Build implements Command {
     this.functions = functions;
   }
 
-  @Override
   public int run(String... names) {
     try {
       List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
