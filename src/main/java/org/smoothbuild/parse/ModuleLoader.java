@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
@@ -20,17 +19,16 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
-public class ModuleParser {
+public class ModuleLoader {
   private final FileSystem fileSystem;
   private final Functions functions;
   private final DefinedFunctionsCreator definedFunctionsCreator;
   private final Console console;
 
   @Inject
-  public ModuleParser(FileSystem fileSystem, Functions functions,
+  public ModuleLoader(FileSystem fileSystem, Functions functions,
       DefinedFunctionsCreator definedFunctionsCreator, Console console) {
     this.fileSystem = fileSystem;
     this.functions = functions;
@@ -38,9 +36,8 @@ public class ModuleParser {
     this.console = console;
   }
 
-  public Map<Name, Function> createModule() {
-    InputStream inputStream = scriptInputStream(DEFAULT_SCRIPT);
-    return createModule(inputStream, DEFAULT_SCRIPT);
+  public void loadFunctions(Path smoothFile) {
+    loadFunctions(scriptInputStream(smoothFile), smoothFile);
   }
 
   private InputStream scriptInputStream(Path scriptFile) {
@@ -52,17 +49,13 @@ public class ModuleParser {
     }
   }
 
-  private Map<Name, Function> createModule(InputStream inputStream, Path scriptFile) {
+  private void loadFunctions(InputStream inputStream, Path scriptFile) {
     ModuleContext module = parseScript(console, inputStream, scriptFile);
     Map<Name, FunctionContext> functionContexts = collectFunctions(console, functions, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
     detectUndefinedFunctions(console, functions, dependencies);
     List<Name> sorted = sortDependencies(functions, dependencies, console);
-
-    Map<Name, Function> definedFunctions = definedFunctionsCreator.createDefinedFunctions(
-        console, functions, functionContexts, sorted);
-
-    return definedFunctions;
+    definedFunctionsCreator.createDefinedFunctions(console, functionContexts, sorted);
   }
 
   public static void detectUndefinedFunctions(Console console, Functions functions,

@@ -17,7 +17,6 @@ import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,26 +56,27 @@ import org.smoothbuild.util.UnescapingFailedException;
 
 public class DefinedFunctionsCreator {
   private final ValuesDb valuesDb;
+  private final Functions functions;
   private final ArgumentExpressionCreator argumentExpressionCreator;
   private final ImplicitConverter implicitConverter;
 
   @Inject
-  public DefinedFunctionsCreator(ValuesDb valuesDb,
+  public DefinedFunctionsCreator(ValuesDb valuesDb, Functions functions,
       ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
     this.valuesDb = valuesDb;
+    this.functions = functions;
     this.argumentExpressionCreator = argumentExpressionCreator;
     this.implicitConverter = implicitConverter;
   }
 
-  public Map<Name, Function> createDefinedFunctions(Console console, Functions functions,
-      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+  public void createDefinedFunctions(Console console, Map<Name, FunctionContext> functionContexts,
+      List<Name> sorted) {
     Worker worker = new Worker(console, functions, functionContexts, sorted,
         valuesDb, argumentExpressionCreator, implicitConverter);
-    Map<Name, Function> result = worker.run();
+    worker.run();
     if (console.isErrorReported()) {
       throw new ParsingException();
     }
-    return result;
   }
 
   private static class Worker {
@@ -87,7 +87,6 @@ public class DefinedFunctionsCreator {
     private final ValuesDb valuesDb;
     private final ArgumentExpressionCreator argumentExpressionCreator;
     private final ImplicitConverter implicitConverter;
-    private final Map<Name, Function> result = new HashMap<>();
 
     public Worker(Console console, Functions functions, Map<Name, FunctionContext> functionContexts,
         List<Name> sorted, ValuesDb valuesDb, ArgumentExpressionCreator argumentExpressionCreator,
@@ -101,12 +100,11 @@ public class DefinedFunctionsCreator {
       this.implicitConverter = implicitConverter;
     }
 
-    public Map<Name, Function> run() {
+    public void run() {
       for (Name name : sorted) {
         DefinedFunction definedFunction = build(functionContexts.get(name));
-        result.put(name, definedFunction);
+        functions.add(definedFunction);
       }
-      return result;
     }
 
     public DefinedFunction build(FunctionContext functionContext) {
@@ -237,7 +235,7 @@ public class DefinedFunctionsCreator {
 
     private Expression toExpression(CallContext callContext, List<Argument> arguments) {
       FunctionNameContext functionNameContext = callContext.functionName();
-      Function function = getFunction(name(functionNameContext.getText()));
+      Function function = functions.get(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
       List<Expression> argumentExpressions = argumentExpressionCreator.createArgExprs(codeLocation,
           console, function, arguments);
@@ -246,18 +244,6 @@ public class DefinedFunctionsCreator {
         return new InvalidExpression(function.type(), codeLocation);
       } else {
         return callExpression(function, false, codeLocation, argumentExpressions);
-      }
-    }
-
-    private Function getFunction(Name name) {
-      // UndefinedFunctionDetector has been run already so we can be sure at
-      // this point that function with given name exists either among imported
-      // functions or among already handled defined functions.
-      Function function = functions.get(name);
-      if (function == null) {
-        return result.get(name);
-      } else {
-        return function;
       }
     }
 

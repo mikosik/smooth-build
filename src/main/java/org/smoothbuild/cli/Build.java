@@ -1,5 +1,6 @@
 package org.smoothbuild.cli;
 
+import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
@@ -7,16 +8,14 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.parse.ModuleParser;
+import org.smoothbuild.parse.ModuleLoader;
 import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.task.exec.SmoothExecutor;
@@ -27,16 +26,16 @@ import com.google.common.collect.ImmutableList;
 public class Build implements Command {
   private final Console console;
   private final TempManager tempManager;
-  private final ModuleParser moduleParser;
+  private final ModuleLoader moduleLoader;
   private final SmoothExecutor smoothExecutor;
   private final Functions functions;
 
   @Inject
-  public Build(Console console, TempManager tempManager, ModuleParser moduleParser,
+  public Build(Console console, TempManager tempManager, ModuleLoader moduleLoader,
       SmoothExecutor smoothExecutor, Functions functions) {
     this.console = console;
     this.tempManager = tempManager;
-    this.moduleParser = moduleParser;
+    this.moduleLoader = moduleLoader;
     this.smoothExecutor = smoothExecutor;
     this.functions = functions;
   }
@@ -48,8 +47,8 @@ public class Build implements Command {
       Set<Name> functionNames = parseArguments(argsWithoutFirst);
       loadBuiltinFunctions(functions);
       tempManager.removeTemps();
-      Map<Name, Function> module = moduleParser.createModule();
-      smoothExecutor.execute(functionNames, module);
+      moduleLoader.loadFunctions(DEFAULT_SCRIPT);
+      smoothExecutor.execute(functionNames);
     } catch (ParsingException | ExecutionException e) {
       return EXIT_CODE_ERROR;
     }
