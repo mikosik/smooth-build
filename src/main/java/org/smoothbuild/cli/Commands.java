@@ -3,36 +3,32 @@ package org.smoothbuild.cli;
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 
-import java.util.Map;
-
 import org.smoothbuild.MainModule;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-
 public class Commands {
-  public static final Map<String, CommandSpec> COMMANDS = commandSpecs();
-
-  private static Map<String, CommandSpec> commandSpecs() {
-    Builder<String, CommandSpec> builder = ImmutableMap.builder();
-    builder.put("build", new BuildSpec());
-    builder.put("clean", new CleanSpec());
-    builder.put("help", new HelpSpec());
-    return builder.build();
-  }
+  public static final String BUILD = "build";
+  public static final String CLEAN = "clean";
+  public static final String HELP = "help";
 
   public static int execute(String[] args) {
     if (args.length == 0) {
-      args = new String[] { "help" };
+      return runCommand(Help.class, new String[] { HELP });
     }
-    String commandName = args[0];
-    CommandSpec commandSpec = COMMANDS.get(commandName);
-    if (commandSpec == null) {
-      System.out.println("smooth: '" + commandName
-          + "' is not a smooth command. See 'smooth help'.");
-      return EXIT_CODE_ERROR;
-    } else {
-      return createInjector(new MainModule()).getInstance(commandSpec.commandClass()).run(args);
+    switch (args[0]) {
+      case BUILD:
+        return runCommand(Build.class, args);
+      case CLEAN:
+        return runCommand(Clean.class, args);
+      case HELP:
+        return runCommand(Help.class, args);
+      default:
+        System.out.println("smooth: '" + args[0]
+            + "' is not a smooth command. See 'smooth help'.");
+        return EXIT_CODE_ERROR;
     }
+  }
+
+  private static int runCommand(Class<? extends Command> commandClass, String[] args) {
+    return createInjector(new MainModule()).getInstance(commandClass).run(args);
   }
 }

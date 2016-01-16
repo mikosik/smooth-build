@@ -3,40 +3,85 @@ package org.smoothbuild.cli;
 import static com.google.common.base.Strings.padEnd;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.cli.Commands.COMMANDS;
-
-import java.util.Map.Entry;
+import static org.smoothbuild.cli.Commands.BUILD;
+import static org.smoothbuild.cli.Commands.CLEAN;
+import static org.smoothbuild.cli.Commands.HELP;
 
 public class Help implements Command {
   @Override
   public int run(String... args) {
-    if (1 < args.length) {
-      CommandSpec commandSpec = COMMANDS.get(args[1]);
-      if (commandSpec == null) {
-        System.out.println("smooth: unknown '" + args[1] + "' command. See 'smooth help'.");
-        return EXIT_CODE_ERROR;
-      } else {
-        System.out.println(commandSpec.longDescription());
-        return EXIT_CODE_SUCCESS;
-      }
+    if (args.length == 1) {
+      System.out.print(generalHelp());
     } else {
-      return generalHelp();
+      switch (args[1]) {
+        case BUILD:
+          System.out.println(buildDescription());
+          break;
+        case CLEAN:
+          System.out.println(cleanDescription());
+          break;
+        case HELP:
+          System.out.println(helpDescription());
+          break;
+        default:
+          System.out.println("smooth: unknown '" + args[1] + "' command. See 'smooth help'.");
+          return EXIT_CODE_ERROR;
+      }
     }
+    return EXIT_CODE_SUCCESS;
   }
 
-  private static int generalHelp() {
+  private static String generalHelp() {
     StringBuilder builder = new StringBuilder();
     builder.append("usage: smooth <command> <arg>...\n");
     builder.append("\n");
     builder.append("All available commands are:\n");
-    for (Entry<String, CommandSpec> entry : COMMANDS.entrySet()) {
-      builder.append("  ");
-      builder.append(padEnd(entry.getKey(), 8, ' '));
-      builder.append(entry.getValue().shortDescription());
-      builder.append("\n");
-    }
+    append(builder, "build", buildShortDescription());
+    append(builder, "clean", cleanShortDescription());
+    append(builder, "help", helpShortDescription());
+    return builder.toString();
+  }
 
-    System.out.print(builder.toString());
-    return EXIT_CODE_SUCCESS;
+  private static void append(StringBuilder builder, String name,
+      String description) {
+    builder.append("  ");
+    builder.append(padEnd(name, 8, ' '));
+    builder.append(description);
+    builder.append("\n");
+  }
+
+  private static String buildDescription() {
+    return "usage: smooth build <function>...\n"
+        + "\n"
+        + buildShortDescription() + "\n"
+        + "\n"
+        + "  <function>  function which execution result is saved as artifact";
+  }
+
+  private static String cleanDescription() {
+    return "usage: smooth clean\n"
+        + "\n"
+        + cleanShortDescription();
+  }
+
+  private static String helpDescription() {
+    return "usage: smooth help <command>\n"
+        + "\n"
+        + helpShortDescription() + "\n"
+        + "\n"
+        + "arguments:\n"
+        + "  <command>  command for which help is printed";
+  }
+
+  private static String buildShortDescription() {
+    return "Build artifact(s) by running specified function(s)";
+  }
+
+  private static String cleanShortDescription() {
+    return "Remove all cached values and artifacts calculated during previous builds";
+  }
+
+  private static String helpShortDescription() {
+    return "Print help about given command";
   }
 }
