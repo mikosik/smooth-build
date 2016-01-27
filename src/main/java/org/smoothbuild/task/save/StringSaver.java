@@ -15,7 +15,6 @@ public class StringSaver implements Saver<SString> {
     this.smoothFileSystem = smoothFileSystem;
   }
 
-  @Override
   public void save(Name name, SString string) {
     Path artifactPath = artifactPath(name);
     Path targetPath = targetPath(string);

@@ -15,17 +15,14 @@ public class ValueAlgorithm implements Algorithm {
     this.value = value;
   }
 
-  @Override
   public HashCode hash() {
     return valueAlgorithmHash(value);
   }
 
-  @Override
   public Type resultType() {
     return value.type();
   }
 
-  @Override
   public Output execute(Input input, ContainerImpl container) {
     return new Output(value);
   }

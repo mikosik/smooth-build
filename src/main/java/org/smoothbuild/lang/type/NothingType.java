@@ -9,7 +9,6 @@ public class NothingType extends Type {
     super("Nothing", Nothing.class);
   }
 
-  @Override
   public Value defaultValue(ValuesDb valuesDb) {
     return null;
   }

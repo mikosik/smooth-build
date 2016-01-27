@@ -36,7 +36,6 @@ public class SString extends Value {
     }
   }
 
-  @Override
   public String toString() {
     return value();
   }

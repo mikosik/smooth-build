@@ -20,7 +20,6 @@ public class NativeCallExpression extends Expression {
     this.isGenerated = isGenerated;
   }
 
-  @Override
   public Computer createComputer() {
     return nativeCallComputer(function, isGenerated, codeLocation());
   }

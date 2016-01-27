@@ -31,7 +31,6 @@ public class RecursiveFilesIterable implements Iterable<Path> {
     this.rootDir = rootDir;
   }
 
-  @Override
   public Iterator<Path> iterator() {
     return new RecursiveFilesIterator();
   }
@@ -48,12 +47,10 @@ public class RecursiveFilesIterable implements Iterable<Path> {
       this.nextFile = fetchNextFile();
     }
 
-    @Override
     public boolean hasNext() {
       return nextFile != null;
     }
 
-    @Override
     public Path next() {
       checkState(hasNext());
       Path result = nextFile;
@@ -87,7 +84,6 @@ public class RecursiveFilesIterable implements Iterable<Path> {
       return null;
     }
 
-    @Override
     public void remove() {
       throw new UnsupportedOperationException();
     }

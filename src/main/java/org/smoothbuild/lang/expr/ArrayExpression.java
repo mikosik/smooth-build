@@ -17,7 +17,6 @@ public class ArrayExpression extends Expression {
     this.arrayType = arrayType;
   }
 
-  @Override
   public Computer createComputer() {
     return arrayComputer(arrayType, codeLocation());
   }

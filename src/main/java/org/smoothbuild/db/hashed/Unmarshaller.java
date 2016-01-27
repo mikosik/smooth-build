@@ -23,17 +23,14 @@ public class Unmarshaller extends InputStream {
     return readHash(true);
   }
 
-  @Override
   public int read() throws IOException {
     return inputStream.read();
   }
 
-  @Override
   public int read(byte b[], int off, int len) throws IOException {
     return inputStream.read(b, off, len);
   }
 
-  @Override
   public int read(byte b[]) throws IOException {
     return inputStream.read(b);
   }
@@ -70,7 +67,6 @@ public class Unmarshaller extends InputStream {
     }
   }
 
-  @Override
   public void close() {
     try {
       inputStream.close();

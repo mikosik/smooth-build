@@ -39,7 +39,6 @@ public class Output {
     return messages;
   }
 
-  @Override
   public boolean equals(Object object) {
     return object instanceof Output && equals((Output) object);
   }
@@ -49,12 +48,10 @@ public class Output {
         && Objects.equals(messages, output.messages);
   }
 
-  @Override
   public int hashCode() {
     return Objects.hash(result, messages);
   }
 
-  @Override
   public String toString() {
     return "TaskOutput(" + result + ", " + messages + ")";
   }

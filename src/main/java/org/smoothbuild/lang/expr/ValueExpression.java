@@ -16,7 +16,6 @@ public class ValueExpression extends Expression {
     this.value = checkNotNull(value);
   }
 
-  @Override
   public Computer createComputer() {
     return valueComputer(value, codeLocation());
   }

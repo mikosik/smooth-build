@@ -72,7 +72,6 @@ public class TaskReporterTest {
       super(null, "name", isInternal, true, CodeLocation.codeLocation(2));
     }
 
-    @Override
     public Output execute(Input input, ContainerImpl container) {
       return null;
     }

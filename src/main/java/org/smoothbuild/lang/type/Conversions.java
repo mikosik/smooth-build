@@ -46,7 +46,6 @@ public class Conversions {
       this.to = to;
     }
 
-    @Override
     public boolean equals(Object object) {
       return object instanceof TypeConversion && equals((TypeConversion) object);
     }
@@ -56,7 +55,6 @@ public class Conversions {
           && Objects.equals(to, typeConversion.to);
     }
 
-    @Override
     public int hashCode() {
       return Objects.hash(from, to);
     }

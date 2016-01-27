@@ -37,12 +37,10 @@ public class InputClassFile extends SimpleJavaFileObject {
     return aPackage;
   }
 
-  @Override
   public InputStream openInputStream() throws IOException {
     return file.content().openInputStream();
   }
 
-  @Override
   public boolean equals(Object object) {
     return object instanceof InputClassFile && equals((InputClassFile) object);
   }
@@ -51,7 +49,6 @@ public class InputClassFile extends SimpleJavaFileObject {
     return Objects.equals(file.path(), inputClassFile.file.path());
   }
 
-  @Override
   public int hashCode() {
     return file.path().hashCode();
   }

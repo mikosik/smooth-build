@@ -18,17 +18,14 @@ public class MemoryFileSystemTest extends GenericFileSystemTestCase {
 
   // helpers
 
-  @Override
   protected void createEmptyFile(String path) throws IOException {
     createEmptyFile(path(path));
   }
 
-  @Override
   protected void createEmptyFile(Path path) throws IOException {
     createFile(path, "");
   }
 
-  @Override
   protected void createFile(Path path, String content) throws IOException {
     OutputStream outputStream = fileSystem.openOutputStream(path);
     writeAndClose(outputStream, content);

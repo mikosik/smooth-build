@@ -25,7 +25,6 @@ public class Blob extends Value {
     return hashedDB.newUnmarshaller(hash());
   }
 
-  @Override
   public String toString() {
     return "Blob(" + size() + " bytes)";
   }

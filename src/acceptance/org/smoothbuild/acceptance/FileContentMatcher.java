@@ -21,12 +21,10 @@ public class FileContentMatcher extends TypeSafeMatcher<File> {
     this.expectedContent = expectedContent;
   }
 
-  @Override
   public void describeTo(Description description) {
     description.appendText("is file with content = '" + expectedContent + "'");
   }
 
-  @Override
   protected boolean matchesSafely(File item) {
     try {
       return item.isFile()

@@ -31,17 +31,14 @@ public abstract class Type {
 
   public abstract Value defaultValue(ValuesDb valuesDb);
 
-  @Override
   public final boolean equals(Object object) {
     return this == object;
   }
 
-  @Override
   public final int hashCode() {
     return name.hashCode();
   }
 
-  @Override
   public String toString() {
     return "'" + name + "'";
   }

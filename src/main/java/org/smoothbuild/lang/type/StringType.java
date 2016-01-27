@@ -8,7 +8,6 @@ public class StringType extends Type {
     super("String", SString.class);
   }
 
-  @Override
   public SString defaultValue(ValuesDb valuesDb) {
     return valuesDb.string("");
   }

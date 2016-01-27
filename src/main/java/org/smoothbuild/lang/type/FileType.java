@@ -13,7 +13,6 @@ public class FileType extends Type {
     super("File", SFile.class);
   }
 
-  @Override
   public SFile defaultValue(ValuesDb valuesDb) {
     SString path = (SString) STRING.defaultValue(valuesDb);
     Blob content = (Blob) BLOB.defaultValue(valuesDb);

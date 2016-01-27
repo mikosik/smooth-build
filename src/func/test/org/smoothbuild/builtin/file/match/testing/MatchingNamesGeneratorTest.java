@@ -47,7 +47,6 @@ public class MatchingNamesGeneratorTest {
   private static class CollectingConsumer implements Consumer<String> {
     private final List<String> generatedNames = new ArrayList<>();
 
-    @Override
     public void accept(String name) {
       generatedNames.add(name);
     }

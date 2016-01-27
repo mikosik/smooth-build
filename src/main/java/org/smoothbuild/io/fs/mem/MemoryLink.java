@@ -17,52 +17,42 @@ public class MemoryLink implements MemoryElement {
     this.target = target;
   }
 
-  @Override
   public Path name() {
     return name;
   }
 
-  @Override
   public MemoryDir parent() {
     return parent;
   }
 
-  @Override
   public boolean isFile() {
     return target.isFile();
   }
 
-  @Override
   public boolean isDir() {
     return target.isDir();
   }
 
-  @Override
   public boolean hasChild(Path name) {
     return target.hasChild(name);
   }
 
-  @Override
   public MemoryElement child(Path name) {
     return target.child(name);
   }
 
-  @Override
   public List<Path> childNames() {
     return target.childNames();
   }
 
-  @Override
   public void addChild(MemoryElement element) {
     target.addChild(element);
   }
 
-  @Override
   public InputStream openInputStream() {
     return target.openInputStream();
   }
 
-  @Override
   public OutputStream openOutputStream() {
     return target.openOutputStream();
   }

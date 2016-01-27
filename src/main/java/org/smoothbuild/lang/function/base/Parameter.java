@@ -49,7 +49,6 @@ public class Parameter {
     return nameHash;
   }
 
-  @Override
   public final boolean equals(Object object) {
     if (!(object instanceof Parameter)) {
       return false;
@@ -59,7 +58,6 @@ public class Parameter {
         && this.isRequired == that.isRequired;
   }
 
-  @Override
   public final int hashCode() {
     return 17 * type.hashCode() + name.hashCode();
   }
@@ -70,7 +68,6 @@ public class Parameter {
     return typePart + namePart;
   }
 
-  @Override
   public String toString() {
     return "Param(" + type.name() + ": " + name + ")";
   }

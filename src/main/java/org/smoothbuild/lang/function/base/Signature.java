@@ -32,7 +32,6 @@ public class Signature {
     return parameters;
   }
 
-  @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append(type.name() + " " + name.value() + "(");

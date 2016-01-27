@@ -28,11 +28,9 @@ public class OutputClassFile extends SimpleJavaFileObject {
     this.contentBuilder = container.create().blobBuilder();
   }
 
-  @Override
   public OutputStream openOutputStream() throws IOException {
     final OutputStream outputStream = contentBuilder;
     return new ForwardingOutputStream(outputStream) {
-      @Override
       public void close() throws IOException {
         outputStream.close();
         SString pathString = container.create().string(path.value());
