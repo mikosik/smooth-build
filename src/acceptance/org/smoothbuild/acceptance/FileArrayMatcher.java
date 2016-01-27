@@ -28,12 +28,10 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
     this.params = params;
   }
 
-  @Override
   public void describeTo(Description description) {
     description.appendText("is array dir with = " + Arrays.toString(params));
   }
 
-  @Override
   protected boolean matchesSafely(File item) {
     try {
       return item.isDirectory() && containsExpectedElements(item)
@@ -43,7 +41,6 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
     }
   }
 
-  @Override
   protected void describeMismatchSafely(File dir, Description mismatchDescription) {
     try {
       mismatchDescription.appendText("actual: [" + actualFiles(dir, dir.getPath().length() + 1)

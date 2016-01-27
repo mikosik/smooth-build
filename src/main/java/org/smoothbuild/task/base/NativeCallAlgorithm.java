@@ -18,17 +18,14 @@ public class NativeCallAlgorithm implements Algorithm {
     this.function = function;
   }
 
-  @Override
   public HashCode hash() {
     return nativeCallAlgorithmHash(function);
   }
 
-  @Override
   public Type resultType() {
     return function.type();
   }
 
-  @Override
   public Output execute(Input input, ContainerImpl container) {
     Value result = function.invoke(container, calculateArguments(input));
     return new Output(result, container.messages());

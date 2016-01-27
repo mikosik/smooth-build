@@ -42,7 +42,6 @@ public class ValuesDb implements ValueFactory {
     return new ValuesDb(new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem)));
   }
 
-  @Override
   public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementClass) {
     if (!(arrayElementJTypes().contains(TypeLiteral.get(elementClass)))) {
       throw new IllegalArgumentException("Illegal type " + elementClass.getCanonicalName());
@@ -57,17 +56,14 @@ public class ValuesDb implements ValueFactory {
         hashedDb);
   }
 
-  @Override
   public SFile file(SString path, Blob content) {
     return storeFileInDb(path, content, hashedDb);
   }
 
-  @Override
   public BlobBuilder blobBuilder() {
     return new BlobBuilder(hashedDb);
   }
 
-  @Override
   public SString string(String string) {
     return storeStringInDb(string, hashedDb);
   }

@@ -45,7 +45,6 @@ public class FunctionsCollector {
       this.functionContexts = new HashMap<>();
     }
 
-    @Override
     public Void visitFunction(FunctionContext functionContext) {
       FunctionNameContext nameContext = functionContext.functionName();
       Name name = name(nameContext.getText());

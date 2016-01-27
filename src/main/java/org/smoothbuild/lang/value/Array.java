@@ -36,7 +36,6 @@ public class Array<T extends Value> extends Value implements Iterable<T> {
     return new Array<T>(marshaller.hash(), arrayType, valueConstructor, hashedDb);
   }
 
-  @Override
   public Iterator<T> iterator() {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash())) {
       ImmutableList.Builder<T> builder = ImmutableList.builder();
@@ -48,7 +47,6 @@ public class Array<T extends Value> extends Value implements Iterable<T> {
     }
   }
 
-  @Override
   public String toString() {
     return "[" + stream(this.spliterator(), false).map(Object::toString).collect(joining(", "))
         + "]";

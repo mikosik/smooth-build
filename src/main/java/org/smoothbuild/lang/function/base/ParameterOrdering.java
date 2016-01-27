@@ -7,7 +7,6 @@ public class ParameterOrdering extends Ordering<Parameter> {
 
   private ParameterOrdering() {}
 
-  @Override
   public int compare(Parameter left, Parameter right) {
     return left.name().compareTo(right.name());
   }

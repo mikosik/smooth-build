@@ -17,7 +17,6 @@ public class ArraySaver<T extends Value> implements Saver<Array<T>> {
     this.smoothFileSystem = smoothFileSystem;
   }
 
-  @Override
   public void save(Name name, Array<T> array) {
     Path artifactPath = artifactPath(name);
 

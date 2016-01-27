@@ -55,7 +55,6 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     return resultClassFiles.build();
   }
 
-  @Override
   public JavaFileObject getJavaFileForOutput(Location location, String className, Kind kind,
       FileObject sibling) throws IOException {
     if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
@@ -72,7 +71,6 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     }
   }
 
-  @Override
   public String inferBinaryName(Location location, JavaFileObject file) {
     if (file instanceof InputClassFile) {
       return ((InputClassFile) file).binaryName();
@@ -81,7 +79,6 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     }
   }
 
-  @Override
   public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds,
       boolean recurse) throws IOException {
     if (location == StandardLocation.CLASS_PATH) {

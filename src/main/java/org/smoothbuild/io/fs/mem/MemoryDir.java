@@ -20,32 +20,26 @@ public class MemoryDir implements MemoryElement {
     this.name = name;
   }
 
-  @Override
   public Path name() {
     return name;
   }
 
-  @Override
   public MemoryDir parent() {
     return parent;
   }
 
-  @Override
   public boolean isFile() {
     return false;
   }
 
-  @Override
   public boolean isDir() {
     return true;
   }
 
-  @Override
   public boolean hasChild(Path name) {
     return map.containsKey(name);
   }
 
-  @Override
   public MemoryElement child(Path name) {
     MemoryElement result = map.get(name);
     if (result == null) {
@@ -54,12 +48,10 @@ public class MemoryDir implements MemoryElement {
     return result;
   }
 
-  @Override
   public List<Path> childNames() {
     return ImmutableList.copyOf(map.keySet());
   }
 
-  @Override
   public void addChild(MemoryElement element) {
     Path elementName = element.name();
     if (map.containsKey(elementName)) {
@@ -77,12 +69,10 @@ public class MemoryDir implements MemoryElement {
     map.clear();
   }
 
-  @Override
   public InputStream openInputStream() {
     throw new UnsupportedOperationException();
   }
 
-  @Override
   public OutputStream openOutputStream() {
     throw new UnsupportedOperationException();
   }

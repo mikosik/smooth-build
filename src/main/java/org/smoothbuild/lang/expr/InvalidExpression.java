@@ -15,12 +15,10 @@ public class InvalidExpression extends Expression {
     this.type = checkNotNull(type);
   }
 
-  @Override
   public Type type() {
     return type;
   }
 
-  @Override
   public Computer createComputer() {
     throw new RuntimeException("Cannot create Computer for invalid expression.");
   }

@@ -41,7 +41,6 @@ public class DiskFileSystem implements FileSystem {
     this.rootDir = path;
   }
 
-  @Override
   public PathState pathState(Path path) {
     java.nio.file.Path jdkPath = jdkPath(path);
     if (!Files.exists(jdkPath)) {
@@ -53,7 +52,6 @@ public class DiskFileSystem implements FileSystem {
     return FILE;
   }
 
-  @Override
   public Iterable<Path> files(Path dir) {
     assertPathIsDir(this, dir);
     try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(
@@ -68,7 +66,6 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
-  @Override
   public void move(Path source, Path target) {
     if (pathState(source) == NOTHING) {
       throw new FileSystemException("Cannot move " + source + ". It doesn't exist.");
@@ -90,7 +87,6 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
-  @Override
   public InputStream openInputStream(Path path) {
     assertPathIsFile(this, path);
     try {
@@ -100,7 +96,6 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
-  @Override
   public OutputStream openOutputStream(Path path) {
     if (pathState(path) == DIR) {
       throw new FileSystemException("Cannot use " + path + " path. It is already taken by dir.");
@@ -115,7 +110,6 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
-  @Override
   public void createDir(Path path) {
     try {
       Files.createDirectories(jdkPath(path));
@@ -126,7 +120,6 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
-  @Override
   public void delete(Path path) {
     if (pathState(path) == NOTHING) {
       return;
@@ -138,7 +131,6 @@ public class DiskFileSystem implements FileSystem {
     }
   }
 
-  @Override
   public void createLink(Path link, Path target) {
     assertPathExists(this, target);
     assertPathIsUnused(this, link);

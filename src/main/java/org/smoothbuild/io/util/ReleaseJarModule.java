@@ -15,7 +15,6 @@ import com.google.inject.Provides;
 
 public class ReleaseJarModule extends AbstractModule {
 
-  @Override
   protected void configure() {}
 
   @Provides

@@ -25,7 +25,6 @@ public class CodeLocation {
     return line;
   }
 
-  @Override
   public final boolean equals(Object object) {
     if (object instanceof CodeLocation) {
       CodeLocation that = (CodeLocation) object;
@@ -34,12 +33,10 @@ public class CodeLocation {
     return false;
   }
 
-  @Override
   public final int hashCode() {
     return line;
   }
 
-  @Override
   public String toString() {
     return "[ " + asString() + " ]";
   }

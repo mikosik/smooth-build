@@ -36,7 +36,6 @@ public class DependencyCollector {
       this.dependencies = ImmutableMap.builder();
     }
 
-    @Override
     public Void visitFunction(FunctionContext function) {
       currentFunctionDependencies = ImmutableSet.builder();
       Name name = name(function.functionName().getText());
@@ -45,7 +44,6 @@ public class DependencyCollector {
       return null;
     }
 
-    @Override
     public Void visitCall(CallContext call) {
       FunctionNameContext functionName = call.functionName();
       Name name = name(functionName.getText());

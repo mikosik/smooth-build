@@ -31,7 +31,6 @@ public class EnvironmentVariable {
     return isSet;
   }
 
-  @Override
   public String toString() {
     return name + "=" + value;
   }

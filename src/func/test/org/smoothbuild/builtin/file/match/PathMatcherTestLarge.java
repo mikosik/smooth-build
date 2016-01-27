@@ -28,7 +28,6 @@ public class PathMatcherTestLarge {
     return new Consumer<String>() {
       private int count = 0;
 
-      @Override
       public void accept(String pattern) {
         count++;
         System.out.println(count + ": " + pattern);

@@ -8,7 +8,6 @@ public class BlobType extends Type {
     super("Blob", Blob.class);
   }
 
-  @Override
   public Blob defaultValue(ValuesDb valuesDb) {
     return valuesDb.blobBuilder().build();
   }

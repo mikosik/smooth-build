@@ -8,7 +8,6 @@ import org.smoothbuild.io.util.ReleaseJarModule;
 import com.google.inject.AbstractModule;
 
 public class MainModule extends AbstractModule {
-  @Override
   protected void configure() {
     install(new OutputsDbModule());
     install(new ValuesDbModule());

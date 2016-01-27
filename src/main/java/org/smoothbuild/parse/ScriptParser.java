@@ -60,7 +60,6 @@ public class ScriptParser {
       this.console = console;
     }
 
-    @Override
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
         int charPositionInLine, String msg, @Nullable RecognitionException e) {
       CodeLocation location = createLocation(offendingSymbol, line);
@@ -75,20 +74,17 @@ public class ScriptParser {
       }
     }
 
-    @Override
     public void reportAmbiguity(@NotNull Parser recognizer, @NotNull DFA dfa, int startIndex,
         int stopIndex, boolean exact, @NotNull BitSet ambigAlts, @NotNull ATNConfigSet configs) {
       reportError(recognizer, startIndex, "Ambiguity in grammar");
     }
 
-    @Override
     public void reportAttemptingFullContext(@NotNull Parser recognizer, @NotNull DFA dfa,
         int startIndex, int stopIndex, @Nullable BitSet conflictingAlts,
         @NotNull ATNConfigSet configs) {
       reportError(recognizer, startIndex, "Attempting full context");
     }
 
-    @Override
     public void reportContextSensitivity(@NotNull Parser recognizer, @NotNull DFA dfa,
         int startIndex, int stopIndex, int prediction, @NotNull ATNConfigSet configs) {
       reportError(recognizer, startIndex, "Context sensitivity");

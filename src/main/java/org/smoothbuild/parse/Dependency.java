@@ -20,7 +20,6 @@ public class Dependency {
     return functionName;
   }
 
-  @Override
   public final boolean equals(Object object) {
     if (!(object instanceof Dependency)) {
       return false;
@@ -29,12 +28,10 @@ public class Dependency {
     return this.functionName.equals(that.functionName);
   }
 
-  @Override
   public final int hashCode() {
     return functionName.hashCode();
   }
 
-  @Override
   public String toString() {
     return "[" + functionName + ":" + location + "]";
   }

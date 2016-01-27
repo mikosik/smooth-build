@@ -91,7 +91,6 @@ public class Argument {
     return number == 0 ? "|" : Integer.toString(number);
   }
 
-  @Override
   public String toString() {
     return type().name() + ":" + nameSanitized();
   }
@@ -118,7 +117,6 @@ public class Argument {
   }
 
   public static final Ordering<Argument> NUMBER_ORDERING = new Ordering<Argument>() {
-    @Override
     public int compare(Argument argument1, Argument argument2) {
       int number1 = argument1.number();
       int number2 = argument2.number();

@@ -11,7 +11,6 @@ public class FileSaver implements Saver<SFile> {
     this.blobSaver = new BlobSaver(smoothFileSystem);
   }
 
-  @Override
   public void save(Name name, SFile file) {
     blobSaver.save(name, file.content());
   }
