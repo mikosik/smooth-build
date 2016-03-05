@@ -26,29 +26,34 @@ public class JunitFunction {
   public static SString junit(Container container, Array<Blob> libs, SString include) {
     Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(container, libs);
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
-    JUnitCore jUnitCore = new JUnitCore();
-
-    Predicate<Path> filter = createFilter(include);
-    int testCount = 0;
-    for (String binaryName : binaryNameToClassFile.keySet()) {
-      Path filePath = path(binaryNameToClassFile.get(binaryName).path().value());
-      if (filter.test(filePath)) {
-        testCount++;
-        Class<?> testClass = loadClass(classLoader, binaryName);
-        Result result = jUnitCore.run(testClass);
-        if (!result.wasSuccessful()) {
-          for (Failure failure : result.getFailures()) {
-            container.log(new ErrorMessage("test failed: " + failure.toString() + "\n" + failure
-                .getTrace()));
+    ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(classLoader);
+    try {
+      JUnitCore jUnitCore = new JUnitCore();
+      Predicate<Path> filter = createFilter(include);
+      int testCount = 0;
+      for (String binaryName : binaryNameToClassFile.keySet()) {
+        Path filePath = path(binaryNameToClassFile.get(binaryName).path().value());
+        if (filter.test(filePath)) {
+          testCount++;
+          Class<?> testClass = loadClass(classLoader, binaryName);
+          Result result = jUnitCore.run(testClass);
+          if (!result.wasSuccessful()) {
+            for (Failure failure : result.getFailures()) {
+              container.log(new ErrorMessage("test failed: " + failure.toString() + "\n" + failure
+                  .getTrace()));
+            }
+            return container.create().string("FAILURE");
           }
-          return container.create().string("FAILURE");
         }
       }
+      if (testCount == 0) {
+        container.log(new WarningMessage("No junit tests found."));
+      }
+      return container.create().string("SUCCESS");
+    } finally {
+      Thread.currentThread().setContextClassLoader(origClassLoader);
     }
-    if (testCount == 0) {
-      container.log(new WarningMessage("No junit tests found."));
-    }
-    return container.create().string("SUCCESS");
   }
 
   private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {
