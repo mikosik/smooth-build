@@ -6,7 +6,6 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.onInstance;
 import static org.testory.Testory.thenCalledTimes;
-import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.util.ArrayList;
@@ -15,14 +14,12 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 
 import org.junit.Test;
-import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 
 public class SandboxedJavaFileManagerTest {
   private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
   private final Container container = containerImpl();
   private final Iterable<InputClassFile> packagedJavaFileObjects = new ArrayList<>();
-
   private SandboxedJavaFileManager manager;
 
   @Test
@@ -30,14 +27,6 @@ public class SandboxedJavaFileManagerTest {
       throws Exception {
     given(manager = new SandboxedJavaFileManager(sfm, container, packagedJavaFileObjects));
     when(manager).getJavaFileForOutput(CLASS_OUTPUT, "className", Kind.CLASS, null);
-    thenCalledTimes(0, onInstance(sfm));
-  }
-
-  @Test
-  public void getJavaFileOutput_logs_error_when_class_name_is_illegal() throws Exception {
-    given(manager = new SandboxedJavaFileManager(sfm, container, packagedJavaFileObjects));
-    when(manager).getJavaFileForOutput(CLASS_OUTPUT, ".illegal.MyClass", Kind.CLASS, null);
-    thenThrown(Message.class);
     thenCalledTimes(0, onInstance(sfm));
   }
 }
