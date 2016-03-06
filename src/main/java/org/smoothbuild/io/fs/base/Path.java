@@ -2,13 +2,13 @@ package org.smoothbuild.io.fs.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.quote;
+import static java.util.stream.Collectors.toList;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.base.Splitter;
 
 /**
  * Path within a project.
@@ -90,11 +90,7 @@ public class Path {
     if (isRoot()) {
       return new ArrayList<>();
     } else {
-      List<Path> result = new ArrayList<>();
-      for (String string : Splitter.on(SEPARATOR).split(value)) {
-        result.add(new Path(string));
-      }
-      return result;
+      return stream(value.split(quote(SEPARATOR))).map(Path::path).collect(toList());
     }
   }
 
