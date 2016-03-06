@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.Path.validationError;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.ErrorMessage;
@@ -20,10 +19,10 @@ public class PathArgValidator {
   }
 
   private static Path validatedPath(String name, String value) {
-    String message = validationError(value);
-    if (message != null) {
-      throw new ErrorMessage("Param '" + name + "' has illegal value. " + message);
+    try {
+      return path(value);
+    } catch (IllegalArgumentException e) {
+      throw new ErrorMessage("Param '" + name + "' has illegal value. " + e.getMessage());
     }
-    return path(value);
   }
 }

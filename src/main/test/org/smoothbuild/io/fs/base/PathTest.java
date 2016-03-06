@@ -34,15 +34,9 @@ public class PathTest {
   @Quackery
   public static Suite path_value_is_validated() {
     return suite("path value is validated")
-        .add(suite("validation error returns null for correct path")
-            .addAll(map(PathTesting.listOfCorrectPaths(),
-                PathTest::validationErrorReturnsNullForCorrectPath)))
         .add(suite("path can be created for valid name")
             .addAll(map(PathTesting.listOfCorrectPaths(),
                 PathTest::pathCanBeCreatedForValidName)))
-        .add(suite("validation error returns message for invalid path")
-            .addAll(map(PathTesting.listOfInvalidPaths(),
-                PathTest::validationErrorReturnsMessageForInvalidPath)))
         .add(suite("cannot create path with invalid value")
             .addAll(map(PathTesting.listOfInvalidPaths(),
                 PathTest::cannotCreatePathWithInvalidValue)));
@@ -52,18 +46,8 @@ public class PathTest {
     return elements.stream().map(mapper).collect(Collectors.toList());
   }
 
-  private static Case validationErrorReturnsNullForCorrectPath(String path) {
-    return newCase(format("path [{0}]", path),
-        () -> assertTrue(Path.validationError(path) == null));
-  }
-
   private static Case pathCanBeCreatedForValidName(String path) {
     return newCase(format("path [{0}]", path), () -> path(path));
-  }
-
-  private static Case validationErrorReturnsMessageForInvalidPath(String path) {
-    return newCase(format("path [{0}]", path),
-        () -> assertTrue(Path.validationError(path) != null));
   }
 
   private static Case cannotCreatePathWithInvalidValue(String path) {
