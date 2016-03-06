@@ -23,7 +23,6 @@ import org.quackery.Case;
 import org.quackery.Quackery;
 import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
-import org.smoothbuild.testing.io.fs.base.PathTesting;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -35,11 +34,9 @@ public class PathTest {
   public static Suite path_value_is_validated() {
     return suite("path value is validated")
         .add(suite("path can be created for valid name")
-            .addAll(map(PathTesting.listOfCorrectPaths(),
-                PathTest::pathCanBeCreatedForValidName)))
+            .addAll(map(listOfCorrectPaths(), PathTest::pathCanBeCreatedForValidName)))
         .add(suite("cannot create path with invalid value")
-            .addAll(map(PathTesting.listOfInvalidPaths(),
-                PathTest::cannotCreatePathWithInvalidValue)));
+            .addAll(map(listOfInvalidPaths(), PathTest::cannotCreatePathWithInvalidValue)));
   }
 
   private static <A, B> List<B> map(List<A> elements, Function<? super A, B> mapper) {
@@ -261,6 +258,68 @@ public class PathTest {
   public void test_to_string() {
     when(path("abc/def").toString());
     thenReturned("'abc/def'");
+  }
+
+  public static List<String> listOfCorrectPaths() {
+    Builder<String> builder = ImmutableList.builder();
+
+    builder.add("");
+
+    builder.add("abc");
+    builder.add("abc/def");
+    builder.add("abc/def/ghi");
+    builder.add("abc/def/ghi/ijk");
+
+    // These paths look really strange but Linux allows creating them.
+    // I cannot see any good reason for forbidding them.
+    builder.add("...");
+    builder.add(".../abc");
+    builder.add("abc/...");
+    builder.add("abc/.../def");
+
+    return builder.build();
+  }
+
+  public static ImmutableList<String> listOfInvalidPaths() {
+    Builder<String> builder = ImmutableList.builder();
+
+    builder.add("/");
+    builder.add(".");
+
+    builder.add("./");
+    builder.add("./.");
+    builder.add("././");
+
+    builder.add("abc/");
+    builder.add("abc/def/");
+    builder.add("abc/def/ghi/");
+
+    builder.add("./abc");
+    builder.add("./abc/def");
+    builder.add("./abc/def/ghi");
+
+    builder.add("..");
+    builder.add("../");
+    builder.add("./../");
+    builder.add("../abc");
+    builder.add("abc/..");
+    builder.add("abc/../def");
+    builder.add("../..");
+
+    builder.add("//");
+    builder.add("///");
+
+    builder.add("/abc");
+    builder.add("//abc");
+    builder.add("///abc");
+
+    builder.add("abc//");
+    builder.add("abc///");
+
+    builder.add("abc//def");
+    builder.add("abc///def");
+
+    return builder.build();
   }
 
   private static List<Path> listOfCorrectNonEqualPaths() {
