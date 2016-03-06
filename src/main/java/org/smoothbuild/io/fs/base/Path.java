@@ -10,9 +10,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Path within a project.
- */
 public class Path {
   public static final String SEPARATOR = "/";
   private static final String ROOT = "";
