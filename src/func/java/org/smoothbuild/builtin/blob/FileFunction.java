@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.blob;
 
+import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
@@ -13,7 +14,7 @@ public class FileFunction {
   public static SFile File(Container container, SString path, Blob content) {
     try {
       Path.path(path.value());
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalPathException e) {
       throw new ErrorMessage("Param '" + "path" + "' has illegal value. " + e.getMessage());
     }
     return container.create().file(path, content);

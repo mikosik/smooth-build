@@ -1,6 +1,5 @@
 package org.smoothbuild.io.fs.base;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.quote;
@@ -17,14 +16,20 @@ public class Path {
   private final String value;
 
   public static Path path(String value) {
-    checkArgument(!value.startsWith("/"), "Path cannot start with slash character '/'.");
-    checkArgument(!value.endsWith("/"), "Path cannot end with slash character '/'.");
-    checkArgument(!value.contains("//"), "Path cannot contain two slashes (//) in a row");
-    checkArgument(!asList(value.split(quote(SEPARATOR))).contains("."),
+    failIf(value.startsWith("/"), "Path cannot start with slash character '/'.");
+    failIf(value.endsWith("/"), "Path cannot end with slash character '/'.");
+    failIf(value.contains("//"), "Path cannot contain two slashes (//) in a row");
+    failIf(asList(value.split(quote(SEPARATOR))).contains("."),
         "Path cannot contain '.' element.");
-    checkArgument(!asList(value.split(quote(SEPARATOR))).contains(".."),
+    failIf(asList(value.split(quote(SEPARATOR))).contains(".."),
         "Path cannot contain '..' element.");
     return new Path(value);
+  }
+
+  private static void failIf(boolean illegal, String message) {
+    if (illegal) {
+      throw new IllegalPathException(message);
+    }
   }
 
   public static Path root() {

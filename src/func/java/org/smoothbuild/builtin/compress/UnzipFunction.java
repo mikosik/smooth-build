@@ -18,6 +18,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
+import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -74,7 +75,7 @@ public class UnzipFunction {
     String fileName = entry.getName();
     try {
       path(fileName);
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalPathException e) {
       throw new ErrorMessage("File in archive has illegal name = '" + fileName + "'");
     }
 
