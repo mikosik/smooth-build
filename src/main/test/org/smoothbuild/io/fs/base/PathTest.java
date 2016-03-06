@@ -52,7 +52,7 @@ public class PathTest {
       try {
         path(path);
         fail();
-      } catch (IllegalArgumentException e) {}
+      } catch (IllegalPathException e) {}
     });
   }
 
