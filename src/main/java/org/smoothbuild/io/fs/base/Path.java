@@ -1,5 +1,9 @@
 package org.smoothbuild.io.fs.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.quote;
+
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +20,13 @@ public class Path {
   private final String value;
 
   public static Path path(String value) {
-    checkIsValid(value);
+    checkArgument(!value.startsWith("/"), "Path cannot start with slash character '/'.");
+    checkArgument(!value.endsWith("/"), "Path cannot end with slash character '/'.");
+    checkArgument(!value.contains("//"), "Path cannot contain two slashes (//) in a row");
+    checkArgument(!asList(value.split(quote(SEPARATOR))).contains("."),
+        "Path cannot contain '.' element.");
+    checkArgument(!asList(value.split(quote(SEPARATOR))).contains(".."),
+        "Path cannot contain '..' element.");
     return new Path(value);
   }
 
@@ -26,33 +36,6 @@ public class Path {
 
   private Path(String value) {
     this.value = value;
-  }
-
-  private static void checkIsValid(String value) {
-    String message = validationError(value);
-    if (message != null) {
-      throw new IllegalArgumentException(message);
-    }
-  }
-
-  public static String validationError(String path) {
-    if (path.startsWith("/")) {
-      return "Path cannot start with slash character '/'.";
-    }
-    if (path.endsWith("/")) {
-      return "Path cannot end with slash character '/'.";
-    }
-    if (path.contains("//")) {
-      return "Path cannot contain two slashes (//) in a row";
-    }
-    if (path.equals(".") || path.startsWith("./") || path.contains("/./") || path.endsWith("/.")) {
-      return "Path cannot contain '.' element.";
-    }
-    if (path.equals("..") || path.startsWith("../") || path.contains("/../")
-        || path.endsWith("/..")) {
-      return "Path cannot contain '..' element.";
-    }
-    return null;
   }
 
   public String value() {

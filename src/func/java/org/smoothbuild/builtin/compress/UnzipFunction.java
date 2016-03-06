@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.compress;
 
 import static java.io.File.createTempFile;
-import static org.smoothbuild.io.fs.base.Path.validationError;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.util.Streams.copy;
 
 import java.io.BufferedOutputStream;
@@ -72,8 +72,9 @@ public class UnzipFunction {
 
   private static SFile unzipEntry(Container container, InputStream inputStream, ZipEntry entry) {
     String fileName = entry.getName();
-    String errorMessage = validationError(fileName);
-    if (errorMessage != null) {
+    try {
+      path(fileName);
+    } catch (IllegalArgumentException e) {
       throw new ErrorMessage("File in archive has illegal name = '" + fileName + "'");
     }
 
