@@ -19,10 +19,6 @@ public class PathArgValidator {
     return validatedPath(name, stringValue.value().substring(PROJECT_ROOT.length()));
   }
 
-  public static Path validatedPath(String name, SString stringValue) {
-    return validatedPath(name, stringValue.value());
-  }
-
   private static Path validatedPath(String name, String value) {
     String message = validationError(value);
     if (message != null) {
