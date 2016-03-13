@@ -1,7 +1,5 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.util.Streams.inputStreamToString;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,15 +19,6 @@ public class StreamTester {
       writer.write(content);
     }
     return null;
-  }
-
-  public static void assertContent(InputStream inputStream, String content) throws IOException,
-      AssertionError {
-    String actual = inputStreamToString(inputStream);
-    if (!actual.equals(content)) {
-      throw new AssertionError("File content is incorrect. Expected '" + content + "' but was '"
-          + actual + "'.");
-    }
   }
 
   public static byte[] inputStreamToBytes(InputStream inputStream) throws IOException {
