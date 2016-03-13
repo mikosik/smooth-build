@@ -5,7 +5,6 @@ import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
-import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -38,8 +37,8 @@ public class BlobTest {
   public void creating_blob_without_content_creates_empty_blob() throws Exception {
     given(blobBuilder = valuesDb.blobBuilder());
     given(blob = blobBuilder.build());
-    when(inputStreamToString(blob.openInputStream()));
-    thenReturned("");
+    when(inputStreamToByteArray(blob.openInputStream()));
+    thenReturned(new byte[] {});
   }
 
   @Test
@@ -54,8 +53,8 @@ public class BlobTest {
     given(blobBuilder = valuesDb.blobBuilder());
     given(blobBuilder).close();
     given(blob = blobBuilder.build());
-    when(inputStreamToString(blob.openInputStream()));
-    thenReturned("");
+    when(inputStreamToByteArray(blob.openInputStream()));
+    thenReturned(new byte[] {});
   }
 
   @Test
@@ -77,19 +76,19 @@ public class BlobTest {
   @Test
   public void blob_has_content_passed_to_write_byte_array_method() throws Exception {
     given(blobBuilder = valuesDb.blobBuilder());
-    given(blobBuilder).write("abc".getBytes());
+    given(blobBuilder).write(bytes);
     given(blob = blobBuilder.build());
-    when(inputStreamToString(blob.openInputStream()));
-    thenReturned("abc");
+    when(inputStreamToByteArray(blob.openInputStream()));
+    thenReturned(bytes);
   }
 
   @Test
   public void blob_has_content_passed_to_write_byte_array_with_range_method() throws Exception {
     given(blobBuilder = valuesDb.blobBuilder());
-    given(blobBuilder).write("-abc-".getBytes(), 1, 3);
+    given(blobBuilder).write(new byte[] { 1, 2, 3, 4, 5 }, 1, 3);
     given(blob = blobBuilder.build());
-    when(inputStreamToString(blob.openInputStream()));
-    thenReturned("abc");
+    when(inputStreamToByteArray(blob.openInputStream()));
+    thenReturned(new byte[] { 2, 3, 4 });
   }
 
   @Test
@@ -152,8 +151,8 @@ public class BlobTest {
   public void blob_fetched_by_hash_has_same_content() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(inputStreamToString(((Blob) valuesDb.read(BLOB, hash)).openInputStream()));
-    thenReturned(inputStreamToString(blob.openInputStream()));
+    when(inputStreamToByteArray(((Blob) valuesDb.read(BLOB, hash)).openInputStream()));
+    thenReturned(inputStreamToByteArray(blob.openInputStream()));
   }
 
   @Test
